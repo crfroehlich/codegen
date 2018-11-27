@@ -237,4 +237,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/help/ids", "GET, POST")]
+    public class HelpIds
+    {
+        public bool All { get; set; }
+    }
 }

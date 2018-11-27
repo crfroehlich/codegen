@@ -210,4 +210,9 @@ namespace Services.Dto
     [Route("/profile/workflowtask/batch", "DELETE, PATCH, POST, PUT")]
     public partial class WorkflowTaskBatch : List<WorkflowTask> { }
 
+    [Route("/admin/workflowtask/ids", "GET, POST")]
+    public class WorkflowTaskIds
+    {
+        public bool All { get; set; }
+    }
 }

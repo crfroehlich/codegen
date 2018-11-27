@@ -224,5 +224,20 @@ namespace Services.API
             ret = entity?.ToDto();
             return ret;
         }
+
+        public List<int> Any(StatsIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityStats>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
+            return ret;
+        }
     }
 }

@@ -265,4 +265,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/backgroundtask/ids", "GET, POST")]
+    public class BackgroundTaskIds
+    {
+        public bool All { get; set; }
+    }
 }

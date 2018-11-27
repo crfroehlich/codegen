@@ -156,4 +156,9 @@ namespace Services.Dto
     [Route("/profile/valuetype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ValueTypeBatch : List<ValueType> { }
 
+    [Route("/admin/valuetype/ids", "GET, POST")]
+    public class ValueTypeIds
+    {
+        public bool All { get; set; }
+    }
 }

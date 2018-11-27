@@ -55,10 +55,6 @@ namespace Services.Dto
         public int? AppsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Category), Description = "string", IsRequired = false)]
-        public string Category { get; set; }
-
-
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -73,29 +69,13 @@ namespace Services.Dto
         public int? HelpCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Icon), Description = "string", IsRequired = false)]
-        public string Icon { get; set; }
-
-
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-
-
-        [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
-        public int? Order { get; set; }
 
 
         [ApiMember(Name = nameof(Roles), Description = "Role", IsRequired = false)]
         public List<Reference> Roles { get; set; }
         public int? RolesCount { get; set; }
-
-
-        [ApiMember(Name = nameof(ShowInSidebar), Description = "bool?", IsRequired = false)]
-        public bool? ShowInSidebar { get; set; }
-
-
-        [ApiMember(Name = nameof(Title), Description = "string", IsRequired = false)]
-        public string Title { get; set; }
 
 
     }
@@ -131,7 +111,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Apps),nameof(AppsCount),nameof(Category),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Glossary),nameof(GlossaryCount),nameof(Help),nameof(HelpCount),nameof(Icon),nameof(Locked),nameof(Name),nameof(Order),nameof(Roles),nameof(RolesCount),nameof(ShowInSidebar),nameof(Title),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Apps),nameof(AppsCount),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Glossary),nameof(GlossaryCount),nameof(Help),nameof(HelpCount),nameof(Locked),nameof(Name),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -169,16 +149,11 @@ namespace Services.Dto
     public partial class PageSearch : Search<Page>
     {
         public List<int> AppsIds { get; set; }
-        public string Category { get; set; }
         public string Description { get; set; }
         public List<int> GlossaryIds { get; set; }
         public List<int> HelpIds { get; set; }
-        public string Icon { get; set; }
         public string Name { get; set; }
-        public int? Order { get; set; }
         public List<int> RolesIds { get; set; }
-        public bool? ShowInSidebar { get; set; }
-        public string Title { get; set; }
     }
     
     public class PageFullTextSearch
@@ -195,16 +170,11 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Updated))); }
         
         public bool doApps { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Apps))); }
-        public bool doCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Category))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Description))); }
         public bool doGlossary { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Glossary))); }
         public bool doHelp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Help))); }
-        public bool doIcon { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Icon))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Name))); }
-        public bool doOrder { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Order))); }
         public bool doRoles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Roles))); }
-        public bool doShowInSidebar { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.ShowInSidebar))); }
-        public bool doTitle { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Title))); }
     }
 
     [Route("/page/version", "GET, POST")]
@@ -258,5 +228,10 @@ namespace Services.Dto
         {
             { return false; }
         }
+    }
+    [Route("/admin/page/ids", "GET, POST")]
+    public class PageIds
+    {
+        public bool All { get; set; }
     }
 }

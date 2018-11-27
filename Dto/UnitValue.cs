@@ -211,4 +211,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/unitvalue/ids", "GET, POST")]
+    public class UnitValueIds
+    {
+        public bool All { get; set; }
+    }
 }

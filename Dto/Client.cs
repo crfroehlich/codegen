@@ -257,4 +257,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/client/ids", "GET, POST")]
+    public class ClientIds
+    {
+        public bool All { get; set; }
+    }
 }

@@ -155,4 +155,9 @@ namespace Services.Dto
     [Route("/profile/documentattribute/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentAttributeBatch : List<DocumentAttribute> { }
 
+    [Route("/admin/documentattribute/ids", "GET, POST")]
+    public class DocumentAttributeIds
+    {
+        public bool All { get; set; }
+    }
 }

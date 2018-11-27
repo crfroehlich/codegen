@@ -201,4 +201,9 @@ namespace Services.Dto
     [Route("/profile/unitconversionrules/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitConversionRulesBatch : List<UnitConversionRules> { }
 
+    [Route("/admin/unitconversionrules/ids", "GET, POST")]
+    public class UnitConversionRulesIds
+    {
+        public bool All { get; set; }
+    }
 }

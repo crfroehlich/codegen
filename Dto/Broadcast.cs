@@ -243,4 +243,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/broadcast/ids", "GET, POST")]
+    public class BroadcastIds
+    {
+        public bool All { get; set; }
+    }
 }

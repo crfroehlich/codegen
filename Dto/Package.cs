@@ -299,4 +299,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/package/ids", "GET, POST")]
+    public class PackageIds
+    {
+        public bool All { get; set; }
+    }
 }

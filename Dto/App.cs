@@ -225,4 +225,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/app/ids", "GET, POST")]
+    public class AppIds
+    {
+        public bool All { get; set; }
+    }
 }

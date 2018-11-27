@@ -163,4 +163,9 @@ namespace Services.Dto
     [Route("/profile/datetime/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DateTimeBatch : List<DateTimeDto> { }
 
+    [Route("/admin/datetime/ids", "GET, POST")]
+    public class DateTimeIds
+    {
+        public bool All { get; set; }
+    }
 }

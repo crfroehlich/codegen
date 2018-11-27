@@ -327,4 +327,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/workflow/ids", "GET, POST")]
+    public class WorkflowIds
+    {
+        public bool All { get; set; }
+    }
 }

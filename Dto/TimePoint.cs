@@ -168,4 +168,9 @@ namespace Services.Dto
     [Route("/profile/timepoint/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TimePointBatch : List<TimePoint> { }
 
+    [Route("/admin/timepoint/ids", "GET, POST")]
+    public class TimePointIds
+    {
+        public bool All { get; set; }
+    }
 }

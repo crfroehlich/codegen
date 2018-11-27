@@ -147,4 +147,9 @@ namespace Services.Dto
     [Route("/profile/outcome/batch", "DELETE, PATCH, POST, PUT")]
     public partial class OutcomeBatch : List<OutcomeDto> { }
 
+    [Route("/admin/outcome/ids", "GET, POST")]
+    public class OutcomeIds
+    {
+        public bool All { get; set; }
+    }
 }

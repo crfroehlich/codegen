@@ -483,4 +483,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/document/ids", "GET, POST")]
+    public class DocumentIds
+    {
+        public bool All { get; set; }
+    }
 }

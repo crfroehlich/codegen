@@ -443,4 +443,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/user/ids", "GET, POST")]
+    public class UserIds
+    {
+        public bool All { get; set; }
+    }
 }

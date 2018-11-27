@@ -129,8 +129,6 @@ namespace Services.Enums
         OUTCOMECATEGORY,
         [EnumMember(Value = DocConstantLookupTable.OUTCOMETYPE)]
         OUTCOMETYPE,
-        [EnumMember(Value = DocConstantLookupTable.PAGE)]
-        PAGE,
         [EnumMember(Value = DocConstantLookupTable.PERMISSION)]
         PERMISSION,
         [EnumMember(Value = DocConstantLookupTable.POPULATIONTYPE)]
@@ -317,7 +315,6 @@ namespace Services.Enums
         public const string MODELNAME = "ModelName";
         public const string OUTCOMECATEGORY = "OutcomeCategory";
         public const string OUTCOMETYPE = "OutcomeType";
-        public const string PAGE = "Page";
         public const string PERMISSION = "Permission";
         public const string POPULATIONTYPE = "PopulationType";
         public const string PREVALENCETYPE = "PrevalenceType";

@@ -164,4 +164,9 @@ namespace Services.Dto
     [Route("/profile/jctattributecategoryattributedocumentset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class JctAttributeCategoryAttributeDocumentSetBatch : List<JctAttributeCategoryAttributeDocumentSet> { }
 
+    [Route("/admin/jctattributecategoryattributedocumentset/ids", "GET, POST")]
+    public class JctAttributeCategoryAttributeDocumentSetIds
+    {
+        public bool All { get; set; }
+    }
 }

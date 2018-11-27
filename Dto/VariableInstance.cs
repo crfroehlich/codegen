@@ -208,4 +208,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/variableinstance/ids", "GET, POST")]
+    public class VariableInstanceIds
+    {
+        public bool All { get; set; }
+    }
 }

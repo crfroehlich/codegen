@@ -190,4 +190,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/tag/ids", "GET, POST")]
+    public class TagIds
+    {
+        public bool All { get; set; }
+    }
 }

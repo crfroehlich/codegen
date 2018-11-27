@@ -197,4 +197,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/featureset/ids", "GET, POST")]
+    public class FeatureSetIds
+    {
+        public bool All { get; set; }
+    }
 }

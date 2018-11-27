@@ -252,4 +252,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/termmaster/ids", "GET, POST")]
+    public class TermMasterIds
+    {
+        public bool All { get; set; }
+    }
 }

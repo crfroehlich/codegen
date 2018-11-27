@@ -259,4 +259,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/role/ids", "GET, POST")]
+    public class RoleIds
+    {
+        public bool All { get; set; }
+    }
 }

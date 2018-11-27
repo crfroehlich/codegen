@@ -268,4 +268,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/auditrecord/ids", "GET, POST")]
+    public class AuditRecordIds
+    {
+        public bool All { get; set; }
+    }
 }

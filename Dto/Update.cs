@@ -250,4 +250,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/update/ids", "GET, POST")]
+    public class UpdateIds
+    {
+        public bool All { get; set; }
+    }
 }

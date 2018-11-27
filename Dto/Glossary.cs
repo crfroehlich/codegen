@@ -178,4 +178,9 @@ namespace Services.Dto
     [Route("/profile/glossary/batch", "DELETE, PATCH, POST, PUT")]
     public partial class GlossaryBatch : List<Glossary> { }
 
+    [Route("/admin/glossary/ids", "GET, POST")]
+    public class GlossaryIds
+    {
+        public bool All { get; set; }
+    }
 }

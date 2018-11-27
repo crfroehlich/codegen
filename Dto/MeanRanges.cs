@@ -179,4 +179,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/meanranges/ids", "GET, POST")]
+    public class MeanRangesIds
+    {
+        public bool All { get; set; }
+    }
 }

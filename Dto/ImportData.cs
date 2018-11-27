@@ -296,4 +296,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/importdata/ids", "GET, POST")]
+    public class ImportDataIds
+    {
+        public bool All { get; set; }
+    }
 }

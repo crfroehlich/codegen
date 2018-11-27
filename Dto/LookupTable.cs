@@ -219,4 +219,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/lookuptable/ids", "GET, POST")]
+    public class LookupTableIds
+    {
+        public bool All { get; set; }
+    }
 }

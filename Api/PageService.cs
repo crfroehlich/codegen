@@ -144,8 +144,6 @@ namespace Services.API
                         {
                             entities = entities.Where(en => en.Apps.Any(r => r.Id.In(request.AppsIds)));
                         }
-                if(!DocTools.IsNullOrEmpty(request.Category))
-                    entities = entities.Where(en => en.Category.Contains(request.Category));
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                         if(true == request.GlossaryIds?.Any())
@@ -156,20 +154,12 @@ namespace Services.API
                         {
                             entities = entities.Where(en => en.Help.Any(r => r.Id.In(request.HelpIds)));
                         }
-                if(!DocTools.IsNullOrEmpty(request.Icon))
-                    entities = entities.Where(en => en.Icon.Contains(request.Icon));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(request.Order.HasValue)
-                    entities = entities.Where(en => request.Order.Value == en.Order);
                         if(true == request.RolesIds?.Any())
                         {
                             entities = entities.Where(en => en.Roles.Any(r => r.Id.In(request.RolesIds)));
                         }
-                if(request.ShowInSidebar.HasValue)
-                    entities = entities.Where(en => request.ShowInSidebar.Value == en.ShowInSidebar);
-                if(!DocTools.IsNullOrEmpty(request.Title))
-                    entities = entities.Where(en => en.Title.Contains(request.Title));
 
                 entities = ApplyFilters(request, entities);
 
@@ -298,16 +288,11 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pApps = dtoSource.Apps?.ToList();
-            var pCategory = dtoSource.Category;
             var pDescription = dtoSource.Description;
             var pGlossary = dtoSource.Glossary?.ToList();
             var pHelp = dtoSource.Help?.ToList();
-            var pIcon = dtoSource.Icon;
             var pName = dtoSource.Name;
-            var pOrder = dtoSource.Order;
             var pRoles = dtoSource.Roles?.ToList();
-            var pShowInSidebar = dtoSource.ShowInSidebar;
-            var pTitle = dtoSource.Title;
 
             DocEntityPage entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -326,15 +311,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pCategory, permission, DocConstantModelName.PAGE, nameof(dtoSource.Category)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pCategory, entity.Category, nameof(dtoSource.Category)))
-                    entity.Category = pCategory;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pCategory, nameof(dtoSource.Category)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Category), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Category));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.PAGE, nameof(dtoSource.Description)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
@@ -342,15 +318,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pIcon, permission, DocConstantModelName.PAGE, nameof(dtoSource.Icon)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pIcon, entity.Icon, nameof(dtoSource.Icon)))
-                    entity.Icon = pIcon;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pIcon, nameof(dtoSource.Icon)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Icon), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Icon));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.PAGE, nameof(dtoSource.Name)))
@@ -361,34 +328,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pOrder, permission, DocConstantModelName.PAGE, nameof(dtoSource.Order)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pOrder, entity.Order, nameof(dtoSource.Order)))
-                    if(null != pOrder)
-                        entity.Order = (int) pOrder;
-                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pOrder, nameof(dtoSource.Order)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Order), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Order));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, dtoSource, pShowInSidebar, permission, DocConstantModelName.PAGE, nameof(dtoSource.ShowInSidebar)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pShowInSidebar, entity.ShowInSidebar, nameof(dtoSource.ShowInSidebar)))
-                    entity.ShowInSidebar = pShowInSidebar;
-                if(DocPermissionFactory.IsRequested<bool?>(dtoSource, pShowInSidebar, nameof(dtoSource.ShowInSidebar)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ShowInSidebar), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.ShowInSidebar));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pTitle, permission, DocConstantModelName.PAGE, nameof(dtoSource.Title)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pTitle, entity.Title, nameof(dtoSource.Title)))
-                    entity.Title = pTitle;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pTitle, nameof(dtoSource.Title)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Title), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Title));
                 }
             }
             
@@ -654,38 +593,22 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
                     var pApps = entity.Apps.ToList();
-                    var pCategory = entity.Category;
-                    if(!DocTools.IsNullOrEmpty(pCategory))
-                        pCategory += " (Copy)";
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
                     var pGlossary = entity.Glossary.ToList();
                     var pHelp = entity.Help.ToList();
-                    var pIcon = entity.Icon;
-                    if(!DocTools.IsNullOrEmpty(pIcon))
-                        pIcon += " (Copy)";
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
-                    var pOrder = entity.Order;
                     var pRoles = entity.Roles.ToList();
-                    var pShowInSidebar = entity.ShowInSidebar;
-                    var pTitle = entity.Title;
-                    if(!DocTools.IsNullOrEmpty(pTitle))
-                        pTitle += " (Copy)";
                 #region Custom Before copyPage
                 #endregion Custom Before copyPage
                 var copy = new DocEntityPage(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Category = pCategory
                                 , Description = pDescription
-                                , Icon = pIcon
                                 , Name = pName
-                                , Order = pOrder
-                                , ShowInSidebar = pShowInSidebar
-                                , Title = pTitle
                 };
                             foreach(var item in pApps)
                             {
@@ -1259,6 +1182,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(PageIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityPage>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

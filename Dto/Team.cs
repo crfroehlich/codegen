@@ -245,4 +245,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/team/ids", "GET, POST")]
+    public class TeamIds
+    {
+        public bool All { get; set; }
+    }
 }

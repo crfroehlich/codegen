@@ -134,11 +134,6 @@ namespace Services.Schema
 
 
         [Field()]
-        [FieldMapping(nameof(Category))]
-        public string Category { get; set; }
-
-
-        [Field()]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
 
@@ -161,19 +156,9 @@ namespace Services.Schema
         public int? HelpCount { get { return Help.Count(); } private set { var noid = value; } }
 
 
-        [Field(DefaultValue = "fa fa-question")]
-        [FieldMapping(nameof(Icon))]
-        public string Icon { get; set; }
-
-
         [Field(Nullable = false)]
         [FieldMapping(nameof(Name))]
         public string Name { get; set; }
-
-
-        [Field()]
-        [FieldMapping(nameof(Order))]
-        public int Order { get; set; }
 
 
         [Field()]
@@ -183,16 +168,6 @@ namespace Services.Schema
 
 
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
-
-
-        [Field(DefaultValue = true)]
-        [FieldMapping(nameof(ShowInSidebar))]
-        public bool? ShowInSidebar { get; set; }
-
-
-        [Field()]
-        [FieldMapping(nameof(Title))]
-        public string Title { get; set; }
 
 
 
@@ -356,11 +331,8 @@ namespace Services.Schema
             if(Hash != hash)
                 Hash = hash;
 
-            Category = Category?.TrimAndPruneSpaces();
             Description = Description?.TrimAndPruneSpaces();
-            Icon = Icon?.TrimAndPruneSpaces();
             Name = Name?.TrimAndPruneSpaces();
-            Title = Title?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
             {
@@ -497,19 +469,14 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, "Updated")))
                 .ForMember(dest => dest.Apps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Apps))))
                 .ForMember(dest => dest.AppsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.AppsCount))))
-                .ForMember(dest => dest.Category, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Category))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Description))))
                 .ForMember(dest => dest.Glossary, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Glossary))))
                 .ForMember(dest => dest.GlossaryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.GlossaryCount))))
                 .ForMember(dest => dest.Help, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Help))))
                 .ForMember(dest => dest.HelpCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.HelpCount))))
-                .ForMember(dest => dest.Icon, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Icon))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Name))))
-                .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Order))))
                 .ForMember(dest => dest.Roles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Roles))))
                 .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.RolesCount))))
-                .ForMember(dest => dest.ShowInSidebar, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.ShowInSidebar))))
-                .ForMember(dest => dest.Title, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Title))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Page,DocEntityPage>()
                 .MaxDepth(2);

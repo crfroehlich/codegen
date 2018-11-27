@@ -179,4 +179,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/meanvariances/ids", "GET, POST")]
+    public class MeanVariancesIds
+    {
+        public bool All { get; set; }
+    }
 }

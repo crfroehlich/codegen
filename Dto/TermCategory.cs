@@ -192,4 +192,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/termcategory/ids", "GET, POST")]
+    public class TermCategoryIds
+    {
+        public bool All { get; set; }
+    }
 }

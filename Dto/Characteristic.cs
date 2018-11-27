@@ -147,4 +147,9 @@ namespace Services.Dto
     [Route("/profile/characteristic/batch", "DELETE, PATCH, POST, PUT")]
     public partial class CharacteristicBatch : List<CharacteristicDto> { }
 
+    [Route("/admin/characteristic/ids", "GET, POST")]
+    public class CharacteristicIds
+    {
+        public bool All { get; set; }
+    }
 }

@@ -220,4 +220,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/usertype/ids", "GET, POST")]
+    public class UserTypeIds
+    {
+        public bool All { get; set; }
+    }
 }

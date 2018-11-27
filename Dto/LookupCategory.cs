@@ -197,4 +197,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/lookupcategory/ids", "GET, POST")]
+    public class LookupCategoryIds
+    {
+        public bool All { get; set; }
+    }
 }

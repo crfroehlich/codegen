@@ -169,4 +169,9 @@ namespace Services.Dto
     [Route("/profile/releasestatus/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ReleaseStatusBatch : List<ReleaseStatus> { }
 
+    [Route("/admin/releasestatus/ids", "GET, POST")]
+    public class ReleaseStatusIds
+    {
+        public bool All { get; set; }
+    }
 }

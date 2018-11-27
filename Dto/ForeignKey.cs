@@ -175,4 +175,9 @@ namespace Services.Dto
     [Route("/profile/foreignkey/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ForeignKeyBatch : List<ForeignKey> { }
 
+    [Route("/admin/foreignkey/ids", "GET, POST")]
+    public class ForeignKeyIds
+    {
+        public bool All { get; set; }
+    }
 }

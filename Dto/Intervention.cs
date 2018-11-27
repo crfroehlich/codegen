@@ -147,4 +147,9 @@ namespace Services.Dto
     [Route("/profile/intervention/batch", "DELETE, PATCH, POST, PUT")]
     public partial class InterventionBatch : List<InterventionDto> { }
 
+    [Route("/admin/intervention/ids", "GET, POST")]
+    public class InterventionIds
+    {
+        public bool All { get; set; }
+    }
 }

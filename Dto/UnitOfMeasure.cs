@@ -175,4 +175,9 @@ namespace Services.Dto
     [Route("/profile/unitofmeasure/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitOfMeasureBatch : List<UnitOfMeasure> { }
 
+    [Route("/admin/unitofmeasure/ids", "GET, POST")]
+    public class UnitOfMeasureIds
+    {
+        public bool All { get; set; }
+    }
 }

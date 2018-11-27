@@ -326,4 +326,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/scope/ids", "GET, POST")]
+    public class ScopeIds
+    {
+        public bool All { get; set; }
+    }
 }

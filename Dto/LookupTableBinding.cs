@@ -226,4 +226,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/lookuptablebinding/ids", "GET, POST")]
+    public class LookupTableBindingIds
+    {
+        public bool All { get; set; }
+    }
 }

@@ -257,4 +257,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/statsstudyset/ids", "GET, POST")]
+    public class StatsStudySetIds
+    {
+        public bool All { get; set; }
+    }
 }

@@ -179,4 +179,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/units/ids", "GET, POST")]
+    public class UnitsIds
+    {
+        public bool All { get; set; }
+    }
 }

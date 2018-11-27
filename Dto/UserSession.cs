@@ -234,4 +234,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/usersession/ids", "GET, POST")]
+    public class UserSessionIds
+    {
+        public bool All { get; set; }
+    }
 }

@@ -216,4 +216,9 @@ namespace Services.Dto
     [Route("/profile/timecard/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TimeCardBatch : List<TimeCard> { }
 
+    [Route("/admin/timecard/ids", "GET, POST")]
+    public class TimeCardIds
+    {
+        public bool All { get; set; }
+    }
 }

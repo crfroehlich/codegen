@@ -229,4 +229,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/event/ids", "GET, POST")]
+    public class EventIds
+    {
+        public bool All { get; set; }
+    }
 }

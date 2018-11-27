@@ -234,4 +234,9 @@ namespace Services.Dto
             { return false; }
         }
     }
+    [Route("/admin/division/ids", "GET, POST")]
+    public class DivisionIds
+    {
+        public bool All { get; set; }
+    }
 }
