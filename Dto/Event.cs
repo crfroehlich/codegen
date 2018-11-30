@@ -64,6 +64,10 @@ namespace Services.Dto
         public DateTime? Processed { get; set; }
 
 
+        [ApiMember(Name = nameof(Status), Description = "string", IsRequired = false)]
+        public string Status { get; set; }
+
+
         [ApiMember(Name = nameof(Teams), Description = "Team", IsRequired = false)]
         public List<Reference> Teams { get; set; }
         public int? TeamsCount { get; set; }
@@ -112,7 +116,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AuditRecord),nameof(AuditRecordId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Processed),nameof(Teams),nameof(TeamsCount),nameof(Updated),nameof(Updates),nameof(UpdatesCount),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AuditRecord),nameof(AuditRecordId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Processed),nameof(Status),nameof(Teams),nameof(TeamsCount),nameof(Updated),nameof(Updates),nameof(UpdatesCount),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -155,6 +159,7 @@ namespace Services.Dto
         public DateTime? Processed { get; set; }
         public DateTime? ProcessedAfter { get; set; }
         public DateTime? ProcessedBefore { get; set; }
+        public string Status { get; set; }
         public List<int> TeamsIds { get; set; }
         public List<int> UpdatesIds { get; set; }
         public List<int> UsersIds { get; set; }
@@ -176,6 +181,7 @@ namespace Services.Dto
         public bool doAuditRecord { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.AuditRecord))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Description))); }
         public bool doProcessed { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Processed))); }
+        public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Status))); }
         public bool doTeams { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Teams))); }
         public bool doUpdates { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Updates))); }
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Users))); }

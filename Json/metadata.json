@@ -2257,6 +2257,26 @@
     },
     "Model": {},
     "Properties": {
+      "Attempts": {
+        "DefaultValue": 0,
+        "Description": "Number of times we've tried to process this item",
+        "DisplayName": "Attempts",
+        "IsAudited": false,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsIndexed": true,
+        "IsInsertOnly": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": true,
+        "Name": "Attempts",
+        "Order": 31,
+        "SetDefaultValue": "0",
+        "Tab": "BackgroundTaskItem",
+        "TabOrder": 0,
+        "Type": "int?",
+        "UIType": ""
+      },
       "AuditRecord": {
         "AutoCreateMissing": false,
         "Description": "Audit Record associated with this item",
@@ -7232,6 +7252,25 @@
         "Tab": "Event",
         "TabOrder": 0,
         "Type": "DateTime?",
+        "UIType": ""
+      },
+      "Status": {
+        "AutoCreateMissing": false,
+        "Description": "Status of this event",
+        "DisplayName": "Status",
+        "IsAudited": false,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsInsertOnly": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "Status",
+        "Order": 11,
+        "SetDefaultValue": "",
+        "Tab": "Event",
+        "TabOrder": 0,
+        "Type": "string",
         "UIType": ""
       },
       "Teams": {

@@ -103,6 +103,8 @@ namespace Services.API
                     entities = entities.Where(en => en.Processed <= request.ProcessedBefore);
                 if(!DocTools.IsNullOrEmpty(request.ProcessedAfter))
                     entities = entities.Where(en => en.Processed >= request.ProcessedAfter);
+                if(!DocTools.IsNullOrEmpty(request.Status))
+                    entities = entities.Where(en => en.Status.Contains(request.Status));
                         if(true == request.TeamsIds?.Any())
                         {
                             entities = entities.Where(en => en.Teams.Any(r => r.Id.In(request.TeamsIds)));
@@ -221,6 +223,7 @@ namespace Services.API
             var pAuditRecord = (dtoSource.AuditRecord?.Id > 0) ? DocEntityAuditRecord.GetAuditRecord(dtoSource.AuditRecord.Id) : null;
             var pDescription = dtoSource.Description;
             var pProcessed = dtoSource.Processed;
+            var pStatus = dtoSource.Status;
             var pTeams = dtoSource.Teams?.ToList();
             var pUpdates = dtoSource.Updates?.ToList();
             var pUsers = dtoSource.Users?.ToList();
@@ -269,6 +272,16 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pProcessed, nameof(dtoSource.Processed)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Processed), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Processed));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pStatus, permission, DocConstantModelName.EVENT, nameof(dtoSource.Status)))
+            {
+                if(DocPermissionFactory.IsRequested(dtoSource, pStatus, entity.Status, nameof(dtoSource.Status)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Status)} cannot be modified once set.");
+                    entity.Status = pStatus;
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pStatus, nameof(dtoSource.Status)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Status), ignoreSpaces: true))
+                {
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Status));
                 }
             }
             
@@ -494,6 +507,9 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
                     var pProcessed = entity.Processed;
+                    var pStatus = entity.Status;
+                    if(!DocTools.IsNullOrEmpty(pStatus))
+                        pStatus += " (Copy)";
                     var pTeams = entity.Teams.ToList();
                     var pUpdates = entity.Updates.ToList();
                     var pUsers = entity.Users.ToList();
@@ -505,6 +521,7 @@ namespace Services.API
                                 , AuditRecord = pAuditRecord
                                 , Description = pDescription
                                 , Processed = pProcessed
+                                , Status = pStatus
                 };
                             foreach(var item in pTeams)
                             {
