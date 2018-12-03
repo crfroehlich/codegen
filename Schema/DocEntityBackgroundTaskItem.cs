@@ -125,11 +125,6 @@ namespace Services.Schema
 
         #region Properties
 
-        [Field(DefaultValue = 0)]
-        [FieldMapping(nameof(Attempts))]
-        public int? Attempts { get; set; }
-
-
         [Field()]
         [FieldMapping(nameof(AuditRecord))]
         public DocEntityAuditRecord AuditRecord { get; set; }
@@ -486,7 +481,6 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityBackgroundTaskItem,BackgroundTaskItem>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, "Updated")))
-                .ForMember(dest => dest.Attempts, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Attempts))))
                 .ForMember(dest => dest.AuditRecord, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.AuditRecord))))
                 .ForMember(dest => dest.AuditRecordId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.AuditRecordId))))
                 .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Data))))
