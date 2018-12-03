@@ -87,8 +87,6 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(request.Attempts.HasValue)
-                    entities = entities.Where(en => request.Attempts.Value == en.Attempts);
                 if(!DocTools.IsNullOrEmpty(request.AuditRecord) && !DocTools.IsNullOrEmpty(request.AuditRecord.Id))
                 {
                     entities = entities.Where(en => en.AuditRecord.Id == request.AuditRecord.Id );

@@ -65,6 +65,7 @@
     "HAZARD_RATIO": "Hazard Ratio",
     "MEAN_DIFFERENCE": "Mean Difference",
     "COHENS_D": "Cohen's D",
+    "RATE_DIFFERENCE": "Rate Difference",
     "RISK_DIFFERENCE": "Risk Difference",
     "RATE_RATIO": "Rate Ratio",
     "HEDGES_G": "Hedges G"
@@ -1091,7 +1092,8 @@
   },
   "StudyImportType": {
     "LEGACY": "Legacy",
-    "EXTRACT": "Extract"
+    "EXTRACT": "Extract",
+    "CLINICAL_TRIALS_GOV": "ClinicalTrials.gov"
   },
   "StudyNGA": {
     "COMPLETED_FINISHED": "Completed/Finished",
@@ -1394,6 +1396,7 @@
   },
   "ValueStatus": {
     "COLLECTED": "Collected",
+    "NOT_AVAILABLE": "Not Available",
     "NOT_COLLECTED": "Not Collected",
     "NOT_REPORTED": "Not Reported",
     "REQUESTED": "Requested"
@@ -1403,11 +1406,14 @@
     "BOOLEAN": "Boolean",
     "CALENDARDATE": "CalendarDate",
     "CALENDARDATES": "CalendarDates",
+    "CONTACT": "Contact",
     "DATETIME": "DateTime",
     "DATETIMERANGE": "DateTimeRange",
     "DECIMAL": "Decimal",
     "DECIMALRANGE": "DecimalRange",
     "DESIGNNESTEDSTUDYIDLINK": "DesignNestedStudyIdLink",
+    "EVENTCOUNTS": "EventCounts",
+    "FACILITY": "Facility",
     "FIXEDDOSEINTERVENTION": "FixedDoseIntervention",
     "FLAG": "Flag",
     "FUNDING": "Funding",
@@ -1419,11 +1425,14 @@
     "NPERSONS": "NPersons",
     "PARTICIPANT": "Participant",
     "PARTICIPANTS": "Participants",
+    "POPULATIONANALYZED": "PopulationAnalyzed",
     "PVALUE": "PValue",
     "RATE": "Rate",
     "SETTINGLOCATION": "SettingLocation",
     "SETTINGLOCATIONTOTAL": "SettingLocationTotal",
+    "STUDYDOC": "StudyDoc",
     "STUDYOBJECTIVE": "StudyObjective",
+    "STUDYREFERENCE": "StudyReference",
     "SUBGROUPDESCRIPTOR": "SubgroupDescriptor",
     "TIMEPOINT": "Timepoint",
     "TIMEPOINTS": "Timepoints",
@@ -1474,6 +1483,8 @@
     "PICO_RATING": "PICO Rating",
     "RAPID_REVIEW": "Rapid Review",
     "RESPONSE_LETTER": "Response Letter",
+    "R_SNIPPET": "R Snippet",
+    "RMD_SNIPPET": "RMD Snippet",
     "SURVEY_DESIGN": "Survey Design",
     "SURVEY_WIZARD": "Survery Wizard",
     "SYSTEMATIC_REVIEW": "Systematic Review",

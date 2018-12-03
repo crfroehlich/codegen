@@ -140,14 +140,20 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
+                if(!DocTools.IsNullOrEmpty(request.AdminTeam) && !DocTools.IsNullOrEmpty(request.AdminTeam.Id))
+                {
+                    entities = entities.Where(en => en.AdminTeam.Id == request.AdminTeam.Id );
+                }
+                if(true == request.AdminTeamIds?.Any())
+                {
+                    entities = entities.Where(en => en.AdminTeam.Id.In(request.AdminTeamIds));
+                }
                         if(true == request.AppsIds?.Any())
                         {
                             entities = entities.Where(en => en.Apps.Any(r => r.Id.In(request.AppsIds)));
                         }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
-                if(!DocTools.IsNullOrEmpty(request.Email))
-                    entities = entities.Where(en => en.Email.Contains(request.Email));
                         if(true == request.FeatureSetsIds?.Any())
                         {
                             entities = entities.Where(en => en.FeatureSets.Any(r => r.Id.In(request.FeatureSetsIds)));
@@ -162,8 +168,6 @@ namespace Services.API
                         {
                             entities = entities.Where(en => en.Pages.Any(r => r.Id.In(request.PagesIds)));
                         }
-                if(!DocTools.IsNullOrEmpty(request.Slack))
-                    entities = entities.Where(en => en.Slack.Contains(request.Slack));
                         if(true == request.UsersIds?.Any())
                         {
                             entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
@@ -295,16 +299,15 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
+            var pAdminTeam = (dtoSource.AdminTeam?.Id > 0) ? DocEntityTeam.GetTeam(dtoSource.AdminTeam.Id) : null;
             var pApps = dtoSource.Apps?.ToList();
             var pDescription = dtoSource.Description;
-            var pEmail = dtoSource.Email;
             var pFeatureSets = dtoSource.FeatureSets?.ToList();
             var pIsInternal = dtoSource.IsInternal;
             var pIsSuperAdmin = dtoSource.IsSuperAdmin;
             var pName = dtoSource.Name;
             var pPages = dtoSource.Pages?.ToList();
             var pPermissions = dtoSource.Permissions;
-            var pSlack = dtoSource.Slack;
             var pUsers = dtoSource.Users?.ToList();
 
             DocEntityRole entity = null;
@@ -324,6 +327,15 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTeam>(currentUser, dtoSource, pAdminTeam, permission, DocConstantModelName.ROLE, nameof(dtoSource.AdminTeam)))
+            {
+                if(DocPermissionFactory.IsRequested(dtoSource, pAdminTeam, entity.AdminTeam, nameof(dtoSource.AdminTeam)))
+                    entity.AdminTeam = pAdminTeam;
+                if(DocPermissionFactory.IsRequested<DocEntityTeam>(dtoSource, pAdminTeam, nameof(dtoSource.AdminTeam)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.AdminTeam), ignoreSpaces: true))
+                {
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.AdminTeam));
+                }
+            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.ROLE, nameof(dtoSource.Description)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
@@ -331,15 +343,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pEmail, permission, DocConstantModelName.ROLE, nameof(dtoSource.Email)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pEmail, entity.Email, nameof(dtoSource.Email)))
-                    entity.Email = pEmail;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pEmail, nameof(dtoSource.Email)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Email), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Email));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsInternal, permission, DocConstantModelName.ROLE, nameof(dtoSource.IsInternal)))
@@ -367,15 +370,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<Permissions>(dtoSource, pPermissions, nameof(dtoSource.Permissions)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Permissions), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Permissions));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pSlack, permission, DocConstantModelName.ROLE, nameof(dtoSource.Slack)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pSlack, entity.Slack, nameof(dtoSource.Slack)))
-                    entity.Slack = pSlack;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pSlack, nameof(dtoSource.Slack)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Slack), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Slack));
                 }
             }
             
@@ -640,13 +634,11 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
+                    var pAdminTeam = entity.AdminTeam;
                     var pApps = entity.Apps.ToList();
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
-                    var pEmail = entity.Email;
-                    if(!DocTools.IsNullOrEmpty(pEmail))
-                        pEmail += " (Copy)";
                     var pFeatureSets = entity.FeatureSets.ToList();
                     var pIsInternal = entity.IsInternal;
                     var pIsSuperAdmin = entity.IsSuperAdmin;
@@ -655,22 +647,18 @@ namespace Services.API
                         pName += " (Copy)";
                     var pPages = entity.Pages.ToList();
                     var pPermissions = entity.Permissions;
-                    var pSlack = entity.Slack;
-                    if(!DocTools.IsNullOrEmpty(pSlack))
-                        pSlack += " (Copy)";
                     var pUsers = entity.Users.ToList();
                 #region Custom Before copyRole
                 #endregion Custom Before copyRole
                 var copy = new DocEntityRole(ssn)
                 {
                     Hash = Guid.NewGuid()
+                                , AdminTeam = pAdminTeam
                                 , Description = pDescription
-                                , Email = pEmail
                                 , IsInternal = pIsInternal
                                 , IsSuperAdmin = pIsSuperAdmin
                                 , Name = pName
                                 , Permissions = pPermissions
-                                , Slack = pSlack
                 };
                             foreach(var item in pApps)
                             {
