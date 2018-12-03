@@ -7234,6 +7234,25 @@
         "Type": "DateTime?",
         "UIType": ""
       },
+      "Status": {
+        "AutoCreateMissing": false,
+        "Description": "Status of this event",
+        "DisplayName": "Status",
+        "IsAudited": false,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsInsertOnly": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "Status",
+        "Order": 11,
+        "SetDefaultValue": "",
+        "Tab": "Event",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
       "Teams": {
         "Description": "Teams affected",
         "DisplayName": "Teams",

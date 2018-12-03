@@ -103,6 +103,8 @@ namespace Services.API
                     entities = entities.Where(en => en.Processed <= request.ProcessedBefore);
                 if(!DocTools.IsNullOrEmpty(request.ProcessedAfter))
                     entities = entities.Where(en => en.Processed >= request.ProcessedAfter);
+                if(!DocTools.IsNullOrEmpty(request.Status))
+                    entities = entities.Where(en => en.Status.Contains(request.Status));
                         if(true == request.TeamsIds?.Any())
                         {
                             entities = entities.Where(en => en.Teams.Any(r => r.Id.In(request.TeamsIds)));
