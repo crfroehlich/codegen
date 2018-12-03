@@ -125,11 +125,6 @@ namespace Services.Schema
 
 
         [Field()]
-        [FieldMapping(nameof(Status))]
-        public string Status { get; set; }
-
-
-        [Field()]
         [FieldMapping(nameof(Teams))]
         public DocEntitySet<DocEntityTeam> Teams { get; private set; }
 
@@ -293,7 +288,6 @@ namespace Services.Schema
                 Hash = hash;
 
             Description = Description?.TrimAndPruneSpaces();
-            Status = Status?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
             {
@@ -423,7 +417,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.AuditRecordId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.AuditRecordId))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Description))))
                 .ForMember(dest => dest.Processed, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Processed))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Status))))
                 .ForMember(dest => dest.Teams, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Teams))))
                 .ForMember(dest => dest.TeamsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.TeamsCount))))
                 .ForMember(dest => dest.Updates, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Updates))))
