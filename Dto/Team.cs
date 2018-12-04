@@ -50,11 +50,6 @@ namespace Services.Dto
 
         public TeamBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(AdminRoles), Description = "Role", IsRequired = false)]
-        public List<Reference> AdminRoles { get; set; }
-        public int? AdminRolesCount { get; set; }
-
-
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -80,10 +75,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
         public int? ScopesCount { get; set; }
-
-
-        [ApiMember(Name = nameof(Settings), Description = "TeamSettings", IsRequired = false)]
-        public TeamSettings Settings { get; set; }
 
 
         [ApiMember(Name = nameof(Slack), Description = "string", IsRequired = false)]
@@ -133,7 +124,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdminRoles),nameof(AdminRolesCount),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Email),nameof(Gestalt),nameof(IsInternal),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Slack),nameof(Updated),nameof(Updates),nameof(UpdatesCount),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Email),nameof(Gestalt),nameof(IsInternal),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Slack),nameof(Updated),nameof(Updates),nameof(UpdatesCount),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -156,7 +147,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(AdminRoles), nameof(AdminRolesCount), nameof(Scopes), nameof(ScopesCount), nameof(Updates), nameof(UpdatesCount), nameof(Users), nameof(UsersCount)
+            nameof(Scopes), nameof(ScopesCount), nameof(Updates), nameof(UpdatesCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
     }
@@ -170,7 +161,6 @@ namespace Services.Dto
     [Route("/profile/team/search", "GET, POST, DELETE")]
     public partial class TeamSearch : Search<Team>
     {
-        public List<int> AdminRolesIds { get; set; }
         public string Description { get; set; }
         public string Email { get; set; }
         public bool? IsInternal { get; set; }
@@ -178,7 +168,6 @@ namespace Services.Dto
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
         public List<int> ScopesIds { get; set; }
-        public string Settings { get; set; }
         public string Slack { get; set; }
         public List<int> UpdatesIds { get; set; }
         public List<int> UsersIds { get; set; }
@@ -197,14 +186,12 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Updated))); }
         
-        public bool doAdminRoles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.AdminRoles))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Description))); }
         public bool doEmail { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Email))); }
         public bool doIsInternal { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.IsInternal))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Name))); }
         public bool doOwner { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Owner))); }
         public bool doScopes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Scopes))); }
-        public bool doSettings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Settings))); }
         public bool doSlack { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Slack))); }
         public bool doUpdates { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Updates))); }
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Team.Users))); }
@@ -217,8 +204,6 @@ namespace Services.Dto
     [Route("/profile/team/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TeamBatch : List<Team> { }
 
-    [Route("/team/{Id}/role", "GET, POST, DELETE")]
-    [Route("/profile/team/{Id}/role", "GET, POST, DELETE")]
     [Route("/team/{Id}/scope", "GET, POST, DELETE")]
     [Route("/profile/team/{Id}/scope", "GET, POST, DELETE")]
     [Route("/team/{Id}/update", "GET, POST, DELETE")]
@@ -244,8 +229,6 @@ namespace Services.Dto
     }
 
 
-    [Route("/team/{Id}/role/version", "GET")]
-    [Route("/profile/team/{Id}/role/version", "GET")]
     [Route("/team/{Id}/scope/version", "GET")]
     [Route("/profile/team/{Id}/scope/version", "GET")]
     [Route("/team/{Id}/update/version", "GET")]

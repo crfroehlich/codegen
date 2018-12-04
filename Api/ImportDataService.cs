@@ -119,22 +119,6 @@ namespace Services.API
                     entities = entities.Where(en => request.ImportTable.Value == en.ImportTable);
                 if(request.ImportText.HasValue)
                     entities = entities.Where(en => request.ImportText.Value == en.ImportText);
-                if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Id))
-                {
-                    entities = entities.Where(en => en.ImportType.Id == request.ImportType.Id );
-                }
-                if(true == request.ImportTypeIds?.Any())
-                {
-                    entities = entities.Where(en => en.ImportType.Id.In(request.ImportTypeIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Name))
-                {
-                    entities = entities.Where(en => en.ImportType.Name == request.ImportType.Name );
-                }
-                if(true == request.ImportTypeNames?.Any())
-                {
-                    entities = entities.Where(en => en.ImportType.Name.In(request.ImportTypeNames));
-                }
                 if(request.IsLegacy.HasValue)
                     entities = entities.Where(en => request.IsLegacy.Value == en.IsLegacy);
                 if(request.Order.HasValue)
@@ -290,7 +274,6 @@ namespace Services.API
             var pImportNewName = dtoSource.ImportNewName;
             var pImportTable = dtoSource.ImportTable;
             var pImportText = dtoSource.ImportText;
-            DocEntityLookupTable pImportType = GetLookup(DocConstantLookupTable.STUDYIMPORTTYPE, dtoSource.ImportType?.Name, dtoSource.ImportType?.Id);
             var pIsLegacy = dtoSource.IsLegacy;
             var pOrder = dtoSource.Order;
             var pReferenceId = dtoSource.ReferenceId;
@@ -397,15 +380,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(dtoSource, pImportText, nameof(dtoSource.ImportText)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ImportText), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.ImportText));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pImportType, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.ImportType)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pImportType, entity.ImportType, nameof(dtoSource.ImportType)))
-                    entity.ImportType = pImportType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pImportType, nameof(dtoSource.ImportType)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ImportType), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.ImportType));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsLegacy, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.IsLegacy)))
@@ -618,7 +592,6 @@ namespace Services.API
                     var pImportNewName = entity.ImportNewName;
                     var pImportTable = entity.ImportTable;
                     var pImportText = entity.ImportText;
-                    var pImportType = entity.ImportType;
                     var pIsLegacy = entity.IsLegacy;
                     var pOrder = entity.Order;
                     var pReferenceId = entity.ReferenceId;
@@ -640,7 +613,6 @@ namespace Services.API
                                 , ImportNewName = pImportNewName
                                 , ImportTable = pImportTable
                                 , ImportText = pImportText
-                                , ImportType = pImportType
                                 , IsLegacy = pIsLegacy
                                 , Order = pOrder
                                 , ReferenceId = pReferenceId

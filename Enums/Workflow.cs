@@ -65,14 +65,10 @@ namespace Services.Enums
         ONTOLOGY_PROJECT,
         [EnumMember(Value = DocConstantWorkflow.PICO_RATING)]
         PICO_RATING,
-        [EnumMember(Value = DocConstantWorkflow.R_SNIPPET)]
-        R_SNIPPET,
         [EnumMember(Value = DocConstantWorkflow.RAPID_REVIEW)]
         RAPID_REVIEW,
         [EnumMember(Value = DocConstantWorkflow.RESPONSE_LETTER)]
         RESPONSE_LETTER,
-        [EnumMember(Value = DocConstantWorkflow.RMD_SNIPPET)]
-        RMD_SNIPPET,
         [EnumMember(Value = DocConstantWorkflow.SURVEY_DESIGN)]
         SURVEY_DESIGN,
         [EnumMember(Value = DocConstantWorkflow.SURVEY_WIZARD)]
@@ -109,10 +105,8 @@ namespace Services.Enums
         public const string NAMESET = "Nameset";
         public const string ONTOLOGY_PROJECT = "Ontology Project";
         public const string PICO_RATING = "PICO Rating";
-        public const string R_SNIPPET = "R Snippet";
         public const string RAPID_REVIEW = "Rapid Review";
         public const string RESPONSE_LETTER = "Response Letter";
-        public const string RMD_SNIPPET = "RMD Snippet";
         public const string SURVEY_DESIGN = "Survey Design";
         public const string SURVEY_WIZARD = "Survery Wizard";
         public const string SYSTEMATIC_REVIEW = "Systematic Review";

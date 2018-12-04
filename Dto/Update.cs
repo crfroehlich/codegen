@@ -54,14 +54,6 @@ namespace Services.Dto
         public string Body { get; set; }
 
 
-        [ApiMember(Name = nameof(DeliveryStatus), Description = "string", IsRequired = false)]
-        public string DeliveryStatus { get; set; }
-
-
-        [ApiMember(Name = nameof(EmailAttempts), Description = "int?", IsRequired = false)]
-        public int? EmailAttempts { get; set; }
-
-
         [ApiMember(Name = nameof(EmailSent), Description = "DateTime?", IsRequired = false)]
         public DateTime? EmailSent { get; set; }
 
@@ -105,8 +97,10 @@ namespace Services.Dto
 
     }
 
-    [Route("/update/{Id}", "GET, PATCH")]
-    [Route("/profile/update/{Id}", "GET, PATCH")]
+    [Route("/update", "POST")]
+    [Route("/profile/update", "POST")]
+    [Route("/update/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/update/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Update : UpdateBase, IReturn<Update>, IDto
     {
         public Update()
@@ -134,7 +128,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Body),nameof(Created),nameof(CreatorId),nameof(DeliveryStatus),nameof(EmailAttempts),nameof(EmailSent),nameof(Events),nameof(EventsCount),nameof(Gestalt),nameof(Link),nameof(Locked),nameof(Priority),nameof(Read),nameof(SlackSent),nameof(Subject),nameof(Team),nameof(TeamId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Body),nameof(Created),nameof(CreatorId),nameof(EmailSent),nameof(Events),nameof(EventsCount),nameof(Gestalt),nameof(Link),nameof(Locked),nameof(Priority),nameof(Read),nameof(SlackSent),nameof(Subject),nameof(Team),nameof(TeamId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -162,6 +156,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
+    [Route("/Update/{Id}/copy", "POST")]
+    [Route("/profile/Update/{Id}/copy", "POST")]
+    public partial class UpdateCopy : Update {}
     [Route("/update", "GET")]
     [Route("/profile/update", "GET")]
     [Route("/update/search", "GET, POST, DELETE")]
@@ -169,8 +166,6 @@ namespace Services.Dto
     public partial class UpdateSearch : Search<Update>
     {
         public string Body { get; set; }
-        public string DeliveryStatus { get; set; }
-        public int? EmailAttempts { get; set; }
         public DateTime? EmailSent { get; set; }
         public DateTime? EmailSentAfter { get; set; }
         public DateTime? EmailSentBefore { get; set; }
@@ -204,8 +199,6 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.Updated))); }
         
         public bool doBody { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.Body))); }
-        public bool doDeliveryStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.DeliveryStatus))); }
-        public bool doEmailAttempts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.EmailAttempts))); }
         public bool doEmailSent { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.EmailSent))); }
         public bool doEvents { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.Events))); }
         public bool doLink { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.Link))); }

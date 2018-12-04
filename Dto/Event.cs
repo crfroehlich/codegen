@@ -85,8 +85,10 @@ namespace Services.Dto
 
     }
 
-    [Route("/event/{Id}", "GET")]
-    [Route("/profile/event/{Id}", "GET")]
+    [Route("/event", "POST")]
+    [Route("/profile/event", "POST")]
+    [Route("/event/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/event/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Event : EventBase, IReturn<Event>, IDto
     {
         public Event()
@@ -142,6 +144,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
+    [Route("/Event/{Id}/copy", "POST")]
+    [Route("/profile/Event/{Id}/copy", "POST")]
+    public partial class EventCopy : Event {}
     [Route("/event", "GET")]
     [Route("/profile/event", "GET")]
     [Route("/event/search", "GET, POST, DELETE")]

@@ -50,12 +50,6 @@ namespace Services.Dto
 
         public RoleBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(AdminTeam), Description = "Team", IsRequired = false)]
-        public Reference AdminTeam { get; set; }
-        [ApiMember(Name = nameof(AdminTeamId), Description = "Primary Key of Team", IsRequired = false)]
-        public int? AdminTeamId { get; set; }
-
-
         [ApiMember(Name = nameof(Apps), Description = "App", IsRequired = false)]
         public List<Reference> Apps { get; set; }
         public int? AppsCount { get; set; }
@@ -63,6 +57,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = true)]
         public string Description { get; set; }
+
+
+        [ApiMember(Name = nameof(Email), Description = "string", IsRequired = false)]
+        public string Email { get; set; }
 
 
         [ApiMember(Name = nameof(FeatureSets), Description = "FeatureSet", IsRequired = false)]
@@ -89,6 +87,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Permissions), Description = "Permissions", IsRequired = false)]
         public Permissions Permissions { get; set; }
+
+
+        [ApiMember(Name = nameof(Slack), Description = "string", IsRequired = false)]
+        public string Slack { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
@@ -129,7 +131,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdminTeam),nameof(AdminTeamId),nameof(Apps),nameof(AppsCount),nameof(Created),nameof(CreatorId),nameof(Description),nameof(FeatureSets),nameof(FeatureSetsCount),nameof(Gestalt),nameof(IsInternal),nameof(IsSuperAdmin),nameof(Locked),nameof(Name),nameof(Pages),nameof(PagesCount),nameof(Permissions),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Apps),nameof(AppsCount),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Email),nameof(FeatureSets),nameof(FeatureSetsCount),nameof(Gestalt),nameof(IsInternal),nameof(IsSuperAdmin),nameof(Locked),nameof(Name),nameof(Pages),nameof(PagesCount),nameof(Permissions),nameof(Slack),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -166,16 +168,16 @@ namespace Services.Dto
     [Route("/profile/role/search", "GET, POST, DELETE")]
     public partial class RoleSearch : Search<Role>
     {
-        public Reference AdminTeam { get; set; }
-        public List<int> AdminTeamIds { get; set; }
         public List<int> AppsIds { get; set; }
         public string Description { get; set; }
+        public string Email { get; set; }
         public List<int> FeatureSetsIds { get; set; }
         public bool? IsInternal { get; set; }
         public bool? IsSuperAdmin { get; private set; }
         public string Name { get; set; }
         public List<int> PagesIds { get; set; }
         public string Permissions { get; set; }
+        public string Slack { get; set; }
         public List<int> UsersIds { get; set; }
     }
     
@@ -192,15 +194,16 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Updated))); }
         
-        public bool doAdminTeam { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.AdminTeam))); }
         public bool doApps { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Apps))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Description))); }
+        public bool doEmail { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Email))); }
         public bool doFeatureSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.FeatureSets))); }
         public bool doIsInternal { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.IsInternal))); }
         public bool doIsSuperAdmin { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.IsSuperAdmin))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Name))); }
         public bool doPages { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Pages))); }
         public bool doPermissions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Permissions))); }
+        public bool doSlack { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Slack))); }
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Users))); }
     }
 

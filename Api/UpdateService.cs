@@ -89,10 +89,6 @@ namespace Services.API
 
                 if(!DocTools.IsNullOrEmpty(request.Body))
                     entities = entities.Where(en => en.Body.Contains(request.Body));
-                if(!DocTools.IsNullOrEmpty(request.DeliveryStatus))
-                    entities = entities.Where(en => en.DeliveryStatus.Contains(request.DeliveryStatus));
-                if(request.EmailAttempts.HasValue)
-                    entities = entities.Where(en => request.EmailAttempts.Value == en.EmailAttempts);
                 if(!DocTools.IsNullOrEmpty(request.EmailSent))
                     entities = entities.Where(en => null != en.EmailSent && request.EmailSent.Value.Date == en.EmailSent.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.EmailSentBefore))
@@ -241,8 +237,6 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pBody = dtoSource.Body;
-            var pDeliveryStatus = dtoSource.DeliveryStatus;
-            var pEmailAttempts = dtoSource.EmailAttempts;
             var pEmailSent = dtoSource.EmailSent;
             var pEvents = dtoSource.Events?.ToList();
             var pLink = dtoSource.Link;
@@ -278,27 +272,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(dtoSource, pBody, nameof(dtoSource.Body)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Body), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Body));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDeliveryStatus, permission, DocConstantModelName.UPDATE, nameof(dtoSource.DeliveryStatus)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDeliveryStatus, entity.DeliveryStatus, nameof(dtoSource.DeliveryStatus)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.DeliveryStatus)} cannot be modified once set.");
-                    entity.DeliveryStatus = pDeliveryStatus;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDeliveryStatus, nameof(dtoSource.DeliveryStatus)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DeliveryStatus), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DeliveryStatus));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pEmailAttempts, permission, DocConstantModelName.UPDATE, nameof(dtoSource.EmailAttempts)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pEmailAttempts, entity.EmailAttempts, nameof(dtoSource.EmailAttempts)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.EmailAttempts)} cannot be modified once set.");
-                    if(null != pEmailAttempts)
-                        entity.EmailAttempts = (int) pEmailAttempts;
-                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pEmailAttempts, nameof(dtoSource.EmailAttempts)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.EmailAttempts), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.EmailAttempts));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pEmailSent, permission, DocConstantModelName.UPDATE, nameof(dtoSource.EmailSent)))
@@ -435,6 +408,123 @@ namespace Services.API
 
             return ret;
         }
+        public Update Post(Update dtoSource)
+        {
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+
+            Update ret = null;
+
+            Execute.Run(ssn =>
+            {
+                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Update")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+            });
+
+            return ret;
+        }
+   
+        public List<Update> Post(UpdateBatch request)
+        {
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+
+            var ret = new List<Update>();
+            var errors = new List<ResponseError>();
+            var errorMap = new Dictionary<string, string>();
+            var i = 0;
+            request.ForEach(dto =>
+            {
+                try
+                {
+                    var obj = Post(dto) as Update;
+                    ret.Add(obj);
+                    errorMap[$"{i}"] = $"{obj.Id}";
+                }
+                catch (Exception ex)
+                {
+                    errorMap[$"{i}"] = null;
+                    errors.Add(new ResponseError()
+                    {
+                        Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
+                        ErrorCode = $"{i}"
+                    });
+                }
+                i += 1;
+            });
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{ret.Count} succeeded");
+            if (errors.Any())
+            {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
+                            ErrorCode = nameof(HttpError),
+                            Meta = errorMap,
+                            Message = "Incomplete request",
+                            Errors = errors
+                        }
+                    }
+                };
+            }
+            return ret;
+        }
+
+        public Update Post(UpdateCopy request)
+        {
+            Update ret = null;
+            Execute.Run(ssn =>
+            {
+                var entity = DocEntityUpdate.GetUpdate(request?.Id);
+                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+                
+                    var pBody = entity.Body;
+                    var pEmailSent = entity.EmailSent;
+                    var pEvents = entity.Events.ToList();
+                    var pLink = entity.Link;
+                    if(!DocTools.IsNullOrEmpty(pLink))
+                        pLink += " (Copy)";
+                    var pPriority = entity.Priority;
+                    var pRead = entity.Read;
+                    var pSlackSent = entity.SlackSent;
+                    var pSubject = entity.Subject;
+                    if(!DocTools.IsNullOrEmpty(pSubject))
+                        pSubject += " (Copy)";
+                    var pTeam = entity.Team;
+                    var pUser = entity.User;
+                #region Custom Before copyUpdate
+                #endregion Custom Before copyUpdate
+                var copy = new DocEntityUpdate(ssn)
+                {
+                    Hash = Guid.NewGuid()
+                                , Body = pBody
+                                , EmailSent = pEmailSent
+                                , Link = pLink
+                                , Priority = pPriority
+                                , Read = pRead
+                                , SlackSent = pSlackSent
+                                , Subject = pSubject
+                                , Team = pTeam
+                                , User = pUser
+                };
+                            foreach(var item in pEvents)
+                            {
+                                entity.Events.Add(item);
+                            }
+
+                #region Custom After copyUpdate
+                #endregion Custom After copyUpdate
+                copy.SaveChanges(DocConstantPermission.ADD);
+                ret = copy.ToDto();
+            });
+            return ret;
+        }
 
 
         public List<Update> Put(UpdateBatch request)
@@ -508,6 +598,79 @@ namespace Services.API
             return ret;
         }
 
+        public void Delete(UpdateBatch request)
+        {
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+
+            var errors = new List<ResponseError>();
+            var errorMap = new Dictionary<string, string>();
+            var i = 0;
+            request.ForEach(dto =>
+            {
+                try
+                {
+                    Delete(dto);
+                    errorMap[$"{i}"] = $"true";
+                }
+                catch (Exception ex)
+                {
+                    errorMap[$"{i}"] = $"false";
+                    errors.Add(new ResponseError()
+                    {
+                        Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
+                        ErrorCode = $"{i}"
+                    });
+                }
+                i += 1;
+            });
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{request.Count-errors.Count} succeeded");
+            if (errors.Any())
+            {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
+                            ErrorCode = nameof(HttpError),
+                            Meta = errorMap,
+                            Message = "Incomplete request",
+                            Errors = errors
+                        }
+                    }
+                };
+            }
+        }
+
+        public void Delete(Update request)
+        {
+            Execute.Run(ssn =>
+            {
+                var en = DocEntityUpdate.GetUpdate(request?.Id);
+
+                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Update could be found for Id {request?.Id}.");
+                if(en.IsRemoved) return;
+                
+                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                
+                en.Remove();
+            });
+        }
+
+        public void Delete(UpdateSearch request)
+        {
+            var matches = Get(request) as List<Update>;
+            if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
+
+            Execute.Run(ssn =>
+            {
+                matches.ForEach(match =>
+                {
+                    Delete(match);
+                });
+            });
+        }
         public object Get(UpdateJunction request)
         {
             if(!(request.Id > 0))
@@ -542,6 +705,9 @@ namespace Services.API
             {
                 switch(method)
                 {
+                case "event":
+                    ret = GetUpdateEventVersion(request);
+                    break;
                 }
             });
             return ret;
@@ -555,6 +721,19 @@ namespace Services.API
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.UPDATE, columnName: "Events", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Update and Event");
              return en?.Events.Take(take).Skip(skip).ConvertFromEntityList<DocEntityEvent,Event>(new List<Event>());
+        }
+
+        private List<Version> GetUpdateEventVersion(UpdateJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityUpdate.GetUpdate(request.Id);
+                ret = en?.Events.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
         }
         
         public object Post(UpdateJunction request)
@@ -574,11 +753,35 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
+                case "event":
+                    ret = _PostUpdateEvent(request);
+                    break;
                 }
             });
             return ret;
         }
 
+
+        private object _PostUpdateEvent(UpdateJunction request)
+        {
+            var entity = DocEntityUpdate.GetUpdate(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Update found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Update");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityEvent.GetEvent(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.EVENT, columnName: "Events")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Events property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Update with objects that do not exist. No matching Event could be found for {id}.");
+                entity.Events.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         public object Delete(UpdateJunction request)
         {
@@ -597,11 +800,33 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
+                case "event":
+                    ret = _DeleteUpdateEvent(request);
+                    break;
                 }
             });
             return ret;
         }
 
+
+        private object _DeleteUpdateEvent(UpdateJunction request)
+        {
+            var entity = DocEntityUpdate.GetUpdate(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Update found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Update");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityEvent.GetEvent(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.EVENT, columnName: "Events"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Update and Event");
+                if(null != relationship && false == relationship.IsRemoved) entity.Events.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         private Update GetUpdate(Update request)
         {

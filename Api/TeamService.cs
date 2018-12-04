@@ -140,10 +140,6 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                        if(true == request.AdminRolesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.AdminRoles.Any(r => r.Id.In(request.AdminRolesIds)));
-                        }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(!DocTools.IsNullOrEmpty(request.Email))
@@ -301,14 +297,12 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pAdminRoles = dtoSource.AdminRoles?.ToList();
             var pDescription = dtoSource.Description;
             var pEmail = dtoSource.Email;
             var pIsInternal = dtoSource.IsInternal;
             var pName = dtoSource.Name;
             var pOwner = (dtoSource.Owner?.Id > 0) ? DocEntityUser.GetUser(dtoSource.Owner.Id) : null;
             var pScopes = dtoSource.Scopes?.ToList();
-            var pSettings = dtoSource.Settings;
             var pSlack = dtoSource.Slack;
             var pUpdates = dtoSource.Updates?.ToList();
             var pUsers = dtoSource.Users?.ToList();
@@ -375,15 +369,6 @@ namespace Services.API
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Owner));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<TeamSettings>(currentUser, dtoSource, pSettings, permission, DocConstantModelName.TEAM, nameof(dtoSource.Settings)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pSettings, entity.Settings, nameof(dtoSource.Settings)))
-                    entity.Settings = DocSerialize<TeamSettings>.ToString(pSettings);
-                if(DocPermissionFactory.IsRequested<TeamSettings>(dtoSource, pSettings, nameof(dtoSource.Settings)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Settings), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Settings));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pSlack, permission, DocConstantModelName.TEAM, nameof(dtoSource.Slack)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pSlack, entity.Slack, nameof(dtoSource.Slack)))
@@ -398,50 +383,6 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pAdminRoles, permission, DocConstantModelName.TEAM, nameof(dtoSource.AdminRoles)))
-            {
-                if (true == pAdminRoles?.Any() )
-                {
-                    var requestedAdminRoles = pAdminRoles.Select(p => p.Id).Distinct().ToList();
-                    var existsAdminRoles = Execute.SelectAll<DocEntityRole>().Where(e => e.Id.In(requestedAdminRoles)).Select( e => e.Id ).ToList();
-                    if (existsAdminRoles.Count != requestedAdminRoles.Count)
-                    {
-                        var nonExists = requestedAdminRoles.Where(id => existsAdminRoles.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection AdminRoles with objects that do not exist. No matching AdminRoles(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedAdminRoles.Where(id => entity.AdminRoles.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.AdminRoles)} to {nameof(Team)}");
-                        entity.AdminRoles.Add(target);
-                    });
-                    var toRemove = entity.AdminRoles.Where(e => requestedAdminRoles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.AdminRoles)} from {nameof(Team)}");
-                        entity.AdminRoles.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.AdminRoles.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.AdminRoles)} from {nameof(Team)}");
-                        entity.AdminRoles.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pAdminRoles, nameof(dtoSource.AdminRoles)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.AdminRoles), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.AdminRoles));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pScopes, permission, DocConstantModelName.TEAM, nameof(dtoSource.Scopes)))
             {
                 if (true == pScopes?.Any() )
@@ -655,7 +596,6 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pAdminRoles = entity.AdminRoles.ToList();
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
@@ -668,7 +608,6 @@ namespace Services.API
                         pName += " (Copy)";
                     var pOwner = entity.Owner;
                     var pScopes = entity.Scopes.ToList();
-                    var pSettings = entity.Settings;
                     var pSlack = entity.Slack;
                     if(!DocTools.IsNullOrEmpty(pSlack))
                         pSlack += " (Copy)";
@@ -684,14 +623,8 @@ namespace Services.API
                                 , IsInternal = pIsInternal
                                 , Name = pName
                                 , Owner = pOwner
-                                , Settings = pSettings
                                 , Slack = pSlack
                 };
-                            foreach(var item in pAdminRoles)
-                            {
-                                entity.AdminRoles.Add(item);
-                            }
-
                             foreach(var item in pScopes)
                             {
                                 entity.Scopes.Add(item);
@@ -874,9 +807,6 @@ namespace Services.API
             {
                 switch(method)
                 {
-                case "role":
-                    ret = _GetTeamRole(request, skip, take);
-                    break;
                 case "scope":
                     ret = _GetTeamScope(request, skip, take);
                     break;
@@ -903,9 +833,6 @@ namespace Services.API
             {
                 switch(method)
                 {
-                case "role":
-                    ret = GetTeamRoleVersion(request);
-                    break;
                 case "scope":
                     ret = GetTeamScopeVersion(request);
                     break;
@@ -920,28 +847,6 @@ namespace Services.API
             return ret;
         }
         
-
-        private object _GetTeamRole(TeamJunction request, int skip, int take)
-        {
-             DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
-             var en = DocEntityTeam.GetTeam(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "AdminRoles", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Role");
-             return en?.AdminRoles.Take(take).Skip(skip).ConvertFromEntityList<DocEntityRole,Role>(new List<Role>());
-        }
-
-        private List<Version> GetTeamRoleVersion(TeamJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityTeam.GetTeam(request.Id);
-                ret = en?.AdminRoles.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
 
         private object _GetTeamScope(TeamJunction request, int skip, int take)
         {
@@ -1026,9 +931,6 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
-                case "role":
-                    ret = _PostTeamRole(request);
-                    break;
                 case "scope":
                     ret = _PostTeamScope(request);
                     break;
@@ -1043,27 +945,6 @@ namespace Services.API
             return ret;
         }
 
-
-        private object _PostTeamRole(TeamJunction request)
-        {
-            var entity = DocEntityTeam.GetTeam(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityRole.GetRole(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "AdminRoles")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the AdminRoles property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Team with objects that do not exist. No matching Role could be found for {id}.");
-                entity.AdminRoles.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private object _PostTeamScope(TeamJunction request)
         {
@@ -1145,9 +1026,6 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
-                case "role":
-                    ret = _DeleteTeamRole(request);
-                    break;
                 case "scope":
                     ret = _DeleteTeamScope(request);
                     break;
@@ -1162,25 +1040,6 @@ namespace Services.API
             return ret;
         }
 
-
-        private object _DeleteTeamRole(TeamJunction request)
-        {
-            var entity = DocEntityTeam.GetTeam(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityRole.GetRole(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "AdminRoles"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Team and Role");
-                if(null != relationship && false == relationship.IsRemoved) entity.AdminRoles.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private object _DeleteTeamScope(TeamJunction request)
         {
