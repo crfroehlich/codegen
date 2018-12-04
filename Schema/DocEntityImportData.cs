@@ -36,30 +36,17 @@ using ValueType = Services.Dto.ValueType;
 namespace Services.Schema
 {
     [TableMapping(DocConstantModelName.IMPORTDATA)]
-
     public partial class DocEntityImportData : DocEntityBase
     {
         private const string IMPORTDATA_CACHE = "ImportDataCache";
 
         #region Constructor
+        public DocEntityImportData(Session session) : base(session) {}
 
-        /// <summary>
-        ///    Initializes a new instance of this class.
-        /// </summary>
-        /// <param name="session">The session.</param>
-        public DocEntityImportData(Session session)
-            : base(session) { }
-
-        /// <summary>
-        ///    Initializes a new instance of this class as a default, session-less object.
-        /// </summary>
-        public DocEntityImportData()
-            : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
-
+        public DocEntityImportData() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
         #region VisibleFields
-        
         private List<string> __vf;
         private List<string> _visibleFields
         {
@@ -77,11 +64,9 @@ namespace Services.Schema
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
         }
-        
         #endregion VisibleFields
 
         #region Static Members
-
         public static DocEntityImportData GetImportData(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? GetImportData(reference.Id) : null;
@@ -120,11 +105,9 @@ namespace Services.Schema
             }
             return ret;
         }
-
         #endregion Static Members
 
         #region Properties
-
         [Field()]
         [FieldMapping(nameof(CompletedOn))]
         public DateTime? CompletedOn { get; set; }
@@ -179,6 +162,12 @@ namespace Services.Schema
         public bool ImportText { get; set; }
 
 
+        [Field()]
+        [FieldMapping(nameof(ImportType))]
+        public DocEntityLookupTable ImportType { get; set; }
+        public int? ImportTypeId { get { return ImportType?.Id; } private set { var noid = value; } }
+
+
         [Field(Nullable = false, DefaultValue = false)]
         [FieldMapping(nameof(IsLegacy))]
         public bool IsLegacy { get; set; }
@@ -218,25 +207,22 @@ namespace Services.Schema
 
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
-        [FieldMapping(DocEntityConstants.PropertyName.GESTALT)]
         public override string Gestalt { get; set; }
 
-        [Field()]
-        [FieldMapping(BasePropertyName.HASH)]
+        [Field]
         public override Guid Hash { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
         public override int VersionNo { get; set; }
 
-        [Field()]
+        [Field]
         public override DateTime? Created { get; set; }
 
-        [Field()]
+        [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field()]
+        [Field]
         public override bool Locked { get; set; }
-
         private bool? _isNewlyLocked;
         private bool? _isModified;
         
@@ -255,20 +241,10 @@ namespace Services.Schema
         #endregion Properties
 
         #region Overrides of DocEntity
-
-        /// <summary>
-        ///    The Model name of this class is <see cref="DocConstantModelName.IMPORTDATA" />
-        /// </summary>
         public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.IMPORTDATA;
 
-        /// <summary>
-        ///    The Model name of this instance is always the same as <see cref="MODEL_NAME" />
-        /// </summary>
-        public override DocConstantModelName ModelName
-        {
-            get { return MODEL_NAME; }
-        }
-        
+        public override DocConstantModelName ModelName => MODEL_NAME;
+
         public const string CACHE_KEY_PREFIX = "FindImportDatas";
 
 
@@ -282,19 +258,12 @@ namespace Services.Schema
             }
             return _model;
         }
-        /// <summary>
-        ///    Converts this Domain object to its corresponding Model.
-        /// </summary>
-        public override T ToModel<T>()
-        {
-            return  (T) ((IDocModel) ToImportData());
 
-        }
+        public override T ToModel<T>() =>  (T) ((IDocModel) ToImportData());
 
         #endregion Overrides of DocEntity
 
         #region Entity overrides
-
         protected override object AdjustFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
             if (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name))
@@ -306,7 +275,7 @@ namespace Services.Schema
                 return oldValue;
             }
         }
-        
+
         ///    Called before field value is about to be changed. This event is raised only on actual change attempt (i.e. when new value differs from the current one).
         protected override void OnSettingFieldValue(FieldInfo fieldInfo, object value)
         {
@@ -377,12 +346,11 @@ namespace Services.Schema
             FlushCache();
 
             _validated = true;
-            
+
         }
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
-
             var hash = GetGuid();
             if(Hash != hash)
                 Hash = hash;
@@ -441,11 +409,9 @@ namespace Services.Schema
             _OnFlushCache();
             DocCacheClient.RemoveSearch("ImportData");
         }
-
         #endregion Entity overrides
 
         #region Validation
-
         public DocValidationMessage ValidationMessage
         {
             get
@@ -453,6 +419,11 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
+                if(null != ImportType && ImportType?.Enum?.Name != "StudyImportType")
+                {
+                    isValid = false;
+                    message += " ImportType is a " + ImportType?.Enum?.Name + ", but must be a StudyImportType.";
+                }
                 if(DocTools.IsNullOrEmpty(IsLegacy))
                 {
                     isValid = false;
@@ -463,7 +434,7 @@ namespace Services.Schema
                     isValid = false;
                     message += " ReferenceId is a required property.";
                 }
-                if(null == Status)
+                if(DocTools.IsNullOrEmpty(Status))
                 {
                     isValid = false;
                     message += " Status is a required property.";
@@ -480,13 +451,10 @@ namespace Services.Schema
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;
             }
-
         }
-
         #endregion Validation
 
         #region Hash
-
 
         public static Guid GetGuid(DocImportData thing)
         {
@@ -534,11 +502,9 @@ namespace Services.Schema
         {
             return GetGuid(this);
         }
-
         #endregion Hash
 
         #region Converters
-
         public override string ToString() => _ToString();
 
         public override Reference ToReference()
@@ -550,7 +516,6 @@ namespace Services.Schema
         public ImportData ToDto() => Mapper.Map<DocEntityImportData, ImportData>(this);
 
         public override IDto ToIDto() => ToDto();
-
         #endregion Converters
     }
 
@@ -584,6 +549,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.ImportNewName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportNewName))))
                 .ForMember(dest => dest.ImportTable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportTable))))
                 .ForMember(dest => dest.ImportText, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportText))))
+                .ForMember(dest => dest.ImportType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportType))))
+                .ForMember(dest => dest.ImportTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportTypeId))))
                 .ForMember(dest => dest.IsLegacy, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.IsLegacy))))
                 .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.Order))))
                 .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ReferenceId))))
@@ -607,6 +574,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.ImportNewName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportNewName))))
                 .ForMember(dest => dest.ImportTable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportTable))))
                 .ForMember(dest => dest.ImportText, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportText))))
+                .ForMember(dest => dest.ImportType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportType))))
                 .ForMember(dest => dest.IsLegacy, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.IsLegacy))))
                 .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.Order))))
                 .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ReferenceId))))

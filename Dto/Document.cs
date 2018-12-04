@@ -129,7 +129,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
         public Reference ImportType { get; set; }
         [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? ImportTypeId { get; set; }
@@ -339,7 +339,7 @@ namespace Services.Dto
         public List<int> ImportIds { get; set; }
         public Reference ImportType { get; set; }
         public List<int> ImportTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
         public List<string> ImportTypeNames { get; set; }
         public string Institution { get; set; }
         public string ISSN { get; set; }

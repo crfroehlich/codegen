@@ -29,6 +29,8 @@ namespace Services.Enums
         CALENDARDATE,
         [EnumMember(Value = DocConstantValueType.CALENDARDATES)]
         CALENDARDATES,
+        [EnumMember(Value = DocConstantValueType.CONTACT)]
+        CONTACT,
         [EnumMember(Value = DocConstantValueType.DATETIME)]
         DATETIME,
         [EnumMember(Value = DocConstantValueType.DATETIMERANGE)]
@@ -39,6 +41,10 @@ namespace Services.Enums
         DECIMALRANGE,
         [EnumMember(Value = DocConstantValueType.DESIGNNESTEDSTUDYIDLINK)]
         DESIGNNESTEDSTUDYIDLINK,
+        [EnumMember(Value = DocConstantValueType.EVENTCOUNTS)]
+        EVENTCOUNTS,
+        [EnumMember(Value = DocConstantValueType.FACILITY)]
+        FACILITY,
         [EnumMember(Value = DocConstantValueType.FIXEDDOSEINTERVENTION)]
         FIXEDDOSEINTERVENTION,
         [EnumMember(Value = DocConstantValueType.FLAG)]
@@ -61,6 +67,8 @@ namespace Services.Enums
         PARTICIPANT,
         [EnumMember(Value = DocConstantValueType.PARTICIPANTS)]
         PARTICIPANTS,
+        [EnumMember(Value = DocConstantValueType.POPULATIONANALYZED)]
+        POPULATIONANALYZED,
         [EnumMember(Value = DocConstantValueType.PVALUE)]
         PVALUE,
         [EnumMember(Value = DocConstantValueType.RATE)]
@@ -69,8 +77,12 @@ namespace Services.Enums
         SETTINGLOCATION,
         [EnumMember(Value = DocConstantValueType.SETTINGLOCATIONTOTAL)]
         SETTINGLOCATIONTOTAL,
+        [EnumMember(Value = DocConstantValueType.STUDYDOC)]
+        STUDYDOC,
         [EnumMember(Value = DocConstantValueType.STUDYOBJECTIVE)]
         STUDYOBJECTIVE,
+        [EnumMember(Value = DocConstantValueType.STUDYREFERENCE)]
+        STUDYREFERENCE,
         [EnumMember(Value = DocConstantValueType.SUBGROUPDESCRIPTOR)]
         SUBGROUPDESCRIPTOR,
         [EnumMember(Value = DocConstantValueType.TIMEPOINT)]
@@ -97,11 +109,14 @@ namespace Services.Enums
         public const string BOOLEAN = "Boolean";
         public const string CALENDARDATE = "CalendarDate";
         public const string CALENDARDATES = "CalendarDates";
+        public const string CONTACT = "Contact";
         public const string DATETIME = "DateTime";
         public const string DATETIMERANGE = "DateTimeRange";
         public const string DECIMAL = "Decimal";
         public const string DECIMALRANGE = "DecimalRange";
         public const string DESIGNNESTEDSTUDYIDLINK = "DesignNestedStudyIdLink";
+        public const string EVENTCOUNTS = "EventCounts";
+        public const string FACILITY = "Facility";
         public const string FIXEDDOSEINTERVENTION = "FixedDoseIntervention";
         public const string FLAG = "Flag";
         public const string FUNDING = "Funding";
@@ -113,11 +128,14 @@ namespace Services.Enums
         public const string NPERSONS = "NPersons";
         public const string PARTICIPANT = "Participant";
         public const string PARTICIPANTS = "Participants";
+        public const string POPULATIONANALYZED = "PopulationAnalyzed";
         public const string PVALUE = "PValue";
         public const string RATE = "Rate";
         public const string SETTINGLOCATION = "SettingLocation";
         public const string SETTINGLOCATIONTOTAL = "SettingLocationTotal";
+        public const string STUDYDOC = "StudyDoc";
         public const string STUDYOBJECTIVE = "StudyObjective";
+        public const string STUDYREFERENCE = "StudyReference";
         public const string SUBGROUPDESCRIPTOR = "SubgroupDescriptor";
         public const string TIMEPOINT = "Timepoint";
         public const string TIMEPOINTS = "Timepoints";
