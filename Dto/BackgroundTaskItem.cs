@@ -50,6 +50,10 @@ namespace Services.Dto
 
         public BackgroundTaskItemBase(int? id) : this(DocConvert.ToInt(id)) {}
     
+        [ApiMember(Name = nameof(Attempts), Description = "int?", IsRequired = false)]
+        public int? Attempts { get; set; }
+
+
         [ApiMember(Name = nameof(AuditRecord), Description = "AuditRecord", IsRequired = false)]
         public Reference AuditRecord { get; set; }
         [ApiMember(Name = nameof(AuditRecordId), Description = "Primary Key of AuditRecord", IsRequired = false)]
@@ -130,7 +134,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AuditRecord),nameof(AuditRecordId),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Ended),nameof(EntityId),nameof(ExecutionTime),nameof(Gestalt),nameof(Locked),nameof(Started),nameof(Status),nameof(Succeeded),nameof(Task),nameof(TaskHistory),nameof(TaskHistoryCount),nameof(TaskId),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Attempts),nameof(AuditRecord),nameof(AuditRecordId),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Ended),nameof(EntityId),nameof(ExecutionTime),nameof(Gestalt),nameof(Locked),nameof(Started),nameof(Status),nameof(Succeeded),nameof(Task),nameof(TaskHistory),nameof(TaskHistoryCount),nameof(TaskId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -164,6 +168,7 @@ namespace Services.Dto
     [Route("/profile/backgroundtaskitem/search", "GET, POST, DELETE")]
     public partial class BackgroundTaskItemSearch : Search<BackgroundTaskItem>
     {
+        public int? Attempts { get; set; }
         public Reference AuditRecord { get; set; }
         public List<int> AuditRecordIds { get; set; }
         public string Data { get; set; }
@@ -196,6 +201,7 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Updated))); }
         
+        public bool doAttempts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Attempts))); }
         public bool doAuditRecord { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.AuditRecord))); }
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Data))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Description))); }
