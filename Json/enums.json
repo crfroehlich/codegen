@@ -31,7 +31,8 @@
     "CONFLUENCE": "Confluence",
     "BITBUCKET": "Bitbucket",
     "BAMBOO": "Bamboo",
-    "DOC_DASHBOARD": "DOC Dashboard"
+    "DOC_DASHBOARD": "DOC Dashboard",
+    "SERVE": "SERVE"
   },
   "ArmPopulationAge": {
     "MEAN_RANGE": "Mean (Range)",
@@ -1485,6 +1486,7 @@
     "RESPONSE_LETTER": "Response Letter",
     "R_SNIPPET": "R Snippet",
     "RMD_SNIPPET": "RMD Snippet",
+    "SERVE_PORTAL": "SERVE Portal",
     "SURVEY_DESIGN": "Survey Design",
     "SURVEY_WIZARD": "Survery Wizard",
     "SYSTEMATIC_REVIEW": "Systematic Review",

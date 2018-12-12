@@ -79,8 +79,8 @@ namespace Services.Dto
         public string Logs { get; set; }
 
 
-        [ApiMember(Name = nameof(Succeeded), Description = "bool", IsRequired = false)]
-        public bool Succeeded { get; set; }
+        [ApiMember(Name = nameof(Succeeded), Description = "bool?", IsRequired = false)]
+        public bool? Succeeded { get; set; }
 
 
         [ApiMember(Name = nameof(Summary), Description = "string", IsRequired = false)]

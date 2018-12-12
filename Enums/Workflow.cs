@@ -73,6 +73,8 @@ namespace Services.Enums
         RESPONSE_LETTER,
         [EnumMember(Value = DocConstantWorkflow.RMD_SNIPPET)]
         RMD_SNIPPET,
+        [EnumMember(Value = DocConstantWorkflow.SERVE_PORTAL)]
+        SERVE_PORTAL,
         [EnumMember(Value = DocConstantWorkflow.SURVEY_DESIGN)]
         SURVEY_DESIGN,
         [EnumMember(Value = DocConstantWorkflow.SURVEY_WIZARD)]
@@ -113,6 +115,7 @@ namespace Services.Enums
         public const string RAPID_REVIEW = "Rapid Review";
         public const string RESPONSE_LETTER = "Response Letter";
         public const string RMD_SNIPPET = "RMD Snippet";
+        public const string SERVE_PORTAL = "SERVE Portal";
         public const string SURVEY_DESIGN = "Survey Design";
         public const string SURVEY_WIZARD = "Survery Wizard";
         public const string SYSTEMATIC_REVIEW = "Systematic Review";

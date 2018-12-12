@@ -149,7 +149,7 @@ namespace Services.Schema
 
         [Field(DefaultValue = false)]
         [FieldMapping(nameof(Succeeded))]
-        public bool Succeeded { get; set; }
+        public bool? Succeeded { get; set; }
 
 
         [Field(Length = int.MaxValue)]

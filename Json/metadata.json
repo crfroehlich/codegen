@@ -1931,7 +1931,7 @@
     "Model": {},
     "Properties": {
       "Completed": {
-        "DefaultValue": "0",
+        "DefaultValue": 0,
         "Description": "Number of updates that processed",
         "DisplayName": "Completed",
         "IsAudited": false,
@@ -2028,7 +2028,7 @@
         "UIType": ""
       },
       "Failed": {
-        "DefaultValue": "0",
+        "DefaultValue": 0,
         "Description": "Number of failures that occurred",
         "DisplayName": "Failed",
         "IsAudited": false,
@@ -2148,7 +2148,7 @@
         "UIType": ""
       },
       "Succeeded": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the item succeeded",
         "DisplayName": "Succeeded",
         "IsAudited": false,
@@ -2163,7 +2163,7 @@
         "SetDefaultValue": "",
         "Tab": "BackgroundTaskHistory",
         "TabOrder": 0,
-        "Type": "bool",
+        "Type": "bool?",
         "UIType": ""
       },
       "Summary": {
