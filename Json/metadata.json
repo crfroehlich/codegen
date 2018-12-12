@@ -7527,6 +7527,24 @@
         "Type": "string",
         "UIType": ""
       },
+      "PermissionTemplate": {
+        "Description": "Permissions template to be used when assigning this feature to a Role",
+        "DisplayName": "Permission Template",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsJSON": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Length": "int.MaxValue",
+        "Name": "PermissionTemplate",
+        "Order": 998,
+        "SetDefaultValue": "",
+        "Tab": "Permission Template",
+        "TabOrder": 0,
+        "Type": "string"
+      },
       "Roles": {
         "Description": "Description of Roles",
         "DisplayName": "Roles",
@@ -13828,6 +13846,26 @@
         "Type": "string",
         "UIType": ""
       },
+      "Features": {
+        "Description": "Feature configuration for this Role",
+        "DisplayName": "Features",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsJSON": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "JsonType": "string",
+        "Length": "int.MaxValue",
+        "Name": "Features",
+        "Order": 999,
+        "SetDefaultValue": "",
+        "Tab": "Features",
+        "TabOrder": 60,
+        "Type": "string",
+        "UIType": ""
+      },
       "FeatureSets": {
         "Association": {
           "OnOwnerRemove": "Clear",
@@ -14012,7 +14050,7 @@
         "Order": 998,
         "SetDefaultValue": "",
         "Tab": "Permissions",
-        "TabOrder": 0,
+        "TabOrder": 50,
         "Type": "string",
         "UIType": "permissions"
       },

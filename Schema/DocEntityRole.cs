@@ -127,6 +127,11 @@ namespace Services.Schema
         public string Description { get; set; }
 
 
+        [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(Features))]
+        public string Features { get; set; }
+
+
         [Field()]
         [FieldMapping(nameof(FeatureSets))]
         [Association( PairTo = nameof(FeatureSet.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
@@ -461,6 +466,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Apps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Apps))))
                 .ForMember(dest => dest.AppsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.AppsCount))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Description))))
+                .ForMember(dest => dest.Features, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Features))))
                 .ForMember(dest => dest.FeatureSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.FeatureSets))))
                 .ForMember(dest => dest.FeatureSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.FeatureSetsCount))))
                 .ForMember(dest => dest.IsInternal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.IsInternal))))

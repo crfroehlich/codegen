@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -280,6 +281,7 @@ namespace Services.API
             var pDescription = dtoSource.Description;
             var pFeature = dtoSource.Feature;
             var pName = dtoSource.Name;
+            var pPermissionTemplate = dtoSource.PermissionTemplate;
             var pRoles = dtoSource.Roles?.ToList();
 
             DocEntityFeatureSet entity = null;
@@ -325,6 +327,15 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pPermissionTemplate, permission, DocConstantModelName.FEATURESET, nameof(dtoSource.PermissionTemplate)))
+            {
+                if(DocPermissionFactory.IsRequested(dtoSource, pPermissionTemplate, entity.PermissionTemplate, nameof(dtoSource.PermissionTemplate)))
+                    entity.PermissionTemplate = pPermissionTemplate;
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pPermissionTemplate, nameof(dtoSource.PermissionTemplate)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.PermissionTemplate), ignoreSpaces: true))
+                {
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.PermissionTemplate));
                 }
             }
             

@@ -82,7 +82,9 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantFeature.SUBMIT_FEEDBACK)]
         SUBMIT_FEEDBACK,
         [EnumMember(Value = DocConstantFeature.TERMS_ADMIN)]
-        TERMS_ADMIN
+        TERMS_ADMIN,
+        [EnumMember(Value = DocConstantFeature.WORKFLOW_ACCESS)]
+        WORKFLOW_ACCESS
     }
     
     public sealed partial class DocConstantFeature
@@ -118,6 +120,7 @@ namespace Services.Enums
         public const string SHARE_LOCALLY = "Share Locally";
         public const string SUBMIT_FEEDBACK = "Submit Feedback";
         public const string TERMS_ADMIN = "Master Terms Admin";
+        public const string WORKFLOW_ACCESS = "Workflow Access";
         
         #region Internals
         

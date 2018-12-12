@@ -123,6 +123,11 @@ namespace Services.Schema
         public string Name { get; set; }
 
 
+        [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(PermissionTemplate))]
+        public string PermissionTemplate { get; set; }
+
+
         [Field()]
         [FieldMapping(nameof(Roles))]
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
@@ -403,6 +408,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Description))))
                 .ForMember(dest => dest.Feature, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Feature))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Name))))
+                .ForMember(dest => dest.PermissionTemplate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.PermissionTemplate))))
                 .ForMember(dest => dest.Roles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Roles))))
                 .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.RolesCount))))
                 .MaxDepth(2);

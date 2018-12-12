@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -302,6 +303,7 @@ namespace Services.API
             var pAdminTeam = (dtoSource.AdminTeam?.Id > 0) ? DocEntityTeam.GetTeam(dtoSource.AdminTeam.Id) : null;
             var pApps = dtoSource.Apps?.ToList();
             var pDescription = dtoSource.Description;
+            var pFeatures = dtoSource.Features;
             var pFeatureSets = dtoSource.FeatureSets?.ToList();
             var pIsInternal = dtoSource.IsInternal;
             var pIsSuperAdmin = dtoSource.IsSuperAdmin;
@@ -343,6 +345,15 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pFeatures, permission, DocConstantModelName.ROLE, nameof(dtoSource.Features)))
+            {
+                if(DocPermissionFactory.IsRequested(dtoSource, pFeatures, entity.Features, nameof(dtoSource.Features)))
+                    entity.Features = DocSerialize<string>.ToString(pFeatures);
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pFeatures, nameof(dtoSource.Features)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Features), ignoreSpaces: true))
+                {
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Features));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsInternal, permission, DocConstantModelName.ROLE, nameof(dtoSource.IsInternal)))
@@ -639,6 +650,7 @@ namespace Services.API
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
+                    var pFeatures = entity.Features;
                     var pFeatureSets = entity.FeatureSets.ToList();
                     var pIsInternal = entity.IsInternal;
                     var pIsSuperAdmin = entity.IsSuperAdmin;
@@ -655,6 +667,7 @@ namespace Services.API
                     Hash = Guid.NewGuid()
                                 , AdminTeam = pAdminTeam
                                 , Description = pDescription
+                                , Features = pFeatures
                                 , IsInternal = pIsInternal
                                 , IsSuperAdmin = pIsSuperAdmin
                                 , Name = pName

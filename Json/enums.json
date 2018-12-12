@@ -251,7 +251,8 @@
     "SHARE_INTERNALLY": "Share Internally",
     "SHARE_LOCALLY": "Share Locally",
     "SUBMIT_FEEDBACK": "Submit Feedback",
-    "TERMS_ADMIN": "Master Terms Admin"
+    "TERMS_ADMIN": "Master Terms Admin",
+    "WORKFLOW_ACCESS": "Workflow Access"
   },
   "FieldType": {
     "BINARY": "Binary",
@@ -512,7 +513,6 @@
     "REPRESENTATIVESAMPLE": "RepresentativeSample",
     "RESPONSESCOLLECTEDBY": "ResponsesCollectedBy",
     "RESULTSCATEGORY": "ResultsCategory",
-    "ROLE": "Role",
     "SCOPE": "Scope",
     "SETTINGTYPE": "SettingType",
     "STATISTICALSIGNIFICANCE": "StatisticalSignificance",
@@ -874,21 +874,6 @@
     "SOCIAL_HISTORY": "Social History",
     "THERAPIES": "Therapies",
     "WITHDRAWAL_DRUG_DISCONTINUATION": "Withdrawal/Drug Discontinuation"
-  },
-  "Role": {
-    "ANALYST_USERS": "Analyst Users",
-    "AUDIT_USERS": "Audit Users",
-    "BINDINGS_ADMINS": "Bindings Admins",
-    "BINDINGS_USERS": "Bindings Users",
-    "CONSULTANT_USERS": "Consultant Users",
-    "DEFAULT_USERS": "Users (Default)",
-    "DRE_ADMINS": "DrE Admins",
-    "DRE_SUPER_ADMIN": "dre_super_admin",
-    "CLIENT_ADMINS": "Client Admins",
-    "CLIENT_SOLUTIONS": "Client Solutions",
-    "DIVISION_ADMINS": "Division Admins",
-    "MARKETING_USERS": "Marketing Users",
-    "USER_ADMINS": "User Admins"
   },
   "Scope": {
     "DOCUMENTSET": "DocumentSet",

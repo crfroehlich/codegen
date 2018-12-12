@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -63,6 +64,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = true)]
         public string Description { get; set; }
+
+
+        [ApiMember(Name = nameof(Features), Description = "string", IsRequired = false)]
+        public string Features { get; set; }
 
 
         [ApiMember(Name = nameof(FeatureSets), Description = "FeatureSet", IsRequired = false)]
@@ -129,7 +134,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdminTeam),nameof(AdminTeamId),nameof(Apps),nameof(AppsCount),nameof(Created),nameof(CreatorId),nameof(Description),nameof(FeatureSets),nameof(FeatureSetsCount),nameof(Gestalt),nameof(IsInternal),nameof(IsSuperAdmin),nameof(Locked),nameof(Name),nameof(Pages),nameof(PagesCount),nameof(Permissions),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdminTeam),nameof(AdminTeamId),nameof(Apps),nameof(AppsCount),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Features),nameof(FeatureSets),nameof(FeatureSetsCount),nameof(Gestalt),nameof(IsInternal),nameof(IsSuperAdmin),nameof(Locked),nameof(Name),nameof(Pages),nameof(PagesCount),nameof(Permissions),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -170,6 +175,7 @@ namespace Services.Dto
         public List<int> AdminTeamIds { get; set; }
         public List<int> AppsIds { get; set; }
         public string Description { get; set; }
+        public string Features { get; set; }
         public List<int> FeatureSetsIds { get; set; }
         public bool? IsInternal { get; set; }
         public bool? IsSuperAdmin { get; private set; }
@@ -195,6 +201,7 @@ namespace Services.Dto
         public bool doAdminTeam { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.AdminTeam))); }
         public bool doApps { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Apps))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Description))); }
+        public bool doFeatures { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Features))); }
         public bool doFeatureSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.FeatureSets))); }
         public bool doIsInternal { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.IsInternal))); }
         public bool doIsSuperAdmin { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.IsSuperAdmin))); }
