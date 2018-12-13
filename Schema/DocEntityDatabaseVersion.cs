@@ -108,6 +108,11 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
+        [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(DatabaseState))]
+        public string DatabaseState { get; set; }
+
+
         [Field()]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
@@ -390,6 +395,7 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityDatabaseVersion,DatabaseVersion>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, "Updated")))
+                .ForMember(dest => dest.DatabaseState, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, nameof(DocEntityDatabaseVersion.DatabaseState))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, nameof(DocEntityDatabaseVersion.Description))))
                 .ForMember(dest => dest.Release, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, nameof(DocEntityDatabaseVersion.Release))))
                 .ForMember(dest => dest.VersionName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, nameof(DocEntityDatabaseVersion.VersionName))))
