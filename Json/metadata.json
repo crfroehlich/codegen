@@ -6003,7 +6003,7 @@
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "FqId",
-        "Order": 60,
+        "Order": 5,
         "SetDefaultValue": "",
         "Tab": "DocumentSet",
         "TabOrder": 0,
@@ -6020,7 +6020,7 @@
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "FramedQuestionId",
-        "Order": 5,
+        "Order": 6,
         "SetDefaultValue": "",
         "Tab": "Protocol",
         "TabOrder": 0,
@@ -19067,6 +19067,19 @@
         "Type": "string",
         "UIType": ""
       },
+      "FeatureConfig": {
+        "Description": "Feature Conguration assigned to this user's Roles",
+        "DisplayName": "FeatureConfig",
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsJSON": true,
+        "Length": "int.MaxValue",
+        "Name": "FeatureConfig",
+        "Order": 999,
+        "Tab": "Feature Config",
+        "TabOrder": 0,
+        "Type": "string"
+      },
       "Password": {
         "DefaultValue": "********",
         "Description": "User's password. Never returned from the API; only used when creating users or changing a user's password.",
@@ -19083,7 +19096,7 @@
         "UIType": "password"
       },
       "Permissions": {
-        "Description": "Permissions assigned to this Role",
+        "Description": "Permissions assigned to this user's Roles",
         "DisplayName": "Permissions",
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
