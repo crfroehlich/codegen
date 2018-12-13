@@ -114,11 +114,6 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Feature))]
-        public string Feature { get; set; }
-
-
-        [Field()]
         [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
@@ -277,7 +272,6 @@ namespace Services.Schema
                 Hash = hash;
 
             Description = Description?.TrimAndPruneSpaces();
-            Feature = Feature?.TrimAndPruneSpaces();
             Name = Name?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
@@ -343,10 +337,10 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(Feature))
+                if(DocTools.IsNullOrEmpty(Name))
                 {
                     isValid = false;
-                    message += " Feature is a required property.";
+                    message += " Name is a required property.";
                 }
 
                 var ret = new DocValidationMessage(message, isValid);
@@ -406,7 +400,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Updated")))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Description))))
-                .ForMember(dest => dest.Feature, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Feature))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Name))))
                 .ForMember(dest => dest.PermissionTemplate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.PermissionTemplate))))
                 .ForMember(dest => dest.Roles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Roles))))

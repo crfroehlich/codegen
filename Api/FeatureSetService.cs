@@ -143,8 +143,6 @@ namespace Services.API
 
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
-                if(!DocTools.IsNullOrEmpty(request.Feature))
-                    entities = entities.Where(en => en.Feature.Contains(request.Feature));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                         if(true == request.RolesIds?.Any())
@@ -279,7 +277,6 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pDescription = dtoSource.Description;
-            var pFeature = dtoSource.Feature;
             var pName = dtoSource.Name;
             var pPermissionTemplate = dtoSource.PermissionTemplate;
             var pRoles = dtoSource.Roles?.ToList();
@@ -310,19 +307,10 @@ namespace Services.API
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pFeature, permission, DocConstantModelName.FEATURESET, nameof(dtoSource.Feature)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pFeature, entity.Feature, nameof(dtoSource.Feature)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Feature)} cannot be modified once set.");
-                    entity.Feature = pFeature;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pFeature, nameof(dtoSource.Feature)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Feature), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Feature));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.FEATURESET, nameof(dtoSource.Name)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
                 {

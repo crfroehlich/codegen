@@ -55,11 +55,7 @@ namespace Services.Dto
         public string Description { get; set; }
 
 
-        [ApiMember(Name = nameof(Feature), Description = "string", IsRequired = true)]
-        public string Feature { get; set; }
-
-
-        [ApiMember(Name = nameof(Name), Description = "string", IsRequired = false)]
+        [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
 
 
@@ -103,7 +99,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Feature),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(PermissionTemplate),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(PermissionTemplate),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -138,7 +134,6 @@ namespace Services.Dto
     public partial class FeatureSetSearch : Search<FeatureSet>
     {
         public string Description { get; set; }
-        public string Feature { get; set; }
         public string Name { get; set; }
         public string PermissionTemplate { get; set; }
         public List<int> RolesIds { get; set; }
@@ -158,7 +153,6 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Updated))); }
         
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Description))); }
-        public bool doFeature { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Feature))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Name))); }
         public bool doPermissionTemplate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.PermissionTemplate))); }
         public bool doRoles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Roles))); }
