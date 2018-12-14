@@ -71,6 +71,8 @@ namespace Services.Enums
         QC,
         [EnumMember(Value = DocConstantFeature.RATINGS)]
         RATINGS,
+        [EnumMember(Value = DocConstantFeature.RISK_OF_BIAS)]
+        RISK_OF_BIAS,
         [EnumMember(Value = DocConstantFeature.SALESFORCE_DATA)]
         SALESFORCE_DATA,
         [EnumMember(Value = DocConstantFeature.SHARE_GLOBALLY)]
@@ -114,6 +116,7 @@ namespace Services.Enums
         public const string PROTOCOL_ADMIN = "Protocol Admin";
         public const string QC = "QC";
         public const string RATINGS = "Ratings";
+        public const string RISK_OF_BIAS = "Risk of Bias";
         public const string SALESFORCE_DATA = "Salesforce Data";
         public const string SHARE_GLOBALLY = "Share Globally";
         public const string SHARE_INTERNALLY = "Share Internally";

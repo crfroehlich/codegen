@@ -111,7 +111,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"R Snippet",@"RMD Snippet",@"SERVE Portal",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"R Snippet",@"RMD Snippet",@"SERVE Portal",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -221,7 +221,7 @@ namespace Services.Dto
         public List<int> TasksIds { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"R Snippet",@"RMD Snippet",@"SERVE Portal",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"R Snippet",@"RMD Snippet",@"SERVE Portal",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
         public List<string> TypeNames { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }

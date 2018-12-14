@@ -260,7 +260,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set",@"SERVE Portal"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -396,7 +396,7 @@ namespace Services.Dto
         public List<int> StudyDesignsIds { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set",@"SERVE Portal"})]
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }

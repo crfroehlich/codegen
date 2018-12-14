@@ -71,6 +71,8 @@ namespace Services.Enums
         RAPID_REVIEW,
         [EnumMember(Value = DocConstantWorkflow.RESPONSE_LETTER)]
         RESPONSE_LETTER,
+        [EnumMember(Value = DocConstantWorkflow.RISK_OF_BIAS)]
+        RISK_OF_BIAS,
         [EnumMember(Value = DocConstantWorkflow.RMD_SNIPPET)]
         RMD_SNIPPET,
         [EnumMember(Value = DocConstantWorkflow.SERVE_PORTAL)]
@@ -114,6 +116,7 @@ namespace Services.Enums
         public const string R_SNIPPET = "R Snippet";
         public const string RAPID_REVIEW = "Rapid Review";
         public const string RESPONSE_LETTER = "Response Letter";
+        public const string RISK_OF_BIAS = "Risk of Bias";
         public const string RMD_SNIPPET = "RMD Snippet";
         public const string SERVE_PORTAL = "SERVE Portal";
         public const string SURVEY_DESIGN = "Survey Design";

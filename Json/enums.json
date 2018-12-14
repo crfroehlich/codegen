@@ -172,7 +172,8 @@
     "GLOBAL": "Global",
     "THERAPEUTIC_AREA": "Therapeutic Area",
     "DISEASE_STATE": "Disease State",
-    "DATA_SET": "Data Set"
+    "DATA_SET": "Data Set",
+    "SERVE_PORTAL": "SERVE Portal"
   },
   "DocumentType": {
     "DATA_HUB": "Data Hub",
@@ -246,6 +247,7 @@
     "PROTOCOL_ADMIN": "Protocol Admin",
     "QC": "QC",
     "RATINGS": "Ratings",
+    "RISK_OF_BIAS": "Risk of Bias",
     "SALESFORCE_DATA": "Salesforce Data",
     "SHARE_GLOBALLY": "Share Globally",
     "SHARE_INTERNALLY": "Share Internally",
@@ -1469,6 +1471,7 @@
     "PICO_RATING": "PICO Rating",
     "RAPID_REVIEW": "Rapid Review",
     "RESPONSE_LETTER": "Response Letter",
+    "RISK_OF_BIAS": "Risk of Bias",
     "R_SNIPPET": "R Snippet",
     "RMD_SNIPPET": "RMD Snippet",
     "SERVE_PORTAL": "SERVE Portal",
