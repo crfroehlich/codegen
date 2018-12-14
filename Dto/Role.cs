@@ -62,7 +62,7 @@ namespace Services.Dto
         public int? AppsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Description), Description = "string", IsRequired = true)]
+        [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
 

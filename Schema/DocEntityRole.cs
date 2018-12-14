@@ -122,7 +122,7 @@ namespace Services.Schema
         public int? AppsCount { get { return Apps.Count(); } private set { var noid = value; } }
 
 
-        [Field(Nullable = false)]
+        [Field()]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
 
@@ -384,11 +384,6 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(Description))
-                {
-                    isValid = false;
-                    message += " Description is a required property.";
-                }
                 if(DocTools.IsNullOrEmpty(IsInternal))
                 {
                     isValid = false;
