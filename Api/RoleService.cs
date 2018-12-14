@@ -350,7 +350,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pFeatures, permission, DocConstantModelName.ROLE, nameof(dtoSource.Features)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pFeatures, entity.Features, nameof(dtoSource.Features)))
-                    entity.Features = DocSerialize<string>.ToString(pFeatures);
+                    entity.Features = pFeatures;
                 if(DocPermissionFactory.IsRequested<string>(dtoSource, pFeatures, nameof(dtoSource.Features)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Features), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Features));

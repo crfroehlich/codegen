@@ -13859,7 +13859,6 @@
         "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
-        "JsonType": "string",
         "Length": "int.MaxValue",
         "Name": "Features",
         "Order": 999,
