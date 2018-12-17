@@ -238,6 +238,7 @@
     "DEBUG": "Debug",
     "DISPLAY_BROADCASTS": "Display Broadcasts",
     "DISPLAY_NOTIFICATIONS": "Display Notifications",
+    "DOCUMENT_SET_ACCESS": "Document Set Access",
     "ERROR_REPORTS": "Error Reports",
     "EXTRACTION": "Extraction",
     "IMPERSONATION": "Impersonation",

@@ -53,6 +53,8 @@ namespace Services.Enums
         DISPLAY_BROADCASTS,
         [EnumMember(Value = DocConstantFeature.DISPLAY_NOTIFICATIONS)]
         DISPLAY_NOTIFICATIONS,
+        [EnumMember(Value = DocConstantFeature.DOCUMENT_SET_ACCESS)]
+        DOCUMENT_SET_ACCESS,
         [EnumMember(Value = DocConstantFeature.ERROR_REPORTS)]
         ERROR_REPORTS,
         [EnumMember(Value = DocConstantFeature.EXTRACTION)]
@@ -107,6 +109,7 @@ namespace Services.Enums
         public const string DEBUG = "Debug";
         public const string DISPLAY_BROADCASTS = "Display Broadcasts";
         public const string DISPLAY_NOTIFICATIONS = "Display Notifications";
+        public const string DOCUMENT_SET_ACCESS = "Document Set Access";
         public const string ERROR_REPORTS = "Error Reports";
         public const string EXTRACTION = "Extraction";
         public const string IMPERSONATION = "Impersonation";
