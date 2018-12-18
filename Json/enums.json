@@ -223,10 +223,7 @@
   },
   "Feature": {
     "ACCESS_BACKEND": "Access Doc Data Backend",
-    "ALL_ENTITIES_ADD": "All Entities (Add)",
-    "ALL_ENTITIES_DELETE": "All Entities (Delete)",
-    "ALL_ENTITIES_EDIT": "All Entities (Edit)",
-    "ALL_ENTITIES_VIEW": "All Entities (View)",
+    "ALL_ENTITIES": "All Entities",
     "ALL_FEATURES": "All Features",
     "ALL_PAGES": "All Pages",
     "ALL_STUDY_SETS": "All Study Sets",
@@ -250,9 +247,7 @@
     "RATINGS": "Ratings",
     "RISK_OF_BIAS": "Risk of Bias",
     "SALESFORCE_DATA": "Salesforce Data",
-    "SHARE_GLOBALLY": "Share Globally",
-    "SHARE_INTERNALLY": "Share Internally",
-    "SHARE_LOCALLY": "Share Locally",
+    "SHARING": "Sharing",
     "SUBMIT_FEEDBACK": "Submit Feedback",
     "TERMS_ADMIN": "Master Terms Admin",
     "WORKFLOW_ACCESS": "Workflow Access"
