@@ -35,15 +35,15 @@ using ValueType = Services.Dto.ValueType;
 
 namespace Services.Schema
 {
-    [TableMapping(DocConstantModelName.OUTCOME)]
-    public partial class DocEntityOutcome : DocEntityBase
+    [TableMapping(DocConstantModelName.COMPARATOR)]
+    public partial class DocEntityComparator : DocEntityBase
     {
-        private const string OUTCOME_CACHE = "OutcomeCache";
+        private const string COMPARATOR_CACHE = "ComparatorCache";
 
         #region Constructor
-        public DocEntityOutcome(Session session) : base(session) {}
+        public DocEntityComparator(Session session) : base(session) {}
 
-        public DocEntityOutcome() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityComparator() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
         #region VisibleFields
@@ -54,7 +54,7 @@ namespace Services.Schema
             {
                 if(null == __vf)
                 {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Outcome());
+                    __vf = DocWebSession.GetTypeVisibleFields(new Comparator());
                 }
                 return __vf;
             }
@@ -67,40 +67,40 @@ namespace Services.Schema
         #endregion VisibleFields
 
         #region Static Members
-        public static DocEntityOutcome GetOutcome(Reference reference)
+        public static DocEntityComparator GetComparator(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetOutcome(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? GetComparator(reference.Id) : null;
         }
 
-        public static DocEntityOutcome GetOutcome(int? primaryKey)
+        public static DocEntityComparator GetComparator(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
-            var ret = DocEntityThreadCache<DocEntityOutcome>.GetFromCache(primaryKey, OUTCOME_CACHE);
+            var ret = DocEntityThreadCache<DocEntityComparator>.GetFromCache(primaryKey, COMPARATOR_CACHE);
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityOutcome>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
+                ret = query.SelectAll<DocEntityComparator>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityOutcome>.UpdateCache(ret.Id, ret, OUTCOME_CACHE);
-                    DocEntityThreadCache<DocEntityOutcome>.UpdateCache(ret.Hash, ret, OUTCOME_CACHE);
+                    DocEntityThreadCache<DocEntityComparator>.UpdateCache(ret.Id, ret, COMPARATOR_CACHE);
+                    DocEntityThreadCache<DocEntityComparator>.UpdateCache(ret.Hash, ret, COMPARATOR_CACHE);
                 }
             }
             return ret;
         }
 
-        public static DocEntityOutcome GetOutcome(Guid hash)
+        public static DocEntityComparator GetComparator(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
-            var ret = DocEntityThreadCache<DocEntityOutcome>.GetFromCache(hash, OUTCOME_CACHE);
+            var ret = DocEntityThreadCache<DocEntityComparator>.GetFromCache(hash, COMPARATOR_CACHE);
             
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityOutcome>().Where(e => e.Hash == hash).FirstOrDefault();
+                ret = query.SelectAll<DocEntityComparator>().Where(e => e.Hash == hash).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityOutcome>.UpdateCache(ret.Id, ret, OUTCOME_CACHE);
-                    DocEntityThreadCache<DocEntityOutcome>.UpdateCache(ret.Hash, ret, OUTCOME_CACHE);
+                    DocEntityThreadCache<DocEntityComparator>.UpdateCache(ret.Id, ret, COMPARATOR_CACHE);
+                    DocEntityThreadCache<DocEntityComparator>.UpdateCache(ret.Hash, ret, COMPARATOR_CACHE);
                 }
             }
             return ret;
@@ -108,7 +108,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(Nullable = false, NullableOnUpgrade = true)]
+        [Field(Nullable = false)]
         [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
@@ -154,11 +154,11 @@ namespace Services.Schema
         #endregion Properties
 
         #region Overrides of DocEntity
-        public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.OUTCOME;
+        public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.COMPARATOR;
 
         public override DocConstantModelName ModelName => MODEL_NAME;
 
-        public const string CACHE_KEY_PREFIX = "FindOutcomes";
+        public const string CACHE_KEY_PREFIX = "FindComparators";
 
 
         public override T ToModel<T>() =>  null;
@@ -240,7 +240,7 @@ namespace Services.Schema
         {
             if (false == ValidationMessage.IsValid)
             {
-                throw new HttpError(HttpStatusCode.Conflict, $"Outcome requires: {ValidationMessage.Message}.");
+                throw new HttpError(HttpStatusCode.Conflict, $"Comparator requires: {ValidationMessage.Message}.");
             }
 
             base.OnValidate();
@@ -298,7 +298,7 @@ namespace Services.Schema
         {
             var ret = DocPermissionFactory.HasPermission(this, null, DocConstantPermission.UNLOCK);
             _OnUnlock();
-            if (!ret) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to unlock this {nameof(Outcome)}");
+            if (!ret) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to unlock this {nameof(Comparator)}");
             if (ret)
             {
                 _isNewlyLocked = true;
@@ -310,7 +310,7 @@ namespace Services.Schema
         public void FlushCache()
         {
             _OnFlushCache();
-            DocCacheClient.RemoveSearch("Outcome");
+            DocCacheClient.RemoveSearch("Comparator");
         }
         #endregion Entity overrides
 
@@ -336,7 +336,7 @@ namespace Services.Schema
 
         #region Hash
         
-        public static Guid GetGuid(DocEntityOutcome thing)
+        public static Guid GetGuid(DocEntityComparator thing)
         {
             if(thing == null) return Guid.Empty;
             return thing.GetGuid();
@@ -361,33 +361,33 @@ namespace Services.Schema
             return _ToReference(ret);
         }
 
-        public Outcome ToDto() => Mapper.Map<DocEntityOutcome, Outcome>(this);
+        public Comparator ToDto() => Mapper.Map<DocEntityComparator, Comparator>(this);
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }
 
-    public partial class OutcomeMapper : Profile
+    public partial class ComparatorMapper : Profile
     {
-        private IMappingExpression<DocEntityOutcome,Outcome> _EntityToDto;
-        private IMappingExpression<Outcome,DocEntityOutcome> _DtoToEntity;
+        private IMappingExpression<DocEntityComparator,Comparator> _EntityToDto;
+        private IMappingExpression<Comparator,DocEntityComparator> _DtoToEntity;
 
-        public OutcomeMapper()
+        public ComparatorMapper()
         {
-            CreateMap<DocEntitySet<DocEntityOutcome>,List<Reference>>()
+            CreateMap<DocEntitySet<DocEntityComparator>,List<Reference>>()
                 .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityOutcome,Reference>()
+            CreateMap<DocEntityComparator,Reference>()
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityOutcome>()
+            CreateMap<Reference,DocEntityComparator>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityOutcome.GetOutcome(c));
-            _EntityToDto = CreateMap<DocEntityOutcome,Outcome>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, "Updated")))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.Name))))
-                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.URI))))
+                .ConstructUsing(c => DocEntityComparator.GetComparator(c));
+            _EntityToDto = CreateMap<DocEntityComparator,Comparator>()
+                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, "Created")))
+                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, "Updated")))
+                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, nameof(DocEntityComparator.Name))))
+                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, nameof(DocEntityComparator.URI))))
                 .MaxDepth(2);
-            _DtoToEntity = CreateMap<Outcome,DocEntityOutcome>()
+            _DtoToEntity = CreateMap<Comparator,DocEntityComparator>()
                 .MaxDepth(2);
             ApplyCustomMaps();
         }

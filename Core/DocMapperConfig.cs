@@ -249,8 +249,9 @@ namespace Services.Core
             cfg.AddProfile<BackgroundTaskHistoryMapper>();
             cfg.AddProfile<BackgroundTaskItemMapper>();
             cfg.AddProfile<BroadcastMapper>();
-            cfg.AddProfile<CharacteristicDtoMapper>();
+            cfg.AddProfile<CharacteristicMapper>();
             cfg.AddProfile<ClientMapper>();
+            cfg.AddProfile<ComparatorMapper>();
             cfg.AddProfile<DatabaseVersionMapper>();
             cfg.AddProfile<DefaultMapper>();
             cfg.AddProfile<DivisionMapper>();
@@ -267,7 +268,7 @@ namespace Services.Core
             cfg.AddProfile<ImpersonationMapper>();
             cfg.AddProfile<ImportDataMapper>();
             cfg.AddProfile<IntervalMapper>();
-            cfg.AddProfile<InterventionDtoMapper>();
+            cfg.AddProfile<InterventionMapper>();
             cfg.AddProfile<JctAttributeCategoryAttributeDocumentSetMapper>();
             cfg.AddProfile<JunctionMapper>();
             cfg.AddProfile<LocaleMapper>();
@@ -280,7 +281,7 @@ namespace Services.Core
             cfg.AddProfile<MeanRangeValueMapper>();
             cfg.AddProfile<MeanVariancesMapper>();
             cfg.AddProfile<MeanVarianceValueMapper>();
-            cfg.AddProfile<OutcomeDtoMapper>();
+            cfg.AddProfile<OutcomeMapper>();
             cfg.AddProfile<PackageMapper>();
             cfg.AddProfile<PageMapper>();
             cfg.AddProfile<QueueChannelMapper>();

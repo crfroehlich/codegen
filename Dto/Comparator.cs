@@ -40,16 +40,16 @@ using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
-    public abstract partial class InterventionBase : Dto<Intervention>
+    public abstract partial class ComparatorBase : Dto<Comparator>
     {
-        public InterventionBase() {}
+        public ComparatorBase() {}
 
-        public InterventionBase(int id) : this()
+        public ComparatorBase(int id) : this()
         {
             if(id > 0) Id = id;
         }
 
-        public InterventionBase(int? id) : this(DocConvert.ToInt(id)) {}
+        public ComparatorBase(int? id) : this(DocConvert.ToInt(id)) {}
     
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
@@ -61,19 +61,19 @@ namespace Services.Dto
 
     }
 
-    [Route("/intervention", "POST")]
-    [Route("/profile/intervention", "POST")]
-    [Route("/intervention/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/intervention/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Intervention : InterventionBase, IReturn<Intervention>, IDto
+    [Route("/comparator", "POST")]
+    [Route("/profile/comparator", "POST")]
+    [Route("/comparator/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/comparator/{Id}", "GET, PATCH, PUT, DELETE")]
+    public partial class Comparator : ComparatorBase, IReturn<Comparator>, IDto
     {
-        public Intervention()
+        public Comparator()
         {
             _Constructor();
         }
 
-        public Intervention(int? id) : base(DocConvert.ToInt(id)) {}
-        public Intervention(int id) : base(id) {}
+        public Comparator(int? id) : base(DocConvert.ToInt(id)) {}
+        public Comparator(int id) : base(id) {}
         
         #region Fields
         
@@ -88,7 +88,7 @@ namespace Services.Dto
         }
 
         private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<Intervention>());
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<Comparator>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
@@ -108,52 +108,52 @@ namespace Services.Dto
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Intervention>("Intervention",exists);
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Comparator>("Comparator",exists);
             }
         }
 
         #endregion Fields
     }
     
-    [Route("/Intervention/{Id}/copy", "POST")]
-    [Route("/profile/Intervention/{Id}/copy", "POST")]
-    public partial class InterventionCopy : Intervention {}
-    [Route("/intervention", "GET")]
-    [Route("/profile/intervention", "GET")]
-    [Route("/intervention/search", "GET, POST, DELETE")]
-    [Route("/profile/intervention/search", "GET, POST, DELETE")]
-    public partial class InterventionSearch : Search<Intervention>
+    [Route("/Comparator/{Id}/copy", "POST")]
+    [Route("/profile/Comparator/{Id}/copy", "POST")]
+    public partial class ComparatorCopy : Comparator {}
+    [Route("/comparator", "GET")]
+    [Route("/profile/comparator", "GET")]
+    [Route("/comparator/search", "GET, POST, DELETE")]
+    [Route("/profile/comparator/search", "GET, POST, DELETE")]
+    public partial class ComparatorSearch : Search<Comparator>
     {
         public string Name { get; set; }
         public string URI { get; set; }
     }
     
-    public class InterventionFullTextSearch
+    public class ComparatorFullTextSearch
     {
-        private InterventionSearch _request;
-        public InterventionFullTextSearch(InterventionSearch request) => _request = request;
+        private ComparatorSearch _request;
+        public ComparatorFullTextSearch(ComparatorSearch request) => _request = request;
         
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.Updated))); }
+        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.Created))); }
+        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.Updated))); }
         
-        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.Name))); }
-        public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.URI))); }
+        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.Name))); }
+        public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.URI))); }
     }
 
-    [Route("/intervention/version", "GET, POST")]
-    public partial class InterventionVersion : InterventionSearch {}
+    [Route("/comparator/version", "GET, POST")]
+    public partial class ComparatorVersion : ComparatorSearch {}
 
-    [Route("/intervention/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/intervention/batch", "DELETE, PATCH, POST, PUT")]
-    public partial class InterventionBatch : List<Intervention> { }
+    [Route("/comparator/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/comparator/batch", "DELETE, PATCH, POST, PUT")]
+    public partial class ComparatorBatch : List<Comparator> { }
 
-    [Route("/admin/intervention/ids", "GET, POST")]
-    public class InterventionIds
+    [Route("/admin/comparator/ids", "GET, POST")]
+    public class ComparatorIds
     {
         public bool All { get; set; }
     }

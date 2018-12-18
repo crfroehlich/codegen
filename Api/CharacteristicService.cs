@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, "Characteristic", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, "Characteristic", request.VisibleFields);
 
             Execute.Run( session => 
             {
@@ -88,22 +88,10 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.Characteristic) && !DocTools.IsNullOrEmpty(request.Characteristic.Id))
-                {
-                    entities = entities.Where(en => en.Characteristic.Id == request.Characteristic.Id );
-                }
-                if(true == request.CharacteristicIds?.Any())
-                {
-                    entities = entities.Where(en => en.Characteristic.Id.In(request.CharacteristicIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.Characteristic) && !DocTools.IsNullOrEmpty(request.Characteristic.Name))
-                {
-                    entities = entities.Where(en => en.Characteristic.Name == request.Characteristic.Name );
-                }
-                if(true == request.CharacteristicNames?.Any())
-                {
-                    entities = entities.Where(en => en.Characteristic.Name.In(request.CharacteristicNames));
-                }
+                if(!DocTools.IsNullOrEmpty(request.Name))
+                    entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.URI))
+                    entities = entities.Where(en => en.URI.Contains(request.URI));
 
                 entities = ApplyFilters(request, entities);
 
@@ -127,8 +115,8 @@ namespace Services.API
                 var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
                 try 
                 {
-                    var ret = new List<CharacteristicDto>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,CharacteristicDto>(ret, Execute, requestCancel));
+                    var ret = new List<Characteristic>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,Characteristic>(ret, Execute, requestCancel));
                     tryRet = ret;
                 }
                 catch(Exception) { throw; }
@@ -148,8 +136,8 @@ namespace Services.API
                 var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
                 try 
                 {
-                    var ret = new List<CharacteristicDto>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,CharacteristicDto>(ret, Execute, requestCancel));
+                    var ret = new List<Characteristic>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,Characteristic>(ret, Execute, requestCancel));
                     tryRet = ret;
                 }
                 catch(Exception) { throw; }
@@ -176,14 +164,14 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(CharacteristicDto request)
+        public object Get(Characteristic request)
         {
-            CharacteristicDto ret = null;
+            Characteristic ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, "Characteristic", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, "Characteristic", request.VisibleFields);
             Execute.Run((ssn) =>
             {
                 ret = GetCharacteristic(request);
@@ -191,7 +179,7 @@ namespace Services.API
             return ret;
         }
 
-        private CharacteristicDto _AssignValues(CharacteristicDto dtoSource, DocConstantPermission permission, Session session)
+        private Characteristic _AssignValues(Characteristic dtoSource, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
@@ -201,13 +189,14 @@ namespace Services.API
 
             dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
-            CharacteristicDto ret = null;
+            Characteristic ret = null;
             dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            DocEntityLookupTable pCharacteristic = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, dtoSource.Characteristic?.Name, dtoSource.Characteristic?.Id);
+            var pName = dtoSource.Name;
+            var pURI = dtoSource.URI;
 
             DocEntityCharacteristic entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -226,13 +215,23 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pCharacteristic, permission, DocConstantModelName.CHARACTERISTIC, nameof(dtoSource.Characteristic)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.CHARACTERISTIC, nameof(dtoSource.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pCharacteristic, entity.Characteristic, nameof(dtoSource.Characteristic)))
-                    entity.Characteristic = pCharacteristic;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pCharacteristic, nameof(dtoSource.Characteristic)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Characteristic), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
+                    entity.Name = pName;
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Characteristic));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pURI, permission, DocConstantModelName.CHARACTERISTIC, nameof(dtoSource.URI)))
+            {
+                if(DocPermissionFactory.IsRequested(dtoSource, pURI, entity.URI, nameof(dtoSource.URI)))
+                    entity.URI = pURI;
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pURI, nameof(dtoSource.URI)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.URI), ignoreSpaces: true))
+                {
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.URI));
                 }
             }
             
@@ -240,18 +239,18 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, nameof(CharacteristicDto), dtoSource.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, nameof(Characteristic), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public CharacteristicDto Post(CharacteristicDto dtoSource)
+        public Characteristic Post(Characteristic dtoSource)
         {
             if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
-            CharacteristicDto ret = null;
+            Characteristic ret = null;
 
             Execute.Run(ssn =>
             {
@@ -264,11 +263,11 @@ namespace Services.API
             return ret;
         }
    
-        public List<CharacteristicDto> Post(CharacteristicBatch request)
+        public List<Characteristic> Post(CharacteristicBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<CharacteristicDto>();
+            var ret = new List<Characteristic>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -276,7 +275,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as CharacteristicDto;
+                    var obj = Post(dto) as Characteristic;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -311,9 +310,9 @@ namespace Services.API
             return ret;
         }
 
-        public CharacteristicDto Post(CharacteristicDtoCopy request)
+        public Characteristic Post(CharacteristicCopy request)
         {
-            CharacteristicDto ret = null;
+            Characteristic ret = null;
             Execute.Run(ssn =>
             {
                 var entity = DocEntityCharacteristic.GetCharacteristic(request?.Id);
@@ -321,13 +320,19 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pCharacteristic = entity.Characteristic;
+                    var pName = entity.Name;
+                    if(!DocTools.IsNullOrEmpty(pName))
+                        pName += " (Copy)";
+                    var pURI = entity.URI;
+                    if(!DocTools.IsNullOrEmpty(pURI))
+                        pURI += " (Copy)";
                 #region Custom Before copyCharacteristic
                 #endregion Custom Before copyCharacteristic
                 var copy = new DocEntityCharacteristic(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Characteristic = pCharacteristic
+                                , Name = pName
+                                , URI = pURI
                 };
                 #region Custom After copyCharacteristic
                 #endregion Custom After copyCharacteristic
@@ -338,21 +343,21 @@ namespace Services.API
         }
 
 
-        public List<CharacteristicDto> Put(CharacteristicBatch request)
+        public List<Characteristic> Put(CharacteristicBatch request)
         {
             return Patch(request);
         }
 
-        public CharacteristicDto Put(CharacteristicDto dtoSource)
+        public Characteristic Put(Characteristic dtoSource)
         {
             return Patch(dtoSource);
         }
 
-        public List<CharacteristicDto> Patch(CharacteristicBatch request)
+        public List<Characteristic> Patch(CharacteristicBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<CharacteristicDto>();
+            var ret = new List<Characteristic>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -360,7 +365,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as CharacteristicDto;
+                    var obj = Patch(dto) as Characteristic;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -395,13 +400,13 @@ namespace Services.API
             return ret;
         }
 
-        public CharacteristicDto Patch(CharacteristicDto dtoSource)
+        public Characteristic Patch(Characteristic dtoSource)
         {
             if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Characteristic to patch.");
             
             dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
-            CharacteristicDto ret = null;
+            Characteristic ret = null;
             Execute.Run(ssn =>
             {
                 ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
@@ -453,7 +458,7 @@ namespace Services.API
             }
         }
 
-        public void Delete(CharacteristicDto request)
+        public void Delete(Characteristic request)
         {
             Execute.Run(ssn =>
             {
@@ -471,7 +476,7 @@ namespace Services.API
 
         public void Delete(CharacteristicSearch request)
         {
-            var matches = Get(request) as List<CharacteristicDto>;
+            var matches = Get(request) as List<Characteristic>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
@@ -483,13 +488,13 @@ namespace Services.API
             });
         }
 
-        private CharacteristicDto GetCharacteristic(CharacteristicDto request)
+        private Characteristic GetCharacteristic(Characteristic request)
         {
             var id = request?.Id;
-            CharacteristicDto ret = null;
+            Characteristic ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, "Characteristic", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, "Characteristic", request.VisibleFields);
 
             DocEntityCharacteristic entity = null;
             if(id.HasValue)

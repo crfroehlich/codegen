@@ -146,7 +146,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Comparators))]
-        public DocEntitySet<DocEntityIntervention> Comparators { get; private set; }
+        public DocEntitySet<DocEntityComparator> Comparators { get; private set; }
 
 
         public int? ComparatorsCount { get { return Comparators.Count(); } private set { var noid = value; } }

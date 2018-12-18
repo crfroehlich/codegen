@@ -42,21 +42,21 @@ using Version = Services.Dto.Version;
 
 namespace Services.API
 {
-    public partial class OutcomeService : DocServiceBase
+    public partial class ComparatorService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityOutcome.CACHE_KEY_PREFIX;
-        private void _ExecSearch(OutcomeSearch request, Action<IQueryable<DocEntityOutcome>> callBack)
+        public const string CACHE_KEY_PREFIX = DocEntityComparator.CACHE_KEY_PREFIX;
+        private void _ExecSearch(ComparatorSearch request, Action<IQueryable<DocEntityComparator>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, "Comparator", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityOutcome>();
+                var entities = Execute.SelectAll<DocEntityComparator>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
-                    var fts = new OutcomeFullTextSearch(request);
+                    var fts = new ComparatorFullTextSearch(request);
                     entities = GetFullTextSearch(fts, entities);
                 }
 
@@ -107,7 +107,7 @@ namespace Services.API
             });
         }
         
-        public object Post(OutcomeSearch request)
+        public object Post(ComparatorSearch request)
         {
             object tryRet = null;
             using (var cancellableRequest = base.Request.CreateCancellableRequest())
@@ -115,8 +115,8 @@ namespace Services.API
                 var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
                 try 
                 {
-                    var ret = new List<Outcome>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
+                    var ret = new List<Comparator>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityComparator,Comparator>(ret, Execute, requestCancel));
                     tryRet = ret;
                 }
                 catch(Exception) { throw; }
@@ -128,7 +128,7 @@ namespace Services.API
             return tryRet;
         }
 
-        public object Get(OutcomeSearch request)
+        public object Get(ComparatorSearch request)
         {
             object tryRet = null;
             using (var cancellableRequest = base.Request.CreateCancellableRequest())
@@ -136,8 +136,8 @@ namespace Services.API
                 var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
                 try 
                 {
-                    var ret = new List<Outcome>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
+                    var ret = new List<Comparator>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityComparator,Comparator>(ret, Execute, requestCancel));
                     tryRet = ret;
                 }
                 catch(Exception) { throw; }
@@ -149,12 +149,12 @@ namespace Services.API
             return tryRet;
         }
 
-        public object Post(OutcomeVersion request) 
+        public object Post(ComparatorVersion request) 
         {
             return Get(request);
         }
 
-        public object Get(OutcomeVersion request) 
+        public object Get(ComparatorVersion request) 
         {
             var ret = new List<Version>();
             _ExecSearch(request, (entities) => 
@@ -164,32 +164,32 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Outcome request)
+        public object Get(Comparator request)
         {
-            Outcome ret = null;
+            Comparator ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, "Comparator", request.VisibleFields);
             Execute.Run((ssn) =>
             {
-                ret = GetOutcome(request);
+                ret = GetComparator(request);
             });
             return ret;
         }
 
-        private Outcome _AssignValues(Outcome dtoSource, DocConstantPermission permission, Session session)
+        private Comparator _AssignValues(Comparator dtoSource, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
-            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Outcome"))
+            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Comparator"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
             dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
-            Outcome ret = null;
+            Comparator ret = null;
             dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
@@ -198,11 +198,11 @@ namespace Services.API
             var pName = dtoSource.Name;
             var pURI = dtoSource.URI;
 
-            DocEntityOutcome entity = null;
+            DocEntityComparator entity = null;
             if(permission == DocConstantPermission.ADD)
             {
                 var now = DateTime.UtcNow;
-                entity = new DocEntityOutcome(session)
+                entity = new DocEntityComparator(session)
                 {
                     Created = now,
                     Updated = now
@@ -210,12 +210,12 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityOutcome.GetOutcome(dtoSource.Id);
+                entity = DocEntityComparator.GetComparator(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.OUTCOME, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.COMPARATOR, nameof(dtoSource.Name)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
                     if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
@@ -225,7 +225,7 @@ namespace Services.API
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pURI, permission, DocConstantModelName.OUTCOME, nameof(dtoSource.URI)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pURI, permission, DocConstantModelName.COMPARATOR, nameof(dtoSource.URI)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pURI, entity.URI, nameof(dtoSource.URI)))
                     entity.URI = pURI;
@@ -239,22 +239,22 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, nameof(Outcome), dtoSource.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, nameof(Comparator), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Outcome Post(Outcome dtoSource)
+        public Comparator Post(Comparator dtoSource)
         {
             if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
-            Outcome ret = null;
+            Comparator ret = null;
 
             Execute.Run(ssn =>
             {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Outcome")) 
+                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Comparator")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                 ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
@@ -263,11 +263,11 @@ namespace Services.API
             return ret;
         }
    
-        public List<Outcome> Post(OutcomeBatch request)
+        public List<Comparator> Post(ComparatorBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<Outcome>();
+            var ret = new List<Comparator>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -275,7 +275,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as Outcome;
+                    var obj = Post(dto) as Comparator;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -310,12 +310,12 @@ namespace Services.API
             return ret;
         }
 
-        public Outcome Post(OutcomeCopy request)
+        public Comparator Post(ComparatorCopy request)
         {
-            Outcome ret = null;
+            Comparator ret = null;
             Execute.Run(ssn =>
             {
-                var entity = DocEntityOutcome.GetOutcome(request?.Id);
+                var entity = DocEntityComparator.GetComparator(request?.Id);
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -326,16 +326,16 @@ namespace Services.API
                     var pURI = entity.URI;
                     if(!DocTools.IsNullOrEmpty(pURI))
                         pURI += " (Copy)";
-                #region Custom Before copyOutcome
-                #endregion Custom Before copyOutcome
-                var copy = new DocEntityOutcome(ssn)
+                #region Custom Before copyComparator
+                #endregion Custom Before copyComparator
+                var copy = new DocEntityComparator(ssn)
                 {
                     Hash = Guid.NewGuid()
                                 , Name = pName
                                 , URI = pURI
                 };
-                #region Custom After copyOutcome
-                #endregion Custom After copyOutcome
+                #region Custom After copyComparator
+                #endregion Custom After copyComparator
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -343,21 +343,21 @@ namespace Services.API
         }
 
 
-        public List<Outcome> Put(OutcomeBatch request)
+        public List<Comparator> Put(ComparatorBatch request)
         {
             return Patch(request);
         }
 
-        public Outcome Put(Outcome dtoSource)
+        public Comparator Put(Comparator dtoSource)
         {
             return Patch(dtoSource);
         }
 
-        public List<Outcome> Patch(OutcomeBatch request)
+        public List<Comparator> Patch(ComparatorBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<Outcome>();
+            var ret = new List<Comparator>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -365,7 +365,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as Outcome;
+                    var obj = Patch(dto) as Comparator;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -400,13 +400,13 @@ namespace Services.API
             return ret;
         }
 
-        public Outcome Patch(Outcome dtoSource)
+        public Comparator Patch(Comparator dtoSource)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Outcome to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Comparator to patch.");
             
             dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
-            Outcome ret = null;
+            Comparator ret = null;
             Execute.Run(ssn =>
             {
                 ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
@@ -414,7 +414,7 @@ namespace Services.API
             return ret;
         }
 
-        public void Delete(OutcomeBatch request)
+        public void Delete(ComparatorBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
@@ -458,13 +458,13 @@ namespace Services.API
             }
         }
 
-        public void Delete(Outcome request)
+        public void Delete(Comparator request)
         {
             Execute.Run(ssn =>
             {
-                var en = DocEntityOutcome.GetOutcome(request?.Id);
+                var en = DocEntityComparator.GetComparator(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Outcome could be found for Id {request?.Id}.");
+                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Comparator could be found for Id {request?.Id}.");
                 if(en.IsRemoved) return;
                 
                 if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
@@ -474,9 +474,9 @@ namespace Services.API
             });
         }
 
-        public void Delete(OutcomeSearch request)
+        public void Delete(ComparatorSearch request)
         {
-            var matches = Get(request) as List<Outcome>;
+            var matches = Get(request) as List<Comparator>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
@@ -488,21 +488,21 @@ namespace Services.API
             });
         }
 
-        private Outcome GetOutcome(Outcome request)
+        private Comparator GetComparator(Comparator request)
         {
             var id = request?.Id;
-            Outcome ret = null;
+            Comparator ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, "Comparator", request.VisibleFields);
 
-            DocEntityOutcome entity = null;
+            DocEntityComparator entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityOutcome.GetOutcome(id.Value);
+                entity = DocEntityComparator.GetComparator(id.Value);
             }
             if(null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Outcome found for Id {id.Value}");
+                throw new HttpError(HttpStatusCode.NotFound, $"No Comparator found for Id {id.Value}");
 
             if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.VIEW))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
@@ -511,12 +511,12 @@ namespace Services.API
             return ret;
         }
 
-        public List<int> Any(OutcomeIds request)
+        public List<int> Any(ComparatorIds request)
         {
             List<int> ret = null;
             if (currentUser.IsSuperAdmin)
             {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityOutcome>().Select(d => d.Id).ToList(); });
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityComparator>().Select(d => d.Id).ToList(); });
             }
             else
             {

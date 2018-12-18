@@ -54,7 +54,7 @@ namespace Services.Schema
             {
                 if(null == __vf)
                 {
-                    __vf = DocWebSession.GetTypeVisibleFields(new InterventionDto());
+                    __vf = DocWebSession.GetTypeVisibleFields(new Intervention());
                 }
                 return __vf;
             }
@@ -108,10 +108,14 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(Nullable = false)]
-        [FieldMapping(nameof(Intervention))]
-        public DocEntityLookupTable Intervention { get; set; }
-        public int? InterventionId { get { return Intervention?.Id; } private set { var noid = value; } }
+        [Field(Nullable = false, NullableOnUpgrade = true)]
+        [FieldMapping(nameof(Name))]
+        public string Name { get; set; }
+
+
+        [Field()]
+        [FieldMapping(nameof(URI))]
+        public string URI { get; set; }
 
 
 
@@ -253,6 +257,8 @@ namespace Services.Schema
             if(Hash != hash)
                 Hash = hash;
 
+            Name = Name?.TrimAndPruneSpaces();
+            URI = URI?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
             {
@@ -316,18 +322,10 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(Intervention))
+                if(DocTools.IsNullOrEmpty(Name))
                 {
                     isValid = false;
-                    message += " Intervention is a required property.";
-                }
-                else
-                {
-                    if(Intervention.Enum?.Name != "Intervention")
-                    {
-                        isValid = false;
-                        message += " Intervention is a " + Intervention.Enum.Name + ", but must be a Intervention.";
-                    }
+                    message += " Name is a required property.";
                 }
 
                 var ret = new DocValidationMessage(message, isValid);
@@ -359,22 +357,22 @@ namespace Services.Schema
 
         public override Reference ToReference()
         {
-            var ret = new Reference(Id, "", Gestalt);
+            var ret = new Reference(Id, Name , Gestalt);
             return _ToReference(ret);
         }
 
-        public InterventionDto ToDto() => Mapper.Map<DocEntityIntervention, InterventionDto>(this);
+        public Intervention ToDto() => Mapper.Map<DocEntityIntervention, Intervention>(this);
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }
 
-    public partial class InterventionDtoMapper : Profile
+    public partial class InterventionMapper : Profile
     {
-        private IMappingExpression<DocEntityIntervention,InterventionDto> _EntityToDto;
-        private IMappingExpression<InterventionDto,DocEntityIntervention> _DtoToEntity;
+        private IMappingExpression<DocEntityIntervention,Intervention> _EntityToDto;
+        private IMappingExpression<Intervention,DocEntityIntervention> _DtoToEntity;
 
-        public InterventionDtoMapper()
+        public InterventionMapper()
         {
             CreateMap<DocEntitySet<DocEntityIntervention>,List<Reference>>()
                 .ConvertUsing(s => s.ToReferences());
@@ -383,13 +381,13 @@ namespace Services.Schema
             CreateMap<Reference,DocEntityIntervention>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
                 .ConstructUsing(c => DocEntityIntervention.GetIntervention(c));
-            _EntityToDto = CreateMap<DocEntityIntervention,InterventionDto>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<InterventionDto>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<InterventionDto>(c, "Updated")))
-                .ForMember(dest => dest.Intervention, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<InterventionDto>(c, nameof(DocEntityIntervention.Intervention))))
-                .ForMember(dest => dest.InterventionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<InterventionDto>(c, nameof(DocEntityIntervention.InterventionId))))
+            _EntityToDto = CreateMap<DocEntityIntervention,Intervention>()
+                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, "Created")))
+                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, "Updated")))
+                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, nameof(DocEntityIntervention.Name))))
+                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, nameof(DocEntityIntervention.URI))))
                 .MaxDepth(2);
-            _DtoToEntity = CreateMap<InterventionDto,DocEntityIntervention>()
+            _DtoToEntity = CreateMap<Intervention,DocEntityIntervention>()
                 .MaxDepth(2);
             ApplyCustomMaps();
         }

@@ -929,7 +929,7 @@ namespace Services.API
                 if (true == pComparators?.Any() )
                 {
                     var requestedComparators = pComparators.Select(p => p.Id).Distinct().ToList();
-                    var existsComparators = Execute.SelectAll<DocEntityIntervention>().Where(e => e.Id.In(requestedComparators)).Select( e => e.Id ).ToList();
+                    var existsComparators = Execute.SelectAll<DocEntityComparator>().Where(e => e.Id.In(requestedComparators)).Select( e => e.Id ).ToList();
                     if (existsComparators.Count != requestedComparators.Count)
                     {
                         var nonExists = requestedComparators.Where(id => existsComparators.All(eId => eId != id));
@@ -938,7 +938,7 @@ namespace Services.API
                     var toAdd = requestedComparators.Where(id => entity.Comparators.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityIntervention.GetIntervention(id);
+                        var target = DocEntityComparator.GetComparator(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(dtoSource.Comparators)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Comparators)} to {nameof(DocumentSet)}");
                         entity.Comparators.Add(target);
@@ -946,7 +946,7 @@ namespace Services.API
                     var toRemove = entity.Comparators.Where(e => requestedComparators.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityIntervention.GetIntervention(id);
+                        var target = DocEntityComparator.GetComparator(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(dtoSource.Comparators)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Comparators)} from {nameof(DocumentSet)}");
                         entity.Comparators.Remove(target);
@@ -957,7 +957,7 @@ namespace Services.API
                     var toRemove = entity.Comparators.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityIntervention.GetIntervention(id);
+                        var target = DocEntityComparator.GetComparator(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(dtoSource.Comparators)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Comparators)} from {nameof(DocumentSet)}");
                         entity.Comparators.Remove(target);
@@ -2119,11 +2119,11 @@ namespace Services.API
 
         private object _GetDocumentSetCharacteristic(DocumentSetJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, "CharacteristicDto", request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, "Characteristic", request.VisibleFields);
              var en = DocEntityDocumentSet.GetDocumentSet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENTSET, columnName: "Characteristics", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and CharacteristicDto");
-             return en?.Characteristics.Take(take).Skip(skip).ConvertFromEntityList<DocEntityCharacteristic,CharacteristicDto>(new List<CharacteristicDto>());
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and Characteristic");
+             return en?.Characteristics.Take(take).Skip(skip).ConvertFromEntityList<DocEntityCharacteristic,Characteristic>(new List<Characteristic>());
         }
 
         private List<Version> GetDocumentSetCharacteristicVersion(DocumentSetJunctionVersion request)
@@ -2163,11 +2163,11 @@ namespace Services.API
 
         private object _GetDocumentSetComparator(DocumentSetJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, "InterventionDto", request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, "Comparator", request.VisibleFields);
              var en = DocEntityDocumentSet.GetDocumentSet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENTSET, columnName: "Comparators", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and InterventionDto");
-             return en?.Comparators.Take(take).Skip(skip).ConvertFromEntityList<DocEntityIntervention,InterventionDto>(new List<InterventionDto>());
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and Comparator");
+             return en?.Comparators.Take(take).Skip(skip).ConvertFromEntityList<DocEntityComparator,Comparator>(new List<Comparator>());
         }
 
         private List<Version> GetDocumentSetComparatorVersion(DocumentSetJunctionVersion request)
@@ -2256,11 +2256,11 @@ namespace Services.API
 
         private object _GetDocumentSetIntervention(DocumentSetJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, "InterventionDto", request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, "Intervention", request.VisibleFields);
              var en = DocEntityDocumentSet.GetDocumentSet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENTSET, columnName: "Interventions", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and InterventionDto");
-             return en?.Interventions.Take(take).Skip(skip).ConvertFromEntityList<DocEntityIntervention,InterventionDto>(new List<InterventionDto>());
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and Intervention");
+             return en?.Interventions.Take(take).Skip(skip).ConvertFromEntityList<DocEntityIntervention,Intervention>(new List<Intervention>());
         }
 
         private List<Version> GetDocumentSetInterventionVersion(DocumentSetJunctionVersion request)
@@ -2300,11 +2300,11 @@ namespace Services.API
 
         private object _GetDocumentSetOutcome(DocumentSetJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "OutcomeDto", request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
              var en = DocEntityDocumentSet.GetDocumentSet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENTSET, columnName: "Outcomes", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and OutcomeDto");
-             return en?.Outcomes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityOutcome,OutcomeDto>(new List<OutcomeDto>());
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and Outcome");
+             return en?.Outcomes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityOutcome,Outcome>(new List<Outcome>());
         }
 
         private List<Version> GetDocumentSetOutcomeVersion(DocumentSetJunctionVersion request)
@@ -2547,10 +2547,10 @@ namespace Services.API
 
             foreach (var id in request.Ids)
             {
-                var relationship = DocEntityIntervention.GetIntervention(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.INTERVENTION, columnName: "Comparators")) 
+                var relationship = DocEntityComparator.GetComparator(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.COMPARATOR, columnName: "Comparators")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Comparators property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Intervention could be found for {id}.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Comparator could be found for {id}.");
                 entity.Comparators.Add(relationship);
             }
             entity.SaveChanges();
@@ -2853,9 +2853,9 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
             foreach (var id in request.Ids)
             {
-                var relationship = DocEntityIntervention.GetIntervention(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.INTERVENTION, columnName: "Comparators"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Intervention");
+                var relationship = DocEntityComparator.GetComparator(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.COMPARATOR, columnName: "Comparators"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Comparator");
                 if(null != relationship && false == relationship.IsRemoved) entity.Comparators.Remove(relationship);
             }
             entity.SaveChanges();

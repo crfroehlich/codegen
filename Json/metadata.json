@@ -2907,65 +2907,21 @@
   },
   "Characteristic": {
     "Attributes": {
-      "AllowDelete": false,
-      "Enum": "DocConstantAttributeName",
-      "IsInModel": false,
       "Name": "Characteristic",
       "TypeId": 14475
     },
-    "Domain": {
-      "Interfaces": ""
-    },
+    "Domain": {},
     "Dto": {
-      "AllVisibleFieldsByDefault": true,
       "DELETE": true,
-      "DontFlattenProperties": "Characteristic",
-      "DtoSuffix": "Dto",
       "GET": true,
-      "IgnoreProps": "",
       "ImplementService": true,
       "Interfaces": "",
       "PATCH": true,
       "POST": true,
       "PUT": true
     },
-    "Model": {
-      "Interfaces": ""
-    },
+    "Model": {},
     "Properties": {
-      "Characteristic": {
-        "Description": "Characteristic",
-        "DisplayName": "Characteristic",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
-        "IsEditColumn": false,
-        "IsIndexed": true,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUnique": true,
-        "IsUniqueConstraint": true,
-        "LookupTableEnum": "AttributeName",
-        "Name": "Characteristic",
-        "Order": 0,
-        "SetDefaultValue": "",
-        "Tab": "Characteristic",
-        "TabOrder": 0,
-        "Type": "LookupTable",
-        "UIType": ""
-      },
-      "CharacteristicId": {
-        "DisplayName": "Characteristic Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "CharacteristicId",
-        "Order": 1,
-        "Tab": "Characteristic",
-        "Type": "int?"
-      },
       "Created": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -3030,6 +2986,27 @@
         "Tab": "History",
         "Type": "bool"
       },
+      "Name": {
+        "Description": "Characteristic Name",
+        "DisplayName": "Name",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsEditColumn": true,
+        "IsIndexed": true,
+        "IsInsertOnly": true,
+        "IsNullOnUpgrade": true,
+        "IsRequired": true,
+        "IsRequiredInForm": true,
+        "IsUniqueConstraint": true,
+        "Name": "Name",
+        "Order": 0,
+        "SetDefaultValue": "",
+        "Tab": "Characteristic",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
       "Updated": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -3039,6 +3016,23 @@
         "Order": -2,
         "Tab": "History",
         "Type": "DateTime?"
+      },
+      "URI": {
+        "Description": "An optional URI to map with DOC Search",
+        "DisplayName": "URI",
+        "IsAudited": true,
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "URI",
+        "Order": 10,
+        "SetDefaultValue": "",
+        "Tab": "Characteristic",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
       },
       "VersionNo": {
         "IsDisplayInForm": false,
@@ -3422,6 +3416,146 @@
         "Name": "VersionNo",
         "Order": 9999999,
         "Tab": "Client",
+        "Type": "int"
+      }
+    }
+  },
+  "Comparator": {
+    "Attributes": {
+      "Name": "Comparator",
+      "TypeId": 20035
+    },
+    "Domain": {},
+    "Dto": {
+      "DELETE": true,
+      "GET": true,
+      "ImplementService": true,
+      "Interfaces": "",
+      "PATCH": true,
+      "POST": true,
+      "PUT": true
+    },
+    "Model": {},
+    "Properties": {
+      "Created": {
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Created",
+        "Order": -1,
+        "Tab": "History",
+        "Type": "DateTime?"
+      },
+      "CreatorId": {
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "CreatorId",
+        "Order": -4,
+        "Tab": "History",
+        "Type": "bool"
+      },
+      "Gestalt": {
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Gestalt",
+        "Order": -10,
+        "Tab": "Comparator",
+        "Type": "string"
+      },
+      "History": {
+        "IsAllowAddInForm": false,
+        "IsAllowCreateInForm ": false,
+        "IsAllowRemoveInForm ": false,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "History",
+        "Order": 99999999,
+        "Tab": "History",
+        "Target": "AuditRecord",
+        "Type": "relationships"
+      },
+      "Id": {
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Id",
+        "Order": -9,
+        "Tab": "Comparator",
+        "Type": "int"
+      },
+      "Locked": {
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Locked",
+        "Order": -3,
+        "Tab": "History",
+        "Type": "bool"
+      },
+      "Name": {
+        "Description": "Comparator Name",
+        "DisplayName": "Name",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsEditColumn": true,
+        "IsIndexed": true,
+        "IsInsertOnly": true,
+        "IsRequired": true,
+        "IsRequiredInForm": true,
+        "IsUniqueConstraint": true,
+        "Name": "Name",
+        "Order": 0,
+        "SetDefaultValue": "",
+        "Tab": "Comparator",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
+      "Updated": {
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Updated",
+        "Order": -2,
+        "Tab": "History",
+        "Type": "DateTime?"
+      },
+      "URI": {
+        "Description": "An optional URI to map with DOC Search",
+        "DisplayName": "URI",
+        "IsAudited": true,
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "URI",
+        "Order": 10,
+        "SetDefaultValue": "",
+        "Tab": "Comparator",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
+      "VersionNo": {
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "VersionNo",
+        "Order": 9999999,
+        "Tab": "Comparator",
         "Type": "int"
       }
     }
@@ -5796,8 +5930,7 @@
         "SetDefaultValue": "",
         "Tab": "Comparators",
         "TabOrder": 20,
-        "Target": "Intervention",
-        "TargetAlias": "Comparator",
+        "Target": "Comparator",
         "Type": "relationships",
         "UIType": ""
       },
@@ -9611,30 +9744,20 @@
   },
   "Intervention": {
     "Attributes": {
-      "Enum": "DocConstantIntervention",
-      "IsInModel": false,
       "Name": "Intervention",
       "TypeId": 13420
     },
-    "Domain": {
-      "Interfaces": ""
-    },
+    "Domain": {},
     "Dto": {
-      "AllVisibleFieldsByDefault": true,
       "DELETE": true,
-      "DontFlattenProperties": "Intervention",
-      "DtoSuffix": "Dto",
       "GET": true,
-      "IgnoreProps": "",
       "ImplementService": true,
       "Interfaces": "",
       "PATCH": true,
       "POST": true,
       "PUT": true
     },
-    "Model": {
-      "Interfaces": ""
-    },
+    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -9690,39 +9813,6 @@
         "Tab": "Intervention",
         "Type": "int"
       },
-      "Intervention": {
-        "Description": "Description of Intervention",
-        "DisplayName": "Intervention",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
-        "IsEditColumn": false,
-        "IsIndexed": true,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUnique": true,
-        "IsUniqueConstraint": true,
-        "LookupTableEnum": "Intervention",
-        "Name": "Intervention",
-        "Order": 0,
-        "SetDefaultValue": "",
-        "Tab": "Intervention",
-        "TabOrder": 0,
-        "Type": "LookupTable",
-        "UIType": ""
-      },
-      "InterventionId": {
-        "DisplayName": "Intervention Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "InterventionId",
-        "Order": 1,
-        "Tab": "Intervention",
-        "Type": "int?"
-      },
       "Locked": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -9733,6 +9823,27 @@
         "Tab": "History",
         "Type": "bool"
       },
+      "Name": {
+        "Description": "Intervention Name",
+        "DisplayName": "Name",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsEditColumn": true,
+        "IsIndexed": true,
+        "IsInsertOnly": true,
+        "IsNullOnUpgrade": true,
+        "IsRequired": true,
+        "IsRequiredInForm": true,
+        "IsUniqueConstraint": true,
+        "Name": "Name",
+        "Order": 0,
+        "SetDefaultValue": "",
+        "Tab": "Intervention",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
       "Updated": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -9742,6 +9853,23 @@
         "Order": -2,
         "Tab": "History",
         "Type": "DateTime?"
+      },
+      "URI": {
+        "Description": "An optional URI to map with DOC Search",
+        "DisplayName": "URI",
+        "IsAudited": true,
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "URI",
+        "Order": 10,
+        "SetDefaultValue": "",
+        "Tab": "Intervention",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
       },
       "VersionNo": {
         "IsDisplayInForm": false,
@@ -12304,30 +12432,20 @@
   },
   "Outcome": {
     "Attributes": {
-      "Enum": "DocConstantAttributeName",
-      "IsInModel": false,
       "Name": "Outcome",
       "TypeId": 13662
     },
-    "Domain": {
-      "Interfaces": ""
-    },
+    "Domain": {},
     "Dto": {
-      "AllVisibleFieldsByDefault": true,
       "DELETE": true,
-      "DontFlattenProperties": "Outcome",
-      "DtoSuffix": "Dto",
       "GET": true,
-      "IgnoreProps": "",
       "ImplementService": true,
       "Interfaces": "",
       "PATCH": true,
       "POST": true,
       "PUT": true
     },
-    "Model": {
-      "Interfaces": ""
-    },
+    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12393,38 +12511,26 @@
         "Tab": "History",
         "Type": "bool"
       },
-      "Outcome": {
-        "Description": "Description of Outcome",
-        "DisplayName": "Outcome",
+      "Name": {
+        "Description": "Outcome Name",
+        "DisplayName": "Name",
         "IsAudited": true,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": true,
-        "IsEditColumn": false,
+        "IsEditColumn": true,
         "IsIndexed": true,
-        "IsRelationship": true,
+        "IsInsertOnly": true,
+        "IsNullOnUpgrade": true,
         "IsRequired": true,
         "IsRequiredInForm": true,
-        "IsUnique": true,
         "IsUniqueConstraint": true,
-        "LookupTableEnum": "AttributeName",
-        "Name": "Outcome",
+        "Name": "Name",
         "Order": 0,
         "SetDefaultValue": "",
         "Tab": "Outcome",
         "TabOrder": 0,
-        "Type": "LookupTable",
+        "Type": "string",
         "UIType": ""
-      },
-      "OutcomeId": {
-        "DisplayName": "Outcome Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "OutcomeId",
-        "Order": 1,
-        "Tab": "Outcome",
-        "Type": "int?"
       },
       "Updated": {
         "IsDisplayInForm": true,
@@ -12435,6 +12541,23 @@
         "Order": -2,
         "Tab": "History",
         "Type": "DateTime?"
+      },
+      "URI": {
+        "Description": "An optional URI to map with DOC Search",
+        "DisplayName": "URI",
+        "IsAudited": true,
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "URI",
+        "Order": 10,
+        "SetDefaultValue": "",
+        "Tab": "Outcome",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
       },
       "VersionNo": {
         "IsDisplayInForm": false,

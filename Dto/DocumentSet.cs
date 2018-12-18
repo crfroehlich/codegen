@@ -74,7 +74,7 @@ namespace Services.Dto
         public int? ClientsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Comparators), Description = "Intervention", IsRequired = false)]
+        [ApiMember(Name = nameof(Comparators), Description = "Comparator", IsRequired = false)]
         public List<Reference> Comparators { get; set; }
         public int? ComparatorsCount { get; set; }
 

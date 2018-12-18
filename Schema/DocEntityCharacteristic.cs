@@ -54,7 +54,7 @@ namespace Services.Schema
             {
                 if(null == __vf)
                 {
-                    __vf = DocWebSession.GetTypeVisibleFields(new CharacteristicDto());
+                    __vf = DocWebSession.GetTypeVisibleFields(new Characteristic());
                 }
                 return __vf;
             }
@@ -108,10 +108,14 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(Nullable = false)]
-        [FieldMapping(nameof(Characteristic))]
-        public DocEntityLookupTable Characteristic { get; set; }
-        public int? CharacteristicId { get { return Characteristic?.Id; } private set { var noid = value; } }
+        [Field(Nullable = false, NullableOnUpgrade = true)]
+        [FieldMapping(nameof(Name))]
+        public string Name { get; set; }
+
+
+        [Field()]
+        [FieldMapping(nameof(URI))]
+        public string URI { get; set; }
 
 
 
@@ -253,6 +257,8 @@ namespace Services.Schema
             if(Hash != hash)
                 Hash = hash;
 
+            Name = Name?.TrimAndPruneSpaces();
+            URI = URI?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
             {
@@ -316,18 +322,10 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(Characteristic))
+                if(DocTools.IsNullOrEmpty(Name))
                 {
                     isValid = false;
-                    message += " Characteristic is a required property.";
-                }
-                else
-                {
-                    if(Characteristic.Enum?.Name != "AttributeName")
-                    {
-                        isValid = false;
-                        message += " Characteristic is a " + Characteristic.Enum.Name + ", but must be a AttributeName.";
-                    }
+                    message += " Name is a required property.";
                 }
 
                 var ret = new DocValidationMessage(message, isValid);
@@ -359,22 +357,22 @@ namespace Services.Schema
 
         public override Reference ToReference()
         {
-            var ret = new Reference(Id, "", Gestalt);
+            var ret = new Reference(Id, Name , Gestalt);
             return _ToReference(ret);
         }
 
-        public CharacteristicDto ToDto() => Mapper.Map<DocEntityCharacteristic, CharacteristicDto>(this);
+        public Characteristic ToDto() => Mapper.Map<DocEntityCharacteristic, Characteristic>(this);
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }
 
-    public partial class CharacteristicDtoMapper : Profile
+    public partial class CharacteristicMapper : Profile
     {
-        private IMappingExpression<DocEntityCharacteristic,CharacteristicDto> _EntityToDto;
-        private IMappingExpression<CharacteristicDto,DocEntityCharacteristic> _DtoToEntity;
+        private IMappingExpression<DocEntityCharacteristic,Characteristic> _EntityToDto;
+        private IMappingExpression<Characteristic,DocEntityCharacteristic> _DtoToEntity;
 
-        public CharacteristicDtoMapper()
+        public CharacteristicMapper()
         {
             CreateMap<DocEntitySet<DocEntityCharacteristic>,List<Reference>>()
                 .ConvertUsing(s => s.ToReferences());
@@ -383,13 +381,13 @@ namespace Services.Schema
             CreateMap<Reference,DocEntityCharacteristic>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
                 .ConstructUsing(c => DocEntityCharacteristic.GetCharacteristic(c));
-            _EntityToDto = CreateMap<DocEntityCharacteristic,CharacteristicDto>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<CharacteristicDto>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<CharacteristicDto>(c, "Updated")))
-                .ForMember(dest => dest.Characteristic, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<CharacteristicDto>(c, nameof(DocEntityCharacteristic.Characteristic))))
-                .ForMember(dest => dest.CharacteristicId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<CharacteristicDto>(c, nameof(DocEntityCharacteristic.CharacteristicId))))
+            _EntityToDto = CreateMap<DocEntityCharacteristic,Characteristic>()
+                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, "Created")))
+                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, "Updated")))
+                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, nameof(DocEntityCharacteristic.Name))))
+                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, nameof(DocEntityCharacteristic.URI))))
                 .MaxDepth(2);
-            _DtoToEntity = CreateMap<CharacteristicDto,DocEntityCharacteristic>()
+            _DtoToEntity = CreateMap<Characteristic,DocEntityCharacteristic>()
                 .MaxDepth(2);
             ApplyCustomMaps();
         }

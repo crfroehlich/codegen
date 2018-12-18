@@ -40,7 +40,7 @@ using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
-    public abstract partial class OutcomeBase : Dto<OutcomeDto>
+    public abstract partial class OutcomeBase : Dto<Outcome>
     {
         public OutcomeBase() {}
 
@@ -51,10 +51,12 @@ namespace Services.Dto
 
         public OutcomeBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(Outcome), Description = "LookupTable", IsRequired = true)]
-        public Reference Outcome { get; set; }
-        [ApiMember(Name = nameof(OutcomeId), Description = "Primary Key of LookupTable", IsRequired = false)]
-        public int? OutcomeId { get; set; }
+        [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
+        public string Name { get; set; }
+
+
+        [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
+        public string URI { get; set; }
 
 
     }
@@ -63,15 +65,15 @@ namespace Services.Dto
     [Route("/profile/outcome", "POST")]
     [Route("/outcome/{Id}", "GET, PATCH, PUT, DELETE")]
     [Route("/profile/outcome/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class OutcomeDto : OutcomeBase, IReturn<OutcomeDto>, IDto
+    public partial class Outcome : OutcomeBase, IReturn<Outcome>, IDto
     {
-        public OutcomeDto()
+        public Outcome()
         {
             _Constructor();
         }
 
-        public OutcomeDto(int? id) : base(DocConvert.ToInt(id)) {}
-        public OutcomeDto(int id) : base(id) {}
+        public Outcome(int? id) : base(DocConvert.ToInt(id)) {}
+        public Outcome(int id) : base(id) {}
         
         #region Fields
         
@@ -86,11 +88,11 @@ namespace Services.Dto
         }
 
         private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<OutcomeDto>());
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<Outcome>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Outcome),nameof(OutcomeId),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(URI),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -98,13 +100,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Outcome>("Outcome",exists);
             }
         }
 
@@ -113,16 +117,15 @@ namespace Services.Dto
     
     [Route("/Outcome/{Id}/copy", "POST")]
     [Route("/profile/Outcome/{Id}/copy", "POST")]
-    public partial class OutcomeDtoCopy : OutcomeDto {}
+    public partial class OutcomeCopy : Outcome {}
     [Route("/outcome", "GET")]
     [Route("/profile/outcome", "GET")]
     [Route("/outcome/search", "GET, POST, DELETE")]
     [Route("/profile/outcome/search", "GET, POST, DELETE")]
-    public partial class OutcomeSearch : Search<OutcomeDto>
+    public partial class OutcomeSearch : Search<Outcome>
     {
-        public Reference Outcome { get; set; }
-        public List<int> OutcomeIds { get; set; }
-        public List<string> OutcomeNames { get; set; }
+        public string Name { get; set; }
+        public string URI { get; set; }
     }
     
     public class OutcomeFullTextSearch
@@ -135,10 +138,11 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(OutcomeDto.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(OutcomeDto.Updated))); }
+        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.Created))); }
+        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.Updated))); }
         
-        public bool doOutcome { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(OutcomeDto.Outcome))); }
+        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.Name))); }
+        public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.URI))); }
     }
 
     [Route("/outcome/version", "GET, POST")]
@@ -146,7 +150,7 @@ namespace Services.Dto
 
     [Route("/outcome/batch", "DELETE, PATCH, POST, PUT")]
     [Route("/profile/outcome/batch", "DELETE, PATCH, POST, PUT")]
-    public partial class OutcomeBatch : List<OutcomeDto> { }
+    public partial class OutcomeBatch : List<Outcome> { }
 
     [Route("/admin/outcome/ids", "GET, POST")]
     public class OutcomeIds

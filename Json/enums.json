@@ -627,6 +627,7 @@
     "BROADCAST": "Broadcast",
     "CHARACTERISTIC": "Characteristic",
     "CLIENT": "Client",
+    "COMPARATOR": "Comparator",
     "DATABASEVERSION": "DatabaseVersion",
     "DATETIME": "DateTime",
     "DEFAULT": "Default",
