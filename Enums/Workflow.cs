@@ -43,12 +43,8 @@ namespace Services.Enums
         DOC_LIBRARY_PROJECT,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_ON_DEMAND)]
         EVIDENCE_ON_DEMAND,
-        [EnumMember(Value = DocConstantWorkflow.EVIDENCE_STATEMENTS)]
-        EVIDENCE_STATEMENTS,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_TABLE)]
         EVIDENCE_TABLE,
-        [EnumMember(Value = DocConstantWorkflow.FAQ)]
-        FAQ,
         [EnumMember(Value = DocConstantWorkflow.FILTER)]
         FILTER,
         [EnumMember(Value = DocConstantWorkflow.FRAMED_QUESTION_DATA_SET)]
@@ -79,6 +75,8 @@ namespace Services.Enums
         RISK_OF_BIAS,
         [EnumMember(Value = DocConstantWorkflow.RMD_SNIPPET)]
         RMD_SNIPPET,
+        [EnumMember(Value = DocConstantWorkflow.SERVE_PORTAL)]
+        SERVE_PORTAL,
         [EnumMember(Value = DocConstantWorkflow.SURVEY_DESIGN)]
         SURVEY_DESIGN,
         [EnumMember(Value = DocConstantWorkflow.SURVEY_WIZARD)]
@@ -104,9 +102,7 @@ namespace Services.Enums
         public const string DOC_EXTRACT_PROJECT = "DOC Extract Project";
         public const string DOC_LIBRARY_PROJECT = "DOC Library Project";
         public const string EVIDENCE_ON_DEMAND = "Evidence on Demand";
-        public const string EVIDENCE_STATEMENTS = "Evidence Statements";
         public const string EVIDENCE_TABLE = "Evidence Table";
-        public const string FAQ = "FAQ";
         public const string FILTER = "Filter";
         public const string FRAMED_QUESTION_DATA_SET = "Framed Question Data Set";
         public const string FRAMED_QUESTION_LIBRARY = "Framed Question Library";
@@ -122,6 +118,7 @@ namespace Services.Enums
         public const string RESPONSE_LETTER = "Response Letter";
         public const string RISK_OF_BIAS = "Risk of Bias";
         public const string RMD_SNIPPET = "RMD Snippet";
+        public const string SERVE_PORTAL = "SERVE Portal";
         public const string SURVEY_DESIGN = "Survey Design";
         public const string SURVEY_WIZARD = "Survery Wizard";
         public const string SYSTEMATIC_REVIEW = "Systematic Review";

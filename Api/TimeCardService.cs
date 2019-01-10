@@ -154,6 +154,14 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.PICO.Id.In(request.PICOIds));
                 }
+                if(!DocTools.IsNullOrEmpty(request.Product) && !DocTools.IsNullOrEmpty(request.Product.Id))
+                {
+                    entities = entities.Where(en => en.Product.Id == request.Product.Id );
+                }
+                if(true == request.ProductIds?.Any())
+                {
+                    entities = entities.Where(en => en.Product.Id.In(request.ProductIds));
+                }
                 if(request.ReferenceId.HasValue)
                     entities = entities.Where(en => request.ReferenceId.Value == en.ReferenceId);
                 if(!DocTools.IsNullOrEmpty(request.Start))
@@ -341,6 +349,7 @@ namespace Services.API
             var pDocument = (dtoSource.Document?.Id > 0) ? DocEntityDocument.GetDocument(dtoSource.Document.Id) : null;
             var pEnd = dtoSource.End;
             var pPICO = (dtoSource.PICO?.Id > 0) ? DocEntityPackage.GetPackage(dtoSource.PICO.Id) : null;
+            var pProduct = (dtoSource.Product?.Id > 0) ? DocEntityProduct.GetProduct(dtoSource.Product.Id) : null;
             var pReferenceId = dtoSource.ReferenceId;
             var pStart = dtoSource.Start;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.TIMECARDSTATUS, dtoSource.Status?.Name, dtoSource.Status?.Id);
@@ -399,6 +408,15 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityPackage>(dtoSource, pPICO, nameof(dtoSource.PICO)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.PICO), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.PICO));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityProduct>(currentUser, dtoSource, pProduct, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.Product)))
+            {
+                if(DocPermissionFactory.IsRequested(dtoSource, pProduct, entity.Product, nameof(dtoSource.Product)))
+                    entity.Product = pProduct;
+                if(DocPermissionFactory.IsRequested<DocEntityProduct>(dtoSource, pProduct, nameof(dtoSource.Product)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Product), ignoreSpaces: true))
+                {
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Product));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pReferenceId, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.ReferenceId)))
@@ -539,6 +557,7 @@ namespace Services.API
                     var pDocument = entity.Document;
                     var pEnd = entity.End;
                     var pPICO = entity.PICO;
+                    var pProduct = entity.Product;
                     var pReferenceId = entity.ReferenceId;
                     var pStart = entity.Start;
                     var pStatus = entity.Status;
@@ -551,6 +570,7 @@ namespace Services.API
                                 , Document = pDocument
                                 , End = pEnd
                                 , PICO = pPICO
+                                , Product = pProduct
                                 , ReferenceId = pReferenceId
                                 , Start = pStart
                                 , Status = pStatus

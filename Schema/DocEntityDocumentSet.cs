@@ -338,6 +338,15 @@ namespace Services.Schema
 
 
         [Field()]
+        [FieldMapping(nameof(Products))]
+        [Association( PairTo = nameof(Product.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        public DocEntitySet<DocEntityProduct> Products { get; private set; }
+
+
+        public int? ProductsCount { get { return Products.Count(); } private set { var noid = value; } }
+
+
+        [Field()]
         [FieldMapping(nameof(ProjectTeam))]
         public DocEntityTeam ProjectTeam { get; set; }
         public int? ProjectTeamId { get { return ProjectTeam?.Id; } private set { var noid = value; } }
@@ -789,6 +798,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.PackagesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.PackagesCount))))
                 .ForMember(dest => dest.Participants, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Participants))))
                 .ForMember(dest => dest.PRISMA, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.PRISMA))))
+                .ForMember(dest => dest.Products, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Products))))
+                .ForMember(dest => dest.ProductsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProductsCount))))
                 .ForMember(dest => dest.ProjectTeam, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProjectTeam))))
                 .ForMember(dest => dest.ProjectTeamId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProjectTeamId))))
                 .ForMember(dest => dest.ProtocolReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProtocolReferenceId))))

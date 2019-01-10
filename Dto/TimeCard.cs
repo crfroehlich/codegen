@@ -71,6 +71,12 @@ namespace Services.Dto
         public int? PICOId { get; set; }
 
 
+        [ApiMember(Name = nameof(Product), Description = "Product", IsRequired = false)]
+        public Reference Product { get; set; }
+        [ApiMember(Name = nameof(ProductId), Description = "Primary Key of Product", IsRequired = false)]
+        public int? ProductId { get; set; }
+
+
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = false)]
         public int? ReferenceId { get; set; }
 
@@ -131,7 +137,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Document),nameof(DocumentId),nameof(End),nameof(Gestalt),nameof(Locked),nameof(PICO),nameof(PICOId),nameof(ReferenceId),nameof(Start),nameof(Status),nameof(StatusId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo),nameof(WorkType),nameof(WorkTypeId)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Document),nameof(DocumentId),nameof(End),nameof(Gestalt),nameof(Locked),nameof(PICO),nameof(PICOId),nameof(Product),nameof(ProductId),nameof(ReferenceId),nameof(Start),nameof(Status),nameof(StatusId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo),nameof(WorkType),nameof(WorkTypeId)})]
         public new List<string> VisibleFields
         {
             get
@@ -171,6 +177,8 @@ namespace Services.Dto
         public DateTime? EndBefore { get; set; }
         public Reference PICO { get; set; }
         public List<int> PICOIds { get; set; }
+        public Reference Product { get; set; }
+        public List<int> ProductIds { get; set; }
         public int? ReferenceId { get; set; }
         public DateTime? Start { get; set; }
         public DateTime? StartAfter { get; set; }
@@ -203,6 +211,7 @@ namespace Services.Dto
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Document))); }
         public bool doEnd { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.End))); }
         public bool doPICO { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.PICO))); }
+        public bool doProduct { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Product))); }
         public bool doReferenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.ReferenceId))); }
         public bool doStart { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Start))); }
         public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Status))); }
