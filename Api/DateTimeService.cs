@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, "DateTime", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DateTimeDto>(Dto.DateTimeDto.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityDateTime>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -187,32 +187,32 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, "DateTime", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<DateTimeDto>(Dto.DateTimeDto.Fields, request);
                 ret = GetDateTime(request);
             });
             return ret;
         }
 
-        private DateTimeDto _AssignValues(DateTimeDto dtoSource, DocConstantPermission permission, Session session)
+        private DateTimeDto _AssignValues(DateTimeDto request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "DateTime"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             DateTimeDto ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pDateDay = dtoSource.DateDay;
-            var pDateMonth = dtoSource.DateMonth;
-            var pDateTime = dtoSource.DateTime;
-            var pDateYear = dtoSource.DateYear;
+            var pDateDay = request.DateDay;
+            var pDateMonth = request.DateMonth;
+            var pDateTime = request.DateTime;
+            var pDateYear = request.DateYear;
 
             DocEntityDateTime entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -226,62 +226,62 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityDateTime.GetDateTime(dtoSource.Id);
+                entity = DocEntityDateTime.GetDateTime(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pDateDay, permission, DocConstantModelName.DATETIME, nameof(dtoSource.DateDay)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateDay, permission, DocConstantModelName.DATETIME, nameof(request.DateDay)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDateDay, entity.DateDay, nameof(dtoSource.DateDay)))
+                if(DocPermissionFactory.IsRequested(request, pDateDay, entity.DateDay, nameof(request.DateDay)))
                     entity.DateDay = pDateDay;
-                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pDateDay, nameof(dtoSource.DateDay)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DateDay), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(request, pDateDay, nameof(request.DateDay)) && !request.VisibleFields.Matches(nameof(request.DateDay), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DateDay));
+                    request.VisibleFields.Add(nameof(request.DateDay));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pDateMonth, permission, DocConstantModelName.DATETIME, nameof(dtoSource.DateMonth)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateMonth, permission, DocConstantModelName.DATETIME, nameof(request.DateMonth)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDateMonth, entity.DateMonth, nameof(dtoSource.DateMonth)))
+                if(DocPermissionFactory.IsRequested(request, pDateMonth, entity.DateMonth, nameof(request.DateMonth)))
                     entity.DateMonth = pDateMonth;
-                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pDateMonth, nameof(dtoSource.DateMonth)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DateMonth), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(request, pDateMonth, nameof(request.DateMonth)) && !request.VisibleFields.Matches(nameof(request.DateMonth), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DateMonth));
+                    request.VisibleFields.Add(nameof(request.DateMonth));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pDateTime, permission, DocConstantModelName.DATETIME, nameof(dtoSource.DateTime)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDateTime, permission, DocConstantModelName.DATETIME, nameof(request.DateTime)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDateTime, entity.DateTime, nameof(dtoSource.DateTime)))
+                if(DocPermissionFactory.IsRequested(request, pDateTime, entity.DateTime, nameof(request.DateTime)))
                     entity.DateTime = pDateTime;
-                if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pDateTime, nameof(dtoSource.DateTime)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DateTime), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pDateTime, nameof(request.DateTime)) && !request.VisibleFields.Matches(nameof(request.DateTime), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DateTime));
+                    request.VisibleFields.Add(nameof(request.DateTime));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pDateYear, permission, DocConstantModelName.DATETIME, nameof(dtoSource.DateYear)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateYear, permission, DocConstantModelName.DATETIME, nameof(request.DateYear)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDateYear, entity.DateYear, nameof(dtoSource.DateYear)))
+                if(DocPermissionFactory.IsRequested(request, pDateYear, entity.DateYear, nameof(request.DateYear)))
                     entity.DateYear = pDateYear;
-                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pDateYear, nameof(dtoSource.DateYear)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DateYear), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(request, pDateYear, nameof(request.DateYear)) && !request.VisibleFields.Matches(nameof(request.DateYear), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DateYear));
+                    request.VisibleFields.Add(nameof(request.DateYear));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, nameof(DateTimeDto), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DateTimeDto>(Dto.DateTimeDto.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public DateTimeDto Post(DateTimeDto dtoSource)
+        public DateTimeDto Post(DateTimeDto request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             DateTimeDto ret = null;
 
@@ -290,7 +290,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "DateTime")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -377,9 +377,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public DateTimeDto Put(DateTimeDto dtoSource)
+        public DateTimeDto Put(DateTimeDto request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<DateTimeDto> Patch(DateTimeBatch request)
@@ -429,16 +429,16 @@ namespace Services.API
             return ret;
         }
 
-        public DateTimeDto Patch(DateTimeDto dtoSource)
+        public DateTimeDto Patch(DateTimeDto request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the DateTime to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the DateTime to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             DateTimeDto ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -523,7 +523,7 @@ namespace Services.API
             DateTimeDto ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, "DateTime", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DateTimeDto>(Dto.DateTimeDto.Fields, request);
 
             DocEntityDateTime entity = null;
             if(id.HasValue)

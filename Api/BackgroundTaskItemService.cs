@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<BackgroundTaskItem>(Dto.BackgroundTaskItem.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityBackgroundTaskItem>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -219,7 +219,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<BackgroundTaskItem>(Dto.BackgroundTaskItem.Fields, request);
                 ret = GetBackgroundTaskItem(request);
             });
             return ret;
@@ -270,7 +270,7 @@ namespace Services.API
 
         private object _GetBackgroundTaskItemBackgroundTaskHistory(BackgroundTaskItemJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<BackgroundTaskHistory>(currentUser, "BackgroundTaskHistory", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<BackgroundTaskHistory>(Dto.BackgroundTaskHistory.Fields, request.VisibleFields);
              var en = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASKITEM, columnName: "TaskHistory", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTaskItem and BackgroundTaskHistory");
@@ -329,7 +329,7 @@ namespace Services.API
             BackgroundTaskItem ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<BackgroundTaskItem>(Dto.BackgroundTaskItem.Fields, request);
 
             DocEntityBackgroundTaskItem entity = null;
             if(id.HasValue)

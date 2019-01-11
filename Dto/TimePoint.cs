@@ -100,8 +100,7 @@ namespace Services.Dto
             return true == VisibleFields?.Matches(field, true);
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<TimePoint>());
+        public static List<string> Fields => DocTools.Fields<TimePoint>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]

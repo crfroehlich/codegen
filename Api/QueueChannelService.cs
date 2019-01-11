@@ -93,7 +93,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, "QueueChannel", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<QueueChannel>(Dto.QueueChannel.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityQueueChannel>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -247,7 +247,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, "QueueChannel", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<QueueChannel>(Dto.QueueChannel.Fields, request);
                 var settings = DocResources.Settings;
                 if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "queuechannel")) 
                 {
@@ -261,28 +261,28 @@ namespace Services.API
             return ret;
         }
 
-        private QueueChannel _AssignValues(QueueChannel dtoSource, DocConstantPermission permission, Session session)
+        private QueueChannel _AssignValues(QueueChannel request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "QueueChannel"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             QueueChannel ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pAutoDelete = dtoSource.AutoDelete;
-            var pDescription = dtoSource.Description;
-            var pDurable = dtoSource.Durable;
-            var pEnabled = dtoSource.Enabled;
-            var pExclusive = dtoSource.Exclusive;
-            var pName = dtoSource.Name;
+            var pAutoDelete = request.AutoDelete;
+            var pDescription = request.Description;
+            var pDurable = request.Durable;
+            var pEnabled = request.Enabled;
+            var pExclusive = request.Exclusive;
+            var pName = request.Name;
 
             DocEntityQueueChannel entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -296,81 +296,81 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityQueueChannel.GetQueueChannel(dtoSource.Id);
+                entity = DocEntityQueueChannel.GetQueueChannel(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pAutoDelete, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.AutoDelete)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pAutoDelete, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.AutoDelete)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pAutoDelete, entity.AutoDelete, nameof(dtoSource.AutoDelete)))
+                if(DocPermissionFactory.IsRequested(request, pAutoDelete, entity.AutoDelete, nameof(request.AutoDelete)))
                     entity.AutoDelete = pAutoDelete;
-                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pAutoDelete, nameof(dtoSource.AutoDelete)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.AutoDelete), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pAutoDelete, nameof(request.AutoDelete)) && !request.VisibleFields.Matches(nameof(request.AutoDelete), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.AutoDelete));
+                    request.VisibleFields.Add(nameof(request.AutoDelete));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Description)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
+                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
                     entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
+                    request.VisibleFields.Add(nameof(request.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pDurable, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Durable)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pDurable, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Durable)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDurable, entity.Durable, nameof(dtoSource.Durable)))
+                if(DocPermissionFactory.IsRequested(request, pDurable, entity.Durable, nameof(request.Durable)))
                     entity.Durable = pDurable;
-                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pDurable, nameof(dtoSource.Durable)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Durable), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pDurable, nameof(request.Durable)) && !request.VisibleFields.Matches(nameof(request.Durable), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Durable));
+                    request.VisibleFields.Add(nameof(request.Durable));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pEnabled, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Enabled)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pEnabled, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Enabled)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pEnabled, entity.Enabled, nameof(dtoSource.Enabled)))
+                if(DocPermissionFactory.IsRequested(request, pEnabled, entity.Enabled, nameof(request.Enabled)))
                     entity.Enabled = pEnabled;
-                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pEnabled, nameof(dtoSource.Enabled)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Enabled), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pEnabled, nameof(request.Enabled)) && !request.VisibleFields.Matches(nameof(request.Enabled), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Enabled));
+                    request.VisibleFields.Add(nameof(request.Enabled));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pExclusive, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Exclusive)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pExclusive, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Exclusive)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pExclusive, entity.Exclusive, nameof(dtoSource.Exclusive)))
+                if(DocPermissionFactory.IsRequested(request, pExclusive, entity.Exclusive, nameof(request.Exclusive)))
                     entity.Exclusive = pExclusive;
-                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pExclusive, nameof(dtoSource.Exclusive)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Exclusive), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pExclusive, nameof(request.Exclusive)) && !request.VisibleFields.Matches(nameof(request.Exclusive), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Exclusive));
+                    request.VisibleFields.Add(nameof(request.Exclusive));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, nameof(QueueChannel), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<QueueChannel>(Dto.QueueChannel.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public QueueChannel Post(QueueChannel dtoSource)
+        public QueueChannel Post(QueueChannel request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             QueueChannel ret = null;
 
@@ -379,7 +379,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "QueueChannel")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -474,9 +474,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public QueueChannel Put(QueueChannel dtoSource)
+        public QueueChannel Put(QueueChannel request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<QueueChannel> Patch(QueueChannelBatch request)
@@ -526,16 +526,16 @@ namespace Services.API
             return ret;
         }
 
-        public QueueChannel Patch(QueueChannel dtoSource)
+        public QueueChannel Patch(QueueChannel request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the QueueChannel to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the QueueChannel to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             QueueChannel ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -620,7 +620,7 @@ namespace Services.API
             QueueChannel ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, "QueueChannel", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<QueueChannel>(Dto.QueueChannel.Fields, request);
 
             DocEntityQueueChannel entity = null;
             if(id.HasValue)

@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityWorkflowTask>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -239,36 +239,36 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request);
                 ret = GetWorkflowTask(request);
             });
             return ret;
         }
 
-        private WorkflowTask _AssignValues(WorkflowTask dtoSource, DocConstantPermission permission, Session session)
+        private WorkflowTask _AssignValues(WorkflowTask request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "WorkflowTask"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             WorkflowTask ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pAssignee = (dtoSource.Assignee?.Id > 0) ? DocEntityUser.GetUser(dtoSource.Assignee.Id) : null;
-            var pData = dtoSource.Data;
-            var pDescription = dtoSource.Description;
-            var pDueDate = dtoSource.DueDate;
-            var pReporter = (dtoSource.Reporter?.Id > 0) ? DocEntityUser.GetUser(dtoSource.Reporter.Id) : null;
-            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.WORKFLOWSTATUS, dtoSource.Status?.Name, dtoSource.Status?.Id);
-            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.WORKFLOWTASKTYPE, dtoSource.Type?.Name, dtoSource.Type?.Id);
-            var pWorkflow = (dtoSource.Workflow?.Id > 0) ? DocEntityWorkflow.GetWorkflow(dtoSource.Workflow.Id) : null;
+            var pAssignee = (request.Assignee?.Id > 0) ? DocEntityUser.GetUser(request.Assignee.Id) : null;
+            var pData = request.Data;
+            var pDescription = request.Description;
+            var pDueDate = request.DueDate;
+            var pReporter = (request.Reporter?.Id > 0) ? DocEntityUser.GetUser(request.Reporter.Id) : null;
+            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.WORKFLOWSTATUS, request.Status?.Name, request.Status?.Id);
+            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.WORKFLOWTASKTYPE, request.Type?.Name, request.Type?.Id);
+            var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.GetWorkflow(request.Workflow.Id) : null;
 
             DocEntityWorkflowTask entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -282,98 +282,98 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityWorkflowTask.GetWorkflowTask(dtoSource.Id);
+                entity = DocEntityWorkflowTask.GetWorkflowTask(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, dtoSource, pAssignee, permission, DocConstantModelName.WORKFLOWTASK, nameof(dtoSource.Assignee)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pAssignee, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Assignee)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pAssignee, entity.Assignee, nameof(dtoSource.Assignee)))
+                if(DocPermissionFactory.IsRequested(request, pAssignee, entity.Assignee, nameof(request.Assignee)))
                     entity.Assignee = pAssignee;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(dtoSource, pAssignee, nameof(dtoSource.Assignee)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Assignee), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pAssignee, nameof(request.Assignee)) && !request.VisibleFields.Matches(nameof(request.Assignee), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Assignee));
+                    request.VisibleFields.Add(nameof(request.Assignee));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pData, permission, DocConstantModelName.WORKFLOWTASK, nameof(dtoSource.Data)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pData, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Data)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pData, entity.Data, nameof(dtoSource.Data)))
+                if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
                     entity.Data = pData;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pData, nameof(dtoSource.Data)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Data), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pData, nameof(request.Data)) && !request.VisibleFields.Matches(nameof(request.Data), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Data));
+                    request.VisibleFields.Add(nameof(request.Data));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.WORKFLOWTASK, nameof(dtoSource.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Description)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
+                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
                     entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
+                    request.VisibleFields.Add(nameof(request.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pDueDate, permission, DocConstantModelName.WORKFLOWTASK, nameof(dtoSource.DueDate)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDueDate, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.DueDate)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDueDate, entity.DueDate, nameof(dtoSource.DueDate)))
+                if(DocPermissionFactory.IsRequested(request, pDueDate, entity.DueDate, nameof(request.DueDate)))
                     entity.DueDate = pDueDate;
-                if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pDueDate, nameof(dtoSource.DueDate)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DueDate), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pDueDate, nameof(request.DueDate)) && !request.VisibleFields.Matches(nameof(request.DueDate), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DueDate));
+                    request.VisibleFields.Add(nameof(request.DueDate));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, dtoSource, pReporter, permission, DocConstantModelName.WORKFLOWTASK, nameof(dtoSource.Reporter)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pReporter, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Reporter)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pReporter, entity.Reporter, nameof(dtoSource.Reporter)))
+                if(DocPermissionFactory.IsRequested(request, pReporter, entity.Reporter, nameof(request.Reporter)))
                     entity.Reporter = pReporter;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(dtoSource, pReporter, nameof(dtoSource.Reporter)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Reporter), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pReporter, nameof(request.Reporter)) && !request.VisibleFields.Matches(nameof(request.Reporter), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Reporter));
+                    request.VisibleFields.Add(nameof(request.Reporter));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pStatus, permission, DocConstantModelName.WORKFLOWTASK, nameof(dtoSource.Status)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Status)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pStatus, entity.Status, nameof(dtoSource.Status)))
+                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
                     entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pStatus, nameof(dtoSource.Status)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Status), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Status));
+                    request.VisibleFields.Add(nameof(request.Status));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pType, permission, DocConstantModelName.WORKFLOWTASK, nameof(dtoSource.Type)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Type)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pType, entity.Type, nameof(dtoSource.Type)))
+                if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
                     entity.Type = pType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pType, nameof(dtoSource.Type)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Type), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Type));
+                    request.VisibleFields.Add(nameof(request.Type));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, dtoSource, pWorkflow, permission, DocConstantModelName.WORKFLOWTASK, nameof(dtoSource.Workflow)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, request, pWorkflow, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Workflow)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pWorkflow, entity.Workflow, nameof(dtoSource.Workflow)))
+                if(DocPermissionFactory.IsRequested(request, pWorkflow, entity.Workflow, nameof(request.Workflow)))
                     entity.Workflow = pWorkflow;
-                if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(dtoSource, pWorkflow, nameof(dtoSource.Workflow)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Workflow), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(request, pWorkflow, nameof(request.Workflow)) && !request.VisibleFields.Matches(nameof(request.Workflow), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Workflow));
+                    request.VisibleFields.Add(nameof(request.Workflow));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, nameof(WorkflowTask), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public WorkflowTask Post(WorkflowTask dtoSource)
+        public WorkflowTask Post(WorkflowTask request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             WorkflowTask ret = null;
 
@@ -382,7 +382,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "WorkflowTask")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -479,9 +479,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public WorkflowTask Put(WorkflowTask dtoSource)
+        public WorkflowTask Put(WorkflowTask request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<WorkflowTask> Patch(WorkflowTaskBatch request)
@@ -531,16 +531,16 @@ namespace Services.API
             return ret;
         }
 
-        public WorkflowTask Patch(WorkflowTask dtoSource)
+        public WorkflowTask Patch(WorkflowTask request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the WorkflowTask to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the WorkflowTask to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             WorkflowTask ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -625,7 +625,7 @@ namespace Services.API
             WorkflowTask ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request);
 
             DocEntityWorkflowTask entity = null;
             if(id.HasValue)

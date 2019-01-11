@@ -93,7 +93,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityBroadcast>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -291,7 +291,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request);
                 var settings = DocResources.Settings;
                 if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "broadcast")) 
                 {
@@ -305,30 +305,30 @@ namespace Services.API
             return ret;
         }
 
-        private Broadcast _AssignValues(Broadcast dtoSource, DocConstantPermission permission, Session session)
+        private Broadcast _AssignValues(Broadcast request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Broadcast"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Broadcast ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (dtoSource.App?.Id > 0) ? DocEntityApp.GetApp(dtoSource.App.Id) : null;
-            var pConfluenceId = dtoSource.ConfluenceId;
-            var pName = dtoSource.Name;
-            var pReprocess = dtoSource.Reprocess;
-            var pReprocessed = dtoSource.Reprocessed;
-            var pScopes = dtoSource.Scopes?.ToList();
-            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.BROADCASTSTATUS, dtoSource.Status?.Name, dtoSource.Status?.Id);
-            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.BROADCASTTYPE, dtoSource.Type?.Name, dtoSource.Type?.Id);
+            var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
+            var pConfluenceId = request.ConfluenceId;
+            var pName = request.Name;
+            var pReprocess = request.Reprocess;
+            var pReprocessed = request.Reprocessed;
+            var pScopes = request.Scopes?.ToList();
+            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.BROADCASTSTATUS, request.Status?.Name, request.Status?.Id);
+            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.BROADCASTTYPE, request.Type?.Name, request.Type?.Id);
 
             DocEntityBroadcast entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -342,81 +342,81 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityBroadcast.GetBroadcast(dtoSource.Id);
+                entity = DocEntityBroadcast.GetBroadcast(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityApp>(currentUser, dtoSource, pApp, permission, DocConstantModelName.BROADCAST, nameof(dtoSource.App)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityApp>(currentUser, request, pApp, permission, DocConstantModelName.BROADCAST, nameof(request.App)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pApp, entity.App, nameof(dtoSource.App)))
+                if(DocPermissionFactory.IsRequested(request, pApp, entity.App, nameof(request.App)))
                     entity.App = pApp;
-                if(DocPermissionFactory.IsRequested<DocEntityApp>(dtoSource, pApp, nameof(dtoSource.App)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.App), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityApp>(request, pApp, nameof(request.App)) && !request.VisibleFields.Matches(nameof(request.App), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.App));
+                    request.VisibleFields.Add(nameof(request.App));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pConfluenceId, permission, DocConstantModelName.BROADCAST, nameof(dtoSource.ConfluenceId)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pConfluenceId, permission, DocConstantModelName.BROADCAST, nameof(request.ConfluenceId)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pConfluenceId, entity.ConfluenceId, nameof(dtoSource.ConfluenceId)))
+                if(DocPermissionFactory.IsRequested(request, pConfluenceId, entity.ConfluenceId, nameof(request.ConfluenceId)))
                     entity.ConfluenceId = pConfluenceId;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pConfluenceId, nameof(dtoSource.ConfluenceId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ConfluenceId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pConfluenceId, nameof(request.ConfluenceId)) && !request.VisibleFields.Matches(nameof(request.ConfluenceId), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.ConfluenceId));
+                    request.VisibleFields.Add(nameof(request.ConfluenceId));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.BROADCAST, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.BROADCAST, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pReprocess, permission, DocConstantModelName.BROADCAST, nameof(dtoSource.Reprocess)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pReprocess, permission, DocConstantModelName.BROADCAST, nameof(request.Reprocess)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pReprocess, entity.Reprocess, nameof(dtoSource.Reprocess)))
+                if(DocPermissionFactory.IsRequested(request, pReprocess, entity.Reprocess, nameof(request.Reprocess)))
                     entity.Reprocess = pReprocess;
-                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pReprocess, nameof(dtoSource.Reprocess)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Reprocess), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pReprocess, nameof(request.Reprocess)) && !request.VisibleFields.Matches(nameof(request.Reprocess), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Reprocess));
+                    request.VisibleFields.Add(nameof(request.Reprocess));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pReprocessed, permission, DocConstantModelName.BROADCAST, nameof(dtoSource.Reprocessed)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pReprocessed, permission, DocConstantModelName.BROADCAST, nameof(request.Reprocessed)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pReprocessed, entity.Reprocessed, nameof(dtoSource.Reprocessed)))
+                if(DocPermissionFactory.IsRequested(request, pReprocessed, entity.Reprocessed, nameof(request.Reprocessed)))
                     entity.Reprocessed = pReprocessed;
-                if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pReprocessed, nameof(dtoSource.Reprocessed)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Reprocessed), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pReprocessed, nameof(request.Reprocessed)) && !request.VisibleFields.Matches(nameof(request.Reprocessed), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Reprocessed));
+                    request.VisibleFields.Add(nameof(request.Reprocessed));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pStatus, permission, DocConstantModelName.BROADCAST, nameof(dtoSource.Status)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.BROADCAST, nameof(request.Status)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pStatus, entity.Status, nameof(dtoSource.Status)))
+                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
                     entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pStatus, nameof(dtoSource.Status)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Status), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Status));
+                    request.VisibleFields.Add(nameof(request.Status));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pType, permission, DocConstantModelName.BROADCAST, nameof(dtoSource.Type)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.BROADCAST, nameof(request.Type)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pType, entity.Type, nameof(dtoSource.Type)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Type)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
                     entity.Type = pType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pType, nameof(dtoSource.Type)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Type), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Type));
+                    request.VisibleFields.Add(nameof(request.Type));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pScopes, permission, DocConstantModelName.BROADCAST, nameof(dtoSource.Scopes)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.BROADCAST, nameof(request.Scopes)))
             {
                 if (true == pScopes?.Any() )
                 {
@@ -431,16 +431,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Broadcast), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Scopes)} to {nameof(Broadcast)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Broadcast), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(Broadcast)}");
                         entity.Scopes.Add(target);
                     });
                     var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Broadcast), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Scopes)} from {nameof(Broadcast)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Broadcast), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Broadcast)}");
                         entity.Scopes.Remove(target);
                     });
                 }
@@ -450,26 +450,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Broadcast), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Scopes)} from {nameof(Broadcast)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Broadcast), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Broadcast)}");
                         entity.Scopes.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pScopes, nameof(dtoSource.Scopes)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Scopes), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopes, nameof(request.Scopes)) && !request.VisibleFields.Matches(nameof(request.Scopes), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Scopes));
+                    request.VisibleFields.Add(nameof(request.Scopes));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, nameof(Broadcast), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Broadcast Post(Broadcast dtoSource)
+        public Broadcast Post(Broadcast request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Broadcast ret = null;
 
@@ -478,7 +478,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Broadcast")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -581,9 +581,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public Broadcast Put(Broadcast dtoSource)
+        public Broadcast Put(Broadcast request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<Broadcast> Patch(BroadcastBatch request)
@@ -633,16 +633,16 @@ namespace Services.API
             return ret;
         }
 
-        public Broadcast Patch(Broadcast dtoSource)
+        public Broadcast Patch(Broadcast request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Broadcast to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Broadcast to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Broadcast ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -765,7 +765,7 @@ namespace Services.API
 
         private object _GetBroadcastScope(BroadcastJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
              var en = DocEntityBroadcast.GetBroadcast(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BROADCAST, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Broadcast and Scope");
@@ -883,7 +883,7 @@ namespace Services.API
             Broadcast ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request);
 
             DocEntityBroadcast entity = null;
             if(id.HasValue)

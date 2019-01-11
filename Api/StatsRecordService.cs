@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityStatsRecord>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -197,7 +197,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request);
                 ret = GetStatsRecord(request);
             });
             return ret;
@@ -213,7 +213,7 @@ namespace Services.API
             StatsRecord ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request);
 
             DocEntityStatsRecord entity = null;
             if(id.HasValue)

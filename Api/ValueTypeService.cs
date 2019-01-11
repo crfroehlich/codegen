@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<ValueType>(Dto.ValueType.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityValueType>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -207,7 +207,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<ValueType>(Dto.ValueType.Fields, request);
                 ret = GetValueType(request);
             });
             return ret;
@@ -223,7 +223,7 @@ namespace Services.API
             ValueType ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<ValueType>(Dto.ValueType.Fields, request);
 
             DocEntityValueType entity = null;
             if(id.HasValue)

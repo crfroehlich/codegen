@@ -93,7 +93,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<UserSession>(Dto.UserSession.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityUserSession>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -263,7 +263,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<UserSession>(Dto.UserSession.Fields, request);
                 var settings = DocResources.Settings;
                 if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usersession")) 
                 {
@@ -331,7 +331,7 @@ namespace Services.API
 
         private object _GetUserSessionImpersonation(UserSessionJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
              var en = DocEntityUserSession.GetUserSession(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "Impersonations", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and Impersonation");
@@ -353,7 +353,7 @@ namespace Services.API
 
         private object _GetUserSessionRequest(UserSessionJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<UserRequest>(currentUser, "UserRequest", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<UserRequest>(Dto.UserRequest.Fields, request.VisibleFields);
              var en = DocEntityUserSession.GetUserSession(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "Requests", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and UserRequest");
@@ -362,7 +362,7 @@ namespace Services.API
 
         private object _GetUserSessionHistory(UserSessionJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request.VisibleFields);
              var en = DocEntityUserSession.GetUserSession(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "UserHistory", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and History");
@@ -467,7 +467,7 @@ namespace Services.API
             UserSession ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<UserSession>(Dto.UserSession.Fields, request);
 
             DocEntityUserSession entity = null;
             if(id.HasValue)

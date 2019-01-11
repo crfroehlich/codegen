@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityHistory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -233,36 +233,36 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request);
                 ret = GetHistory(request);
             });
             return ret;
         }
 
-        private History _AssignValues(History dtoSource, DocConstantPermission permission, Session session)
+        private History _AssignValues(History request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "History"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             History ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (dtoSource.App?.Id > 0) ? DocEntityApp.GetApp(dtoSource.App.Id) : null;
-            var pDocumentSet = (dtoSource.DocumentSet?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(dtoSource.DocumentSet.Id) : null;
-            var pImpersonation = (dtoSource.Impersonation?.Id > 0) ? DocEntityImpersonation.GetImpersonation(dtoSource.Impersonation.Id) : null;
-            var pPage = (dtoSource.Page?.Id > 0) ? DocEntityPage.GetPage(dtoSource.Page.Id) : null;
-            var pURL = dtoSource.URL;
-            var pUser = (dtoSource.User?.Id > 0) ? DocEntityUser.GetUser(dtoSource.User.Id) : null;
-            var pUserSession = (dtoSource.UserSession?.Id > 0) ? DocEntityUserSession.GetUserSession(dtoSource.UserSession.Id) : null;
-            var pWorkflow = (dtoSource.Workflow?.Id > 0) ? DocEntityWorkflow.GetWorkflow(dtoSource.Workflow.Id) : null;
+            var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
+            var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.DocumentSet.Id) : null;
+            var pImpersonation = (request.Impersonation?.Id > 0) ? DocEntityImpersonation.GetImpersonation(request.Impersonation.Id) : null;
+            var pPage = (request.Page?.Id > 0) ? DocEntityPage.GetPage(request.Page.Id) : null;
+            var pURL = request.URL;
+            var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
+            var pUserSession = (request.UserSession?.Id > 0) ? DocEntityUserSession.GetUserSession(request.UserSession.Id) : null;
+            var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.GetWorkflow(request.Workflow.Id) : null;
 
             DocEntityHistory entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -276,106 +276,106 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityHistory.GetHistory(dtoSource.Id);
+                entity = DocEntityHistory.GetHistory(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityApp>(currentUser, dtoSource, pApp, permission, DocConstantModelName.HISTORY, nameof(dtoSource.App)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityApp>(currentUser, request, pApp, permission, DocConstantModelName.HISTORY, nameof(request.App)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pApp, entity.App, nameof(dtoSource.App)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.App)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pApp, entity.App, nameof(request.App)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.App)} cannot be modified once set.");
                     entity.App = pApp;
-                if(DocPermissionFactory.IsRequested<DocEntityApp>(dtoSource, pApp, nameof(dtoSource.App)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.App), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityApp>(request, pApp, nameof(request.App)) && !request.VisibleFields.Matches(nameof(request.App), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.App));
+                    request.VisibleFields.Add(nameof(request.App));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, dtoSource, pDocumentSet, permission, DocConstantModelName.HISTORY, nameof(dtoSource.DocumentSet)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, request, pDocumentSet, permission, DocConstantModelName.HISTORY, nameof(request.DocumentSet)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDocumentSet, entity.DocumentSet, nameof(dtoSource.DocumentSet)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.DocumentSet)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pDocumentSet, entity.DocumentSet, nameof(request.DocumentSet)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DocumentSet)} cannot be modified once set.");
                     entity.DocumentSet = pDocumentSet;
-                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(dtoSource, pDocumentSet, nameof(dtoSource.DocumentSet)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DocumentSet), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pDocumentSet, nameof(request.DocumentSet)) && !request.VisibleFields.Matches(nameof(request.DocumentSet), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DocumentSet));
+                    request.VisibleFields.Add(nameof(request.DocumentSet));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityImpersonation>(currentUser, dtoSource, pImpersonation, permission, DocConstantModelName.HISTORY, nameof(dtoSource.Impersonation)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityImpersonation>(currentUser, request, pImpersonation, permission, DocConstantModelName.HISTORY, nameof(request.Impersonation)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pImpersonation, entity.Impersonation, nameof(dtoSource.Impersonation)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Impersonation)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pImpersonation, entity.Impersonation, nameof(request.Impersonation)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Impersonation)} cannot be modified once set.");
                     entity.Impersonation = pImpersonation;
-                if(DocPermissionFactory.IsRequested<DocEntityImpersonation>(dtoSource, pImpersonation, nameof(dtoSource.Impersonation)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Impersonation), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityImpersonation>(request, pImpersonation, nameof(request.Impersonation)) && !request.VisibleFields.Matches(nameof(request.Impersonation), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Impersonation));
+                    request.VisibleFields.Add(nameof(request.Impersonation));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPage>(currentUser, dtoSource, pPage, permission, DocConstantModelName.HISTORY, nameof(dtoSource.Page)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPage>(currentUser, request, pPage, permission, DocConstantModelName.HISTORY, nameof(request.Page)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pPage, entity.Page, nameof(dtoSource.Page)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Page)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pPage, entity.Page, nameof(request.Page)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Page)} cannot be modified once set.");
                     entity.Page = pPage;
-                if(DocPermissionFactory.IsRequested<DocEntityPage>(dtoSource, pPage, nameof(dtoSource.Page)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Page), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityPage>(request, pPage, nameof(request.Page)) && !request.VisibleFields.Matches(nameof(request.Page), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Page));
+                    request.VisibleFields.Add(nameof(request.Page));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pURL, permission, DocConstantModelName.HISTORY, nameof(dtoSource.URL)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURL, permission, DocConstantModelName.HISTORY, nameof(request.URL)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pURL, entity.URL, nameof(dtoSource.URL)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.URL)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pURL, entity.URL, nameof(request.URL)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.URL)} cannot be modified once set.");
                     entity.URL = pURL;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pURL, nameof(dtoSource.URL)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.URL), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pURL, nameof(request.URL)) && !request.VisibleFields.Matches(nameof(request.URL), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.URL));
+                    request.VisibleFields.Add(nameof(request.URL));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, dtoSource, pUser, permission, DocConstantModelName.HISTORY, nameof(dtoSource.User)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pUser, permission, DocConstantModelName.HISTORY, nameof(request.User)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pUser, entity.User, nameof(dtoSource.User)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.User)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pUser, entity.User, nameof(request.User)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.User)} cannot be modified once set.");
                     entity.User = pUser;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(dtoSource, pUser, nameof(dtoSource.User)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.User), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.VisibleFields.Matches(nameof(request.User), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.User));
+                    request.VisibleFields.Add(nameof(request.User));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUserSession>(currentUser, dtoSource, pUserSession, permission, DocConstantModelName.HISTORY, nameof(dtoSource.UserSession)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUserSession>(currentUser, request, pUserSession, permission, DocConstantModelName.HISTORY, nameof(request.UserSession)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pUserSession, entity.UserSession, nameof(dtoSource.UserSession)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.UserSession)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pUserSession, entity.UserSession, nameof(request.UserSession)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.UserSession)} cannot be modified once set.");
                     entity.UserSession = pUserSession;
-                if(DocPermissionFactory.IsRequested<DocEntityUserSession>(dtoSource, pUserSession, nameof(dtoSource.UserSession)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.UserSession), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUserSession>(request, pUserSession, nameof(request.UserSession)) && !request.VisibleFields.Matches(nameof(request.UserSession), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.UserSession));
+                    request.VisibleFields.Add(nameof(request.UserSession));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, dtoSource, pWorkflow, permission, DocConstantModelName.HISTORY, nameof(dtoSource.Workflow)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, request, pWorkflow, permission, DocConstantModelName.HISTORY, nameof(request.Workflow)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pWorkflow, entity.Workflow, nameof(dtoSource.Workflow)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Workflow)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pWorkflow, entity.Workflow, nameof(request.Workflow)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Workflow)} cannot be modified once set.");
                     entity.Workflow = pWorkflow;
-                if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(dtoSource, pWorkflow, nameof(dtoSource.Workflow)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Workflow), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(request, pWorkflow, nameof(request.Workflow)) && !request.VisibleFields.Matches(nameof(request.Workflow), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Workflow));
+                    request.VisibleFields.Add(nameof(request.Workflow));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<History>(currentUser, nameof(History), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public History Post(History dtoSource)
+        public History Post(History request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             History ret = null;
 
@@ -384,7 +384,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "History")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -484,7 +484,7 @@ namespace Services.API
             History ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request);
 
             DocEntityHistory entity = null;
             if(id.HasValue)

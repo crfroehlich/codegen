@@ -93,7 +93,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, "LookupTableEnum", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LookupTableEnum>(Dto.LookupTableEnum.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityLookupTableEnum>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -241,7 +241,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, "LookupTableEnum", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<LookupTableEnum>(Dto.LookupTableEnum.Fields, request);
                 var settings = DocResources.Settings;
                 if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "lookuptableenum")) 
                 {
@@ -255,25 +255,25 @@ namespace Services.API
             return ret;
         }
 
-        private LookupTableEnum _AssignValues(LookupTableEnum dtoSource, DocConstantPermission permission, Session session)
+        private LookupTableEnum _AssignValues(LookupTableEnum request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupTableEnum"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LookupTableEnum ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pIsBindable = dtoSource.IsBindable;
-            var pIsGlobal = dtoSource.IsGlobal;
-            var pName = dtoSource.Name;
+            var pIsBindable = request.IsBindable;
+            var pIsGlobal = request.IsGlobal;
+            var pName = request.Name;
 
             DocEntityLookupTableEnum entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -287,26 +287,26 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityLookupTableEnum.GetLookupTableEnum(dtoSource.Id);
+                entity = DocEntityLookupTableEnum.GetLookupTableEnum(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, nameof(LookupTableEnum), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LookupTableEnum>(Dto.LookupTableEnum.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public LookupTableEnum Post(LookupTableEnum dtoSource)
+        public LookupTableEnum Post(LookupTableEnum request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LookupTableEnum ret = null;
 
@@ -315,7 +315,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupTableEnum")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -402,9 +402,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public LookupTableEnum Put(LookupTableEnum dtoSource)
+        public LookupTableEnum Put(LookupTableEnum request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<LookupTableEnum> Patch(LookupTableEnumBatch request)
@@ -454,16 +454,16 @@ namespace Services.API
             return ret;
         }
 
-        public LookupTableEnum Patch(LookupTableEnum dtoSource)
+        public LookupTableEnum Patch(LookupTableEnum request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the LookupTableEnum to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the LookupTableEnum to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             LookupTableEnum ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -548,7 +548,7 @@ namespace Services.API
             LookupTableEnum ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, "LookupTableEnum", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LookupTableEnum>(Dto.LookupTableEnum.Fields, request);
 
             DocEntityLookupTableEnum entity = null;
             if(id.HasValue)

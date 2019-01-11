@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DocumentSetHistory>(Dto.DocumentSetHistory.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityDocumentSetHistory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -191,7 +191,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<DocumentSetHistory>(Dto.DocumentSetHistory.Fields, request);
                 ret = GetDocumentSetHistory(request);
             });
             return ret;
@@ -207,7 +207,7 @@ namespace Services.API
             DocumentSetHistory ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DocumentSetHistory>(Dto.DocumentSetHistory.Fields, request);
 
             DocEntityDocumentSetHistory entity = null;
             if(id.HasValue)

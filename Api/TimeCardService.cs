@@ -93,7 +93,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityTimeCard>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -153,14 +153,6 @@ namespace Services.API
                 if(true == request.PICOIds?.Any())
                 {
                     entities = entities.Where(en => en.PICO.Id.In(request.PICOIds));
-                }
-                if(!DocTools.IsNullOrEmpty(request.Product) && !DocTools.IsNullOrEmpty(request.Product.Id))
-                {
-                    entities = entities.Where(en => en.Product.Id == request.Product.Id );
-                }
-                if(true == request.ProductIds?.Any())
-                {
-                    entities = entities.Where(en => en.Product.Id.In(request.ProductIds));
                 }
                 if(request.ReferenceId.HasValue)
                     entities = entities.Where(en => request.ReferenceId.Value == en.ReferenceId);
@@ -315,7 +307,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request);
                 var settings = DocResources.Settings;
                 if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "timecard")) 
                 {
@@ -329,32 +321,31 @@ namespace Services.API
             return ret;
         }
 
-        private TimeCard _AssignValues(TimeCard dtoSource, DocConstantPermission permission, Session session)
+        private TimeCard _AssignValues(TimeCard request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "TimeCard"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TimeCard ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pDescription = dtoSource.Description;
-            var pDocument = (dtoSource.Document?.Id > 0) ? DocEntityDocument.GetDocument(dtoSource.Document.Id) : null;
-            var pEnd = dtoSource.End;
-            var pPICO = (dtoSource.PICO?.Id > 0) ? DocEntityPackage.GetPackage(dtoSource.PICO.Id) : null;
-            var pProduct = (dtoSource.Product?.Id > 0) ? DocEntityProduct.GetProduct(dtoSource.Product.Id) : null;
-            var pReferenceId = dtoSource.ReferenceId;
-            var pStart = dtoSource.Start;
-            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.TIMECARDSTATUS, dtoSource.Status?.Name, dtoSource.Status?.Id);
-            var pUser = (dtoSource.User?.Id > 0) ? DocEntityUser.GetUser(dtoSource.User.Id) : null;
-            DocEntityLookupTable pWorkType = GetLookup(DocConstantLookupTable.WORKTYPE, dtoSource.WorkType?.Name, dtoSource.WorkType?.Id);
+            var pDescription = request.Description;
+            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.GetDocument(request.Document.Id) : null;
+            var pEnd = request.End;
+            var pPICO = (request.PICO?.Id > 0) ? DocEntityPackage.GetPackage(request.PICO.Id) : null;
+            var pReferenceId = request.ReferenceId;
+            var pStart = request.Start;
+            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.TIMECARDSTATUS, request.Status?.Name, request.Status?.Id);
+            var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
+            DocEntityLookupTable pWorkType = GetLookup(DocConstantLookupTable.WORKTYPE, request.WorkType?.Name, request.WorkType?.Id);
 
             DocEntityTimeCard entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -368,118 +359,109 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityTimeCard.GetTimeCard(dtoSource.Id);
+                entity = DocEntityTimeCard.GetTimeCard(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.TIMECARD, nameof(request.Description)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
+                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
                     entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
+                    request.VisibleFields.Add(nameof(request.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocument>(currentUser, dtoSource, pDocument, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.Document)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocument>(currentUser, request, pDocument, permission, DocConstantModelName.TIMECARD, nameof(request.Document)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDocument, entity.Document, nameof(dtoSource.Document)))
+                if(DocPermissionFactory.IsRequested(request, pDocument, entity.Document, nameof(request.Document)))
                     entity.Document = pDocument;
-                if(DocPermissionFactory.IsRequested<DocEntityDocument>(dtoSource, pDocument, nameof(dtoSource.Document)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Document), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.VisibleFields.Matches(nameof(request.Document), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Document));
+                    request.VisibleFields.Add(nameof(request.Document));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pEnd, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.End)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pEnd, permission, DocConstantModelName.TIMECARD, nameof(request.End)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pEnd, entity.End, nameof(dtoSource.End)))
+                if(DocPermissionFactory.IsRequested(request, pEnd, entity.End, nameof(request.End)))
                         if(null != pEnd)
                     entity.End = (DateTime) pEnd;
-                if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pEnd, nameof(dtoSource.End)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.End), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pEnd, nameof(request.End)) && !request.VisibleFields.Matches(nameof(request.End), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.End));
+                    request.VisibleFields.Add(nameof(request.End));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPackage>(currentUser, dtoSource, pPICO, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.PICO)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPackage>(currentUser, request, pPICO, permission, DocConstantModelName.TIMECARD, nameof(request.PICO)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pPICO, entity.PICO, nameof(dtoSource.PICO)))
+                if(DocPermissionFactory.IsRequested(request, pPICO, entity.PICO, nameof(request.PICO)))
                     entity.PICO = pPICO;
-                if(DocPermissionFactory.IsRequested<DocEntityPackage>(dtoSource, pPICO, nameof(dtoSource.PICO)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.PICO), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityPackage>(request, pPICO, nameof(request.PICO)) && !request.VisibleFields.Matches(nameof(request.PICO), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.PICO));
+                    request.VisibleFields.Add(nameof(request.PICO));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityProduct>(currentUser, dtoSource, pProduct, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.Product)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pReferenceId, permission, DocConstantModelName.TIMECARD, nameof(request.ReferenceId)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pProduct, entity.Product, nameof(dtoSource.Product)))
-                    entity.Product = pProduct;
-                if(DocPermissionFactory.IsRequested<DocEntityProduct>(dtoSource, pProduct, nameof(dtoSource.Product)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Product), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Product));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pReferenceId, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.ReferenceId)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pReferenceId, entity.ReferenceId, nameof(dtoSource.ReferenceId)))
+                if(DocPermissionFactory.IsRequested(request, pReferenceId, entity.ReferenceId, nameof(request.ReferenceId)))
                     entity.ReferenceId = pReferenceId;
-                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pReferenceId, nameof(dtoSource.ReferenceId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ReferenceId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(request, pReferenceId, nameof(request.ReferenceId)) && !request.VisibleFields.Matches(nameof(request.ReferenceId), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.ReferenceId));
+                    request.VisibleFields.Add(nameof(request.ReferenceId));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pStart, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.Start)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pStart, permission, DocConstantModelName.TIMECARD, nameof(request.Start)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pStart, entity.Start, nameof(dtoSource.Start)))
+                if(DocPermissionFactory.IsRequested(request, pStart, entity.Start, nameof(request.Start)))
                         if(null != pStart)
                     entity.Start = (DateTime) pStart;
-                if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pStart, nameof(dtoSource.Start)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Start), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pStart, nameof(request.Start)) && !request.VisibleFields.Matches(nameof(request.Start), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Start));
+                    request.VisibleFields.Add(nameof(request.Start));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pStatus, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.Status)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.TIMECARD, nameof(request.Status)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pStatus, entity.Status, nameof(dtoSource.Status)))
+                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
                     entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pStatus, nameof(dtoSource.Status)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Status), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Status));
+                    request.VisibleFields.Add(nameof(request.Status));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, dtoSource, pUser, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.User)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pUser, permission, DocConstantModelName.TIMECARD, nameof(request.User)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pUser, entity.User, nameof(dtoSource.User)))
+                if(DocPermissionFactory.IsRequested(request, pUser, entity.User, nameof(request.User)))
                     entity.User = pUser;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(dtoSource, pUser, nameof(dtoSource.User)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.User), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.VisibleFields.Matches(nameof(request.User), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.User));
+                    request.VisibleFields.Add(nameof(request.User));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pWorkType, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.WorkType)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pWorkType, permission, DocConstantModelName.TIMECARD, nameof(request.WorkType)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pWorkType, entity.WorkType, nameof(dtoSource.WorkType)))
+                if(DocPermissionFactory.IsRequested(request, pWorkType, entity.WorkType, nameof(request.WorkType)))
                     entity.WorkType = pWorkType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pWorkType, nameof(dtoSource.WorkType)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.WorkType), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pWorkType, nameof(request.WorkType)) && !request.VisibleFields.Matches(nameof(request.WorkType), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.WorkType));
+                    request.VisibleFields.Add(nameof(request.WorkType));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, nameof(TimeCard), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public TimeCard Post(TimeCard dtoSource)
+        public TimeCard Post(TimeCard request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TimeCard ret = null;
 
@@ -488,7 +470,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TimeCard")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -557,7 +539,6 @@ namespace Services.API
                     var pDocument = entity.Document;
                     var pEnd = entity.End;
                     var pPICO = entity.PICO;
-                    var pProduct = entity.Product;
                     var pReferenceId = entity.ReferenceId;
                     var pStart = entity.Start;
                     var pStatus = entity.Status;
@@ -570,7 +551,6 @@ namespace Services.API
                                 , Document = pDocument
                                 , End = pEnd
                                 , PICO = pPICO
-                                , Product = pProduct
                                 , ReferenceId = pReferenceId
                                 , Start = pStart
                                 , Status = pStatus
@@ -589,9 +569,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public TimeCard Put(TimeCard dtoSource)
+        public TimeCard Put(TimeCard request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<TimeCard> Patch(TimeCardBatch request)
@@ -641,16 +621,16 @@ namespace Services.API
             return ret;
         }
 
-        public TimeCard Patch(TimeCard dtoSource)
+        public TimeCard Patch(TimeCard request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TimeCard to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TimeCard to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             TimeCard ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -735,7 +715,7 @@ namespace Services.API
             TimeCard ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request);
 
             DocEntityTimeCard entity = null;
             if(id.HasValue)

@@ -94,7 +94,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Rejected",@"Collected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Requested",@"Collected",@"Unavailable"})]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -111,7 +111,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"R Snippet",@"RMD Snippet",@"SERVE Portal",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"R Snippet",@"RMD Snippet",@"FAQ",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -161,8 +161,7 @@ namespace Services.Dto
             return true == VisibleFields?.Matches(field, true);
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<Workflow>());
+        public static List<string> Fields => DocTools.Fields<Workflow>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
@@ -215,13 +214,13 @@ namespace Services.Dto
         public List<int> ScopesIds { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Rejected",@"Collected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Requested",@"Collected",@"Unavailable"})]
         public List<string> StatusNames { get; set; }
         public List<int> TagsIds { get; set; }
         public List<int> TasksIds { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"R Snippet",@"RMD Snippet",@"SERVE Portal",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"R Snippet",@"RMD Snippet",@"FAQ",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
         public List<string> TypeNames { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }

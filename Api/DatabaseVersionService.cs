@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<DatabaseVersion>(currentUser, "DatabaseVersion", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DatabaseVersion>(Dto.DatabaseVersion.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityDatabaseVersion>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -181,7 +181,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<DatabaseVersion>(currentUser, "DatabaseVersion", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<DatabaseVersion>(Dto.DatabaseVersion.Fields, request);
                 ret = GetDatabaseVersion(request);
             });
             return ret;
@@ -197,7 +197,7 @@ namespace Services.API
             DatabaseVersion ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<DatabaseVersion>(currentUser, "DatabaseVersion", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DatabaseVersion>(Dto.DatabaseVersion.Fields, request);
 
             DocEntityDatabaseVersion entity = null;
             if(id.HasValue)

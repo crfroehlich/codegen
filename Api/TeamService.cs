@@ -93,7 +93,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityTeam>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -269,7 +269,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request);
                 var settings = DocResources.Settings;
                 if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "team")) 
                 {
@@ -283,33 +283,33 @@ namespace Services.API
             return ret;
         }
 
-        private Team _AssignValues(Team dtoSource, DocConstantPermission permission, Session session)
+        private Team _AssignValues(Team request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Team"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Team ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pAdminRoles = dtoSource.AdminRoles?.ToList();
-            var pDescription = dtoSource.Description;
-            var pEmail = dtoSource.Email;
-            var pIsInternal = dtoSource.IsInternal;
-            var pName = dtoSource.Name;
-            var pOwner = (dtoSource.Owner?.Id > 0) ? DocEntityUser.GetUser(dtoSource.Owner.Id) : null;
-            var pScopes = dtoSource.Scopes?.ToList();
-            var pSettings = dtoSource.Settings;
-            var pSlack = dtoSource.Slack;
-            var pUpdates = dtoSource.Updates?.ToList();
-            var pUsers = dtoSource.Users?.ToList();
+            var pAdminRoles = request.AdminRoles?.ToList();
+            var pDescription = request.Description;
+            var pEmail = request.Email;
+            var pIsInternal = request.IsInternal;
+            var pName = request.Name;
+            var pOwner = (request.Owner?.Id > 0) ? DocEntityUser.GetUser(request.Owner.Id) : null;
+            var pScopes = request.Scopes?.ToList();
+            var pSettings = request.Settings;
+            var pSlack = request.Slack;
+            var pUpdates = request.Updates?.ToList();
+            var pUsers = request.Users?.ToList();
 
             DocEntityTeam entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -323,80 +323,80 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityTeam.GetTeam(dtoSource.Id);
+                entity = DocEntityTeam.GetTeam(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.TEAM, nameof(dtoSource.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.TEAM, nameof(request.Description)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
+                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
                     entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
+                    request.VisibleFields.Add(nameof(request.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pEmail, permission, DocConstantModelName.TEAM, nameof(dtoSource.Email)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pEmail, permission, DocConstantModelName.TEAM, nameof(request.Email)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pEmail, entity.Email, nameof(dtoSource.Email)))
+                if(DocPermissionFactory.IsRequested(request, pEmail, entity.Email, nameof(request.Email)))
                     entity.Email = pEmail;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pEmail, nameof(dtoSource.Email)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Email), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pEmail, nameof(request.Email)) && !request.VisibleFields.Matches(nameof(request.Email), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Email));
+                    request.VisibleFields.Add(nameof(request.Email));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsInternal, permission, DocConstantModelName.TEAM, nameof(dtoSource.IsInternal)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsInternal, permission, DocConstantModelName.TEAM, nameof(request.IsInternal)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pIsInternal, entity.IsInternal, nameof(dtoSource.IsInternal)))
+                if(DocPermissionFactory.IsRequested(request, pIsInternal, entity.IsInternal, nameof(request.IsInternal)))
                     entity.IsInternal = pIsInternal;
-                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pIsInternal, nameof(dtoSource.IsInternal)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IsInternal), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pIsInternal, nameof(request.IsInternal)) && !request.VisibleFields.Matches(nameof(request.IsInternal), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.IsInternal));
+                    request.VisibleFields.Add(nameof(request.IsInternal));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.TEAM, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.TEAM, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, dtoSource, pOwner, permission, DocConstantModelName.TEAM, nameof(dtoSource.Owner)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pOwner, permission, DocConstantModelName.TEAM, nameof(request.Owner)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pOwner, entity.Owner, nameof(dtoSource.Owner)))
+                if(DocPermissionFactory.IsRequested(request, pOwner, entity.Owner, nameof(request.Owner)))
                     entity.Owner = pOwner;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(dtoSource, pOwner, nameof(dtoSource.Owner)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Owner), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pOwner, nameof(request.Owner)) && !request.VisibleFields.Matches(nameof(request.Owner), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Owner));
+                    request.VisibleFields.Add(nameof(request.Owner));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<TeamSettings>(currentUser, dtoSource, pSettings, permission, DocConstantModelName.TEAM, nameof(dtoSource.Settings)))
+            if (DocPermissionFactory.IsRequestedHasPermission<TeamSettings>(currentUser, request, pSettings, permission, DocConstantModelName.TEAM, nameof(request.Settings)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pSettings, entity.Settings, nameof(dtoSource.Settings)))
+                if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
                     entity.Settings = DocSerialize<TeamSettings>.ToString(pSettings);
-                if(DocPermissionFactory.IsRequested<TeamSettings>(dtoSource, pSettings, nameof(dtoSource.Settings)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Settings), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<TeamSettings>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Settings));
+                    request.VisibleFields.Add(nameof(request.Settings));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pSlack, permission, DocConstantModelName.TEAM, nameof(dtoSource.Slack)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSlack, permission, DocConstantModelName.TEAM, nameof(request.Slack)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pSlack, entity.Slack, nameof(dtoSource.Slack)))
+                if(DocPermissionFactory.IsRequested(request, pSlack, entity.Slack, nameof(request.Slack)))
                     entity.Slack = pSlack;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pSlack, nameof(dtoSource.Slack)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Slack), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pSlack, nameof(request.Slack)) && !request.VisibleFields.Matches(nameof(request.Slack), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Slack));
+                    request.VisibleFields.Add(nameof(request.Slack));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pAdminRoles, permission, DocConstantModelName.TEAM, nameof(dtoSource.AdminRoles)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pAdminRoles, permission, DocConstantModelName.TEAM, nameof(request.AdminRoles)))
             {
                 if (true == pAdminRoles?.Any() )
                 {
@@ -411,16 +411,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.AdminRoles)} to {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.AdminRoles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.AdminRoles)} to {nameof(Team)}");
                         entity.AdminRoles.Add(target);
                     });
                     var toRemove = entity.AdminRoles.Where(e => requestedAdminRoles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.AdminRoles)} from {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.AdminRoles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.AdminRoles)} from {nameof(Team)}");
                         entity.AdminRoles.Remove(target);
                     });
                 }
@@ -430,17 +430,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.AdminRoles)} from {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.AdminRoles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.AdminRoles)} from {nameof(Team)}");
                         entity.AdminRoles.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pAdminRoles, nameof(dtoSource.AdminRoles)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.AdminRoles), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pAdminRoles, nameof(request.AdminRoles)) && !request.VisibleFields.Matches(nameof(request.AdminRoles), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.AdminRoles));
+                    request.VisibleFields.Add(nameof(request.AdminRoles));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pScopes, permission, DocConstantModelName.TEAM, nameof(dtoSource.Scopes)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.TEAM, nameof(request.Scopes)))
             {
                 if (true == pScopes?.Any() )
                 {
@@ -455,16 +455,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Scopes)} to {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(Team)}");
                         entity.Scopes.Add(target);
                     });
                     var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Scopes)} from {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Team)}");
                         entity.Scopes.Remove(target);
                     });
                 }
@@ -474,17 +474,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Scopes)} from {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Team)}");
                         entity.Scopes.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pScopes, nameof(dtoSource.Scopes)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Scopes), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopes, nameof(request.Scopes)) && !request.VisibleFields.Matches(nameof(request.Scopes), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Scopes));
+                    request.VisibleFields.Add(nameof(request.Scopes));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pUpdates, permission, DocConstantModelName.TEAM, nameof(dtoSource.Updates)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pUpdates, permission, DocConstantModelName.TEAM, nameof(request.Updates)))
             {
                 if (true == pUpdates?.Any() )
                 {
@@ -499,16 +499,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityUpdate.GetUpdate(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Updates)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Updates)} to {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Updates)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Updates)} to {nameof(Team)}");
                         entity.Updates.Add(target);
                     });
                     var toRemove = entity.Updates.Where(e => requestedUpdates.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityUpdate.GetUpdate(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Updates)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Updates)} from {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Updates)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Updates)} from {nameof(Team)}");
                         entity.Updates.Remove(target);
                     });
                 }
@@ -518,17 +518,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityUpdate.GetUpdate(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Updates)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Updates)} from {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Updates)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Updates)} from {nameof(Team)}");
                         entity.Updates.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pUpdates, nameof(dtoSource.Updates)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Updates), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pUpdates, nameof(request.Updates)) && !request.VisibleFields.Matches(nameof(request.Updates), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Updates));
+                    request.VisibleFields.Add(nameof(request.Updates));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pUsers, permission, DocConstantModelName.TEAM, nameof(dtoSource.Users)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pUsers, permission, DocConstantModelName.TEAM, nameof(request.Users)))
             {
                 if (true == pUsers?.Any() )
                 {
@@ -543,16 +543,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityUser.GetUser(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Users)} to {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Users)} to {nameof(Team)}");
                         entity.Users.Add(target);
                     });
                     var toRemove = entity.Users.Where(e => requestedUsers.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityUser.GetUser(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Users)} from {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(Team)}");
                         entity.Users.Remove(target);
                     });
                 }
@@ -562,26 +562,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityUser.GetUser(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(dtoSource.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Users)} from {nameof(Team)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(Team)}");
                         entity.Users.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pUsers, nameof(dtoSource.Users)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Users), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pUsers, nameof(request.Users)) && !request.VisibleFields.Matches(nameof(request.Users), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Users));
+                    request.VisibleFields.Add(nameof(request.Users));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<Team>(currentUser, nameof(Team), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Team Post(Team dtoSource)
+        public Team Post(Team request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Team ret = null;
 
@@ -590,7 +590,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Team")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -715,9 +715,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public Team Put(Team dtoSource)
+        public Team Put(Team request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<Team> Patch(TeamBatch request)
@@ -767,16 +767,16 @@ namespace Services.API
             return ret;
         }
 
-        public Team Patch(Team dtoSource)
+        public Team Patch(Team request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Team to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Team to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Team ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -917,7 +917,7 @@ namespace Services.API
 
         private object _GetTeamRole(TeamJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
              var en = DocEntityTeam.GetTeam(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "AdminRoles", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Role");
@@ -939,7 +939,7 @@ namespace Services.API
 
         private object _GetTeamScope(TeamJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
              var en = DocEntityTeam.GetTeam(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Scope");
@@ -961,7 +961,7 @@ namespace Services.API
 
         private object _GetTeamUpdate(TeamJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
              var en = DocEntityTeam.GetTeam(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Updates", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Update");
@@ -983,7 +983,7 @@ namespace Services.API
 
         private object _GetTeamUser(TeamJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
              var en = DocEntityTeam.GetTeam(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and User");
@@ -1239,7 +1239,7 @@ namespace Services.API
             Team ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request);
 
             DocEntityTeam entity = null;
             if(id.HasValue)

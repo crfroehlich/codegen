@@ -117,8 +117,6 @@ namespace Services.Enums
         PACKAGE,
         [EnumMember(Value = DocConstantModelName.PAGE)]
         PAGE,
-        [EnumMember(Value = DocConstantModelName.PRODUCT)]
-        PRODUCT,
         [EnumMember(Value = DocConstantModelName.QUEUECHANNEL)]
         QUEUECHANNEL,
         [EnumMember(Value = DocConstantModelName.RELEASESTATUS)]
@@ -233,7 +231,6 @@ namespace Services.Enums
         public const string OUTCOME = "Outcome";
         public const string PACKAGE = "Package";
         public const string PAGE = "Page";
-        public const string PRODUCT = "Product";
         public const string QUEUECHANNEL = "QueueChannel";
         public const string RELEASESTATUS = "ReleaseStatus";
         public const string ROLE = "Role";

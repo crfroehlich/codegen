@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<StatsStudySet>(currentUser, "StatsStudySet", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<StatsStudySet>(Dto.StatsStudySet.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityStatsStudySet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -219,7 +219,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<StatsStudySet>(currentUser, "StatsStudySet", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<StatsStudySet>(Dto.StatsStudySet.Fields, request);
                 ret = GetStatsStudySet(request);
             });
             return ret;
@@ -270,7 +270,7 @@ namespace Services.API
 
         private object _GetStatsStudySetStatsRecord(StatsStudySetJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request.VisibleFields);
              var en = DocEntityStatsStudySet.GetStatsStudySet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.STATSSTUDYSET, columnName: "Records", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between StatsStudySet and StatsRecord");
@@ -329,7 +329,7 @@ namespace Services.API
             StatsStudySet ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<StatsStudySet>(currentUser, "StatsStudySet", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<StatsStudySet>(Dto.StatsStudySet.Fields, request);
 
             DocEntityStatsStudySet entity = null;
             if(id.HasValue)

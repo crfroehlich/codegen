@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityImpersonation>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -199,7 +199,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request);
                 ret = GetImpersonation(request);
             });
             return ret;
@@ -215,7 +215,7 @@ namespace Services.API
             Impersonation ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request);
 
             DocEntityImpersonation entity = null;
             if(id.HasValue)

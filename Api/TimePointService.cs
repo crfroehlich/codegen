@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<TimePoint>(currentUser, "TimePoint", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TimePoint>(Dto.TimePoint.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityTimePoint>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -193,7 +193,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<TimePoint>(currentUser, "TimePoint", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<TimePoint>(Dto.TimePoint.Fields, request);
                 ret = GetTimePoint(request);
             });
             return ret;
@@ -209,7 +209,7 @@ namespace Services.API
             TimePoint ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<TimePoint>(currentUser, "TimePoint", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TimePoint>(Dto.TimePoint.Fields, request);
 
             DocEntityTimePoint entity = null;
             if(id.HasValue)

@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LocaleLookup>(Dto.LocaleLookup.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityLocaleLookup>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -185,31 +185,31 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<LocaleLookup>(Dto.LocaleLookup.Fields, request);
                 ret = GetLocaleLookup(request);
             });
             return ret;
         }
 
-        private LocaleLookup _AssignValues(LocaleLookup dtoSource, DocConstantPermission permission, Session session)
+        private LocaleLookup _AssignValues(LocaleLookup request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "LocaleLookup"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LocaleLookup ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pData = dtoSource.Data;
-            var pIpAddress = dtoSource.IpAddress;
-            var pLocale = (dtoSource.Locale?.Id > 0) ? DocEntityLocale.GetLocale(dtoSource.Locale.Id) : null;
+            var pData = request.Data;
+            var pIpAddress = request.IpAddress;
+            var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.GetLocale(request.Locale.Id) : null;
 
             DocEntityLocaleLookup entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -223,53 +223,53 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityLocaleLookup.GetLocaleLookup(dtoSource.Id);
+                entity = DocEntityLocaleLookup.GetLocaleLookup(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<IpData>(currentUser, dtoSource, pData, permission, DocConstantModelName.LOCALELOOKUP, nameof(dtoSource.Data)))
+            if (DocPermissionFactory.IsRequestedHasPermission<IpData>(currentUser, request, pData, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.Data)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pData, entity.Data, nameof(dtoSource.Data)))
+                if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
                     entity.Data = DocSerialize<IpData>.ToString(pData);
-                if(DocPermissionFactory.IsRequested<IpData>(dtoSource, pData, nameof(dtoSource.Data)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Data), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<IpData>(request, pData, nameof(request.Data)) && !request.VisibleFields.Matches(nameof(request.Data), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Data));
+                    request.VisibleFields.Add(nameof(request.Data));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pIpAddress, permission, DocConstantModelName.LOCALELOOKUP, nameof(dtoSource.IpAddress)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pIpAddress, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pIpAddress, entity.IpAddress, nameof(dtoSource.IpAddress)))
+                if(DocPermissionFactory.IsRequested(request, pIpAddress, entity.IpAddress, nameof(request.IpAddress)))
                     entity.IpAddress = pIpAddress;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pIpAddress, nameof(dtoSource.IpAddress)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IpAddress), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pIpAddress, nameof(request.IpAddress)) && !request.VisibleFields.Matches(nameof(request.IpAddress), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.IpAddress));
+                    request.VisibleFields.Add(nameof(request.IpAddress));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, dtoSource, pLocale, permission, DocConstantModelName.LOCALELOOKUP, nameof(dtoSource.Locale)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, request, pLocale, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.Locale)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pLocale, entity.Locale, nameof(dtoSource.Locale)))
+                if(DocPermissionFactory.IsRequested(request, pLocale, entity.Locale, nameof(request.Locale)))
                     entity.Locale = pLocale;
-                if(DocPermissionFactory.IsRequested<DocEntityLocale>(dtoSource, pLocale, nameof(dtoSource.Locale)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Locale), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLocale>(request, pLocale, nameof(request.Locale)) && !request.VisibleFields.Matches(nameof(request.Locale), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Locale));
+                    request.VisibleFields.Add(nameof(request.Locale));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, nameof(LocaleLookup), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LocaleLookup>(Dto.LocaleLookup.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public LocaleLookup Post(LocaleLookup dtoSource)
+        public LocaleLookup Post(LocaleLookup request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LocaleLookup ret = null;
 
@@ -278,7 +278,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "LocaleLookup")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -368,7 +368,7 @@ namespace Services.API
             LocaleLookup ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LocaleLookup>(Dto.LocaleLookup.Fields, request);
 
             DocEntityLocaleLookup entity = null;
             if(id.HasValue)

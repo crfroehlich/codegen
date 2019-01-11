@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityEvent>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -205,7 +205,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request);
                 ret = GetEvent(request);
             });
             return ret;
@@ -262,7 +262,7 @@ namespace Services.API
 
         private object _GetEventTeam(EventJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request.VisibleFields);
              var en = DocEntityEvent.GetEvent(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Teams", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and Team");
@@ -271,7 +271,7 @@ namespace Services.API
 
         private object _GetEventUpdate(EventJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
              var en = DocEntityEvent.GetEvent(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Updates", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and Update");
@@ -280,7 +280,7 @@ namespace Services.API
 
         private object _GetEventUser(EventJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
              var en = DocEntityEvent.GetEvent(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and User");
@@ -339,7 +339,7 @@ namespace Services.API
             Event ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request);
 
             DocEntityEvent entity = null;
             if(id.HasValue)

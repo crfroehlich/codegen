@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityAuditRecord>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -225,7 +225,7 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request);
                 ret = GetAuditRecord(request);
             });
             return ret;
@@ -276,7 +276,7 @@ namespace Services.API
 
         private object _GetAuditRecordAuditDelta(AuditRecordJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, "AuditDelta", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<AuditDelta>(Dto.AuditDelta.Fields, request.VisibleFields);
              var en = DocEntityAuditRecord.GetAuditRecord(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.AUDITRECORD, columnName: "Deltas", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between AuditRecord and AuditDelta");
@@ -335,7 +335,7 @@ namespace Services.API
             AuditRecord ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request);
 
             DocEntityAuditRecord entity = null;
             if(id.HasValue)

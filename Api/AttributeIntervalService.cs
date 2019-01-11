@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeInterval>(Dto.AttributeInterval.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityAttributeInterval>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -175,29 +175,29 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<AttributeInterval>(Dto.AttributeInterval.Fields, request);
                 ret = GetAttributeInterval(request);
             });
             return ret;
         }
 
-        private AttributeInterval _AssignValues(AttributeInterval dtoSource, DocConstantPermission permission, Session session)
+        private AttributeInterval _AssignValues(AttributeInterval request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "AttributeInterval"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             AttributeInterval ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pInterval = dtoSource.Interval;
+            var pInterval = request.Interval;
 
             DocEntityAttributeInterval entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -211,26 +211,26 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityAttributeInterval.GetAttributeInterval(dtoSource.Id);
+                entity = DocEntityAttributeInterval.GetAttributeInterval(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, nameof(AttributeInterval), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeInterval>(Dto.AttributeInterval.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public AttributeInterval Post(AttributeInterval dtoSource)
+        public AttributeInterval Post(AttributeInterval request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             AttributeInterval ret = null;
 
@@ -239,7 +239,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "AttributeInterval")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -320,9 +320,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public AttributeInterval Put(AttributeInterval dtoSource)
+        public AttributeInterval Put(AttributeInterval request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<AttributeInterval> Patch(AttributeIntervalBatch request)
@@ -372,16 +372,16 @@ namespace Services.API
             return ret;
         }
 
-        public AttributeInterval Patch(AttributeInterval dtoSource)
+        public AttributeInterval Patch(AttributeInterval request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the AttributeInterval to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the AttributeInterval to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             AttributeInterval ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -466,7 +466,7 @@ namespace Services.API
             AttributeInterval ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeInterval>(Dto.AttributeInterval.Fields, request);
 
             DocEntityAttributeInterval entity = null;
             if(id.HasValue)

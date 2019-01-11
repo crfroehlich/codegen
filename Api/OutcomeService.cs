@@ -49,7 +49,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
 
             var entities = Execute.SelectAll<DocEntityOutcome>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
@@ -179,30 +179,30 @@ namespace Services.API
 
             Execute.Run(s =>
             {
-                DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+                request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
                 ret = GetOutcome(request);
             });
             return ret;
         }
 
-        private Outcome _AssignValues(Outcome dtoSource, DocConstantPermission permission, Session session)
+        private Outcome _AssignValues(Outcome request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Outcome"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Outcome ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pName = dtoSource.Name;
-            var pURI = dtoSource.URI;
+            var pName = request.Name;
+            var pURI = request.URI;
 
             DocEntityOutcome entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -216,45 +216,45 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityOutcome.GetOutcome(dtoSource.Id);
+                entity = DocEntityOutcome.GetOutcome(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.OUTCOME, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.OUTCOME, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pURI, permission, DocConstantModelName.OUTCOME, nameof(dtoSource.URI)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.OUTCOME, nameof(request.URI)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pURI, entity.URI, nameof(dtoSource.URI)))
+                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
                     entity.URI = pURI;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pURI, nameof(dtoSource.URI)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.URI), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.URI));
+                    request.VisibleFields.Add(nameof(request.URI));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, nameof(Outcome), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Outcome Post(Outcome dtoSource)
+        public Outcome Post(Outcome request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Outcome ret = null;
 
@@ -263,7 +263,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Outcome")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -350,9 +350,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public Outcome Put(Outcome dtoSource)
+        public Outcome Put(Outcome request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<Outcome> Patch(OutcomeBatch request)
@@ -402,16 +402,16 @@ namespace Services.API
             return ret;
         }
 
-        public Outcome Patch(Outcome dtoSource)
+        public Outcome Patch(Outcome request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Outcome to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Outcome to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Outcome ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -496,7 +496,7 @@ namespace Services.API
             Outcome ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
 
             DocEntityOutcome entity = null;
             if(id.HasValue)
