@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -56,11 +55,20 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    cachedRet = GetGlossary(request);
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetGlossary(request);
+                    });
                     return cachedRet;
                 });
             }
-            ret = ret ?? GetGlossary(request);
+            if(null == ret)
+            {
+                Execute.Run(s =>
+                {
+                    ret = GetGlossary(request);
+                });
+            }
             return ret;
         }
 
@@ -93,9 +101,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Glossary>(Dto.Glossary.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, "Glossary", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityGlossary>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityGlossary>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new GlossaryFullTextSearch(request);
@@ -169,70 +179,65 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(GlossarySearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<Glossary>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "glossary")) 
                     {
-                        var ret = new List<Glossary>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "glossary")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityGlossary,Glossary>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityGlossary,Glossary>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(GlossarySearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<Glossary>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "glossary")) 
                     {
-                        var ret = new List<Glossary>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "glossary")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityGlossary,Glossary>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityGlossary,Glossary>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -244,60 +249,57 @@ namespace Services.API
         public object Get(GlossaryVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(Glossary request)
         {
-            object ret = null;
+            Glossary ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, "Glossary", request.VisibleFields);
+            var settings = DocResources.Settings;
+            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "glossary")) 
             {
-                request.VisibleFields = InitVisibleFields<Glossary>(Dto.Glossary.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "glossary")) 
-                {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                return _GetIdCache(request);
+            }
+            else 
+            {
+                Execute.Run((ssn) =>
                 {
                     ret = GetGlossary(request);
-                }
-            });
+                });
+            }
             return ret;
         }
 
-        private Glossary _AssignValues(Glossary request, DocConstantPermission permission, Session session)
+        private Glossary _AssignValues(Glossary dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Glossary"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             Glossary ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pDefinition = request.Definition;
-            var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(request.Enum);
-            var pIcon = request.Icon;
-            var pPage = (request.Page?.Id > 0) ? DocEntityPage.GetPage(request.Page.Id) : null;
-            var pTerm = (request.Term?.Id > 0) ? DocEntityTermMaster.GetTermMaster(request.Term.Id) : null;
+            var pDefinition = dtoSource.Definition;
+            var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(dtoSource.Enum);
+            var pIcon = dtoSource.Icon;
+            var pPage = (dtoSource.Page?.Id > 0) ? DocEntityPage.GetPage(dtoSource.Page.Id) : null;
+            var pTerm = (dtoSource.Term?.Id > 0) ? DocEntityTermMaster.GetTermMaster(dtoSource.Term.Id) : null;
 
             DocEntityGlossary entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -311,72 +313,72 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityGlossary.GetGlossary(request.Id);
+                entity = DocEntityGlossary.GetGlossary(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDefinition, permission, DocConstantModelName.GLOSSARY, nameof(request.Definition)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDefinition, permission, DocConstantModelName.GLOSSARY, nameof(dtoSource.Definition)))
             {
-                if(DocPermissionFactory.IsRequested(request, pDefinition, entity.Definition, nameof(request.Definition)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pDefinition, entity.Definition, nameof(dtoSource.Definition)))
                     entity.Definition = pDefinition;
-                if(DocPermissionFactory.IsRequested<string>(request, pDefinition, nameof(request.Definition)) && !request.VisibleFields.Matches(nameof(request.Definition), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDefinition, nameof(dtoSource.Definition)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Definition), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Definition));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Definition));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, request, pEnum, permission, DocConstantModelName.GLOSSARY, nameof(request.Enum)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, dtoSource, pEnum, permission, DocConstantModelName.GLOSSARY, nameof(dtoSource.Enum)))
             {
-                if(DocPermissionFactory.IsRequested(request, pEnum, entity.Enum, nameof(request.Enum)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pEnum, entity.Enum, nameof(dtoSource.Enum)))
                     entity.Enum = pEnum;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(dtoSource, pEnum, nameof(dtoSource.Enum)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Enum), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Enum));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Enum));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pIcon, permission, DocConstantModelName.GLOSSARY, nameof(request.Icon)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pIcon, permission, DocConstantModelName.GLOSSARY, nameof(dtoSource.Icon)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIcon, entity.Icon, nameof(request.Icon)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pIcon, entity.Icon, nameof(dtoSource.Icon)))
                     entity.Icon = pIcon;
-                if(DocPermissionFactory.IsRequested<string>(request, pIcon, nameof(request.Icon)) && !request.VisibleFields.Matches(nameof(request.Icon), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pIcon, nameof(dtoSource.Icon)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Icon), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Icon));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Icon));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPage>(currentUser, request, pPage, permission, DocConstantModelName.GLOSSARY, nameof(request.Page)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPage>(currentUser, dtoSource, pPage, permission, DocConstantModelName.GLOSSARY, nameof(dtoSource.Page)))
             {
-                if(DocPermissionFactory.IsRequested(request, pPage, entity.Page, nameof(request.Page)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pPage, entity.Page, nameof(dtoSource.Page)))
                     entity.Page = pPage;
-                if(DocPermissionFactory.IsRequested<DocEntityPage>(request, pPage, nameof(request.Page)) && !request.VisibleFields.Matches(nameof(request.Page), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityPage>(dtoSource, pPage, nameof(dtoSource.Page)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Page), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Page));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Page));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, request, pTerm, permission, DocConstantModelName.GLOSSARY, nameof(request.Term)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, dtoSource, pTerm, permission, DocConstantModelName.GLOSSARY, nameof(dtoSource.Term)))
             {
-                if(DocPermissionFactory.IsRequested(request, pTerm, entity.Term, nameof(request.Term)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Term)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pTerm, entity.Term, nameof(dtoSource.Term)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Term)} cannot be modified once set.");
                     entity.Term = pTerm;
-                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pTerm, nameof(request.Term)) && !request.VisibleFields.Matches(nameof(request.Term), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(dtoSource, pTerm, nameof(dtoSource.Term)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Term), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Term));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Term));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<Glossary>(Dto.Glossary.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, nameof(Glossary), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Glossary Post(Glossary request)
+        public Glossary Post(Glossary dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             Glossary ret = null;
 
@@ -385,7 +387,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Glossary")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -455,6 +457,8 @@ namespace Services.API
                         pIcon += " (Copy)";
                     var pPage = entity.Page;
                     var pTerm = entity.Term;
+                #region Custom Before copyGlossary
+                #endregion Custom Before copyGlossary
                 var copy = new DocEntityGlossary(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -464,6 +468,8 @@ namespace Services.API
                                 , Page = pPage
                                 , Term = pTerm
                 };
+                #region Custom After copyGlossary
+                #endregion Custom After copyGlossary
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -476,9 +482,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public Glossary Put(Glossary request)
+        public Glossary Put(Glossary dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<Glossary> Patch(GlossaryBatch request)
@@ -528,16 +534,16 @@ namespace Services.API
             return ret;
         }
 
-        public Glossary Patch(Glossary request)
+        public Glossary Patch(Glossary dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Glossary to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Glossary to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             Glossary ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -622,7 +628,7 @@ namespace Services.API
             Glossary ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Glossary>(Dto.Glossary.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, "Glossary", request.VisibleFields);
 
             DocEntityGlossary entity = null;
             if(id.HasValue)
@@ -650,6 +656,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

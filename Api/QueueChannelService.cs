@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -56,11 +55,20 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    cachedRet = GetQueueChannel(request);
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetQueueChannel(request);
+                    });
                     return cachedRet;
                 });
             }
-            ret = ret ?? GetQueueChannel(request);
+            if(null == ret)
+            {
+                Execute.Run(s =>
+                {
+                    ret = GetQueueChannel(request);
+                });
+            }
             return ret;
         }
 
@@ -93,9 +101,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<QueueChannel>(Dto.QueueChannel.Fields, request);
+            DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, "QueueChannel", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityQueueChannel>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityQueueChannel>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new QueueChannelFullTextSearch(request);
@@ -153,70 +163,65 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(QueueChannelSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<QueueChannel>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "queuechannel")) 
                     {
-                        var ret = new List<QueueChannel>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "queuechannel")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityQueueChannel,QueueChannel>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityQueueChannel,QueueChannel>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(QueueChannelSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<QueueChannel>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "queuechannel")) 
                     {
-                        var ret = new List<QueueChannel>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "queuechannel")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityQueueChannel,QueueChannel>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityQueueChannel,QueueChannel>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -228,61 +233,58 @@ namespace Services.API
         public object Get(QueueChannelVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(QueueChannel request)
         {
-            object ret = null;
+            QueueChannel ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, "QueueChannel", request.VisibleFields);
+            var settings = DocResources.Settings;
+            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "queuechannel")) 
             {
-                request.VisibleFields = InitVisibleFields<QueueChannel>(Dto.QueueChannel.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "queuechannel")) 
-                {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                return _GetIdCache(request);
+            }
+            else 
+            {
+                Execute.Run((ssn) =>
                 {
                     ret = GetQueueChannel(request);
-                }
-            });
+                });
+            }
             return ret;
         }
 
-        private QueueChannel _AssignValues(QueueChannel request, DocConstantPermission permission, Session session)
+        private QueueChannel _AssignValues(QueueChannel dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "QueueChannel"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             QueueChannel ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pAutoDelete = request.AutoDelete;
-            var pDescription = request.Description;
-            var pDurable = request.Durable;
-            var pEnabled = request.Enabled;
-            var pExclusive = request.Exclusive;
-            var pName = request.Name;
+            var pAutoDelete = dtoSource.AutoDelete;
+            var pDescription = dtoSource.Description;
+            var pDurable = dtoSource.Durable;
+            var pEnabled = dtoSource.Enabled;
+            var pExclusive = dtoSource.Exclusive;
+            var pName = dtoSource.Name;
 
             DocEntityQueueChannel entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -296,81 +298,81 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityQueueChannel.GetQueueChannel(request.Id);
+                entity = DocEntityQueueChannel.GetQueueChannel(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pAutoDelete, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.AutoDelete)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pAutoDelete, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.AutoDelete)))
             {
-                if(DocPermissionFactory.IsRequested(request, pAutoDelete, entity.AutoDelete, nameof(request.AutoDelete)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pAutoDelete, entity.AutoDelete, nameof(dtoSource.AutoDelete)))
                     entity.AutoDelete = pAutoDelete;
-                if(DocPermissionFactory.IsRequested<bool>(request, pAutoDelete, nameof(request.AutoDelete)) && !request.VisibleFields.Matches(nameof(request.AutoDelete), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pAutoDelete, nameof(dtoSource.AutoDelete)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.AutoDelete), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.AutoDelete));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.AutoDelete));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Description)))
             {
-                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
                     entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Description));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pDurable, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Durable)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pDurable, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Durable)))
             {
-                if(DocPermissionFactory.IsRequested(request, pDurable, entity.Durable, nameof(request.Durable)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pDurable, entity.Durable, nameof(dtoSource.Durable)))
                     entity.Durable = pDurable;
-                if(DocPermissionFactory.IsRequested<bool>(request, pDurable, nameof(request.Durable)) && !request.VisibleFields.Matches(nameof(request.Durable), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pDurable, nameof(dtoSource.Durable)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Durable), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Durable));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Durable));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pEnabled, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Enabled)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pEnabled, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Enabled)))
             {
-                if(DocPermissionFactory.IsRequested(request, pEnabled, entity.Enabled, nameof(request.Enabled)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pEnabled, entity.Enabled, nameof(dtoSource.Enabled)))
                     entity.Enabled = pEnabled;
-                if(DocPermissionFactory.IsRequested<bool>(request, pEnabled, nameof(request.Enabled)) && !request.VisibleFields.Matches(nameof(request.Enabled), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pEnabled, nameof(dtoSource.Enabled)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Enabled), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Enabled));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Enabled));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pExclusive, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Exclusive)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pExclusive, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Exclusive)))
             {
-                if(DocPermissionFactory.IsRequested(request, pExclusive, entity.Exclusive, nameof(request.Exclusive)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pExclusive, entity.Exclusive, nameof(dtoSource.Exclusive)))
                     entity.Exclusive = pExclusive;
-                if(DocPermissionFactory.IsRequested<bool>(request, pExclusive, nameof(request.Exclusive)) && !request.VisibleFields.Matches(nameof(request.Exclusive), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pExclusive, nameof(dtoSource.Exclusive)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Exclusive), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Exclusive));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Exclusive));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.QUEUECHANNEL, nameof(dtoSource.Name)))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Name));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<QueueChannel>(Dto.QueueChannel.Fields, request);
+            DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, nameof(QueueChannel), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public QueueChannel Post(QueueChannel request)
+        public QueueChannel Post(QueueChannel dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             QueueChannel ret = null;
 
@@ -379,7 +381,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "QueueChannel")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -452,6 +454,8 @@ namespace Services.API
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
+                #region Custom Before copyQueueChannel
+                #endregion Custom Before copyQueueChannel
                 var copy = new DocEntityQueueChannel(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -462,6 +466,8 @@ namespace Services.API
                                 , Exclusive = pExclusive
                                 , Name = pName
                 };
+                #region Custom After copyQueueChannel
+                #endregion Custom After copyQueueChannel
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -474,9 +480,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public QueueChannel Put(QueueChannel request)
+        public QueueChannel Put(QueueChannel dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<QueueChannel> Patch(QueueChannelBatch request)
@@ -526,16 +532,16 @@ namespace Services.API
             return ret;
         }
 
-        public QueueChannel Patch(QueueChannel request)
+        public QueueChannel Patch(QueueChannel dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the QueueChannel to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the QueueChannel to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             QueueChannel ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -620,7 +626,7 @@ namespace Services.API
             QueueChannel ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<QueueChannel>(Dto.QueueChannel.Fields, request);
+            DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, "QueueChannel", request.VisibleFields);
 
             DocEntityQueueChannel entity = null;
             if(id.HasValue)
@@ -648,6 +654,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -49,9 +48,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<ForeignKey>(Dto.ForeignKey.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityForeignKey>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityForeignKey>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ForeignKeyFullTextSearch(request);
@@ -133,54 +134,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(ForeignKeySearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ForeignKey>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityForeignKey,ForeignKey>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ForeignKey>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityForeignKey,ForeignKey>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(ForeignKeySearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ForeignKey>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityForeignKey,ForeignKey>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ForeignKey>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityForeignKey,ForeignKey>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -192,51 +188,48 @@ namespace Services.API
         public object Get(ForeignKeyVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(ForeignKey request)
         {
-            object ret = null;
+            ForeignKey ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                request.VisibleFields = InitVisibleFields<ForeignKey>(Dto.ForeignKey.Fields, request);
                 ret = GetForeignKey(request);
             });
             return ret;
         }
 
-        private ForeignKey _AssignValues(ForeignKey request, DocConstantPermission permission, Session session)
+        private ForeignKey _AssignValues(ForeignKey dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "ForeignKey"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             ForeignKey ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            DocEntityLookupTable pIntegrationName = GetLookup(DocConstantLookupTable.INTEGRATIONNAME, request.IntegrationName?.Name, request.IntegrationName?.Id);
-            DocEntityLookupTable pIntegrationPropertyName = GetLookup(DocConstantLookupTable.INTEGRATIONPROPERTYNAME, request.IntegrationPropertyName?.Name, request.IntegrationPropertyName?.Id);
-            var pKeyId = request.KeyId;
-            var pKeyName = request.KeyName;
+            DocEntityLookupTable pIntegrationName = GetLookup(DocConstantLookupTable.INTEGRATIONNAME, dtoSource.IntegrationName?.Name, dtoSource.IntegrationName?.Id);
+            DocEntityLookupTable pIntegrationPropertyName = GetLookup(DocConstantLookupTable.INTEGRATIONPROPERTYNAME, dtoSource.IntegrationPropertyName?.Name, dtoSource.IntegrationPropertyName?.Id);
+            var pKeyId = dtoSource.KeyId;
+            var pKeyName = dtoSource.KeyName;
 
             DocEntityForeignKey entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -250,66 +243,66 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityForeignKey.GetForeignKey(request.Id);
+                entity = DocEntityForeignKey.GetForeignKey(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pIntegrationName, permission, DocConstantModelName.FOREIGNKEY, nameof(request.IntegrationName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pIntegrationName, permission, DocConstantModelName.FOREIGNKEY, nameof(dtoSource.IntegrationName)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIntegrationName, entity.IntegrationName, nameof(request.IntegrationName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IntegrationName)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pIntegrationName, entity.IntegrationName, nameof(dtoSource.IntegrationName)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.IntegrationName)} cannot be modified once set.");
                     entity.IntegrationName = pIntegrationName;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pIntegrationName, nameof(request.IntegrationName)) && !request.VisibleFields.Matches(nameof(request.IntegrationName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pIntegrationName, nameof(dtoSource.IntegrationName)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IntegrationName), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IntegrationName));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.IntegrationName));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pIntegrationPropertyName, permission, DocConstantModelName.FOREIGNKEY, nameof(request.IntegrationPropertyName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pIntegrationPropertyName, permission, DocConstantModelName.FOREIGNKEY, nameof(dtoSource.IntegrationPropertyName)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIntegrationPropertyName, entity.IntegrationPropertyName, nameof(request.IntegrationPropertyName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IntegrationPropertyName)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pIntegrationPropertyName, entity.IntegrationPropertyName, nameof(dtoSource.IntegrationPropertyName)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.IntegrationPropertyName)} cannot be modified once set.");
                     entity.IntegrationPropertyName = pIntegrationPropertyName;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pIntegrationPropertyName, nameof(request.IntegrationPropertyName)) && !request.VisibleFields.Matches(nameof(request.IntegrationPropertyName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pIntegrationPropertyName, nameof(dtoSource.IntegrationPropertyName)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IntegrationPropertyName), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IntegrationPropertyName));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.IntegrationPropertyName));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pKeyId, permission, DocConstantModelName.FOREIGNKEY, nameof(request.KeyId)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pKeyId, permission, DocConstantModelName.FOREIGNKEY, nameof(dtoSource.KeyId)))
             {
-                if(DocPermissionFactory.IsRequested(request, pKeyId, entity.KeyId, nameof(request.KeyId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.KeyId)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pKeyId, entity.KeyId, nameof(dtoSource.KeyId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.KeyId)} cannot be modified once set.");
                     entity.KeyId = pKeyId;
-                if(DocPermissionFactory.IsRequested<string>(request, pKeyId, nameof(request.KeyId)) && !request.VisibleFields.Matches(nameof(request.KeyId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pKeyId, nameof(dtoSource.KeyId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.KeyId), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.KeyId));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.KeyId));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pKeyName, permission, DocConstantModelName.FOREIGNKEY, nameof(request.KeyName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pKeyName, permission, DocConstantModelName.FOREIGNKEY, nameof(dtoSource.KeyName)))
             {
-                if(DocPermissionFactory.IsRequested(request, pKeyName, entity.KeyName, nameof(request.KeyName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.KeyName)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pKeyName, entity.KeyName, nameof(dtoSource.KeyName)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.KeyName)} cannot be modified once set.");
                     entity.KeyName = pKeyName;
-                if(DocPermissionFactory.IsRequested<string>(request, pKeyName, nameof(request.KeyName)) && !request.VisibleFields.Matches(nameof(request.KeyName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pKeyName, nameof(dtoSource.KeyName)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.KeyName), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.KeyName));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.KeyName));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<ForeignKey>(Dto.ForeignKey.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, nameof(ForeignKey), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public ForeignKey Post(ForeignKey request)
+        public ForeignKey Post(ForeignKey dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             ForeignKey ret = null;
 
@@ -318,7 +311,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "ForeignKey")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -389,6 +382,8 @@ namespace Services.API
                     var pKeyName = entity.KeyName;
                     if(!DocTools.IsNullOrEmpty(pKeyName))
                         pKeyName += " (Copy)";
+                #region Custom Before copyForeignKey
+                #endregion Custom Before copyForeignKey
                 var copy = new DocEntityForeignKey(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -397,6 +392,8 @@ namespace Services.API
                                 , KeyId = pKeyId
                                 , KeyName = pKeyName
                 };
+                #region Custom After copyForeignKey
+                #endregion Custom After copyForeignKey
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -409,9 +406,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public ForeignKey Put(ForeignKey request)
+        public ForeignKey Put(ForeignKey dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<ForeignKey> Patch(ForeignKeyBatch request)
@@ -461,16 +458,16 @@ namespace Services.API
             return ret;
         }
 
-        public ForeignKey Patch(ForeignKey request)
+        public ForeignKey Patch(ForeignKey dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the ForeignKey to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the ForeignKey to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             ForeignKey ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -555,7 +552,7 @@ namespace Services.API
             ForeignKey ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<ForeignKey>(Dto.ForeignKey.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
 
             DocEntityForeignKey entity = null;
             if(id.HasValue)
@@ -583,6 +580,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

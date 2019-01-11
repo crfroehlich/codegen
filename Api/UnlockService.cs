@@ -97,10 +97,6 @@ namespace Services.API
                         var enClient = DocEntityFactory.GetEntity<DocEntityClient>( en.Id );
                         ret = enClient.ToDto();
                         break;
-                    case DocConstantModelName.COMPARATOR:
-                        var enComparator = DocEntityFactory.GetEntity<DocEntityComparator>( en.Id );
-                        ret = enComparator.ToDto();
-                        break;
                     case DocConstantModelName.DATABASEVERSION:
                         var enDatabaseVersion = DocEntityFactory.GetEntity<DocEntityDatabaseVersion>( en.Id );
                         ret = enDatabaseVersion.ToDto();
@@ -232,6 +228,10 @@ namespace Services.API
                     case DocConstantModelName.PAGE:
                         var enPage = DocEntityFactory.GetEntity<DocEntityPage>( en.Id );
                         ret = enPage.ToDto();
+                        break;
+                    case DocConstantModelName.PRODUCT:
+                        var enProduct = DocEntityFactory.GetEntity<DocEntityProduct>( en.Id );
+                        ret = enProduct.ToDto();
                         break;
                     case DocConstantModelName.QUEUECHANNEL:
                         var enQueueChannel = DocEntityFactory.GetEntity<DocEntityQueueChannel>( en.Id );

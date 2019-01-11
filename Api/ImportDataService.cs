@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -49,9 +48,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<ImportData>(Dto.ImportData.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityImportData>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityImportData>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ImportDataFullTextSearch(request);
@@ -118,22 +119,6 @@ namespace Services.API
                     entities = entities.Where(en => request.ImportTable.Value == en.ImportTable);
                 if(request.ImportText.HasValue)
                     entities = entities.Where(en => request.ImportText.Value == en.ImportText);
-                if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Id))
-                {
-                    entities = entities.Where(en => en.ImportType.Id == request.ImportType.Id );
-                }
-                if(true == request.ImportTypeIds?.Any())
-                {
-                    entities = entities.Where(en => en.ImportType.Id.In(request.ImportTypeIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Name))
-                {
-                    entities = entities.Where(en => en.ImportType.Name == request.ImportType.Name );
-                }
-                if(true == request.ImportTypeNames?.Any())
-                {
-                    entities = entities.Where(en => en.ImportType.Name.In(request.ImportTypeNames));
-                }
                 if(request.IsLegacy.HasValue)
                     entities = entities.Where(en => request.IsLegacy.Value == en.IsLegacy);
                 if(request.Order.HasValue)
@@ -187,54 +172,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(ImportDataSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ImportData>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ImportData>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(ImportDataSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ImportData>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ImportData>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -246,65 +226,61 @@ namespace Services.API
         public object Get(ImportDataVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(ImportData request)
         {
-            object ret = null;
+            ImportData ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                request.VisibleFields = InitVisibleFields<ImportData>(Dto.ImportData.Fields, request);
                 ret = GetImportData(request);
             });
             return ret;
         }
 
-        private ImportData _AssignValues(ImportData request, DocConstantPermission permission, Session session)
+        private ImportData _AssignValues(ImportData dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "ImportData"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             ImportData ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pCompletedOn = request.CompletedOn;
-            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.GetDocument(request.Document.Id) : null;
-            var pDocumentSets = request.DocumentSets?.ToList();
-            var pErrorData = request.ErrorData;
-            var pExtractUrl = request.ExtractUrl;
-            var pHighPriority = request.HighPriority;
-            var pImportFr = request.ImportFr;
-            var pImportNewName = request.ImportNewName;
-            var pImportTable = request.ImportTable;
-            var pImportText = request.ImportText;
-            DocEntityLookupTable pImportType = GetLookup(DocConstantLookupTable.STUDYIMPORTTYPE, request.ImportType?.Name, request.ImportType?.Id);
-            var pIsLegacy = request.IsLegacy;
-            var pOrder = request.Order;
-            var pReferenceId = request.ReferenceId;
-            var pRequestedBy = (request.RequestedBy?.Id > 0) ? DocEntityUser.GetUser(request.RequestedBy.Id) : null;
-            var pRequestedOn = request.RequestedOn;
-            var pStartedOn = request.StartedOn;
-            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.IMPORTSTATUS, request.Status?.Name, request.Status?.Id);
+            var pCompletedOn = dtoSource.CompletedOn;
+            var pDocument = (dtoSource.Document?.Id > 0) ? DocEntityDocument.GetDocument(dtoSource.Document.Id) : null;
+            var pDocumentSets = dtoSource.DocumentSets?.ToList();
+            var pErrorData = dtoSource.ErrorData;
+            var pExtractUrl = dtoSource.ExtractUrl;
+            var pHighPriority = dtoSource.HighPriority;
+            var pImportFr = dtoSource.ImportFr;
+            var pImportNewName = dtoSource.ImportNewName;
+            var pImportTable = dtoSource.ImportTable;
+            var pImportText = dtoSource.ImportText;
+            var pIsLegacy = dtoSource.IsLegacy;
+            var pOrder = dtoSource.Order;
+            var pReferenceId = dtoSource.ReferenceId;
+            var pRequestedBy = (dtoSource.RequestedBy?.Id > 0) ? DocEntityUser.GetUser(dtoSource.RequestedBy.Id) : null;
+            var pRequestedOn = dtoSource.RequestedOn;
+            var pStartedOn = dtoSource.StartedOn;
+            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.IMPORTSTATUS, dtoSource.Status?.Name, dtoSource.Status?.Id);
 
             DocEntityImportData entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -318,177 +294,168 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityImportData.GetImportData(request.Id);
+                entity = DocEntityImportData.GetImportData(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pCompletedOn, permission, DocConstantModelName.IMPORTDATA, nameof(request.CompletedOn)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pCompletedOn, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.CompletedOn)))
             {
-                if(DocPermissionFactory.IsRequested(request, pCompletedOn, entity.CompletedOn, nameof(request.CompletedOn)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CompletedOn)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pCompletedOn, entity.CompletedOn, nameof(dtoSource.CompletedOn)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.CompletedOn)} cannot be modified once set.");
                     entity.CompletedOn = pCompletedOn;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pCompletedOn, nameof(request.CompletedOn)) && !request.VisibleFields.Matches(nameof(request.CompletedOn), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pCompletedOn, nameof(dtoSource.CompletedOn)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.CompletedOn), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.CompletedOn));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.CompletedOn));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocument>(currentUser, request, pDocument, permission, DocConstantModelName.IMPORTDATA, nameof(request.Document)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocument>(currentUser, dtoSource, pDocument, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.Document)))
             {
-                if(DocPermissionFactory.IsRequested(request, pDocument, entity.Document, nameof(request.Document)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Document)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pDocument, entity.Document, nameof(dtoSource.Document)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Document)} cannot be modified once set.");
                     entity.Document = pDocument;
-                if(DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.VisibleFields.Matches(nameof(request.Document), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDocument>(dtoSource, pDocument, nameof(dtoSource.Document)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Document), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Document));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Document));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pErrorData, permission, DocConstantModelName.IMPORTDATA, nameof(request.ErrorData)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pErrorData, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.ErrorData)))
             {
-                if(DocPermissionFactory.IsRequested(request, pErrorData, entity.ErrorData, nameof(request.ErrorData)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pErrorData, entity.ErrorData, nameof(dtoSource.ErrorData)))
                     entity.ErrorData = pErrorData;
-                if(DocPermissionFactory.IsRequested<string>(request, pErrorData, nameof(request.ErrorData)) && !request.VisibleFields.Matches(nameof(request.ErrorData), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pErrorData, nameof(dtoSource.ErrorData)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ErrorData), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ErrorData));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ErrorData));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pExtractUrl, permission, DocConstantModelName.IMPORTDATA, nameof(request.ExtractUrl)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pExtractUrl, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.ExtractUrl)))
             {
-                if(DocPermissionFactory.IsRequested(request, pExtractUrl, entity.ExtractUrl, nameof(request.ExtractUrl)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pExtractUrl, entity.ExtractUrl, nameof(dtoSource.ExtractUrl)))
                     entity.ExtractUrl = pExtractUrl;
-                if(DocPermissionFactory.IsRequested<string>(request, pExtractUrl, nameof(request.ExtractUrl)) && !request.VisibleFields.Matches(nameof(request.ExtractUrl), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pExtractUrl, nameof(dtoSource.ExtractUrl)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ExtractUrl), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ExtractUrl));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ExtractUrl));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pHighPriority, permission, DocConstantModelName.IMPORTDATA, nameof(request.HighPriority)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pHighPriority, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.HighPriority)))
             {
-                if(DocPermissionFactory.IsRequested(request, pHighPriority, entity.HighPriority, nameof(request.HighPriority)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pHighPriority, entity.HighPriority, nameof(dtoSource.HighPriority)))
                     entity.HighPriority = pHighPriority;
-                if(DocPermissionFactory.IsRequested<bool>(request, pHighPriority, nameof(request.HighPriority)) && !request.VisibleFields.Matches(nameof(request.HighPriority), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pHighPriority, nameof(dtoSource.HighPriority)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.HighPriority), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.HighPriority));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.HighPriority));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pImportFr, permission, DocConstantModelName.IMPORTDATA, nameof(request.ImportFr)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pImportFr, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.ImportFr)))
             {
-                if(DocPermissionFactory.IsRequested(request, pImportFr, entity.ImportFr, nameof(request.ImportFr)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pImportFr, entity.ImportFr, nameof(dtoSource.ImportFr)))
                     entity.ImportFr = pImportFr;
-                if(DocPermissionFactory.IsRequested<bool>(request, pImportFr, nameof(request.ImportFr)) && !request.VisibleFields.Matches(nameof(request.ImportFr), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pImportFr, nameof(dtoSource.ImportFr)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ImportFr), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ImportFr));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ImportFr));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pImportNewName, permission, DocConstantModelName.IMPORTDATA, nameof(request.ImportNewName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pImportNewName, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.ImportNewName)))
             {
-                if(DocPermissionFactory.IsRequested(request, pImportNewName, entity.ImportNewName, nameof(request.ImportNewName)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pImportNewName, entity.ImportNewName, nameof(dtoSource.ImportNewName)))
                     entity.ImportNewName = pImportNewName;
-                if(DocPermissionFactory.IsRequested<bool>(request, pImportNewName, nameof(request.ImportNewName)) && !request.VisibleFields.Matches(nameof(request.ImportNewName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pImportNewName, nameof(dtoSource.ImportNewName)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ImportNewName), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ImportNewName));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ImportNewName));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pImportTable, permission, DocConstantModelName.IMPORTDATA, nameof(request.ImportTable)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pImportTable, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.ImportTable)))
             {
-                if(DocPermissionFactory.IsRequested(request, pImportTable, entity.ImportTable, nameof(request.ImportTable)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pImportTable, entity.ImportTable, nameof(dtoSource.ImportTable)))
                     entity.ImportTable = pImportTable;
-                if(DocPermissionFactory.IsRequested<bool>(request, pImportTable, nameof(request.ImportTable)) && !request.VisibleFields.Matches(nameof(request.ImportTable), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pImportTable, nameof(dtoSource.ImportTable)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ImportTable), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ImportTable));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ImportTable));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pImportText, permission, DocConstantModelName.IMPORTDATA, nameof(request.ImportText)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pImportText, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.ImportText)))
             {
-                if(DocPermissionFactory.IsRequested(request, pImportText, entity.ImportText, nameof(request.ImportText)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pImportText, entity.ImportText, nameof(dtoSource.ImportText)))
                     entity.ImportText = pImportText;
-                if(DocPermissionFactory.IsRequested<bool>(request, pImportText, nameof(request.ImportText)) && !request.VisibleFields.Matches(nameof(request.ImportText), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pImportText, nameof(dtoSource.ImportText)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ImportText), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ImportText));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ImportText));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pImportType, permission, DocConstantModelName.IMPORTDATA, nameof(request.ImportType)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsLegacy, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.IsLegacy)))
             {
-                if(DocPermissionFactory.IsRequested(request, pImportType, entity.ImportType, nameof(request.ImportType)))
-                    entity.ImportType = pImportType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pImportType, nameof(request.ImportType)) && !request.VisibleFields.Matches(nameof(request.ImportType), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.ImportType));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsLegacy, permission, DocConstantModelName.IMPORTDATA, nameof(request.IsLegacy)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pIsLegacy, entity.IsLegacy, nameof(request.IsLegacy)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pIsLegacy, entity.IsLegacy, nameof(dtoSource.IsLegacy)))
                     entity.IsLegacy = pIsLegacy;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsLegacy, nameof(request.IsLegacy)) && !request.VisibleFields.Matches(nameof(request.IsLegacy), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pIsLegacy, nameof(dtoSource.IsLegacy)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IsLegacy), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IsLegacy));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.IsLegacy));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pOrder, permission, DocConstantModelName.IMPORTDATA, nameof(request.Order)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pOrder, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.Order)))
             {
-                if(DocPermissionFactory.IsRequested(request, pOrder, entity.Order, nameof(request.Order)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pOrder, entity.Order, nameof(dtoSource.Order)))
                     entity.Order = pOrder;
-                if(DocPermissionFactory.IsRequested<int?>(request, pOrder, nameof(request.Order)) && !request.VisibleFields.Matches(nameof(request.Order), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pOrder, nameof(dtoSource.Order)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Order), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Order));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Order));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pReferenceId, permission, DocConstantModelName.IMPORTDATA, nameof(request.ReferenceId)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pReferenceId, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.ReferenceId)))
             {
-                if(DocPermissionFactory.IsRequested(request, pReferenceId, entity.ReferenceId, nameof(request.ReferenceId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ReferenceId)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pReferenceId, entity.ReferenceId, nameof(dtoSource.ReferenceId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.ReferenceId)} cannot be modified once set.");
                     if(null != pReferenceId)
                         entity.ReferenceId = (int) pReferenceId;
-                if(DocPermissionFactory.IsRequested<int?>(request, pReferenceId, nameof(request.ReferenceId)) && !request.VisibleFields.Matches(nameof(request.ReferenceId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pReferenceId, nameof(dtoSource.ReferenceId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ReferenceId), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ReferenceId));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ReferenceId));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pRequestedBy, permission, DocConstantModelName.IMPORTDATA, nameof(request.RequestedBy)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, dtoSource, pRequestedBy, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.RequestedBy)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRequestedBy, entity.RequestedBy, nameof(request.RequestedBy)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RequestedBy)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pRequestedBy, entity.RequestedBy, nameof(dtoSource.RequestedBy)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.RequestedBy)} cannot be modified once set.");
                     entity.RequestedBy = pRequestedBy;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pRequestedBy, nameof(request.RequestedBy)) && !request.VisibleFields.Matches(nameof(request.RequestedBy), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(dtoSource, pRequestedBy, nameof(dtoSource.RequestedBy)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.RequestedBy), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.RequestedBy));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.RequestedBy));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pRequestedOn, permission, DocConstantModelName.IMPORTDATA, nameof(request.RequestedOn)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pRequestedOn, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.RequestedOn)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRequestedOn, entity.RequestedOn, nameof(request.RequestedOn)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RequestedOn)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pRequestedOn, entity.RequestedOn, nameof(dtoSource.RequestedOn)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.RequestedOn)} cannot be modified once set.");
                     entity.RequestedOn = pRequestedOn;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pRequestedOn, nameof(request.RequestedOn)) && !request.VisibleFields.Matches(nameof(request.RequestedOn), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pRequestedOn, nameof(dtoSource.RequestedOn)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.RequestedOn), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.RequestedOn));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.RequestedOn));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pStartedOn, permission, DocConstantModelName.IMPORTDATA, nameof(request.StartedOn)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, dtoSource, pStartedOn, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.StartedOn)))
             {
-                if(DocPermissionFactory.IsRequested(request, pStartedOn, entity.StartedOn, nameof(request.StartedOn)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.StartedOn)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pStartedOn, entity.StartedOn, nameof(dtoSource.StartedOn)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.StartedOn)} cannot be modified once set.");
                     entity.StartedOn = pStartedOn;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pStartedOn, nameof(request.StartedOn)) && !request.VisibleFields.Matches(nameof(request.StartedOn), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(dtoSource, pStartedOn, nameof(dtoSource.StartedOn)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.StartedOn), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.StartedOn));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.StartedOn));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.IMPORTDATA, nameof(request.Status)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pStatus, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.Status)))
             {
-                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pStatus, entity.Status, nameof(dtoSource.Status)))
                     entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pStatus, nameof(dtoSource.Status)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Status), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Status));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Status));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocumentSets, permission, DocConstantModelName.IMPORTDATA, nameof(request.DocumentSets)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pDocumentSets, permission, DocConstantModelName.IMPORTDATA, nameof(dtoSource.DocumentSets)))
             {
                 if (true == pDocumentSets?.Any() )
                 {
@@ -503,16 +470,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(ImportData)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(dtoSource.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.DocumentSets)} to {nameof(ImportData)}");
                         entity.DocumentSets.Add(target);
                     });
                     var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(ImportData)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(dtoSource.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.DocumentSets)} from {nameof(ImportData)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
@@ -522,26 +489,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(ImportData)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(dtoSource.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.DocumentSets)} from {nameof(ImportData)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.VisibleFields.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pDocumentSets, nameof(dtoSource.DocumentSets)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DocumentSets), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.DocumentSets));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.DocumentSets));
                 }
             }
-            request.VisibleFields = InitVisibleFields<ImportData>(Dto.ImportData.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, nameof(ImportData), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public ImportData Post(ImportData request)
+        public ImportData Post(ImportData dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             ImportData ret = null;
 
@@ -550,7 +517,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "ImportData")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -625,7 +592,6 @@ namespace Services.API
                     var pImportNewName = entity.ImportNewName;
                     var pImportTable = entity.ImportTable;
                     var pImportText = entity.ImportText;
-                    var pImportType = entity.ImportType;
                     var pIsLegacy = entity.IsLegacy;
                     var pOrder = entity.Order;
                     var pReferenceId = entity.ReferenceId;
@@ -633,6 +599,8 @@ namespace Services.API
                     var pRequestedOn = entity.RequestedOn;
                     var pStartedOn = entity.StartedOn;
                     var pStatus = entity.Status;
+                #region Custom Before copyImportData
+                #endregion Custom Before copyImportData
                 var copy = new DocEntityImportData(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -645,7 +613,6 @@ namespace Services.API
                                 , ImportNewName = pImportNewName
                                 , ImportTable = pImportTable
                                 , ImportText = pImportText
-                                , ImportType = pImportType
                                 , IsLegacy = pIsLegacy
                                 , Order = pOrder
                                 , ReferenceId = pReferenceId
@@ -659,6 +626,8 @@ namespace Services.API
                                 entity.DocumentSets.Add(item);
                             }
 
+                #region Custom After copyImportData
+                #endregion Custom After copyImportData
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -671,9 +640,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public ImportData Put(ImportData request)
+        public ImportData Put(ImportData dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<ImportData> Patch(ImportDataBatch request)
@@ -723,16 +692,16 @@ namespace Services.API
             return ret;
         }
 
-        public ImportData Patch(ImportData request)
+        public ImportData Patch(ImportData dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the ImportData to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the ImportData to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             ImportData ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -855,7 +824,7 @@ namespace Services.API
 
         private object _GetImportDataDocumentSet(ImportDataJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
              var en = DocEntityImportData.GetImportData(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.IMPORTDATA, columnName: "DocumentSets", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between ImportData and DocumentSet");
@@ -973,7 +942,7 @@ namespace Services.API
             ImportData ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<ImportData>(Dto.ImportData.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
 
             DocEntityImportData entity = null;
             if(id.HasValue)
@@ -1001,6 +970,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

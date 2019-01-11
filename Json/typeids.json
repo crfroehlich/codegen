@@ -2,7 +2,7 @@
   "NextTypeId": 20135,
   "MaxTypeId": 20035,
   "Types": {
-    "Comparator": 20035,
+    "Product": 20035,
     "BackgroundTaskItem": 19935,
     "ReleaseStatus": 19835,
     "Default": 19435,

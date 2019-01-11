@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -49,9 +48,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityJunction>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityJunction>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new JunctionFullTextSearch(request);
@@ -141,54 +142,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(JunctionSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Junction>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<Junction>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(JunctionSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Junction>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<Junction>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -200,56 +196,53 @@ namespace Services.API
         public object Get(JunctionVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(Junction request)
         {
-            object ret = null;
+            Junction ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request);
                 ret = GetJunction(request);
             });
             return ret;
         }
 
-        private Junction _AssignValues(Junction request, DocConstantPermission permission, Session session)
+        private Junction _AssignValues(Junction dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Junction"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             Junction ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pChildren = request.Children?.ToList();
-            var pData = request.Data;
-            var pOwnerId = request.OwnerId;
-            var pOwnerType = request.OwnerType;
-            var pParent = (request.Parent?.Id > 0) ? DocEntityJunction.GetJunction(request.Parent.Id) : null;
-            var pTargetId = request.TargetId;
-            var pTargetType = request.TargetType;
-            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.JUNCTIONTYPE, request.Type?.Name, request.Type?.Id);
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
+            var pChildren = dtoSource.Children?.ToList();
+            var pData = dtoSource.Data;
+            var pOwnerId = dtoSource.OwnerId;
+            var pOwnerType = dtoSource.OwnerType;
+            var pParent = (dtoSource.Parent?.Id > 0) ? DocEntityJunction.GetJunction(dtoSource.Parent.Id) : null;
+            var pTargetId = dtoSource.TargetId;
+            var pTargetType = dtoSource.TargetType;
+            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.JUNCTIONTYPE, dtoSource.Type?.Name, dtoSource.Type?.Id);
+            var pUser = (dtoSource.User?.Id > 0) ? DocEntityUser.GetUser(dtoSource.User.Id) : null;
 
             DocEntityJunction entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -263,96 +256,96 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityJunction.GetJunction(request.Id);
+                entity = DocEntityJunction.GetJunction(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pData, permission, DocConstantModelName.JUNCTION, nameof(request.Data)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pData, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.Data)))
             {
-                if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pData, entity.Data, nameof(dtoSource.Data)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Data)} cannot be modified once set.");
                     entity.Data = pData;
-                if(DocPermissionFactory.IsRequested<string>(request, pData, nameof(request.Data)) && !request.VisibleFields.Matches(nameof(request.Data), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pData, nameof(dtoSource.Data)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Data), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Data));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Data));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pOwnerId, permission, DocConstantModelName.JUNCTION, nameof(request.OwnerId)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pOwnerId, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.OwnerId)))
             {
-                if(DocPermissionFactory.IsRequested(request, pOwnerId, entity.OwnerId, nameof(request.OwnerId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.OwnerId)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pOwnerId, entity.OwnerId, nameof(dtoSource.OwnerId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.OwnerId)} cannot be modified once set.");
                     entity.OwnerId = pOwnerId;
-                if(DocPermissionFactory.IsRequested<int?>(request, pOwnerId, nameof(request.OwnerId)) && !request.VisibleFields.Matches(nameof(request.OwnerId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pOwnerId, nameof(dtoSource.OwnerId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.OwnerId), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.OwnerId));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.OwnerId));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pOwnerType, permission, DocConstantModelName.JUNCTION, nameof(request.OwnerType)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pOwnerType, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.OwnerType)))
             {
-                if(DocPermissionFactory.IsRequested(request, pOwnerType, entity.OwnerType, nameof(request.OwnerType)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.OwnerType)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pOwnerType, entity.OwnerType, nameof(dtoSource.OwnerType)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.OwnerType)} cannot be modified once set.");
                     entity.OwnerType = pOwnerType;
-                if(DocPermissionFactory.IsRequested<string>(request, pOwnerType, nameof(request.OwnerType)) && !request.VisibleFields.Matches(nameof(request.OwnerType), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pOwnerType, nameof(dtoSource.OwnerType)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.OwnerType), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.OwnerType));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.OwnerType));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityJunction>(currentUser, request, pParent, permission, DocConstantModelName.JUNCTION, nameof(request.Parent)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityJunction>(currentUser, dtoSource, pParent, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.Parent)))
             {
-                if(DocPermissionFactory.IsRequested(request, pParent, entity.Parent, nameof(request.Parent)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pParent, entity.Parent, nameof(dtoSource.Parent)))
                     entity.Parent = pParent;
-                if(DocPermissionFactory.IsRequested<DocEntityJunction>(request, pParent, nameof(request.Parent)) && !request.VisibleFields.Matches(nameof(request.Parent), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityJunction>(dtoSource, pParent, nameof(dtoSource.Parent)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Parent), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Parent));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Parent));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pTargetId, permission, DocConstantModelName.JUNCTION, nameof(request.TargetId)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pTargetId, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.TargetId)))
             {
-                if(DocPermissionFactory.IsRequested(request, pTargetId, entity.TargetId, nameof(request.TargetId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TargetId)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pTargetId, entity.TargetId, nameof(dtoSource.TargetId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.TargetId)} cannot be modified once set.");
                     entity.TargetId = pTargetId;
-                if(DocPermissionFactory.IsRequested<int?>(request, pTargetId, nameof(request.TargetId)) && !request.VisibleFields.Matches(nameof(request.TargetId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pTargetId, nameof(dtoSource.TargetId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.TargetId), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.TargetId));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.TargetId));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pTargetType, permission, DocConstantModelName.JUNCTION, nameof(request.TargetType)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pTargetType, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.TargetType)))
             {
-                if(DocPermissionFactory.IsRequested(request, pTargetType, entity.TargetType, nameof(request.TargetType)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TargetType)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pTargetType, entity.TargetType, nameof(dtoSource.TargetType)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.TargetType)} cannot be modified once set.");
                     entity.TargetType = pTargetType;
-                if(DocPermissionFactory.IsRequested<string>(request, pTargetType, nameof(request.TargetType)) && !request.VisibleFields.Matches(nameof(request.TargetType), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pTargetType, nameof(dtoSource.TargetType)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.TargetType), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.TargetType));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.TargetType));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.JUNCTION, nameof(request.Type)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pType, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.Type)))
             {
-                if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pType, entity.Type, nameof(dtoSource.Type)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Type)} cannot be modified once set.");
                     entity.Type = pType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pType, nameof(dtoSource.Type)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Type), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Type));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Type));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pUser, permission, DocConstantModelName.JUNCTION, nameof(request.User)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, dtoSource, pUser, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.User)))
             {
-                if(DocPermissionFactory.IsRequested(request, pUser, entity.User, nameof(request.User)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.User)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pUser, entity.User, nameof(dtoSource.User)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.User)} cannot be modified once set.");
                     entity.User = pUser;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.VisibleFields.Matches(nameof(request.User), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(dtoSource, pUser, nameof(dtoSource.User)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.User), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.User));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.User));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pChildren, permission, DocConstantModelName.JUNCTION, nameof(request.Children)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pChildren, permission, DocConstantModelName.JUNCTION, nameof(dtoSource.Children)))
             {
                 if (true == pChildren?.Any() )
                 {
@@ -367,16 +360,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityJunction.GetJunction(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Children)} to {nameof(Junction)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Junction), columnName: nameof(dtoSource.Children)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Children)} to {nameof(Junction)}");
                         entity.Children.Add(target);
                     });
                     var toRemove = entity.Children.Where(e => requestedChildren.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityJunction.GetJunction(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Junction)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Junction), columnName: nameof(dtoSource.Children)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Children)} from {nameof(Junction)}");
                         entity.Children.Remove(target);
                     });
                 }
@@ -386,26 +379,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityJunction.GetJunction(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Junction)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Junction), columnName: nameof(dtoSource.Children)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Children)} from {nameof(Junction)}");
                         entity.Children.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pChildren, nameof(request.Children)) && !request.VisibleFields.Matches(nameof(request.Children), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pChildren, nameof(dtoSource.Children)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Children), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Children));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Children));
                 }
             }
-            request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, nameof(Junction), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Junction Post(Junction request)
+        public Junction Post(Junction dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             Junction ret = null;
 
@@ -414,7 +407,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Junction")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -490,6 +483,8 @@ namespace Services.API
                         pTargetType += " (Copy)";
                     var pType = entity.Type;
                     var pUser = entity.User;
+                #region Custom Before copyJunction
+                #endregion Custom Before copyJunction
                 var copy = new DocEntityJunction(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -507,6 +502,8 @@ namespace Services.API
                                 entity.Children.Add(item);
                             }
 
+                #region Custom After copyJunction
+                #endregion Custom After copyJunction
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -519,9 +516,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public Junction Put(Junction request)
+        public Junction Put(Junction dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<Junction> Patch(JunctionBatch request)
@@ -571,16 +568,16 @@ namespace Services.API
             return ret;
         }
 
-        public Junction Patch(Junction request)
+        public Junction Patch(Junction dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Junction to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Junction to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             Junction ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -703,7 +700,7 @@ namespace Services.API
 
         private object _GetJunctionJunction(JunctionJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
              var en = DocEntityJunction.GetJunction(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.JUNCTION, columnName: "Children", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Junction and Junction");
@@ -821,7 +818,7 @@ namespace Services.API
             Junction ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
 
             DocEntityJunction entity = null;
             if(id.HasValue)
@@ -849,6 +846,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

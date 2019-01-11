@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -94,13 +93,6 @@ namespace Services.Dto
         public bool ImportText { get; set; }
 
 
-        [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
-        public Reference ImportType { get; set; }
-        [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
-        public int? ImportTypeId { get; set; }
-
-
         [ApiMember(Name = nameof(IsLegacy), Description = "bool", IsRequired = false)]
         public bool IsLegacy { get; set; }
 
@@ -154,16 +146,20 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
-            return ret;
+            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
+            if (DocTools.AreEqual(nameof(Fields), field)) return false;
+            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
+            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
+            if (DocTools.AreEqual(nameof(Id), field)) return true;
+            return true == VisibleFields?.Matches(field, true);
         }
 
-        public static List<string> Fields => DocTools.Fields<ImportData>();
+        private static List<string> _fields;
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<ImportData>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(CompletedOn),nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(ErrorData),nameof(ExtractUrl),nameof(Gestalt),nameof(HighPriority),nameof(ImportFr),nameof(ImportNewName),nameof(ImportTable),nameof(ImportText),nameof(ImportType),nameof(ImportTypeId),nameof(IsLegacy),nameof(Locked),nameof(Order),nameof(ReferenceId),nameof(RequestedBy),nameof(RequestedById),nameof(RequestedOn),nameof(StartedOn),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(CompletedOn),nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(ErrorData),nameof(ExtractUrl),nameof(Gestalt),nameof(HighPriority),nameof(ImportFr),nameof(ImportNewName),nameof(ImportTable),nameof(ImportText),nameof(IsLegacy),nameof(Locked),nameof(Order),nameof(ReferenceId),nameof(RequestedBy),nameof(RequestedById),nameof(RequestedOn),nameof(StartedOn),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -211,10 +207,6 @@ namespace Services.Dto
         public bool? ImportNewName { get; set; }
         public bool? ImportTable { get; set; }
         public bool? ImportText { get; set; }
-        public Reference ImportType { get; set; }
-        public List<int> ImportTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
-        public List<string> ImportTypeNames { get; set; }
         public bool? IsLegacy { get; set; }
         public int? Order { get; set; }
         public int? ReferenceId { get; set; }
@@ -255,7 +247,6 @@ namespace Services.Dto
         public bool doImportNewName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportNewName))); }
         public bool doImportTable { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportTable))); }
         public bool doImportText { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportText))); }
-        public bool doImportType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportType))); }
         public bool doIsLegacy { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.IsLegacy))); }
         public bool doOrder { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Order))); }
         public bool doReferenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ReferenceId))); }

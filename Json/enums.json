@@ -31,8 +31,7 @@
     "CONFLUENCE": "Confluence",
     "BITBUCKET": "Bitbucket",
     "BAMBOO": "Bamboo",
-    "DOC_DASHBOARD": "DOC Dashboard",
-    "SERVE": "SERVE"
+    "DOC_DASHBOARD": "DOC Dashboard"
   },
   "ArmPopulationAge": {
     "MEAN_RANGE": "Mean (Range)",
@@ -66,7 +65,6 @@
     "HAZARD_RATIO": "Hazard Ratio",
     "MEAN_DIFFERENCE": "Mean Difference",
     "COHENS_D": "Cohen's D",
-    "RATE_DIFFERENCE": "Rate Difference",
     "RISK_DIFFERENCE": "Risk Difference",
     "RATE_RATIO": "Rate Ratio",
     "HEDGES_G": "Hedges G"
@@ -172,8 +170,7 @@
     "GLOBAL": "Global",
     "THERAPEUTIC_AREA": "Therapeutic Area",
     "DISEASE_STATE": "Disease State",
-    "DATA_SET": "Data Set",
-    "SERVE_PORTAL": "SERVE Portal"
+    "DATA_SET": "Data Set"
   },
   "DocumentType": {
     "DATA_HUB": "Data Hub",
@@ -223,7 +220,10 @@
   },
   "Feature": {
     "ACCESS_BACKEND": "Access Doc Data Backend",
-    "ALL_ENTITIES": "All Entities",
+    "ALL_ENTITIES_ADD": "All Entities (Add)",
+    "ALL_ENTITIES_DELETE": "All Entities (Delete)",
+    "ALL_ENTITIES_EDIT": "All Entities (Edit)",
+    "ALL_ENTITIES_VIEW": "All Entities (View)",
     "ALL_FEATURES": "All Features",
     "ALL_PAGES": "All Pages",
     "ALL_STUDY_SETS": "All Study Sets",
@@ -235,7 +235,6 @@
     "DEBUG": "Debug",
     "DISPLAY_BROADCASTS": "Display Broadcasts",
     "DISPLAY_NOTIFICATIONS": "Display Notifications",
-    "DOCUMENT_SET_ACCESS": "Document Set Access",
     "ERROR_REPORTS": "Error Reports",
     "EXTRACTION": "Extraction",
     "IMPERSONATION": "Impersonation",
@@ -245,12 +244,12 @@
     "PROTOCOL_ADMIN": "Protocol Admin",
     "QC": "QC",
     "RATINGS": "Ratings",
-    "RISK_OF_BIAS": "Risk of Bias",
     "SALESFORCE_DATA": "Salesforce Data",
-    "SHARING": "Sharing",
+    "SHARE_GLOBALLY": "Share Globally",
+    "SHARE_INTERNALLY": "Share Internally",
+    "SHARE_LOCALLY": "Share Locally",
     "SUBMIT_FEEDBACK": "Submit Feedback",
-    "TERMS_ADMIN": "Master Terms Admin",
-    "WORKFLOW_ACCESS": "Workflow Access"
+    "TERMS_ADMIN": "Master Terms Admin"
   },
   "FieldType": {
     "BINARY": "Binary",
@@ -511,6 +510,7 @@
     "REPRESENTATIVESAMPLE": "RepresentativeSample",
     "RESPONSESCOLLECTEDBY": "ResponsesCollectedBy",
     "RESULTSCATEGORY": "ResultsCategory",
+    "ROLE": "Role",
     "SCOPE": "Scope",
     "SETTINGTYPE": "SettingType",
     "STATISTICALSIGNIFICANCE": "StatisticalSignificance",
@@ -622,7 +622,6 @@
     "BROADCAST": "Broadcast",
     "CHARACTERISTIC": "Characteristic",
     "CLIENT": "Client",
-    "COMPARATOR": "Comparator",
     "DATABASEVERSION": "DatabaseVersion",
     "DATETIME": "DateTime",
     "DEFAULT": "Default",
@@ -656,6 +655,7 @@
     "OUTCOME": "Outcome",
     "PACKAGE": "Package",
     "PAGE": "Page",
+    "PRODUCT": "Product",
     "QUEUECHANNEL": "QueueChannel",
     "RELEASESTATUS": "ReleaseStatus",
     "ROLE": "Role",
@@ -874,6 +874,21 @@
     "THERAPIES": "Therapies",
     "WITHDRAWAL_DRUG_DISCONTINUATION": "Withdrawal/Drug Discontinuation"
   },
+  "Role": {
+    "ANALYST_USERS": "Analyst Users",
+    "AUDIT_USERS": "Audit Users",
+    "BINDINGS_ADMINS": "Bindings Admins",
+    "BINDINGS_USERS": "Bindings Users",
+    "CONSULTANT_USERS": "Consultant Users",
+    "DEFAULT_USERS": "Users (Default)",
+    "DRE_ADMINS": "DrE Admins",
+    "DRE_SUPER_ADMIN": "dre_super_admin",
+    "CLIENT_ADMINS": "Client Admins",
+    "CLIENT_SOLUTIONS": "Client Solutions",
+    "DIVISION_ADMINS": "Division Admins",
+    "MARKETING_USERS": "Marketing Users",
+    "USER_ADMINS": "User Admins"
+  },
   "Scope": {
     "DOCUMENTSET": "DocumentSet",
     "CLIENT": "Client",
@@ -1077,8 +1092,7 @@
   },
   "StudyImportType": {
     "LEGACY": "Legacy",
-    "EXTRACT": "Extract",
-    "CLINICAL_TRIALS_GOV": "ClinicalTrials.gov"
+    "EXTRACT": "Extract"
   },
   "StudyNGA": {
     "COMPLETED_FINISHED": "Completed/Finished",
@@ -1381,7 +1395,6 @@
   },
   "ValueStatus": {
     "COLLECTED": "Collected",
-    "NOT_AVAILABLE": "Not Available",
     "NOT_COLLECTED": "Not Collected",
     "NOT_REPORTED": "Not Reported",
     "REQUESTED": "Requested"
@@ -1391,14 +1404,11 @@
     "BOOLEAN": "Boolean",
     "CALENDARDATE": "CalendarDate",
     "CALENDARDATES": "CalendarDates",
-    "CONTACT": "Contact",
     "DATETIME": "DateTime",
     "DATETIMERANGE": "DateTimeRange",
     "DECIMAL": "Decimal",
     "DECIMALRANGE": "DecimalRange",
     "DESIGNNESTEDSTUDYIDLINK": "DesignNestedStudyIdLink",
-    "EVENTCOUNTS": "EventCounts",
-    "FACILITY": "Facility",
     "FIXEDDOSEINTERVENTION": "FixedDoseIntervention",
     "FLAG": "Flag",
     "FUNDING": "Funding",
@@ -1410,14 +1420,11 @@
     "NPERSONS": "NPersons",
     "PARTICIPANT": "Participant",
     "PARTICIPANTS": "Participants",
-    "POPULATIONANALYZED": "PopulationAnalyzed",
     "PVALUE": "PValue",
     "RATE": "Rate",
     "SETTINGLOCATION": "SettingLocation",
     "SETTINGLOCATIONTOTAL": "SettingLocationTotal",
-    "STUDYDOC": "StudyDoc",
     "STUDYOBJECTIVE": "StudyObjective",
-    "STUDYREFERENCE": "StudyReference",
     "SUBGROUPDESCRIPTOR": "SubgroupDescriptor",
     "TIMEPOINT": "Timepoint",
     "TIMEPOINTS": "Timepoints",
@@ -1455,7 +1462,6 @@
     "DOC_EXTRACT_PROJECT": "DOC Extract Project",
     "DOC_LIBRARY_PROJECT": "DOC Library Project",
     "EVIDENCE_ON_DEMAND": "Evidence on Demand",
-    "EVIDENCE_STATEMENTS": "Evidence Statements",
     "EVIDENCE_TABLE": "Evidence Table",
     "FILTER": "Filter",
     "FRAMED_QUESTION_DATA_SET": "Framed Question Data Set",
@@ -1469,10 +1475,6 @@
     "PICO_RATING": "PICO Rating",
     "RAPID_REVIEW": "Rapid Review",
     "RESPONSE_LETTER": "Response Letter",
-    "RISK_OF_BIAS": "Risk of Bias",
-    "R_SNIPPET": "R Snippet",
-    "RMD_SNIPPET": "RMD Snippet",
-    "FAQ": "FAQ",
     "SURVEY_DESIGN": "Survey Design",
     "SURVEY_WIZARD": "Survery Wizard",
     "SYSTEMATIC_REVIEW": "Systematic Review",

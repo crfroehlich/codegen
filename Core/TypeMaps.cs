@@ -22,7 +22,7 @@ namespace Services.Schema
     {
         public static List<TypeMap> Maps { get; } = new List<TypeMap>
         {
-            new TypeMap() { SchemaName = typeof(DocEntityComparator).FullName, TypeId = 20035, TableName = DocConstantModelName.COMPARATOR, ClassName = "Comparator", DtoName = nameof(Comparator) },
+            new TypeMap() { SchemaName = typeof(DocEntityProduct).FullName, TypeId = 20035, TableName = DocConstantModelName.PRODUCT, ClassName = "Product", DtoName = nameof(Product) },
             new TypeMap() { SchemaName = typeof(DocEntityBackgroundTaskItem).FullName, TypeId = 19935, TableName = DocConstantModelName.BACKGROUNDTASKITEM, ClassName = "BackgroundTaskItem", DtoName = nameof(BackgroundTaskItem) },
             new TypeMap() { SchemaName = typeof(DocEntityReleaseStatus).FullName, TypeId = 19835, TableName = DocConstantModelName.RELEASESTATUS, ClassName = "ReleaseStatus", DtoName = nameof(ReleaseStatus) },
             new TypeMap() { SchemaName = typeof(DocEntityDefault).FullName, TypeId = 19435, TableName = DocConstantModelName.DEFAULT, ClassName = "Default", DtoName = nameof(Default) },
@@ -60,15 +60,15 @@ namespace Services.Schema
             new TypeMap() { SchemaName = typeof(DocEntityTimePoint).FullName, TypeId = 15078, TableName = DocConstantModelName.TIMEPOINT, ClassName = "TimePoint", DtoName = nameof(TimePoint) },
             new TypeMap() { SchemaName = typeof(DocEntityHelp).FullName, TypeId = 14978, TableName = DocConstantModelName.HELP, ClassName = "Help", DtoName = nameof(Help) },
             new TypeMap() { SchemaName = typeof(DocEntityGlossary).FullName, TypeId = 14977, TableName = DocConstantModelName.GLOSSARY, ClassName = "Glossary", DtoName = nameof(Glossary) },
-            new TypeMap() { SchemaName = typeof(DocEntityCharacteristic).FullName, TypeId = 14475, TableName = DocConstantModelName.CHARACTERISTIC, ClassName = "Characteristic", DtoName = nameof(Characteristic) },
+            new TypeMap() { SchemaName = typeof(DocEntityCharacteristic).FullName, TypeId = 14475, TableName = DocConstantModelName.CHARACTERISTIC, ClassName = "Characteristic", DtoName = nameof(CharacteristicDto) },
             new TypeMap() { SchemaName = typeof(DocEntityBackgroundTask).FullName, TypeId = 14375, TableName = DocConstantModelName.BACKGROUNDTASK, ClassName = "BackgroundTask", DtoName = nameof(BackgroundTask) },
             new TypeMap() { SchemaName = typeof(DocEntityStatsRecord).FullName, TypeId = 14275, TableName = DocConstantModelName.STATSRECORD, ClassName = "StatsRecord", DtoName = nameof(StatsRecord) },
             new TypeMap() { SchemaName = typeof(DocEntityStatsStudySet).FullName, TypeId = 14274, TableName = DocConstantModelName.STATSSTUDYSET, ClassName = "StatsStudySet", DtoName = nameof(StatsStudySet) },
             new TypeMap() { SchemaName = typeof(DocEntityStats).FullName, TypeId = 14273, TableName = DocConstantModelName.STATS, ClassName = "Stats", DtoName = nameof(Stats) },
             new TypeMap() { SchemaName = typeof(DocEntityApp).FullName, TypeId = 14173, TableName = DocConstantModelName.APP, ClassName = "App", DtoName = nameof(App) },
             new TypeMap() { SchemaName = typeof(DocEntityBroadcast).FullName, TypeId = 13962, TableName = DocConstantModelName.BROADCAST, ClassName = "Broadcast", DtoName = nameof(Broadcast) },
-            new TypeMap() { SchemaName = typeof(DocEntityOutcome).FullName, TypeId = 13662, TableName = DocConstantModelName.OUTCOME, ClassName = "Outcome", DtoName = nameof(Outcome) },
-            new TypeMap() { SchemaName = typeof(DocEntityIntervention).FullName, TypeId = 13420, TableName = DocConstantModelName.INTERVENTION, ClassName = "Intervention", DtoName = nameof(Intervention) },
+            new TypeMap() { SchemaName = typeof(DocEntityOutcome).FullName, TypeId = 13662, TableName = DocConstantModelName.OUTCOME, ClassName = "Outcome", DtoName = nameof(OutcomeDto) },
+            new TypeMap() { SchemaName = typeof(DocEntityIntervention).FullName, TypeId = 13420, TableName = DocConstantModelName.INTERVENTION, ClassName = "Intervention", DtoName = nameof(InterventionDto) },
             new TypeMap() { SchemaName = typeof(DocEntityDocumentSetHistory).FullName, TypeId = 13320, TableName = DocConstantModelName.DOCUMENTSETHISTORY, ClassName = "DocumentSetHistory", DtoName = nameof(DocumentSetHistory) },
             new TypeMap() { SchemaName = typeof(DocEntityJctAttributeCategoryAttributeDocumentSet).FullName, TypeId = 13223, TableName = DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, ClassName = "JctAttributeCategoryAttributeDocumentSet", DtoName = nameof(JctAttributeCategoryAttributeDocumentSet) },
             new TypeMap() { SchemaName = typeof(DocEntityAttributeCategory).FullName, TypeId = 13222, TableName = DocConstantModelName.ATTRIBUTECATEGORY, ClassName = "AttributeCategory", DtoName = nameof(AttributeCategory) },

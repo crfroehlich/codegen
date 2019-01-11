@@ -77,10 +77,6 @@ namespace Services.Schema
                 {
                     ret = DocConstantModelName.CLIENT;
                 }
-                else if(typeof(T) == typeof(DocEntityComparator))
-                {
-                    ret = DocConstantModelName.COMPARATOR;
-                }
                 else if(typeof(T) == typeof(DocEntityDatabaseVersion))
                 {
                     ret = DocConstantModelName.DATABASEVERSION;
@@ -212,6 +208,10 @@ namespace Services.Schema
                 else if(typeof(T) == typeof(DocEntityPage))
                 {
                     ret = DocConstantModelName.PAGE;
+                }
+                else if(typeof(T) == typeof(DocEntityProduct))
+                {
+                    ret = DocConstantModelName.PRODUCT;
                 }
                 else if(typeof(T) == typeof(DocEntityQueueChannel))
                 {
@@ -397,9 +397,6 @@ namespace Services.Schema
                 case DocConstantModelName.CLIENT:
                     ret = new DocEntityClient(session);
                     break;
-                case DocConstantModelName.COMPARATOR:
-                    ret = new DocEntityComparator(session);
-                    break;
                 case DocConstantModelName.DATABASEVERSION:
                     ret = new DocEntityDatabaseVersion(session);
                     break;
@@ -498,6 +495,9 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.PAGE:
                     ret = new DocEntityPage(session);
+                    break;
+                case DocConstantModelName.PRODUCT:
+                    ret = new DocEntityProduct(session);
                     break;
                 case DocConstantModelName.QUEUECHANNEL:
                     ret = new DocEntityQueueChannel(session);
@@ -650,9 +650,6 @@ namespace Services.Schema
                 case DocConstantModelName.CLIENT:
                     ret = DocEntityClient.GetClient(id);
                     break;
-                case DocConstantModelName.COMPARATOR:
-                    ret = DocEntityComparator.GetComparator(id);
-                    break;
                 case DocConstantModelName.DATABASEVERSION:
                     ret = DocEntityDatabaseVersion.GetDatabaseVersion(id);
                     break;
@@ -751,6 +748,9 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.PAGE:
                     ret = DocEntityPage.GetPage(id);
+                    break;
+                case DocConstantModelName.PRODUCT:
+                    ret = DocEntityProduct.GetProduct(id);
                     break;
                 case DocConstantModelName.QUEUECHANNEL:
                     ret = DocEntityQueueChannel.GetQueueChannel(id);
@@ -911,17 +911,12 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.CHARACTERISTIC:
                     {
-                       ret = entities.Cast<DocEntityCharacteristic>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                       ret = entities.Cast<DocEntityCharacteristic>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.CLIENT:
                     {
                        ret = entities.Cast<DocEntityClient>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
-                    }
-                    break;
-                case DocConstantModelName.COMPARATOR:
-                    {
-                       ret = entities.Cast<DocEntityComparator>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DATABASEVERSION:
@@ -1011,7 +1006,7 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.INTERVENTION:
                     {
-                       ret = entities.Cast<DocEntityIntervention>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                       ret = entities.Cast<DocEntityIntervention>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET:
@@ -1076,7 +1071,7 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.OUTCOME:
                     {
-                       ret = entities.Cast<DocEntityOutcome>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                       ret = entities.Cast<DocEntityOutcome>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.PACKAGE:
@@ -1087,6 +1082,11 @@ namespace Services.Schema
                 case DocConstantModelName.PAGE:
                     {
                        ret = entities.Cast<DocEntityPage>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                    }
+                    break;
+                case DocConstantModelName.PRODUCT:
+                    {
+                       ret = entities.Cast<DocEntityProduct>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.QUEUECHANNEL:

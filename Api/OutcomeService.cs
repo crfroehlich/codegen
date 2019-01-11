@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -49,9 +48,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
+            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityOutcome>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityOutcome>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new OutcomeFullTextSearch(request);
@@ -86,10 +87,22 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.Name))
-                    entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(!DocTools.IsNullOrEmpty(request.URI))
-                    entities = entities.Where(en => en.URI.Contains(request.URI));
+                if(!DocTools.IsNullOrEmpty(request.Outcome) && !DocTools.IsNullOrEmpty(request.Outcome.Id))
+                {
+                    entities = entities.Where(en => en.Outcome.Id == request.Outcome.Id );
+                }
+                if(true == request.OutcomeIds?.Any())
+                {
+                    entities = entities.Where(en => en.Outcome.Id.In(request.OutcomeIds));
+                }
+                else if(!DocTools.IsNullOrEmpty(request.Outcome) && !DocTools.IsNullOrEmpty(request.Outcome.Name))
+                {
+                    entities = entities.Where(en => en.Outcome.Name == request.Outcome.Name );
+                }
+                if(true == request.OutcomeNames?.Any())
+                {
+                    entities = entities.Where(en => en.Outcome.Name.In(request.OutcomeNames));
+                }
 
                 entities = ApplyFilters(request, entities);
 
@@ -101,54 +114,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(OutcomeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Outcome>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<OutcomeDto>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,OutcomeDto>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(OutcomeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Outcome>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<OutcomeDto>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,OutcomeDto>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -160,49 +168,45 @@ namespace Services.API
         public object Get(OutcomeVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Outcome request)
+        public object Get(OutcomeDto request)
         {
-            object ret = null;
+            OutcomeDto ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
                 ret = GetOutcome(request);
             });
             return ret;
         }
 
-        private Outcome _AssignValues(Outcome request, DocConstantPermission permission, Session session)
+        private OutcomeDto _AssignValues(OutcomeDto dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Outcome"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
-            Outcome ret = null;
-            request = _InitAssignValues(request, permission, session);
+            OutcomeDto ret = null;
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pName = request.Name;
-            var pURI = request.URI;
+            DocEntityLookupTable pOutcome = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, dtoSource.Outcome?.Name, dtoSource.Outcome?.Id);
 
             DocEntityOutcome entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -216,64 +220,54 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityOutcome.GetOutcome(request.Id);
+                entity = DocEntityOutcome.GetOutcome(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.OUTCOME, nameof(request.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pOutcome, permission, DocConstantModelName.OUTCOME, nameof(dtoSource.Outcome)))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
-                    entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(dtoSource, pOutcome, entity.Outcome, nameof(dtoSource.Outcome)))
+                    entity.Outcome = pOutcome;
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pOutcome, nameof(dtoSource.Outcome)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Outcome), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Name));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.OUTCOME, nameof(request.URI)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
-                    entity.URI = pURI;
-                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.URI));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Outcome));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
+            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, nameof(OutcomeDto), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Outcome Post(Outcome request)
+        public OutcomeDto Post(OutcomeDto dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
-            Outcome ret = null;
+            OutcomeDto ret = null;
 
             Execute.Run(ssn =>
             {
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Outcome")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
         }
    
-        public List<Outcome> Post(OutcomeBatch request)
+        public List<OutcomeDto> Post(OutcomeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<Outcome>();
+            var ret = new List<OutcomeDto>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -281,7 +275,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as Outcome;
+                    var obj = Post(dto) as OutcomeDto;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -316,9 +310,9 @@ namespace Services.API
             return ret;
         }
 
-        public Outcome Post(OutcomeCopy request)
+        public OutcomeDto Post(OutcomeDtoCopy request)
         {
-            Outcome ret = null;
+            OutcomeDto ret = null;
             Execute.Run(ssn =>
             {
                 var entity = DocEntityOutcome.GetOutcome(request?.Id);
@@ -326,18 +320,16 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pName = entity.Name;
-                    if(!DocTools.IsNullOrEmpty(pName))
-                        pName += " (Copy)";
-                    var pURI = entity.URI;
-                    if(!DocTools.IsNullOrEmpty(pURI))
-                        pURI += " (Copy)";
+                    var pOutcome = entity.Outcome;
+                #region Custom Before copyOutcome
+                #endregion Custom Before copyOutcome
                 var copy = new DocEntityOutcome(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Name = pName
-                                , URI = pURI
+                                , Outcome = pOutcome
                 };
+                #region Custom After copyOutcome
+                #endregion Custom After copyOutcome
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -345,21 +337,21 @@ namespace Services.API
         }
 
 
-        public List<Outcome> Put(OutcomeBatch request)
+        public List<OutcomeDto> Put(OutcomeBatch request)
         {
             return Patch(request);
         }
 
-        public Outcome Put(Outcome request)
+        public OutcomeDto Put(OutcomeDto dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
-        public List<Outcome> Patch(OutcomeBatch request)
+        public List<OutcomeDto> Patch(OutcomeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<Outcome>();
+            var ret = new List<OutcomeDto>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -367,7 +359,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as Outcome;
+                    var obj = Patch(dto) as OutcomeDto;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -402,16 +394,16 @@ namespace Services.API
             return ret;
         }
 
-        public Outcome Patch(Outcome request)
+        public OutcomeDto Patch(OutcomeDto dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Outcome to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Outcome to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
-            Outcome ret = null;
+            OutcomeDto ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -460,7 +452,7 @@ namespace Services.API
             }
         }
 
-        public void Delete(Outcome request)
+        public void Delete(OutcomeDto request)
         {
             Execute.Run(ssn =>
             {
@@ -478,7 +470,7 @@ namespace Services.API
 
         public void Delete(OutcomeSearch request)
         {
-            var matches = Get(request) as List<Outcome>;
+            var matches = Get(request) as List<OutcomeDto>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
@@ -490,13 +482,13 @@ namespace Services.API
             });
         }
 
-        private Outcome GetOutcome(Outcome request)
+        private OutcomeDto GetOutcome(OutcomeDto request)
         {
             var id = request?.Id;
-            Outcome ret = null;
+            OutcomeDto ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
+            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
 
             DocEntityOutcome entity = null;
             if(id.HasValue)
@@ -524,6 +516,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

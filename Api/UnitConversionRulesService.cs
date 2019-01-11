@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -56,11 +55,20 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    cachedRet = GetUnitConversionRules(request);
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetUnitConversionRules(request);
+                    });
                     return cachedRet;
                 });
             }
-            ret = ret ?? GetUnitConversionRules(request);
+            if(null == ret)
+            {
+                Execute.Run(s =>
+                {
+                    ret = GetUnitConversionRules(request);
+                });
+            }
             return ret;
         }
 
@@ -93,9 +101,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<UnitConversionRules>(Dto.UnitConversionRules.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityUnitConversionRules>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityUnitConversionRules>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UnitConversionRulesFullTextSearch(request);
@@ -195,70 +205,65 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(UnitConversionRulesSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<UnitConversionRules>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
                     {
-                        var ret = new List<UnitConversionRules>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(UnitConversionRulesSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<UnitConversionRules>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
                     {
-                        var ret = new List<UnitConversionRules>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -270,63 +275,60 @@ namespace Services.API
         public object Get(UnitConversionRulesVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(UnitConversionRules request)
         {
-            object ret = null;
+            UnitConversionRules ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
+            var settings = DocResources.Settings;
+            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
             {
-                request.VisibleFields = InitVisibleFields<UnitConversionRules>(Dto.UnitConversionRules.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
-                {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                return _GetIdCache(request);
+            }
+            else 
+            {
+                Execute.Run((ssn) =>
                 {
                     ret = GetUnitConversionRules(request);
-                }
-            });
+                });
+            }
             return ret;
         }
 
-        private UnitConversionRules _AssignValues(UnitConversionRules request, DocConstantPermission permission, Session session)
+        private UnitConversionRules _AssignValues(UnitConversionRules dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "UnitConversionRules"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             UnitConversionRules ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pDestinationUnit = (request.DestinationUnit?.Id > 0) ? DocEntityUnitOfMeasure.GetUnitOfMeasure(request.DestinationUnit.Id) : null;
-            var pIsDefault = request.IsDefault;
-            var pIsDestinationSi = request.IsDestinationSi;
-            var pModifierTerm = (request.ModifierTerm?.Id > 0) ? DocEntityTermMaster.GetTermMaster(request.ModifierTerm.Id) : null;
-            var pMultiplier = request.Multiplier;
-            DocEntityLookupTable pParent = GetLookup(DocConstantLookupTable.UNITCONVERSIONRULEPARENT, request.Parent?.Name, request.Parent?.Id);
-            var pRootTerm = (request.RootTerm?.Id > 0) ? DocEntityTermMaster.GetTermMaster(request.RootTerm.Id) : null;
-            var pSourceUnit = (request.SourceUnit?.Id > 0) ? DocEntityUnitOfMeasure.GetUnitOfMeasure(request.SourceUnit.Id) : null;
+            var pDestinationUnit = (dtoSource.DestinationUnit?.Id > 0) ? DocEntityUnitOfMeasure.GetUnitOfMeasure(dtoSource.DestinationUnit.Id) : null;
+            var pIsDefault = dtoSource.IsDefault;
+            var pIsDestinationSi = dtoSource.IsDestinationSi;
+            var pModifierTerm = (dtoSource.ModifierTerm?.Id > 0) ? DocEntityTermMaster.GetTermMaster(dtoSource.ModifierTerm.Id) : null;
+            var pMultiplier = dtoSource.Multiplier;
+            DocEntityLookupTable pParent = GetLookup(DocConstantLookupTable.UNITCONVERSIONRULEPARENT, dtoSource.Parent?.Name, dtoSource.Parent?.Id);
+            var pRootTerm = (dtoSource.RootTerm?.Id > 0) ? DocEntityTermMaster.GetTermMaster(dtoSource.RootTerm.Id) : null;
+            var pSourceUnit = (dtoSource.SourceUnit?.Id > 0) ? DocEntityUnitOfMeasure.GetUnitOfMeasure(dtoSource.SourceUnit.Id) : null;
 
             DocEntityUnitConversionRules entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -340,102 +342,102 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityUnitConversionRules.GetUnitConversionRules(request.Id);
+                entity = DocEntityUnitConversionRules.GetUnitConversionRules(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUnitOfMeasure>(currentUser, request, pDestinationUnit, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.DestinationUnit)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUnitOfMeasure>(currentUser, dtoSource, pDestinationUnit, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(dtoSource.DestinationUnit)))
             {
-                if(DocPermissionFactory.IsRequested(request, pDestinationUnit, entity.DestinationUnit, nameof(request.DestinationUnit)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DestinationUnit)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pDestinationUnit, entity.DestinationUnit, nameof(dtoSource.DestinationUnit)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.DestinationUnit)} cannot be modified once set.");
                     entity.DestinationUnit = pDestinationUnit;
-                if(DocPermissionFactory.IsRequested<DocEntityUnitOfMeasure>(request, pDestinationUnit, nameof(request.DestinationUnit)) && !request.VisibleFields.Matches(nameof(request.DestinationUnit), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUnitOfMeasure>(dtoSource, pDestinationUnit, nameof(dtoSource.DestinationUnit)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DestinationUnit), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.DestinationUnit));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.DestinationUnit));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsDefault, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.IsDefault)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsDefault, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(dtoSource.IsDefault)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsDefault, entity.IsDefault, nameof(request.IsDefault)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pIsDefault, entity.IsDefault, nameof(dtoSource.IsDefault)))
                     entity.IsDefault = pIsDefault;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsDefault, nameof(request.IsDefault)) && !request.VisibleFields.Matches(nameof(request.IsDefault), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pIsDefault, nameof(dtoSource.IsDefault)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IsDefault), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IsDefault));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.IsDefault));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsDestinationSi, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.IsDestinationSi)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsDestinationSi, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(dtoSource.IsDestinationSi)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsDestinationSi, entity.IsDestinationSi, nameof(request.IsDestinationSi)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pIsDestinationSi, entity.IsDestinationSi, nameof(dtoSource.IsDestinationSi)))
                     entity.IsDestinationSi = pIsDestinationSi;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsDestinationSi, nameof(request.IsDestinationSi)) && !request.VisibleFields.Matches(nameof(request.IsDestinationSi), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pIsDestinationSi, nameof(dtoSource.IsDestinationSi)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IsDestinationSi), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IsDestinationSi));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.IsDestinationSi));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, request, pModifierTerm, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.ModifierTerm)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, dtoSource, pModifierTerm, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(dtoSource.ModifierTerm)))
             {
-                if(DocPermissionFactory.IsRequested(request, pModifierTerm, entity.ModifierTerm, nameof(request.ModifierTerm)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ModifierTerm)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pModifierTerm, entity.ModifierTerm, nameof(dtoSource.ModifierTerm)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.ModifierTerm)} cannot be modified once set.");
                     entity.ModifierTerm = pModifierTerm;
-                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pModifierTerm, nameof(request.ModifierTerm)) && !request.VisibleFields.Matches(nameof(request.ModifierTerm), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(dtoSource, pModifierTerm, nameof(dtoSource.ModifierTerm)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ModifierTerm), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ModifierTerm));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ModifierTerm));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<decimal>(currentUser, request, pMultiplier, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Multiplier)))
+            if (DocPermissionFactory.IsRequestedHasPermission<decimal>(currentUser, dtoSource, pMultiplier, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(dtoSource.Multiplier)))
             {
-                if(DocPermissionFactory.IsRequested(request, pMultiplier, entity.Multiplier, nameof(request.Multiplier)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pMultiplier, entity.Multiplier, nameof(dtoSource.Multiplier)))
                     entity.Multiplier = pMultiplier;
-                if(DocPermissionFactory.IsRequested<decimal>(request, pMultiplier, nameof(request.Multiplier)) && !request.VisibleFields.Matches(nameof(request.Multiplier), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<decimal>(dtoSource, pMultiplier, nameof(dtoSource.Multiplier)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Multiplier), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Multiplier));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Multiplier));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pParent, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.Parent)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pParent, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(dtoSource.Parent)))
             {
-                if(DocPermissionFactory.IsRequested(request, pParent, entity.Parent, nameof(request.Parent)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pParent, entity.Parent, nameof(dtoSource.Parent)))
                     entity.Parent = pParent;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pParent, nameof(request.Parent)) && !request.VisibleFields.Matches(nameof(request.Parent), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pParent, nameof(dtoSource.Parent)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Parent), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Parent));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Parent));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, request, pRootTerm, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.RootTerm)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, dtoSource, pRootTerm, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(dtoSource.RootTerm)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRootTerm, entity.RootTerm, nameof(request.RootTerm)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RootTerm)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pRootTerm, entity.RootTerm, nameof(dtoSource.RootTerm)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.RootTerm)} cannot be modified once set.");
                     entity.RootTerm = pRootTerm;
-                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pRootTerm, nameof(request.RootTerm)) && !request.VisibleFields.Matches(nameof(request.RootTerm), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(dtoSource, pRootTerm, nameof(dtoSource.RootTerm)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.RootTerm), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.RootTerm));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.RootTerm));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUnitOfMeasure>(currentUser, request, pSourceUnit, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(request.SourceUnit)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUnitOfMeasure>(currentUser, dtoSource, pSourceUnit, permission, DocConstantModelName.UNITCONVERSIONRULES, nameof(dtoSource.SourceUnit)))
             {
-                if(DocPermissionFactory.IsRequested(request, pSourceUnit, entity.SourceUnit, nameof(request.SourceUnit)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SourceUnit)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pSourceUnit, entity.SourceUnit, nameof(dtoSource.SourceUnit)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.SourceUnit)} cannot be modified once set.");
                     entity.SourceUnit = pSourceUnit;
-                if(DocPermissionFactory.IsRequested<DocEntityUnitOfMeasure>(request, pSourceUnit, nameof(request.SourceUnit)) && !request.VisibleFields.Matches(nameof(request.SourceUnit), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUnitOfMeasure>(dtoSource, pSourceUnit, nameof(dtoSource.SourceUnit)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.SourceUnit), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.SourceUnit));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.SourceUnit));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<UnitConversionRules>(Dto.UnitConversionRules.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, nameof(UnitConversionRules), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public UnitConversionRules Post(UnitConversionRules request)
+        public UnitConversionRules Post(UnitConversionRules dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             UnitConversionRules ret = null;
 
@@ -444,7 +446,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UnitConversionRules")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -515,6 +517,8 @@ namespace Services.API
                     var pParent = entity.Parent;
                     var pRootTerm = entity.RootTerm;
                     var pSourceUnit = entity.SourceUnit;
+                #region Custom Before copyUnitConversionRules
+                #endregion Custom Before copyUnitConversionRules
                 var copy = new DocEntityUnitConversionRules(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -527,6 +531,8 @@ namespace Services.API
                                 , RootTerm = pRootTerm
                                 , SourceUnit = pSourceUnit
                 };
+                #region Custom After copyUnitConversionRules
+                #endregion Custom After copyUnitConversionRules
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -539,9 +545,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public UnitConversionRules Put(UnitConversionRules request)
+        public UnitConversionRules Put(UnitConversionRules dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<UnitConversionRules> Patch(UnitConversionRulesBatch request)
@@ -591,16 +597,16 @@ namespace Services.API
             return ret;
         }
 
-        public UnitConversionRules Patch(UnitConversionRules request)
+        public UnitConversionRules Patch(UnitConversionRules dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the UnitConversionRules to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the UnitConversionRules to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             UnitConversionRules ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -685,7 +691,7 @@ namespace Services.API
             UnitConversionRules ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<UnitConversionRules>(Dto.UnitConversionRules.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
 
             DocEntityUnitConversionRules entity = null;
             if(id.HasValue)
@@ -713,6 +719,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

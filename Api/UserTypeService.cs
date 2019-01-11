@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -56,11 +55,20 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    cachedRet = GetUserType(request);
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetUserType(request);
+                    });
                     return cachedRet;
                 });
             }
-            ret = ret ?? GetUserType(request);
+            if(null == ret)
+            {
+                Execute.Run(s =>
+                {
+                    ret = GetUserType(request);
+                });
+            }
             return ret;
         }
 
@@ -93,9 +101,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<UserType>(Dto.UserType.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UserType>(currentUser, "UserType", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityUserType>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityUserType>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserTypeFullTextSearch(request);
@@ -193,70 +203,65 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(UserTypeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<UserType>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
                     {
-                        var ret = new List<UserType>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(UserTypeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<UserType>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
                     {
-                        var ret = new List<UserType>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -268,59 +273,56 @@ namespace Services.API
         public object Get(UserTypeVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(UserType request)
         {
-            object ret = null;
+            UserType ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<UserType>(currentUser, "UserType", request.VisibleFields);
+            var settings = DocResources.Settings;
+            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
             {
-                request.VisibleFields = InitVisibleFields<UserType>(Dto.UserType.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
-                {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                return _GetIdCache(request);
+            }
+            else 
+            {
+                Execute.Run((ssn) =>
                 {
                     ret = GetUserType(request);
-                }
-            });
+                });
+            }
             return ret;
         }
 
-        private UserType _AssignValues(UserType request, DocConstantPermission permission, Session session)
+        private UserType _AssignValues(UserType dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "UserType"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             UserType ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            DocEntityLookupTable pPayrollStatus = GetLookup(DocConstantLookupTable.USERPAYROLLSTATUS, request.PayrollStatus?.Name, request.PayrollStatus?.Id);
-            DocEntityLookupTable pPayrollType = GetLookup(DocConstantLookupTable.USERPAYROLLTYPE, request.PayrollType?.Name, request.PayrollType?.Id);
-            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.USEREMPLOYEETYPE, request.Type?.Name, request.Type?.Id);
-            var pUsers = request.Users?.ToList();
+            DocEntityLookupTable pPayrollStatus = GetLookup(DocConstantLookupTable.USERPAYROLLSTATUS, dtoSource.PayrollStatus?.Name, dtoSource.PayrollStatus?.Id);
+            DocEntityLookupTable pPayrollType = GetLookup(DocConstantLookupTable.USERPAYROLLTYPE, dtoSource.PayrollType?.Name, dtoSource.PayrollType?.Id);
+            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.USEREMPLOYEETYPE, dtoSource.Type?.Name, dtoSource.Type?.Id);
+            var pUsers = dtoSource.Users?.ToList();
 
             DocEntityUserType entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -334,44 +336,44 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityUserType.GetUserType(request.Id);
+                entity = DocEntityUserType.GetUserType(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pPayrollStatus, permission, DocConstantModelName.USERTYPE, nameof(request.PayrollStatus)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pPayrollStatus, permission, DocConstantModelName.USERTYPE, nameof(dtoSource.PayrollStatus)))
             {
-                if(DocPermissionFactory.IsRequested(request, pPayrollStatus, entity.PayrollStatus, nameof(request.PayrollStatus)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pPayrollStatus, entity.PayrollStatus, nameof(dtoSource.PayrollStatus)))
                     entity.PayrollStatus = pPayrollStatus;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pPayrollStatus, nameof(request.PayrollStatus)) && !request.VisibleFields.Matches(nameof(request.PayrollStatus), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pPayrollStatus, nameof(dtoSource.PayrollStatus)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.PayrollStatus), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.PayrollStatus));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.PayrollStatus));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pPayrollType, permission, DocConstantModelName.USERTYPE, nameof(request.PayrollType)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pPayrollType, permission, DocConstantModelName.USERTYPE, nameof(dtoSource.PayrollType)))
             {
-                if(DocPermissionFactory.IsRequested(request, pPayrollType, entity.PayrollType, nameof(request.PayrollType)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pPayrollType, entity.PayrollType, nameof(dtoSource.PayrollType)))
                     entity.PayrollType = pPayrollType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pPayrollType, nameof(request.PayrollType)) && !request.VisibleFields.Matches(nameof(request.PayrollType), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pPayrollType, nameof(dtoSource.PayrollType)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.PayrollType), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.PayrollType));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.PayrollType));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.USERTYPE, nameof(request.Type)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pType, permission, DocConstantModelName.USERTYPE, nameof(dtoSource.Type)))
             {
-                if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pType, entity.Type, nameof(dtoSource.Type)))
                     entity.Type = pType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pType, nameof(dtoSource.Type)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Type), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Type));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Type));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pUsers, permission, DocConstantModelName.USERTYPE, nameof(request.Users)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pUsers, permission, DocConstantModelName.USERTYPE, nameof(dtoSource.Users)))
             {
                 if (true == pUsers?.Any() )
                 {
@@ -386,16 +388,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityUser.GetUser(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Users)} to {nameof(UserType)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(UserType), columnName: nameof(dtoSource.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Users)} to {nameof(UserType)}");
                         entity.Users.Add(target);
                     });
                     var toRemove = entity.Users.Where(e => requestedUsers.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityUser.GetUser(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(UserType)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(UserType), columnName: nameof(dtoSource.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Users)} from {nameof(UserType)}");
                         entity.Users.Remove(target);
                     });
                 }
@@ -405,26 +407,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityUser.GetUser(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(UserType)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(UserType), columnName: nameof(dtoSource.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Users)} from {nameof(UserType)}");
                         entity.Users.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pUsers, nameof(request.Users)) && !request.VisibleFields.Matches(nameof(request.Users), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pUsers, nameof(dtoSource.Users)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Users), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Users));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Users));
                 }
             }
-            request.VisibleFields = InitVisibleFields<UserType>(Dto.UserType.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UserType>(currentUser, nameof(UserType), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public UserType Post(UserType request)
+        public UserType Post(UserType dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             UserType ret = null;
 
@@ -433,7 +435,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UserType")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -500,6 +502,8 @@ namespace Services.API
                     var pPayrollType = entity.PayrollType;
                     var pType = entity.Type;
                     var pUsers = entity.Users.ToList();
+                #region Custom Before copyUserType
+                #endregion Custom Before copyUserType
                 var copy = new DocEntityUserType(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -512,6 +516,8 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
+                #region Custom After copyUserType
+                #endregion Custom After copyUserType
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -524,9 +530,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public UserType Put(UserType request)
+        public UserType Put(UserType dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<UserType> Patch(UserTypeBatch request)
@@ -576,16 +582,16 @@ namespace Services.API
             return ret;
         }
 
-        public UserType Patch(UserType request)
+        public UserType Patch(UserType dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the UserType to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the UserType to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             UserType ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -708,7 +714,7 @@ namespace Services.API
 
         private object _GetUserTypeUser(UserTypeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
              var en = DocEntityUserType.GetUserType(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERTYPE, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserType and User");
@@ -826,7 +832,7 @@ namespace Services.API
             UserType ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<UserType>(Dto.UserType.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UserType>(currentUser, "UserType", request.VisibleFields);
 
             DocEntityUserType entity = null;
             if(id.HasValue)
@@ -854,6 +860,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

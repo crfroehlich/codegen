@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -49,9 +48,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<BackgroundTask>(Dto.BackgroundTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, "BackgroundTask", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityBackgroundTask>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityBackgroundTask>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskFullTextSearch(request);
@@ -135,54 +136,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(BackgroundTaskSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<BackgroundTask>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTask,BackgroundTask>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<BackgroundTask>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTask,BackgroundTask>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(BackgroundTaskSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<BackgroundTask>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTask,BackgroundTask>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<BackgroundTask>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTask,BackgroundTask>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -194,61 +190,58 @@ namespace Services.API
         public object Get(BackgroundTaskVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(BackgroundTask request)
         {
-            object ret = null;
+            BackgroundTask ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, "BackgroundTask", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                request.VisibleFields = InitVisibleFields<BackgroundTask>(Dto.BackgroundTask.Fields, request);
                 ret = GetBackgroundTask(request);
             });
             return ret;
         }
 
-        private BackgroundTask _AssignValues(BackgroundTask request, DocConstantPermission permission, Session session)
+        private BackgroundTask _AssignValues(BackgroundTask dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "BackgroundTask"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             BackgroundTask ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
-            var pDescription = request.Description;
-            var pEnabled = request.Enabled;
-            var pFrequency = request.Frequency;
-            var pHistoryRetention = request.HistoryRetention;
-            var pItems = request.Items?.ToList();
-            var pLastRunVersion = request.LastRunVersion;
-            var pLogError = request.LogError;
-            var pLogInfo = request.LogInfo;
-            var pName = request.Name;
-            var pRowsToProcessPerIteration = request.RowsToProcessPerIteration;
-            var pRunNow = request.RunNow;
-            var pStartAt = request.StartAt;
-            var pTaskHistory = request.TaskHistory?.ToList();
+            var pApp = (dtoSource.App?.Id > 0) ? DocEntityApp.GetApp(dtoSource.App.Id) : null;
+            var pDescription = dtoSource.Description;
+            var pEnabled = dtoSource.Enabled;
+            var pFrequency = dtoSource.Frequency;
+            var pHistoryRetention = dtoSource.HistoryRetention;
+            var pItems = dtoSource.Items?.ToList();
+            var pLastRunVersion = dtoSource.LastRunVersion;
+            var pLogError = dtoSource.LogError;
+            var pLogInfo = dtoSource.LogInfo;
+            var pName = dtoSource.Name;
+            var pRowsToProcessPerIteration = dtoSource.RowsToProcessPerIteration;
+            var pRunNow = dtoSource.RunNow;
+            var pStartAt = dtoSource.StartAt;
+            var pTaskHistory = dtoSource.TaskHistory?.ToList();
 
             DocEntityBackgroundTask entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -262,129 +255,129 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
+                entity = DocEntityBackgroundTask.GetBackgroundTask(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityApp>(currentUser, request, pApp, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.App)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityApp>(currentUser, dtoSource, pApp, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.App)))
             {
-                if(DocPermissionFactory.IsRequested(request, pApp, entity.App, nameof(request.App)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.App)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pApp, entity.App, nameof(dtoSource.App)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.App)} cannot be modified once set.");
                     entity.App = pApp;
-                if(DocPermissionFactory.IsRequested<DocEntityApp>(request, pApp, nameof(request.App)) && !request.VisibleFields.Matches(nameof(request.App), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityApp>(dtoSource, pApp, nameof(dtoSource.App)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.App), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.App));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.App));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.Description)))
             {
-                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
                     entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Description));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pEnabled, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.Enabled)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pEnabled, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.Enabled)))
             {
-                if(DocPermissionFactory.IsRequested(request, pEnabled, entity.Enabled, nameof(request.Enabled)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pEnabled, entity.Enabled, nameof(dtoSource.Enabled)))
                     entity.Enabled = pEnabled;
-                if(DocPermissionFactory.IsRequested<bool>(request, pEnabled, nameof(request.Enabled)) && !request.VisibleFields.Matches(nameof(request.Enabled), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pEnabled, nameof(dtoSource.Enabled)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Enabled), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Enabled));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Enabled));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pFrequency, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.Frequency)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pFrequency, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.Frequency)))
             {
-                if(DocPermissionFactory.IsRequested(request, pFrequency, entity.Frequency, nameof(request.Frequency)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pFrequency, entity.Frequency, nameof(dtoSource.Frequency)))
                     if(null != pFrequency)
                         entity.Frequency = (int) pFrequency;
-                if(DocPermissionFactory.IsRequested<int?>(request, pFrequency, nameof(request.Frequency)) && !request.VisibleFields.Matches(nameof(request.Frequency), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pFrequency, nameof(dtoSource.Frequency)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Frequency), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Frequency));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Frequency));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pHistoryRetention, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.HistoryRetention)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pHistoryRetention, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.HistoryRetention)))
             {
-                if(DocPermissionFactory.IsRequested(request, pHistoryRetention, entity.HistoryRetention, nameof(request.HistoryRetention)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pHistoryRetention, entity.HistoryRetention, nameof(dtoSource.HistoryRetention)))
                     entity.HistoryRetention = pHistoryRetention;
-                if(DocPermissionFactory.IsRequested<int?>(request, pHistoryRetention, nameof(request.HistoryRetention)) && !request.VisibleFields.Matches(nameof(request.HistoryRetention), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pHistoryRetention, nameof(dtoSource.HistoryRetention)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.HistoryRetention), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.HistoryRetention));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.HistoryRetention));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLastRunVersion, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.LastRunVersion)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pLastRunVersion, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.LastRunVersion)))
             {
-                if(DocPermissionFactory.IsRequested(request, pLastRunVersion, entity.LastRunVersion, nameof(request.LastRunVersion)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pLastRunVersion, entity.LastRunVersion, nameof(dtoSource.LastRunVersion)))
                     entity.LastRunVersion = pLastRunVersion;
-                if(DocPermissionFactory.IsRequested<string>(request, pLastRunVersion, nameof(request.LastRunVersion)) && !request.VisibleFields.Matches(nameof(request.LastRunVersion), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pLastRunVersion, nameof(dtoSource.LastRunVersion)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.LastRunVersion), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.LastRunVersion));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.LastRunVersion));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pLogError, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.LogError)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pLogError, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.LogError)))
             {
-                if(DocPermissionFactory.IsRequested(request, pLogError, entity.LogError, nameof(request.LogError)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pLogError, entity.LogError, nameof(dtoSource.LogError)))
                     entity.LogError = pLogError;
-                if(DocPermissionFactory.IsRequested<bool>(request, pLogError, nameof(request.LogError)) && !request.VisibleFields.Matches(nameof(request.LogError), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pLogError, nameof(dtoSource.LogError)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.LogError), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.LogError));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.LogError));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pLogInfo, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.LogInfo)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pLogInfo, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.LogInfo)))
             {
-                if(DocPermissionFactory.IsRequested(request, pLogInfo, entity.LogInfo, nameof(request.LogInfo)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pLogInfo, entity.LogInfo, nameof(dtoSource.LogInfo)))
                     entity.LogInfo = pLogInfo;
-                if(DocPermissionFactory.IsRequested<bool>(request, pLogInfo, nameof(request.LogInfo)) && !request.VisibleFields.Matches(nameof(request.LogInfo), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pLogInfo, nameof(dtoSource.LogInfo)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.LogInfo), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.LogInfo));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.LogInfo));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.Name)))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Name));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pRowsToProcessPerIteration, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.RowsToProcessPerIteration)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pRowsToProcessPerIteration, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.RowsToProcessPerIteration)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRowsToProcessPerIteration, entity.RowsToProcessPerIteration, nameof(request.RowsToProcessPerIteration)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pRowsToProcessPerIteration, entity.RowsToProcessPerIteration, nameof(dtoSource.RowsToProcessPerIteration)))
                     if(null != pRowsToProcessPerIteration)
                         entity.RowsToProcessPerIteration = (int) pRowsToProcessPerIteration;
-                if(DocPermissionFactory.IsRequested<int?>(request, pRowsToProcessPerIteration, nameof(request.RowsToProcessPerIteration)) && !request.VisibleFields.Matches(nameof(request.RowsToProcessPerIteration), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(dtoSource, pRowsToProcessPerIteration, nameof(dtoSource.RowsToProcessPerIteration)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.RowsToProcessPerIteration), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.RowsToProcessPerIteration));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.RowsToProcessPerIteration));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pRunNow, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.RunNow)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pRunNow, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.RunNow)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRunNow, entity.RunNow, nameof(request.RunNow)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pRunNow, entity.RunNow, nameof(dtoSource.RunNow)))
                     entity.RunNow = pRunNow;
-                if(DocPermissionFactory.IsRequested<bool>(request, pRunNow, nameof(request.RunNow)) && !request.VisibleFields.Matches(nameof(request.RunNow), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pRunNow, nameof(dtoSource.RunNow)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.RunNow), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.RunNow));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.RunNow));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pStartAt, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.StartAt)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pStartAt, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.StartAt)))
             {
-                if(DocPermissionFactory.IsRequested(request, pStartAt, entity.StartAt, nameof(request.StartAt)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pStartAt, entity.StartAt, nameof(dtoSource.StartAt)))
                     entity.StartAt = pStartAt;
-                if(DocPermissionFactory.IsRequested<string>(request, pStartAt, nameof(request.StartAt)) && !request.VisibleFields.Matches(nameof(request.StartAt), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pStartAt, nameof(dtoSource.StartAt)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.StartAt), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.StartAt));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.StartAt));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pItems, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.Items)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pItems, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.Items)))
             {
                 if (true == pItems?.Any() )
                 {
@@ -399,16 +392,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Items)} to {nameof(BackgroundTask)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(dtoSource.Items)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Items)} to {nameof(BackgroundTask)}");
                         entity.Items.Add(target);
                     });
                     var toRemove = entity.Items.Where(e => requestedItems.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Items)} from {nameof(BackgroundTask)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(dtoSource.Items)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Items)} from {nameof(BackgroundTask)}");
                         entity.Items.Remove(target);
                     });
                 }
@@ -418,17 +411,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Items)} from {nameof(BackgroundTask)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(dtoSource.Items)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Items)} from {nameof(BackgroundTask)}");
                         entity.Items.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pItems, nameof(request.Items)) && !request.VisibleFields.Matches(nameof(request.Items), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pItems, nameof(dtoSource.Items)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Items), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Items));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Items));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTaskHistory, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.TaskHistory)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pTaskHistory, permission, DocConstantModelName.BACKGROUNDTASK, nameof(dtoSource.TaskHistory)))
             {
                 if (true == pTaskHistory?.Any() )
                 {
@@ -443,16 +436,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.TaskHistory)} to {nameof(BackgroundTask)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(dtoSource.TaskHistory)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.TaskHistory)} to {nameof(BackgroundTask)}");
                         entity.TaskHistory.Add(target);
                     });
                     var toRemove = entity.TaskHistory.Where(e => requestedTaskHistory.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TaskHistory)} from {nameof(BackgroundTask)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(dtoSource.TaskHistory)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.TaskHistory)} from {nameof(BackgroundTask)}");
                         entity.TaskHistory.Remove(target);
                     });
                 }
@@ -462,17 +455,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TaskHistory)} from {nameof(BackgroundTask)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(dtoSource.TaskHistory)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.TaskHistory)} from {nameof(BackgroundTask)}");
                         entity.TaskHistory.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pTaskHistory, nameof(request.TaskHistory)) && !request.VisibleFields.Matches(nameof(request.TaskHistory), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pTaskHistory, nameof(dtoSource.TaskHistory)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.TaskHistory), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.TaskHistory));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.TaskHistory));
                 }
             }
-            request.VisibleFields = InitVisibleFields<BackgroundTask>(Dto.BackgroundTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, nameof(BackgroundTask), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
@@ -484,9 +477,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public BackgroundTask Put(BackgroundTask request)
+        public BackgroundTask Put(BackgroundTask dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<BackgroundTask> Patch(BackgroundTaskBatch request)
@@ -536,16 +529,16 @@ namespace Services.API
             return ret;
         }
 
-        public BackgroundTask Patch(BackgroundTask request)
+        public BackgroundTask Patch(BackgroundTask dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the BackgroundTask to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the BackgroundTask to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             BackgroundTask ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -595,7 +588,7 @@ namespace Services.API
 
         private object _GetBackgroundTaskBackgroundTaskItem(BackgroundTaskJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<BackgroundTaskItem>(Dto.BackgroundTaskItem.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
              var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "Items", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskItem");
@@ -604,7 +597,7 @@ namespace Services.API
 
         private object _GetBackgroundTaskBackgroundTaskHistory(BackgroundTaskJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<BackgroundTaskHistory>(Dto.BackgroundTaskHistory.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<BackgroundTaskHistory>(currentUser, "BackgroundTaskHistory", request.VisibleFields);
              var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "TaskHistory", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskHistory");
@@ -663,7 +656,7 @@ namespace Services.API
             BackgroundTask ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<BackgroundTask>(Dto.BackgroundTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, "BackgroundTask", request.VisibleFields);
 
             DocEntityBackgroundTask entity = null;
             if(id.HasValue)
@@ -691,6 +684,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

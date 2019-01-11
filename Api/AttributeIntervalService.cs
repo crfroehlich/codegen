@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -49,9 +48,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<AttributeInterval>(Dto.AttributeInterval.Fields, request);
+            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityAttributeInterval>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityAttributeInterval>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeIntervalFullTextSearch(request);
@@ -97,54 +98,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(AttributeIntervalSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<AttributeInterval>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeInterval,AttributeInterval>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<AttributeInterval>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeInterval,AttributeInterval>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(AttributeIntervalSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<AttributeInterval>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeInterval,AttributeInterval>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<AttributeInterval>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeInterval,AttributeInterval>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -156,48 +152,45 @@ namespace Services.API
         public object Get(AttributeIntervalVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(AttributeInterval request)
         {
-            object ret = null;
+            AttributeInterval ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                request.VisibleFields = InitVisibleFields<AttributeInterval>(Dto.AttributeInterval.Fields, request);
                 ret = GetAttributeInterval(request);
             });
             return ret;
         }
 
-        private AttributeInterval _AssignValues(AttributeInterval request, DocConstantPermission permission, Session session)
+        private AttributeInterval _AssignValues(AttributeInterval dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "AttributeInterval"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             AttributeInterval ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pInterval = request.Interval;
+            var pInterval = dtoSource.Interval;
 
             DocEntityAttributeInterval entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -211,26 +204,26 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityAttributeInterval.GetAttributeInterval(request.Id);
+                entity = DocEntityAttributeInterval.GetAttributeInterval(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<AttributeInterval>(Dto.AttributeInterval.Fields, request);
+            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, nameof(AttributeInterval), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public AttributeInterval Post(AttributeInterval request)
+        public AttributeInterval Post(AttributeInterval dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             AttributeInterval ret = null;
 
@@ -239,7 +232,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "AttributeInterval")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -303,11 +296,15 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
                     var pInterval = entity.Interval;
+                #region Custom Before copyAttributeInterval
+                #endregion Custom Before copyAttributeInterval
                 var copy = new DocEntityAttributeInterval(ssn)
                 {
                     Hash = Guid.NewGuid()
                                 , Interval = pInterval
                 };
+                #region Custom After copyAttributeInterval
+                #endregion Custom After copyAttributeInterval
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -320,9 +317,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public AttributeInterval Put(AttributeInterval request)
+        public AttributeInterval Put(AttributeInterval dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<AttributeInterval> Patch(AttributeIntervalBatch request)
@@ -372,16 +369,16 @@ namespace Services.API
             return ret;
         }
 
-        public AttributeInterval Patch(AttributeInterval request)
+        public AttributeInterval Patch(AttributeInterval dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the AttributeInterval to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the AttributeInterval to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             AttributeInterval ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -466,7 +463,7 @@ namespace Services.API
             AttributeInterval ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<AttributeInterval>(Dto.AttributeInterval.Fields, request);
+            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
 
             DocEntityAttributeInterval entity = null;
             if(id.HasValue)
@@ -494,6 +491,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

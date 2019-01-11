@@ -21,8 +21,6 @@ namespace Services.Enums
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyImportTypeEnm
     {
-        [EnumMember(Value = DocConstantStudyImportType.CLINICAL_TRIALS_GOV)]
-        CLINICAL_TRIALS_GOV,
         [EnumMember(Value = DocConstantStudyImportType.EXTRACT)]
         EXTRACT,
         [EnumMember(Value = DocConstantStudyImportType.LEGACY)]
@@ -31,7 +29,6 @@ namespace Services.Enums
     
     public sealed partial class DocConstantStudyImportType
     {
-        public const string CLINICAL_TRIALS_GOV = "ClinicalTrials.gov";
         public const string EXTRACT = "Extract";
         public const string LEGACY = "Legacy";
         

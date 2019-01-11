@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -56,11 +55,20 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    cachedRet = GetPage(request);
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetPage(request);
+                    });
                     return cachedRet;
                 });
             }
-            ret = ret ?? GetPage(request);
+            if(null == ret)
+            {
+                Execute.Run(s =>
+                {
+                    ret = GetPage(request);
+                });
+            }
             return ret;
         }
 
@@ -93,9 +101,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Page>(currentUser, "Page", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityPage>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityPage>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new PageFullTextSearch(request);
@@ -161,70 +171,65 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(PageSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<Page>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "page")) 
                     {
-                        var ret = new List<Page>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "page")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPage,Page>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPage,Page>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(PageSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<Page>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "page")) 
                     {
-                        var ret = new List<Page>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "page")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPage,Page>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPage,Page>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -236,61 +241,58 @@ namespace Services.API
         public object Get(PageVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(Page request)
         {
-            object ret = null;
+            Page ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Page>(currentUser, "Page", request.VisibleFields);
+            var settings = DocResources.Settings;
+            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "page")) 
             {
-                request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "page")) 
-                {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                return _GetIdCache(request);
+            }
+            else 
+            {
+                Execute.Run((ssn) =>
                 {
                     ret = GetPage(request);
-                }
-            });
+                });
+            }
             return ret;
         }
 
-        private Page _AssignValues(Page request, DocConstantPermission permission, Session session)
+        private Page _AssignValues(Page dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Page"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             Page ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pApps = request.Apps?.ToList();
-            var pDescription = request.Description;
-            var pGlossary = request.Glossary?.ToList();
-            var pHelp = request.Help?.ToList();
-            var pName = request.Name;
-            var pRoles = request.Roles?.ToList();
+            var pApps = dtoSource.Apps?.ToList();
+            var pDescription = dtoSource.Description;
+            var pGlossary = dtoSource.Glossary?.ToList();
+            var pHelp = dtoSource.Help?.ToList();
+            var pName = dtoSource.Name;
+            var pRoles = dtoSource.Roles?.ToList();
 
             DocEntityPage entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -304,36 +306,36 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityPage.GetPage(request.Id);
+                entity = DocEntityPage.GetPage(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.PAGE, nameof(request.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.PAGE, nameof(dtoSource.Description)))
             {
-                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
                     entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Description));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.PAGE, nameof(request.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.PAGE, nameof(dtoSource.Name)))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Name));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pApps, permission, DocConstantModelName.PAGE, nameof(request.Apps)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pApps, permission, DocConstantModelName.PAGE, nameof(dtoSource.Apps)))
             {
                 if (true == pApps?.Any() )
                 {
@@ -348,16 +350,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityApp.GetApp(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Apps)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Apps)} to {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Apps)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Apps)} to {nameof(Page)}");
                         entity.Apps.Add(target);
                     });
                     var toRemove = entity.Apps.Where(e => requestedApps.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityApp.GetApp(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Apps)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Apps)} from {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Apps)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Apps)} from {nameof(Page)}");
                         entity.Apps.Remove(target);
                     });
                 }
@@ -367,17 +369,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityApp.GetApp(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Apps)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Apps)} from {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Apps)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Apps)} from {nameof(Page)}");
                         entity.Apps.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pApps, nameof(request.Apps)) && !request.VisibleFields.Matches(nameof(request.Apps), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pApps, nameof(dtoSource.Apps)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Apps), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Apps));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Apps));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pGlossary, permission, DocConstantModelName.PAGE, nameof(request.Glossary)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pGlossary, permission, DocConstantModelName.PAGE, nameof(dtoSource.Glossary)))
             {
                 if (true == pGlossary?.Any() )
                 {
@@ -392,16 +394,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityGlossary.GetGlossary(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Glossary)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Glossary)} to {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Glossary)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Glossary)} to {nameof(Page)}");
                         entity.Glossary.Add(target);
                     });
                     var toRemove = entity.Glossary.Where(e => requestedGlossary.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityGlossary.GetGlossary(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Glossary)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Glossary)} from {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Glossary)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Glossary)} from {nameof(Page)}");
                         entity.Glossary.Remove(target);
                     });
                 }
@@ -411,17 +413,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityGlossary.GetGlossary(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Glossary)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Glossary)} from {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Glossary)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Glossary)} from {nameof(Page)}");
                         entity.Glossary.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pGlossary, nameof(request.Glossary)) && !request.VisibleFields.Matches(nameof(request.Glossary), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pGlossary, nameof(dtoSource.Glossary)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Glossary), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Glossary));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Glossary));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pHelp, permission, DocConstantModelName.PAGE, nameof(request.Help)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pHelp, permission, DocConstantModelName.PAGE, nameof(dtoSource.Help)))
             {
                 if (true == pHelp?.Any() )
                 {
@@ -436,16 +438,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityHelp.GetHelp(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Help)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Help)} to {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Help)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Help)} to {nameof(Page)}");
                         entity.Help.Add(target);
                     });
                     var toRemove = entity.Help.Where(e => requestedHelp.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityHelp.GetHelp(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Help)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Help)} from {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Help)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Help)} from {nameof(Page)}");
                         entity.Help.Remove(target);
                     });
                 }
@@ -455,17 +457,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityHelp.GetHelp(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Help)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Help)} from {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Help)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Help)} from {nameof(Page)}");
                         entity.Help.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pHelp, nameof(request.Help)) && !request.VisibleFields.Matches(nameof(request.Help), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pHelp, nameof(dtoSource.Help)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Help), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Help));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Help));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pRoles, permission, DocConstantModelName.PAGE, nameof(request.Roles)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pRoles, permission, DocConstantModelName.PAGE, nameof(dtoSource.Roles)))
             {
                 if (true == pRoles?.Any() )
                 {
@@ -480,16 +482,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Roles)} to {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Roles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Roles)} to {nameof(Page)}");
                         entity.Roles.Add(target);
                     });
                     var toRemove = entity.Roles.Where(e => requestedRoles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Roles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Roles)} from {nameof(Page)}");
                         entity.Roles.Remove(target);
                     });
                 }
@@ -499,26 +501,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(request.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(Page)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Page), columnName: nameof(dtoSource.Roles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Roles)} from {nameof(Page)}");
                         entity.Roles.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pRoles, nameof(request.Roles)) && !request.VisibleFields.Matches(nameof(request.Roles), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pRoles, nameof(dtoSource.Roles)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Roles), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Roles));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Roles));
                 }
             }
-            request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Page>(currentUser, nameof(Page), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Page Post(Page request)
+        public Page Post(Page dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             Page ret = null;
 
@@ -527,7 +529,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Page")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -600,6 +602,8 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
                     var pRoles = entity.Roles.ToList();
+                #region Custom Before copyPage
+                #endregion Custom Before copyPage
                 var copy = new DocEntityPage(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -626,6 +630,8 @@ namespace Services.API
                                 entity.Roles.Add(item);
                             }
 
+                #region Custom After copyPage
+                #endregion Custom After copyPage
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -638,9 +644,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public Page Put(Page request)
+        public Page Put(Page dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<Page> Patch(PageBatch request)
@@ -690,16 +696,16 @@ namespace Services.API
             return ret;
         }
 
-        public Page Patch(Page request)
+        public Page Patch(Page dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Page to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Page to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             Page ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -840,7 +846,7 @@ namespace Services.API
 
         private object _GetPageApp(PageJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<App>(Dto.App.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<App>(currentUser, "App", request.VisibleFields);
              var en = DocEntityPage.GetPage(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Apps", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and App");
@@ -862,7 +868,7 @@ namespace Services.API
 
         private object _GetPageGlossary(PageJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Glossary>(Dto.Glossary.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, "Glossary", request.VisibleFields);
              var en = DocEntityPage.GetPage(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Glossary", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Glossary");
@@ -884,7 +890,7 @@ namespace Services.API
 
         private object _GetPageHelp(PageJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Help>(currentUser, "Help", request.VisibleFields);
              var en = DocEntityPage.GetPage(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Help", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Help");
@@ -906,7 +912,7 @@ namespace Services.API
 
         private object _GetPageRole(PageJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
              var en = DocEntityPage.GetPage(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Roles", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Role");
@@ -1162,7 +1168,7 @@ namespace Services.API
             Page ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Page>(currentUser, "Page", request.VisibleFields);
 
             DocEntityPage entity = null;
             if(id.HasValue)
@@ -1190,6 +1196,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

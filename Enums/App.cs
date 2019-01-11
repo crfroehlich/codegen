@@ -76,9 +76,7 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantApp.MISC)]
         MISC,
         [EnumMember(Value = DocConstantApp.REPORTS)]
-        REPORTS,
-        [EnumMember(Value = DocConstantApp.SERVE)]
-        SERVE
+        REPORTS
     }
     
     public sealed partial class DocConstantApp
@@ -111,7 +109,6 @@ namespace Services.Enums
         public const string LOGIN = "Login";
         public const string MISC = "Miscellaneous";
         public const string REPORTS = "Reports";
-        public const string SERVE = "SERVE";
         
         #region Internals
         

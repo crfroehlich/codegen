@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -56,11 +55,20 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    cachedRet = GetTermMaster(request);
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetTermMaster(request);
+                    });
                     return cachedRet;
                 });
             }
-            ret = ret ?? GetTermMaster(request);
+            if(null == ret)
+            {
+                Execute.Run(s =>
+                {
+                    ret = GetTermMaster(request);
+                });
+            }
             return ret;
         }
 
@@ -93,9 +101,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request);
+            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityTermMaster>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityTermMaster>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermMasterFullTextSearch(request);
@@ -173,70 +183,65 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(TermMasterSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<TermMaster>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
                     {
-                        var ret = new List<TermMaster>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(TermMasterSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<TermMaster>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
                     {
-                        var ret = new List<TermMaster>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -248,66 +253,63 @@ namespace Services.API
         public object Get(TermMasterVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(TermMaster request)
         {
-            object ret = null;
+            TermMaster ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
+            var settings = DocResources.Settings;
+            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
             {
-                request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
-                {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                return _GetIdCache(request);
+            }
+            else 
+            {
+                Execute.Run((ssn) =>
                 {
                     ret = GetTermMaster(request);
-                }
-            });
+                });
+            }
             return ret;
         }
 
-        private TermMaster _AssignValues(TermMaster request, DocConstantPermission permission, Session session)
+        private TermMaster _AssignValues(TermMaster dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermMaster"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             TermMaster ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pBioPortal = request.BioPortal;
-            var pCategories = request.Categories?.ToList();
-            var pCUI = request.CUI;
-            var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(request.Enum);
-            var pMedDRA = request.MedDRA;
-            var pName = request.Name;
-            var pRxNorm = request.RxNorm;
-            var pSNOWMED = request.SNOWMED;
-            var pSynonyms = request.Synonyms?.ToList();
-            var pTUI = request.TUI;
-            var pURI = request.URI;
+            var pBioPortal = dtoSource.BioPortal;
+            var pCategories = dtoSource.Categories?.ToList();
+            var pCUI = dtoSource.CUI;
+            var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(dtoSource.Enum);
+            var pMedDRA = dtoSource.MedDRA;
+            var pName = dtoSource.Name;
+            var pRxNorm = dtoSource.RxNorm;
+            var pSNOWMED = dtoSource.SNOWMED;
+            var pSynonyms = dtoSource.Synonyms?.ToList();
+            var pTUI = dtoSource.TUI;
+            var pURI = dtoSource.URI;
 
             DocEntityTermMaster entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -321,98 +323,98 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityTermMaster.GetTermMaster(request.Id);
+                entity = DocEntityTermMaster.GetTermMaster(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pBioPortal, permission, DocConstantModelName.TERMMASTER, nameof(request.BioPortal)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pBioPortal, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.BioPortal)))
             {
-                if(DocPermissionFactory.IsRequested(request, pBioPortal, entity.BioPortal, nameof(request.BioPortal)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pBioPortal, entity.BioPortal, nameof(dtoSource.BioPortal)))
                     entity.BioPortal = pBioPortal;
-                if(DocPermissionFactory.IsRequested<string>(request, pBioPortal, nameof(request.BioPortal)) && !request.VisibleFields.Matches(nameof(request.BioPortal), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pBioPortal, nameof(dtoSource.BioPortal)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.BioPortal), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.BioPortal));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.BioPortal));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pCUI, permission, DocConstantModelName.TERMMASTER, nameof(request.CUI)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pCUI, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.CUI)))
             {
-                if(DocPermissionFactory.IsRequested(request, pCUI, entity.CUI, nameof(request.CUI)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pCUI, entity.CUI, nameof(dtoSource.CUI)))
                     entity.CUI = pCUI;
-                if(DocPermissionFactory.IsRequested<string>(request, pCUI, nameof(request.CUI)) && !request.VisibleFields.Matches(nameof(request.CUI), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pCUI, nameof(dtoSource.CUI)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.CUI), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.CUI));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.CUI));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, request, pEnum, permission, DocConstantModelName.TERMMASTER, nameof(request.Enum)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, dtoSource, pEnum, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.Enum)))
             {
-                if(DocPermissionFactory.IsRequested(request, pEnum, entity.Enum, nameof(request.Enum)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pEnum, entity.Enum, nameof(dtoSource.Enum)))
                     entity.Enum = pEnum;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(dtoSource, pEnum, nameof(dtoSource.Enum)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Enum), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Enum));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Enum));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pMedDRA, permission, DocConstantModelName.TERMMASTER, nameof(request.MedDRA)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pMedDRA, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.MedDRA)))
             {
-                if(DocPermissionFactory.IsRequested(request, pMedDRA, entity.MedDRA, nameof(request.MedDRA)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pMedDRA, entity.MedDRA, nameof(dtoSource.MedDRA)))
                     entity.MedDRA = pMedDRA;
-                if(DocPermissionFactory.IsRequested<string>(request, pMedDRA, nameof(request.MedDRA)) && !request.VisibleFields.Matches(nameof(request.MedDRA), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pMedDRA, nameof(dtoSource.MedDRA)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.MedDRA), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.MedDRA));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.MedDRA));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.TERMMASTER, nameof(request.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.Name)))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Name));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pRxNorm, permission, DocConstantModelName.TERMMASTER, nameof(request.RxNorm)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pRxNorm, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.RxNorm)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRxNorm, entity.RxNorm, nameof(request.RxNorm)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pRxNorm, entity.RxNorm, nameof(dtoSource.RxNorm)))
                     entity.RxNorm = pRxNorm;
-                if(DocPermissionFactory.IsRequested<string>(request, pRxNorm, nameof(request.RxNorm)) && !request.VisibleFields.Matches(nameof(request.RxNorm), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pRxNorm, nameof(dtoSource.RxNorm)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.RxNorm), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.RxNorm));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.RxNorm));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSNOWMED, permission, DocConstantModelName.TERMMASTER, nameof(request.SNOWMED)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pSNOWMED, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.SNOWMED)))
             {
-                if(DocPermissionFactory.IsRequested(request, pSNOWMED, entity.SNOWMED, nameof(request.SNOWMED)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pSNOWMED, entity.SNOWMED, nameof(dtoSource.SNOWMED)))
                     entity.SNOWMED = pSNOWMED;
-                if(DocPermissionFactory.IsRequested<string>(request, pSNOWMED, nameof(request.SNOWMED)) && !request.VisibleFields.Matches(nameof(request.SNOWMED), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pSNOWMED, nameof(dtoSource.SNOWMED)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.SNOWMED), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.SNOWMED));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.SNOWMED));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pTUI, permission, DocConstantModelName.TERMMASTER, nameof(request.TUI)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pTUI, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.TUI)))
             {
-                if(DocPermissionFactory.IsRequested(request, pTUI, entity.TUI, nameof(request.TUI)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pTUI, entity.TUI, nameof(dtoSource.TUI)))
                     entity.TUI = pTUI;
-                if(DocPermissionFactory.IsRequested<string>(request, pTUI, nameof(request.TUI)) && !request.VisibleFields.Matches(nameof(request.TUI), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pTUI, nameof(dtoSource.TUI)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.TUI), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.TUI));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.TUI));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.TERMMASTER, nameof(request.URI)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pURI, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.URI)))
             {
-                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
+                if(DocPermissionFactory.IsRequested(dtoSource, pURI, entity.URI, nameof(dtoSource.URI)))
                     entity.URI = pURI;
-                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pURI, nameof(dtoSource.URI)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.URI), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.URI));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.URI));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<TermCategory>>(currentUser, request, pCategories, permission, DocConstantModelName.TERMMASTER, nameof(request.Categories)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<TermCategory>>(currentUser, dtoSource, pCategories, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.Categories)))
             {
                 if (true == pCategories?.Any() )
                 {
@@ -427,16 +429,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityTermCategory.GetTermCategory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Categories)} to {nameof(TermMaster)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(dtoSource.Categories)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Categories)} to {nameof(TermMaster)}");
                         entity.Categories.Add(target);
                     });
                     var toRemove = entity.Categories.Where(e => requestedCategories.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityTermCategory.GetTermCategory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(TermMaster)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(dtoSource.Categories)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Categories)} from {nameof(TermMaster)}");
                         entity.Categories.Remove(target);
                     });
                 }
@@ -446,17 +448,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityTermCategory.GetTermCategory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(TermMaster)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(dtoSource.Categories)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Categories)} from {nameof(TermMaster)}");
                         entity.Categories.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<TermCategory>>(request, pCategories, nameof(request.Categories)) && !request.VisibleFields.Matches(nameof(request.Categories), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<TermCategory>>(dtoSource, pCategories, nameof(dtoSource.Categories)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Categories), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Categories));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Categories));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pSynonyms, permission, DocConstantModelName.TERMMASTER, nameof(request.Synonyms)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pSynonyms, permission, DocConstantModelName.TERMMASTER, nameof(dtoSource.Synonyms)))
             {
                 if (true == pSynonyms?.Any() )
                 {
@@ -471,16 +473,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityTermSynonym.GetTermSynonym(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Synonyms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Synonyms)} to {nameof(TermMaster)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(dtoSource.Synonyms)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Synonyms)} to {nameof(TermMaster)}");
                         entity.Synonyms.Add(target);
                     });
                     var toRemove = entity.Synonyms.Where(e => requestedSynonyms.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityTermSynonym.GetTermSynonym(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Synonyms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Synonyms)} from {nameof(TermMaster)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(dtoSource.Synonyms)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Synonyms)} from {nameof(TermMaster)}");
                         entity.Synonyms.Remove(target);
                     });
                 }
@@ -490,26 +492,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityTermSynonym.GetTermSynonym(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Synonyms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Synonyms)} from {nameof(TermMaster)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(dtoSource.Synonyms)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Synonyms)} from {nameof(TermMaster)}");
                         entity.Synonyms.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pSynonyms, nameof(request.Synonyms)) && !request.VisibleFields.Matches(nameof(request.Synonyms), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pSynonyms, nameof(dtoSource.Synonyms)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Synonyms), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Synonyms));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Synonyms));
                 }
             }
-            request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request);
+            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, nameof(TermMaster), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public TermMaster Post(TermMaster request)
+        public TermMaster Post(TermMaster dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             TermMaster ret = null;
 
@@ -518,7 +520,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermMaster")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -608,6 +610,8 @@ namespace Services.API
                     var pURI = entity.URI;
                     if(!DocTools.IsNullOrEmpty(pURI))
                         pURI += " (Copy)";
+                #region Custom Before copyTermMaster
+                #endregion Custom Before copyTermMaster
                 var copy = new DocEntityTermMaster(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -631,6 +635,8 @@ namespace Services.API
                                 entity.Synonyms.Add(item);
                             }
 
+                #region Custom After copyTermMaster
+                #endregion Custom After copyTermMaster
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -643,9 +649,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public TermMaster Put(TermMaster request)
+        public TermMaster Put(TermMaster dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<TermMaster> Patch(TermMasterBatch request)
@@ -695,16 +701,16 @@ namespace Services.API
             return ret;
         }
 
-        public TermMaster Patch(TermMaster request)
+        public TermMaster Patch(TermMaster dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TermMaster to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TermMaster to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             TermMaster ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -833,7 +839,7 @@ namespace Services.API
 
         private object _GetTermMasterTermCategory(TermMasterJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<TermCategory>(Dto.TermCategory.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, "TermCategory", request.VisibleFields);
              var en = DocEntityTermMaster.GetTermMaster(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMMASTER, columnName: "Categories", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermMaster and TermCategory");
@@ -855,7 +861,7 @@ namespace Services.API
 
         private object _GetTermMasterTermSynonym(TermMasterJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
              var en = DocEntityTermMaster.GetTermMaster(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMMASTER, columnName: "Synonyms", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermMaster and TermSynonym");
@@ -1019,7 +1025,7 @@ namespace Services.API
             TermMaster ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request);
+            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
 
             DocEntityTermMaster entity = null;
             if(id.HasValue)
@@ -1047,6 +1053,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

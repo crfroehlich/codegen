@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -49,9 +48,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Attribute>(Dto.Attribute.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, "Attribute", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityAttribute>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityAttribute>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeFullTextSearch(request);
@@ -153,54 +154,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(AttributeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Attribute>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttribute,Attribute>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<Attribute>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttribute,Attribute>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(AttributeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Attribute>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttribute,Attribute>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<Attribute>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttribute,Attribute>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -212,55 +208,52 @@ namespace Services.API
         public object Get(AttributeVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(Attribute request)
         {
-            object ret = null;
+            Attribute ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, "Attribute", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                request.VisibleFields = InitVisibleFields<Attribute>(Dto.Attribute.Fields, request);
                 ret = GetAttribute(request);
             });
             return ret;
         }
 
-        private Attribute _AssignValues(Attribute request, DocConstantPermission permission, Session session)
+        private Attribute _AssignValues(Attribute dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Attribute"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             Attribute ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            DocEntityLookupTable pAttributeName = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.AttributeName?.Name, request.AttributeName?.Id);
-            DocEntityLookupTable pAttributeType = GetLookup(DocConstantLookupTable.ATTRIBUTETYPE, request.AttributeType?.Name, request.AttributeType?.Id);
-            var pInterval = (request.Interval?.Id > 0) ? DocEntityAttributeInterval.GetAttributeInterval(request.Interval.Id) : null;
-            var pIsCharacteristic = request.IsCharacteristic;
-            var pIsOutcome = request.IsOutcome;
-            var pIsPositive = request.IsPositive;
-            var pUniqueKey = request.UniqueKey;
-            var pValueType = DocEntityValueType.GetValueType(request.ValueType);
+            DocEntityLookupTable pAttributeName = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, dtoSource.AttributeName?.Name, dtoSource.AttributeName?.Id);
+            DocEntityLookupTable pAttributeType = GetLookup(DocConstantLookupTable.ATTRIBUTETYPE, dtoSource.AttributeType?.Name, dtoSource.AttributeType?.Id);
+            var pInterval = (dtoSource.Interval?.Id > 0) ? DocEntityAttributeInterval.GetAttributeInterval(dtoSource.Interval.Id) : null;
+            var pIsCharacteristic = dtoSource.IsCharacteristic;
+            var pIsOutcome = dtoSource.IsOutcome;
+            var pIsPositive = dtoSource.IsPositive;
+            var pUniqueKey = dtoSource.UniqueKey;
+            var pValueType = DocEntityValueType.GetValueType(dtoSource.ValueType);
 
             DocEntityAttribute entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -274,106 +267,106 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityAttribute.GetAttribute(request.Id);
+                entity = DocEntityAttribute.GetAttribute(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pAttributeName, permission, DocConstantModelName.ATTRIBUTE, nameof(request.AttributeName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pAttributeName, permission, DocConstantModelName.ATTRIBUTE, nameof(dtoSource.AttributeName)))
             {
-                if(DocPermissionFactory.IsRequested(request, pAttributeName, entity.AttributeName, nameof(request.AttributeName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.AttributeName)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pAttributeName, entity.AttributeName, nameof(dtoSource.AttributeName)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.AttributeName)} cannot be modified once set.");
                     entity.AttributeName = pAttributeName;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pAttributeName, nameof(request.AttributeName)) && !request.VisibleFields.Matches(nameof(request.AttributeName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pAttributeName, nameof(dtoSource.AttributeName)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.AttributeName), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.AttributeName));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.AttributeName));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pAttributeType, permission, DocConstantModelName.ATTRIBUTE, nameof(request.AttributeType)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pAttributeType, permission, DocConstantModelName.ATTRIBUTE, nameof(dtoSource.AttributeType)))
             {
-                if(DocPermissionFactory.IsRequested(request, pAttributeType, entity.AttributeType, nameof(request.AttributeType)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.AttributeType)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pAttributeType, entity.AttributeType, nameof(dtoSource.AttributeType)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.AttributeType)} cannot be modified once set.");
                     entity.AttributeType = pAttributeType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pAttributeType, nameof(request.AttributeType)) && !request.VisibleFields.Matches(nameof(request.AttributeType), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pAttributeType, nameof(dtoSource.AttributeType)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.AttributeType), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.AttributeType));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.AttributeType));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAttributeInterval>(currentUser, request, pInterval, permission, DocConstantModelName.ATTRIBUTE, nameof(request.Interval)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAttributeInterval>(currentUser, dtoSource, pInterval, permission, DocConstantModelName.ATTRIBUTE, nameof(dtoSource.Interval)))
             {
-                if(DocPermissionFactory.IsRequested(request, pInterval, entity.Interval, nameof(request.Interval)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Interval)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pInterval, entity.Interval, nameof(dtoSource.Interval)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Interval)} cannot be modified once set.");
                     entity.Interval = pInterval;
-                if(DocPermissionFactory.IsRequested<DocEntityAttributeInterval>(request, pInterval, nameof(request.Interval)) && !request.VisibleFields.Matches(nameof(request.Interval), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityAttributeInterval>(dtoSource, pInterval, nameof(dtoSource.Interval)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Interval), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Interval));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Interval));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsCharacteristic, permission, DocConstantModelName.ATTRIBUTE, nameof(request.IsCharacteristic)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsCharacteristic, permission, DocConstantModelName.ATTRIBUTE, nameof(dtoSource.IsCharacteristic)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsCharacteristic, entity.IsCharacteristic, nameof(request.IsCharacteristic)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsCharacteristic)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pIsCharacteristic, entity.IsCharacteristic, nameof(dtoSource.IsCharacteristic)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.IsCharacteristic)} cannot be modified once set.");
                     entity.IsCharacteristic = pIsCharacteristic;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsCharacteristic, nameof(request.IsCharacteristic)) && !request.VisibleFields.Matches(nameof(request.IsCharacteristic), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pIsCharacteristic, nameof(dtoSource.IsCharacteristic)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IsCharacteristic), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IsCharacteristic));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.IsCharacteristic));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsOutcome, permission, DocConstantModelName.ATTRIBUTE, nameof(request.IsOutcome)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pIsOutcome, permission, DocConstantModelName.ATTRIBUTE, nameof(dtoSource.IsOutcome)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsOutcome, entity.IsOutcome, nameof(request.IsOutcome)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsOutcome)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pIsOutcome, entity.IsOutcome, nameof(dtoSource.IsOutcome)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.IsOutcome)} cannot be modified once set.");
                     entity.IsOutcome = pIsOutcome;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsOutcome, nameof(request.IsOutcome)) && !request.VisibleFields.Matches(nameof(request.IsOutcome), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pIsOutcome, nameof(dtoSource.IsOutcome)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IsOutcome), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IsOutcome));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.IsOutcome));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pIsPositive, permission, DocConstantModelName.ATTRIBUTE, nameof(request.IsPositive)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, dtoSource, pIsPositive, permission, DocConstantModelName.ATTRIBUTE, nameof(dtoSource.IsPositive)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIsPositive, entity.IsPositive, nameof(request.IsPositive)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsPositive)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pIsPositive, entity.IsPositive, nameof(dtoSource.IsPositive)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.IsPositive)} cannot be modified once set.");
                     entity.IsPositive = pIsPositive;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pIsPositive, nameof(request.IsPositive)) && !request.VisibleFields.Matches(nameof(request.IsPositive), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool?>(dtoSource, pIsPositive, nameof(dtoSource.IsPositive)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.IsPositive), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IsPositive));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.IsPositive));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pUniqueKey, permission, DocConstantModelName.ATTRIBUTE, nameof(request.UniqueKey)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pUniqueKey, permission, DocConstantModelName.ATTRIBUTE, nameof(dtoSource.UniqueKey)))
             {
-                if(DocPermissionFactory.IsRequested(request, pUniqueKey, entity.UniqueKey, nameof(request.UniqueKey)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.UniqueKey)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pUniqueKey, entity.UniqueKey, nameof(dtoSource.UniqueKey)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.UniqueKey)} cannot be modified once set.");
                     entity.UniqueKey = pUniqueKey;
-                if(DocPermissionFactory.IsRequested<string>(request, pUniqueKey, nameof(request.UniqueKey)) && !request.VisibleFields.Matches(nameof(request.UniqueKey), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pUniqueKey, nameof(dtoSource.UniqueKey)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.UniqueKey), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.UniqueKey));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.UniqueKey));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityValueType>(currentUser, request, pValueType, permission, DocConstantModelName.ATTRIBUTE, nameof(request.ValueType)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityValueType>(currentUser, dtoSource, pValueType, permission, DocConstantModelName.ATTRIBUTE, nameof(dtoSource.ValueType)))
             {
-                if(DocPermissionFactory.IsRequested(request, pValueType, entity.ValueType, nameof(request.ValueType)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ValueType)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pValueType, entity.ValueType, nameof(dtoSource.ValueType)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.ValueType)} cannot be modified once set.");
                     entity.ValueType = pValueType;
-                if(DocPermissionFactory.IsRequested<DocEntityValueType>(request, pValueType, nameof(request.ValueType)) && !request.VisibleFields.Matches(nameof(request.ValueType), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityValueType>(dtoSource, pValueType, nameof(dtoSource.ValueType)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ValueType), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ValueType));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.ValueType));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<Attribute>(Dto.Attribute.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, nameof(Attribute), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Attribute Post(Attribute request)
+        public Attribute Post(Attribute dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             Attribute ret = null;
 
@@ -382,7 +375,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Attribute")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -455,6 +448,8 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pUniqueKey))
                         pUniqueKey += " (Copy)";
                     var pValueType = entity.ValueType;
+                #region Custom Before copyAttribute
+                #endregion Custom Before copyAttribute
                 var copy = new DocEntityAttribute(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -467,6 +462,8 @@ namespace Services.API
                                 , UniqueKey = pUniqueKey
                                 , ValueType = pValueType
                 };
+                #region Custom After copyAttribute
+                #endregion Custom After copyAttribute
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -479,9 +476,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public Attribute Put(Attribute request)
+        public Attribute Put(Attribute dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<Attribute> Patch(AttributeBatch request)
@@ -531,16 +528,16 @@ namespace Services.API
             return ret;
         }
 
-        public Attribute Patch(Attribute request)
+        public Attribute Patch(Attribute dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Attribute to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Attribute to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             Attribute ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -625,7 +622,7 @@ namespace Services.API
             Attribute ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Attribute>(Dto.Attribute.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, "Attribute", request.VisibleFields);
 
             DocEntityAttribute entity = null;
             if(id.HasValue)
@@ -653,6 +650,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

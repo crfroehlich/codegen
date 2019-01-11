@@ -19,30 +19,57 @@ using Newtonsoft.Json.Converters;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum ValueStatusEnm
+    public enum RoleEnm
     {
-        [EnumMember(Value = DocConstantValueStatus.COLLECTED)]
-        COLLECTED,
-        [EnumMember(Value = DocConstantValueStatus.NOT_COLLECTED)]
-        NOT_COLLECTED,
-        [EnumMember(Value = DocConstantValueStatus.NOT_REPORTED)]
-        NOT_REPORTED,
-        [EnumMember(Value = DocConstantValueStatus.REQUESTED)]
-        REQUESTED
+        [EnumMember(Value = DocConstantRole.ANALYST_USERS)]
+        ANALYST_USERS,
+        [EnumMember(Value = DocConstantRole.AUDIT_USERS)]
+        AUDIT_USERS,
+        [EnumMember(Value = DocConstantRole.BINDINGS_ADMINS)]
+        BINDINGS_ADMINS,
+        [EnumMember(Value = DocConstantRole.BINDINGS_USERS)]
+        BINDINGS_USERS,
+        [EnumMember(Value = DocConstantRole.CLIENT_ADMINS)]
+        CLIENT_ADMINS,
+        [EnumMember(Value = DocConstantRole.CLIENT_SOLUTIONS)]
+        CLIENT_SOLUTIONS,
+        [EnumMember(Value = DocConstantRole.CONSULTANT_USERS)]
+        CONSULTANT_USERS,
+        [EnumMember(Value = DocConstantRole.DEFAULT_USERS)]
+        DEFAULT_USERS,
+        [EnumMember(Value = DocConstantRole.DIVISION_ADMINS)]
+        DIVISION_ADMINS,
+        [EnumMember(Value = DocConstantRole.DRE_ADMINS)]
+        DRE_ADMINS,
+        [EnumMember(Value = DocConstantRole.DRE_SUPER_ADMIN)]
+        DRE_SUPER_ADMIN,
+        [EnumMember(Value = DocConstantRole.MARKETING_USERS)]
+        MARKETING_USERS,
+        [EnumMember(Value = DocConstantRole.USER_ADMINS)]
+        USER_ADMINS
     }
     
-    public sealed partial class DocConstantValueStatus
+    public sealed partial class DocConstantRole
     {
-        public const string COLLECTED = "Collected";
-        public const string NOT_COLLECTED = "Not Collected";
-        public const string NOT_REPORTED = "Not Reported";
-        public const string REQUESTED = "Requested";
+        public const string ANALYST_USERS = "Analyst Users";
+        public const string AUDIT_USERS = "Audit Users";
+        public const string BINDINGS_ADMINS = "Bindings Admins";
+        public const string BINDINGS_USERS = "Bindings Users";
+        public const string CLIENT_ADMINS = "Client Admins";
+        public const string CLIENT_SOLUTIONS = "Client Solutions";
+        public const string CONSULTANT_USERS = "Consultant Users";
+        public const string DEFAULT_USERS = "Users (Default)";
+        public const string DIVISION_ADMINS = "Division Admins";
+        public const string DRE_ADMINS = "DrE Admins";
+        public const string DRE_SUPER_ADMIN = "dre_super_admin";
+        public const string MARKETING_USERS = "Marketing Users";
+        public const string USER_ADMINS = "User Admins";
         
         #region Internals
         
         private static List<string> _all;
         
-        public static List<string> All => _all ?? (_all = typeof(DocConstantValueStatus).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
+        public static List<string> All => _all ?? (_all = typeof(DocConstantRole).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
         /// <summary>
         ///    The string value of the current instance
@@ -53,7 +80,7 @@ namespace Services.Enums
         ///    The enum constructor
         /// </summary>
         /// <param name="ItemName">Name of the item.</param>
-        private DocConstantValueStatus(string ItemName = null)
+        private DocConstantRole(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
@@ -71,9 +98,9 @@ namespace Services.Enums
         /// </summary>
         /// <param name="Val">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantValueStatus(string Val)
+        public static implicit operator DocConstantRole(string Val)
         {
-            return new DocConstantValueStatus(Val);
+            return new DocConstantRole(Val);
         }
 
         /// <summary>
@@ -81,7 +108,7 @@ namespace Services.Enums
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantValueStatus item)
+        public static implicit operator string(DocConstantRole item)
         {
             return item?.Value ?? string.Empty;
         }
@@ -97,14 +124,14 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantValueStatus)
+        #region IEquatable (DocConstantRole)
 
         /// <summary>
         ///    Equals
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantValueStatus obj)
+        public bool Equals(DocConstantRole obj)
         {
             return this == obj;
         }
@@ -115,7 +142,7 @@ namespace Services.Enums
         /// <param name="ft1">The FT1.</param>
         /// <param name="ft2">The FT2.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantValueStatus ft1, DocConstantValueStatus ft2)
+        public static bool operator ==(DocConstantRole ft1, DocConstantRole ft2)
         {
             //do a string comparison on the fieldtypes
             return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
@@ -127,7 +154,7 @@ namespace Services.Enums
         /// <param name="ft1">The FT1.</param>
         /// <param name="ft2">The FT2.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantValueStatus ft1, DocConstantValueStatus ft2)
+        public static bool operator !=(DocConstantRole ft1, DocConstantRole ft2)
         {
             return !(ft1 == ft2);
         }
@@ -140,13 +167,13 @@ namespace Services.Enums
         public override bool Equals(object obj)
         {
             var ret = false;
-            if(!(obj is DocConstantValueStatus))
+            if(!(obj is DocConstantRole))
             {
                 ret = false;
             }
             else
             {
-                ret = this == (DocConstantValueStatus) obj;
+                ret = this == (DocConstantRole) obj;
             }
             return ret;
         }
@@ -164,6 +191,6 @@ namespace Services.Enums
             return ret;
         }
 
-        #endregion IEquatable (DocConstantValueStatus)
+        #endregion IEquatable (DocConstantRole)
     }
 }

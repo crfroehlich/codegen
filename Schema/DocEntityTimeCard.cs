@@ -36,17 +36,30 @@ using ValueType = Services.Dto.ValueType;
 namespace Services.Schema
 {
     [TableMapping(DocConstantModelName.TIMECARD)]
+
     public partial class DocEntityTimeCard : DocEntityBase
     {
         private const string TIMECARD_CACHE = "TimeCardCache";
 
         #region Constructor
-        public DocEntityTimeCard(Session session) : base(session) {}
 
-        public DocEntityTimeCard() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        /// <summary>
+        ///    Initializes a new instance of this class.
+        /// </summary>
+        /// <param name="session">The session.</param>
+        public DocEntityTimeCard(Session session)
+            : base(session) { }
+
+        /// <summary>
+        ///    Initializes a new instance of this class as a default, session-less object.
+        /// </summary>
+        public DocEntityTimeCard()
+            : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
+
         #endregion Constructor
 
         #region VisibleFields
+        
         private List<string> __vf;
         private List<string> _visibleFields
         {
@@ -64,9 +77,11 @@ namespace Services.Schema
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
         }
+        
         #endregion VisibleFields
 
         #region Static Members
+
         public static DocEntityTimeCard GetTimeCard(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? GetTimeCard(reference.Id) : null;
@@ -105,9 +120,11 @@ namespace Services.Schema
             }
             return ret;
         }
+
         #endregion Static Members
 
         #region Properties
+
         [Field()]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
@@ -128,6 +145,12 @@ namespace Services.Schema
         [FieldMapping(nameof(PICO))]
         public DocEntityPackage PICO { get; set; }
         public int? PICOId { get { return PICO?.Id; } private set { var noid = value; } }
+
+
+        [Field()]
+        [FieldMapping(nameof(Product))]
+        public DocEntityProduct Product { get; set; }
+        public int? ProductId { get { return Product?.Id; } private set { var noid = value; } }
 
 
         [Field()]
@@ -160,22 +183,25 @@ namespace Services.Schema
 
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [FieldMapping(DocEntityConstants.PropertyName.GESTALT)]
         public override string Gestalt { get; set; }
 
-        [Field]
+        [Field()]
+        [FieldMapping(BasePropertyName.HASH)]
         public override Guid Hash { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
         public override int VersionNo { get; set; }
 
-        [Field]
+        [Field()]
         public override DateTime? Created { get; set; }
 
-        [Field]
+        [Field()]
         public override DateTime? Updated { get; set; }
 
-        [Field]
+        [Field()]
         public override bool Locked { get; set; }
+
         private bool? _isNewlyLocked;
         private bool? _isModified;
         
@@ -194,18 +220,35 @@ namespace Services.Schema
         #endregion Properties
 
         #region Overrides of DocEntity
+
+        /// <summary>
+        ///    The Model name of this class is <see cref="DocConstantModelName.TIMECARD" />
+        /// </summary>
         public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.TIMECARD;
 
-        public override DocConstantModelName ModelName => MODEL_NAME;
-
+        /// <summary>
+        ///    The Model name of this instance is always the same as <see cref="MODEL_NAME" />
+        /// </summary>
+        public override DocConstantModelName ModelName
+        {
+            get { return MODEL_NAME; }
+        }
+        
         public const string CACHE_KEY_PREFIX = "FindTimeCards";
 
+        /// <summary>
+        ///    Converts this Domain object to its corresponding Model.
+        /// </summary>
+        public override T ToModel<T>()
+        {
+            return  null;
 
-        public override T ToModel<T>() =>  null;
+        }
 
         #endregion Overrides of DocEntity
 
         #region Entity overrides
+
         protected override object AdjustFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
             if (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name))
@@ -217,7 +260,7 @@ namespace Services.Schema
                 return oldValue;
             }
         }
-
+        
         ///    Called before field value is about to be changed. This event is raised only on actual change attempt (i.e. when new value differs from the current one).
         protected override void OnSettingFieldValue(FieldInfo fieldInfo, object value)
         {
@@ -288,12 +331,13 @@ namespace Services.Schema
             FlushCache();
 
             _validated = true;
-
+            
 
         }
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
+
             var hash = GetGuid();
             if(Hash != hash)
                 Hash = hash;
@@ -353,9 +397,11 @@ namespace Services.Schema
             DocCacheClient.RemoveSearch("TimeCard");
             DocCacheClient.RemoveById(Id);
         }
+
         #endregion Entity overrides
 
         #region Validation
+
         public DocValidationMessage ValidationMessage
         {
             get
@@ -363,17 +409,17 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(End))
+                if(null == End)
                 {
                     isValid = false;
                     message += " End is a required property.";
                 }
-                if(DocTools.IsNullOrEmpty(PICO))
+                if(null == PICO)
                 {
                     isValid = false;
                     message += " PICO is a required property.";
                 }
-                if(DocTools.IsNullOrEmpty(Start))
+                if(null == Start)
                 {
                     isValid = false;
                     message += " Start is a required property.";
@@ -383,7 +429,7 @@ namespace Services.Schema
                     isValid = false;
                     message += " Status is a " + Status?.Enum?.Name + ", but must be a TimeCardStatus.";
                 }
-                if(DocTools.IsNullOrEmpty(User))
+                if(null == User)
                 {
                     isValid = false;
                     message += " User is a required property.";
@@ -397,10 +443,13 @@ namespace Services.Schema
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;
             }
+
         }
+
         #endregion Validation
 
         #region Hash
+
         
         public static Guid GetGuid(DocEntityTimeCard thing)
         {
@@ -416,9 +465,11 @@ namespace Services.Schema
         {
             return GetGuid(this);
         }
+
         #endregion Hash
 
         #region Converters
+
         public override string ToString() => _ToString();
 
         public override Reference ToReference()
@@ -430,6 +481,7 @@ namespace Services.Schema
         public TimeCard ToDto() => Mapper.Map<DocEntityTimeCard, TimeCard>(this);
 
         public override IDto ToIDto() => ToDto();
+
         #endregion Converters
     }
 
@@ -456,6 +508,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.End, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.End))))
                 .ForMember(dest => dest.PICO, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICO))))
                 .ForMember(dest => dest.PICOId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICOId))))
+                .ForMember(dest => dest.Product, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Product))))
+                .ForMember(dest => dest.ProductId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ProductId))))
                 .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ReferenceId))))
                 .ForMember(dest => dest.Start, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Start))))
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Status))))

@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -49,9 +48,11 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<ReleaseStatus>(Dto.ReleaseStatus.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityReleaseStatus>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityReleaseStatus>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ReleaseStatusFullTextSearch(request);
@@ -107,54 +108,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(ReleaseStatusSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ReleaseStatus>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ReleaseStatus>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(ReleaseStatusSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ReleaseStatus>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ReleaseStatus>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -166,52 +162,49 @@ namespace Services.API
         public object Get(ReleaseStatusVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(ReleaseStatus request)
         {
-            object ret = null;
+            ReleaseStatus ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                request.VisibleFields = InitVisibleFields<ReleaseStatus>(Dto.ReleaseStatus.Fields, request);
                 ret = GetReleaseStatus(request);
             });
             return ret;
         }
 
-        private ReleaseStatus _AssignValues(ReleaseStatus request, DocConstantPermission permission, Session session)
+        private ReleaseStatus _AssignValues(ReleaseStatus dtoSource, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "ReleaseStatus"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             ReleaseStatus ret = null;
-            request = _InitAssignValues(request, permission, session);
+            dtoSource = _InitAssignValues(dtoSource, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
             
             //First, assign all the variables, do database lookups and conversions
-            var pBranch = request.Branch;
-            var pRelease = request.Release;
-            var pServer = request.Server;
-            var pURL = request.URL;
-            var pVersion = request.Version;
+            var pBranch = dtoSource.Branch;
+            var pRelease = dtoSource.Release;
+            var pServer = dtoSource.Server;
+            var pURL = dtoSource.URL;
+            var pVersion = dtoSource.Version;
 
             DocEntityReleaseStatus entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -225,76 +218,76 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityReleaseStatus.GetReleaseStatus(request.Id);
+                entity = DocEntityReleaseStatus.GetReleaseStatus(dtoSource.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pBranch, permission, DocConstantModelName.RELEASESTATUS, nameof(request.Branch)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pBranch, permission, DocConstantModelName.RELEASESTATUS, nameof(dtoSource.Branch)))
             {
-                if(DocPermissionFactory.IsRequested(request, pBranch, entity.Branch, nameof(request.Branch)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Branch)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pBranch, entity.Branch, nameof(dtoSource.Branch)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Branch)} cannot be modified once set.");
                     entity.Branch = pBranch;
-                if(DocPermissionFactory.IsRequested<string>(request, pBranch, nameof(request.Branch)) && !request.VisibleFields.Matches(nameof(request.Branch), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pBranch, nameof(dtoSource.Branch)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Branch), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Branch));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Branch));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pRelease, permission, DocConstantModelName.RELEASESTATUS, nameof(request.Release)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pRelease, permission, DocConstantModelName.RELEASESTATUS, nameof(dtoSource.Release)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRelease, entity.Release, nameof(request.Release)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Release)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pRelease, entity.Release, nameof(dtoSource.Release)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Release)} cannot be modified once set.");
                     entity.Release = pRelease;
-                if(DocPermissionFactory.IsRequested<string>(request, pRelease, nameof(request.Release)) && !request.VisibleFields.Matches(nameof(request.Release), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pRelease, nameof(dtoSource.Release)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Release), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Release));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Release));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pServer, permission, DocConstantModelName.RELEASESTATUS, nameof(request.Server)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pServer, permission, DocConstantModelName.RELEASESTATUS, nameof(dtoSource.Server)))
             {
-                if(DocPermissionFactory.IsRequested(request, pServer, entity.Server, nameof(request.Server)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Server)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pServer, entity.Server, nameof(dtoSource.Server)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Server)} cannot be modified once set.");
                     entity.Server = pServer;
-                if(DocPermissionFactory.IsRequested<string>(request, pServer, nameof(request.Server)) && !request.VisibleFields.Matches(nameof(request.Server), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pServer, nameof(dtoSource.Server)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Server), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Server));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Server));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURL, permission, DocConstantModelName.RELEASESTATUS, nameof(request.URL)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pURL, permission, DocConstantModelName.RELEASESTATUS, nameof(dtoSource.URL)))
             {
-                if(DocPermissionFactory.IsRequested(request, pURL, entity.URL, nameof(request.URL)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.URL)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pURL, entity.URL, nameof(dtoSource.URL)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.URL)} cannot be modified once set.");
                     entity.URL = pURL;
-                if(DocPermissionFactory.IsRequested<string>(request, pURL, nameof(request.URL)) && !request.VisibleFields.Matches(nameof(request.URL), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pURL, nameof(dtoSource.URL)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.URL), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.URL));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.URL));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pVersion, permission, DocConstantModelName.RELEASESTATUS, nameof(request.Version)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pVersion, permission, DocConstantModelName.RELEASESTATUS, nameof(dtoSource.Version)))
             {
-                if(DocPermissionFactory.IsRequested(request, pVersion, entity.Version, nameof(request.Version)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Version)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(dtoSource, pVersion, entity.Version, nameof(dtoSource.Version)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Version)} cannot be modified once set.");
                     entity.Version = pVersion;
-                if(DocPermissionFactory.IsRequested<string>(request, pVersion, nameof(request.Version)) && !request.VisibleFields.Matches(nameof(request.Version), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(dtoSource, pVersion, nameof(dtoSource.Version)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Version), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Version));
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Version));
                 }
             }
             
-            if (request.Locked) entity.Locked = request.Locked;
+            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<ReleaseStatus>(Dto.ReleaseStatus.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, nameof(ReleaseStatus), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
             return ret;
         }
-        public ReleaseStatus Post(ReleaseStatus request)
+        public ReleaseStatus Post(ReleaseStatus dtoSource)
         {
-            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
 
             ReleaseStatus ret = null;
 
@@ -303,7 +296,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "ReleaseStatus")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -381,6 +374,8 @@ namespace Services.API
                     var pVersion = entity.Version;
                     if(!DocTools.IsNullOrEmpty(pVersion))
                         pVersion += " (Copy)";
+                #region Custom Before copyReleaseStatus
+                #endregion Custom Before copyReleaseStatus
                 var copy = new DocEntityReleaseStatus(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -390,6 +385,8 @@ namespace Services.API
                                 , URL = pURL
                                 , Version = pVersion
                 };
+                #region Custom After copyReleaseStatus
+                #endregion Custom After copyReleaseStatus
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -402,9 +399,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public ReleaseStatus Put(ReleaseStatus request)
+        public ReleaseStatus Put(ReleaseStatus dtoSource)
         {
-            return Patch(request);
+            return Patch(dtoSource);
         }
 
         public List<ReleaseStatus> Patch(ReleaseStatusBatch request)
@@ -454,16 +451,16 @@ namespace Services.API
             return ret;
         }
 
-        public ReleaseStatus Patch(ReleaseStatus request)
+        public ReleaseStatus Patch(ReleaseStatus dtoSource)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the ReleaseStatus to patch.");
+            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the ReleaseStatus to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
             
             ReleaseStatus ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -548,7 +545,7 @@ namespace Services.API
             ReleaseStatus ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<ReleaseStatus>(Dto.ReleaseStatus.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
 
             DocEntityReleaseStatus entity = null;
             if(id.HasValue)
@@ -576,6 +573,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }
