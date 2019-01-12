@@ -55,20 +55,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetUserType(request);
-                    });
+                    cachedRet = GetUserType(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetUserType(request);
-                });
-            }
+            ret = ret ?? GetUserType(request);
             return ret;
         }
 
@@ -103,9 +94,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<UserType>(currentUser, "UserType", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityUserType>();
+            var entities = Execute.SelectAll<DocEntityUserType>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserTypeFullTextSearch(request);
@@ -203,65 +192,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(UserTypeSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<UserType>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<UserType>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(UserTypeSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<UserType>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<UserType>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -273,33 +267,36 @@ namespace Services.API
         public object Get(UserTypeVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(UserType request)
         {
-            UserType ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<UserType>(currentUser, "UserType", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                DocPermissionFactory.SetVisibleFields<UserType>(currentUser, "UserType", request.VisibleFields);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usertype")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetUserType(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
@@ -502,8 +499,6 @@ namespace Services.API
                     var pPayrollType = entity.PayrollType;
                     var pType = entity.Type;
                     var pUsers = entity.Users.ToList();
-                #region Custom Before copyUserType
-                #endregion Custom Before copyUserType
                 var copy = new DocEntityUserType(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -516,8 +511,6 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                #region Custom After copyUserType
-                #endregion Custom After copyUserType
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -860,7 +853,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

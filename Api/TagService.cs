@@ -55,20 +55,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTag(request);
-                    });
+                    cachedRet = GetTag(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTag(request);
-                });
-            }
+            ret = ret ?? GetTag(request);
             return ret;
         }
 
@@ -103,9 +94,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<Tag>(currentUser, "Tag", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityTag>();
+            var entities = Execute.SelectAll<DocEntityTag>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TagFullTextSearch(request);
@@ -157,65 +146,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(TagSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Tag>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "tag")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<Tag>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "tag")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTag,Tag>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTag,Tag>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(TagSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Tag>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "tag")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<Tag>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "tag")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTag,Tag>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTag,Tag>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -227,33 +221,36 @@ namespace Services.API
         public object Get(TagVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(Tag request)
         {
-            Tag ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Tag>(currentUser, "Tag", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "tag")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                DocPermissionFactory.SetVisibleFields<Tag>(currentUser, "Tag", request.VisibleFields);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "tag")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetTag(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
@@ -437,8 +434,6 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
                     var pWorkflows = entity.Workflows.ToList();
-                #region Custom Before copyTag
-                #endregion Custom Before copyTag
                 var copy = new DocEntityTag(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -449,8 +444,6 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-                #region Custom After copyTag
-                #endregion Custom After copyTag
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -723,7 +716,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

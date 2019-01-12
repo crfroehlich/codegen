@@ -50,9 +50,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityVariableRule>();
+            var entities = Execute.SelectAll<DocEntityVariableRule>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableRuleFullTextSearch(request);
@@ -152,49 +150,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(VariableRuleSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<VariableRule>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableRule,VariableRule>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<VariableRule>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableRule,VariableRule>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(VariableRuleSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<VariableRule>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableRule,VariableRule>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<VariableRule>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableRule,VariableRule>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -206,23 +209,26 @@ namespace Services.API
         public object Get(VariableRuleVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(VariableRule request)
         {
-            VariableRule ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
-            Execute.Run((ssn) =>
+            Execute.Run(s =>
             {
+                DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
                 ret = GetVariableRule(request);
             });
             return ret;
@@ -545,8 +551,6 @@ namespace Services.API
                     var pRule = entity.Rule;
                     var pScopes = entity.Scopes.ToList();
                     var pType = entity.Type;
-                #region Custom Before copyVariableRule
-                #endregion Custom Before copyVariableRule
                 var copy = new DocEntityVariableRule(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -571,8 +575,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                #region Custom After copyVariableRule
-                #endregion Custom After copyVariableRule
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -1063,7 +1065,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

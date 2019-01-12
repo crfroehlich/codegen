@@ -55,20 +55,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetClient(request);
-                    });
+                    cachedRet = GetClient(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetClient(request);
-                });
-            }
+            ret = ret ?? GetClient(request);
             return ret;
         }
 
@@ -103,9 +94,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<Client>(currentUser, "Client", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityClient>();
+            var entities = Execute.SelectAll<DocEntityClient>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ClientFullTextSearch(request);
@@ -189,65 +178,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(ClientSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Client>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<Client>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityClient,Client>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityClient,Client>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(ClientSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Client>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<Client>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityClient,Client>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityClient,Client>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -259,33 +253,36 @@ namespace Services.API
         public object Get(ClientVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(Client request)
         {
-            Client ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Client>(currentUser, "Client", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                DocPermissionFactory.SetVisibleFields<Client>(currentUser, "Client", request.VisibleFields);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetClient(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
@@ -604,8 +601,6 @@ namespace Services.API
                     var pRole = entity.Role;
                     var pScopes = entity.Scopes.ToList();
                     var pSettings = entity.Settings;
-                #region Custom Before copyClient
-                #endregion Custom Before copyClient
                 var copy = new DocEntityClient(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -630,8 +625,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                #region Custom After copyClient
-                #endregion Custom After copyClient
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -1158,7 +1151,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

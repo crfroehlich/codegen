@@ -1,8 +1,7 @@
 {
-  "NextTypeId": 20135,
-  "MaxTypeId": 20035,
+  "NextTypeId": 20035,
+  "MaxTypeId": 19935,
   "Types": {
-    "Product": 20035,
     "BackgroundTaskItem": 19935,
     "ReleaseStatus": 19835,
     "Default": 19435,

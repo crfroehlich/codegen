@@ -55,20 +55,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTermSynonym(request);
-                    });
+                    cachedRet = GetTermSynonym(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTermSynonym(request);
-                });
-            }
+            ret = ret ?? GetTermSynonym(request);
             return ret;
         }
 
@@ -103,9 +94,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityTermSynonym>();
+            var entities = Execute.SelectAll<DocEntityTermSynonym>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermSynonymFullTextSearch(request);
@@ -177,65 +166,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(TermSynonymSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<TermSynonym>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<TermSynonym>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(TermSynonymSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<TermSynonym>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<TermSynonym>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -247,33 +241,36 @@ namespace Services.API
         public object Get(TermSynonymVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(TermSynonym request)
         {
-            TermSynonym ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetTermSynonym(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
@@ -501,8 +498,6 @@ namespace Services.API
                     var pSynonym = entity.Synonym;
                     if(!DocTools.IsNullOrEmpty(pSynonym))
                         pSynonym += " (Copy)";
-                #region Custom Before copyTermSynonym
-                #endregion Custom Before copyTermSynonym
                 var copy = new DocEntityTermSynonym(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -517,8 +512,6 @@ namespace Services.API
                                 entity.Bindings.Add(item);
                             }
 
-                #region Custom After copyTermSynonym
-                #endregion Custom After copyTermSynonym
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -861,7 +854,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

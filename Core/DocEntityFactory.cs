@@ -209,10 +209,6 @@ namespace Services.Schema
                 {
                     ret = DocConstantModelName.PAGE;
                 }
-                else if(typeof(T) == typeof(DocEntityProduct))
-                {
-                    ret = DocConstantModelName.PRODUCT;
-                }
                 else if(typeof(T) == typeof(DocEntityQueueChannel))
                 {
                     ret = DocConstantModelName.QUEUECHANNEL;
@@ -496,9 +492,6 @@ namespace Services.Schema
                 case DocConstantModelName.PAGE:
                     ret = new DocEntityPage(session);
                     break;
-                case DocConstantModelName.PRODUCT:
-                    ret = new DocEntityProduct(session);
-                    break;
                 case DocConstantModelName.QUEUECHANNEL:
                     ret = new DocEntityQueueChannel(session);
                     break;
@@ -748,9 +741,6 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.PAGE:
                     ret = DocEntityPage.GetPage(id);
-                    break;
-                case DocConstantModelName.PRODUCT:
-                    ret = DocEntityProduct.GetProduct(id);
                     break;
                 case DocConstantModelName.QUEUECHANNEL:
                     ret = DocEntityQueueChannel.GetQueueChannel(id);
@@ -1082,11 +1072,6 @@ namespace Services.Schema
                 case DocConstantModelName.PAGE:
                     {
                        ret = entities.Cast<DocEntityPage>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
-                    }
-                    break;
-                case DocConstantModelName.PRODUCT:
-                    {
-                       ret = entities.Cast<DocEntityProduct>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.QUEUECHANNEL:

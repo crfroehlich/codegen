@@ -55,20 +55,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetUserSession(request);
-                    });
+                    cachedRet = GetUserSession(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetUserSession(request);
-                });
-            }
+            ret = ret ?? GetUserSession(request);
             return ret;
         }
 
@@ -103,9 +94,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityUserSession>();
+            var entities = Execute.SelectAll<DocEntityUserSession>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserSessionFullTextSearch(request);
@@ -179,65 +168,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(UserSessionSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<UserSession>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usersession")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<UserSession>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usersession")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserSession,UserSession>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserSession,UserSession>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(UserSessionSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<UserSession>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usersession")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<UserSession>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usersession")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserSession,UserSession>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserSession,UserSession>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -249,33 +243,36 @@ namespace Services.API
         public object Get(UserSessionVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(UserSession request)
         {
-            UserSession ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usersession")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "usersession")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetUserSession(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
@@ -497,7 +494,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

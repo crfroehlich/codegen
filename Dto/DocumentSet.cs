@@ -209,11 +209,6 @@ namespace Services.Dto
         public string PRISMA { get; set; }
 
 
-        [ApiMember(Name = nameof(Products), Description = "Product", IsRequired = false)]
-        public List<Reference> Products { get; set; }
-        public int? ProductsCount { get; set; }
-
-
         [ApiMember(Name = nameof(ProjectTeam), Description = "Team", IsRequired = false)]
         public Reference ProjectTeam { get; set; }
         [ApiMember(Name = nameof(ProjectTeamId), Description = "Primary Key of Team", IsRequired = false)]
@@ -308,7 +303,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Archived),nameof(Categories),nameof(CategoriesCount),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(NonDigitizedDocuments),nameof(NonDigitizedDocumentsCount),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Packages),nameof(PackagesCount),nameof(Participants),nameof(PRISMA),nameof(Products),nameof(ProductsCount),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SelectionCriteria),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Archived),nameof(Categories),nameof(CategoriesCount),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(NonDigitizedDocuments),nameof(NonDigitizedDocumentsCount),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Packages),nameof(PackagesCount),nameof(Participants),nameof(PRISMA),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SelectionCriteria),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -331,7 +326,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Categories), nameof(CategoriesCount), nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(NonDigitizedDocuments), nameof(NonDigitizedDocumentsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Packages), nameof(PackagesCount), nameof(Products), nameof(ProductsCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
+            nameof(Categories), nameof(CategoriesCount), nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(NonDigitizedDocuments), nameof(NonDigitizedDocumentsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Packages), nameof(PackagesCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
     }
@@ -382,7 +377,6 @@ namespace Services.Dto
         public List<int> PackagesIds { get; set; }
         public string Participants { get; set; }
         public string PRISMA { get; set; }
-        public List<int> ProductsIds { get; set; }
         public Reference ProjectTeam { get; set; }
         public List<int> ProjectTeamIds { get; set; }
         public int? ProtocolReferenceId { get; set; }
@@ -455,7 +449,6 @@ namespace Services.Dto
         public bool doPackages { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Packages))); }
         public bool doParticipants { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Participants))); }
         public bool doPRISMA { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.PRISMA))); }
-        public bool doProducts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Products))); }
         public bool doProjectTeam { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProjectTeam))); }
         public bool doProtocolReferenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProtocolReferenceId))); }
         public bool doQUOROM { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.QUOROM))); }
@@ -508,8 +501,6 @@ namespace Services.Dto
     [Route("/profile/documentset/{Id}/outcome", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/package", "GET, POST, DELETE")]
     [Route("/profile/documentset/{Id}/package", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/product", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/product", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/projectlink", "GET, POST, DELETE")]
     [Route("/profile/documentset/{Id}/projectlink", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/scope", "GET, POST, DELETE")]
@@ -571,8 +562,6 @@ namespace Services.Dto
     [Route("/profile/documentset/{Id}/outcome/version", "GET")]
     [Route("/documentset/{Id}/package/version", "GET")]
     [Route("/profile/documentset/{Id}/package/version", "GET")]
-    [Route("/documentset/{Id}/product/version", "GET")]
-    [Route("/profile/documentset/{Id}/product/version", "GET")]
     [Route("/documentset/{Id}/projectlink/version", "GET")]
     [Route("/profile/documentset/{Id}/projectlink/version", "GET")]
     [Route("/documentset/{Id}/scope/version", "GET")]

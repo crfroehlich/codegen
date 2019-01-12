@@ -259,7 +259,6 @@ namespace Services.Core
             cfg.AddProfile<OutcomeDtoMapper>();
             cfg.AddProfile<PackageMapper>();
             cfg.AddProfile<PageMapper>();
-            cfg.AddProfile<ProductMapper>();
             cfg.AddProfile<QueueChannelMapper>();
             cfg.AddProfile<ReleaseStatusMapper>();
             cfg.AddProfile<RoleMapper>();

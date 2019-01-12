@@ -50,9 +50,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityLocaleLookup>();
+            var entities = Execute.SelectAll<DocEntityLocaleLookup>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LocaleLookupFullTextSearch(request);
@@ -108,49 +106,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(LocaleLookupSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<LocaleLookup>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLocaleLookup,LocaleLookup>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<LocaleLookup>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLocaleLookup,LocaleLookup>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(LocaleLookupSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<LocaleLookup>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLocaleLookup,LocaleLookup>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<LocaleLookup>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLocaleLookup,LocaleLookup>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -162,23 +165,26 @@ namespace Services.API
         public object Get(LocaleLookupVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(LocaleLookup request)
         {
-            LocaleLookup ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
-            Execute.Run((ssn) =>
+            Execute.Run(s =>
             {
+                DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
                 ret = GetLocaleLookup(request);
             });
             return ret;
@@ -339,8 +345,6 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pIpAddress))
                         pIpAddress += " (Copy)";
                     var pLocale = entity.Locale;
-                #region Custom Before copyLocaleLookup
-                #endregion Custom Before copyLocaleLookup
                 var copy = new DocEntityLocaleLookup(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -348,8 +352,6 @@ namespace Services.API
                                 , IpAddress = pIpAddress
                                 , Locale = pLocale
                 };
-                #region Custom After copyLocaleLookup
-                #endregion Custom After copyLocaleLookup
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -393,7 +395,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

@@ -50,9 +50,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityUpdate>();
+            var entities = Execute.SelectAll<DocEntityUpdate>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UpdateFullTextSearch(request);
@@ -144,49 +142,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(UpdateSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Update>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUpdate,Update>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<Update>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUpdate,Update>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(UpdateSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Update>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUpdate,Update>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<Update>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUpdate,Update>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -198,23 +201,26 @@ namespace Services.API
         public object Get(UpdateVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(Update request)
         {
-            Update ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
-            Execute.Run((ssn) =>
+            Execute.Run(s =>
             {
+                DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
                 ret = GetUpdate(request);
             });
             return ret;
@@ -498,8 +504,6 @@ namespace Services.API
                         pSubject += " (Copy)";
                     var pTeam = entity.Team;
                     var pUser = entity.User;
-                #region Custom Before copyUpdate
-                #endregion Custom Before copyUpdate
                 var copy = new DocEntityUpdate(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -518,8 +522,6 @@ namespace Services.API
                                 entity.Events.Add(item);
                             }
 
-                #region Custom After copyUpdate
-                #endregion Custom After copyUpdate
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -862,7 +864,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

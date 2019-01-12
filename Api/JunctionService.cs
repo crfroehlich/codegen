@@ -50,9 +50,7 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityJunction>();
+            var entities = Execute.SelectAll<DocEntityJunction>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new JunctionFullTextSearch(request);
@@ -142,49 +140,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(JunctionSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Junction>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<Junction>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(JunctionSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Junction>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<Junction>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -196,23 +199,26 @@ namespace Services.API
         public object Get(JunctionVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(Junction request)
         {
-            Junction ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
-            Execute.Run((ssn) =>
+            Execute.Run(s =>
             {
+                DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
                 ret = GetJunction(request);
             });
             return ret;
@@ -483,8 +489,6 @@ namespace Services.API
                         pTargetType += " (Copy)";
                     var pType = entity.Type;
                     var pUser = entity.User;
-                #region Custom Before copyJunction
-                #endregion Custom Before copyJunction
                 var copy = new DocEntityJunction(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -502,8 +506,6 @@ namespace Services.API
                                 entity.Children.Add(item);
                             }
 
-                #region Custom After copyJunction
-                #endregion Custom After copyJunction
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -846,7 +848,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
