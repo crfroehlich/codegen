@@ -50,7 +50,9 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, "VariableInstance", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityVariableInstance>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityVariableInstance>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableInstanceFullTextSearch(request);
@@ -116,54 +118,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(VariableInstanceSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<VariableInstance>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableInstance,VariableInstance>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<VariableInstance>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableInstance,VariableInstance>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(VariableInstanceSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<VariableInstance>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableInstance,VariableInstance>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<VariableInstance>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableInstance,VariableInstance>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -175,26 +172,23 @@ namespace Services.API
         public object Get(VariableInstanceVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(VariableInstance request)
         {
-            object ret = null;
+            VariableInstance ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, "VariableInstance", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, "VariableInstance", request.VisibleFields);
                 ret = GetVariableInstance(request);
             });
             return ret;
@@ -400,6 +394,8 @@ namespace Services.API
                     var pDocument = entity.Document;
                     var pRule = entity.Rule;
                     var pWorkflows = entity.Workflows.ToList();
+                #region Custom Before copyVariableInstance
+                #endregion Custom Before copyVariableInstance
                 var copy = new DocEntityVariableInstance(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -412,6 +408,8 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
+                #region Custom After copyVariableInstance
+                #endregion Custom After copyVariableInstance
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -754,6 +752,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

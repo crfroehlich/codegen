@@ -50,7 +50,9 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, "Intervention", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityIntervention>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityIntervention>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new InterventionFullTextSearch(request);
@@ -112,54 +114,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(InterventionSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<InterventionDto>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityIntervention,InterventionDto>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<InterventionDto>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityIntervention,InterventionDto>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(InterventionSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<InterventionDto>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityIntervention,InterventionDto>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<InterventionDto>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityIntervention,InterventionDto>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -171,26 +168,23 @@ namespace Services.API
         public object Get(InterventionVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(InterventionDto request)
         {
-            object ret = null;
+            InterventionDto ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, "Intervention", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, "Intervention", request.VisibleFields);
                 ret = GetIntervention(request);
             });
             return ret;
@@ -327,11 +321,15 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
                     var pIntervention = entity.Intervention;
+                #region Custom Before copyIntervention
+                #endregion Custom Before copyIntervention
                 var copy = new DocEntityIntervention(ssn)
                 {
                     Hash = Guid.NewGuid()
                                 , Intervention = pIntervention
                 };
+                #region Custom After copyIntervention
+                #endregion Custom After copyIntervention
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -518,6 +516,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

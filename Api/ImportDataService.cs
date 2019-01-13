@@ -50,7 +50,9 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityImportData>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityImportData>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ImportDataFullTextSearch(request);
@@ -170,54 +172,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(ImportDataSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ImportData>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ImportData>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(ImportDataSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ImportData>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ImportData>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -229,26 +226,23 @@ namespace Services.API
         public object Get(ImportDataVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(ImportData request)
         {
-            object ret = null;
+            ImportData ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
                 ret = GetImportData(request);
             });
             return ret;
@@ -605,6 +599,8 @@ namespace Services.API
                     var pRequestedOn = entity.RequestedOn;
                     var pStartedOn = entity.StartedOn;
                     var pStatus = entity.Status;
+                #region Custom Before copyImportData
+                #endregion Custom Before copyImportData
                 var copy = new DocEntityImportData(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -630,6 +626,8 @@ namespace Services.API
                                 entity.DocumentSets.Add(item);
                             }
 
+                #region Custom After copyImportData
+                #endregion Custom After copyImportData
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -972,6 +970,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

@@ -50,7 +50,9 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<DocumentAttribute>(currentUser, "DocumentAttribute", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityDocumentAttribute>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityDocumentAttribute>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentAttributeFullTextSearch(request);
@@ -112,54 +114,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(DocumentAttributeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<DocumentAttribute>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentAttribute,DocumentAttribute>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<DocumentAttribute>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentAttribute,DocumentAttribute>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(DocumentAttributeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<DocumentAttribute>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentAttribute,DocumentAttribute>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<DocumentAttribute>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentAttribute,DocumentAttribute>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -171,26 +168,23 @@ namespace Services.API
         public object Get(DocumentAttributeVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(DocumentAttribute request)
         {
-            object ret = null;
+            DocumentAttribute ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<DocumentAttribute>(currentUser, "DocumentAttribute", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                DocPermissionFactory.SetVisibleFields<DocumentAttribute>(currentUser, "DocumentAttribute", request.VisibleFields);
                 ret = GetDocumentAttribute(request);
             });
             return ret;
@@ -338,12 +332,16 @@ namespace Services.API
                 
                     var pAttribute = entity.Attribute;
                     var pDocument = entity.Document;
+                #region Custom Before copyDocumentAttribute
+                #endregion Custom Before copyDocumentAttribute
                 var copy = new DocEntityDocumentAttribute(ssn)
                 {
                     Hash = Guid.NewGuid()
                                 , Attribute = pAttribute
                                 , Document = pDocument
                 };
+                #region Custom After copyDocumentAttribute
+                #endregion Custom After copyDocumentAttribute
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -530,6 +528,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

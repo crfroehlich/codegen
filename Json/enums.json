@@ -655,6 +655,7 @@
     "OUTCOME": "Outcome",
     "PACKAGE": "Package",
     "PAGE": "Page",
+    "PRODUCT": "Product",
     "QUEUECHANNEL": "QueueChannel",
     "RELEASESTATUS": "ReleaseStatus",
     "ROLE": "Role",

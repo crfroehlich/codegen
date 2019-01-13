@@ -50,7 +50,9 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityReleaseStatus>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityReleaseStatus>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ReleaseStatusFullTextSearch(request);
@@ -106,54 +108,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(ReleaseStatusSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ReleaseStatus>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ReleaseStatus>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(ReleaseStatusSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ReleaseStatus>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<ReleaseStatus>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -165,26 +162,23 @@ namespace Services.API
         public object Get(ReleaseStatusVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(ReleaseStatus request)
         {
-            object ret = null;
+            ReleaseStatus ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
                 ret = GetReleaseStatus(request);
             });
             return ret;
@@ -380,6 +374,8 @@ namespace Services.API
                     var pVersion = entity.Version;
                     if(!DocTools.IsNullOrEmpty(pVersion))
                         pVersion += " (Copy)";
+                #region Custom Before copyReleaseStatus
+                #endregion Custom Before copyReleaseStatus
                 var copy = new DocEntityReleaseStatus(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -389,6 +385,8 @@ namespace Services.API
                                 , URL = pURL
                                 , Version = pVersion
                 };
+                #region Custom After copyReleaseStatus
+                #endregion Custom After copyReleaseStatus
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -575,6 +573,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

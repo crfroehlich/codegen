@@ -229,6 +229,10 @@ namespace Services.API
                         var enPage = DocEntityFactory.GetEntity<DocEntityPage>( en.Id );
                         ret = enPage.ToDto();
                         break;
+                    case DocConstantModelName.PRODUCT:
+                        var enProduct = DocEntityFactory.GetEntity<DocEntityProduct>( en.Id );
+                        ret = enProduct.ToDto();
+                        break;
                     case DocConstantModelName.QUEUECHANNEL:
                         var enQueueChannel = DocEntityFactory.GetEntity<DocEntityQueueChannel>( en.Id );
                         ret = enQueueChannel.ToDto();

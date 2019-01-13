@@ -50,7 +50,9 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<Interval>(currentUser, "Interval", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityInterval>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityInterval>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new IntervalFullTextSearch(request);
@@ -130,54 +132,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(IntervalSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Interval>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityInterval,Interval>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<Interval>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityInterval,Interval>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(IntervalSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Interval>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityInterval,Interval>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<Interval>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityInterval,Interval>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -189,26 +186,23 @@ namespace Services.API
         public object Get(IntervalVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(Interval request)
         {
-            object ret = null;
+            Interval ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Interval>(currentUser, "Interval", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                DocPermissionFactory.SetVisibleFields<Interval>(currentUser, "Interval", request.VisibleFields);
                 ret = GetInterval(request);
             });
             return ret;
@@ -391,6 +385,8 @@ namespace Services.API
                         pCalendarType += " (Copy)";
                     var pFollowUp = entity.FollowUp;
                     var pTimeOfDay = entity.TimeOfDay;
+                #region Custom Before copyInterval
+                #endregion Custom Before copyInterval
                 var copy = new DocEntityInterval(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -400,6 +396,8 @@ namespace Services.API
                                 , FollowUp = pFollowUp
                                 , TimeOfDay = pTimeOfDay
                 };
+                #region Custom After copyInterval
+                #endregion Custom After copyInterval
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -586,6 +584,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

@@ -83,6 +83,10 @@ namespace Services.Dto
         public int? FqId { get; set; }
 
 
+        [ApiMember(Name = nameof(LegacyPackageId), Description = "int?", IsRequired = false)]
+        public int? LegacyPackageId { get; set; }
+
+
         [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
         public int? LibraryPackageId { get; set; }
 
@@ -165,7 +169,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(OpportunityId),nameof(OpportunityName),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(ProjectId),nameof(ProjectName),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LegacyPackageId),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(OpportunityId),nameof(OpportunityName),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(ProjectId),nameof(ProjectName),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -215,6 +219,7 @@ namespace Services.Dto
         public DateTime? DeliverableDeadlineAfter { get; set; }
         public DateTime? DeliverableDeadlineBefore { get; set; }
         public int? FqId { get; set; }
+        public int? LegacyPackageId { get; set; }
         public int? LibraryPackageId { get; set; }
         public string LibraryPackageName { get; set; }
         public string Number { get; set; }
@@ -252,6 +257,7 @@ namespace Services.Dto
         public bool doDataset { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Dataset))); }
         public bool doDeliverableDeadline { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.DeliverableDeadline))); }
         public bool doFqId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.FqId))); }
+        public bool doLegacyPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.LegacyPackageId))); }
         public bool doLibraryPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.LibraryPackageId))); }
         public bool doLibraryPackageName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.LibraryPackageName))); }
         public bool doNumber { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Number))); }

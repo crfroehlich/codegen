@@ -159,10 +159,29 @@ namespace Services.Schema
         public string Name { get; set; }
 
 
+        [Field()]
+        [FieldMapping(nameof(Products))]
+        [Association( PairTo = nameof(Product.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
+        public DocEntitySet<DocEntityProduct> Products { get; private set; }
+
+
+        public int? ProductsCount { get { return Products.Count(); } private set { var noid = value; } }
+
+
         [Field(Nullable = false)]
         [FieldMapping(nameof(Role))]
         public DocEntityRole Role { get; set; }
         public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
+
+
+        [Field()]
+        [FieldMapping(nameof(SalesforceAccountId))]
+        public string SalesforceAccountId { get; set; }
+
+
+        [Field()]
+        [FieldMapping(nameof(SalesforceAccountName))]
+        public string SalesforceAccountName { get; set; }
 
 
         [Field()]
@@ -341,6 +360,8 @@ namespace Services.Schema
                 Hash = hash;
 
             Name = Name?.TrimAndPruneSpaces();
+            SalesforceAccountId = SalesforceAccountId?.TrimAndPruneSpaces();
+            SalesforceAccountName = SalesforceAccountName?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
             {
@@ -489,8 +510,12 @@ namespace Services.Schema
                 .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DocumentSets))))
                 .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DocumentSetsCount))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Name))))
+                .ForMember(dest => dest.Products, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Products))))
+                .ForMember(dest => dest.ProductsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.ProductsCount))))
                 .ForMember(dest => dest.Role, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Role))))
                 .ForMember(dest => dest.RoleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.RoleId))))
+                .ForMember(dest => dest.SalesforceAccountId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.SalesforceAccountId))))
+                .ForMember(dest => dest.SalesforceAccountName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.SalesforceAccountName))))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.ScopesCount))))
                 .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Settings))))

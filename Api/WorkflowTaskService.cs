@@ -50,7 +50,9 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityWorkflowTask>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityWorkflowTask>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowTaskFullTextSearch(request);
@@ -160,54 +162,49 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(WorkflowTaskSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<WorkflowTask>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowTask,WorkflowTask>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<WorkflowTask>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowTask,WorkflowTask>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(WorkflowTaskSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<WorkflowTask>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowTask,WorkflowTask>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
+                    var ret = new List<WorkflowTask>();
+                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowTask,WorkflowTask>(ret, Execute, requestCancel));
+                    tryRet = ret;
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -219,26 +216,23 @@ namespace Services.API
         public object Get(WorkflowTaskVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(WorkflowTask request)
         {
-            object ret = null;
+            WorkflowTask ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
+            Execute.Run((ssn) =>
             {
-                DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
                 ret = GetWorkflowTask(request);
             });
             return ret;
@@ -454,6 +448,8 @@ namespace Services.API
                     var pStatus = entity.Status;
                     var pType = entity.Type;
                     var pWorkflow = entity.Workflow;
+                #region Custom Before copyWorkflowTask
+                #endregion Custom Before copyWorkflowTask
                 var copy = new DocEntityWorkflowTask(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -466,6 +462,8 @@ namespace Services.API
                                 , Type = pType
                                 , Workflow = pWorkflow
                 };
+                #region Custom After copyWorkflowTask
+                #endregion Custom After copyWorkflowTask
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -652,6 +650,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

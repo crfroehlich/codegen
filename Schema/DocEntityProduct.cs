@@ -167,6 +167,11 @@ namespace Services.Schema
 
 
         [Field()]
+        [FieldMapping(nameof(LegacyPackageId))]
+        public int? LegacyPackageId { get; set; }
+
+
+        [Field()]
         [FieldMapping(nameof(LibraryPackageId))]
         public int? LibraryPackageId { get; set; }
 
@@ -537,6 +542,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.DatasetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.DatasetId))))
                 .ForMember(dest => dest.DeliverableDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.DeliverableDeadline))))
                 .ForMember(dest => dest.FqId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.FqId))))
+                .ForMember(dest => dest.LegacyPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.LegacyPackageId))))
                 .ForMember(dest => dest.LibraryPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.LibraryPackageId))))
                 .ForMember(dest => dest.LibraryPackageName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.LibraryPackageName))))
                 .ForMember(dest => dest.Number, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.Number))))

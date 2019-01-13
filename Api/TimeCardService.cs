@@ -55,11 +55,20 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    cachedRet = GetTimeCard(request);
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetTimeCard(request);
+                    });
                     return cachedRet;
                 });
             }
-            ret = ret ?? GetTimeCard(request);
+            if(null == ret)
+            {
+                Execute.Run(s =>
+                {
+                    ret = GetTimeCard(request);
+                });
+            }
             return ret;
         }
 
@@ -94,7 +103,9 @@ namespace Services.API
             
             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityTimeCard>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityTimeCard>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimeCardFullTextSearch(request);
@@ -152,6 +163,14 @@ namespace Services.API
                 if(true == request.PICOIds?.Any())
                 {
                     entities = entities.Where(en => en.PICO.Id.In(request.PICOIds));
+                }
+                if(!DocTools.IsNullOrEmpty(request.Product) && !DocTools.IsNullOrEmpty(request.Product.Id))
+                {
+                    entities = entities.Where(en => en.Product.Id == request.Product.Id );
+                }
+                if(true == request.ProductIds?.Any())
+                {
+                    entities = entities.Where(en => en.Product.Id.In(request.ProductIds));
                 }
                 if(request.ReferenceId.HasValue)
                     entities = entities.Where(en => request.ReferenceId.Value == en.ReferenceId);
@@ -212,70 +231,65 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(TimeCardSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<TimeCard>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "timecard")) 
                     {
-                        var ret = new List<TimeCard>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "timecard")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard,TimeCard>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard,TimeCard>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
         public object Get(TimeCardSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    var ret = new List<TimeCard>();
+                    var settings = DocResources.Settings;
+                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "timecard")) 
                     {
-                        var ret = new List<TimeCard>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "timecard")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard,TimeCard>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                        tryRet = _GetSearchCache(request, requestCancel);
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard,TimeCard>(ret, Execute, requestCancel));
+                        tryRet = ret;
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
             return tryRet;
         }
 
@@ -287,36 +301,33 @@ namespace Services.API
         public object Get(TimeCardVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
         public object Get(TimeCard request)
         {
-            object ret = null;
+            TimeCard ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
+            var settings = DocResources.Settings;
+            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "timecard")) 
             {
-                DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "timecard")) 
-                {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                return _GetIdCache(request);
+            }
+            else 
+            {
+                Execute.Run((ssn) =>
                 {
                     ret = GetTimeCard(request);
-                }
-            });
+                });
+            }
             return ret;
         }
 
@@ -340,6 +351,7 @@ namespace Services.API
             var pDocument = (dtoSource.Document?.Id > 0) ? DocEntityDocument.GetDocument(dtoSource.Document.Id) : null;
             var pEnd = dtoSource.End;
             var pPICO = (dtoSource.PICO?.Id > 0) ? DocEntityPackage.GetPackage(dtoSource.PICO.Id) : null;
+            var pProduct = (dtoSource.Product?.Id > 0) ? DocEntityProduct.GetProduct(dtoSource.Product.Id) : null;
             var pReferenceId = dtoSource.ReferenceId;
             var pStart = dtoSource.Start;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.TIMECARDSTATUS, dtoSource.Status?.Name, dtoSource.Status?.Id);
@@ -398,6 +410,15 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityPackage>(dtoSource, pPICO, nameof(dtoSource.PICO)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.PICO), ignoreSpaces: true))
                 {
                     dtoSource.VisibleFields.Add(nameof(dtoSource.PICO));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityProduct>(currentUser, dtoSource, pProduct, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.Product)))
+            {
+                if(DocPermissionFactory.IsRequested(dtoSource, pProduct, entity.Product, nameof(dtoSource.Product)))
+                    entity.Product = pProduct;
+                if(DocPermissionFactory.IsRequested<DocEntityProduct>(dtoSource, pProduct, nameof(dtoSource.Product)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Product), ignoreSpaces: true))
+                {
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.Product));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pReferenceId, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.ReferenceId)))
@@ -538,11 +559,14 @@ namespace Services.API
                     var pDocument = entity.Document;
                     var pEnd = entity.End;
                     var pPICO = entity.PICO;
+                    var pProduct = entity.Product;
                     var pReferenceId = entity.ReferenceId;
                     var pStart = entity.Start;
                     var pStatus = entity.Status;
                     var pUser = entity.User;
                     var pWorkType = entity.WorkType;
+                #region Custom Before copyTimeCard
+                #endregion Custom Before copyTimeCard
                 var copy = new DocEntityTimeCard(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -550,12 +574,15 @@ namespace Services.API
                                 , Document = pDocument
                                 , End = pEnd
                                 , PICO = pPICO
+                                , Product = pProduct
                                 , ReferenceId = pReferenceId
                                 , Start = pStart
                                 , Status = pStatus
                                 , User = pUser
                                 , WorkType = pWorkType
                 };
+                #region Custom After copyTimeCard
+                #endregion Custom After copyTimeCard
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -742,6 +769,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }
