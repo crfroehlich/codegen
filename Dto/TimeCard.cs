@@ -64,7 +64,7 @@ namespace Services.Dto
         public DateTime? End { get; set; }
 
 
-        [ApiMember(Name = nameof(PICO), Description = "Package", IsRequired = true)]
+        [ApiMember(Name = nameof(PICO), Description = "Package", IsRequired = false)]
         public Reference PICO { get; set; }
         [ApiMember(Name = nameof(PICOId), Description = "Primary Key of Package", IsRequired = false)]
         public int? PICOId { get; set; }

@@ -136,6 +136,11 @@ namespace Services.Dto
         public int? StatusId { get; set; }
 
 
+        [ApiMember(Name = nameof(TimeCards), Description = "TimeCard", IsRequired = false)]
+        public List<Reference> TimeCards { get; set; }
+        public int? TimeCardsCount { get; set; }
+
+
     }
 
     [Route("/product", "POST")]
@@ -169,7 +174,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LegacyPackageId),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(OpportunityId),nameof(OpportunityName),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(ProjectId),nameof(ProjectName),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LegacyPackageId),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(OpportunityId),nameof(OpportunityName),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(ProjectId),nameof(ProjectName),nameof(Status),nameof(StatusId),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -192,7 +197,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Children), nameof(ChildrenCount)
+            nameof(Children), nameof(ChildrenCount), nameof(TimeCards), nameof(TimeCardsCount)
         };
         private List<string> collections { get { return _collections; } }
     }
@@ -235,6 +240,7 @@ namespace Services.Dto
         public List<int> StatusIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         public List<string> StatusNames { get; set; }
+        public List<int> TimeCardsIds { get; set; }
     }
     
     public class ProductFullTextSearch
@@ -269,6 +275,7 @@ namespace Services.Dto
         public bool doProjectId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.ProjectId))); }
         public bool doProjectName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.ProjectName))); }
         public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Status))); }
+        public bool doTimeCards { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.TimeCards))); }
     }
 
     [Route("/product/version", "GET, POST")]
@@ -280,6 +287,8 @@ namespace Services.Dto
 
     [Route("/product/{Id}/product", "GET, POST, DELETE")]
     [Route("/profile/product/{Id}/product", "GET, POST, DELETE")]
+    [Route("/product/{Id}/timecard", "GET, POST, DELETE")]
+    [Route("/profile/product/{Id}/timecard", "GET, POST, DELETE")]
     public class ProductJunction : Search<Product>
     {
         public int? Id { get; set; }
@@ -301,6 +310,8 @@ namespace Services.Dto
 
     [Route("/product/{Id}/product/version", "GET")]
     [Route("/profile/product/{Id}/product/version", "GET")]
+    [Route("/product/{Id}/timecard/version", "GET")]
+    [Route("/profile/product/{Id}/timecard/version", "GET")]
     public class ProductJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

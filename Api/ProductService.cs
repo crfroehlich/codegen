@@ -220,6 +220,10 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
                 }
+                        if(true == request.TimeCardsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.TimeCards.Any(r => r.Id.In(request.TimeCardsIds)));
+                        }
 
                 entities = ApplyFilters(request, entities);
 
@@ -366,6 +370,7 @@ namespace Services.API
             var pProjectId = dtoSource.ProjectId;
             var pProjectName = dtoSource.ProjectName;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.FOREIGNKEYSTATUS, dtoSource.Status?.Name, dtoSource.Status?.Id);
+            var pTimeCards = dtoSource.TimeCards?.ToList();
 
             DocEntityProduct entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -613,6 +618,50 @@ namespace Services.API
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Children));
                 }
             }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pTimeCards, permission, DocConstantModelName.PRODUCT, nameof(dtoSource.TimeCards)))
+            {
+                if (true == pTimeCards?.Any() )
+                {
+                    var requestedTimeCards = pTimeCards.Select(p => p.Id).Distinct().ToList();
+                    var existsTimeCards = Execute.SelectAll<DocEntityTimeCard>().Where(e => e.Id.In(requestedTimeCards)).Select( e => e.Id ).ToList();
+                    if (existsTimeCards.Count != requestedTimeCards.Count)
+                    {
+                        var nonExists = requestedTimeCards.Where(id => existsTimeCards.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection TimeCards with objects that do not exist. No matching TimeCards(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedTimeCards.Where(id => entity.TimeCards.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityTimeCard.GetTimeCard(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Product), columnName: nameof(dtoSource.TimeCards)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.TimeCards)} to {nameof(Product)}");
+                        entity.TimeCards.Add(target);
+                    });
+                    var toRemove = entity.TimeCards.Where(e => requestedTimeCards.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityTimeCard.GetTimeCard(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Product), columnName: nameof(dtoSource.TimeCards)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.TimeCards)} from {nameof(Product)}");
+                        entity.TimeCards.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.TimeCards.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityTimeCard.GetTimeCard(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Product), columnName: nameof(dtoSource.TimeCards)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.TimeCards)} from {nameof(Product)}");
+                        entity.TimeCards.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pTimeCards, nameof(dtoSource.TimeCards)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.TimeCards), ignoreSpaces: true))
+                {
+                    dtoSource.VisibleFields.Add(nameof(dtoSource.TimeCards));
+                }
+            }
             DocPermissionFactory.SetVisibleFields<Product>(currentUser, nameof(Product), dtoSource.VisibleFields);
             ret = entity.ToDto();
 
@@ -731,6 +780,7 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pProjectName))
                         pProjectName += " (Copy)";
                     var pStatus = entity.Status;
+                    var pTimeCards = entity.TimeCards.ToList();
                 #region Custom Before copyProduct
                 #endregion Custom Before copyProduct
                 var copy = new DocEntityProduct(ssn)
@@ -758,6 +808,11 @@ namespace Services.API
                             foreach(var item in pChildren)
                             {
                                 entity.Children.Add(item);
+                            }
+
+                            foreach(var item in pTimeCards)
+                            {
+                                entity.TimeCards.Add(item);
                             }
 
                 #region Custom After copyProduct
@@ -930,6 +985,9 @@ namespace Services.API
                 case "product":
                     ret = _GetProductProduct(request, skip, take);
                     break;
+                case "timecard":
+                    ret = _GetProductTimeCard(request, skip, take);
+                    break;
                 }
             });
             return ret;
@@ -961,6 +1019,15 @@ namespace Services.API
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Product and Product");
              return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityProduct,Product>(new List<Product>());
         }
+
+        private object _GetProductTimeCard(ProductJunction request, int skip, int take)
+        {
+             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
+             var en = DocEntityProduct.GetProduct(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PRODUCT, columnName: "TimeCards", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Product and TimeCard");
+             return en?.TimeCards.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTimeCard,TimeCard>(new List<TimeCard>());
+        }
         
         public object Post(ProductJunction request)
         {
@@ -979,11 +1046,35 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
+                case "timecard":
+                    ret = _PostProductTimeCard(request);
+                    break;
                 }
             });
             return ret;
         }
 
+
+        private object _PostProductTimeCard(ProductJunction request)
+        {
+            var entity = DocEntityProduct.GetProduct(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Product found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Product");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityTimeCard.GetTimeCard(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.TIMECARD, columnName: "TimeCards")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the TimeCards property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Product with objects that do not exist. No matching TimeCard could be found for {id}.");
+                entity.TimeCards.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         public object Delete(ProductJunction request)
         {
@@ -1002,11 +1093,33 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
+                case "timecard":
+                    ret = _DeleteProductTimeCard(request);
+                    break;
                 }
             });
             return ret;
         }
 
+
+        private object _DeleteProductTimeCard(ProductJunction request)
+        {
+            var entity = DocEntityProduct.GetProduct(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Product found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Product");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityTimeCard.GetTimeCard(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.TIMECARD, columnName: "TimeCards"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Product and TimeCard");
+                if(null != relationship && false == relationship.IsRemoved) entity.TimeCards.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         private Product GetProduct(Product request)
         {

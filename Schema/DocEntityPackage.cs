@@ -125,6 +125,11 @@ namespace Services.Schema
 
         #region Properties
 
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
+        public bool? Archived { get; set; }
+
+
         [Field()]
         [FieldMapping(nameof(Children))]
         [Association( PairTo = nameof( Package.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
@@ -164,6 +169,15 @@ namespace Services.Schema
         [Field()]
         [FieldMapping(nameof(FqId))]
         public int? FqId { get; set; }
+
+
+        [Field()]
+        [FieldMapping(nameof(LegacyTimeCards))]
+        [Association( PairTo = nameof(TimeCard.PICO), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        public DocEntitySet<DocEntityTimeCard> LegacyTimeCards { get; private set; }
+
+
+        public int? LegacyTimeCardsCount { get { return LegacyTimeCards.Count(); } private set { var noid = value; } }
 
 
         [Field()]
@@ -515,6 +529,7 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityPackage,Package>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, "Updated")))
+                .ForMember(dest => dest.Archived, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.Archived))))
                 .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.Children))))
                 .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.ChildrenCount))))
                 .ForMember(dest => dest.Client, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.Client))))
@@ -525,6 +540,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.DatasetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.DatasetId))))
                 .ForMember(dest => dest.DeliverableDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.DeliverableDeadline))))
                 .ForMember(dest => dest.FqId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.FqId))))
+                .ForMember(dest => dest.LegacyTimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.LegacyTimeCards))))
+                .ForMember(dest => dest.LegacyTimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.LegacyTimeCardsCount))))
                 .ForMember(dest => dest.LibraryPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.LibraryPackageId))))
                 .ForMember(dest => dest.LibraryPackageName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.LibraryPackageName))))
                 .ForMember(dest => dest.Number, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Package>(c, nameof(DocEntityPackage.Number))))

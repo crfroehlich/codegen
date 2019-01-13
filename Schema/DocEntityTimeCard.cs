@@ -141,7 +141,7 @@ namespace Services.Schema
         public DateTime End { get; set; }
 
 
-        [Field(Nullable = false)]
+        [Field()]
         [FieldMapping(nameof(PICO))]
         public DocEntityPackage PICO { get; set; }
         public int? PICOId { get { return PICO?.Id; } private set { var noid = value; } }
@@ -413,11 +413,6 @@ namespace Services.Schema
                 {
                     isValid = false;
                     message += " End is a required property.";
-                }
-                if(null == PICO)
-                {
-                    isValid = false;
-                    message += " PICO is a required property.";
                 }
                 if(null == Start)
                 {

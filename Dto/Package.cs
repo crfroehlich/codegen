@@ -50,6 +50,10 @@ namespace Services.Dto
 
         public PackageBase(int? id) : this(DocConvert.ToInt(id)) {}
     
+        [ApiMember(Name = nameof(Archived), Description = "bool?", IsRequired = false)]
+        public bool? Archived { get; set; }
+
+
         [ApiMember(Name = nameof(Children), Description = "Package", IsRequired = false)]
         public List<Reference> Children { get; set; }
         public int? ChildrenCount { get; set; }
@@ -81,6 +85,11 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(FqId), Description = "int?", IsRequired = false)]
         public int? FqId { get; set; }
+
+
+        [ApiMember(Name = nameof(LegacyTimeCards), Description = "TimeCard", IsRequired = false)]
+        public List<Reference> LegacyTimeCards { get; set; }
+        public int? LegacyTimeCardsCount { get; set; }
 
 
         [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
@@ -161,7 +170,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(Opportunity),nameof(OpportunityId),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(Project),nameof(ProjectId),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Archived),nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LegacyTimeCards),nameof(LegacyTimeCardsCount),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(Opportunity),nameof(OpportunityId),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(Project),nameof(ProjectId),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -184,7 +193,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Children), nameof(ChildrenCount)
+            nameof(Children), nameof(ChildrenCount), nameof(LegacyTimeCards), nameof(LegacyTimeCardsCount)
         };
         private List<string> collections { get { return _collections; } }
     }
@@ -198,6 +207,7 @@ namespace Services.Dto
     [Route("/profile/package/search", "GET, POST, DELETE")]
     public partial class PackageSearch : Search<Package>
     {
+        public bool? Archived { get; set; }
         public List<int> ChildrenIds { get; set; }
         public Reference Client { get; set; }
         public List<int> ClientIds { get; set; }
@@ -211,6 +221,7 @@ namespace Services.Dto
         public DateTime? DeliverableDeadlineAfter { get; set; }
         public DateTime? DeliverableDeadlineBefore { get; set; }
         public int? FqId { get; set; }
+        public List<int> LegacyTimeCardsIds { get; set; }
         public int? LibraryPackageId { get; set; }
         public string LibraryPackageName { get; set; }
         public string Number { get; set; }
@@ -241,6 +252,7 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.Updated))); }
         
+        public bool doArchived { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.Archived))); }
         public bool doChildren { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.Children))); }
         public bool doClient { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.Client))); }
         public bool doDatabaseDeadline { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.DatabaseDeadline))); }
@@ -248,6 +260,7 @@ namespace Services.Dto
         public bool doDataset { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.Dataset))); }
         public bool doDeliverableDeadline { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.DeliverableDeadline))); }
         public bool doFqId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.FqId))); }
+        public bool doLegacyTimeCards { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.LegacyTimeCards))); }
         public bool doLibraryPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.LibraryPackageId))); }
         public bool doLibraryPackageName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.LibraryPackageName))); }
         public bool doNumber { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.Number))); }
@@ -268,6 +281,8 @@ namespace Services.Dto
 
     [Route("/package/{Id}/package", "GET, POST, DELETE")]
     [Route("/profile/package/{Id}/package", "GET, POST, DELETE")]
+    [Route("/package/{Id}/timecard", "GET, POST, DELETE")]
+    [Route("/profile/package/{Id}/timecard", "GET, POST, DELETE")]
     public class PackageJunction : Search<Package>
     {
         public int? Id { get; set; }
@@ -289,6 +304,8 @@ namespace Services.Dto
 
     [Route("/package/{Id}/package/version", "GET")]
     [Route("/profile/package/{Id}/package/version", "GET")]
+    [Route("/package/{Id}/timecard/version", "GET")]
+    [Route("/profile/package/{Id}/timecard/version", "GET")]
     public class PackageJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

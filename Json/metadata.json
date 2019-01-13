@@ -5659,6 +5659,33 @@
         "Target": "LookupTableBinding",
         "Type": "relationships"
       },
+      "Packages": {
+        "Association": {
+          "OnOwnerRemove": "Clear",
+          "OnTargetRemove": "Clear",
+          "PairTo": "Package.Dataset"
+        },
+        "Description": "Legacy DOC Data Packages",
+        "DisplayName": "Legacy DOC Data Packages",
+        "IsAllowAddInForm": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowEditInForm": false,
+        "IsAllowRemoveInForm": false,
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "Packages",
+        "Order": 45,
+        "SetDefaultValue": "",
+        "Tab": "PICO Ids",
+        "TabOrder": 34,
+        "Target": "Package",
+        "Type": "relationships",
+        "UIType": ""
+      },
       "ProjectLinks": {
         "Description": "A list of projects for this document set",
         "DisplayName": "Project Links",
@@ -6563,45 +6590,6 @@
         "Name": "OwnerId",
         "Order": 4,
         "Tab": "DocumentSet",
-        "Type": "int?"
-      },
-      "Packages": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Package.Dataset"
-        },
-        "Description": "All the PICO Ids on this data set",
-        "DisplayName": "PICO Ids",
-        "IsAllowAddInForm": false,
-        "IsAllowCreateInForm": false,
-        "IsAllowEditInForm": false,
-        "IsAllowRemoveInForm": false,
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "Name": "Packages",
-        "Order": 45,
-        "SetDefaultValue": "",
-        "Tab": "PICO Ids",
-        "TabOrder": 34,
-        "Target": "Package",
-        "Type": "relationships",
-        "UIType": ""
-      },
-      "PackagesCount": {
-        "DisplayName": "PICO Ids Count",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "IsRelationshipCount": true,
-        "Name": "PackagesCount",
-        "Order": 46,
-        "Tab": "PICO Ids",
         "Type": "int?"
       },
       "Participants": {
@@ -12527,6 +12515,24 @@
     },
     "Model": {},
     "Properties": {
+      "Archived": {
+        "DefaultValue": "false",
+        "Description": "If true, this package set will not appear by default",
+        "DisplayName": "Archived",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "Archived",
+        "Order": 120,
+        "SetDefaultValue": "",
+        "Tab": "Package",
+        "TabOrder": 0,
+        "Type": "bool?",
+        "UIType": ""
+      },
       "Children": {
         "Association": {
           "OnOwnerRemove": "Cascade",
@@ -12750,6 +12756,45 @@
         "Order": -9,
         "Tab": "Package",
         "Type": "int"
+      },
+      "LegacyTimeCards": {
+        "Association": {
+          "OnOwnerRemove": "Clear",
+          "OnTargetRemove": "Clear",
+          "PairTo": "TimeCard.PICO"
+        },
+        "Description": "Legacy Package Time Cards",
+        "DisplayName": "Legacy Package Time Cards",
+        "IsAllowAddInForm": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowEditInForm": false,
+        "IsAllowRemoveInForm": false,
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "LegacyTimeCards",
+        "Order": 111,
+        "SetDefaultValue": "",
+        "Tab": "Legacy Time Cards",
+        "TabOrder": 30,
+        "Target": "TimeCard",
+        "Type": "relationships",
+        "UIType": ""
+      },
+      "LegacyTimeCardsCount": {
+        "DisplayName": "Legacy Package Time Cards Count",
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "IsRelationshipCount": true,
+        "Name": "LegacyTimeCardsCount",
+        "Order": 112,
+        "Tab": "Legacy Time Cards",
+        "Type": "int?"
       },
       "LibraryPackageId": {
         "Description": "LMS (Legacy Library) Package Id",
@@ -13896,6 +13941,45 @@
         "Name": "StatusId",
         "Order": 71,
         "Tab": "Product",
+        "Type": "int?"
+      },
+      "TimeCards": {
+        "Association": {
+          "OnOwnerRemove": "Clear",
+          "OnTargetRemove": "Clear",
+          "PairTo": "TimeCard.Product"
+        },
+        "Description": "Time Cards associated with this Product",
+        "DisplayName": "Time Cards",
+        "IsAllowAddInForm": true,
+        "IsAllowCreateInForm": true,
+        "IsAllowEditInForm": true,
+        "IsAllowRemoveInForm": true,
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "TimeCards",
+        "Order": 111,
+        "SetDefaultValue": "",
+        "Tab": "Time Cards",
+        "TabOrder": 30,
+        "Target": "TimeCard",
+        "Type": "relationships",
+        "UIType": ""
+      },
+      "TimeCardsCount": {
+        "DisplayName": "Time Cards Count",
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "IsRelationshipCount": true,
+        "Name": "TimeCardsCount",
+        "Order": 112,
+        "Tab": "Time Cards",
         "Type": "int?"
       },
       "Updated": {
@@ -17863,9 +17947,10 @@
         "IsAudited": true,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": true,
+        "IsInsertOnly": true,
         "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
         "IsUniqueConstraint": true,
         "Name": "PICO",
         "Order": 40,
@@ -17888,8 +17973,8 @@
       },
       "Product": {
         "AutoCreateMissing": false,
-        "Description": "PICO Id",
-        "DisplayName": "PICO",
+        "Description": "Salesforce Project",
+        "DisplayName": "Project",
         "IsAudited": true,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": true,
@@ -17906,7 +17991,7 @@
         "UIType": ""
       },
       "ProductId": {
-        "DisplayName": "PICO Id",
+        "DisplayName": "Project Id",
         "IsDisplayInForm": false,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,

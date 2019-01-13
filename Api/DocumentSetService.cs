@@ -234,10 +234,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Owner.Id.In(request.OwnerIds));
                 }
-                        if(true == request.PackagesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Packages.Any(r => r.Id.In(request.PackagesIds)));
-                        }
                 if(!DocTools.IsNullOrEmpty(request.Participants))
                     entities = entities.Where(en => en.Participants.Contains(request.Participants));
                 if(!DocTools.IsNullOrEmpty(request.PRISMA))
@@ -466,7 +462,6 @@ namespace Services.API
             var pOriginalSearch = dtoSource.OriginalSearch;
             var pOutcomes = dtoSource.Outcomes?.ToList();
             var pOwner = (dtoSource.Owner?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(dtoSource.Owner.Id) : null;
-            var pPackages = dtoSource.Packages?.ToList();
             var pParticipants = dtoSource.Participants;
             var pPRISMA = dtoSource.PRISMA;
             var pProducts = dtoSource.Products?.ToList();
@@ -1324,50 +1319,6 @@ namespace Services.API
                     dtoSource.VisibleFields.Add(nameof(dtoSource.Outcomes));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pPackages, permission, DocConstantModelName.DOCUMENTSET, nameof(dtoSource.Packages)))
-            {
-                if (true == pPackages?.Any() )
-                {
-                    var requestedPackages = pPackages.Select(p => p.Id).Distinct().ToList();
-                    var existsPackages = Execute.SelectAll<DocEntityPackage>().Where(e => e.Id.In(requestedPackages)).Select( e => e.Id ).ToList();
-                    if (existsPackages.Count != requestedPackages.Count)
-                    {
-                        var nonExists = requestedPackages.Where(id => existsPackages.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Packages with objects that do not exist. No matching Packages(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedPackages.Where(id => entity.Packages.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityPackage.GetPackage(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(dtoSource.Packages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Packages)} to {nameof(DocumentSet)}");
-                        entity.Packages.Add(target);
-                    });
-                    var toRemove = entity.Packages.Where(e => requestedPackages.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityPackage.GetPackage(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(dtoSource.Packages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Packages)} from {nameof(DocumentSet)}");
-                        entity.Packages.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Packages.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityPackage.GetPackage(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(dtoSource.Packages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Packages)} from {nameof(DocumentSet)}");
-                        entity.Packages.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pPackages, nameof(dtoSource.Packages)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Packages), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Packages));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pProducts, permission, DocConstantModelName.DOCUMENTSET, nameof(dtoSource.Products)))
             {
                 if (true == pProducts?.Any() )
@@ -1706,7 +1657,6 @@ namespace Services.API
                     var pOriginalSearch = entity.OriginalSearch;
                     var pOutcomes = entity.Outcomes.ToList();
                     var pOwner = entity.Owner;
-                    var pPackages = entity.Packages.ToList();
                     var pParticipants = entity.Participants;
                     var pPRISMA = entity.PRISMA;
                     if(!DocTools.IsNullOrEmpty(pPRISMA))
@@ -1823,11 +1773,6 @@ namespace Services.API
                             foreach(var item in pOutcomes)
                             {
                                 entity.Outcomes.Add(item);
-                            }
-
-                            foreach(var item in pPackages)
-                            {
-                                entity.Packages.Add(item);
                             }
 
                             foreach(var item in pProducts)

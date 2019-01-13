@@ -228,6 +228,15 @@ namespace Services.Schema
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 
 
+        [Field()]
+        [FieldMapping(nameof(TimeCards))]
+        [Association( PairTo = nameof(TimeCard.Product), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        public DocEntitySet<DocEntityTimeCard> TimeCards { get; private set; }
+
+
+        public int? TimeCardsCount { get { return TimeCards.Count(); } private set { var noid = value; } }
+
+
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
         [FieldMapping(DocEntityConstants.PropertyName.GESTALT)]
@@ -556,6 +565,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.ProjectName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.ProjectName))))
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.Status))))
                 .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.StatusId))))
+                .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.TimeCards))))
+                .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.TimeCardsCount))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Product,DocEntityProduct>()
                 .MaxDepth(2);

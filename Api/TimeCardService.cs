@@ -406,6 +406,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPackage>(currentUser, dtoSource, pPICO, permission, DocConstantModelName.TIMECARD, nameof(dtoSource.PICO)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pPICO, entity.PICO, nameof(dtoSource.PICO)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.PICO)} cannot be modified once set.");
                     entity.PICO = pPICO;
                 if(DocPermissionFactory.IsRequested<DocEntityPackage>(dtoSource, pPICO, nameof(dtoSource.PICO)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.PICO), ignoreSpaces: true))
                 {
