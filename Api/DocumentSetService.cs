@@ -553,6 +553,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pFqId, permission, DocConstantModelName.DOCUMENTSET, nameof(dtoSource.FqId)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pFqId, entity.FqId, nameof(dtoSource.FqId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.FqId)} cannot be modified once set.");
                     entity.FqId = pFqId;
                 if(DocPermissionFactory.IsRequested<int?>(dtoSource, pFqId, nameof(dtoSource.FqId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.FqId), ignoreSpaces: true))
                 {
@@ -562,6 +563,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, dtoSource, pFramedQuestionId, permission, DocConstantModelName.DOCUMENTSET, nameof(dtoSource.FramedQuestionId)))
             {
                 if(DocPermissionFactory.IsRequested(dtoSource, pFramedQuestionId, entity.FramedQuestionId, nameof(dtoSource.FramedQuestionId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.FramedQuestionId)} cannot be modified once set.");
                     entity.FramedQuestionId = pFramedQuestionId;
                 if(DocPermissionFactory.IsRequested<int?>(dtoSource, pFramedQuestionId, nameof(dtoSource.FramedQuestionId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.FramedQuestionId), ignoreSpaces: true))
                 {
