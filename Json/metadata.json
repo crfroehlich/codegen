@@ -2907,65 +2907,21 @@
   },
   "Characteristic": {
     "Attributes": {
-      "AllowDelete": false,
-      "Enum": "DocConstantAttributeName",
-      "IsInModel": false,
       "Name": "Characteristic",
       "TypeId": 14475
     },
-    "Domain": {
-      "Interfaces": ""
-    },
+    "Domain": {},
     "Dto": {
-      "AllVisibleFieldsByDefault": true,
       "DELETE": true,
-      "DontFlattenProperties": "Characteristic",
-      "DtoSuffix": "Dto",
       "GET": true,
-      "IgnoreProps": "",
       "ImplementService": true,
       "Interfaces": "",
       "PATCH": true,
       "POST": true,
       "PUT": true
     },
-    "Model": {
-      "Interfaces": ""
-    },
+    "Model": {},
     "Properties": {
-      "Characteristic": {
-        "Description": "Characteristic",
-        "DisplayName": "Characteristic",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
-        "IsEditColumn": false,
-        "IsIndexed": true,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUnique": true,
-        "IsUniqueConstraint": true,
-        "LookupTableEnum": "AttributeName",
-        "Name": "Characteristic",
-        "Order": 0,
-        "SetDefaultValue": "",
-        "Tab": "Characteristic",
-        "TabOrder": 0,
-        "Type": "LookupTable",
-        "UIType": ""
-      },
-      "CharacteristicId": {
-        "DisplayName": "Characteristic Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "CharacteristicId",
-        "Order": 1,
-        "Tab": "Characteristic",
-        "Type": "int?"
-      },
       "Created": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -3030,6 +2986,27 @@
         "Tab": "History",
         "Type": "bool"
       },
+      "Name": {
+        "Description": "Characteristic Name",
+        "DisplayName": "Name",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsEditColumn": true,
+        "IsIndexed": true,
+        "IsInsertOnly": true,
+        "IsNullOnUpgrade": true,
+        "IsRequired": true,
+        "IsRequiredInForm": true,
+        "IsUniqueConstraint": true,
+        "Name": "Name",
+        "Order": 0,
+        "SetDefaultValue": "",
+        "Tab": "Characteristic",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
       "Updated": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -3039,6 +3016,23 @@
         "Order": -2,
         "Tab": "History",
         "Type": "DateTime?"
+      },
+      "URI": {
+        "Description": "An optional URI to map with DOC Search",
+        "DisplayName": "URI",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "URI",
+        "Order": 10,
+        "SetDefaultValue": "",
+        "Tab": "Characteristic",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
       },
       "VersionNo": {
         "IsDisplayInForm": false,
@@ -3194,7 +3188,7 @@
           "OnTargetRemove": "Clear",
           "PairTo": "Division.Client"
         },
-        "Description": "Description of Divisions",
+        "Description": "All departments/divisions of this client",
         "DisplayName": "Divisions",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -3224,7 +3218,7 @@
         "Type": "int?"
       },
       "DocumentSets": {
-        "Description": "All Document Sets assigned to this client",
+        "Description": "All Document Sets assigned to this client which will be shared to all users of this client",
         "DisplayName": "DocumentSets",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -3298,7 +3292,7 @@
         "Type": "bool"
       },
       "Name": {
-        "Description": "Description of Name",
+        "Description": "Unique name of the Client",
         "DisplayName": "Name",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -3323,8 +3317,8 @@
           "OnTargetRemove": "Clear",
           "PairTo": "Product.Client"
         },
-        "Description": "All Products assigned to this client",
-        "DisplayName": "Products",
+        "Description": "All Salesforce Products assigned to this client",
+        "DisplayName": "Salesforce Products",
         "IsAllowAddInForm": false,
         "IsAllowCreateInForm": false,
         "IsAllowEditInForm": false,
@@ -3345,7 +3339,7 @@
         "UIType": ""
       },
       "ProductsCount": {
-        "DisplayName": "Products Count",
+        "DisplayName": "Salesforce Products Count",
         "IsDisplayInForm": false,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -3358,7 +3352,7 @@
       },
       "Role": {
         "AutoCreateMissing": false,
-        "Description": "Description of Role",
+        "Description": "Default role to apply to all new divisions of this client",
         "DisplayName": "Role",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -3388,7 +3382,7 @@
       },
       "SalesforceAccountId": {
         "AutoCreateMissing": false,
-        "Description": "(Optional Saleforce account Id to associate with this client",
+        "Description": "(Optional) Saleforce account Id to associate with this client",
         "DisplayName": "Salesforce Account Id",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -3432,7 +3426,7 @@
           "OnTargetRemove": "Clear",
           "PairTo": "Scope.Client"
         },
-        "Description": "Scopes whom this is shared",
+        "Description": "All scopes which include this client as a target",
         "DisplayName": "Scopes",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -3462,7 +3456,7 @@
         "Type": "int?"
       },
       "Settings": {
-        "Description": "Description of Settings",
+        "Description": "Default settings to apply to all new divisions",
         "DisplayName": "Settings",
         "IsAudited": false,
         "IsDisplayInForm": true,
@@ -3499,6 +3493,146 @@
         "Name": "VersionNo",
         "Order": 9999999,
         "Tab": "Client",
+        "Type": "int"
+      }
+    }
+  },
+  "Comparator": {
+    "Attributes": {
+      "Name": "Comparator",
+      "TypeId": 20035
+    },
+    "Domain": {},
+    "Dto": {
+      "DELETE": true,
+      "GET": true,
+      "ImplementService": true,
+      "Interfaces": "",
+      "PATCH": true,
+      "POST": true,
+      "PUT": true
+    },
+    "Model": {},
+    "Properties": {
+      "Created": {
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Created",
+        "Order": -1,
+        "Tab": "History",
+        "Type": "DateTime?"
+      },
+      "CreatorId": {
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "CreatorId",
+        "Order": -4,
+        "Tab": "History",
+        "Type": "bool"
+      },
+      "Gestalt": {
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Gestalt",
+        "Order": -10,
+        "Tab": "Comparator",
+        "Type": "string"
+      },
+      "History": {
+        "IsAllowAddInForm": false,
+        "IsAllowCreateInForm ": false,
+        "IsAllowRemoveInForm ": false,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "History",
+        "Order": 99999999,
+        "Tab": "History",
+        "Target": "AuditRecord",
+        "Type": "relationships"
+      },
+      "Id": {
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Id",
+        "Order": -9,
+        "Tab": "Comparator",
+        "Type": "int"
+      },
+      "Locked": {
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Locked",
+        "Order": -3,
+        "Tab": "History",
+        "Type": "bool"
+      },
+      "Name": {
+        "Description": "Comparator Name",
+        "DisplayName": "Name",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsEditColumn": true,
+        "IsIndexed": true,
+        "IsInsertOnly": true,
+        "IsRequired": true,
+        "IsRequiredInForm": true,
+        "IsUniqueConstraint": true,
+        "Name": "Name",
+        "Order": 0,
+        "SetDefaultValue": "",
+        "Tab": "Comparator",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
+      "Updated": {
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "Updated",
+        "Order": -2,
+        "Tab": "History",
+        "Type": "DateTime?"
+      },
+      "URI": {
+        "Description": "An optional URI to map with DOC Search",
+        "DisplayName": "URI",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "URI",
+        "Order": 10,
+        "SetDefaultValue": "",
+        "Tab": "Comparator",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
+      "VersionNo": {
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "VersionNo",
+        "Order": 9999999,
+        "Tab": "Comparator",
         "Type": "int"
       }
     }
@@ -3541,6 +3675,25 @@
         "Tab": "History",
         "Type": "bool"
       },
+      "DatabaseState": {
+        "Description": "A simple list of the last Id for each entity type in the database",
+        "DisplayName": "Database State",
+        "IsAudited": false,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsJSON": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Length": "int.MaxValue",
+        "Name": "DatabaseState",
+        "Order": 30,
+        "SetDefaultValue": "",
+        "Tab": "Database State",
+        "TabOrder": 10,
+        "Type": "string"
+      },
       "Description": {
         "Description": "Summary of changes in this version",
         "DisplayName": "Description",
@@ -3553,7 +3706,7 @@
         "IsUnique": false,
         "IsUniqueConstraint": false,
         "Name": "Description",
-        "Order": 0,
+        "Order": 10,
         "SetDefaultValue": "",
         "Tab": "Database Version",
         "TabOrder": 0,
@@ -3616,7 +3769,7 @@
         "IsUnique": true,
         "IsUniqueConstraint": false,
         "Name": "Release",
-        "Order": 0,
+        "Order": 20,
         "SetDefaultValue": "",
         "Tab": "Database Version",
         "TabOrder": 0,
@@ -3639,6 +3792,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": true,
+        "IsEditColumn": true,
         "IsInsertOnly": true,
         "IsRequired": true,
         "IsRequiredInForm": true,
@@ -5880,8 +6034,7 @@
         "SetDefaultValue": "",
         "Tab": "Comparators",
         "TabOrder": 20,
-        "Target": "Intervention",
-        "TargetAlias": "Comparator",
+        "Target": "Comparator",
         "Type": "relationships",
         "UIType": ""
       },
@@ -6126,7 +6279,7 @@
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "FramedQuestionId",
-        "Order": 5,
+        "Order": 6,
         "SetDefaultValue": "",
         "Tab": "Protocol",
         "TabOrder": 0,
@@ -7222,12 +7375,12 @@
     "Domain": {},
     "Dto": {
       "AllVisibleFieldsByDefault": false,
-      "DELETE": true,
+      "DELETE": false,
       "GET": true,
       "ImplementService": true,
-      "PATCH": true,
-      "POST": true,
-      "PUT": true
+      "PATCH": false,
+      "POST": false,
+      "PUT": false
     },
     "Model": {},
     "Properties": {
@@ -7351,7 +7504,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": true,
-        "IsInsertOnly": false,
+        "IsInsertOnly": true,
         "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
@@ -7385,10 +7538,12 @@
       "Teams": {
         "Description": "Teams affected",
         "DisplayName": "Teams",
+        "IsAllowAddInForm": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
         "IsRequiredInForm": true,
         "IsUniqueConstraint": false,
         "Name": "Teams",
@@ -7426,10 +7581,12 @@
         "AutoCreateMissing": false,
         "Description": "Updates of which this event is a member",
         "DisplayName": "Updates",
+        "IsAllowAddInForm": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsAudited": false,
         "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
-        "IsInsertOnly": true,
+        "IsDisplayInGrid": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Updates",
@@ -7456,11 +7613,13 @@
       "Users": {
         "Description": "Users affected",
         "DisplayName": "Users",
+        "IsAllowAddInForm": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsRequiredInForm": true,
+        "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Users",
         "Order": 20,
@@ -7550,25 +7709,6 @@
         "Type": "string",
         "UIType": ""
       },
-      "Feature": {
-        "Description": "The feature name enum. This cannot be changed.",
-        "DisplayName": "Feature Enum",
-        "IsAudited": true,
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsRequired": true,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "LookupTableEnum": "Feature",
-        "Name": "Feature",
-        "Order": -10,
-        "SetDefaultValue": "",
-        "Tab": "FeatureSet",
-        "TabOrder": 0,
-        "Type": "string",
-        "UIType": ""
-      },
       "Gestalt": {
         "IsDisplayInForm": false,
         "IsDisplayInGrid": false,
@@ -7614,21 +7754,41 @@
         "Type": "bool"
       },
       "Name": {
-        "Description": "Display name of Feature",
+        "Description": "The feature name enum. This cannot be changed.",
         "DisplayName": "Name",
         "IsAudited": true,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": true,
-        "IsRequired": false,
+        "IsEditColumn": true,
+        "IsInsertOnly": true,
+        "IsRequired": true,
         "IsRequiredInForm": true,
-        "IsUniqueConstraint": false,
+        "IsUniqueConstraint": true,
         "Name": "Name",
         "Order": 0,
         "SetDefaultValue": "",
-        "Tab": "FeatureSet",
+        "Tab": "Feature",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
+      },
+      "PermissionTemplate": {
+        "Description": "Permissions template to be used when assigning this feature to a Role",
+        "DisplayName": "Permission Template",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsJSON": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Length": "int.MaxValue",
+        "Name": "PermissionTemplate",
+        "Order": 998,
+        "SetDefaultValue": "",
+        "Tab": "Permission Template",
+        "TabOrder": 0,
+        "Type": "string"
       },
       "Roles": {
         "Description": "Description of Roles",
@@ -9232,6 +9392,37 @@
         "Type": "bool",
         "UIType": ""
       },
+      "ImportType": {
+        "Description": "Description of ImportType",
+        "DisplayName": "ImportType",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsRelationship": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "LookupTableEnum": "StudyImportType",
+        "ModelType": "LookupTable",
+        "Name": "ImportType",
+        "Order": 111,
+        "SetDefaultValue": "Extract",
+        "Tab": "ImportData",
+        "TabOrder": 0,
+        "Type": "LookupTable",
+        "UIType": ""
+      },
+      "ImportTypeId": {
+        "DisplayName": "ImportType Id",
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "ImportTypeId",
+        "Order": 112,
+        "Tab": "ImportData",
+        "Type": "int?"
+      },
       "IsLegacy": {
         "DefaultValue": "false",
         "Description": "Description of IsLegacy",
@@ -9662,30 +9853,20 @@
   },
   "Intervention": {
     "Attributes": {
-      "Enum": "DocConstantIntervention",
-      "IsInModel": false,
       "Name": "Intervention",
       "TypeId": 13420
     },
-    "Domain": {
-      "Interfaces": ""
-    },
+    "Domain": {},
     "Dto": {
-      "AllVisibleFieldsByDefault": true,
       "DELETE": true,
-      "DontFlattenProperties": "Intervention",
-      "DtoSuffix": "Dto",
       "GET": true,
-      "IgnoreProps": "",
       "ImplementService": true,
       "Interfaces": "",
       "PATCH": true,
       "POST": true,
       "PUT": true
     },
-    "Model": {
-      "Interfaces": ""
-    },
+    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -9741,39 +9922,6 @@
         "Tab": "Intervention",
         "Type": "int"
       },
-      "Intervention": {
-        "Description": "Description of Intervention",
-        "DisplayName": "Intervention",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
-        "IsEditColumn": false,
-        "IsIndexed": true,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUnique": true,
-        "IsUniqueConstraint": true,
-        "LookupTableEnum": "Intervention",
-        "Name": "Intervention",
-        "Order": 0,
-        "SetDefaultValue": "",
-        "Tab": "Intervention",
-        "TabOrder": 0,
-        "Type": "LookupTable",
-        "UIType": ""
-      },
-      "InterventionId": {
-        "DisplayName": "Intervention Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "InterventionId",
-        "Order": 1,
-        "Tab": "Intervention",
-        "Type": "int?"
-      },
       "Locked": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -9784,6 +9932,27 @@
         "Tab": "History",
         "Type": "bool"
       },
+      "Name": {
+        "Description": "Intervention Name",
+        "DisplayName": "Name",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsEditColumn": true,
+        "IsIndexed": true,
+        "IsInsertOnly": true,
+        "IsNullOnUpgrade": true,
+        "IsRequired": true,
+        "IsRequiredInForm": true,
+        "IsUniqueConstraint": true,
+        "Name": "Name",
+        "Order": 0,
+        "SetDefaultValue": "",
+        "Tab": "Intervention",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
       "Updated": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -9793,6 +9962,23 @@
         "Order": -2,
         "Tab": "History",
         "Type": "DateTime?"
+      },
+      "URI": {
+        "Description": "An optional URI to map with DOC Search",
+        "DisplayName": "URI",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "URI",
+        "Order": 10,
+        "SetDefaultValue": "",
+        "Tab": "Intervention",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
       },
       "VersionNo": {
         "IsDisplayInForm": false,
@@ -12355,30 +12541,20 @@
   },
   "Outcome": {
     "Attributes": {
-      "Enum": "DocConstantAttributeName",
-      "IsInModel": false,
       "Name": "Outcome",
       "TypeId": 13662
     },
-    "Domain": {
-      "Interfaces": ""
-    },
+    "Domain": {},
     "Dto": {
-      "AllVisibleFieldsByDefault": true,
       "DELETE": true,
-      "DontFlattenProperties": "Outcome",
-      "DtoSuffix": "Dto",
       "GET": true,
-      "IgnoreProps": "",
       "ImplementService": true,
       "Interfaces": "",
       "PATCH": true,
       "POST": true,
       "PUT": true
     },
-    "Model": {
-      "Interfaces": ""
-    },
+    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12444,38 +12620,26 @@
         "Tab": "History",
         "Type": "bool"
       },
-      "Outcome": {
-        "Description": "Description of Outcome",
-        "DisplayName": "Outcome",
+      "Name": {
+        "Description": "Outcome Name",
+        "DisplayName": "Name",
         "IsAudited": true,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": true,
-        "IsEditColumn": false,
+        "IsEditColumn": true,
         "IsIndexed": true,
-        "IsRelationship": true,
+        "IsInsertOnly": true,
+        "IsNullOnUpgrade": true,
         "IsRequired": true,
         "IsRequiredInForm": true,
-        "IsUnique": true,
         "IsUniqueConstraint": true,
-        "LookupTableEnum": "AttributeName",
-        "Name": "Outcome",
+        "Name": "Name",
         "Order": 0,
         "SetDefaultValue": "",
         "Tab": "Outcome",
         "TabOrder": 0,
-        "Type": "LookupTable",
+        "Type": "string",
         "UIType": ""
-      },
-      "OutcomeId": {
-        "DisplayName": "Outcome Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "OutcomeId",
-        "Order": 1,
-        "Tab": "Outcome",
-        "Type": "int?"
       },
       "Updated": {
         "IsDisplayInForm": true,
@@ -12486,6 +12650,23 @@
         "Order": -2,
         "Tab": "History",
         "Type": "DateTime?"
+      },
+      "URI": {
+        "Description": "An optional URI to map with DOC Search",
+        "DisplayName": "URI",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "URI",
+        "Order": 10,
+        "SetDefaultValue": "",
+        "Tab": "Outcome",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
       },
       "VersionNo": {
         "IsDisplayInForm": false,
@@ -13433,7 +13614,7 @@
     "Attributes": {
       "IsCached": true,
       "Name": "Product",
-      "TypeId": 20035
+      "TypeId": 20135
     },
     "Domain": {},
     "Dto": {
@@ -14437,6 +14618,36 @@
     "Extension": {},
     "Model": {},
     "Properties": {
+      "AdminTeam": {
+        "AutoCreateMissing": false,
+        "Description": "(Optional) Team that receives notifications for changes to this role",
+        "DisplayName": "Admin Team",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsRelationship": true,
+        "IsRequired": false,
+        "IsRequiredInForm": true,
+        "IsUniqueConstraint": false,
+        "Name": "AdminTeam",
+        "Order": 20,
+        "SetDefaultValue": "",
+        "Tab": "Role",
+        "TabOrder": 1,
+        "Type": "Team",
+        "UIType": ""
+      },
+      "AdminTeamId": {
+        "DisplayName": "Admin Team Id",
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "AdminTeamId",
+        "Order": 21,
+        "Tab": "Role",
+        "Type": "int?"
+      },
       "Apps": {
         "Description": "All apps assigned to this role.",
         "DisplayName": "Apps",
@@ -14447,7 +14658,7 @@
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Apps",
-        "Order": 39,
+        "Order": 50,
         "SetDefaultValue": "",
         "Tab": "Apps",
         "TabOrder": 20,
@@ -14463,7 +14674,7 @@
         "IsReadOnly": true,
         "IsRelationshipCount": true,
         "Name": "AppsCount",
-        "Order": 40,
+        "Order": 51,
         "Tab": "Apps",
         "Type": "int?"
       },
@@ -14493,33 +14704,35 @@
         "IsAudited": true,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Description",
-        "Order": 20,
+        "Order": 10,
         "SetDefaultValue": "",
         "Tab": "Role",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
       },
-      "Email": {
-        "Description": "An email address for this role (usually a distribution group)",
-        "DisplayName": "Email",
+      "Features": {
+        "Description": "Feature configuration for this Role",
+        "DisplayName": "Features",
         "IsAudited": true,
         "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
+        "IsDisplayInGrid": false,
+        "IsJSON": true,
         "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
-        "Name": "Email",
-        "Order": 21,
+        "Length": "int.MaxValue",
+        "Name": "Features",
+        "Order": 999,
         "SetDefaultValue": "",
-        "Tab": "Role",
-        "TabOrder": 0,
+        "Tab": "Features",
+        "TabOrder": 60,
         "Type": "string",
-        "UIType": "email"
+        "UIType": ""
       },
       "FeatureSets": {
         "Association": {
@@ -14536,7 +14749,7 @@
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "FeatureSets",
-        "Order": 30,
+        "Order": 40,
         "SetDefaultValue": "",
         "Tab": "FeatureSets",
         "TabOrder": 10,
@@ -14552,7 +14765,7 @@
         "IsReadOnly": true,
         "IsRelationshipCount": true,
         "Name": "FeatureSetsCount",
-        "Order": 31,
+        "Order": 41,
         "Tab": "FeatureSets",
         "Type": "int?"
       },
@@ -14622,7 +14835,7 @@
         "IsRequiredInForm": true,
         "IsUniqueConstraint": false,
         "Name": "IsSuperAdmin",
-        "Order": 40,
+        "Order": 60,
         "SetDefaultValue": false,
         "Tab": "Role",
         "TabOrder": 0,
@@ -14669,7 +14882,7 @@
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Pages",
-        "Order": 40,
+        "Order": 70,
         "SetDefaultValue": "",
         "Tab": "Pages",
         "TabOrder": 30,
@@ -14685,7 +14898,7 @@
         "IsReadOnly": true,
         "IsRelationshipCount": true,
         "Name": "PagesCount",
-        "Order": 41,
+        "Order": 71,
         "Tab": "Pages",
         "Type": "int?"
       },
@@ -14705,26 +14918,9 @@
         "Order": 998,
         "SetDefaultValue": "",
         "Tab": "Permissions",
-        "TabOrder": 0,
+        "TabOrder": 50,
         "Type": "string",
         "UIType": "permissions"
-      },
-      "Slack": {
-        "Description": "(Optional) a Slack handle to associate with this role (usually a channel).",
-        "DisplayName": "Slack",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "Name": "Slack",
-        "Order": 21,
-        "SetDefaultValue": "",
-        "Tab": "Role",
-        "TabOrder": 0,
-        "Type": "string",
-        "UIType": "email"
       },
       "Updated": {
         "IsDisplayInForm": true,
@@ -14751,7 +14947,7 @@
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Users",
-        "Order": 50,
+        "Order": 80,
         "SetDefaultValue": "",
         "Tab": "Users",
         "TabOrder": 40,
@@ -14767,7 +14963,7 @@
         "IsReadOnly": true,
         "IsRelationshipCount": true,
         "Name": "UsersCount",
-        "Order": 51,
+        "Order": 81,
         "Tab": "Users",
         "Type": "int?"
       },
@@ -16682,6 +16878,41 @@
       "Interfaces": ""
     },
     "Properties": {
+      "AdminRoles": {
+        "Association": {
+          "OnOwnerRemove": "Cascade",
+          "OnTargetRemove": "Clear",
+          "PairTo": "Role.AdminTeam"
+        },
+        "Description": "Roles to which this team is assigned as an admin",
+        "DisplayName": "Admin Roles",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "AdminRoles",
+        "Order": 70,
+        "SetDefaultValue": "",
+        "Tab": "Admin Roles",
+        "TabOrder": 40,
+        "Target": "Role",
+        "Type": "relationships",
+        "UIType": ""
+      },
+      "AdminRolesCount": {
+        "DisplayName": "Admin Roles Count",
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "IsRelationshipCount": true,
+        "Name": "AdminRolesCount",
+        "Order": 71,
+        "Tab": "Admin Roles",
+        "Type": "int?"
+      },
       "Created": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -16883,6 +17114,26 @@
         "Order": 51,
         "Tab": "Scopes",
         "Type": "int?"
+      },
+      "Settings": {
+        "Description": "Configuration settings for this team.",
+        "DisplayName": "Settings",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsJSON": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "JsonType": "TeamSettings",
+        "Length": "int.MaxValue",
+        "Name": "Settings",
+        "Order": 999,
+        "SetDefaultValue": "",
+        "Tab": "Settings",
+        "TabOrder": 99999,
+        "Type": "string",
+        "UIType": ""
       },
       "Slack": {
         "Description": "(Optional) a Slack handle to associate with this team (usually a channel).",
@@ -19308,12 +19559,12 @@
     "Domain": {},
     "Dto": {
       "AllVisibleFieldsByDefault": false,
-      "DELETE": true,
+      "DELETE": false,
       "GET": true,
       "ImplementService": true,
       "PATCH": true,
-      "POST": true,
-      "PUT": true
+      "POST": false,
+      "PUT": false
     },
     "Model": {},
     "Properties": {
@@ -19356,6 +19607,44 @@
         "Tab": "History",
         "Type": "bool"
       },
+      "DeliveryStatus": {
+        "Description": "Status of email delivery",
+        "DisplayName": "Delivery Status",
+        "IsAudited": false,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsInsertOnly": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": true,
+        "Length": "int.MaxValue",
+        "Name": "DeliveryStatus",
+        "Order": 41,
+        "SetDefaultValue": "",
+        "Tab": "Message",
+        "TabOrder": 0,
+        "Type": "string",
+        "UIType": ""
+      },
+      "EmailAttempts": {
+        "DefaultValue": 0,
+        "Description": "Number of attempts to send an email",
+        "DisplayName": "Email Attempts",
+        "IsAudited": false,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsInsertOnly": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "EmailAttempts",
+        "Order": 61,
+        "SetDefaultValue": "",
+        "Tab": "Message",
+        "TabOrder": 0,
+        "Type": "int",
+        "UIType": ""
+      },
       "EmailSent": {
         "Description": "Date/Time the email was sent",
         "DisplayName": "Email Sent",
@@ -19383,10 +19672,12 @@
         "AutoCreateMissing": false,
         "Description": "Events that are part of this notification",
         "DisplayName": "Events",
+        "IsAllowAddInForm": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsAudited": false,
         "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
-        "IsInsertOnly": true,
+        "IsDisplayInGrid": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Events",
@@ -19692,6 +19983,19 @@
         "Type": "string",
         "UIType": ""
       },
+      "FeatureConfig": {
+        "Description": "Feature Conguration assigned to this user's Roles",
+        "DisplayName": "FeatureConfig",
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": false,
+        "IsJSON": true,
+        "Length": "int.MaxValue",
+        "Name": "FeatureConfig",
+        "Order": 999,
+        "Tab": "Feature Config",
+        "TabOrder": 0,
+        "Type": "string"
+      },
       "Password": {
         "DefaultValue": "********",
         "Description": "User's password. Never returned from the API; only used when creating users or changing a user's password.",
@@ -19708,7 +20012,7 @@
         "UIType": "password"
       },
       "Permissions": {
-        "Description": "Permissions assigned to this Role",
+        "Description": "Permissions assigned to this user's Roles",
         "DisplayName": "Permissions",
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
