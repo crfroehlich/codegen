@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -55,20 +56,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetClient(request);
-                    });
+                    cachedRet = GetClient(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetClient(request);
-                });
-            }
+            ret = ret ?? GetClient(request);
             return ret;
         }
 
@@ -101,11 +93,9 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Client>(currentUser, "Client", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Client>(Dto.Client.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityClient>();
+            var entities = Execute.SelectAll<DocEntityClient>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ClientFullTextSearch(request);
@@ -197,65 +187,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(ClientSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Client>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<Client>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityClient,Client>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityClient,Client>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(ClientSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<Client>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<Client>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityClient,Client>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityClient,Client>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -267,63 +262,66 @@ namespace Services.API
         public object Get(ClientVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(Client request)
         {
-            Client ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Client>(currentUser, "Client", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                request.VisibleFields = InitVisibleFields<Client>(Dto.Client.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "client")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetClient(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
-        private Client _AssignValues(Client dtoSource, DocConstantPermission permission, Session session)
+        private Client _AssignValues(Client request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Client"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Client ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pAccount = (dtoSource.Account?.Id > 0) ? DocEntityForeignKey.GetForeignKey(dtoSource.Account.Id) : null;
-            var pDefaultLocale = (dtoSource.DefaultLocale?.Id > 0) ? DocEntityLocale.GetLocale(dtoSource.DefaultLocale.Id) : null;
-            var pDivisions = dtoSource.Divisions?.ToList();
-            var pDocumentSets = dtoSource.DocumentSets?.ToList();
-            var pName = dtoSource.Name;
-            var pProducts = dtoSource.Products?.ToList();
-            var pRole = (dtoSource.Role?.Id > 0) ? DocEntityRole.GetRole(dtoSource.Role.Id) : null;
-            var pSalesforceAccountId = dtoSource.SalesforceAccountId;
-            var pSalesforceAccountName = dtoSource.SalesforceAccountName;
-            var pScopes = dtoSource.Scopes?.ToList();
-            var pSettings = dtoSource.Settings;
+            var pAccount = (request.Account?.Id > 0) ? DocEntityForeignKey.GetForeignKey(request.Account.Id) : null;
+            var pDefaultLocale = (request.DefaultLocale?.Id > 0) ? DocEntityLocale.GetLocale(request.DefaultLocale.Id) : null;
+            var pDivisions = request.Divisions?.ToList();
+            var pDocumentSets = request.DocumentSets?.ToList();
+            var pName = request.Name;
+            var pProducts = request.Products?.ToList();
+            var pRole = (request.Role?.Id > 0) ? DocEntityRole.GetRole(request.Role.Id) : null;
+            var pSalesforceAccountId = request.SalesforceAccountId;
+            var pSalesforceAccountName = request.SalesforceAccountName;
+            var pScopes = request.Scopes?.ToList();
+            var pSettings = request.Settings;
 
             DocEntityClient entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -337,82 +335,82 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityClient.GetClient(dtoSource.Id);
+                entity = DocEntityClient.GetClient(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityForeignKey>(currentUser, dtoSource, pAccount, permission, DocConstantModelName.CLIENT, nameof(dtoSource.Account)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityForeignKey>(currentUser, request, pAccount, permission, DocConstantModelName.CLIENT, nameof(request.Account)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pAccount, entity.Account, nameof(dtoSource.Account)))
+                if(DocPermissionFactory.IsRequested(request, pAccount, entity.Account, nameof(request.Account)))
                     entity.Account = pAccount;
-                if(DocPermissionFactory.IsRequested<DocEntityForeignKey>(dtoSource, pAccount, nameof(dtoSource.Account)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Account), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityForeignKey>(request, pAccount, nameof(request.Account)) && !request.VisibleFields.Matches(nameof(request.Account), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Account));
+                    request.VisibleFields.Add(nameof(request.Account));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, dtoSource, pDefaultLocale, permission, DocConstantModelName.CLIENT, nameof(dtoSource.DefaultLocale)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, request, pDefaultLocale, permission, DocConstantModelName.CLIENT, nameof(request.DefaultLocale)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDefaultLocale, entity.DefaultLocale, nameof(dtoSource.DefaultLocale)))
+                if(DocPermissionFactory.IsRequested(request, pDefaultLocale, entity.DefaultLocale, nameof(request.DefaultLocale)))
                     entity.DefaultLocale = pDefaultLocale;
-                if(DocPermissionFactory.IsRequested<DocEntityLocale>(dtoSource, pDefaultLocale, nameof(dtoSource.DefaultLocale)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DefaultLocale), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLocale>(request, pDefaultLocale, nameof(request.DefaultLocale)) && !request.VisibleFields.Matches(nameof(request.DefaultLocale), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DefaultLocale));
+                    request.VisibleFields.Add(nameof(request.DefaultLocale));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.CLIENT, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.CLIENT, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityRole>(currentUser, dtoSource, pRole, permission, DocConstantModelName.CLIENT, nameof(dtoSource.Role)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityRole>(currentUser, request, pRole, permission, DocConstantModelName.CLIENT, nameof(request.Role)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pRole, entity.Role, nameof(dtoSource.Role)))
+                if(DocPermissionFactory.IsRequested(request, pRole, entity.Role, nameof(request.Role)))
                     entity.Role = pRole;
-                if(DocPermissionFactory.IsRequested<DocEntityRole>(dtoSource, pRole, nameof(dtoSource.Role)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Role), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityRole>(request, pRole, nameof(request.Role)) && !request.VisibleFields.Matches(nameof(request.Role), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Role));
+                    request.VisibleFields.Add(nameof(request.Role));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pSalesforceAccountId, permission, DocConstantModelName.CLIENT, nameof(dtoSource.SalesforceAccountId)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSalesforceAccountId, permission, DocConstantModelName.CLIENT, nameof(request.SalesforceAccountId)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pSalesforceAccountId, entity.SalesforceAccountId, nameof(dtoSource.SalesforceAccountId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.SalesforceAccountId)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pSalesforceAccountId, entity.SalesforceAccountId, nameof(request.SalesforceAccountId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SalesforceAccountId)} cannot be modified once set.");
                     entity.SalesforceAccountId = pSalesforceAccountId;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pSalesforceAccountId, nameof(dtoSource.SalesforceAccountId)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.SalesforceAccountId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pSalesforceAccountId, nameof(request.SalesforceAccountId)) && !request.VisibleFields.Matches(nameof(request.SalesforceAccountId), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.SalesforceAccountId));
+                    request.VisibleFields.Add(nameof(request.SalesforceAccountId));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pSalesforceAccountName, permission, DocConstantModelName.CLIENT, nameof(dtoSource.SalesforceAccountName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSalesforceAccountName, permission, DocConstantModelName.CLIENT, nameof(request.SalesforceAccountName)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pSalesforceAccountName, entity.SalesforceAccountName, nameof(dtoSource.SalesforceAccountName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.SalesforceAccountName)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pSalesforceAccountName, entity.SalesforceAccountName, nameof(request.SalesforceAccountName)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SalesforceAccountName)} cannot be modified once set.");
                     entity.SalesforceAccountName = pSalesforceAccountName;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pSalesforceAccountName, nameof(dtoSource.SalesforceAccountName)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.SalesforceAccountName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pSalesforceAccountName, nameof(request.SalesforceAccountName)) && !request.VisibleFields.Matches(nameof(request.SalesforceAccountName), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.SalesforceAccountName));
+                    request.VisibleFields.Add(nameof(request.SalesforceAccountName));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<ClientSettings>(currentUser, dtoSource, pSettings, permission, DocConstantModelName.CLIENT, nameof(dtoSource.Settings)))
+            if (DocPermissionFactory.IsRequestedHasPermission<ClientSettings>(currentUser, request, pSettings, permission, DocConstantModelName.CLIENT, nameof(request.Settings)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pSettings, entity.Settings, nameof(dtoSource.Settings)))
+                if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
                     entity.Settings = DocSerialize<ClientSettings>.ToString(pSettings);
-                if(DocPermissionFactory.IsRequested<ClientSettings>(dtoSource, pSettings, nameof(dtoSource.Settings)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Settings), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<ClientSettings>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Settings));
+                    request.VisibleFields.Add(nameof(request.Settings));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pDivisions, permission, DocConstantModelName.CLIENT, nameof(dtoSource.Divisions)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDivisions, permission, DocConstantModelName.CLIENT, nameof(request.Divisions)))
             {
                 if (true == pDivisions?.Any() )
                 {
@@ -427,16 +425,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityDivision.GetDivision(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Divisions)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Divisions)} to {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Divisions)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Divisions)} to {nameof(Client)}");
                         entity.Divisions.Add(target);
                     });
                     var toRemove = entity.Divisions.Where(e => requestedDivisions.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDivision.GetDivision(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Divisions)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Divisions)} from {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Divisions)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Divisions)} from {nameof(Client)}");
                         entity.Divisions.Remove(target);
                     });
                 }
@@ -446,17 +444,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDivision.GetDivision(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Divisions)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Divisions)} from {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Divisions)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Divisions)} from {nameof(Client)}");
                         entity.Divisions.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pDivisions, nameof(dtoSource.Divisions)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Divisions), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDivisions, nameof(request.Divisions)) && !request.VisibleFields.Matches(nameof(request.Divisions), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Divisions));
+                    request.VisibleFields.Add(nameof(request.Divisions));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pDocumentSets, permission, DocConstantModelName.CLIENT, nameof(dtoSource.DocumentSets)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocumentSets, permission, DocConstantModelName.CLIENT, nameof(request.DocumentSets)))
             {
                 if (true == pDocumentSets?.Any() )
                 {
@@ -471,16 +469,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.DocumentSets)} to {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(Client)}");
                         entity.DocumentSets.Add(target);
                     });
                     var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.DocumentSets)} from {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Client)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
@@ -490,17 +488,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.DocumentSets)} from {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Client)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pDocumentSets, nameof(dtoSource.DocumentSets)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DocumentSets), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.VisibleFields.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DocumentSets));
+                    request.VisibleFields.Add(nameof(request.DocumentSets));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pProducts, permission, DocConstantModelName.CLIENT, nameof(dtoSource.Products)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pProducts, permission, DocConstantModelName.CLIENT, nameof(request.Products)))
             {
                 if (true == pProducts?.Any() )
                 {
@@ -515,16 +513,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityProduct.GetProduct(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Products)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Products)} to {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Products)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Products)} to {nameof(Client)}");
                         entity.Products.Add(target);
                     });
                     var toRemove = entity.Products.Where(e => requestedProducts.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityProduct.GetProduct(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Products)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Products)} from {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Products)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Products)} from {nameof(Client)}");
                         entity.Products.Remove(target);
                     });
                 }
@@ -534,17 +532,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityProduct.GetProduct(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Products)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Products)} from {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Products)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Products)} from {nameof(Client)}");
                         entity.Products.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pProducts, nameof(dtoSource.Products)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Products), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pProducts, nameof(request.Products)) && !request.VisibleFields.Matches(nameof(request.Products), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Products));
+                    request.VisibleFields.Add(nameof(request.Products));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pScopes, permission, DocConstantModelName.CLIENT, nameof(dtoSource.Scopes)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.CLIENT, nameof(request.Scopes)))
             {
                 if (true == pScopes?.Any() )
                 {
@@ -559,16 +557,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Scopes)} to {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(Client)}");
                         entity.Scopes.Add(target);
                     });
                     var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Scopes)} from {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Client)}");
                         entity.Scopes.Remove(target);
                     });
                 }
@@ -578,26 +576,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityScope.GetScope(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(dtoSource.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Scopes)} from {nameof(Client)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Client), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Client)}");
                         entity.Scopes.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pScopes, nameof(dtoSource.Scopes)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Scopes), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopes, nameof(request.Scopes)) && !request.VisibleFields.Matches(nameof(request.Scopes), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Scopes));
+                    request.VisibleFields.Add(nameof(request.Scopes));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<Client>(currentUser, nameof(Client), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Client>(Dto.Client.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public Client Post(Client dtoSource)
+        public Client Post(Client request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Client ret = null;
 
@@ -606,7 +604,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Client")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -686,8 +684,6 @@ namespace Services.API
                         pSalesforceAccountName += " (Copy)";
                     var pScopes = entity.Scopes.ToList();
                     var pSettings = entity.Settings;
-                #region Custom Before copyClient
-                #endregion Custom Before copyClient
                 var copy = new DocEntityClient(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -719,8 +715,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                #region Custom After copyClient
-                #endregion Custom After copyClient
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -733,9 +727,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public Client Put(Client dtoSource)
+        public Client Put(Client request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<Client> Patch(ClientBatch request)
@@ -785,16 +779,16 @@ namespace Services.API
             return ret;
         }
 
-        public Client Patch(Client dtoSource)
+        public Client Patch(Client request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Client to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Client to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Client ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -941,7 +935,7 @@ namespace Services.API
 
         private object _GetClientLookupTableBinding(ClientJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and LookupTableBinding");
@@ -950,7 +944,7 @@ namespace Services.API
 
         private object _GetClientDivision(ClientJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Division>(currentUser, "Division", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Division>(Dto.Division.Fields, request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Divisions", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Division");
@@ -972,7 +966,7 @@ namespace Services.API
 
         private object _GetClientDocumentSet(ClientJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "DocumentSets", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and DocumentSet");
@@ -994,7 +988,7 @@ namespace Services.API
 
         private object _GetClientProduct(ClientJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Product>(currentUser, "Product", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Product>(Dto.Product.Fields, request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Products", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Product");
@@ -1003,7 +997,7 @@ namespace Services.API
 
         private object _GetClientScope(ClientJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Scope");
@@ -1025,7 +1019,7 @@ namespace Services.API
 
         private object _GetClientUser(ClientJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and User");
@@ -1034,7 +1028,7 @@ namespace Services.API
 
         private object _GetClientWorkflow(ClientJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Workflow");
@@ -1231,7 +1225,7 @@ namespace Services.API
             Client ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Client>(currentUser, "Client", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Client>(Dto.Client.Fields, request);
 
             DocEntityClient entity = null;
             if(id.HasValue)
@@ -1259,7 +1253,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

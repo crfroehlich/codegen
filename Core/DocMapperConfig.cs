@@ -47,10 +47,13 @@ namespace Services.Core
             .Include<DocTypeBoolean, TypeBoolean>()
             .Include<DocTypeCalendarDate, TypeCalendarDate>()
             .Include<DocTypeCalendarDates, TypeCalendarDates>()
+            .Include<DocTypeContact, TypeContact>()
             .Include<DocTypeDateTimeRange, TypeDateTimeRange>()
             .Include<DocTypeDecimal, TypeDecimal>()
             .Include<DocTypeDecimalRange, TypeDecimalRange>()
             .Include<DocTypeDesignNestedStudyIdLink, TypeDesignNestedStudyIdLink>()
+            .Include<DocTypeEventCounts, TypeEventCounts>()
+            .Include<DocTypeFacility, TypeFacility>()
             .Include<DocTypeFixedDoseIntervention, TypeFixedDoseIntervention>()
             .Include<DocTypeFlag, TypeFlag>()
             .Include<DocTypeFunding, TypeFunding>()
@@ -63,11 +66,14 @@ namespace Services.Core
             .Include<DocTypeNPersons, TypeNPersons>()
             .Include<DocTypeParticipant, TypeParticipant>()
             .Include<DocTypeParticipants, TypeParticipants>()
+            .Include<DocTypePopulationAnalyzed, TypePopulationAnalyzed>()
             .Include<DocTypePValue, TypePValue>()
             .Include<DocTypeRate, TypeRate>()
             .Include<DocTypeSettingLocation, TypeSettingLocation>()
             .Include<DocTypeSettingLocationTotal, TypeSettingLocationTotal>()
+            .Include<DocTypeStudyDoc, TypeStudyDoc>()
             .Include<DocTypeStudyObjective, TypeStudyObjective>()
+            .Include<DocTypeStudyReference, TypeStudyReference>()
             .Include<DocTypeSubgroupDescriptor, TypeSubgroupDescriptor>()
             .Include<DocTypeTimepoint, TypeTimepoint>()
             .Include<DocTypeTimepoints, TypeTimepoints>()
@@ -83,10 +89,13 @@ namespace Services.Core
             .Include<TypeBoolean, DocTypeBoolean>()
             .Include<TypeCalendarDate, DocTypeCalendarDate>()
             .Include<TypeCalendarDates, DocTypeCalendarDates>()
+            .Include<TypeContact, DocTypeContact>()
             .Include<TypeDateTimeRange, DocTypeDateTimeRange>()
             .Include<TypeDecimal, DocTypeDecimal>()
             .Include<TypeDecimalRange, DocTypeDecimalRange>()
             .Include<TypeDesignNestedStudyIdLink, DocTypeDesignNestedStudyIdLink>()
+            .Include<TypeEventCounts, DocTypeEventCounts>()
+            .Include<TypeFacility, DocTypeFacility>()
             .Include<TypeFixedDoseIntervention, DocTypeFixedDoseIntervention>()
             .Include<TypeFlag, DocTypeFlag>()
             .Include<TypeFunding, DocTypeFunding>()
@@ -99,11 +108,14 @@ namespace Services.Core
             .Include<TypeNPersons, DocTypeNPersons>()
             .Include<TypeParticipant, DocTypeParticipant>()
             .Include<TypeParticipants, DocTypeParticipants>()
+            .Include<TypePopulationAnalyzed, DocTypePopulationAnalyzed>()
             .Include<TypePValue, DocTypePValue>()
             .Include<TypeRate, DocTypeRate>()
             .Include<TypeSettingLocation, DocTypeSettingLocation>()
             .Include<TypeSettingLocationTotal, DocTypeSettingLocationTotal>()
+            .Include<TypeStudyDoc, DocTypeStudyDoc>()
             .Include<TypeStudyObjective, DocTypeStudyObjective>()
+            .Include<TypeStudyReference, DocTypeStudyReference>()
             .Include<TypeSubgroupDescriptor, DocTypeSubgroupDescriptor>()
             .Include<TypeTimepoint, DocTypeTimepoint>()
             .Include<TypeTimepoints, DocTypeTimepoints>()
@@ -130,11 +142,14 @@ namespace Services.Core
                 .ForMember(dest => dest.BooleanValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.CalendarDateValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.CalendarDatesValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.ContactValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DateTimeValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DateTimeRangeValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DecimalValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DecimalRangeValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DesignNestedStudyIdLinkValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.EventCountsValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.FacilityValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.FixedDoseInterventionValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.FlagValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.FundingValue, opt => opt.Ignore() )
@@ -147,11 +162,14 @@ namespace Services.Core
                 .ForMember(dest => dest.NPersonsValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.ParticipantValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.ParticipantsValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.PopulationAnalyzedValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.PValueValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.RateValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.SettingLocationValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.SettingLocationTotalValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.StudyDocValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.StudyObjectiveValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.StudyReferenceValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.SubgroupDescriptorValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.TimepointValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.TimepointsValue, opt => opt.Ignore() )
@@ -179,11 +197,14 @@ namespace Services.Core
                 .ForMember(dest => dest.BooleanValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.CalendarDateValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.CalendarDatesValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.ContactValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DateTimeValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DateTimeRangeValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DecimalValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DecimalRangeValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.DesignNestedStudyIdLinkValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.EventCountsValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.FacilityValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.FixedDoseInterventionValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.FlagValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.FundingValue, opt => opt.Ignore() )
@@ -196,11 +217,14 @@ namespace Services.Core
                 .ForMember(dest => dest.NPersonsValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.ParticipantValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.ParticipantsValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.PopulationAnalyzedValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.PValueValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.RateValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.SettingLocationValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.SettingLocationTotalValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.StudyDocValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.StudyObjectiveValue, opt => opt.Ignore() )
+                .ForMember(dest => dest.StudyReferenceValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.SubgroupDescriptorValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.TimepointValue, opt => opt.Ignore() )
                 .ForMember(dest => dest.TimepointsValue, opt => opt.Ignore() )
@@ -225,8 +249,9 @@ namespace Services.Core
             cfg.AddProfile<BackgroundTaskHistoryMapper>();
             cfg.AddProfile<BackgroundTaskItemMapper>();
             cfg.AddProfile<BroadcastMapper>();
-            cfg.AddProfile<CharacteristicDtoMapper>();
+            cfg.AddProfile<CharacteristicMapper>();
             cfg.AddProfile<ClientMapper>();
+            cfg.AddProfile<ComparatorMapper>();
             cfg.AddProfile<DatabaseVersionMapper>();
             cfg.AddProfile<DefaultMapper>();
             cfg.AddProfile<DivisionMapper>();
@@ -243,7 +268,7 @@ namespace Services.Core
             cfg.AddProfile<ImpersonationMapper>();
             cfg.AddProfile<ImportDataMapper>();
             cfg.AddProfile<IntervalMapper>();
-            cfg.AddProfile<InterventionDtoMapper>();
+            cfg.AddProfile<InterventionMapper>();
             cfg.AddProfile<JctAttributeCategoryAttributeDocumentSetMapper>();
             cfg.AddProfile<JunctionMapper>();
             cfg.AddProfile<LocaleMapper>();
@@ -256,7 +281,7 @@ namespace Services.Core
             cfg.AddProfile<MeanRangeValueMapper>();
             cfg.AddProfile<MeanVariancesMapper>();
             cfg.AddProfile<MeanVarianceValueMapper>();
-            cfg.AddProfile<OutcomeDtoMapper>();
+            cfg.AddProfile<OutcomeMapper>();
             cfg.AddProfile<PackageMapper>();
             cfg.AddProfile<PageMapper>();
             cfg.AddProfile<ProductMapper>();
@@ -389,6 +414,27 @@ namespace Services.Core
                 .ForMember(dest => dest.CalendarDates, opt => opt.MapFrom(src => (null == src || null == src.CalendarDates ) ? new List<DocTypeCalendarDate>() : Mapper.Map(src.CalendarDates, new List<DocTypeCalendarDate>() ) ) )
 ;
 
+            cfg.CreateMap<DocTypeContact, TypeContact>()
+                .ConstructUsing(new Func<DocTypeContact, TypeContact>(c => new TypeContact() ) )
+;            cfg.CreateMap<DocStructureContact, TypeContact>()
+                .ConstructUsing(new Func<DocStructureContact, TypeContact>(c => new TypeContact() ) );
+            cfg.CreateMap<DocTypeContact, Reference>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeContact>()
+                .ForAllMembers(opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeContact>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name ) )
+                .ForMember(dest => dest.Gestalt, opt => opt.MapFrom(src => src.Gestalt ) )
+;
+            cfg.CreateMap<TypeContact, DocTypeContact>()
+                .ConstructUsing(new Func<TypeContact, DocTypeContact>(c => new DocTypeContact() ) )
+                .ForMember(dest => dest.Execute, opt => opt.Ignore() )
+                .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
+                .ForMember(dest => dest.Hash, opt => opt.Ignore() )
+;
+
             cfg.CreateMap<DocTypeDateTime, TypeDateTime>()
                 .ConstructUsing(new Func<DocTypeDateTime, TypeDateTime>(c => new TypeDateTime() ) )
 ;            cfg.CreateMap<DocStructureDateTime, TypeDateTime>()
@@ -498,6 +544,57 @@ namespace Services.Core
                 .ForMember(dest => dest.Execute, opt => opt.Ignore() )
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
+;
+
+            cfg.CreateMap<DocTypeEventCounts, TypeEventCounts>()
+                .ConstructUsing(new Func<DocTypeEventCounts, TypeEventCounts>(c => new TypeEventCounts() ) )
+;            cfg.CreateMap<DocStructureEventCounts, TypeEventCounts>()
+                .ConstructUsing(new Func<DocStructureEventCounts, TypeEventCounts>(c => new TypeEventCounts() ) );
+            cfg.CreateMap<DocTypeEventCounts, Reference>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore() )
+                .ForMember(dest => dest.Name, opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeEventCounts>()
+                .ForAllMembers(opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeEventCounts>()
+                .ForMember(dest => dest.Gestalt, opt => opt.MapFrom(src => src.Gestalt ) )
+;
+            cfg.CreateMap<TypeEventCounts, DocTypeEventCounts>()
+                .ConstructUsing(new Func<TypeEventCounts, DocTypeEventCounts>(c => new DocTypeEventCounts() ) )
+                .ForMember(dest => dest.Execute, opt => opt.Ignore() )
+                .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
+                .ForMember(dest => dest.Hash, opt => opt.Ignore() )
+                .ForMember(dest => dest.SubjectsAffected, opt => opt.MapFrom(src => (null == src || null == src.SubjectsAffected ) ? new DocTypeInteger() : Mapper.Map(src.SubjectsAffected, new DocTypeInteger() ) ) )
+                .ForMember(dest => dest.SubjectsAtRisk, opt => opt.MapFrom(src => (null == src || null == src.SubjectsAtRisk ) ? new DocTypeInteger() : Mapper.Map(src.SubjectsAtRisk, new DocTypeInteger() ) ) )
+                .ForMember(dest => dest.Events, opt => opt.MapFrom(src => (null == src || null == src.Events ) ? new DocTypeInteger() : Mapper.Map(src.Events, new DocTypeInteger() ) ) )
+;
+
+            cfg.CreateMap<DocTypeFacility, TypeFacility>()
+                .ConstructUsing(new Func<DocTypeFacility, TypeFacility>(c => new TypeFacility() ) )
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => (null == src || null == src.City ) ? null : src.City.ToReference() ) )
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => (null == src || null == src.State ) ? null : src.State.ToReference() ) )
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => (null == src || null == src.Country ) ? null : src.Country.ToReference() ) )
+;            cfg.CreateMap<DocStructureFacility, TypeFacility>()
+                .ConstructUsing(new Func<DocStructureFacility, TypeFacility>(c => new TypeFacility() ) );
+            cfg.CreateMap<DocTypeFacility, Reference>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeFacility>()
+                .ForAllMembers(opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeFacility>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name ) )
+                .ForMember(dest => dest.Gestalt, opt => opt.MapFrom(src => src.Gestalt ) )
+;
+            cfg.CreateMap<TypeFacility, DocTypeFacility>()
+                .ConstructUsing(new Func<TypeFacility, DocTypeFacility>(c => new DocTypeFacility() ) )
+                .ForMember(dest => dest.Execute, opt => opt.Ignore() )
+                .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
+                .ForMember(dest => dest.Hash, opt => opt.Ignore() )
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => (null == src || null == src.City || string.IsNullOrEmpty(src.City.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SettingLocationName", src.City.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => (null == src || null == src.State || string.IsNullOrEmpty(src.State.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SettingLocationName", src.State.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => (null == src || null == src.Country || string.IsNullOrEmpty(src.Country.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SettingLocationName", src.Country.Name ).ToLookupTable() ) )
 ;
 
             cfg.CreateMap<DocTypeFixedDoseIntervention, TypeFixedDoseIntervention>()
@@ -794,6 +891,32 @@ namespace Services.Core
                 .ForMember(dest => dest.Unknown, opt => opt.MapFrom(src => (null == src || null == src.Unknown ) ? new DocTypeParticipant() : Mapper.Map(src.Unknown, new DocTypeParticipant() ) ) )
 ;
 
+            cfg.CreateMap<DocTypePopulationAnalyzed, TypePopulationAnalyzed>()
+                .ConstructUsing(new Func<DocTypePopulationAnalyzed, TypePopulationAnalyzed>(c => new TypePopulationAnalyzed() ) )
+                .ForMember(dest => dest.Scope, opt => opt.MapFrom(src => (null == src || null == src.Scope ) ? null : src.Scope.ToReference() ) )
+                .ForMember(dest => dest.Units, opt => opt.MapFrom(src => (null == src || null == src.Units ) ? null : src.Units.ToReference() ) )
+;            cfg.CreateMap<DocStructurePopulationAnalyzed, TypePopulationAnalyzed>()
+                .ConstructUsing(new Func<DocStructurePopulationAnalyzed, TypePopulationAnalyzed>(c => new TypePopulationAnalyzed() ) );
+            cfg.CreateMap<DocTypePopulationAnalyzed, Reference>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore() )
+                .ForMember(dest => dest.Name, opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypePopulationAnalyzed>()
+                .ForAllMembers(opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypePopulationAnalyzed>()
+                .ForMember(dest => dest.Gestalt, opt => opt.MapFrom(src => src.Gestalt ) )
+;
+            cfg.CreateMap<TypePopulationAnalyzed, DocTypePopulationAnalyzed>()
+                .ConstructUsing(new Func<TypePopulationAnalyzed, DocTypePopulationAnalyzed>(c => new DocTypePopulationAnalyzed() ) )
+                .ForMember(dest => dest.Execute, opt => opt.Ignore() )
+                .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
+                .ForMember(dest => dest.Hash, opt => opt.Ignore() )
+                .ForMember(dest => dest.Scope, opt => opt.MapFrom(src => (null == src || null == src.Scope || string.IsNullOrEmpty(src.Scope.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("ArmPopulationN", src.Scope.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.Units, opt => opt.MapFrom(src => (null == src || null == src.Units || string.IsNullOrEmpty(src.Units.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("PopulationType", src.Units.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.N, opt => opt.MapFrom(src => (null == src || null == src.N ) ? new DocTypeInteger() : Mapper.Map(src.N, new DocTypeInteger() ) ) )
+;
+
             cfg.CreateMap<DocTypePValue, TypePValue>()
                 .ConstructUsing(new Func<DocTypePValue, TypePValue>(c => new TypePValue() ) )
                 .ForMember(dest => dest.EqualityOperator, opt => opt.MapFrom(src => (null == src || null == src.EqualityOperator ) ? null : src.EqualityOperator.ToReference() ) )
@@ -913,6 +1036,27 @@ namespace Services.Core
                 .ForMember(dest => dest.Total, opt => opt.MapFrom(src => (null == src || null == src.Total ) ? new DocTypeInteger() : Mapper.Map(src.Total, new DocTypeInteger() ) ) )
 ;
 
+            cfg.CreateMap<DocTypeStudyDoc, TypeStudyDoc>()
+                .ConstructUsing(new Func<DocTypeStudyDoc, TypeStudyDoc>(c => new TypeStudyDoc() ) )
+;            cfg.CreateMap<DocStructureStudyDoc, TypeStudyDoc>()
+                .ConstructUsing(new Func<DocStructureStudyDoc, TypeStudyDoc>(c => new TypeStudyDoc() ) );
+            cfg.CreateMap<DocTypeStudyDoc, Reference>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore() )
+                .ForMember(dest => dest.Name, opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeStudyDoc>()
+                .ForAllMembers(opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeStudyDoc>()
+                .ForMember(dest => dest.Gestalt, opt => opt.MapFrom(src => src.Gestalt ) )
+;
+            cfg.CreateMap<TypeStudyDoc, DocTypeStudyDoc>()
+                .ConstructUsing(new Func<TypeStudyDoc, DocTypeStudyDoc>(c => new DocTypeStudyDoc() ) )
+                .ForMember(dest => dest.Execute, opt => opt.Ignore() )
+                .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
+                .ForMember(dest => dest.Hash, opt => opt.Ignore() )
+;
+
             cfg.CreateMap<DocTypeStudyObjective, TypeStudyObjective>()
                 .ConstructUsing(new Func<DocTypeStudyObjective, TypeStudyObjective>(c => new TypeStudyObjective() ) )
                 .ForMember(dest => dest.Objective, opt => opt.MapFrom(src => (null == src || null == src.Objective ) ? null : src.Objective.ToReference() ) )
@@ -934,6 +1078,27 @@ namespace Services.Core
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
                 .ForMember(dest => dest.Objective, opt => opt.MapFrom(src => (null == src || null == src.Objective || string.IsNullOrEmpty(src.Objective.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("StudyObjective", src.Objective.Name ).ToLookupTable() ) )
+;
+
+            cfg.CreateMap<DocTypeStudyReference, TypeStudyReference>()
+                .ConstructUsing(new Func<DocTypeStudyReference, TypeStudyReference>(c => new TypeStudyReference() ) )
+;            cfg.CreateMap<DocStructureStudyReference, TypeStudyReference>()
+                .ConstructUsing(new Func<DocStructureStudyReference, TypeStudyReference>(c => new TypeStudyReference() ) );
+            cfg.CreateMap<DocTypeStudyReference, Reference>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore() )
+                .ForMember(dest => dest.Name, opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeStudyReference>()
+                .ForAllMembers(opt => opt.Ignore() )
+;
+            cfg.CreateMap<Reference, DocTypeStudyReference>()
+                .ForMember(dest => dest.Gestalt, opt => opt.MapFrom(src => src.Gestalt ) )
+;
+            cfg.CreateMap<TypeStudyReference, DocTypeStudyReference>()
+                .ConstructUsing(new Func<TypeStudyReference, DocTypeStudyReference>(c => new DocTypeStudyReference() ) )
+                .ForMember(dest => dest.Execute, opt => opt.Ignore() )
+                .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
+                .ForMember(dest => dest.Hash, opt => opt.Ignore() )
 ;
 
             cfg.CreateMap<DocTypeSubgroupDescriptor, TypeSubgroupDescriptor>()

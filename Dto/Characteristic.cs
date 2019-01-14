@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -39,7 +40,7 @@ using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
-    public abstract partial class CharacteristicBase : Dto<CharacteristicDto>
+    public abstract partial class CharacteristicBase : Dto<Characteristic>
     {
         public CharacteristicBase() {}
 
@@ -50,10 +51,12 @@ namespace Services.Dto
 
         public CharacteristicBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(Characteristic), Description = "LookupTable", IsRequired = true)]
-        public Reference Characteristic { get; set; }
-        [ApiMember(Name = nameof(CharacteristicId), Description = "Primary Key of LookupTable", IsRequired = false)]
-        public int? CharacteristicId { get; set; }
+        [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
+        public string Name { get; set; }
+
+
+        [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
+        public string URI { get; set; }
 
 
     }
@@ -62,34 +65,30 @@ namespace Services.Dto
     [Route("/profile/characteristic", "POST")]
     [Route("/characteristic/{Id}", "GET, PATCH, PUT, DELETE")]
     [Route("/profile/characteristic/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class CharacteristicDto : CharacteristicBase, IReturn<CharacteristicDto>, IDto
+    public partial class Characteristic : CharacteristicBase, IReturn<Characteristic>, IDto
     {
-        public CharacteristicDto()
+        public Characteristic()
         {
             _Constructor();
         }
 
-        public CharacteristicDto(int? id) : base(DocConvert.ToInt(id)) {}
-        public CharacteristicDto(int id) : base(id) {}
+        public Characteristic(int? id) : base(DocConvert.ToInt(id)) {}
+        public Characteristic(int id) : base(id) {}
         
         #region Fields
         
         public bool? ShouldSerialize(string field)
         {
-            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
-            if (DocTools.AreEqual(nameof(Fields), field)) return false;
-            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
-            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
-            if (DocTools.AreEqual(nameof(Id), field)) return true;
-            return true == VisibleFields?.Matches(field, true);
+            if (IgnoredVisibleFields.Matches(field, true)) return false;
+            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            return ret;
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<CharacteristicDto>());
+        public static List<string> Fields => DocTools.Fields<Characteristic>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Characteristic),nameof(CharacteristicId),nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(URI),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -97,13 +96,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Characteristic>("Characteristic",exists);
             }
         }
 
@@ -112,16 +113,15 @@ namespace Services.Dto
     
     [Route("/Characteristic/{Id}/copy", "POST")]
     [Route("/profile/Characteristic/{Id}/copy", "POST")]
-    public partial class CharacteristicDtoCopy : CharacteristicDto {}
+    public partial class CharacteristicCopy : Characteristic {}
     [Route("/characteristic", "GET")]
     [Route("/profile/characteristic", "GET")]
     [Route("/characteristic/search", "GET, POST, DELETE")]
     [Route("/profile/characteristic/search", "GET, POST, DELETE")]
-    public partial class CharacteristicSearch : Search<CharacteristicDto>
+    public partial class CharacteristicSearch : Search<Characteristic>
     {
-        public Reference Characteristic { get; set; }
-        public List<int> CharacteristicIds { get; set; }
-        public List<string> CharacteristicNames { get; set; }
+        public string Name { get; set; }
+        public string URI { get; set; }
     }
     
     public class CharacteristicFullTextSearch
@@ -134,10 +134,11 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(CharacteristicDto.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(CharacteristicDto.Updated))); }
+        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Characteristic.Created))); }
+        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Characteristic.Updated))); }
         
-        public bool doCharacteristic { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(CharacteristicDto.Characteristic))); }
+        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Characteristic.Name))); }
+        public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Characteristic.URI))); }
     }
 
     [Route("/characteristic/version", "GET, POST")]
@@ -145,7 +146,7 @@ namespace Services.Dto
 
     [Route("/characteristic/batch", "DELETE, PATCH, POST, PUT")]
     [Route("/profile/characteristic/batch", "DELETE, PATCH, POST, PUT")]
-    public partial class CharacteristicBatch : List<CharacteristicDto> { }
+    public partial class CharacteristicBatch : List<Characteristic> { }
 
     [Route("/admin/characteristic/ids", "GET, POST")]
     public class CharacteristicIds

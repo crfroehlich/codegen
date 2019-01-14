@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -48,11 +49,9 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DocumentSetHistory>(Dto.DocumentSetHistory.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityDocumentSetHistory>();
+            var entities = Execute.SelectAll<DocEntityDocumentSetHistory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentSetHistoryFullTextSearch(request);
@@ -114,49 +113,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(DocumentSetHistorySearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<DocumentSetHistory>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSetHistory,DocumentSetHistory>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<DocumentSetHistory>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSetHistory,DocumentSetHistory>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(DocumentSetHistorySearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<DocumentSetHistory>();
-                    _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSetHistory,DocumentSetHistory>(ret, Execute, requestCancel));
-                    tryRet = ret;
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<DocumentSetHistory>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSetHistory,DocumentSetHistory>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -168,23 +172,26 @@ namespace Services.API
         public object Get(DocumentSetHistoryVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(DocumentSetHistory request)
         {
-            DocumentSetHistory ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
-            Execute.Run((ssn) =>
+            Execute.Run(s =>
             {
+                request.VisibleFields = InitVisibleFields<DocumentSetHistory>(Dto.DocumentSetHistory.Fields, request);
                 ret = GetDocumentSetHistory(request);
             });
             return ret;
@@ -200,7 +207,7 @@ namespace Services.API
             DocumentSetHistory ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DocumentSetHistory>(Dto.DocumentSetHistory.Fields, request);
 
             DocEntityDocumentSetHistory entity = null;
             if(id.HasValue)
@@ -228,7 +235,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

@@ -45,6 +45,8 @@ namespace Services.Enums
         CHARACTERISTIC,
         [EnumMember(Value = DocConstantModelName.CLIENT)]
         CLIENT,
+        [EnumMember(Value = DocConstantModelName.COMPARATOR)]
+        COMPARATOR,
         [EnumMember(Value = DocConstantModelName.DATABASEVERSION)]
         DATABASEVERSION,
         [EnumMember(Value = DocConstantModelName.DATETIME)]
@@ -195,6 +197,7 @@ namespace Services.Enums
         public const string BROADCAST = "Broadcast";
         public const string CHARACTERISTIC = "Characteristic";
         public const string CLIENT = "Client";
+        public const string COMPARATOR = "Comparator";
         public const string DATABASEVERSION = "DatabaseVersion";
         public const string DATETIME = "DateTime";
         public const string DEFAULT = "Default";

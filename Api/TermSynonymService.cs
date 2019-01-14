@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -55,20 +56,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTermSynonym(request);
-                    });
+                    cachedRet = GetTermSynonym(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTermSynonym(request);
-                });
-            }
+            ret = ret ?? GetTermSynonym(request);
             return ret;
         }
 
@@ -101,11 +93,9 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityTermSynonym>();
+            var entities = Execute.SelectAll<DocEntityTermSynonym>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermSynonymFullTextSearch(request);
@@ -177,65 +167,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(TermSynonymSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<TermSynonym>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<TermSynonym>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(TermSynonymSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<TermSynonym>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<TermSynonym>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -247,58 +242,61 @@ namespace Services.API
         public object Get(TermSynonymVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(TermSynonym request)
         {
-            TermSynonym ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetTermSynonym(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
-        private TermSynonym _AssignValues(TermSynonym dtoSource, DocConstantPermission permission, Session session)
+        private TermSynonym _AssignValues(TermSynonym request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermSynonym"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermSynonym ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pApproved = dtoSource.Approved;
-            var pBindings = dtoSource.Bindings?.ToList();
-            var pMaster = (dtoSource.Master?.Id > 0) ? DocEntityTermMaster.GetTermMaster(dtoSource.Master.Id) : null;
-            var pPreferred = dtoSource.Preferred;
-            var pScope = (dtoSource.Scope?.Id > 0) ? DocEntityScope.GetScope(dtoSource.Scope.Id) : null;
-            var pSynonym = dtoSource.Synonym;
+            var pApproved = request.Approved;
+            var pBindings = request.Bindings?.ToList();
+            var pMaster = (request.Master?.Id > 0) ? DocEntityTermMaster.GetTermMaster(request.Master.Id) : null;
+            var pPreferred = request.Preferred;
+            var pScope = (request.Scope?.Id > 0) ? DocEntityScope.GetScope(request.Scope.Id) : null;
+            var pSynonym = request.Synonym;
 
             DocEntityTermSynonym entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -312,63 +310,63 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityTermSynonym.GetTermSynonym(dtoSource.Id);
+                entity = DocEntityTermSynonym.GetTermSynonym(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pApproved, permission, DocConstantModelName.TERMSYNONYM, nameof(dtoSource.Approved)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pApproved, permission, DocConstantModelName.TERMSYNONYM, nameof(request.Approved)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pApproved, entity.Approved, nameof(dtoSource.Approved)))
+                if(DocPermissionFactory.IsRequested(request, pApproved, entity.Approved, nameof(request.Approved)))
                     entity.Approved = pApproved;
-                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pApproved, nameof(dtoSource.Approved)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Approved), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pApproved, nameof(request.Approved)) && !request.VisibleFields.Matches(nameof(request.Approved), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Approved));
+                    request.VisibleFields.Add(nameof(request.Approved));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, dtoSource, pMaster, permission, DocConstantModelName.TERMSYNONYM, nameof(dtoSource.Master)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, request, pMaster, permission, DocConstantModelName.TERMSYNONYM, nameof(request.Master)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pMaster, entity.Master, nameof(dtoSource.Master)))
+                if(DocPermissionFactory.IsRequested(request, pMaster, entity.Master, nameof(request.Master)))
                     entity.Master = pMaster;
-                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(dtoSource, pMaster, nameof(dtoSource.Master)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Master), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pMaster, nameof(request.Master)) && !request.VisibleFields.Matches(nameof(request.Master), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Master));
+                    request.VisibleFields.Add(nameof(request.Master));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, dtoSource, pPreferred, permission, DocConstantModelName.TERMSYNONYM, nameof(dtoSource.Preferred)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pPreferred, permission, DocConstantModelName.TERMSYNONYM, nameof(request.Preferred)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pPreferred, entity.Preferred, nameof(dtoSource.Preferred)))
+                if(DocPermissionFactory.IsRequested(request, pPreferred, entity.Preferred, nameof(request.Preferred)))
                     entity.Preferred = pPreferred;
-                if(DocPermissionFactory.IsRequested<bool>(dtoSource, pPreferred, nameof(dtoSource.Preferred)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Preferred), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pPreferred, nameof(request.Preferred)) && !request.VisibleFields.Matches(nameof(request.Preferred), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Preferred));
+                    request.VisibleFields.Add(nameof(request.Preferred));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityScope>(currentUser, dtoSource, pScope, permission, DocConstantModelName.TERMSYNONYM, nameof(dtoSource.Scope)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityScope>(currentUser, request, pScope, permission, DocConstantModelName.TERMSYNONYM, nameof(request.Scope)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pScope, entity.Scope, nameof(dtoSource.Scope)))
+                if(DocPermissionFactory.IsRequested(request, pScope, entity.Scope, nameof(request.Scope)))
                     entity.Scope = pScope;
-                if(DocPermissionFactory.IsRequested<DocEntityScope>(dtoSource, pScope, nameof(dtoSource.Scope)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Scope), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityScope>(request, pScope, nameof(request.Scope)) && !request.VisibleFields.Matches(nameof(request.Scope), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Scope));
+                    request.VisibleFields.Add(nameof(request.Scope));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pSynonym, permission, DocConstantModelName.TERMSYNONYM, nameof(dtoSource.Synonym)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSynonym, permission, DocConstantModelName.TERMSYNONYM, nameof(request.Synonym)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pSynonym, entity.Synonym, nameof(dtoSource.Synonym)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Synonym)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pSynonym, entity.Synonym, nameof(request.Synonym)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Synonym)} cannot be modified once set.");
                     entity.Synonym = pSynonym;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pSynonym, nameof(dtoSource.Synonym)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Synonym), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pSynonym, nameof(request.Synonym)) && !request.VisibleFields.Matches(nameof(request.Synonym), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Synonym));
+                    request.VisibleFields.Add(nameof(request.Synonym));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pBindings, permission, DocConstantModelName.TERMSYNONYM, nameof(dtoSource.Bindings)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pBindings, permission, DocConstantModelName.TERMSYNONYM, nameof(request.Bindings)))
             {
                 if (true == pBindings?.Any() )
                 {
@@ -383,16 +381,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(dtoSource.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Bindings)} to {nameof(TermSynonym)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Bindings)} to {nameof(TermSynonym)}");
                         entity.Bindings.Add(target);
                     });
                     var toRemove = entity.Bindings.Where(e => requestedBindings.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(dtoSource.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Bindings)} from {nameof(TermSynonym)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(TermSynonym)}");
                         entity.Bindings.Remove(target);
                     });
                 }
@@ -402,26 +400,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(dtoSource.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Bindings)} from {nameof(TermSynonym)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(TermSynonym)}");
                         entity.Bindings.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pBindings, nameof(dtoSource.Bindings)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Bindings), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pBindings, nameof(request.Bindings)) && !request.VisibleFields.Matches(nameof(request.Bindings), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Bindings));
+                    request.VisibleFields.Add(nameof(request.Bindings));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, nameof(TermSynonym), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public TermSynonym Post(TermSynonym dtoSource)
+        public TermSynonym Post(TermSynonym request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermSynonym ret = null;
 
@@ -430,7 +428,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermSynonym")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -501,8 +499,6 @@ namespace Services.API
                     var pSynonym = entity.Synonym;
                     if(!DocTools.IsNullOrEmpty(pSynonym))
                         pSynonym += " (Copy)";
-                #region Custom Before copyTermSynonym
-                #endregion Custom Before copyTermSynonym
                 var copy = new DocEntityTermSynonym(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -517,8 +513,6 @@ namespace Services.API
                                 entity.Bindings.Add(item);
                             }
 
-                #region Custom After copyTermSynonym
-                #endregion Custom After copyTermSynonym
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -531,9 +525,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public TermSynonym Put(TermSynonym dtoSource)
+        public TermSynonym Put(TermSynonym request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<TermSynonym> Patch(TermSynonymBatch request)
@@ -583,16 +577,16 @@ namespace Services.API
             return ret;
         }
 
-        public TermSynonym Patch(TermSynonym dtoSource)
+        public TermSynonym Patch(TermSynonym request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TermSynonym to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TermSynonym to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             TermSynonym ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -715,7 +709,7 @@ namespace Services.API
 
         private object _GetTermSynonymLookupTableBinding(TermSynonymJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
              var en = DocEntityTermSynonym.GetTermSynonym(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMSYNONYM, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermSynonym and LookupTableBinding");
@@ -833,7 +827,7 @@ namespace Services.API
             TermSynonym ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request);
 
             DocEntityTermSynonym entity = null;
             if(id.HasValue)
@@ -861,7 +855,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

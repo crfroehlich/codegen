@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -55,20 +56,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetLookupTable(request);
-                    });
+                    cachedRet = GetLookupTable(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetLookupTable(request);
-                });
-            }
+            ret = ret ?? GetLookupTable(request);
             return ret;
         }
 
@@ -101,11 +93,9 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<LookupTable>(currentUser, "LookupTable", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LookupTable>(Dto.LookupTable.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityLookupTable>();
+            var entities = Execute.SelectAll<DocEntityLookupTable>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableFullTextSearch(request);
@@ -173,65 +163,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(LookupTableSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<LookupTable>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "lookuptable")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<LookupTable>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "lookuptable")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTable,LookupTable>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTable,LookupTable>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(LookupTableSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<LookupTable>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "lookuptable")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<LookupTable>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "lookuptable")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTable,LookupTable>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTable,LookupTable>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -243,57 +238,60 @@ namespace Services.API
         public object Get(LookupTableVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(LookupTable request)
         {
-            LookupTable ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<LookupTable>(currentUser, "LookupTable", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "lookuptable")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                request.VisibleFields = InitVisibleFields<LookupTable>(Dto.LookupTable.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "lookuptable")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetLookupTable(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
-        private LookupTable _AssignValues(LookupTable dtoSource, DocConstantPermission permission, Session session)
+        private LookupTable _AssignValues(LookupTable request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupTable"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LookupTable ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pBindings = dtoSource.Bindings?.ToList();
-            var pCategories = dtoSource.Categories?.ToList();
-            var pDocuments = dtoSource.Documents?.ToList();
-            var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(dtoSource.Enum);
-            var pName = dtoSource.Name;
+            var pBindings = request.Bindings?.ToList();
+            var pCategories = request.Categories?.ToList();
+            var pDocuments = request.Documents?.ToList();
+            var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(request.Enum);
+            var pName = request.Name;
 
             DocEntityLookupTable entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -307,37 +305,37 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityLookupTable.GetLookupTable(dtoSource.Id);
+                entity = DocEntityLookupTable.GetLookupTable(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, dtoSource, pEnum, permission, DocConstantModelName.LOOKUPTABLE, nameof(dtoSource.Enum)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, request, pEnum, permission, DocConstantModelName.LOOKUPTABLE, nameof(request.Enum)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pEnum, entity.Enum, nameof(dtoSource.Enum)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Enum)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pEnum, entity.Enum, nameof(request.Enum)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enum)} cannot be modified once set.");
                     entity.Enum = pEnum;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(dtoSource, pEnum, nameof(dtoSource.Enum)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Enum), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Enum));
+                    request.VisibleFields.Add(nameof(request.Enum));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.LOOKUPTABLE, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.LOOKUPTABLE, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Name)} cannot be modified once set.");
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pBindings, permission, DocConstantModelName.LOOKUPTABLE, nameof(dtoSource.Bindings)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pBindings, permission, DocConstantModelName.LOOKUPTABLE, nameof(request.Bindings)))
             {
                 if (true == pBindings?.Any() )
                 {
@@ -352,16 +350,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Bindings)} to {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Bindings)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Bindings)} to {nameof(LookupTable)}");
                         entity.Bindings.Add(target);
                     });
                     var toRemove = entity.Bindings.Where(e => requestedBindings.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Bindings)} from {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Bindings)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(LookupTable)}");
                         entity.Bindings.Remove(target);
                     });
                 }
@@ -371,17 +369,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Bindings)} from {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Bindings)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(LookupTable)}");
                         entity.Bindings.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pBindings, nameof(dtoSource.Bindings)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Bindings), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pBindings, nameof(request.Bindings)) && !request.VisibleFields.Matches(nameof(request.Bindings), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Bindings));
+                    request.VisibleFields.Add(nameof(request.Bindings));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pCategories, permission, DocConstantModelName.LOOKUPTABLE, nameof(dtoSource.Categories)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pCategories, permission, DocConstantModelName.LOOKUPTABLE, nameof(request.Categories)))
             {
                 if (true == pCategories?.Any() )
                 {
@@ -396,16 +394,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityLookupCategory.GetLookupCategory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Categories)} to {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Categories)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Categories)} to {nameof(LookupTable)}");
                         entity.Categories.Add(target);
                     });
                     var toRemove = entity.Categories.Where(e => requestedCategories.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityLookupCategory.GetLookupCategory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Categories)} from {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Categories)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(LookupTable)}");
                         entity.Categories.Remove(target);
                     });
                 }
@@ -415,17 +413,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityLookupCategory.GetLookupCategory(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Categories)} from {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Categories)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(LookupTable)}");
                         entity.Categories.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pCategories, nameof(dtoSource.Categories)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Categories), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pCategories, nameof(request.Categories)) && !request.VisibleFields.Matches(nameof(request.Categories), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Categories));
+                    request.VisibleFields.Add(nameof(request.Categories));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pDocuments, permission, DocConstantModelName.LOOKUPTABLE, nameof(dtoSource.Documents)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocuments, permission, DocConstantModelName.LOOKUPTABLE, nameof(request.Documents)))
             {
                 if (true == pDocuments?.Any() )
                 {
@@ -440,16 +438,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityDocument.GetDocument(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Documents)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Documents)} to {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Documents)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Documents)} to {nameof(LookupTable)}");
                         entity.Documents.Add(target);
                     });
                     var toRemove = entity.Documents.Where(e => requestedDocuments.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocument.GetDocument(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Documents)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Documents)} from {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Documents)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Documents)} from {nameof(LookupTable)}");
                         entity.Documents.Remove(target);
                     });
                 }
@@ -459,26 +457,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocument.GetDocument(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(dtoSource.Documents)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Documents)} from {nameof(LookupTable)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Documents)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Documents)} from {nameof(LookupTable)}");
                         entity.Documents.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pDocuments, nameof(dtoSource.Documents)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Documents), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocuments, nameof(request.Documents)) && !request.VisibleFields.Matches(nameof(request.Documents), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Documents));
+                    request.VisibleFields.Add(nameof(request.Documents));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<LookupTable>(currentUser, nameof(LookupTable), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LookupTable>(Dto.LookupTable.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public LookupTable Post(LookupTable dtoSource)
+        public LookupTable Post(LookupTable request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LookupTable ret = null;
 
@@ -487,7 +485,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupTable")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -557,8 +555,6 @@ namespace Services.API
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
-                #region Custom Before copyLookupTable
-                #endregion Custom Before copyLookupTable
                 var copy = new DocEntityLookupTable(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -580,8 +576,6 @@ namespace Services.API
                                 entity.Documents.Add(item);
                             }
 
-                #region Custom After copyLookupTable
-                #endregion Custom After copyLookupTable
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -594,9 +588,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public LookupTable Put(LookupTable dtoSource)
+        public LookupTable Put(LookupTable request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<LookupTable> Patch(LookupTableBatch request)
@@ -646,16 +640,16 @@ namespace Services.API
             return ret;
         }
 
-        public LookupTable Patch(LookupTable dtoSource)
+        public LookupTable Patch(LookupTable request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the LookupTable to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the LookupTable to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             LookupTable ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -790,7 +784,7 @@ namespace Services.API
 
         private object _GetLookupTableLookupTableBinding(LookupTableJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
              var en = DocEntityLookupTable.GetLookupTable(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTable and LookupTableBinding");
@@ -812,7 +806,7 @@ namespace Services.API
 
         private object _GetLookupTableLookupCategory(LookupTableJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<LookupCategory>(currentUser, "LookupCategory", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<LookupCategory>(Dto.LookupCategory.Fields, request.VisibleFields);
              var en = DocEntityLookupTable.GetLookupTable(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "Categories", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTable and LookupCategory");
@@ -834,7 +828,7 @@ namespace Services.API
 
         private object _GetLookupTableDocument(LookupTableJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Document>(currentUser, "Document", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Document>(Dto.Document.Fields, request.VisibleFields);
              var en = DocEntityLookupTable.GetLookupTable(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "Documents", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTable and Document");
@@ -1044,7 +1038,7 @@ namespace Services.API
             LookupTable ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<LookupTable>(currentUser, "LookupTable", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<LookupTable>(Dto.LookupTable.Fields, request);
 
             DocEntityLookupTable entity = null;
             if(id.HasValue)
@@ -1072,7 +1066,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

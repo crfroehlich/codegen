@@ -31,6 +31,8 @@ namespace Services.Enums
         MEAN_DIFFERENCE,
         [EnumMember(Value = DocConstantAssociationMeasure.ODDS_RATIO)]
         ODDS_RATIO,
+        [EnumMember(Value = DocConstantAssociationMeasure.RATE_DIFFERENCE)]
+        RATE_DIFFERENCE,
         [EnumMember(Value = DocConstantAssociationMeasure.RATE_RATIO)]
         RATE_RATIO,
         [EnumMember(Value = DocConstantAssociationMeasure.RAW_DIFFERENCE)]
@@ -54,6 +56,7 @@ namespace Services.Enums
         public const string HEDGES_G = "Hedges G";
         public const string MEAN_DIFFERENCE = "Mean Difference";
         public const string ODDS_RATIO = "Odds Ratio";
+        public const string RATE_DIFFERENCE = "Rate Difference";
         public const string RATE_RATIO = "Rate Ratio";
         public const string RAW_DIFFERENCE = "Raw Difference";
         public const string RELATIVE_RISK_INCREASE = "Relative Risk Increase";

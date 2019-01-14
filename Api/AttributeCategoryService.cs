@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -55,20 +56,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetAttributeCategory(request);
-                    });
+                    cachedRet = GetAttributeCategory(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetAttributeCategory(request);
-                });
-            }
+            ret = ret ?? GetAttributeCategory(request);
             return ret;
         }
 
@@ -101,11 +93,9 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<AttributeCategory>(currentUser, "AttributeCategory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeCategory>(Dto.AttributeCategory.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityAttributeCategory>();
+            var entities = Execute.SelectAll<DocEntityAttributeCategory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeCategoryFullTextSearch(request);
@@ -183,65 +173,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(AttributeCategorySearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<AttributeCategory>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<AttributeCategory>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(AttributeCategorySearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<AttributeCategory>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<AttributeCategory>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -253,55 +248,58 @@ namespace Services.API
         public object Get(AttributeCategoryVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(AttributeCategory request)
         {
-            AttributeCategory ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<AttributeCategory>(currentUser, "AttributeCategory", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                request.VisibleFields = InitVisibleFields<AttributeCategory>(Dto.AttributeCategory.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetAttributeCategory(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
-        private AttributeCategory _AssignValues(AttributeCategory dtoSource, DocConstantPermission permission, Session session)
+        private AttributeCategory _AssignValues(AttributeCategory request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "AttributeCategory"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             AttributeCategory ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pDocumentSet = (dtoSource.DocumentSet?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(dtoSource.DocumentSet.Id) : null;
-            DocEntityLookupTable pName = GetLookup(DocConstantLookupTable.ATTRIBUTECATEGORY, dtoSource.Name?.Name, dtoSource.Name?.Id);
-            var pParentAttributeCategory = (dtoSource.ParentAttributeCategory?.Id > 0) ? DocEntityAttributeCategory.GetAttributeCategory(dtoSource.ParentAttributeCategory.Id) : null;
+            var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.DocumentSet.Id) : null;
+            DocEntityLookupTable pName = GetLookup(DocConstantLookupTable.ATTRIBUTECATEGORY, request.Name?.Name, request.Name?.Id);
+            var pParentAttributeCategory = (request.ParentAttributeCategory?.Id > 0) ? DocEntityAttributeCategory.GetAttributeCategory(request.ParentAttributeCategory.Id) : null;
 
             DocEntityAttributeCategory entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -315,53 +313,53 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityAttributeCategory.GetAttributeCategory(dtoSource.Id);
+                entity = DocEntityAttributeCategory.GetAttributeCategory(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, dtoSource, pDocumentSet, permission, DocConstantModelName.ATTRIBUTECATEGORY, nameof(dtoSource.DocumentSet)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, request, pDocumentSet, permission, DocConstantModelName.ATTRIBUTECATEGORY, nameof(request.DocumentSet)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDocumentSet, entity.DocumentSet, nameof(dtoSource.DocumentSet)))
+                if(DocPermissionFactory.IsRequested(request, pDocumentSet, entity.DocumentSet, nameof(request.DocumentSet)))
                     entity.DocumentSet = pDocumentSet;
-                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(dtoSource, pDocumentSet, nameof(dtoSource.DocumentSet)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.DocumentSet), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pDocumentSet, nameof(request.DocumentSet)) && !request.VisibleFields.Matches(nameof(request.DocumentSet), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.DocumentSet));
+                    request.VisibleFields.Add(nameof(request.DocumentSet));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pName, permission, DocConstantModelName.ATTRIBUTECATEGORY, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pName, permission, DocConstantModelName.ATTRIBUTECATEGORY, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAttributeCategory>(currentUser, dtoSource, pParentAttributeCategory, permission, DocConstantModelName.ATTRIBUTECATEGORY, nameof(dtoSource.ParentAttributeCategory)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAttributeCategory>(currentUser, request, pParentAttributeCategory, permission, DocConstantModelName.ATTRIBUTECATEGORY, nameof(request.ParentAttributeCategory)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pParentAttributeCategory, entity.ParentAttributeCategory, nameof(dtoSource.ParentAttributeCategory)))
+                if(DocPermissionFactory.IsRequested(request, pParentAttributeCategory, entity.ParentAttributeCategory, nameof(request.ParentAttributeCategory)))
                     entity.ParentAttributeCategory = pParentAttributeCategory;
-                if(DocPermissionFactory.IsRequested<DocEntityAttributeCategory>(dtoSource, pParentAttributeCategory, nameof(dtoSource.ParentAttributeCategory)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ParentAttributeCategory), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityAttributeCategory>(request, pParentAttributeCategory, nameof(request.ParentAttributeCategory)) && !request.VisibleFields.Matches(nameof(request.ParentAttributeCategory), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.ParentAttributeCategory));
+                    request.VisibleFields.Add(nameof(request.ParentAttributeCategory));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<AttributeCategory>(currentUser, nameof(AttributeCategory), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeCategory>(Dto.AttributeCategory.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public AttributeCategory Post(AttributeCategory dtoSource)
+        public AttributeCategory Post(AttributeCategory request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             AttributeCategory ret = null;
 
@@ -370,7 +368,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "AttributeCategory")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -436,8 +434,6 @@ namespace Services.API
                     var pDocumentSet = entity.DocumentSet;
                     var pName = entity.Name;
                     var pParentAttributeCategory = entity.ParentAttributeCategory;
-                #region Custom Before copyAttributeCategory
-                #endregion Custom Before copyAttributeCategory
                 var copy = new DocEntityAttributeCategory(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -445,8 +441,6 @@ namespace Services.API
                                 , Name = pName
                                 , ParentAttributeCategory = pParentAttributeCategory
                 };
-                #region Custom After copyAttributeCategory
-                #endregion Custom After copyAttributeCategory
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -459,9 +453,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public AttributeCategory Put(AttributeCategory dtoSource)
+        public AttributeCategory Put(AttributeCategory request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<AttributeCategory> Patch(AttributeCategoryBatch request)
@@ -511,16 +505,16 @@ namespace Services.API
             return ret;
         }
 
-        public AttributeCategory Patch(AttributeCategory dtoSource)
+        public AttributeCategory Patch(AttributeCategory request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the AttributeCategory to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the AttributeCategory to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             AttributeCategory ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -605,7 +599,7 @@ namespace Services.API
             AttributeCategory ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<AttributeCategory>(currentUser, "AttributeCategory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeCategory>(Dto.AttributeCategory.Fields, request);
 
             DocEntityAttributeCategory entity = null;
             if(id.HasValue)
@@ -633,7 +627,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

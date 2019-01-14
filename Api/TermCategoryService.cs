@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -55,20 +56,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTermCategory(request);
-                    });
+                    cachedRet = GetTermCategory(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTermCategory(request);
-                });
-            }
+            ret = ret ?? GetTermCategory(request);
             return ret;
         }
 
@@ -101,11 +93,9 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, "TermCategory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermCategory>(Dto.TermCategory.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityTermCategory>();
+            var entities = Execute.SelectAll<DocEntityTermCategory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermCategoryFullTextSearch(request);
@@ -179,65 +169,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(TermCategorySearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<TermCategory>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termcategory")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<TermCategory>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termcategory")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermCategory,TermCategory>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermCategory,TermCategory>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(TermCategorySearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<TermCategory>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termcategory")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<TermCategory>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termcategory")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermCategory,TermCategory>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermCategory,TermCategory>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -249,55 +244,58 @@ namespace Services.API
         public object Get(TermCategoryVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(TermCategory request)
         {
-            TermCategory ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, "TermCategory", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termcategory")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                request.VisibleFields = InitVisibleFields<TermCategory>(Dto.TermCategory.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termcategory")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetTermCategory(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
-        private TermCategory _AssignValues(TermCategory dtoSource, DocConstantPermission permission, Session session)
+        private TermCategory _AssignValues(TermCategory request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermCategory"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermCategory ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            DocEntityLookupTable pName = GetLookup(DocConstantLookupTable.TERMCATEGORY, dtoSource.Name?.Name, dtoSource.Name?.Id);
-            var pParentCategory = (dtoSource.ParentCategory?.Id > 0) ? DocEntityTermCategory.GetTermCategory(dtoSource.ParentCategory.Id) : null;
-            var pTerms = dtoSource.Terms?.ToList();
+            DocEntityLookupTable pName = GetLookup(DocConstantLookupTable.TERMCATEGORY, request.Name?.Name, request.Name?.Id);
+            var pParentCategory = (request.ParentCategory?.Id > 0) ? DocEntityTermCategory.GetTermCategory(request.ParentCategory.Id) : null;
+            var pTerms = request.Terms?.ToList();
 
             DocEntityTermCategory entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -311,35 +309,35 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityTermCategory.GetTermCategory(dtoSource.Id);
+                entity = DocEntityTermCategory.GetTermCategory(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, dtoSource, pName, permission, DocConstantModelName.TERMCATEGORY, nameof(dtoSource.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pName, permission, DocConstantModelName.TERMCATEGORY, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermCategory>(currentUser, dtoSource, pParentCategory, permission, DocConstantModelName.TERMCATEGORY, nameof(dtoSource.ParentCategory)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermCategory>(currentUser, request, pParentCategory, permission, DocConstantModelName.TERMCATEGORY, nameof(request.ParentCategory)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pParentCategory, entity.ParentCategory, nameof(dtoSource.ParentCategory)))
+                if(DocPermissionFactory.IsRequested(request, pParentCategory, entity.ParentCategory, nameof(request.ParentCategory)))
                     entity.ParentCategory = pParentCategory;
-                if(DocPermissionFactory.IsRequested<DocEntityTermCategory>(dtoSource, pParentCategory, nameof(dtoSource.ParentCategory)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.ParentCategory), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTermCategory>(request, pParentCategory, nameof(request.ParentCategory)) && !request.VisibleFields.Matches(nameof(request.ParentCategory), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.ParentCategory));
+                    request.VisibleFields.Add(nameof(request.ParentCategory));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pTerms, permission, DocConstantModelName.TERMCATEGORY, nameof(dtoSource.Terms)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTerms, permission, DocConstantModelName.TERMCATEGORY, nameof(request.Terms)))
             {
                 if (true == pTerms?.Any() )
                 {
@@ -354,16 +352,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityTermMaster.GetTermMaster(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(dtoSource.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Terms)} to {nameof(TermCategory)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Terms)} to {nameof(TermCategory)}");
                         entity.Terms.Add(target);
                     });
                     var toRemove = entity.Terms.Where(e => requestedTerms.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityTermMaster.GetTermMaster(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(dtoSource.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Terms)} from {nameof(TermCategory)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Terms)} from {nameof(TermCategory)}");
                         entity.Terms.Remove(target);
                     });
                 }
@@ -373,26 +371,26 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityTermMaster.GetTermMaster(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(dtoSource.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Terms)} from {nameof(TermCategory)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Terms)} from {nameof(TermCategory)}");
                         entity.Terms.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pTerms, nameof(dtoSource.Terms)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Terms), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pTerms, nameof(request.Terms)) && !request.VisibleFields.Matches(nameof(request.Terms), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Terms));
+                    request.VisibleFields.Add(nameof(request.Terms));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, nameof(TermCategory), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermCategory>(Dto.TermCategory.Fields, request);
             ret = entity.ToDto();
 
             return ret;
         }
-        public TermCategory Post(TermCategory dtoSource)
+        public TermCategory Post(TermCategory request)
         {
-            if(dtoSource == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermCategory ret = null;
 
@@ -401,7 +399,7 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermCategory")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(dtoSource, DocConstantPermission.ADD, ssn);
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
             });
 
             return ret;
@@ -467,8 +465,6 @@ namespace Services.API
                     var pName = entity.Name;
                     var pParentCategory = entity.ParentCategory;
                     var pTerms = entity.Terms.ToList();
-                #region Custom Before copyTermCategory
-                #endregion Custom Before copyTermCategory
                 var copy = new DocEntityTermCategory(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -480,8 +476,6 @@ namespace Services.API
                                 entity.Terms.Add(item);
                             }
 
-                #region Custom After copyTermCategory
-                #endregion Custom After copyTermCategory
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -494,9 +488,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public TermCategory Put(TermCategory dtoSource)
+        public TermCategory Put(TermCategory request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<TermCategory> Patch(TermCategoryBatch request)
@@ -546,16 +540,16 @@ namespace Services.API
             return ret;
         }
 
-        public TermCategory Patch(TermCategory dtoSource)
+        public TermCategory Patch(TermCategory request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TermCategory to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TermCategory to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             TermCategory ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -678,7 +672,7 @@ namespace Services.API
 
         private object _GetTermCategoryTermMaster(TermCategoryJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request.VisibleFields);
              var en = DocEntityTermCategory.GetTermCategory(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMCATEGORY, columnName: "Terms", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermCategory and TermMaster");
@@ -796,7 +790,7 @@ namespace Services.API
             TermCategory ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, "TermCategory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermCategory>(Dto.TermCategory.Fields, request);
 
             DocEntityTermCategory entity = null;
             if(id.HasValue)
@@ -824,7 +818,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

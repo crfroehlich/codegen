@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -55,20 +56,11 @@ namespace Services.API
                 ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
                     object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetFeatureSet(request);
-                    });
+                    cachedRet = GetFeatureSet(request);
                     return cachedRet;
                 });
             }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetFeatureSet(request);
-                });
-            }
+            ret = ret ?? GetFeatureSet(request);
             return ret;
         }
 
@@ -101,11 +93,9 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, "FeatureSet", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<FeatureSet>(Dto.FeatureSet.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityFeatureSet>();
+            var entities = Execute.SelectAll<DocEntityFeatureSet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new FeatureSetFullTextSearch(request);
@@ -142,8 +132,6 @@ namespace Services.API
 
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
-                if(!DocTools.IsNullOrEmpty(request.Feature))
-                    entities = entities.Where(en => en.Feature.Contains(request.Feature));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                         if(true == request.RolesIds?.Any())
@@ -161,65 +149,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(FeatureSetSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<FeatureSet>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "featureset")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<FeatureSet>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "featureset")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityFeatureSet,FeatureSet>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityFeatureSet,FeatureSet>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
         public object Get(FeatureSetSearch request)
         {
             object tryRet = null;
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    var ret = new List<FeatureSet>();
-                    var settings = DocResources.Settings;
-                    if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "featureset")) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = _GetSearchCache(request, requestCancel);
+                        var ret = new List<FeatureSet>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "featureset")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityFeatureSet,FeatureSet>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityFeatureSet,FeatureSet>(ret, Execute, requestCancel));
-                        tryRet = ret;
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
+            });
             return tryRet;
         }
 
@@ -231,56 +224,59 @@ namespace Services.API
         public object Get(FeatureSetVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
 
         public object Get(FeatureSet request)
         {
-            FeatureSet ret = null;
+            object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, "FeatureSet", request.VisibleFields);
-            var settings = DocResources.Settings;
-            if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "featureset")) 
+            Execute.Run(s =>
             {
-                return _GetIdCache(request);
-            }
-            else 
-            {
-                Execute.Run((ssn) =>
+                request.VisibleFields = InitVisibleFields<FeatureSet>(Dto.FeatureSet.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "featureset")) 
+                {
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetFeatureSet(request);
-                });
-            }
+                }
+            });
             return ret;
         }
 
-        private FeatureSet _AssignValues(FeatureSet dtoSource, DocConstantPermission permission, Session session)
+        private FeatureSet _AssignValues(FeatureSet request, DocConstantPermission permission, Session session)
         {
-            if(permission != DocConstantPermission.ADD && (dtoSource == null || dtoSource.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "FeatureSet"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             FeatureSet ret = null;
-            dtoSource = _InitAssignValues(dtoSource, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if(permission == DocConstantPermission.ADD && dtoSource.Id > 0) return dtoSource;
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             //First, assign all the variables, do database lookups and conversions
-            var pDescription = dtoSource.Description;
-            var pFeature = dtoSource.Feature;
-            var pName = dtoSource.Name;
-            var pRoles = dtoSource.Roles?.ToList();
+            var pDescription = request.Description;
+            var pName = request.Name;
+            var pPermissionTemplate = request.PermissionTemplate;
+            var pRoles = request.Roles?.ToList();
 
             DocEntityFeatureSet entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -294,45 +290,45 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityFeatureSet.GetFeatureSet(dtoSource.Id);
+                entity = DocEntityFeatureSet.GetFeatureSet(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pDescription, permission, DocConstantModelName.FEATURESET, nameof(dtoSource.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.FEATURESET, nameof(request.Description)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pDescription, entity.Description, nameof(dtoSource.Description)))
+                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
                     entity.Description = pDescription;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pDescription, nameof(dtoSource.Description)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Description));
+                    request.VisibleFields.Add(nameof(request.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pFeature, permission, DocConstantModelName.FEATURESET, nameof(dtoSource.Feature)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.FEATURESET, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(dtoSource, pFeature, entity.Feature, nameof(dtoSource.Feature)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(dtoSource.Feature)} cannot be modified once set.");
-                    entity.Feature = pFeature;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pFeature, nameof(dtoSource.Feature)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Feature), ignoreSpaces: true))
-                {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Feature));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, dtoSource, pName, permission, DocConstantModelName.FEATURESET, nameof(dtoSource.Name)))
-            {
-                if(DocPermissionFactory.IsRequested(dtoSource, pName, entity.Name, nameof(dtoSource.Name)))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(dtoSource, pName, nameof(dtoSource.Name)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Name));
+                    request.VisibleFields.Add(nameof(request.Name));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pPermissionTemplate, permission, DocConstantModelName.FEATURESET, nameof(request.PermissionTemplate)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pPermissionTemplate, entity.PermissionTemplate, nameof(request.PermissionTemplate)))
+                    entity.PermissionTemplate = pPermissionTemplate;
+                if(DocPermissionFactory.IsRequested<string>(request, pPermissionTemplate, nameof(request.PermissionTemplate)) && !request.VisibleFields.Matches(nameof(request.PermissionTemplate), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.PermissionTemplate));
                 }
             }
             
-            if (dtoSource.Locked) entity.Locked = dtoSource.Locked;
+            if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, dtoSource, pRoles, permission, DocConstantModelName.FEATURESET, nameof(dtoSource.Roles)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pRoles, permission, DocConstantModelName.FEATURESET, nameof(request.Roles)))
             {
                 if (true == pRoles?.Any() )
                 {
@@ -347,16 +343,16 @@ namespace Services.API
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(dtoSource.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(dtoSource.Roles)} to {nameof(FeatureSet)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Roles)} to {nameof(FeatureSet)}");
                         entity.Roles.Add(target);
                     });
                     var toRemove = entity.Roles.Where(e => requestedRoles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(dtoSource.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Roles)} from {nameof(FeatureSet)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(FeatureSet)}");
                         entity.Roles.Remove(target);
                     });
                 }
@@ -366,17 +362,17 @@ namespace Services.API
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(dtoSource.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(dtoSource.Roles)} from {nameof(FeatureSet)}");
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(FeatureSet)}");
                         entity.Roles.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(dtoSource, pRoles, nameof(dtoSource.Roles)) && !dtoSource.VisibleFields.Matches(nameof(dtoSource.Roles), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pRoles, nameof(request.Roles)) && !request.VisibleFields.Matches(nameof(request.Roles), ignoreSpaces: true))
                 {
-                    dtoSource.VisibleFields.Add(nameof(dtoSource.Roles));
+                    request.VisibleFields.Add(nameof(request.Roles));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, nameof(FeatureSet), dtoSource.VisibleFields);
+            request.VisibleFields = InitVisibleFields<FeatureSet>(Dto.FeatureSet.Fields, request);
             ret = entity.ToDto();
 
             return ret;
@@ -388,9 +384,9 @@ namespace Services.API
             return Patch(request);
         }
 
-        public FeatureSet Put(FeatureSet dtoSource)
+        public FeatureSet Put(FeatureSet request)
         {
-            return Patch(dtoSource);
+            return Patch(request);
         }
 
         public List<FeatureSet> Patch(FeatureSetBatch request)
@@ -440,16 +436,16 @@ namespace Services.API
             return ret;
         }
 
-        public FeatureSet Patch(FeatureSet dtoSource)
+        public FeatureSet Patch(FeatureSet request)
         {
-            if(true != (dtoSource?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the FeatureSet to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the FeatureSet to patch.");
             
-            dtoSource.VisibleFields = dtoSource.VisibleFields ?? new List<string>();
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             FeatureSet ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(dtoSource, DocConstantPermission.EDIT, ssn);
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
             });
             return ret;
         }
@@ -499,7 +495,7 @@ namespace Services.API
 
         private object _GetFeatureSetRole(FeatureSetJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
              var en = DocEntityFeatureSet.GetFeatureSet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.FEATURESET, columnName: "Roles", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between FeatureSet and Role");
@@ -617,7 +613,7 @@ namespace Services.API
             FeatureSet ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, "FeatureSet", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<FeatureSet>(Dto.FeatureSet.Fields, request);
 
             DocEntityFeatureSet entity = null;
             if(id.HasValue)
@@ -645,7 +641,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -129,7 +130,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
         public Reference ImportType { get; set; }
         [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? ImportTypeId { get; set; }
@@ -262,16 +263,12 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
-            if (DocTools.AreEqual(nameof(Fields), field)) return false;
-            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
-            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
-            if (DocTools.AreEqual(nameof(Id), field)) return true;
-            return true == VisibleFields?.Matches(field, true);
+            if (IgnoredVisibleFields.Matches(field, true)) return false;
+            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            return ret;
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<Document>());
+        public static List<string> Fields => DocTools.Fields<Document>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
@@ -339,7 +336,7 @@ namespace Services.Dto
         public List<int> ImportIds { get; set; }
         public Reference ImportType { get; set; }
         public List<int> ImportTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
         public List<string> ImportTypeNames { get; set; }
         public string Institution { get; set; }
         public string ISSN { get; set; }
