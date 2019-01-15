@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class TeamService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityTeam.CACHE_KEY_PREFIX;
-        private object _GetIdCache(Team request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.TEAM);
-                var cacheKey = $"Team_{key}_{request.Id}_{UrnId.Create<Team>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetTeam(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetTeam(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(TeamSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<Team>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.TEAM);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<TeamSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTeam,Team>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<Team>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTeam,Team>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(TeamSearch request, Action<IQueryable<DocEntityTeam>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityTeam>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityTeam>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TeamFullTextSearch(request);
@@ -130,10 +86,6 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                        if(true == request.AdminRolesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.AdminRoles.Any(r => r.Id.In(request.AdminRolesIds)));
-                        }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(!DocTools.IsNullOrEmpty(request.Email))
@@ -175,70 +127,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(TeamSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Team>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "team")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTeam,Team>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(TeamSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Team>();
+            var cacheKey = GetApiCacheKey<Team>(DocConstantModelName.TEAM, nameof(Team), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<Team>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "team")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTeam,Team>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.TEAM);
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTeam,Team>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.TEAM);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.TEAM);
             return tryRet;
         }
 
@@ -250,12 +180,9 @@ namespace Services.API
         public object Get(TeamVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -267,19 +194,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Team>(DocConstantModelName.TEAM, nameof(Team), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "team")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetTeam(request);
+                    });
+                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.TEAM);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetTeam(request);
-                }
-            });
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.TEAM);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.TEAM);
             return ret;
         }
 
@@ -298,15 +236,15 @@ namespace Services.API
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
+            var cacheKey = GetApiCacheKey<Team>(DocConstantModelName.TEAM, nameof(Team), request);
+            
             //First, assign all the variables, do database lookups and conversions
-            var pAdminRoles = request.AdminRoles?.ToList();
             var pDescription = request.Description;
             var pEmail = request.Email;
             var pIsInternal = request.IsInternal;
             var pName = request.Name;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityUser.GetUser(request.Owner.Id) : null;
             var pScopes = request.Scopes?.ToList();
-            var pSettings = request.Settings;
             var pSlack = request.Slack;
             var pUpdates = request.Updates?.ToList();
             var pUsers = request.Users?.ToList();
@@ -373,15 +311,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Owner));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<TeamSettings>(currentUser, request, pSettings, permission, DocConstantModelName.TEAM, nameof(request.Settings)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
-                    entity.Settings = DocSerialize<TeamSettings>.ToString(pSettings);
-                if(DocPermissionFactory.IsRequested<TeamSettings>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Settings));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSlack, permission, DocConstantModelName.TEAM, nameof(request.Slack)))
             {
                 if(DocPermissionFactory.IsRequested(request, pSlack, entity.Slack, nameof(request.Slack)))
@@ -396,50 +325,6 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pAdminRoles, permission, DocConstantModelName.TEAM, nameof(request.AdminRoles)))
-            {
-                if (true == pAdminRoles?.Any() )
-                {
-                    var requestedAdminRoles = pAdminRoles.Select(p => p.Id).Distinct().ToList();
-                    var existsAdminRoles = Execute.SelectAll<DocEntityRole>().Where(e => e.Id.In(requestedAdminRoles)).Select( e => e.Id ).ToList();
-                    if (existsAdminRoles.Count != requestedAdminRoles.Count)
-                    {
-                        var nonExists = requestedAdminRoles.Where(id => existsAdminRoles.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection AdminRoles with objects that do not exist. No matching AdminRoles(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedAdminRoles.Where(id => entity.AdminRoles.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.AdminRoles)} to {nameof(Team)}");
-                        entity.AdminRoles.Add(target);
-                    });
-                    var toRemove = entity.AdminRoles.Where(e => requestedAdminRoles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.AdminRoles)} from {nameof(Team)}");
-                        entity.AdminRoles.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.AdminRoles.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityRole.GetRole(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Team), columnName: nameof(request.AdminRoles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.AdminRoles)} from {nameof(Team)}");
-                        entity.AdminRoles.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pAdminRoles, nameof(request.AdminRoles)) && !request.VisibleFields.Matches(nameof(request.AdminRoles), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.AdminRoles));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.TEAM, nameof(request.Scopes)))
             {
                 if (true == pScopes?.Any() )
@@ -572,8 +457,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Users));
                 }
             }
-            request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Team>(currentUser, nameof(Team), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.TEAM);
 
             return ret;
         }
@@ -653,7 +540,6 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pAdminRoles = entity.AdminRoles.ToList();
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
@@ -666,12 +552,13 @@ namespace Services.API
                         pName += " (Copy)";
                     var pOwner = entity.Owner;
                     var pScopes = entity.Scopes.ToList();
-                    var pSettings = entity.Settings;
                     var pSlack = entity.Slack;
                     if(!DocTools.IsNullOrEmpty(pSlack))
                         pSlack += " (Copy)";
                     var pUpdates = entity.Updates.ToList();
                     var pUsers = entity.Users.ToList();
+                #region Custom Before copyTeam
+                #endregion Custom Before copyTeam
                 var copy = new DocEntityTeam(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -680,14 +567,8 @@ namespace Services.API
                                 , IsInternal = pIsInternal
                                 , Name = pName
                                 , Owner = pOwner
-                                , Settings = pSettings
                                 , Slack = pSlack
                 };
-                            foreach(var item in pAdminRoles)
-                            {
-                                entity.AdminRoles.Add(item);
-                            }
-
                             foreach(var item in pScopes)
                             {
                                 entity.Scopes.Add(item);
@@ -703,6 +584,8 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
+                #region Custom After copyTeam
+                #endregion Custom After copyTeam
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -829,6 +712,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.TEAM);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityTeam.GetTeam(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Team could be found for Id {request?.Id}.");
@@ -868,9 +755,6 @@ namespace Services.API
             {
                 switch(method)
                 {
-                case "role":
-                    ret = _GetTeamRole(request, skip, take);
-                    break;
                 case "scope":
                     ret = _GetTeamScope(request, skip, take);
                     break;
@@ -897,9 +781,6 @@ namespace Services.API
             {
                 switch(method)
                 {
-                case "role":
-                    ret = GetTeamRoleVersion(request);
-                    break;
                 case "scope":
                     ret = GetTeamScopeVersion(request);
                     break;
@@ -915,31 +796,9 @@ namespace Services.API
         }
         
 
-        private object _GetTeamRole(TeamJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
-             var en = DocEntityTeam.GetTeam(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "AdminRoles", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Role");
-             return en?.AdminRoles.Take(take).Skip(skip).ConvertFromEntityList<DocEntityRole,Role>(new List<Role>());
-        }
-
-        private List<Version> GetTeamRoleVersion(TeamJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityTeam.GetTeam(request.Id);
-                ret = en?.AdminRoles.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
         private object _GetTeamScope(TeamJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
              var en = DocEntityTeam.GetTeam(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Scope");
@@ -961,7 +820,7 @@ namespace Services.API
 
         private object _GetTeamUpdate(TeamJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
              var en = DocEntityTeam.GetTeam(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Updates", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Update");
@@ -983,7 +842,7 @@ namespace Services.API
 
         private object _GetTeamUser(TeamJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
              var en = DocEntityTeam.GetTeam(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and User");
@@ -1020,9 +879,6 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
-                case "role":
-                    ret = _PostTeamRole(request);
-                    break;
                 case "scope":
                     ret = _PostTeamScope(request);
                     break;
@@ -1037,27 +893,6 @@ namespace Services.API
             return ret;
         }
 
-
-        private object _PostTeamRole(TeamJunction request)
-        {
-            var entity = DocEntityTeam.GetTeam(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityRole.GetRole(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "AdminRoles")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the AdminRoles property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Team with objects that do not exist. No matching Role could be found for {id}.");
-                entity.AdminRoles.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private object _PostTeamScope(TeamJunction request)
         {
@@ -1139,9 +974,6 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
-                case "role":
-                    ret = _DeleteTeamRole(request);
-                    break;
                 case "scope":
                     ret = _DeleteTeamScope(request);
                     break;
@@ -1156,25 +988,6 @@ namespace Services.API
             return ret;
         }
 
-
-        private object _DeleteTeamRole(TeamJunction request)
-        {
-            var entity = DocEntityTeam.GetTeam(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityRole.GetRole(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "AdminRoles"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Team and Role");
-                if(null != relationship && false == relationship.IsRemoved) entity.AdminRoles.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private object _DeleteTeamScope(TeamJunction request)
         {
@@ -1239,7 +1052,7 @@ namespace Services.API
             Team ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
 
             DocEntityTeam entity = null;
             if(id.HasValue)
@@ -1267,6 +1080,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

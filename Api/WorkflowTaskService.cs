@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class WorkflowTaskService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityWorkflowTask.CACHE_KEY_PREFIX;
         private void _ExecSearch(WorkflowTaskSearch request, Action<IQueryable<DocEntityWorkflowTask>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityWorkflowTask>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityWorkflowTask>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowTaskFullTextSearch(request);
@@ -161,54 +161,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(WorkflowTaskSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<WorkflowTask>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowTask,WorkflowTask>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(WorkflowTaskSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<WorkflowTask>();
+            var cacheKey = GetApiCacheKey<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, nameof(WorkflowTask), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<WorkflowTask>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowTask,WorkflowTask>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.WORKFLOWTASK);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.WORKFLOWTASK);
             return tryRet;
         }
 
@@ -220,12 +205,9 @@ namespace Services.API
         public object Get(WorkflowTaskVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -237,11 +219,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, nameof(WorkflowTask), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request);
-                ret = GetWorkflowTask(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetWorkflowTask(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOWTASK);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.WORKFLOWTASK);
             return ret;
         }
 
@@ -259,6 +247,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, nameof(WorkflowTask), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pAssignee = (request.Assignee?.Id > 0) ? DocEntityUser.GetUser(request.Assignee.Id) : null;
@@ -364,8 +354,10 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, nameof(WorkflowTask), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOWTASK);
 
             return ret;
         }
@@ -455,6 +447,8 @@ namespace Services.API
                     var pStatus = entity.Status;
                     var pType = entity.Type;
                     var pWorkflow = entity.Workflow;
+                #region Custom Before copyWorkflowTask
+                #endregion Custom Before copyWorkflowTask
                 var copy = new DocEntityWorkflowTask(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -467,6 +461,8 @@ namespace Services.API
                                 , Type = pType
                                 , Workflow = pWorkflow
                 };
+                #region Custom After copyWorkflowTask
+                #endregion Custom After copyWorkflowTask
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -593,6 +589,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.WORKFLOWTASK);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityWorkflowTask.GetWorkflowTask(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowTask could be found for Id {request?.Id}.");
@@ -625,7 +625,7 @@ namespace Services.API
             WorkflowTask ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
 
             DocEntityWorkflowTask entity = null;
             if(id.HasValue)
@@ -653,6 +653,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

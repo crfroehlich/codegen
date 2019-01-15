@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -77,23 +76,10 @@ namespace Services.Dto
         public string Name { get; set; }
 
 
-        [ApiMember(Name = nameof(Products), Description = "Product", IsRequired = false)]
-        public List<Reference> Products { get; set; }
-        public int? ProductsCount { get; set; }
-
-
         [ApiMember(Name = nameof(Role), Description = "Role", IsRequired = true)]
         public Reference Role { get; set; }
         [ApiMember(Name = nameof(RoleId), Description = "Primary Key of Role", IsRequired = false)]
         public int? RoleId { get; set; }
-
-
-        [ApiMember(Name = nameof(SalesforceAccountId), Description = "string", IsRequired = false)]
-        public string SalesforceAccountId { get; set; }
-
-
-        [ApiMember(Name = nameof(SalesforceAccountName), Description = "string", IsRequired = false)]
-        public string SalesforceAccountName { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
@@ -125,16 +111,20 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
-            return ret;
+            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
+            if (DocTools.AreEqual(nameof(Fields), field)) return false;
+            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
+            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
+            if (DocTools.AreEqual(nameof(Id), field)) return true;
+            return true == VisibleFields?.Matches(field, true);
         }
 
-        public static List<string> Fields => DocTools.Fields<Client>();
+        private static List<string> _fields;
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<Client>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Account),nameof(AccountId),nameof(Created),nameof(CreatorId),nameof(DefaultLocale),nameof(DefaultLocaleId),nameof(Divisions),nameof(DivisionsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Products),nameof(ProductsCount),nameof(Role),nameof(RoleId),nameof(SalesforceAccountId),nameof(SalesforceAccountName),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Account),nameof(AccountId),nameof(Created),nameof(CreatorId),nameof(DefaultLocale),nameof(DefaultLocaleId),nameof(Divisions),nameof(DivisionsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Role),nameof(RoleId),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -157,7 +147,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Divisions), nameof(DivisionsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Products), nameof(ProductsCount), nameof(Scopes), nameof(ScopesCount)
+            nameof(Divisions), nameof(DivisionsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
     }
@@ -178,11 +168,8 @@ namespace Services.Dto
         public List<int> DivisionsIds { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
-        public List<int> ProductsIds { get; set; }
         public Reference Role { get; set; }
         public List<int> RoleIds { get; set; }
-        public string SalesforceAccountId { get; set; }
-        public string SalesforceAccountName { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Settings { get; set; }
     }
@@ -205,10 +192,7 @@ namespace Services.Dto
         public bool doDivisions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Divisions))); }
         public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.DocumentSets))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Name))); }
-        public bool doProducts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Products))); }
         public bool doRole { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Role))); }
-        public bool doSalesforceAccountId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.SalesforceAccountId))); }
-        public bool doSalesforceAccountName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.SalesforceAccountName))); }
         public bool doScopes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Scopes))); }
         public bool doSettings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Settings))); }
     }
@@ -226,8 +210,6 @@ namespace Services.Dto
     [Route("/profile/client/{Id}/division", "GET, POST, DELETE")]
     [Route("/client/{Id}/documentset", "GET, POST, DELETE")]
     [Route("/profile/client/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/client/{Id}/product", "GET, POST, DELETE")]
-    [Route("/profile/client/{Id}/product", "GET, POST, DELETE")]
     [Route("/client/{Id}/scope", "GET, POST, DELETE")]
     [Route("/profile/client/{Id}/scope", "GET, POST, DELETE")]
     [Route("/client/{Id}/user", "GET, POST, DELETE")]
@@ -259,8 +241,6 @@ namespace Services.Dto
     [Route("/profile/client/{Id}/division/version", "GET")]
     [Route("/client/{Id}/documentset/version", "GET")]
     [Route("/profile/client/{Id}/documentset/version", "GET")]
-    [Route("/client/{Id}/product/version", "GET")]
-    [Route("/profile/client/{Id}/product/version", "GET")]
     [Route("/client/{Id}/scope/version", "GET")]
     [Route("/profile/client/{Id}/scope/version", "GET")]
     [Route("/client/{Id}/user/version", "GET")]

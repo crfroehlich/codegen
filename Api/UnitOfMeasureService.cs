@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class UnitOfMeasureService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityUnitOfMeasure.CACHE_KEY_PREFIX;
-        private object _GetIdCache(UnitOfMeasure request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.UNITOFMEASURE);
-                var cacheKey = $"UnitOfMeasure_{key}_{request.Id}_{UrnId.Create<UnitOfMeasure>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetUnitOfMeasure(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetUnitOfMeasure(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(UnitOfMeasureSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<UnitOfMeasure>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.UNITOFMEASURE);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<UnitOfMeasureSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<UnitOfMeasure>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(UnitOfMeasureSearch request, Action<IQueryable<DocEntityUnitOfMeasure>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<UnitOfMeasure>(Dto.UnitOfMeasure.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, "UnitOfMeasure", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityUnitOfMeasure>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityUnitOfMeasure>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UnitOfMeasureFullTextSearch(request);
@@ -191,70 +147,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(UnitOfMeasureSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<UnitOfMeasure>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitofmeasure")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(UnitOfMeasureSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<UnitOfMeasure>();
+            var cacheKey = GetApiCacheKey<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, nameof(UnitOfMeasure), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<UnitOfMeasure>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitofmeasure")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.UNITOFMEASURE);
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.UNITOFMEASURE);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.UNITOFMEASURE);
             return tryRet;
         }
 
@@ -266,12 +200,9 @@ namespace Services.API
         public object Get(UnitOfMeasureVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -283,19 +214,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, "UnitOfMeasure", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, nameof(UnitOfMeasure), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<UnitOfMeasure>(Dto.UnitOfMeasure.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitofmeasure")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetUnitOfMeasure(request);
+                    });
+                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.UNITOFMEASURE);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetUnitOfMeasure(request);
-                }
-            });
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.UNITOFMEASURE);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.UNITOFMEASURE);
             return ret;
         }
 
@@ -313,6 +255,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, nameof(UnitOfMeasure), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pIsSI = request.IsSI;
@@ -380,8 +324,10 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<UnitOfMeasure>(Dto.UnitOfMeasure.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, nameof(UnitOfMeasure), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.UNITOFMEASURE);
 
             return ret;
         }
@@ -465,6 +411,8 @@ namespace Services.API
                     var pName = entity.Name;
                     var pType = entity.Type;
                     var pUnit = entity.Unit;
+                #region Custom Before copyUnitOfMeasure
+                #endregion Custom Before copyUnitOfMeasure
                 var copy = new DocEntityUnitOfMeasure(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -473,6 +421,8 @@ namespace Services.API
                                 , Type = pType
                                 , Unit = pUnit
                 };
+                #region Custom After copyUnitOfMeasure
+                #endregion Custom After copyUnitOfMeasure
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -599,6 +549,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.UNITOFMEASURE);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityUnitOfMeasure.GetUnitOfMeasure(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UnitOfMeasure could be found for Id {request?.Id}.");
@@ -631,7 +585,7 @@ namespace Services.API
             UnitOfMeasure ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<UnitOfMeasure>(Dto.UnitOfMeasure.Fields, request);
+            DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, "UnitOfMeasure", request.VisibleFields);
 
             DocEntityUnitOfMeasure entity = null;
             if(id.HasValue)
@@ -659,6 +613,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

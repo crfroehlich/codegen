@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class LocaleLookupService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityLocaleLookup.CACHE_KEY_PREFIX;
         private void _ExecSearch(LocaleLookupSearch request, Action<IQueryable<DocEntityLocaleLookup>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<LocaleLookup>(Dto.LocaleLookup.Fields, request);
+            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityLocaleLookup>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityLocaleLookup>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LocaleLookupFullTextSearch(request);
@@ -107,54 +107,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(LocaleLookupSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<LocaleLookup>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLocaleLookup,LocaleLookup>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(LocaleLookupSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<LocaleLookup>();
+            var cacheKey = GetApiCacheKey<LocaleLookup>(DocConstantModelName.LOCALELOOKUP, nameof(LocaleLookup), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<LocaleLookup>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLocaleLookup,LocaleLookup>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.LOCALELOOKUP);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.LOCALELOOKUP);
             return tryRet;
         }
 
@@ -166,12 +151,9 @@ namespace Services.API
         public object Get(LocaleLookupVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -183,11 +165,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<LocaleLookup>(DocConstantModelName.LOCALELOOKUP, nameof(LocaleLookup), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<LocaleLookup>(Dto.LocaleLookup.Fields, request);
-                ret = GetLocaleLookup(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetLocaleLookup(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOCALELOOKUP);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.LOCALELOOKUP);
             return ret;
         }
 
@@ -205,6 +193,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<LocaleLookup>(DocConstantModelName.LOCALELOOKUP, nameof(LocaleLookup), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pData = request.Data;
@@ -260,8 +250,10 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<LocaleLookup>(Dto.LocaleLookup.Fields, request);
+            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, nameof(LocaleLookup), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOCALELOOKUP);
 
             return ret;
         }
@@ -346,6 +338,8 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pIpAddress))
                         pIpAddress += " (Copy)";
                     var pLocale = entity.Locale;
+                #region Custom Before copyLocaleLookup
+                #endregion Custom Before copyLocaleLookup
                 var copy = new DocEntityLocaleLookup(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -353,6 +347,8 @@ namespace Services.API
                                 , IpAddress = pIpAddress
                                 , Locale = pLocale
                 };
+                #region Custom After copyLocaleLookup
+                #endregion Custom After copyLocaleLookup
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -368,7 +364,7 @@ namespace Services.API
             LocaleLookup ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<LocaleLookup>(Dto.LocaleLookup.Fields, request);
+            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
 
             DocEntityLocaleLookup entity = null;
             if(id.HasValue)
@@ -396,6 +392,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

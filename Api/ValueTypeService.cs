@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class ValueTypeService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityValueType.CACHE_KEY_PREFIX;
         private void _ExecSearch(ValueTypeSearch request, Action<IQueryable<DocEntityValueType>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<ValueType>(Dto.ValueType.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityValueType>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityValueType>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ValueTypeFullTextSearch(request);
@@ -129,54 +129,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(ValueTypeSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ValueType>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityValueType,ValueType>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(ValueTypeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<ValueType>();
+            var cacheKey = GetApiCacheKey<ValueType>(DocConstantModelName.VALUETYPE, nameof(ValueType), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<ValueType>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityValueType,ValueType>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.VALUETYPE);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.VALUETYPE);
             return tryRet;
         }
 
@@ -188,12 +173,9 @@ namespace Services.API
         public object Get(ValueTypeVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -205,11 +187,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<ValueType>(DocConstantModelName.VALUETYPE, nameof(ValueType), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<ValueType>(Dto.ValueType.Fields, request);
-                ret = GetValueType(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetValueType(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.VALUETYPE);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.VALUETYPE);
             return ret;
         }
 
@@ -223,7 +211,7 @@ namespace Services.API
             ValueType ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<ValueType>(Dto.ValueType.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
 
             DocEntityValueType entity = null;
             if(id.HasValue)
@@ -251,6 +239,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

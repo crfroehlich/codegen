@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class WorkflowCommentService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityWorkflowComment.CACHE_KEY_PREFIX;
         private void _ExecSearch(WorkflowCommentSearch request, Action<IQueryable<DocEntityWorkflowComment>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request);
+            DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, "WorkflowComment", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityWorkflowComment>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityWorkflowComment>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowCommentFullTextSearch(request);
@@ -127,54 +127,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(WorkflowCommentSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<WorkflowComment>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowComment,WorkflowComment>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(WorkflowCommentSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<WorkflowComment>();
+            var cacheKey = GetApiCacheKey<WorkflowComment>(DocConstantModelName.WORKFLOWCOMMENT, nameof(WorkflowComment), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<WorkflowComment>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowComment,WorkflowComment>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.WORKFLOWCOMMENT);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.WORKFLOWCOMMENT);
             return tryRet;
         }
 
@@ -186,12 +171,9 @@ namespace Services.API
         public object Get(WorkflowCommentVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -203,11 +185,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, "WorkflowComment", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<WorkflowComment>(DocConstantModelName.WORKFLOWCOMMENT, nameof(WorkflowComment), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request);
-                ret = GetWorkflowComment(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetWorkflowComment(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOWCOMMENT);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.WORKFLOWCOMMENT);
             return ret;
         }
 
@@ -225,6 +213,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<WorkflowComment>(DocConstantModelName.WORKFLOWCOMMENT, nameof(WorkflowComment), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pChildren = request.Children?.ToList();
@@ -336,8 +326,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Children));
                 }
             }
-            request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request);
+            DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, nameof(WorkflowComment), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOWCOMMENT);
 
             return ret;
         }
@@ -422,6 +414,8 @@ namespace Services.API
                     var pText = entity.Text;
                     var pUser = entity.User;
                     var pWorkflow = entity.Workflow;
+                #region Custom Before copyWorkflowComment
+                #endregion Custom Before copyWorkflowComment
                 var copy = new DocEntityWorkflowComment(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -435,6 +429,8 @@ namespace Services.API
                                 entity.Children.Add(item);
                             }
 
+                #region Custom After copyWorkflowComment
+                #endregion Custom After copyWorkflowComment
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -561,6 +557,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.WORKFLOWCOMMENT);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityWorkflowComment.GetWorkflowComment(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowComment could be found for Id {request?.Id}.");
@@ -631,7 +631,7 @@ namespace Services.API
 
         private object _GetWorkflowCommentWorkflowComment(WorkflowCommentJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, "WorkflowComment", request.VisibleFields);
              var en = DocEntityWorkflowComment.GetWorkflowComment(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOWCOMMENT, columnName: "Children", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between WorkflowComment and WorkflowComment");
@@ -749,7 +749,7 @@ namespace Services.API
             WorkflowComment ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request);
+            DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, "WorkflowComment", request.VisibleFields);
 
             DocEntityWorkflowComment entity = null;
             if(id.HasValue)
@@ -777,6 +777,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

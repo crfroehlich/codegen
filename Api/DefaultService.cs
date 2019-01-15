@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class DefaultService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityDefault.CACHE_KEY_PREFIX;
         private void _ExecSearch(DefaultSearch request, Action<IQueryable<DocEntityDefault>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Default>(Dto.Default.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Default>(currentUser, "Default", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityDefault>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityDefault>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DefaultFullTextSearch(request);
@@ -129,54 +129,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(DefaultSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Default>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDefault,Default>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(DefaultSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Default>();
+            var cacheKey = GetApiCacheKey<Default>(DocConstantModelName.DEFAULT, nameof(Default), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<Default>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDefault,Default>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.DEFAULT);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.DEFAULT);
             return tryRet;
         }
 
@@ -188,12 +173,9 @@ namespace Services.API
         public object Get(DefaultVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -205,11 +187,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Default>(currentUser, "Default", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Default>(DocConstantModelName.DEFAULT, nameof(Default), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<Default>(Dto.Default.Fields, request);
-                ret = GetDefault(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetDefault(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DEFAULT);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.DEFAULT);
             return ret;
         }
 
@@ -227,6 +215,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<Default>(DocConstantModelName.DEFAULT, nameof(Default), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pDiseaseState = (request.DiseaseState?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.DiseaseState.Id) : null;
@@ -293,8 +283,10 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<Default>(Dto.Default.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Default>(currentUser, nameof(Default), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DEFAULT);
 
             return ret;
         }
@@ -378,6 +370,8 @@ namespace Services.API
                     var pRole = entity.Role;
                     var pScope = entity.Scope;
                     var pTherapeuticArea = entity.TherapeuticArea;
+                #region Custom Before copyDefault
+                #endregion Custom Before copyDefault
                 var copy = new DocEntityDefault(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -386,6 +380,8 @@ namespace Services.API
                                 , Scope = pScope
                                 , TherapeuticArea = pTherapeuticArea
                 };
+                #region Custom After copyDefault
+                #endregion Custom After copyDefault
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -471,7 +467,7 @@ namespace Services.API
             Default ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Default>(Dto.Default.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Default>(currentUser, "Default", request.VisibleFields);
 
             DocEntityDefault entity = null;
             if(id.HasValue)
@@ -499,6 +495,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

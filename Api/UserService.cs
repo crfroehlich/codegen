@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class UserService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityUser.CACHE_KEY_PREFIX;
-        private object _GetIdCache(User request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.USER);
-                var cacheKey = $"User_{key}_{request.Id}_{UrnId.Create<User>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetUser(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetUser(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(UserSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<User>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.USER);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<UserSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<User>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(UserSearch request, Action<IQueryable<DocEntityUser>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request);
+            DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityUser>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityUser>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserFullTextSearch(request);
@@ -267,70 +223,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(UserSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<User>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "user")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(UserSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<User>();
+            var cacheKey = GetApiCacheKey<User>(DocConstantModelName.USER, nameof(User), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<User>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "user")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.USER);
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.USER);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.USER);
             return tryRet;
         }
 
@@ -342,12 +276,9 @@ namespace Services.API
         public object Get(UserVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -359,19 +290,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<User>(DocConstantModelName.USER, nameof(User), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "user")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetUser(request);
+                    });
+                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.USER);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetUser(request);
-                }
-            });
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.USER);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.USER);
             return ret;
         }
 
@@ -389,6 +331,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<User>(DocConstantModelName.USER, nameof(User), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pClientDepartment = request.ClientDepartment;
@@ -1104,8 +1048,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Workflows));
                 }
             }
-            request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request);
+            DocPermissionFactory.SetVisibleFields<User>(currentUser, nameof(User), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.USER);
 
             return ret;
         }
@@ -1234,6 +1180,8 @@ namespace Services.API
                     var pUpdates = entity.Updates.ToList();
                     var pUserType = entity.UserType;
                     var pWorkflows = entity.Workflows.ToList();
+                #region Custom Before copyUser
+                #endregion Custom Before copyUser
                 var copy = new DocEntityUser(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -1313,6 +1261,8 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
+                #region Custom After copyUser
+                #endregion Custom After copyUser
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -1481,7 +1431,7 @@ namespace Services.API
 
         private object _GetUserAuditRecord(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Audits", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and AuditRecord");
@@ -1490,7 +1440,7 @@ namespace Services.API
 
         private object _GetUserLookupTableBinding(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and LookupTableBinding");
@@ -1499,7 +1449,7 @@ namespace Services.API
 
         private object _GetUserDocumentSet(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "DocumentSets", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and DocumentSet");
@@ -1521,7 +1471,7 @@ namespace Services.API
 
         private object _GetUserHistory(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "History", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and History");
@@ -1530,7 +1480,7 @@ namespace Services.API
 
         private object _GetUserImpersonatedUser(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Impersonated", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Impersonation");
@@ -1539,7 +1489,7 @@ namespace Services.API
 
         private object _GetUserImpersonatingUser(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Impersonating", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Impersonation");
@@ -1548,7 +1498,7 @@ namespace Services.API
 
         private object _GetUserRole(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Roles", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Role");
@@ -1570,7 +1520,7 @@ namespace Services.API
 
         private object _GetUserScope(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Scope");
@@ -1592,7 +1542,7 @@ namespace Services.API
 
         private object _GetUserSession(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<UserSession>(Dto.UserSession.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Sessions", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and UserSession");
@@ -1601,7 +1551,7 @@ namespace Services.API
 
         private object _GetUserTeam(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Teams", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Team");
@@ -1610,7 +1560,7 @@ namespace Services.API
 
         private object _GetUserTimeCard(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "TimeCards", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and TimeCard");
@@ -1619,7 +1569,7 @@ namespace Services.API
 
         private object _GetUserUpdate(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Updates", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Update");
@@ -1641,7 +1591,7 @@ namespace Services.API
 
         private object _GetUserWorkflow(UserJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Workflow");
@@ -1884,7 +1834,7 @@ namespace Services.API
             User ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request);
+            DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
 
             DocEntityUser entity = null;
             if(id.HasValue)
@@ -1912,6 +1862,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

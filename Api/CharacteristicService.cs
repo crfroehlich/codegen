@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class CharacteristicService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityCharacteristic.CACHE_KEY_PREFIX;
         private void _ExecSearch(CharacteristicSearch request, Action<IQueryable<DocEntityCharacteristic>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Characteristic>(Dto.Characteristic.Fields, request);
+            DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, "Characteristic", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityCharacteristic>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityCharacteristic>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new CharacteristicFullTextSearch(request);
@@ -86,10 +86,22 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.Name))
-                    entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(!DocTools.IsNullOrEmpty(request.URI))
-                    entities = entities.Where(en => en.URI.Contains(request.URI));
+                if(!DocTools.IsNullOrEmpty(request.Characteristic) && !DocTools.IsNullOrEmpty(request.Characteristic.Id))
+                {
+                    entities = entities.Where(en => en.Characteristic.Id == request.Characteristic.Id );
+                }
+                if(true == request.CharacteristicIds?.Any())
+                {
+                    entities = entities.Where(en => en.Characteristic.Id.In(request.CharacteristicIds));
+                }
+                else if(!DocTools.IsNullOrEmpty(request.Characteristic) && !DocTools.IsNullOrEmpty(request.Characteristic.Name))
+                {
+                    entities = entities.Where(en => en.Characteristic.Name == request.Characteristic.Name );
+                }
+                if(true == request.CharacteristicNames?.Any())
+                {
+                    entities = entities.Where(en => en.Characteristic.Name.In(request.CharacteristicNames));
+                }
 
                 entities = ApplyFilters(request, entities);
 
@@ -101,54 +113,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(CharacteristicSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Characteristic>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,Characteristic>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(CharacteristicSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<CharacteristicDto>();
+            var cacheKey = GetApiCacheKey<CharacteristicDto>(DocConstantModelName.CHARACTERISTIC, nameof(CharacteristicDto), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<Characteristic>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,Characteristic>(ret, Execute, requestCancel));
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,CharacteristicDto>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.CHARACTERISTIC);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.CHARACTERISTIC);
             return tryRet;
         }
 
@@ -160,32 +157,35 @@ namespace Services.API
         public object Get(CharacteristicVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Characteristic request)
+        public object Get(CharacteristicDto request)
         {
             object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, "Characteristic", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<CharacteristicDto>(DocConstantModelName.CHARACTERISTIC, nameof(CharacteristicDto), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<Characteristic>(Dto.Characteristic.Fields, request);
-                ret = GetCharacteristic(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetCharacteristic(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.CHARACTERISTIC);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.CHARACTERISTIC);
             return ret;
         }
 
-        private Characteristic _AssignValues(Characteristic request, DocConstantPermission permission, Session session)
+        private CharacteristicDto _AssignValues(CharacteristicDto request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
@@ -195,14 +195,15 @@ namespace Services.API
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            Characteristic ret = null;
+            CharacteristicDto ret = null;
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
+            var cacheKey = GetApiCacheKey<CharacteristicDto>(DocConstantModelName.CHARACTERISTIC, nameof(CharacteristicDto), request);
+            
             //First, assign all the variables, do database lookups and conversions
-            var pName = request.Name;
-            var pURI = request.URI;
+            DocEntityLookupTable pCharacteristic = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.Characteristic?.Name, request.Characteristic?.Id);
 
             DocEntityCharacteristic entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -221,23 +222,13 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.CHARACTERISTIC, nameof(request.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pCharacteristic, permission, DocConstantModelName.CHARACTERISTIC, nameof(request.Characteristic)))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
-                    entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pCharacteristic, entity.Characteristic, nameof(request.Characteristic)))
+                    entity.Characteristic = pCharacteristic;
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pCharacteristic, nameof(request.Characteristic)) && !request.VisibleFields.Matches(nameof(request.Characteristic), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Name));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.CHARACTERISTIC, nameof(request.URI)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
-                    entity.URI = pURI;
-                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.URI));
+                    request.VisibleFields.Add(nameof(request.Characteristic));
                 }
             }
             
@@ -245,18 +236,20 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<Characteristic>(Dto.Characteristic.Fields, request);
+            DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, nameof(CharacteristicDto), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.CHARACTERISTIC);
 
             return ret;
         }
-        public Characteristic Post(Characteristic request)
+        public CharacteristicDto Post(CharacteristicDto request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            Characteristic ret = null;
+            CharacteristicDto ret = null;
 
             Execute.Run(ssn =>
             {
@@ -269,11 +262,11 @@ namespace Services.API
             return ret;
         }
    
-        public List<Characteristic> Post(CharacteristicBatch request)
+        public List<CharacteristicDto> Post(CharacteristicBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<Characteristic>();
+            var ret = new List<CharacteristicDto>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -281,7 +274,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as Characteristic;
+                    var obj = Post(dto) as CharacteristicDto;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -316,9 +309,9 @@ namespace Services.API
             return ret;
         }
 
-        public Characteristic Post(CharacteristicCopy request)
+        public CharacteristicDto Post(CharacteristicDtoCopy request)
         {
-            Characteristic ret = null;
+            CharacteristicDto ret = null;
             Execute.Run(ssn =>
             {
                 var entity = DocEntityCharacteristic.GetCharacteristic(request?.Id);
@@ -326,18 +319,16 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pName = entity.Name;
-                    if(!DocTools.IsNullOrEmpty(pName))
-                        pName += " (Copy)";
-                    var pURI = entity.URI;
-                    if(!DocTools.IsNullOrEmpty(pURI))
-                        pURI += " (Copy)";
+                    var pCharacteristic = entity.Characteristic;
+                #region Custom Before copyCharacteristic
+                #endregion Custom Before copyCharacteristic
                 var copy = new DocEntityCharacteristic(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Name = pName
-                                , URI = pURI
+                                , Characteristic = pCharacteristic
                 };
+                #region Custom After copyCharacteristic
+                #endregion Custom After copyCharacteristic
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -345,21 +336,21 @@ namespace Services.API
         }
 
 
-        public List<Characteristic> Put(CharacteristicBatch request)
+        public List<CharacteristicDto> Put(CharacteristicBatch request)
         {
             return Patch(request);
         }
 
-        public Characteristic Put(Characteristic request)
+        public CharacteristicDto Put(CharacteristicDto request)
         {
             return Patch(request);
         }
 
-        public List<Characteristic> Patch(CharacteristicBatch request)
+        public List<CharacteristicDto> Patch(CharacteristicBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<Characteristic>();
+            var ret = new List<CharacteristicDto>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -367,7 +358,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as Characteristic;
+                    var obj = Patch(dto) as CharacteristicDto;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -402,13 +393,13 @@ namespace Services.API
             return ret;
         }
 
-        public Characteristic Patch(Characteristic request)
+        public CharacteristicDto Patch(CharacteristicDto request)
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Characteristic to patch.");
             
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
-            Characteristic ret = null;
+            CharacteristicDto ret = null;
             Execute.Run(ssn =>
             {
                 ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
@@ -460,10 +451,14 @@ namespace Services.API
             }
         }
 
-        public void Delete(Characteristic request)
+        public void Delete(CharacteristicDto request)
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.CHARACTERISTIC);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityCharacteristic.GetCharacteristic(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Characteristic could be found for Id {request?.Id}.");
@@ -478,7 +473,7 @@ namespace Services.API
 
         public void Delete(CharacteristicSearch request)
         {
-            var matches = Get(request) as List<Characteristic>;
+            var matches = Get(request) as List<CharacteristicDto>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
@@ -490,13 +485,13 @@ namespace Services.API
             });
         }
 
-        private Characteristic GetCharacteristic(Characteristic request)
+        private CharacteristicDto GetCharacteristic(CharacteristicDto request)
         {
             var id = request?.Id;
-            Characteristic ret = null;
+            CharacteristicDto ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Characteristic>(Dto.Characteristic.Fields, request);
+            DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, "Characteristic", request.VisibleFields);
 
             DocEntityCharacteristic entity = null;
             if(id.HasValue)
@@ -524,6 +519,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

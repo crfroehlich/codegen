@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class AttributeService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityAttribute.CACHE_KEY_PREFIX;
         private void _ExecSearch(AttributeSearch request, Action<IQueryable<DocEntityAttribute>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Attribute>(Dto.Attribute.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, "Attribute", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityAttribute>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityAttribute>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeFullTextSearch(request);
@@ -153,54 +153,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(AttributeSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Attribute>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttribute,Attribute>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(AttributeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Attribute>();
+            var cacheKey = GetApiCacheKey<Attribute>(DocConstantModelName.ATTRIBUTE, nameof(Attribute), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<Attribute>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttribute,Attribute>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.ATTRIBUTE);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.ATTRIBUTE);
             return tryRet;
         }
 
@@ -212,12 +197,9 @@ namespace Services.API
         public object Get(AttributeVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -229,11 +211,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, "Attribute", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Attribute>(DocConstantModelName.ATTRIBUTE, nameof(Attribute), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<Attribute>(Dto.Attribute.Fields, request);
-                ret = GetAttribute(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetAttribute(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.ATTRIBUTE);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.ATTRIBUTE);
             return ret;
         }
 
@@ -251,6 +239,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<Attribute>(DocConstantModelName.ATTRIBUTE, nameof(Attribute), request);
             
             //First, assign all the variables, do database lookups and conversions
             DocEntityLookupTable pAttributeName = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.AttributeName?.Name, request.AttributeName?.Id);
@@ -364,8 +354,10 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<Attribute>(Dto.Attribute.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, nameof(Attribute), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.ATTRIBUTE);
 
             return ret;
         }
@@ -455,6 +447,8 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pUniqueKey))
                         pUniqueKey += " (Copy)";
                     var pValueType = entity.ValueType;
+                #region Custom Before copyAttribute
+                #endregion Custom Before copyAttribute
                 var copy = new DocEntityAttribute(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -467,6 +461,8 @@ namespace Services.API
                                 , UniqueKey = pUniqueKey
                                 , ValueType = pValueType
                 };
+                #region Custom After copyAttribute
+                #endregion Custom After copyAttribute
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -593,6 +589,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.ATTRIBUTE);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityAttribute.GetAttribute(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Attribute could be found for Id {request?.Id}.");
@@ -625,7 +625,7 @@ namespace Services.API
             Attribute ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Attribute>(Dto.Attribute.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, "Attribute", request.VisibleFields);
 
             DocEntityAttribute entity = null;
             if(id.HasValue)
@@ -653,6 +653,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class EventService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityEvent.CACHE_KEY_PREFIX;
         private void _ExecSearch(EventSearch request, Action<IQueryable<DocEntityEvent>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityEvent>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityEvent>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new EventFullTextSearch(request);
@@ -127,54 +127,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(EventSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Event>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityEvent,Event>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(EventSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Event>();
+            var cacheKey = GetApiCacheKey<Event>(DocConstantModelName.EVENT, nameof(Event), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<Event>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityEvent,Event>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.EVENT);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.EVENT);
             return tryRet;
         }
 
@@ -186,12 +171,9 @@ namespace Services.API
         public object Get(EventVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -203,17 +185,515 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Event>(DocConstantModelName.EVENT, nameof(Event), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request);
-                ret = GetEvent(request);
+                Execute.Run(s =>
+                {
+                    ret = GetEvent(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.EVENT);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.EVENT);
+            return ret;
+        }
+
+        private Event _AssignValues(Event request, DocConstantPermission permission, Session session)
+        {
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+                throw new HttpError(HttpStatusCode.NotFound, $"No record");
+
+            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Event"))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
+
+            Event ret = null;
+            request = _InitAssignValues(request, permission, session);
+            //In case init assign handles create for us, return it
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<Event>(DocConstantModelName.EVENT, nameof(Event), request);
+            
+            //First, assign all the variables, do database lookups and conversions
+            var pAuditRecord = (request.AuditRecord?.Id > 0) ? DocEntityAuditRecord.GetAuditRecord(request.AuditRecord.Id) : null;
+            var pDescription = request.Description;
+            var pProcessed = request.Processed;
+            var pStatus = request.Status;
+            var pTeams = request.Teams?.ToList();
+            var pUpdates = request.Updates?.ToList();
+            var pUsers = request.Users?.ToList();
+
+            DocEntityEvent entity = null;
+            if(permission == DocConstantPermission.ADD)
+            {
+                var now = DateTime.UtcNow;
+                entity = new DocEntityEvent(session)
+                {
+                    Created = now,
+                    Updated = now
+                };
+            }
+            else
+            {
+                entity = DocEntityEvent.GetEvent(request.Id);
+                if(null == entity)
+                    throw new HttpError(HttpStatusCode.NotFound, $"No record");
+            }
+
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAuditRecord>(currentUser, request, pAuditRecord, permission, DocConstantModelName.EVENT, nameof(request.AuditRecord)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pAuditRecord, entity.AuditRecord, nameof(request.AuditRecord)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.AuditRecord)} cannot be modified once set.");
+                    entity.AuditRecord = pAuditRecord;
+                if(DocPermissionFactory.IsRequested<DocEntityAuditRecord>(request, pAuditRecord, nameof(request.AuditRecord)) && !request.VisibleFields.Matches(nameof(request.AuditRecord), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.AuditRecord));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.EVENT, nameof(request.Description)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Description)} cannot be modified once set.");
+                    entity.Description = pDescription;
+                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Description));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pProcessed, permission, DocConstantModelName.EVENT, nameof(request.Processed)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pProcessed, entity.Processed, nameof(request.Processed)))
+                    entity.Processed = pProcessed;
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pProcessed, nameof(request.Processed)) && !request.VisibleFields.Matches(nameof(request.Processed), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Processed));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pStatus, permission, DocConstantModelName.EVENT, nameof(request.Status)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
+                    entity.Status = pStatus;
+                if(DocPermissionFactory.IsRequested<string>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Status));
+                }
+            }
+            
+            if (request.Locked) entity.Locked = request.Locked;
+
+            entity.SaveChanges(permission);
+            
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTeams, permission, DocConstantModelName.EVENT, nameof(request.Teams)))
+            {
+                if (true == pTeams?.Any() )
+                {
+                    var requestedTeams = pTeams.Select(p => p.Id).Distinct().ToList();
+                    var existsTeams = Execute.SelectAll<DocEntityTeam>().Where(e => e.Id.In(requestedTeams)).Select( e => e.Id ).ToList();
+                    if (existsTeams.Count != requestedTeams.Count)
+                    {
+                        var nonExists = requestedTeams.Where(id => existsTeams.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Teams with objects that do not exist. No matching Teams(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedTeams.Where(id => entity.Teams.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityTeam.GetTeam(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Teams)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Teams)} to {nameof(Event)}");
+                        entity.Teams.Add(target);
+                    });
+                    var toRemove = entity.Teams.Where(e => requestedTeams.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityTeam.GetTeam(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Teams)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Teams)} from {nameof(Event)}");
+                        entity.Teams.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.Teams.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityTeam.GetTeam(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Teams)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Teams)} from {nameof(Event)}");
+                        entity.Teams.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pTeams, nameof(request.Teams)) && !request.VisibleFields.Matches(nameof(request.Teams), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Teams));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pUpdates, permission, DocConstantModelName.EVENT, nameof(request.Updates)))
+            {
+                if (true == pUpdates?.Any() )
+                {
+                    var requestedUpdates = pUpdates.Select(p => p.Id).Distinct().ToList();
+                    var existsUpdates = Execute.SelectAll<DocEntityUpdate>().Where(e => e.Id.In(requestedUpdates)).Select( e => e.Id ).ToList();
+                    if (existsUpdates.Count != requestedUpdates.Count)
+                    {
+                        var nonExists = requestedUpdates.Where(id => existsUpdates.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Updates with objects that do not exist. No matching Updates(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedUpdates.Where(id => entity.Updates.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityUpdate.GetUpdate(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Updates)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Updates)} to {nameof(Event)}");
+                        entity.Updates.Add(target);
+                    });
+                    var toRemove = entity.Updates.Where(e => requestedUpdates.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityUpdate.GetUpdate(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Updates)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Updates)} from {nameof(Event)}");
+                        entity.Updates.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.Updates.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityUpdate.GetUpdate(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Updates)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Updates)} from {nameof(Event)}");
+                        entity.Updates.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pUpdates, nameof(request.Updates)) && !request.VisibleFields.Matches(nameof(request.Updates), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Updates));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pUsers, permission, DocConstantModelName.EVENT, nameof(request.Users)))
+            {
+                if (true == pUsers?.Any() )
+                {
+                    var requestedUsers = pUsers.Select(p => p.Id).Distinct().ToList();
+                    var existsUsers = Execute.SelectAll<DocEntityUser>().Where(e => e.Id.In(requestedUsers)).Select( e => e.Id ).ToList();
+                    if (existsUsers.Count != requestedUsers.Count)
+                    {
+                        var nonExists = requestedUsers.Where(id => existsUsers.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Users with objects that do not exist. No matching Users(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedUsers.Where(id => entity.Users.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityUser.GetUser(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Users)} to {nameof(Event)}");
+                        entity.Users.Add(target);
+                    });
+                    var toRemove = entity.Users.Where(e => requestedUsers.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityUser.GetUser(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(Event)}");
+                        entity.Users.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.Users.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityUser.GetUser(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Event), columnName: nameof(request.Users)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(Event)}");
+                        entity.Users.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pUsers, nameof(request.Users)) && !request.VisibleFields.Matches(nameof(request.Users), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Users));
+                }
+            }
+            DocPermissionFactory.SetVisibleFields<Event>(currentUser, nameof(Event), request.VisibleFields);
+            ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.EVENT);
+
+            return ret;
+        }
+        public Event Post(Event request)
+        {
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
+
+            Event ret = null;
+
+            Execute.Run(ssn =>
+            {
+                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Event")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+            });
+
+            return ret;
+        }
+   
+        public List<Event> Post(EventBatch request)
+        {
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+
+            var ret = new List<Event>();
+            var errors = new List<ResponseError>();
+            var errorMap = new Dictionary<string, string>();
+            var i = 0;
+            request.ForEach(dto =>
+            {
+                try
+                {
+                    var obj = Post(dto) as Event;
+                    ret.Add(obj);
+                    errorMap[$"{i}"] = $"{obj.Id}";
+                }
+                catch (Exception ex)
+                {
+                    errorMap[$"{i}"] = null;
+                    errors.Add(new ResponseError()
+                    {
+                        Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
+                        ErrorCode = $"{i}"
+                    });
+                }
+                i += 1;
+            });
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{ret.Count} succeeded");
+            if (errors.Any())
+            {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
+                            ErrorCode = nameof(HttpError),
+                            Meta = errorMap,
+                            Message = "Incomplete request",
+                            Errors = errors
+                        }
+                    }
+                };
+            }
+            return ret;
+        }
+
+        public Event Post(EventCopy request)
+        {
+            Event ret = null;
+            Execute.Run(ssn =>
+            {
+                var entity = DocEntityEvent.GetEvent(request?.Id);
+                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+                
+                    var pAuditRecord = entity.AuditRecord;
+                    var pDescription = entity.Description;
+                    if(!DocTools.IsNullOrEmpty(pDescription))
+                        pDescription += " (Copy)";
+                    var pProcessed = entity.Processed;
+                    var pStatus = entity.Status;
+                    if(!DocTools.IsNullOrEmpty(pStatus))
+                        pStatus += " (Copy)";
+                    var pTeams = entity.Teams.ToList();
+                    var pUpdates = entity.Updates.ToList();
+                    var pUsers = entity.Users.ToList();
+                #region Custom Before copyEvent
+                #endregion Custom Before copyEvent
+                var copy = new DocEntityEvent(ssn)
+                {
+                    Hash = Guid.NewGuid()
+                                , AuditRecord = pAuditRecord
+                                , Description = pDescription
+                                , Processed = pProcessed
+                                , Status = pStatus
+                };
+                            foreach(var item in pTeams)
+                            {
+                                entity.Teams.Add(item);
+                            }
+
+                            foreach(var item in pUpdates)
+                            {
+                                entity.Updates.Add(item);
+                            }
+
+                            foreach(var item in pUsers)
+                            {
+                                entity.Users.Add(item);
+                            }
+
+                #region Custom After copyEvent
+                #endregion Custom After copyEvent
+                copy.SaveChanges(DocConstantPermission.ADD);
+                ret = copy.ToDto();
             });
             return ret;
         }
 
 
+        public List<Event> Put(EventBatch request)
+        {
+            return Patch(request);
+        }
 
+        public Event Put(Event request)
+        {
+            return Patch(request);
+        }
 
+        public List<Event> Patch(EventBatch request)
+        {
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+
+            var ret = new List<Event>();
+            var errors = new List<ResponseError>();
+            var errorMap = new Dictionary<string, string>();
+            var i = 0;
+            request.ForEach(dto =>
+            {
+                try
+                {
+                    var obj = Patch(dto) as Event;
+                    ret.Add(obj);
+                    errorMap[$"{i}"] = $"true";
+                }
+                catch (Exception ex)
+                {
+                    errorMap[$"{i}"] = $"false";
+                    errors.Add(new ResponseError()
+                    {
+                        Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
+                        ErrorCode = $"{i}"
+                    });
+                }
+                i += 1;
+            });
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{ret.Count} succeeded");
+            if (errors.Any())
+            {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
+                            ErrorCode = nameof(HttpError),
+                            Meta = errorMap,
+                            Message = "Incomplete request",
+                            Errors = errors
+                        }
+                    }
+                };
+            }
+            return ret;
+        }
+
+        public Event Patch(Event request)
+        {
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Event to patch.");
+            
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            
+            Event ret = null;
+            Execute.Run(ssn =>
+            {
+                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+            });
+            return ret;
+        }
+
+        public void Delete(EventBatch request)
+        {
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+
+            var errors = new List<ResponseError>();
+            var errorMap = new Dictionary<string, string>();
+            var i = 0;
+            request.ForEach(dto =>
+            {
+                try
+                {
+                    Delete(dto);
+                    errorMap[$"{i}"] = $"true";
+                }
+                catch (Exception ex)
+                {
+                    errorMap[$"{i}"] = $"false";
+                    errors.Add(new ResponseError()
+                    {
+                        Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
+                        ErrorCode = $"{i}"
+                    });
+                }
+                i += 1;
+            });
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{request.Count-errors.Count} succeeded");
+            if (errors.Any())
+            {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
+                            ErrorCode = nameof(HttpError),
+                            Meta = errorMap,
+                            Message = "Incomplete request",
+                            Errors = errors
+                        }
+                    }
+                };
+            }
+        }
+
+        public void Delete(Event request)
+        {
+            Execute.Run(ssn =>
+            {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.EVENT);
+                DocCacheClient.RemoveById(request.Id);
+                var en = DocEntityEvent.GetEvent(request?.Id);
+
+                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Event could be found for Id {request?.Id}.");
+                if(en.IsRemoved) return;
+                
+                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                
+                en.Remove();
+            });
+        }
+
+        public void Delete(EventSearch request)
+        {
+            var matches = Get(request) as List<Event>;
+            if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
+
+            Execute.Run(ssn =>
+            {
+                matches.ForEach(match =>
+                {
+                    Delete(match);
+                });
+            });
+        }
         public object Get(EventJunction request)
         {
             if(!(request.Id > 0))
@@ -254,6 +734,15 @@ namespace Services.API
             {
                 switch(method)
                 {
+                case "team":
+                    ret = GetEventTeamVersion(request);
+                    break;
+                case "update":
+                    ret = GetEventUpdateVersion(request);
+                    break;
+                case "user":
+                    ret = GetEventUserVersion(request);
+                    break;
                 }
             });
             return ret;
@@ -262,29 +751,68 @@ namespace Services.API
 
         private object _GetEventTeam(EventJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
              var en = DocEntityEvent.GetEvent(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Teams", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and Team");
              return en?.Teams.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTeam,Team>(new List<Team>());
         }
 
+        private List<Version> GetEventTeamVersion(EventJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityEvent.GetEvent(request.Id);
+                ret = en?.Teams.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
         private object _GetEventUpdate(EventJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
              var en = DocEntityEvent.GetEvent(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Updates", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and Update");
              return en?.Updates.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUpdate,Update>(new List<Update>());
         }
 
+        private List<Version> GetEventUpdateVersion(EventJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityEvent.GetEvent(request.Id);
+                ret = en?.Updates.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
         private object _GetEventUser(EventJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
              var en = DocEntityEvent.GetEvent(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and User");
              return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
+        }
+
+        private List<Version> GetEventUserVersion(EventJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityEvent.GetEvent(request.Id);
+                ret = en?.Users.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
         }
         
         public object Post(EventJunction request)
@@ -304,11 +832,83 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
+                case "team":
+                    ret = _PostEventTeam(request);
+                    break;
+                case "update":
+                    ret = _PostEventUpdate(request);
+                    break;
+                case "user":
+                    ret = _PostEventUser(request);
+                    break;
                 }
             });
             return ret;
         }
 
+
+        private object _PostEventTeam(EventJunction request)
+        {
+            var entity = DocEntityEvent.GetEvent(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Event found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Event");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityTeam.GetTeam(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.TEAM, columnName: "Teams")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Teams property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Event with objects that do not exist. No matching Team could be found for {id}.");
+                entity.Teams.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostEventUpdate(EventJunction request)
+        {
+            var entity = DocEntityEvent.GetEvent(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Event found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Event");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUpdate.GetUpdate(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.UPDATE, columnName: "Updates")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Updates property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Event with objects that do not exist. No matching Update could be found for {id}.");
+                entity.Updates.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostEventUser(EventJunction request)
+        {
+            var entity = DocEntityEvent.GetEvent(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Event found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Event");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUser.GetUser(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Users property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Event with objects that do not exist. No matching User could be found for {id}.");
+                entity.Users.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         public object Delete(EventJunction request)
         {
@@ -327,11 +927,77 @@ namespace Services.API
                 var method = info[info.Length-1];
                 switch(method)
                 {
+                case "team":
+                    ret = _DeleteEventTeam(request);
+                    break;
+                case "update":
+                    ret = _DeleteEventUpdate(request);
+                    break;
+                case "user":
+                    ret = _DeleteEventUser(request);
+                    break;
                 }
             });
             return ret;
         }
 
+
+        private object _DeleteEventTeam(EventJunction request)
+        {
+            var entity = DocEntityEvent.GetEvent(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Event found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Event");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityTeam.GetTeam(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.TEAM, columnName: "Teams"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Event and Team");
+                if(null != relationship && false == relationship.IsRemoved) entity.Teams.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeleteEventUpdate(EventJunction request)
+        {
+            var entity = DocEntityEvent.GetEvent(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Event found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Event");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUpdate.GetUpdate(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.UPDATE, columnName: "Updates"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Event and Update");
+                if(null != relationship && false == relationship.IsRemoved) entity.Updates.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeleteEventUser(EventJunction request)
+        {
+            var entity = DocEntityEvent.GetEvent(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Event found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Event");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUser.GetUser(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Event and User");
+                if(null != relationship && false == relationship.IsRemoved) entity.Users.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         private Event GetEvent(Event request)
         {
@@ -339,7 +1005,7 @@ namespace Services.API
             Event ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
 
             DocEntityEvent entity = null;
             if(id.HasValue)
@@ -367,6 +1033,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

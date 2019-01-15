@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class BackgroundTaskService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityBackgroundTask.CACHE_KEY_PREFIX;
         private void _ExecSearch(BackgroundTaskSearch request, Action<IQueryable<DocEntityBackgroundTask>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<BackgroundTask>(Dto.BackgroundTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, "BackgroundTask", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityBackgroundTask>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityBackgroundTask>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskFullTextSearch(request);
@@ -135,54 +135,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(BackgroundTaskSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<BackgroundTask>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTask,BackgroundTask>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(BackgroundTaskSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<BackgroundTask>();
+            var cacheKey = GetApiCacheKey<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, nameof(BackgroundTask), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<BackgroundTask>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTask,BackgroundTask>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.BACKGROUNDTASK);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.BACKGROUNDTASK);
             return tryRet;
         }
 
@@ -194,12 +179,9 @@ namespace Services.API
         public object Get(BackgroundTaskVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -211,11 +193,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, "BackgroundTask", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, nameof(BackgroundTask), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<BackgroundTask>(Dto.BackgroundTask.Fields, request);
-                ret = GetBackgroundTask(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetBackgroundTask(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BACKGROUNDTASK);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.BACKGROUNDTASK);
             return ret;
         }
 
@@ -233,6 +221,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, nameof(BackgroundTask), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
@@ -472,8 +462,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.TaskHistory));
                 }
             }
-            request.VisibleFields = InitVisibleFields<BackgroundTask>(Dto.BackgroundTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, nameof(BackgroundTask), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BACKGROUNDTASK);
 
             return ret;
         }
@@ -595,7 +587,7 @@ namespace Services.API
 
         private object _GetBackgroundTaskBackgroundTaskItem(BackgroundTaskJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<BackgroundTaskItem>(Dto.BackgroundTaskItem.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
              var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "Items", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskItem");
@@ -604,7 +596,7 @@ namespace Services.API
 
         private object _GetBackgroundTaskBackgroundTaskHistory(BackgroundTaskJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<BackgroundTaskHistory>(Dto.BackgroundTaskHistory.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<BackgroundTaskHistory>(currentUser, "BackgroundTaskHistory", request.VisibleFields);
              var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "TaskHistory", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskHistory");
@@ -663,7 +655,7 @@ namespace Services.API
             BackgroundTask ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<BackgroundTask>(Dto.BackgroundTask.Fields, request);
+            DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, "BackgroundTask", request.VisibleFields);
 
             DocEntityBackgroundTask entity = null;
             if(id.HasValue)
@@ -691,6 +683,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

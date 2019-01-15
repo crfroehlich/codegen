@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class TermMasterService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityTermMaster.CACHE_KEY_PREFIX;
-        private object _GetIdCache(TermMaster request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.TERMMASTER);
-                var cacheKey = $"TermMaster_{key}_{request.Id}_{UrnId.Create<TermMaster>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetTermMaster(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetTermMaster(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(TermMasterSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<TermMaster>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.TERMMASTER);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<TermMasterSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<TermMaster>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(TermMasterSearch request, Action<IQueryable<DocEntityTermMaster>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request);
+            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityTermMaster>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityTermMaster>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermMasterFullTextSearch(request);
@@ -173,70 +129,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(TermMasterSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<TermMaster>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(TermMasterSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<TermMaster>();
+            var cacheKey = GetApiCacheKey<TermMaster>(DocConstantModelName.TERMMASTER, nameof(TermMaster), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<TermMaster>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.TERMMASTER);
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.TERMMASTER);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.TERMMASTER);
             return tryRet;
         }
 
@@ -248,12 +182,9 @@ namespace Services.API
         public object Get(TermMasterVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -265,19 +196,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<TermMaster>(DocConstantModelName.TERMMASTER, nameof(TermMaster), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termmaster")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetTermMaster(request);
+                    });
+                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.TERMMASTER);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetTermMaster(request);
-                }
-            });
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.TERMMASTER);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.TERMMASTER);
             return ret;
         }
 
@@ -295,6 +237,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<TermMaster>(DocConstantModelName.TERMMASTER, nameof(TermMaster), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pBioPortal = request.BioPortal;
@@ -500,8 +444,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Synonyms));
                 }
             }
-            request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request);
+            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, nameof(TermMaster), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.TERMMASTER);
 
             return ret;
         }
@@ -608,6 +554,8 @@ namespace Services.API
                     var pURI = entity.URI;
                     if(!DocTools.IsNullOrEmpty(pURI))
                         pURI += " (Copy)";
+                #region Custom Before copyTermMaster
+                #endregion Custom Before copyTermMaster
                 var copy = new DocEntityTermMaster(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -631,6 +579,8 @@ namespace Services.API
                                 entity.Synonyms.Add(item);
                             }
 
+                #region Custom After copyTermMaster
+                #endregion Custom After copyTermMaster
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -757,6 +707,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.TERMMASTER);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityTermMaster.GetTermMaster(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TermMaster could be found for Id {request?.Id}.");
@@ -833,7 +787,7 @@ namespace Services.API
 
         private object _GetTermMasterTermCategory(TermMasterJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<TermCategory>(Dto.TermCategory.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, "TermCategory", request.VisibleFields);
              var en = DocEntityTermMaster.GetTermMaster(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMMASTER, columnName: "Categories", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermMaster and TermCategory");
@@ -855,7 +809,7 @@ namespace Services.API
 
         private object _GetTermMasterTermSynonym(TermMasterJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
              var en = DocEntityTermMaster.GetTermMaster(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMMASTER, columnName: "Synonyms", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermMaster and TermSynonym");
@@ -1019,7 +973,7 @@ namespace Services.API
             TermMaster ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request);
+            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
 
             DocEntityTermMaster entity = null;
             if(id.HasValue)
@@ -1047,6 +1001,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class StatsStudySetService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityStatsStudySet.CACHE_KEY_PREFIX;
         private void _ExecSearch(StatsStudySetSearch request, Action<IQueryable<DocEntityStatsStudySet>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<StatsStudySet>(Dto.StatsStudySet.Fields, request);
+            DocPermissionFactory.SetVisibleFields<StatsStudySet>(currentUser, "StatsStudySet", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityStatsStudySet>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityStatsStudySet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new StatsStudySetFullTextSearch(request);
@@ -141,54 +141,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(StatsStudySetSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<StatsStudySet>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityStatsStudySet,StatsStudySet>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(StatsStudySetSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<StatsStudySet>();
+            var cacheKey = GetApiCacheKey<StatsStudySet>(DocConstantModelName.STATSSTUDYSET, nameof(StatsStudySet), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<StatsStudySet>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityStatsStudySet,StatsStudySet>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.STATSSTUDYSET);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.STATSSTUDYSET);
             return tryRet;
         }
 
@@ -200,12 +185,9 @@ namespace Services.API
         public object Get(StatsStudySetVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -217,11 +199,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<StatsStudySet>(currentUser, "StatsStudySet", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<StatsStudySet>(DocConstantModelName.STATSSTUDYSET, nameof(StatsStudySet), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<StatsStudySet>(Dto.StatsStudySet.Fields, request);
-                ret = GetStatsStudySet(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetStatsStudySet(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.STATSSTUDYSET);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.STATSSTUDYSET);
             return ret;
         }
 
@@ -270,7 +258,7 @@ namespace Services.API
 
         private object _GetStatsStudySetStatsRecord(StatsStudySetJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
              var en = DocEntityStatsStudySet.GetStatsStudySet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.STATSSTUDYSET, columnName: "Records", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between StatsStudySet and StatsRecord");
@@ -329,7 +317,7 @@ namespace Services.API
             StatsStudySet ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<StatsStudySet>(Dto.StatsStudySet.Fields, request);
+            DocPermissionFactory.SetVisibleFields<StatsStudySet>(currentUser, "StatsStudySet", request.VisibleFields);
 
             DocEntityStatsStudySet entity = null;
             if(id.HasValue)
@@ -357,6 +345,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

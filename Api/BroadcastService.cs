@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class BroadcastService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityBroadcast.CACHE_KEY_PREFIX;
-        private object _GetIdCache(Broadcast request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.BROADCAST);
-                var cacheKey = $"Broadcast_{key}_{request.Id}_{UrnId.Create<Broadcast>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetBroadcast(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetBroadcast(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(BroadcastSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<Broadcast>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.BROADCAST);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<BroadcastSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBroadcast,Broadcast>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<Broadcast>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBroadcast,Broadcast>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(BroadcastSearch request, Action<IQueryable<DocEntityBroadcast>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityBroadcast>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityBroadcast>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BroadcastFullTextSearch(request);
@@ -197,70 +153,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(BroadcastSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Broadcast>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "broadcast")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBroadcast,Broadcast>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(BroadcastSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Broadcast>();
+            var cacheKey = GetApiCacheKey<Broadcast>(DocConstantModelName.BROADCAST, nameof(Broadcast), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<Broadcast>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "broadcast")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBroadcast,Broadcast>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.BROADCAST);
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBroadcast,Broadcast>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.BROADCAST);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.BROADCAST);
             return tryRet;
         }
 
@@ -272,12 +206,9 @@ namespace Services.API
         public object Get(BroadcastVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -289,19 +220,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Broadcast>(DocConstantModelName.BROADCAST, nameof(Broadcast), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "broadcast")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetBroadcast(request);
+                    });
+                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.BROADCAST);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetBroadcast(request);
-                }
-            });
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BROADCAST);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.BROADCAST);
             return ret;
         }
 
@@ -319,6 +261,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<Broadcast>(DocConstantModelName.BROADCAST, nameof(Broadcast), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
@@ -460,8 +404,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Scopes));
                 }
             }
-            request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, nameof(Broadcast), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BROADCAST);
 
             return ret;
         }
@@ -553,6 +499,8 @@ namespace Services.API
                     var pScopes = entity.Scopes.ToList();
                     var pStatus = entity.Status;
                     var pType = entity.Type;
+                #region Custom Before copyBroadcast
+                #endregion Custom Before copyBroadcast
                 var copy = new DocEntityBroadcast(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -569,6 +517,8 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
+                #region Custom After copyBroadcast
+                #endregion Custom After copyBroadcast
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -695,6 +645,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.BROADCAST);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityBroadcast.GetBroadcast(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Broadcast could be found for Id {request?.Id}.");
@@ -765,7 +719,7 @@ namespace Services.API
 
         private object _GetBroadcastScope(BroadcastJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
              var en = DocEntityBroadcast.GetBroadcast(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BROADCAST, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Broadcast and Scope");
@@ -883,7 +837,7 @@ namespace Services.API
             Broadcast ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
 
             DocEntityBroadcast entity = null;
             if(id.HasValue)
@@ -911,6 +865,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

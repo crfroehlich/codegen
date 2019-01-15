@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class VariableInstanceService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityVariableInstance.CACHE_KEY_PREFIX;
         private void _ExecSearch(VariableInstanceSearch request, Action<IQueryable<DocEntityVariableInstance>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<VariableInstance>(Dto.VariableInstance.Fields, request);
+            DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, "VariableInstance", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityVariableInstance>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityVariableInstance>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableInstanceFullTextSearch(request);
@@ -117,54 +117,39 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(VariableInstanceSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<VariableInstance>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableInstance,VariableInstance>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(VariableInstanceSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<VariableInstance>();
+            var cacheKey = GetApiCacheKey<VariableInstance>(DocConstantModelName.VARIABLEINSTANCE, nameof(VariableInstance), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<VariableInstance>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableInstance,VariableInstance>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.VARIABLEINSTANCE);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.VARIABLEINSTANCE);
             return tryRet;
         }
 
@@ -176,12 +161,9 @@ namespace Services.API
         public object Get(VariableInstanceVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -193,11 +175,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, "VariableInstance", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<VariableInstance>(DocConstantModelName.VARIABLEINSTANCE, nameof(VariableInstance), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<VariableInstance>(Dto.VariableInstance.Fields, request);
-                ret = GetVariableInstance(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetVariableInstance(request);
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.VARIABLEINSTANCE);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.VARIABLEINSTANCE);
             return ret;
         }
 
@@ -215,6 +203,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<VariableInstance>(DocConstantModelName.VARIABLEINSTANCE, nameof(VariableInstance), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pData = request.Data;
@@ -316,8 +306,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Workflows));
                 }
             }
-            request.VisibleFields = InitVisibleFields<VariableInstance>(Dto.VariableInstance.Fields, request);
+            DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, nameof(VariableInstance), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.VARIABLEINSTANCE);
 
             return ret;
         }
@@ -401,6 +393,8 @@ namespace Services.API
                     var pDocument = entity.Document;
                     var pRule = entity.Rule;
                     var pWorkflows = entity.Workflows.ToList();
+                #region Custom Before copyVariableInstance
+                #endregion Custom Before copyVariableInstance
                 var copy = new DocEntityVariableInstance(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -413,6 +407,8 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
+                #region Custom After copyVariableInstance
+                #endregion Custom After copyVariableInstance
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -539,6 +535,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.VARIABLEINSTANCE);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityVariableInstance.GetVariableInstance(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No VariableInstance could be found for Id {request?.Id}.");
@@ -609,7 +609,7 @@ namespace Services.API
 
         private object _GetVariableInstanceWorkflow(VariableInstanceJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
              var en = DocEntityVariableInstance.GetVariableInstance(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.VARIABLEINSTANCE, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between VariableInstance and Workflow");
@@ -727,7 +727,7 @@ namespace Services.API
             VariableInstance ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<VariableInstance>(Dto.VariableInstance.Fields, request);
+            DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, "VariableInstance", request.VisibleFields);
 
             DocEntityVariableInstance entity = null;
             if(id.HasValue)
@@ -755,6 +755,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

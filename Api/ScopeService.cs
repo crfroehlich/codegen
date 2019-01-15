@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class ScopeService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityScope.CACHE_KEY_PREFIX;
-        private object _GetIdCache(Scope request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.SCOPE);
-                var cacheKey = $"Scope_{key}_{request.Id}_{UrnId.Create<Scope>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetScope(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetScope(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(ScopeSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<Scope>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.SCOPE);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<ScopeSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityScope,Scope>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<Scope>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityScope,Scope>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(ScopeSearch request, Action<IQueryable<DocEntityScope>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityScope>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityScope>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ScopeFullTextSearch(request);
@@ -231,70 +187,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(ScopeSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Scope>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "scope")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityScope,Scope>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(ScopeSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Scope>();
+            var cacheKey = GetApiCacheKey<Scope>(DocConstantModelName.SCOPE, nameof(Scope), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<Scope>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "scope")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityScope,Scope>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.SCOPE);
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityScope,Scope>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.SCOPE);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.SCOPE);
             return tryRet;
         }
 
@@ -306,12 +240,9 @@ namespace Services.API
         public object Get(ScopeVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -323,19 +254,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Scope>(DocConstantModelName.SCOPE, nameof(Scope), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "scope")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetScope(request);
+                    });
+                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.SCOPE);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetScope(request);
-                }
-            });
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.SCOPE);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.SCOPE);
             return ret;
         }
 
@@ -353,6 +295,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<Scope>(DocConstantModelName.SCOPE, nameof(Scope), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
@@ -759,8 +703,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Workflows));
                 }
             }
-            request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Scope>(currentUser, nameof(Scope), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.SCOPE);
 
             return ret;
         }
@@ -857,6 +803,8 @@ namespace Services.API
                     var pVariableRules = entity.VariableRules.ToList();
                     var pView = entity.View;
                     var pWorkflows = entity.Workflows.ToList();
+                #region Custom Before copyScope
+                #endregion Custom Before copyScope
                 var copy = new DocEntityScope(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -902,6 +850,8 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
+                #region Custom After copyScope
+                #endregion Custom After copyScope
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -1028,6 +978,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.SCOPE);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityScope.GetScope(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Scope could be found for Id {request?.Id}.");
@@ -1128,7 +1082,7 @@ namespace Services.API
 
         private object _GetScopeLookupTableBinding(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and LookupTableBinding");
@@ -1150,7 +1104,7 @@ namespace Services.API
 
         private object _GetScopeBroadcast(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Broadcasts", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Broadcast");
@@ -1172,7 +1126,7 @@ namespace Services.API
 
         private object _GetScopeHelp(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Help>(currentUser, "Help", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Help", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Help");
@@ -1194,7 +1148,7 @@ namespace Services.API
 
         private object _GetScopeTermSynonym(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Synonyms", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and TermSynonym");
@@ -1216,7 +1170,7 @@ namespace Services.API
 
         private object _GetScopeVariableRule(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "VariableRules", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and VariableRule");
@@ -1238,7 +1192,7 @@ namespace Services.API
 
         private object _GetScopeWorkflow(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Workflow");
@@ -1586,7 +1540,7 @@ namespace Services.API
             Scope ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
 
             DocEntityScope entity = null;
             if(id.HasValue)
@@ -1614,6 +1568,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

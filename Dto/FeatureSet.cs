@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -55,12 +54,12 @@ namespace Services.Dto
         public string Description { get; set; }
 
 
-        [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
+        [ApiMember(Name = nameof(Feature), Description = "string", IsRequired = true)]
+        public string Feature { get; set; }
+
+
+        [ApiMember(Name = nameof(Name), Description = "string", IsRequired = false)]
         public string Name { get; set; }
-
-
-        [ApiMember(Name = nameof(PermissionTemplate), Description = "string", IsRequired = false)]
-        public string PermissionTemplate { get; set; }
 
 
         [ApiMember(Name = nameof(Roles), Description = "Role", IsRequired = false)]
@@ -86,16 +85,20 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
-            return ret;
+            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
+            if (DocTools.AreEqual(nameof(Fields), field)) return false;
+            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
+            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
+            if (DocTools.AreEqual(nameof(Id), field)) return true;
+            return true == VisibleFields?.Matches(field, true);
         }
 
-        public static List<string> Fields => DocTools.Fields<FeatureSet>();
+        private static List<string> _fields;
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<FeatureSet>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(PermissionTemplate),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Feature),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -130,8 +133,8 @@ namespace Services.Dto
     public partial class FeatureSetSearch : Search<FeatureSet>
     {
         public string Description { get; set; }
+        public string Feature { get; set; }
         public string Name { get; set; }
-        public string PermissionTemplate { get; set; }
         public List<int> RolesIds { get; set; }
     }
     
@@ -149,8 +152,8 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Updated))); }
         
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Description))); }
+        public bool doFeature { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Feature))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Name))); }
-        public bool doPermissionTemplate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.PermissionTemplate))); }
         public bool doRoles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Roles))); }
     }
 

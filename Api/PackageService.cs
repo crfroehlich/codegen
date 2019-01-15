@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class PackageService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityPackage.CACHE_KEY_PREFIX;
-        private object _GetIdCache(Package request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.PACKAGE);
-                var cacheKey = $"Package_{key}_{request.Id}_{UrnId.Create<Package>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetPackage(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetPackage(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(PackageSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<Package>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.PACKAGE);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<PackageSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<Package>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(PackageSearch request, Action<IQueryable<DocEntityPackage>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityPackage>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityPackage>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new PackageFullTextSearch(request);
@@ -130,8 +86,6 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(request.Archived.HasValue)
-                    entities = entities.Where(en => request.Archived.Value == en.Archived);
                         if(true == request.ChildrenIds?.Any())
                         {
                             entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
@@ -168,10 +122,6 @@ namespace Services.API
                     entities = entities.Where(en => en.DeliverableDeadline >= request.DeliverableDeadlineAfter);
                 if(request.FqId.HasValue)
                     entities = entities.Where(en => request.FqId.Value == en.FqId);
-                        if(true == request.LegacyTimeCardsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.LegacyTimeCards.Any(r => r.Id.In(request.LegacyTimeCardsIds)));
-                        }
                 if(request.LibraryPackageId.HasValue)
                     entities = entities.Where(en => request.LibraryPackageId.Value == en.LibraryPackageId);
                 if(!DocTools.IsNullOrEmpty(request.LibraryPackageName))
@@ -233,70 +183,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(PackageSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Package>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "package")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(PackageSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Package>();
+            var cacheKey = GetApiCacheKey<Package>(DocConstantModelName.PACKAGE, nameof(Package), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<Package>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "package")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.PACKAGE);
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.PACKAGE);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.PACKAGE);
             return tryRet;
         }
 
@@ -308,12 +236,9 @@ namespace Services.API
         public object Get(PackageVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -325,19 +250,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Package>(DocConstantModelName.PACKAGE, nameof(Package), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "package")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetPackage(request);
+                    });
+                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.PACKAGE);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetPackage(request);
-                }
-            });
+                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.PACKAGE);
+                });
+            }
+            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.PACKAGE);
             return ret;
         }
 
@@ -356,8 +292,9 @@ namespace Services.API
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
+            var cacheKey = GetApiCacheKey<Package>(DocConstantModelName.PACKAGE, nameof(Package), request);
+            
             //First, assign all the variables, do database lookups and conversions
-            var pArchived = request.Archived;
             var pChildren = request.Children?.ToList();
             var pClient = (request.Client?.Id > 0) ? DocEntityClient.GetClient(request.Client.Id) : null;
             var pDatabaseDeadline = request.DatabaseDeadline;
@@ -365,7 +302,6 @@ namespace Services.API
             var pDataset = (request.Dataset?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.Dataset.Id) : null;
             var pDeliverableDeadline = request.DeliverableDeadline;
             var pFqId = request.FqId;
-            var pLegacyTimeCards = request.LegacyTimeCards?.ToList();
             var pLibraryPackageId = request.LibraryPackageId;
             var pLibraryPackageName = request.LibraryPackageName;
             var pNumber = request.Number;
@@ -393,15 +329,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pArchived, permission, DocConstantModelName.PACKAGE, nameof(request.Archived)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Archived));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityClient>(currentUser, request, pClient, permission, DocConstantModelName.PACKAGE, nameof(request.Client)))
             {
                 if(DocPermissionFactory.IsRequested(request, pClient, entity.Client, nameof(request.Client)))
@@ -586,52 +513,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Children));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pLegacyTimeCards, permission, DocConstantModelName.PACKAGE, nameof(request.LegacyTimeCards)))
-            {
-                if (true == pLegacyTimeCards?.Any() )
-                {
-                    var requestedLegacyTimeCards = pLegacyTimeCards.Select(p => p.Id).Distinct().ToList();
-                    var existsLegacyTimeCards = Execute.SelectAll<DocEntityTimeCard>().Where(e => e.Id.In(requestedLegacyTimeCards)).Select( e => e.Id ).ToList();
-                    if (existsLegacyTimeCards.Count != requestedLegacyTimeCards.Count)
-                    {
-                        var nonExists = requestedLegacyTimeCards.Where(id => existsLegacyTimeCards.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection LegacyTimeCards with objects that do not exist. No matching LegacyTimeCards(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedLegacyTimeCards.Where(id => entity.LegacyTimeCards.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Package), columnName: nameof(request.LegacyTimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.LegacyTimeCards)} to {nameof(Package)}");
-                        entity.LegacyTimeCards.Add(target);
-                    });
-                    var toRemove = entity.LegacyTimeCards.Where(e => requestedLegacyTimeCards.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Package), columnName: nameof(request.LegacyTimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.LegacyTimeCards)} from {nameof(Package)}");
-                        entity.LegacyTimeCards.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.LegacyTimeCards.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Package), columnName: nameof(request.LegacyTimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.LegacyTimeCards)} from {nameof(Package)}");
-                        entity.LegacyTimeCards.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pLegacyTimeCards, nameof(request.LegacyTimeCards)) && !request.VisibleFields.Matches(nameof(request.LegacyTimeCards), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.LegacyTimeCards));
-                }
-            }
-            request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Package>(currentUser, nameof(Package), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.PACKAGE);
 
             return ret;
         }
@@ -711,7 +596,6 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pArchived = entity.Archived;
                     var pChildren = entity.Children.ToList();
                     var pClient = entity.Client;
                     var pDatabaseDeadline = entity.DatabaseDeadline;
@@ -721,7 +605,6 @@ namespace Services.API
                     var pDataset = entity.Dataset;
                     var pDeliverableDeadline = entity.DeliverableDeadline;
                     var pFqId = entity.FqId;
-                    var pLegacyTimeCards = entity.LegacyTimeCards.ToList();
                     var pLibraryPackageId = entity.LibraryPackageId;
                     var pLibraryPackageName = entity.LibraryPackageName;
                     if(!DocTools.IsNullOrEmpty(pLibraryPackageName))
@@ -739,10 +622,11 @@ namespace Services.API
                         pPICO += " (Copy)";
                     var pProject = entity.Project;
                     var pStatus = entity.Status;
+                #region Custom Before copyPackage
+                #endregion Custom Before copyPackage
                 var copy = new DocEntityPackage(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Archived = pArchived
                                 , Client = pClient
                                 , DatabaseDeadline = pDatabaseDeadline
                                 , DatabaseName = pDatabaseName
@@ -764,11 +648,8 @@ namespace Services.API
                                 entity.Children.Add(item);
                             }
 
-                            foreach(var item in pLegacyTimeCards)
-                            {
-                                entity.LegacyTimeCards.Add(item);
-                            }
-
+                #region Custom After copyPackage
+                #endregion Custom After copyPackage
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -895,6 +776,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.PACKAGE);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityPackage.GetPackage(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Package could be found for Id {request?.Id}.");
@@ -937,9 +822,6 @@ namespace Services.API
                 case "package":
                     ret = _GetPackagePackage(request, skip, take);
                     break;
-                case "timecard":
-                    ret = _GetPackageTimeCard(request, skip, take);
-                    break;
                 }
             });
             return ret;
@@ -965,20 +847,11 @@ namespace Services.API
 
         private object _GetPackagePackage(PackageJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
              var en = DocEntityPackage.GetPackage(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PACKAGE, columnName: "Children", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Package and Package");
              return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPackage,Package>(new List<Package>());
-        }
-
-        private object _GetPackageTimeCard(PackageJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request.VisibleFields);
-             var en = DocEntityPackage.GetPackage(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PACKAGE, columnName: "LegacyTimeCards", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Package and TimeCard");
-             return en?.LegacyTimeCards.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTimeCard,TimeCard>(new List<TimeCard>());
         }
         
         public object Post(PackageJunction request)
@@ -1033,7 +906,7 @@ namespace Services.API
             Package ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
 
             DocEntityPackage entity = null;
             if(id.HasValue)
@@ -1061,6 +934,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }
