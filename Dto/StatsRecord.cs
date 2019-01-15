@@ -72,7 +72,6 @@ namespace Services.Dto
     }
 
     [Route("/statsrecord/{Id}", "GET")]
-    [Route("/profile/statsrecord/{Id}", "GET")]
     public partial class StatsRecord : StatsRecordBase, IReturn<StatsRecord>, IDto
     {
         public StatsRecord()
@@ -122,9 +121,7 @@ namespace Services.Dto
     }
     
     [Route("/statsrecord", "GET")]
-    [Route("/profile/statsrecord", "GET")]
     [Route("/statsrecord/search", "GET, POST, DELETE")]
-    [Route("/profile/statsrecord/search", "GET, POST, DELETE")]
     public partial class StatsRecordSearch : Search<StatsRecord>
     {
         public Reference Name { get; set; }
@@ -159,7 +156,6 @@ namespace Services.Dto
     public partial class StatsRecordVersion : StatsRecordSearch {}
 
     [Route("/statsrecord/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/statsrecord/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsRecordBatch : List<StatsRecord> { }
 
     [Route("/admin/statsrecord/ids", "GET, POST")]

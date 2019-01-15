@@ -70,7 +70,6 @@ namespace Services.Dto
     }
 
     [Route("/featureset/{Id}", "GET, PATCH, PUT")]
-    [Route("/profile/featureset/{Id}", "GET, PATCH, PUT")]
     public partial class FeatureSet : FeatureSetBase, IReturn<FeatureSet>, IDto
     {
         public FeatureSet()
@@ -127,9 +126,7 @@ namespace Services.Dto
     }
     
     [Route("/featureset", "GET")]
-    [Route("/profile/featureset", "GET")]
     [Route("/featureset/search", "GET, POST, DELETE")]
-    [Route("/profile/featureset/search", "GET, POST, DELETE")]
     public partial class FeatureSetSearch : Search<FeatureSet>
     {
         public string Description { get; set; }
@@ -161,11 +158,9 @@ namespace Services.Dto
     public partial class FeatureSetVersion : FeatureSetSearch {}
 
     [Route("/featureset/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/featureset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class FeatureSetBatch : List<FeatureSet> { }
 
     [Route("/featureset/{Id}/role", "GET, POST, DELETE")]
-    [Route("/profile/featureset/{Id}/role", "GET, POST, DELETE")]
     public class FeatureSetJunction : Search<FeatureSet>
     {
         public int? Id { get; set; }
@@ -186,7 +181,6 @@ namespace Services.Dto
 
 
     [Route("/featureset/{Id}/role/version", "GET")]
-    [Route("/profile/featureset/{Id}/role/version", "GET")]
     public class FeatureSetJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

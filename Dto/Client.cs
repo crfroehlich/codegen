@@ -94,9 +94,7 @@ namespace Services.Dto
     }
 
     [Route("/client", "POST")]
-    [Route("/profile/client", "POST")]
     [Route("/client/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/client/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Client : ClientBase, IReturn<Client>, IDto
     {
         public Client()
@@ -153,12 +151,9 @@ namespace Services.Dto
     }
     
     [Route("/Client/{Id}/copy", "POST")]
-    [Route("/profile/Client/{Id}/copy", "POST")]
     public partial class ClientCopy : Client {}
     [Route("/client", "GET")]
-    [Route("/profile/client", "GET")]
     [Route("/client/search", "GET, POST, DELETE")]
-    [Route("/profile/client/search", "GET, POST, DELETE")]
     public partial class ClientSearch : Search<Client>
     {
         public Reference Account { get; set; }
@@ -201,21 +196,14 @@ namespace Services.Dto
     public partial class ClientVersion : ClientSearch {}
 
     [Route("/client/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/client/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ClientBatch : List<Client> { }
 
     [Route("/client/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/profile/client/{Id}/lookuptablebinding", "GET, POST, DELETE")]
     [Route("/client/{Id}/division", "GET, POST, DELETE")]
-    [Route("/profile/client/{Id}/division", "GET, POST, DELETE")]
     [Route("/client/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/profile/client/{Id}/documentset", "GET, POST, DELETE")]
     [Route("/client/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/profile/client/{Id}/scope", "GET, POST, DELETE")]
     [Route("/client/{Id}/user", "GET, POST, DELETE")]
-    [Route("/profile/client/{Id}/user", "GET, POST, DELETE")]
     [Route("/client/{Id}/workflow", "GET, POST, DELETE")]
-    [Route("/profile/client/{Id}/workflow", "GET, POST, DELETE")]
     public class ClientJunction : Search<Client>
     {
         public int? Id { get; set; }
@@ -236,17 +224,11 @@ namespace Services.Dto
 
 
     [Route("/client/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/profile/client/{Id}/lookuptablebinding/version", "GET")]
     [Route("/client/{Id}/division/version", "GET")]
-    [Route("/profile/client/{Id}/division/version", "GET")]
     [Route("/client/{Id}/documentset/version", "GET")]
-    [Route("/profile/client/{Id}/documentset/version", "GET")]
     [Route("/client/{Id}/scope/version", "GET")]
-    [Route("/profile/client/{Id}/scope/version", "GET")]
     [Route("/client/{Id}/user/version", "GET")]
-    [Route("/profile/client/{Id}/user/version", "GET")]
     [Route("/client/{Id}/workflow/version", "GET")]
-    [Route("/profile/client/{Id}/workflow/version", "GET")]
     public class ClientJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

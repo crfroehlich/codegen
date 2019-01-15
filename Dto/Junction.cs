@@ -97,9 +97,7 @@ namespace Services.Dto
     }
 
     [Route("/junction", "POST")]
-    [Route("/profile/junction", "POST")]
     [Route("/junction/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/junction/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Junction : JunctionBase, IReturn<Junction>, IDto
     {
         public Junction()
@@ -156,12 +154,9 @@ namespace Services.Dto
     }
     
     [Route("/Junction/{Id}/copy", "POST")]
-    [Route("/profile/Junction/{Id}/copy", "POST")]
     public partial class JunctionCopy : Junction {}
     [Route("/junction", "GET")]
-    [Route("/profile/junction", "GET")]
     [Route("/junction/search", "GET, POST, DELETE")]
-    [Route("/profile/junction/search", "GET, POST, DELETE")]
     public partial class JunctionSearch : Search<Junction>
     {
         public List<int> ChildrenIds { get; set; }
@@ -208,11 +203,9 @@ namespace Services.Dto
     public partial class JunctionVersion : JunctionSearch {}
 
     [Route("/junction/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/junction/batch", "DELETE, PATCH, POST, PUT")]
     public partial class JunctionBatch : List<Junction> { }
 
     [Route("/junction/{Id}/junction", "GET, POST, DELETE")]
-    [Route("/profile/junction/{Id}/junction", "GET, POST, DELETE")]
     public class JunctionJunction : Search<Junction>
     {
         public int? Id { get; set; }
@@ -233,7 +226,6 @@ namespace Services.Dto
 
 
     [Route("/junction/{Id}/junction/version", "GET")]
-    [Route("/profile/junction/{Id}/junction/version", "GET")]
     public class JunctionJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

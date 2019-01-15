@@ -89,9 +89,7 @@ namespace Services.Dto
     }
 
     [Route("/division", "POST")]
-    [Route("/profile/division", "POST")]
     [Route("/division/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/division/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Division : DivisionBase, IReturn<Division>, IDto
     {
         public Division()
@@ -148,12 +146,9 @@ namespace Services.Dto
     }
     
     [Route("/Division/{Id}/copy", "POST")]
-    [Route("/profile/Division/{Id}/copy", "POST")]
     public partial class DivisionCopy : Division {}
     [Route("/division", "GET")]
-    [Route("/profile/division", "GET")]
     [Route("/division/search", "GET, POST, DELETE")]
-    [Route("/profile/division/search", "GET, POST, DELETE")]
     public partial class DivisionSearch : Search<Division>
     {
         public Reference Client { get; set; }
@@ -194,13 +189,10 @@ namespace Services.Dto
     public partial class DivisionVersion : DivisionSearch {}
 
     [Route("/division/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/division/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DivisionBatch : List<Division> { }
 
     [Route("/division/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/profile/division/{Id}/documentset", "GET, POST, DELETE")]
     [Route("/division/{Id}/user", "GET, POST, DELETE")]
-    [Route("/profile/division/{Id}/user", "GET, POST, DELETE")]
     public class DivisionJunction : Search<Division>
     {
         public int? Id { get; set; }
@@ -221,9 +213,7 @@ namespace Services.Dto
 
 
     [Route("/division/{Id}/documentset/version", "GET")]
-    [Route("/profile/division/{Id}/documentset/version", "GET")]
     [Route("/division/{Id}/user/version", "GET")]
-    [Route("/profile/division/{Id}/user/version", "GET")]
     public class DivisionJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

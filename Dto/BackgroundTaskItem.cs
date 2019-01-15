@@ -106,7 +106,6 @@ namespace Services.Dto
     }
 
     [Route("/backgroundtaskitem/{Id}", "GET")]
-    [Route("/profile/backgroundtaskitem/{Id}", "GET")]
     public partial class BackgroundTaskItem : BackgroundTaskItemBase, IReturn<BackgroundTaskItem>, IDto
     {
         public BackgroundTaskItem()
@@ -163,9 +162,7 @@ namespace Services.Dto
     }
     
     [Route("/backgroundtaskitem", "GET")]
-    [Route("/profile/backgroundtaskitem", "GET")]
     [Route("/backgroundtaskitem/search", "GET, POST, DELETE")]
-    [Route("/profile/backgroundtaskitem/search", "GET, POST, DELETE")]
     public partial class BackgroundTaskItemSearch : Search<BackgroundTaskItem>
     {
         public int? Attempts { get; set; }
@@ -219,11 +216,9 @@ namespace Services.Dto
     public partial class BackgroundTaskItemVersion : BackgroundTaskItemSearch {}
 
     [Route("/backgroundtaskitem/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/backgroundtaskitem/batch", "DELETE, PATCH, POST, PUT")]
     public partial class BackgroundTaskItemBatch : List<BackgroundTaskItem> { }
 
     [Route("/backgroundtaskitem/{Id}/backgroundtaskhistory", "GET, POST, DELETE")]
-    [Route("/profile/backgroundtaskitem/{Id}/backgroundtaskhistory", "GET, POST, DELETE")]
     public class BackgroundTaskItemJunction : Search<BackgroundTaskItem>
     {
         public int? Id { get; set; }
@@ -244,7 +239,6 @@ namespace Services.Dto
 
 
     [Route("/backgroundtaskitem/{Id}/backgroundtaskhistory/version", "GET")]
-    [Route("/profile/backgroundtaskitem/{Id}/backgroundtaskhistory/version", "GET")]
     public class BackgroundTaskItemJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

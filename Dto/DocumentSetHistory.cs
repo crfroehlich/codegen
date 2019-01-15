@@ -75,7 +75,6 @@ namespace Services.Dto
     }
 
     [Route("/documentsethistory/{Id}", "GET")]
-    [Route("/profile/documentsethistory/{Id}", "GET")]
     public partial class DocumentSetHistory : DocumentSetHistoryBase, IReturn<DocumentSetHistory>, IDto
     {
         public DocumentSetHistory()
@@ -127,9 +126,7 @@ namespace Services.Dto
     }
     
     [Route("/documentsethistory", "GET")]
-    [Route("/profile/documentsethistory", "GET")]
     [Route("/documentsethistory/search", "GET, POST, DELETE")]
-    [Route("/profile/documentsethistory/search", "GET, POST, DELETE")]
     public partial class DocumentSetHistorySearch : Search<DocumentSetHistory>
     {
         public Reference DocumentSet { get; set; }
@@ -164,7 +161,6 @@ namespace Services.Dto
     public partial class DocumentSetHistoryVersion : DocumentSetHistorySearch {}
 
     [Route("/documentsethistory/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/documentsethistory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentSetHistoryBatch : List<DocumentSetHistory> { }
 
     [Route("/admin/documentsethistory/ids", "GET, POST")]

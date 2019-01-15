@@ -57,9 +57,7 @@ namespace Services.Dto
     }
 
     [Route("/attributeinterval", "POST")]
-    [Route("/profile/attributeinterval", "POST")]
     [Route("/attributeinterval/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/attributeinterval/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class AttributeInterval : AttributeIntervalBase, IReturn<AttributeInterval>, IDto
     {
         public AttributeInterval()
@@ -109,12 +107,9 @@ namespace Services.Dto
     }
     
     [Route("/AttributeInterval/{Id}/copy", "POST")]
-    [Route("/profile/AttributeInterval/{Id}/copy", "POST")]
     public partial class AttributeIntervalCopy : AttributeInterval {}
     [Route("/attributeinterval", "GET")]
-    [Route("/profile/attributeinterval", "GET")]
     [Route("/attributeinterval/search", "GET, POST, DELETE")]
-    [Route("/profile/attributeinterval/search", "GET, POST, DELETE")]
     public partial class AttributeIntervalSearch : Search<AttributeInterval>
     {
         public TypeInterval Interval { get; set; }
@@ -140,7 +135,6 @@ namespace Services.Dto
     public partial class AttributeIntervalVersion : AttributeIntervalSearch {}
 
     [Route("/attributeinterval/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/attributeinterval/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeIntervalBatch : List<AttributeInterval> { }
 
     [Route("/admin/attributeinterval/ids", "GET, POST")]

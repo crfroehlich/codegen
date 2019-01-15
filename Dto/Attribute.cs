@@ -88,9 +88,7 @@ namespace Services.Dto
     }
 
     [Route("/attribute", "POST")]
-    [Route("/profile/attribute", "POST")]
     [Route("/attribute/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/attribute/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Attribute : AttributeBase, IReturn<Attribute>, IDto
     {
         public Attribute()
@@ -140,12 +138,9 @@ namespace Services.Dto
     }
     
     [Route("/Attribute/{Id}/copy", "POST")]
-    [Route("/profile/Attribute/{Id}/copy", "POST")]
     public partial class AttributeCopy : Attribute {}
     [Route("/attribute", "GET")]
-    [Route("/profile/attribute", "GET")]
     [Route("/attribute/search", "GET, POST, DELETE")]
-    [Route("/profile/attribute/search", "GET, POST, DELETE")]
     public partial class AttributeSearch : Search<Attribute>
     {
         public Reference AttributeName { get; set; }
@@ -190,7 +185,6 @@ namespace Services.Dto
     public partial class AttributeVersion : AttributeSearch {}
 
     [Route("/attribute/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/attribute/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeBatch : List<Attribute> { }
 
     [Route("/admin/attribute/ids", "GET, POST")]

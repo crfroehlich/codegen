@@ -65,7 +65,6 @@ namespace Services.Dto
     }
 
     [Route("/databaseversion/{Id}", "GET")]
-    [Route("/profile/databaseversion/{Id}", "GET")]
     public partial class DatabaseVersion : DatabaseVersionBase, IReturn<DatabaseVersion>, IDto
     {
         public DatabaseVersion()
@@ -117,9 +116,7 @@ namespace Services.Dto
     }
     
     [Route("/databaseversion", "GET")]
-    [Route("/profile/databaseversion", "GET")]
     [Route("/databaseversion/search", "GET, POST, DELETE")]
-    [Route("/profile/databaseversion/search", "GET, POST, DELETE")]
     public partial class DatabaseVersionSearch : Search<DatabaseVersion>
     {
         public string Description { get; set; }
@@ -149,7 +146,6 @@ namespace Services.Dto
     public partial class DatabaseVersionVersion : DatabaseVersionSearch {}
 
     [Route("/databaseversion/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/databaseversion/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DatabaseVersionBatch : List<DatabaseVersion> { }
 
     [Route("/admin/databaseversion/ids", "GET, POST")]

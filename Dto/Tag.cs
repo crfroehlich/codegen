@@ -62,9 +62,7 @@ namespace Services.Dto
     }
 
     [Route("/tag", "POST")]
-    [Route("/profile/tag", "POST")]
     [Route("/tag/{Id}", "GET, DELETE")]
-    [Route("/profile/tag/{Id}", "GET, DELETE")]
     public partial class Tag : TagBase, IReturn<Tag>, IDto
     {
         public Tag()
@@ -121,12 +119,9 @@ namespace Services.Dto
     }
     
     [Route("/Tag/{Id}/copy", "POST")]
-    [Route("/profile/Tag/{Id}/copy", "POST")]
     public partial class TagCopy : Tag {}
     [Route("/tag", "GET")]
-    [Route("/profile/tag", "GET")]
     [Route("/tag/search", "GET, POST, DELETE")]
-    [Route("/profile/tag/search", "GET, POST, DELETE")]
     public partial class TagSearch : Search<Tag>
     {
         public string Name { get; set; }
@@ -154,11 +149,9 @@ namespace Services.Dto
     public partial class TagVersion : TagSearch {}
 
     [Route("/tag/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/tag/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TagBatch : List<Tag> { }
 
     [Route("/tag/{Id}/workflow", "GET, POST, DELETE")]
-    [Route("/profile/tag/{Id}/workflow", "GET, POST, DELETE")]
     public class TagJunction : Search<Tag>
     {
         public int? Id { get; set; }
@@ -179,7 +172,6 @@ namespace Services.Dto
 
 
     [Route("/tag/{Id}/workflow/version", "GET")]
-    [Route("/profile/tag/{Id}/workflow/version", "GET")]
     public class TagJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

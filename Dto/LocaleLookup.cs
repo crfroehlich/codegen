@@ -67,9 +67,7 @@ namespace Services.Dto
     }
 
     [Route("/localelookup", "POST")]
-    [Route("/profile/localelookup", "POST")]
     [Route("/localelookup/{Id}", "GET")]
-    [Route("/profile/localelookup/{Id}", "GET")]
     public partial class LocaleLookup : LocaleLookupBase, IReturn<LocaleLookup>, IDto
     {
         public LocaleLookup()
@@ -121,12 +119,9 @@ namespace Services.Dto
     }
     
     [Route("/LocaleLookup/{Id}/copy", "POST")]
-    [Route("/profile/LocaleLookup/{Id}/copy", "POST")]
     public partial class LocaleLookupCopy : LocaleLookup {}
     [Route("/localelookup", "GET")]
-    [Route("/profile/localelookup", "GET")]
     [Route("/localelookup/search", "GET, POST, DELETE")]
-    [Route("/profile/localelookup/search", "GET, POST, DELETE")]
     public partial class LocaleLookupSearch : Search<LocaleLookup>
     {
         public string Data { get; set; }
@@ -157,7 +152,6 @@ namespace Services.Dto
     public partial class LocaleLookupVersion : LocaleLookupSearch {}
 
     [Route("/localelookup/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/localelookup/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LocaleLookupBatch : List<LocaleLookup> { }
 
     [Route("/admin/localelookup/ids", "GET, POST")]

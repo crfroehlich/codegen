@@ -79,9 +79,7 @@ namespace Services.Dto
     }
 
     [Route("/glossary", "POST")]
-    [Route("/profile/glossary", "POST")]
     [Route("/glossary/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/glossary/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Glossary : GlossaryBase, IReturn<Glossary>, IDto
     {
         public Glossary()
@@ -133,12 +131,9 @@ namespace Services.Dto
     }
     
     [Route("/Glossary/{Id}/copy", "POST")]
-    [Route("/profile/Glossary/{Id}/copy", "POST")]
     public partial class GlossaryCopy : Glossary {}
     [Route("/glossary", "GET")]
-    [Route("/profile/glossary", "GET")]
     [Route("/glossary/search", "GET, POST, DELETE")]
-    [Route("/profile/glossary/search", "GET, POST, DELETE")]
     public partial class GlossarySearch : Search<Glossary>
     {
         public string Definition { get; set; }
@@ -175,7 +170,6 @@ namespace Services.Dto
     public partial class GlossaryVersion : GlossarySearch {}
 
     [Route("/glossary/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/glossary/batch", "DELETE, PATCH, POST, PUT")]
     public partial class GlossaryBatch : List<Glossary> { }
 
     [Route("/admin/glossary/ids", "GET, POST")]

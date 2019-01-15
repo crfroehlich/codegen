@@ -81,9 +81,7 @@ namespace Services.Dto
     }
 
     [Route("/interval", "POST")]
-    [Route("/profile/interval", "POST")]
     [Route("/interval/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/interval/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Interval : IntervalBase, IReturn<Interval>, IDto
     {
         public Interval()
@@ -133,12 +131,9 @@ namespace Services.Dto
     }
     
     [Route("/Interval/{Id}/copy", "POST")]
-    [Route("/profile/Interval/{Id}/copy", "POST")]
     public partial class IntervalCopy : Interval {}
     [Route("/interval", "GET")]
-    [Route("/profile/interval", "GET")]
     [Route("/interval/search", "GET, POST, DELETE")]
-    [Route("/profile/interval/search", "GET, POST, DELETE")]
     public partial class IntervalSearch : Search<Interval>
     {
         public Reference CalendarDateEnd { get; set; }
@@ -176,7 +171,6 @@ namespace Services.Dto
     public partial class IntervalVersion : IntervalSearch {}
 
     [Route("/interval/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/interval/batch", "DELETE, PATCH, POST, PUT")]
     public partial class IntervalBatch : List<Interval> { }
 
     [Route("/admin/interval/ids", "GET, POST")]

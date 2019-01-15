@@ -90,7 +90,6 @@ namespace Services.Dto
     }
 
     [Route("/usersession/{Id}", "GET")]
-    [Route("/profile/usersession/{Id}", "GET")]
     public partial class UserSession : UserSessionBase, IReturn<UserSession>, IDto
     {
         public UserSession()
@@ -147,9 +146,7 @@ namespace Services.Dto
     }
     
     [Route("/usersession", "GET")]
-    [Route("/profile/usersession", "GET")]
     [Route("/usersession/search", "GET, POST, DELETE")]
-    [Route("/profile/usersession/search", "GET, POST, DELETE")]
     public partial class UserSessionSearch : Search<UserSession>
     {
         public string ClientId { get; set; }
@@ -190,15 +187,11 @@ namespace Services.Dto
     public partial class UserSessionVersion : UserSessionSearch {}
 
     [Route("/usersession/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/usersession/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserSessionBatch : List<UserSession> { }
 
     [Route("/usersession/{Id}/impersonation", "GET, POST, DELETE")]
-    [Route("/profile/usersession/{Id}/impersonation", "GET, POST, DELETE")]
     [Route("/usersession/{Id}/request", "GET, POST, DELETE")]
-    [Route("/profile/usersession/{Id}/request", "GET, POST, DELETE")]
     [Route("/usersession/{Id}/history", "GET, POST, DELETE")]
-    [Route("/profile/usersession/{Id}/history", "GET, POST, DELETE")]
     public class UserSessionJunction : Search<UserSession>
     {
         public int? Id { get; set; }
@@ -219,11 +212,8 @@ namespace Services.Dto
 
 
     [Route("/usersession/{Id}/impersonation/version", "GET")]
-    [Route("/profile/usersession/{Id}/impersonation/version", "GET")]
     [Route("/usersession/{Id}/request/version", "GET")]
-    [Route("/profile/usersession/{Id}/request/version", "GET")]
     [Route("/usersession/{Id}/history/version", "GET")]
-    [Route("/profile/usersession/{Id}/history/version", "GET")]
     public class UserSessionJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

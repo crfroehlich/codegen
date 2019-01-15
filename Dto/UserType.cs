@@ -79,9 +79,7 @@ namespace Services.Dto
     }
 
     [Route("/usertype", "POST")]
-    [Route("/profile/usertype", "POST")]
     [Route("/usertype/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/usertype/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class UserType : UserTypeBase, IReturn<UserType>, IDto
     {
         public UserType()
@@ -138,12 +136,9 @@ namespace Services.Dto
     }
     
     [Route("/UserType/{Id}/copy", "POST")]
-    [Route("/profile/UserType/{Id}/copy", "POST")]
     public partial class UserTypeCopy : UserType {}
     [Route("/usertype", "GET")]
-    [Route("/profile/usertype", "GET")]
     [Route("/usertype/search", "GET, POST, DELETE")]
-    [Route("/profile/usertype/search", "GET, POST, DELETE")]
     public partial class UserTypeSearch : Search<UserType>
     {
         public Reference PayrollStatus { get; set; }
@@ -184,11 +179,9 @@ namespace Services.Dto
     public partial class UserTypeVersion : UserTypeSearch {}
 
     [Route("/usertype/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/usertype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserTypeBatch : List<UserType> { }
 
     [Route("/usertype/{Id}/user", "GET, POST, DELETE")]
-    [Route("/profile/usertype/{Id}/user", "GET, POST, DELETE")]
     public class UserTypeJunction : Search<UserType>
     {
         public int? Id { get; set; }
@@ -209,7 +202,6 @@ namespace Services.Dto
 
 
     [Route("/usertype/{Id}/user/version", "GET")]
-    [Route("/profile/usertype/{Id}/user/version", "GET")]
     public class UserTypeJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

@@ -80,9 +80,7 @@ namespace Services.Dto
     }
 
     [Route("/workflowcomment", "POST")]
-    [Route("/profile/workflowcomment", "POST")]
     [Route("/workflowcomment/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/workflowcomment/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class WorkflowComment : WorkflowCommentBase, IReturn<WorkflowComment>, IDto
     {
         public WorkflowComment()
@@ -139,12 +137,9 @@ namespace Services.Dto
     }
     
     [Route("/WorkflowComment/{Id}/copy", "POST")]
-    [Route("/profile/WorkflowComment/{Id}/copy", "POST")]
     public partial class WorkflowCommentCopy : WorkflowComment {}
     [Route("/workflowcomment", "GET")]
-    [Route("/profile/workflowcomment", "GET")]
     [Route("/workflowcomment/search", "GET, POST, DELETE")]
-    [Route("/profile/workflowcomment/search", "GET, POST, DELETE")]
     public partial class WorkflowCommentSearch : Search<WorkflowComment>
     {
         public List<int> ChildrenIds { get; set; }
@@ -181,11 +176,9 @@ namespace Services.Dto
     public partial class WorkflowCommentVersion : WorkflowCommentSearch {}
 
     [Route("/workflowcomment/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/workflowcomment/batch", "DELETE, PATCH, POST, PUT")]
     public partial class WorkflowCommentBatch : List<WorkflowComment> { }
 
     [Route("/workflowcomment/{Id}/workflowcomment", "GET, POST, DELETE")]
-    [Route("/profile/workflowcomment/{Id}/workflowcomment", "GET, POST, DELETE")]
     public class WorkflowCommentJunction : Search<WorkflowComment>
     {
         public int? Id { get; set; }
@@ -206,7 +199,6 @@ namespace Services.Dto
 
 
     [Route("/workflowcomment/{Id}/workflowcomment/version", "GET")]
-    [Route("/profile/workflowcomment/{Id}/workflowcomment/version", "GET")]
     public class WorkflowCommentJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

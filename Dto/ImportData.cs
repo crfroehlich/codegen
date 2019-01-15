@@ -129,9 +129,7 @@ namespace Services.Dto
     }
 
     [Route("/importdata", "POST")]
-    [Route("/profile/importdata", "POST")]
     [Route("/importdata/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/importdata/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class ImportData : ImportDataBase, IReturn<ImportData>, IDto
     {
         public ImportData()
@@ -186,12 +184,9 @@ namespace Services.Dto
     }
     
     [Route("/ImportData/{Id}/copy", "POST")]
-    [Route("/profile/ImportData/{Id}/copy", "POST")]
     public partial class ImportDataCopy : ImportData {}
     [Route("/importdata", "GET")]
-    [Route("/profile/importdata", "GET")]
     [Route("/importdata/search", "GET, POST, DELETE")]
-    [Route("/profile/importdata/search", "GET, POST, DELETE")]
     public partial class ImportDataSearch : Search<ImportData>
     {
         public DateTime? CompletedOn { get; set; }
@@ -260,11 +255,9 @@ namespace Services.Dto
     public partial class ImportDataVersion : ImportDataSearch {}
 
     [Route("/importdata/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/importdata/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ImportDataBatch : List<ImportData> { }
 
     [Route("/importdata/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/profile/importdata/{Id}/documentset", "GET, POST, DELETE")]
     public class ImportDataJunction : Search<ImportData>
     {
         public int? Id { get; set; }
@@ -285,7 +278,6 @@ namespace Services.Dto
 
 
     [Route("/importdata/{Id}/documentset/version", "GET")]
-    [Route("/profile/importdata/{Id}/documentset/version", "GET")]
     public class ImportDataJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

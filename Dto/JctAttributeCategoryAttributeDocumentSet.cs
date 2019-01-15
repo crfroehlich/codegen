@@ -71,9 +71,7 @@ namespace Services.Dto
     }
 
     [Route("/jctattributecategoryattributedocumentset", "POST")]
-    [Route("/profile/jctattributecategoryattributedocumentset", "POST")]
     [Route("/jctattributecategoryattributedocumentset/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/jctattributecategoryattributedocumentset/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class JctAttributeCategoryAttributeDocumentSet : JctAttributeCategoryAttributeDocumentSetBase, IReturn<JctAttributeCategoryAttributeDocumentSet>, IDto
     {
         public JctAttributeCategoryAttributeDocumentSet()
@@ -123,12 +121,9 @@ namespace Services.Dto
     }
     
     [Route("/JctAttributeCategoryAttributeDocumentSet/{Id}/copy", "POST")]
-    [Route("/profile/JctAttributeCategoryAttributeDocumentSet/{Id}/copy", "POST")]
     public partial class JctAttributeCategoryAttributeDocumentSetCopy : JctAttributeCategoryAttributeDocumentSet {}
     [Route("/jctattributecategoryattributedocumentset", "GET")]
-    [Route("/profile/jctattributecategoryattributedocumentset", "GET")]
     [Route("/jctattributecategoryattributedocumentset/search", "GET, POST, DELETE")]
-    [Route("/profile/jctattributecategoryattributedocumentset/search", "GET, POST, DELETE")]
     public partial class JctAttributeCategoryAttributeDocumentSetSearch : Search<JctAttributeCategoryAttributeDocumentSet>
     {
         public Reference Attribute { get; set; }
@@ -161,7 +156,6 @@ namespace Services.Dto
     public partial class JctAttributeCategoryAttributeDocumentSetVersion : JctAttributeCategoryAttributeDocumentSetSearch {}
 
     [Route("/jctattributecategoryattributedocumentset/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/jctattributecategoryattributedocumentset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class JctAttributeCategoryAttributeDocumentSetBatch : List<JctAttributeCategoryAttributeDocumentSet> { }
 
     [Route("/admin/jctattributecategoryattributedocumentset/ids", "GET, POST")]

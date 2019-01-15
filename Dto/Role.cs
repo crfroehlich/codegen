@@ -101,9 +101,7 @@ namespace Services.Dto
     }
 
     [Route("/role", "POST")]
-    [Route("/profile/role", "POST")]
     [Route("/role/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/role/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Role : RoleBase, IReturn<Role>, IDto
     {
         public Role()
@@ -160,12 +158,9 @@ namespace Services.Dto
     }
     
     [Route("/Role/{Id}/copy", "POST")]
-    [Route("/profile/Role/{Id}/copy", "POST")]
     public partial class RoleCopy : Role {}
     [Route("/role", "GET")]
-    [Route("/profile/role", "GET")]
     [Route("/role/search", "GET, POST, DELETE")]
-    [Route("/profile/role/search", "GET, POST, DELETE")]
     public partial class RoleSearch : Search<Role>
     {
         public List<int> AppsIds { get; set; }
@@ -211,17 +206,12 @@ namespace Services.Dto
     public partial class RoleVersion : RoleSearch {}
 
     [Route("/role/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/role/batch", "DELETE, PATCH, POST, PUT")]
     public partial class RoleBatch : List<Role> { }
 
     [Route("/role/{Id}/app", "GET, POST, DELETE")]
-    [Route("/profile/role/{Id}/app", "GET, POST, DELETE")]
     [Route("/role/{Id}/featureset", "GET, POST, DELETE")]
-    [Route("/profile/role/{Id}/featureset", "GET, POST, DELETE")]
     [Route("/role/{Id}/page", "GET, POST, DELETE")]
-    [Route("/profile/role/{Id}/page", "GET, POST, DELETE")]
     [Route("/role/{Id}/user", "GET, POST, DELETE")]
-    [Route("/profile/role/{Id}/user", "GET, POST, DELETE")]
     public class RoleJunction : Search<Role>
     {
         public int? Id { get; set; }
@@ -242,13 +232,9 @@ namespace Services.Dto
 
 
     [Route("/role/{Id}/app/version", "GET")]
-    [Route("/profile/role/{Id}/app/version", "GET")]
     [Route("/role/{Id}/featureset/version", "GET")]
-    [Route("/profile/role/{Id}/featureset/version", "GET")]
     [Route("/role/{Id}/page/version", "GET")]
-    [Route("/profile/role/{Id}/page/version", "GET")]
     [Route("/role/{Id}/user/version", "GET")]
-    [Route("/profile/role/{Id}/user/version", "GET")]
     public class RoleJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

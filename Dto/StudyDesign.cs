@@ -60,7 +60,6 @@ namespace Services.Dto
     }
 
     [Route("/studydesign/{Id}", "GET")]
-    [Route("/profile/studydesign/{Id}", "GET")]
     public partial class StudyDesign : StudyDesignBase, IReturn<StudyDesign>, IDto
     {
         public StudyDesign()
@@ -110,9 +109,7 @@ namespace Services.Dto
     }
     
     [Route("/studydesign", "GET")]
-    [Route("/profile/studydesign", "GET")]
     [Route("/studydesign/search", "GET, POST, DELETE")]
-    [Route("/profile/studydesign/search", "GET, POST, DELETE")]
     public partial class StudyDesignSearch : Search<StudyDesign>
     {
         public Reference Design { get; set; }
@@ -141,7 +138,6 @@ namespace Services.Dto
     public partial class StudyDesignVersion : StudyDesignSearch {}
 
     [Route("/studydesign/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/studydesign/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StudyDesignBatch : List<StudyDesign> { }
 
     [Route("/admin/studydesign/ids", "GET, POST")]

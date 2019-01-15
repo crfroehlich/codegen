@@ -135,9 +135,7 @@ namespace Services.Dto
     }
 
     [Route("/workflow", "POST")]
-    [Route("/profile/workflow", "POST")]
     [Route("/workflow/{Id}", "GET, PATCH, PUT")]
-    [Route("/profile/workflow/{Id}", "GET, PATCH, PUT")]
     public partial class Workflow : WorkflowBase, IReturn<Workflow>, IDto
     {
         public Workflow()
@@ -194,12 +192,9 @@ namespace Services.Dto
     }
     
     [Route("/Workflow/{Id}/copy", "POST")]
-    [Route("/profile/Workflow/{Id}/copy", "POST")]
     public partial class WorkflowCopy : Workflow {}
     [Route("/workflow", "GET")]
-    [Route("/profile/workflow", "GET")]
     [Route("/workflow/search", "GET, POST, DELETE")]
-    [Route("/profile/workflow/search", "GET, POST, DELETE")]
     public partial class WorkflowSearch : Search<Workflow>
     {
         public bool? Archived { get; set; }
@@ -263,25 +258,16 @@ namespace Services.Dto
     public partial class WorkflowVersion : WorkflowSearch {}
 
     [Route("/workflow/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/workflow/batch", "DELETE, PATCH, POST, PUT")]
     public partial class WorkflowBatch : List<Workflow> { }
 
     [Route("/workflow/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/profile/workflow/{Id}/lookuptablebinding", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/workflowcomment", "GET, POST, DELETE")]
-    [Route("/profile/workflow/{Id}/workflowcomment", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/document", "GET, POST, DELETE")]
-    [Route("/profile/workflow/{Id}/document", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/profile/workflow/{Id}/scope", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/tag", "GET, POST, DELETE")]
-    [Route("/profile/workflow/{Id}/tag", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/workflowtask", "GET, POST, DELETE")]
-    [Route("/profile/workflow/{Id}/workflowtask", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/variableinstance", "GET, POST, DELETE")]
-    [Route("/profile/workflow/{Id}/variableinstance", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/workflow", "GET, POST, DELETE")]
-    [Route("/profile/workflow/{Id}/workflow", "GET, POST, DELETE")]
     public class WorkflowJunction : Search<Workflow>
     {
         public int? Id { get; set; }
@@ -302,21 +288,13 @@ namespace Services.Dto
 
 
     [Route("/workflow/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/profile/workflow/{Id}/lookuptablebinding/version", "GET")]
     [Route("/workflow/{Id}/workflowcomment/version", "GET")]
-    [Route("/profile/workflow/{Id}/workflowcomment/version", "GET")]
     [Route("/workflow/{Id}/document/version", "GET")]
-    [Route("/profile/workflow/{Id}/document/version", "GET")]
     [Route("/workflow/{Id}/scope/version", "GET")]
-    [Route("/profile/workflow/{Id}/scope/version", "GET")]
     [Route("/workflow/{Id}/tag/version", "GET")]
-    [Route("/profile/workflow/{Id}/tag/version", "GET")]
     [Route("/workflow/{Id}/workflowtask/version", "GET")]
-    [Route("/profile/workflow/{Id}/workflowtask/version", "GET")]
     [Route("/workflow/{Id}/variableinstance/version", "GET")]
-    [Route("/profile/workflow/{Id}/variableinstance/version", "GET")]
     [Route("/workflow/{Id}/workflow/version", "GET")]
-    [Route("/profile/workflow/{Id}/workflow/version", "GET")]
     public class WorkflowJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

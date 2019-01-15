@@ -94,9 +94,7 @@ namespace Services.Dto
     }
 
     [Route("/broadcast", "POST")]
-    [Route("/profile/broadcast", "POST")]
     [Route("/broadcast/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/broadcast/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Broadcast : BroadcastBase, IReturn<Broadcast>, IDto
     {
         public Broadcast()
@@ -153,12 +151,9 @@ namespace Services.Dto
     }
     
     [Route("/Broadcast/{Id}/copy", "POST")]
-    [Route("/profile/Broadcast/{Id}/copy", "POST")]
     public partial class BroadcastCopy : Broadcast {}
     [Route("/broadcast", "GET")]
-    [Route("/profile/broadcast", "GET")]
     [Route("/broadcast/search", "GET, POST, DELETE")]
-    [Route("/profile/broadcast/search", "GET, POST, DELETE")]
     public partial class BroadcastSearch : Search<Broadcast>
     {
         public Reference App { get; set; }
@@ -207,11 +202,9 @@ namespace Services.Dto
     public partial class BroadcastVersion : BroadcastSearch {}
 
     [Route("/broadcast/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/broadcast/batch", "DELETE, PATCH, POST, PUT")]
     public partial class BroadcastBatch : List<Broadcast> { }
 
     [Route("/broadcast/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/profile/broadcast/{Id}/scope", "GET, POST, DELETE")]
     public class BroadcastJunction : Search<Broadcast>
     {
         public int? Id { get; set; }
@@ -232,7 +225,6 @@ namespace Services.Dto
 
 
     [Route("/broadcast/{Id}/scope/version", "GET")]
-    [Route("/profile/broadcast/{Id}/scope/version", "GET")]
     public class BroadcastJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

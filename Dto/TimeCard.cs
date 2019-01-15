@@ -100,9 +100,7 @@ namespace Services.Dto
     }
 
     [Route("/timecard", "POST")]
-    [Route("/profile/timecard", "POST")]
     [Route("/timecard/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/timecard/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class TimeCard : TimeCardBase, IReturn<TimeCard>, IDto
     {
         public TimeCard()
@@ -154,12 +152,9 @@ namespace Services.Dto
     }
     
     [Route("/TimeCard/{Id}/copy", "POST")]
-    [Route("/profile/TimeCard/{Id}/copy", "POST")]
     public partial class TimeCardCopy : TimeCard {}
     [Route("/timecard", "GET")]
-    [Route("/profile/timecard", "GET")]
     [Route("/timecard/search", "GET, POST, DELETE")]
-    [Route("/profile/timecard/search", "GET, POST, DELETE")]
     public partial class TimeCardSearch : Search<TimeCard>
     {
         public string Description { get; set; }
@@ -213,7 +208,6 @@ namespace Services.Dto
     public partial class TimeCardVersion : TimeCardSearch {}
 
     [Route("/timecard/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/timecard/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TimeCardBatch : List<TimeCard> { }
 
     [Route("/admin/timecard/ids", "GET, POST")]

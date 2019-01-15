@@ -67,7 +67,6 @@ namespace Services.Dto
     }
 
     [Route("/userrequest/{Id}", "GET")]
-    [Route("/profile/userrequest/{Id}", "GET")]
     public partial class UserRequest : UserRequestBase, IReturn<UserRequest>, IDto
     {
         public UserRequest()
@@ -119,9 +118,7 @@ namespace Services.Dto
     }
     
     [Route("/userrequest", "GET")]
-    [Route("/profile/userrequest", "GET")]
     [Route("/userrequest/search", "GET, POST, DELETE")]
-    [Route("/profile/userrequest/search", "GET, POST, DELETE")]
     public partial class UserRequestSearch : Search<UserRequest>
     {
         public string Method { get; set; }
@@ -152,7 +149,6 @@ namespace Services.Dto
     public partial class UserRequestVersion : UserRequestSearch {}
 
     [Route("/userrequest/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/userrequest/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserRequestBatch : List<UserRequest> { }
 
     [Route("/admin/userrequest/ids", "GET, POST")]

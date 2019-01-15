@@ -245,9 +245,7 @@ namespace Services.Dto
     }
 
     [Route("/document", "POST")]
-    [Route("/profile/document", "POST")]
     [Route("/document/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/document/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Document : DocumentBase, IReturn<Document>, IDto
     {
         public Document()
@@ -304,12 +302,9 @@ namespace Services.Dto
     }
     
     [Route("/Document/{Id}/copy", "POST")]
-    [Route("/profile/Document/{Id}/copy", "POST")]
     public partial class DocumentCopy : Document {}
     [Route("/document", "GET")]
-    [Route("/profile/document", "GET")]
     [Route("/document/search", "GET, POST, DELETE")]
-    [Route("/profile/document/search", "GET, POST, DELETE")]
     public partial class DocumentSearch : Search<Document>
     {
         public string Abstract { get; set; }
@@ -435,17 +430,12 @@ namespace Services.Dto
     public partial class DocumentVersion : DocumentSearch {}
 
     [Route("/document/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/document/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentBatch : List<Document> { }
 
     [Route("/document/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/profile/document/{Id}/documentset", "GET, POST, DELETE")]
     [Route("/document/{Id}/lookuptable", "GET, POST, DELETE")]
-    [Route("/profile/document/{Id}/lookuptable", "GET, POST, DELETE")]
     [Route("/document/{Id}/nondigitizeddocumentset", "GET, POST, DELETE")]
-    [Route("/profile/document/{Id}/nondigitizeddocumentset", "GET, POST, DELETE")]
     [Route("/document/{Id}/variableinstance", "GET, POST, DELETE")]
-    [Route("/profile/document/{Id}/variableinstance", "GET, POST, DELETE")]
     public class DocumentJunction : Search<Document>
     {
         public int? Id { get; set; }
@@ -466,13 +456,9 @@ namespace Services.Dto
 
 
     [Route("/document/{Id}/documentset/version", "GET")]
-    [Route("/profile/document/{Id}/documentset/version", "GET")]
     [Route("/document/{Id}/lookuptable/version", "GET")]
-    [Route("/profile/document/{Id}/lookuptable/version", "GET")]
     [Route("/document/{Id}/nondigitizeddocumentset/version", "GET")]
-    [Route("/profile/document/{Id}/nondigitizeddocumentset/version", "GET")]
     [Route("/document/{Id}/variableinstance/version", "GET")]
-    [Route("/profile/document/{Id}/variableinstance/version", "GET")]
     public class DocumentJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

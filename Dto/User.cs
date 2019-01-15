@@ -197,9 +197,7 @@ namespace Services.Dto
     }
 
     [Route("/user", "POST")]
-    [Route("/profile/user", "POST")]
     [Route("/user/{Id}", "GET, PATCH, PUT")]
-    [Route("/profile/user/{Id}", "GET, PATCH, PUT")]
     public partial class User : UserBase, IReturn<User>, IDto
     {
         public User()
@@ -256,12 +254,9 @@ namespace Services.Dto
     }
     
     [Route("/User/{Id}/copy", "POST")]
-    [Route("/profile/User/{Id}/copy", "POST")]
     public partial class UserCopy : User {}
     [Route("/user", "GET")]
-    [Route("/profile/user", "GET")]
     [Route("/user/search", "GET, POST, DELETE")]
-    [Route("/profile/user/search", "GET, POST, DELETE")]
     public partial class UserSearch : Search<User>
     {
         public string ClientDepartment { get; set; }
@@ -359,35 +354,21 @@ namespace Services.Dto
     public partial class UserVersion : UserSearch {}
 
     [Route("/user/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/user/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserBatch : List<User> { }
 
     [Route("/user/{Id}/auditrecord", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/auditrecord", "GET, POST, DELETE")]
     [Route("/user/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/lookuptablebinding", "GET, POST, DELETE")]
     [Route("/user/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/documentset", "GET, POST, DELETE")]
     [Route("/user/{Id}/history", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/history", "GET, POST, DELETE")]
     [Route("/user/{Id}/impersonateduser", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/impersonateduser", "GET, POST, DELETE")]
     [Route("/user/{Id}/impersonatinguser", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/impersonatinguser", "GET, POST, DELETE")]
     [Route("/user/{Id}/role", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/role", "GET, POST, DELETE")]
     [Route("/user/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/scope", "GET, POST, DELETE")]
     [Route("/user/{Id}/session", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/session", "GET, POST, DELETE")]
     [Route("/user/{Id}/team", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/team", "GET, POST, DELETE")]
     [Route("/user/{Id}/timecard", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/timecard", "GET, POST, DELETE")]
     [Route("/user/{Id}/update", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/update", "GET, POST, DELETE")]
     [Route("/user/{Id}/workflow", "GET, POST, DELETE")]
-    [Route("/profile/user/{Id}/workflow", "GET, POST, DELETE")]
     public class UserJunction : Search<User>
     {
         public int? Id { get; set; }
@@ -408,31 +389,18 @@ namespace Services.Dto
 
 
     [Route("/user/{Id}/auditrecord/version", "GET")]
-    [Route("/profile/user/{Id}/auditrecord/version", "GET")]
     [Route("/user/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/profile/user/{Id}/lookuptablebinding/version", "GET")]
     [Route("/user/{Id}/documentset/version", "GET")]
-    [Route("/profile/user/{Id}/documentset/version", "GET")]
     [Route("/user/{Id}/history/version", "GET")]
-    [Route("/profile/user/{Id}/history/version", "GET")]
     [Route("/user/{Id}/impersonateduser/version", "GET")]
-    [Route("/profile/user/{Id}/impersonateduser/version", "GET")]
     [Route("/user/{Id}/impersonatinguser/version", "GET")]
-    [Route("/profile/user/{Id}/impersonatinguser/version", "GET")]
     [Route("/user/{Id}/role/version", "GET")]
-    [Route("/profile/user/{Id}/role/version", "GET")]
     [Route("/user/{Id}/scope/version", "GET")]
-    [Route("/profile/user/{Id}/scope/version", "GET")]
     [Route("/user/{Id}/session/version", "GET")]
-    [Route("/profile/user/{Id}/session/version", "GET")]
     [Route("/user/{Id}/team/version", "GET")]
-    [Route("/profile/user/{Id}/team/version", "GET")]
     [Route("/user/{Id}/timecard/version", "GET")]
-    [Route("/profile/user/{Id}/timecard/version", "GET")]
     [Route("/user/{Id}/update/version", "GET")]
-    [Route("/profile/user/{Id}/update/version", "GET")]
     [Route("/user/{Id}/workflow/version", "GET")]
-    [Route("/profile/user/{Id}/workflow/version", "GET")]
     public class UserJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }
