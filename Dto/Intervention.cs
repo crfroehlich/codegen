@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -39,7 +40,7 @@ using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
-    public abstract partial class InterventionBase : Dto<InterventionDto>
+    public abstract partial class InterventionBase : Dto<Intervention>
     {
         public InterventionBase() {}
 
@@ -50,44 +51,42 @@ namespace Services.Dto
 
         public InterventionBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(Intervention), Description = "LookupTable", IsRequired = true)]
-        public Reference Intervention { get; set; }
-        [ApiMember(Name = nameof(InterventionId), Description = "Primary Key of LookupTable", IsRequired = false)]
-        public int? InterventionId { get; set; }
+        [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
+        public string Name { get; set; }
+
+
+        [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
+        public string URI { get; set; }
 
 
     }
 
     [Route("/intervention", "POST")]
     [Route("/intervention/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class InterventionDto : InterventionBase, IReturn<InterventionDto>, IDto
+    public partial class Intervention : InterventionBase, IReturn<Intervention>, IDto
     {
-        public InterventionDto()
+        public Intervention()
         {
             _Constructor();
         }
 
-        public InterventionDto(int? id) : base(DocConvert.ToInt(id)) {}
-        public InterventionDto(int id) : base(id) {}
+        public Intervention(int? id) : base(DocConvert.ToInt(id)) {}
+        public Intervention(int id) : base(id) {}
         
         #region Fields
         
         public bool? ShouldSerialize(string field)
         {
-            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
-            if (DocTools.AreEqual(nameof(Fields), field)) return false;
-            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
-            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
-            if (DocTools.AreEqual(nameof(Id), field)) return true;
-            return true == VisibleFields?.Matches(field, true);
+            if (IgnoredVisibleFields.Matches(field, true)) return false;
+            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            return ret;
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<InterventionDto>());
+        public static List<string> Fields => DocTools.Fields<Intervention>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Intervention),nameof(InterventionId),nameof(Locked),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(URI),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -95,13 +94,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Intervention>("Intervention",exists);
             }
         }
 
@@ -109,14 +110,13 @@ namespace Services.Dto
     }
     
     [Route("/Intervention/{Id}/copy", "POST")]
-    public partial class InterventionDtoCopy : InterventionDto {}
+    public partial class InterventionCopy : Intervention {}
     [Route("/intervention", "GET")]
     [Route("/intervention/search", "GET, POST, DELETE")]
-    public partial class InterventionSearch : Search<InterventionDto>
+    public partial class InterventionSearch : Search<Intervention>
     {
-        public Reference Intervention { get; set; }
-        public List<int> InterventionIds { get; set; }
-        public List<string> InterventionNames { get; set; }
+        public string Name { get; set; }
+        public string URI { get; set; }
     }
     
     public class InterventionFullTextSearch
@@ -129,17 +129,18 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(InterventionDto.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(InterventionDto.Updated))); }
+        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.Created))); }
+        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.Updated))); }
         
-        public bool doIntervention { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(InterventionDto.Intervention))); }
+        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.Name))); }
+        public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.URI))); }
     }
 
     [Route("/intervention/version", "GET, POST")]
     public partial class InterventionVersion : InterventionSearch {}
 
     [Route("/intervention/batch", "DELETE, PATCH, POST, PUT")]
-    public partial class InterventionBatch : List<InterventionDto> { }
+    public partial class InterventionBatch : List<Intervention> { }
 
     [Route("/admin/intervention/ids", "GET, POST")]
     public class InterventionIds

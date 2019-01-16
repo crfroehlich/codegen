@@ -632,7 +632,7 @@ namespace Services.API
 
         private object _GetWorkflowCommentWorkflowComment(WorkflowCommentJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, "WorkflowComment", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request.VisibleFields);
              var en = DocEntityWorkflowComment.GetWorkflowComment(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOWCOMMENT, columnName: "Children", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between WorkflowComment and WorkflowComment");

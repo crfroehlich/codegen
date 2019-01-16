@@ -23,6 +23,8 @@ namespace Services.Enums
     {
         [EnumMember(Value = DocConstantValueStatus.COLLECTED)]
         COLLECTED,
+        [EnumMember(Value = DocConstantValueStatus.NOT_AVAILABLE)]
+        NOT_AVAILABLE,
         [EnumMember(Value = DocConstantValueStatus.NOT_COLLECTED)]
         NOT_COLLECTED,
         [EnumMember(Value = DocConstantValueStatus.NOT_REPORTED)]
@@ -34,6 +36,7 @@ namespace Services.Enums
     public sealed partial class DocConstantValueStatus
     {
         public const string COLLECTED = "Collected";
+        public const string NOT_AVAILABLE = "Not Available";
         public const string NOT_COLLECTED = "Not Collected";
         public const string NOT_REPORTED = "Not Reported";
         public const string REQUESTED = "Requested";

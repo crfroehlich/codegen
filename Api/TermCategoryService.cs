@@ -626,7 +626,7 @@ namespace Services.API
 
         private object _GetTermCategoryTermMaster(TermCategoryJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request.VisibleFields);
              var en = DocEntityTermCategory.GetTermCategory(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMCATEGORY, columnName: "Terms", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermCategory and TermMaster");

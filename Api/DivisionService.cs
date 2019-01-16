@@ -727,7 +727,7 @@ namespace Services.API
 
         private object _GetDivisionDocumentSet(DivisionJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
              var en = DocEntityDivision.GetDivision(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DIVISION, columnName: "DocumentSets", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Division and DocumentSet");
@@ -749,7 +749,7 @@ namespace Services.API
 
         private object _GetDivisionUser(DivisionJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
              var en = DocEntityDivision.GetDivision(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DIVISION, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Division and User");

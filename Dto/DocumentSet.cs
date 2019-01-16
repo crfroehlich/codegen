@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -73,7 +74,7 @@ namespace Services.Dto
         public int? ClientsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Comparators), Description = "Intervention", IsRequired = false)]
+        [ApiMember(Name = nameof(Comparators), Description = "Comparator", IsRequired = false)]
         public List<Reference> Comparators { get; set; }
         public int? ComparatorsCount { get; set; }
 
@@ -259,7 +260,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set",@"SERVE Portal"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -288,16 +289,12 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
-            if (DocTools.AreEqual(nameof(Fields), field)) return false;
-            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
-            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
-            if (DocTools.AreEqual(nameof(Id), field)) return true;
-            return true == VisibleFields?.Matches(field, true);
+            if (IgnoredVisibleFields.Matches(field, true)) return false;
+            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            return ret;
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<DocumentSet>());
+        public static List<string> Fields => DocTools.Fields<DocumentSet>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
@@ -390,7 +387,7 @@ namespace Services.Dto
         public List<int> StudyDesignsIds { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set",@"SERVE Portal"})]
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }

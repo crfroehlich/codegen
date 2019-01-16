@@ -847,7 +847,7 @@ namespace Services.API
 
         private object _GetPackagePackage(PackageJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request.VisibleFields);
              var en = DocEntityPackage.GetPackage(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PACKAGE, columnName: "Children", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Package and Package");
