@@ -143,7 +143,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTable,LookupTable>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.LOOKUPTABLE);
                             return ret;
                         });
                     }
@@ -151,7 +150,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTable,LookupTable>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.LOOKUPTABLE);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOOKUPTABLE, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -160,7 +160,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.LOOKUPTABLE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOOKUPTABLE, search: true);
             return tryRet;
         }
 
@@ -197,7 +197,7 @@ namespace Services.API
                     {
                         cachedRet = GetLookupTable(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.LOOKUPTABLE);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLE);
                     return cachedRet;
                 });
             }
@@ -206,10 +206,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetLookupTable(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOOKUPTABLE);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLE);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.LOOKUPTABLE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLE);
             return ret;
         }
 
@@ -414,7 +414,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<LookupTable>(currentUser, nameof(LookupTable), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOOKUPTABLE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLE);
 
             return ret;
         }

@@ -155,7 +155,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.LOOKUPTABLEBINDING);
                             return ret;
                         });
                     }
@@ -163,7 +162,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.LOOKUPTABLEBINDING);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOOKUPTABLEBINDING, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -172,7 +172,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.LOOKUPTABLEBINDING);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOOKUPTABLEBINDING, search: true);
             return tryRet;
         }
 
@@ -209,7 +209,7 @@ namespace Services.API
                     {
                         cachedRet = GetLookupTableBinding(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.LOOKUPTABLEBINDING);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEBINDING);
                     return cachedRet;
                 });
             }
@@ -218,10 +218,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetLookupTableBinding(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOOKUPTABLEBINDING);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEBINDING);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.LOOKUPTABLEBINDING);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEBINDING);
             return ret;
         }
 
@@ -402,7 +402,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, nameof(LookupTableBinding), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOOKUPTABLEBINDING);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEBINDING);
 
             return ret;
         }

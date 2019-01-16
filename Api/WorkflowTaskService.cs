@@ -184,7 +184,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowTask,WorkflowTask>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.WORKFLOWTASK);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.WORKFLOWTASK, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -193,7 +194,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.WORKFLOWTASK);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.WORKFLOWTASK, search: true);
             return tryRet;
         }
 
@@ -226,10 +227,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetWorkflowTask(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOWTASK);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWTASK);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.WORKFLOWTASK);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWTASK);
             return ret;
         }
 
@@ -357,7 +358,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, nameof(WorkflowTask), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOWTASK);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWTASK);
 
             return ret;
         }

@@ -164,7 +164,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityStatsStudySet,StatsStudySet>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.STATSSTUDYSET);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.STATSSTUDYSET, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -173,7 +174,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.STATSSTUDYSET);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.STATSSTUDYSET, search: true);
             return tryRet;
         }
 
@@ -206,10 +207,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetStatsStudySet(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.STATSSTUDYSET);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.STATSSTUDYSET);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.STATSSTUDYSET);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.STATSSTUDYSET);
             return ret;
         }
 

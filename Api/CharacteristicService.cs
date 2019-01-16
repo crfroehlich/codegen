@@ -136,7 +136,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,CharacteristicDto>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.CHARACTERISTIC);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.CHARACTERISTIC, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -145,7 +146,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.CHARACTERISTIC);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.CHARACTERISTIC, search: true);
             return tryRet;
         }
 
@@ -178,10 +179,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetCharacteristic(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.CHARACTERISTIC);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.CHARACTERISTIC);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.CHARACTERISTIC);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.CHARACTERISTIC);
             return ret;
         }
 
@@ -239,7 +240,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<CharacteristicDto>(currentUser, nameof(CharacteristicDto), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.CHARACTERISTIC);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.CHARACTERISTIC);
 
             return ret;
         }

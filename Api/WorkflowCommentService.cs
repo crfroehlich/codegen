@@ -150,7 +150,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflowComment,WorkflowComment>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.WORKFLOWCOMMENT);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.WORKFLOWCOMMENT, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -159,7 +160,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.WORKFLOWCOMMENT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.WORKFLOWCOMMENT, search: true);
             return tryRet;
         }
 
@@ -192,10 +193,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetWorkflowComment(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOWCOMMENT);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWCOMMENT);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.WORKFLOWCOMMENT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWCOMMENT);
             return ret;
         }
 
@@ -329,7 +330,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, nameof(WorkflowComment), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOWCOMMENT);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWCOMMENT);
 
             return ret;
         }

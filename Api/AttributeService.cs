@@ -176,7 +176,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttribute,Attribute>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.ATTRIBUTE);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.ATTRIBUTE, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -185,7 +186,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.ATTRIBUTE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.ATTRIBUTE, search: true);
             return tryRet;
         }
 
@@ -218,10 +219,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetAttribute(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.ATTRIBUTE);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTE);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.ATTRIBUTE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTE);
             return ret;
         }
 
@@ -357,7 +358,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, nameof(Attribute), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.ATTRIBUTE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTE);
 
             return ret;
         }

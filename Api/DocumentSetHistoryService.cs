@@ -136,7 +136,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSetHistory,DocumentSetHistory>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.DOCUMENTSETHISTORY);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DOCUMENTSETHISTORY, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -145,7 +146,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.DOCUMENTSETHISTORY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DOCUMENTSETHISTORY, search: true);
             return tryRet;
         }
 
@@ -178,10 +179,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetDocumentSetHistory(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DOCUMENTSETHISTORY);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DOCUMENTSETHISTORY);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.DOCUMENTSETHISTORY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DOCUMENTSETHISTORY);
             return ret;
         }
 

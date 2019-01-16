@@ -152,7 +152,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityValueType,ValueType>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.VALUETYPE);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.VALUETYPE, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -161,7 +162,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.VALUETYPE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.VALUETYPE, search: true);
             return tryRet;
         }
 
@@ -194,10 +195,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetValueType(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.VALUETYPE);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VALUETYPE);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.VALUETYPE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.VALUETYPE);
             return ret;
         }
 

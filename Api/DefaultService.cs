@@ -152,7 +152,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDefault,Default>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.DEFAULT);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DEFAULT, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -161,7 +162,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.DEFAULT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DEFAULT, search: true);
             return tryRet;
         }
 
@@ -194,10 +195,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetDefault(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DEFAULT);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DEFAULT);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.DEFAULT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DEFAULT);
             return ret;
         }
 
@@ -286,7 +287,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Default>(currentUser, nameof(Default), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DEFAULT);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DEFAULT);
 
             return ret;
         }

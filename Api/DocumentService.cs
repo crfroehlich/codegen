@@ -255,7 +255,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocument,Document>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.DOCUMENT);
                             return ret;
                         });
                     }
@@ -263,7 +262,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocument,Document>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.DOCUMENT);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DOCUMENT, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -272,7 +272,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.DOCUMENT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DOCUMENT, search: true);
             return tryRet;
         }
 
@@ -309,7 +309,7 @@ namespace Services.API
                     {
                         cachedRet = GetDocument(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.DOCUMENT);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.DOCUMENT);
                     return cachedRet;
                 });
             }
@@ -318,10 +318,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetDocument(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DOCUMENT);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DOCUMENT);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.DOCUMENT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DOCUMENT);
             return ret;
         }
 
@@ -961,7 +961,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Document>(currentUser, nameof(Document), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DOCUMENT);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DOCUMENT);
 
             return ret;
         }

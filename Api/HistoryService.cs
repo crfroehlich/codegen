@@ -178,7 +178,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHistory,History>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.HISTORY);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.HISTORY, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -187,7 +188,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.HISTORY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.HISTORY, search: true);
             return tryRet;
         }
 
@@ -220,10 +221,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetHistory(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.HISTORY);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.HISTORY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
             return ret;
         }
 
@@ -359,7 +360,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<History>(currentUser, nameof(History), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.HISTORY);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
 
             return ret;
         }

@@ -171,7 +171,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.UNITOFMEASURE);
                             return ret;
                         });
                     }
@@ -179,7 +178,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.UNITOFMEASURE);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.UNITOFMEASURE, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -188,7 +188,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.UNITOFMEASURE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.UNITOFMEASURE, search: true);
             return tryRet;
         }
 
@@ -225,7 +225,7 @@ namespace Services.API
                     {
                         cachedRet = GetUnitOfMeasure(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.UNITOFMEASURE);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE);
                     return cachedRet;
                 });
             }
@@ -234,10 +234,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetUnitOfMeasure(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.UNITOFMEASURE);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.UNITOFMEASURE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE);
             return ret;
         }
 
@@ -327,7 +327,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, nameof(UnitOfMeasure), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.UNITOFMEASURE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE);
 
             return ret;
         }

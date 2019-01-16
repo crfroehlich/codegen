@@ -156,7 +156,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityForeignKey,ForeignKey>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.FOREIGNKEY);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.FOREIGNKEY, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -165,7 +166,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.FOREIGNKEY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.FOREIGNKEY, search: true);
             return tryRet;
         }
 
@@ -198,10 +199,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetForeignKey(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.FOREIGNKEY);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.FOREIGNKEY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
             return ret;
         }
 
@@ -293,7 +294,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, nameof(ForeignKey), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.FOREIGNKEY);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
 
             return ret;
         }

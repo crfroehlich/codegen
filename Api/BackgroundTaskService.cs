@@ -158,7 +158,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTask,BackgroundTask>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.BACKGROUNDTASK);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.BACKGROUNDTASK, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -167,7 +168,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.BACKGROUNDTASK);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.BACKGROUNDTASK, search: true);
             return tryRet;
         }
 
@@ -200,10 +201,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetBackgroundTask(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BACKGROUNDTASK);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASK);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.BACKGROUNDTASK);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASK);
             return ret;
         }
 
@@ -465,7 +466,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, nameof(BackgroundTask), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BACKGROUNDTASK);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASK);
 
             return ret;
         }

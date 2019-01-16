@@ -128,7 +128,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAuditDelta,AuditDelta>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.AUDITDELTA);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.AUDITDELTA, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -137,7 +138,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.AUDITDELTA);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.AUDITDELTA, search: true);
             return tryRet;
         }
 
@@ -170,10 +171,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetAuditDelta(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.AUDITDELTA);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.AUDITDELTA);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.AUDITDELTA);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.AUDITDELTA);
             return ret;
         }
 
@@ -243,7 +244,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, nameof(AuditDelta), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.AUDITDELTA);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.AUDITDELTA);
 
             return ret;
         }

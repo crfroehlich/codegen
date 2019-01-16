@@ -127,7 +127,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTableEnum,LookupTableEnum>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.LOOKUPTABLEENUM);
                             return ret;
                         });
                     }
@@ -135,7 +134,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTableEnum,LookupTableEnum>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.LOOKUPTABLEENUM);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOOKUPTABLEENUM, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -144,7 +144,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.LOOKUPTABLEENUM);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOOKUPTABLEENUM, search: true);
             return tryRet;
         }
 
@@ -181,7 +181,7 @@ namespace Services.API
                     {
                         cachedRet = GetLookupTableEnum(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.LOOKUPTABLEENUM);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM);
                     return cachedRet;
                 });
             }
@@ -190,10 +190,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetLookupTableEnum(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOOKUPTABLEENUM);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.LOOKUPTABLEENUM);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM);
             return ret;
         }
 
@@ -244,7 +244,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, nameof(LookupTableEnum), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOOKUPTABLEENUM);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM);
 
             return ret;
         }

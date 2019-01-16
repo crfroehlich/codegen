@@ -136,7 +136,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityIntervention,InterventionDto>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.INTERVENTION);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.INTERVENTION, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -145,7 +146,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.INTERVENTION);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.INTERVENTION, search: true);
             return tryRet;
         }
 
@@ -178,10 +179,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetIntervention(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.INTERVENTION);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVENTION);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.INTERVENTION);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.INTERVENTION);
             return ret;
         }
 
@@ -239,7 +240,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, nameof(InterventionDto), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.INTERVENTION);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVENTION);
 
             return ret;
         }

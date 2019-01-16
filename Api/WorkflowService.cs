@@ -207,7 +207,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflow,Workflow>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.WORKFLOW);
                             return ret;
                         });
                     }
@@ -215,7 +214,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflow,Workflow>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.WORKFLOW);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.WORKFLOW, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -224,7 +224,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.WORKFLOW);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.WORKFLOW, search: true);
             return tryRet;
         }
 
@@ -261,7 +261,7 @@ namespace Services.API
                     {
                         cachedRet = GetWorkflow(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.WORKFLOW);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW);
                     return cachedRet;
                 });
             }
@@ -270,10 +270,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetWorkflow(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOW);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.WORKFLOW);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW);
             return ret;
         }
 
@@ -762,7 +762,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, nameof(Workflow), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.WORKFLOW);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW);
 
             return ret;
         }

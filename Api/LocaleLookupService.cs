@@ -130,7 +130,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLocaleLookup,LocaleLookup>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.LOCALELOOKUP);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOCALELOOKUP, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -139,7 +140,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.LOCALELOOKUP);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOCALELOOKUP, search: true);
             return tryRet;
         }
 
@@ -172,10 +173,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetLocaleLookup(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOCALELOOKUP);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOCALELOOKUP);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.LOCALELOOKUP);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOCALELOOKUP);
             return ret;
         }
 
@@ -253,7 +254,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, nameof(LocaleLookup), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.LOCALELOOKUP);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOCALELOOKUP);
 
             return ret;
         }

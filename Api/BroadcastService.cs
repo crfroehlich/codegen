@@ -177,7 +177,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBroadcast,Broadcast>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.BROADCAST);
                             return ret;
                         });
                     }
@@ -185,7 +184,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBroadcast,Broadcast>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.BROADCAST);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.BROADCAST, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -194,7 +194,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.BROADCAST);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.BROADCAST, search: true);
             return tryRet;
         }
 
@@ -231,7 +231,7 @@ namespace Services.API
                     {
                         cachedRet = GetBroadcast(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.BROADCAST);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.BROADCAST);
                     return cachedRet;
                 });
             }
@@ -240,10 +240,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetBroadcast(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BROADCAST);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BROADCAST);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.BROADCAST);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.BROADCAST);
             return ret;
         }
 
@@ -407,7 +407,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, nameof(Broadcast), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BROADCAST);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BROADCAST);
 
             return ret;
         }

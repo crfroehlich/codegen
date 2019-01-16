@@ -174,7 +174,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableRule,VariableRule>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.VARIABLERULE);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.VARIABLERULE, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -183,7 +184,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.VARIABLERULE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.VARIABLERULE, search: true);
             return tryRet;
         }
 
@@ -216,10 +217,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetVariableRule(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.VARIABLERULE);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.VARIABLERULE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
             return ret;
         }
 
@@ -454,7 +455,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, nameof(VariableRule), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.VARIABLERULE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
 
             return ret;
         }

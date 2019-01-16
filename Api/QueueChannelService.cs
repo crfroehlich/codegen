@@ -133,7 +133,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityQueueChannel,QueueChannel>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.QUEUECHANNEL);
                             return ret;
                         });
                     }
@@ -141,7 +140,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityQueueChannel,QueueChannel>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.QUEUECHANNEL);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.QUEUECHANNEL, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -150,7 +150,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.QUEUECHANNEL);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.QUEUECHANNEL, search: true);
             return tryRet;
         }
 
@@ -187,7 +187,7 @@ namespace Services.API
                     {
                         cachedRet = GetQueueChannel(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.QUEUECHANNEL);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.QUEUECHANNEL);
                     return cachedRet;
                 });
             }
@@ -196,10 +196,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetQueueChannel(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.QUEUECHANNEL);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.QUEUECHANNEL);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.QUEUECHANNEL);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.QUEUECHANNEL);
             return ret;
         }
 
@@ -308,7 +308,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, nameof(QueueChannel), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.QUEUECHANNEL);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.QUEUECHANNEL);
 
             return ret;
         }

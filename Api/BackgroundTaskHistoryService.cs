@@ -144,7 +144,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTaskHistory,BackgroundTaskHistory>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.BACKGROUNDTASKHISTORY);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.BACKGROUNDTASKHISTORY, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -153,7 +154,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.BACKGROUNDTASKHISTORY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.BACKGROUNDTASKHISTORY, search: true);
             return tryRet;
         }
 
@@ -186,10 +187,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetBackgroundTaskHistory(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.BACKGROUNDTASKHISTORY);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASKHISTORY);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.BACKGROUNDTASKHISTORY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASKHISTORY);
             return ret;
         }
 

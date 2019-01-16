@@ -154,7 +154,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityInterval,Interval>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.INTERVAL);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.INTERVAL, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -163,7 +164,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.INTERVAL);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.INTERVAL, search: true);
             return tryRet;
         }
 
@@ -196,10 +197,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetInterval(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.INTERVAL);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVAL);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.INTERVAL);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.INTERVAL);
             return ret;
         }
 
@@ -297,7 +298,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Interval>(currentUser, nameof(Interval), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.INTERVAL);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVAL);
 
             return ret;
         }

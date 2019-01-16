@@ -126,7 +126,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDatabaseVersion,DatabaseVersion>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.DATABASEVERSION);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DATABASEVERSION, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -135,7 +136,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.DATABASEVERSION);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DATABASEVERSION, search: true);
             return tryRet;
         }
 
@@ -168,10 +169,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetDatabaseVersion(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DATABASEVERSION);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATABASEVERSION);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.DATABASEVERSION);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DATABASEVERSION);
             return ret;
         }
 

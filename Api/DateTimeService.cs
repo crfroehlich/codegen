@@ -132,7 +132,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDateTime,DateTimeDto>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.DATETIME);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DATETIME, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -141,7 +142,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.DATETIME);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DATETIME, search: true);
             return tryRet;
         }
 
@@ -174,10 +175,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetDateTime(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DATETIME);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATETIME);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.DATETIME);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DATETIME);
             return ret;
         }
 
@@ -265,7 +266,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, nameof(DateTimeDto), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.DATETIME);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATETIME);
 
             return ret;
         }

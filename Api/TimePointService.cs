@@ -138,7 +138,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimePoint,TimePoint>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.TIMEPOINT);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TIMEPOINT, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -147,7 +148,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.TIMEPOINT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.TIMEPOINT, search: true);
             return tryRet;
         }
 
@@ -180,10 +181,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetTimePoint(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.TIMEPOINT);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TIMEPOINT);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.TIMEPOINT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.TIMEPOINT);
             return ret;
         }
 

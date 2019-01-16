@@ -155,7 +155,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHelp,Help>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.HELP);
                             return ret;
                         });
                     }
@@ -163,7 +162,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHelp,Help>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.HELP);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.HELP, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -172,7 +172,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.HELP);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.HELP, search: true);
             return tryRet;
         }
 
@@ -209,7 +209,7 @@ namespace Services.API
                     {
                         cachedRet = GetHelp(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.HELP);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.HELP);
                     return cachedRet;
                 });
             }
@@ -218,10 +218,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetHelp(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.HELP);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HELP);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.HELP);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.HELP);
             return ret;
         }
 
@@ -419,7 +419,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Help>(currentUser, nameof(Help), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.HELP);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HELP);
 
             return ret;
         }

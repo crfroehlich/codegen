@@ -144,7 +144,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJctAttributeCategoryAttributeDocumentSet,JctAttributeCategoryAttributeDocumentSet>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -153,7 +154,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, search: true);
             return tryRet;
         }
 
@@ -186,10 +187,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetJctAttributeCategoryAttributeDocumentSet(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
             return ret;
         }
 
@@ -267,7 +268,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>(currentUser, nameof(JctAttributeCategoryAttributeDocumentSet), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
 
             return ret;
         }

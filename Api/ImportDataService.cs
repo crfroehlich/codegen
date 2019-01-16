@@ -194,7 +194,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.IMPORTDATA);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.IMPORTDATA, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -203,7 +204,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.IMPORTDATA);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.IMPORTDATA, search: true);
             return tryRet;
         }
 
@@ -236,10 +237,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetImportData(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.IMPORTDATA);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.IMPORTDATA);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.IMPORTDATA);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.IMPORTDATA);
             return ret;
         }
 
@@ -499,7 +500,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, nameof(ImportData), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.IMPORTDATA);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.IMPORTDATA);
 
             return ret;
         }

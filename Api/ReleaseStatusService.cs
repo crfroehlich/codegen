@@ -130,7 +130,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.RELEASESTATUS);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.RELEASESTATUS, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -139,7 +140,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.RELEASESTATUS);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.RELEASESTATUS, search: true);
             return tryRet;
         }
 
@@ -172,10 +173,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetReleaseStatus(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.RELEASESTATUS);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.RELEASESTATUS);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.RELEASESTATUS);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.RELEASESTATUS);
             return ret;
         }
 
@@ -278,7 +279,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, nameof(ReleaseStatus), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.RELEASESTATUS);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.RELEASESTATUS);
 
             return ret;
         }

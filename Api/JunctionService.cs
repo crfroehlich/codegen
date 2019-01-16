@@ -164,7 +164,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.JUNCTION);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.JUNCTION, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -173,7 +174,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.JUNCTION);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.JUNCTION, search: true);
             return tryRet;
         }
 
@@ -206,10 +207,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetJunction(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.JUNCTION);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JUNCTION);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.JUNCTION);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.JUNCTION);
             return ret;
         }
 
@@ -389,7 +390,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Junction>(currentUser, nameof(Junction), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.JUNCTION);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JUNCTION);
 
             return ret;
         }

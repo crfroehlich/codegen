@@ -141,7 +141,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPage,Page>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.PAGE);
                             return ret;
                         });
                     }
@@ -149,7 +148,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPage,Page>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.PAGE);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.PAGE, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -158,7 +158,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.PAGE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.PAGE, search: true);
             return tryRet;
         }
 
@@ -195,7 +195,7 @@ namespace Services.API
                     {
                         cachedRet = GetPage(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.PAGE);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.PAGE);
                     return cachedRet;
                 });
             }
@@ -204,10 +204,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetPage(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.PAGE);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.PAGE);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.PAGE);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.PAGE);
             return ret;
         }
 
@@ -456,7 +456,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Page>(currentUser, nameof(Page), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.PAGE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.PAGE);
 
             return ret;
         }

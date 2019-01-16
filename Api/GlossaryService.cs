@@ -149,7 +149,6 @@ namespace Services.API
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityGlossary,Glossary>(ret, Execute, requestCancel));
-                            DocCacheClient.Set(cacheKey, ret, DocConstantModelName.GLOSSARY);
                             return ret;
                         });
                     }
@@ -157,7 +156,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityGlossary,Glossary>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.GLOSSARY);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.GLOSSARY, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -166,7 +166,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.GLOSSARY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.GLOSSARY, search: true);
             return tryRet;
         }
 
@@ -203,7 +203,7 @@ namespace Services.API
                     {
                         cachedRet = GetGlossary(request);
                     });
-                    DocCacheClient.Set(cacheKey, cachedRet, request.Id, DocConstantModelName.GLOSSARY);
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY);
                     return cachedRet;
                 });
             }
@@ -212,10 +212,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetGlossary(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.GLOSSARY);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.GLOSSARY);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY);
             return ret;
         }
 
@@ -314,7 +314,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, nameof(Glossary), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.GLOSSARY);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY);
 
             return ret;
         }

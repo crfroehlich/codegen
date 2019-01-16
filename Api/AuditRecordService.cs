@@ -170,7 +170,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAuditRecord,AuditRecord>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.AUDITRECORD);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.AUDITRECORD, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -179,7 +180,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.AUDITRECORD);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.AUDITRECORD, search: true);
             return tryRet;
         }
 
@@ -212,10 +213,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetAuditRecord(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.AUDITRECORD);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.AUDITRECORD);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.AUDITRECORD);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.AUDITRECORD);
             return ret;
         }
 

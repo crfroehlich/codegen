@@ -150,7 +150,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityEvent,Event>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.EVENT);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.EVENT, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -159,7 +160,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.EVENT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.EVENT, search: true);
             return tryRet;
         }
 
@@ -192,10 +193,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetEvent(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.EVENT);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.EVENT);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.EVENT);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.EVENT);
             return ret;
         }
 
@@ -421,7 +422,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Event>(currentUser, nameof(Event), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.EVENT);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.EVENT);
 
             return ret;
         }

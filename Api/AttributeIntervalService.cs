@@ -120,7 +120,8 @@ namespace Services.API
                     {
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeInterval,AttributeInterval>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        DocCacheClient.Set(cacheKey, tryRet, DocConstantModelName.ATTRIBUTEINTERVAL);
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.ATTRIBUTEINTERVAL, search: true);
                     }
                 }
                 catch(Exception) { throw; }
@@ -129,7 +130,7 @@ namespace Services.API
                     requestCancel?.CloseRequest();
                 }
             }
-            DocCacheClient.SyncKeys(cacheKey, DocConstantModelName.ATTRIBUTEINTERVAL);
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.ATTRIBUTEINTERVAL, search: true);
             return tryRet;
         }
 
@@ -162,10 +163,10 @@ namespace Services.API
                 Execute.Run(s =>
                 {
                     ret = GetAttributeInterval(request);
-                    DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.ATTRIBUTEINTERVAL);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTEINTERVAL);
                 });
             }
-            DocCacheClient.SyncKeys(cacheKey, request.Id, DocConstantModelName.ATTRIBUTEINTERVAL);
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTEINTERVAL);
             return ret;
         }
 
@@ -214,7 +215,7 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, nameof(AttributeInterval), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(cacheKey, ret, request.Id, DocConstantModelName.ATTRIBUTEINTERVAL);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTEINTERVAL);
 
             return ret;
         }
