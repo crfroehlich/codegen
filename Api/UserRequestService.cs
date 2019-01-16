@@ -86,10 +86,28 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
+                if(!DocTools.IsNullOrEmpty(request.App) && !DocTools.IsNullOrEmpty(request.App.Id))
+                {
+                    entities = entities.Where(en => en.App.Id == request.App.Id );
+                }
+                if(true == request.AppIds?.Any())
+                {
+                    entities = entities.Where(en => en.App.Id.In(request.AppIds));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Method))
                     entities = entities.Where(en => en.Method.Contains(request.Method));
+                if(!DocTools.IsNullOrEmpty(request.Page) && !DocTools.IsNullOrEmpty(request.Page.Id))
+                {
+                    entities = entities.Where(en => en.Page.Id == request.Page.Id );
+                }
+                if(true == request.PageIds?.Any())
+                {
+                    entities = entities.Where(en => en.Page.Id.In(request.PageIds));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Path))
                     entities = entities.Where(en => en.Path.Contains(request.Path));
+                if(!DocTools.IsNullOrEmpty(request.URL))
+                    entities = entities.Where(en => en.URL.Contains(request.URL));
                 if(!DocTools.IsNullOrEmpty(request.UserSession) && !DocTools.IsNullOrEmpty(request.UserSession.Id))
                 {
                     entities = entities.Where(en => en.UserSession.Id == request.UserSession.Id );
