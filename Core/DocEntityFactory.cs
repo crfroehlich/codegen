@@ -77,10 +77,6 @@ namespace Services.Schema
                 {
                     ret = DocConstantModelName.CLIENT;
                 }
-                else if(typeof(T) == typeof(DocEntityComparator))
-                {
-                    ret = DocConstantModelName.COMPARATOR;
-                }
                 else if(typeof(T) == typeof(DocEntityDatabaseVersion))
                 {
                     ret = DocConstantModelName.DATABASEVERSION;
@@ -397,9 +393,6 @@ namespace Services.Schema
                 case DocConstantModelName.CLIENT:
                     ret = new DocEntityClient(session);
                     break;
-                case DocConstantModelName.COMPARATOR:
-                    ret = new DocEntityComparator(session);
-                    break;
                 case DocConstantModelName.DATABASEVERSION:
                     ret = new DocEntityDatabaseVersion(session);
                     break;
@@ -649,9 +642,6 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.CLIENT:
                     ret = DocEntityClient.GetClient(id);
-                    break;
-                case DocConstantModelName.COMPARATOR:
-                    ret = DocEntityComparator.GetComparator(id);
                     break;
                 case DocConstantModelName.DATABASEVERSION:
                     ret = DocEntityDatabaseVersion.GetDatabaseVersion(id);
@@ -911,17 +901,12 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.CHARACTERISTIC:
                     {
-                       ret = entities.Cast<DocEntityCharacteristic>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                       ret = entities.Cast<DocEntityCharacteristic>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.CLIENT:
                     {
                        ret = entities.Cast<DocEntityClient>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
-                    }
-                    break;
-                case DocConstantModelName.COMPARATOR:
-                    {
-                       ret = entities.Cast<DocEntityComparator>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DATABASEVERSION:
@@ -1011,7 +996,7 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.INTERVENTION:
                     {
-                       ret = entities.Cast<DocEntityIntervention>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                       ret = entities.Cast<DocEntityIntervention>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET:
@@ -1076,7 +1061,7 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.OUTCOME:
                     {
-                       ret = entities.Cast<DocEntityOutcome>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                       ret = entities.Cast<DocEntityOutcome>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.PACKAGE:

@@ -86,20 +86,14 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.AdminTeam) && !DocTools.IsNullOrEmpty(request.AdminTeam.Id))
-                {
-                    entities = entities.Where(en => en.AdminTeam.Id == request.AdminTeam.Id );
-                }
-                if(true == request.AdminTeamIds?.Any())
-                {
-                    entities = entities.Where(en => en.AdminTeam.Id.In(request.AdminTeamIds));
-                }
                         if(true == request.AppsIds?.Any())
                         {
                             entities = entities.Where(en => en.Apps.Any(r => r.Id.In(request.AppsIds)));
                         }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Email))
+                    entities = entities.Where(en => en.Email.Contains(request.Email));
                         if(true == request.FeatureSetsIds?.Any())
                         {
                             entities = entities.Where(en => en.FeatureSets.Any(r => r.Id.In(request.FeatureSetsIds)));
@@ -114,6 +108,8 @@ namespace Services.API
                         {
                             entities = entities.Where(en => en.Pages.Any(r => r.Id.In(request.PagesIds)));
                         }
+                if(!DocTools.IsNullOrEmpty(request.Slack))
+                    entities = entities.Where(en => en.Slack.Contains(request.Slack));
                         if(true == request.UsersIds?.Any())
                         {
                             entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
@@ -241,16 +237,16 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Role>(DocConstantModelName.ROLE, nameof(Role), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pAdminTeam = (request.AdminTeam?.Id > 0) ? DocEntityTeam.GetTeam(request.AdminTeam.Id) : null;
             var pApps = request.Apps?.ToList();
             var pDescription = request.Description;
-            var pFeatures = request.Features;
+            var pEmail = request.Email;
             var pFeatureSets = request.FeatureSets?.ToList();
             var pIsInternal = request.IsInternal;
             var pIsSuperAdmin = request.IsSuperAdmin;
             var pName = request.Name;
             var pPages = request.Pages?.ToList();
             var pPermissions = request.Permissions;
+            var pSlack = request.Slack;
             var pUsers = request.Users?.ToList();
 
             DocEntityRole entity = null;
@@ -270,15 +266,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTeam>(currentUser, request, pAdminTeam, permission, DocConstantModelName.ROLE, nameof(request.AdminTeam)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pAdminTeam, entity.AdminTeam, nameof(request.AdminTeam)))
-                    entity.AdminTeam = pAdminTeam;
-                if(DocPermissionFactory.IsRequested<DocEntityTeam>(request, pAdminTeam, nameof(request.AdminTeam)) && !request.VisibleFields.Matches(nameof(request.AdminTeam), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.AdminTeam));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.ROLE, nameof(request.Description)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
@@ -288,13 +275,13 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pFeatures, permission, DocConstantModelName.ROLE, nameof(request.Features)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pEmail, permission, DocConstantModelName.ROLE, nameof(request.Email)))
             {
-                if(DocPermissionFactory.IsRequested(request, pFeatures, entity.Features, nameof(request.Features)))
-                    entity.Features = pFeatures;
-                if(DocPermissionFactory.IsRequested<string>(request, pFeatures, nameof(request.Features)) && !request.VisibleFields.Matches(nameof(request.Features), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pEmail, entity.Email, nameof(request.Email)))
+                    entity.Email = pEmail;
+                if(DocPermissionFactory.IsRequested<string>(request, pEmail, nameof(request.Email)) && !request.VisibleFields.Matches(nameof(request.Email), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Features));
+                    request.VisibleFields.Add(nameof(request.Email));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsInternal, permission, DocConstantModelName.ROLE, nameof(request.IsInternal)))
@@ -322,6 +309,15 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<Permissions>(request, pPermissions, nameof(request.Permissions)) && !request.VisibleFields.Matches(nameof(request.Permissions), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Permissions));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSlack, permission, DocConstantModelName.ROLE, nameof(request.Slack)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pSlack, entity.Slack, nameof(request.Slack)))
+                    entity.Slack = pSlack;
+                if(DocPermissionFactory.IsRequested<string>(request, pSlack, nameof(request.Slack)) && !request.VisibleFields.Matches(nameof(request.Slack), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Slack));
                 }
             }
             
@@ -588,12 +584,13 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pAdminTeam = entity.AdminTeam;
                     var pApps = entity.Apps.ToList();
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
-                    var pFeatures = entity.Features;
+                    var pEmail = entity.Email;
+                    if(!DocTools.IsNullOrEmpty(pEmail))
+                        pEmail += " (Copy)";
                     var pFeatureSets = entity.FeatureSets.ToList();
                     var pIsInternal = entity.IsInternal;
                     var pIsSuperAdmin = entity.IsSuperAdmin;
@@ -602,19 +599,22 @@ namespace Services.API
                         pName += " (Copy)";
                     var pPages = entity.Pages.ToList();
                     var pPermissions = entity.Permissions;
+                    var pSlack = entity.Slack;
+                    if(!DocTools.IsNullOrEmpty(pSlack))
+                        pSlack += " (Copy)";
                     var pUsers = entity.Users.ToList();
                 #region Custom Before copyRole
                 #endregion Custom Before copyRole
                 var copy = new DocEntityRole(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , AdminTeam = pAdminTeam
                                 , Description = pDescription
-                                , Features = pFeatures
+                                , Email = pEmail
                                 , IsInternal = pIsInternal
                                 , IsSuperAdmin = pIsSuperAdmin
                                 , Name = pName
                                 , Permissions = pPermissions
+                                , Slack = pSlack
                 };
                             foreach(var item in pApps)
                             {
@@ -856,7 +856,7 @@ namespace Services.API
 
         private object _GetRoleApp(RoleJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<App>(Dto.App.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<App>(currentUser, "App", request.VisibleFields);
              var en = DocEntityRole.GetRole(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Apps", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and App");
@@ -878,7 +878,7 @@ namespace Services.API
 
         private object _GetRoleFeatureSet(RoleJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<FeatureSet>(Dto.FeatureSet.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, "FeatureSet", request.VisibleFields);
              var en = DocEntityRole.GetRole(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "FeatureSets", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and FeatureSet");
@@ -900,7 +900,7 @@ namespace Services.API
 
         private object _GetRolePage(RoleJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Page>(currentUser, "Page", request.VisibleFields);
              var en = DocEntityRole.GetRole(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Pages", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and Page");
@@ -922,7 +922,7 @@ namespace Services.API
 
         private object _GetRoleUser(RoleJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
              var en = DocEntityRole.GetRole(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and User");

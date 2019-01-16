@@ -785,7 +785,7 @@ namespace Services.API
 
         private object _GetVariableRuleVariableRule(VariableRuleJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
              var en = DocEntityVariableRule.GetVariableRule(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.VARIABLERULE, columnName: "Children", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between VariableRule and VariableRule");
@@ -807,7 +807,7 @@ namespace Services.API
 
         private object _GetVariableRuleVariableInstance(VariableRuleJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<VariableInstance>(Dto.VariableInstance.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, "VariableInstance", request.VisibleFields);
              var en = DocEntityVariableRule.GetVariableRule(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.VARIABLERULE, columnName: "Instances", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between VariableRule and VariableInstance");
@@ -829,7 +829,7 @@ namespace Services.API
 
         private object _GetVariableRuleScope(VariableRuleJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
              var en = DocEntityVariableRule.GetVariableRule(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.VARIABLERULE, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between VariableRule and Scope");

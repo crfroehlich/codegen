@@ -616,7 +616,7 @@ namespace Services.API
 
         private object _GetLookupCategoryLookupTable(LookupCategoryJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<LookupTable>(Dto.LookupTable.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<LookupTable>(currentUser, "LookupTable", request.VisibleFields);
              var en = DocEntityLookupCategory.GetLookupCategory(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPCATEGORY, columnName: "Lookups", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupCategory and LookupTable");

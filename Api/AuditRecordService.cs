@@ -265,7 +265,7 @@ namespace Services.API
 
         private object _GetAuditRecordAuditDelta(AuditRecordJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<AuditDelta>(Dto.AuditDelta.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, "AuditDelta", request.VisibleFields);
              var en = DocEntityAuditRecord.GetAuditRecord(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.AUDITRECORD, columnName: "Deltas", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between AuditRecord and AuditDelta");

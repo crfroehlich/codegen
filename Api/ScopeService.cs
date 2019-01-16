@@ -1082,7 +1082,7 @@ namespace Services.API
 
         private object _GetScopeLookupTableBinding(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and LookupTableBinding");
@@ -1104,7 +1104,7 @@ namespace Services.API
 
         private object _GetScopeBroadcast(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Broadcasts", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Broadcast");
@@ -1126,7 +1126,7 @@ namespace Services.API
 
         private object _GetScopeHelp(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Help>(currentUser, "Help", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Help", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Help");
@@ -1148,7 +1148,7 @@ namespace Services.API
 
         private object _GetScopeTermSynonym(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Synonyms", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and TermSynonym");
@@ -1170,7 +1170,7 @@ namespace Services.API
 
         private object _GetScopeVariableRule(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "VariableRules", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and VariableRule");
@@ -1192,7 +1192,7 @@ namespace Services.API
 
         private object _GetScopeWorkflow(ScopeJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
              var en = DocEntityScope.GetScope(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Workflow");

@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -77,6 +76,10 @@ namespace Services.Dto
         public string SessionId { get; set; }
 
 
+        [ApiMember(Name = nameof(TemporarySessionId), Description = "string", IsRequired = false)]
+        public string TemporarySessionId { get; set; }
+
+
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
         public Reference User { get; set; }
         [ApiMember(Name = nameof(UserId), Description = "Primary Key of User", IsRequired = false)]
@@ -105,16 +108,20 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
-            return ret;
+            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
+            if (DocTools.AreEqual(nameof(Fields), field)) return false;
+            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
+            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
+            if (DocTools.AreEqual(nameof(Id), field)) return true;
+            return true == VisibleFields?.Matches(field, true);
         }
 
-        public static List<string> Fields => DocTools.Fields<UserSession>();
+        private static List<string> _fields;
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<UserSession>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Hits),nameof(Impersonations),nameof(ImpersonationsCount),nameof(IpAddress),nameof(Locked),nameof(Requests),nameof(RequestsCount),nameof(SessionId),nameof(Updated),nameof(User),nameof(UserHistory),nameof(UserHistoryCount),nameof(UserId),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Hits),nameof(Impersonations),nameof(ImpersonationsCount),nameof(IpAddress),nameof(Locked),nameof(Requests),nameof(RequestsCount),nameof(SessionId),nameof(TemporarySessionId),nameof(Updated),nameof(User),nameof(UserHistory),nameof(UserHistoryCount),nameof(UserId),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -152,6 +159,7 @@ namespace Services.Dto
         public string IpAddress { get; set; }
         public List<int> RequestsIds { get; set; }
         public string SessionId { get; set; }
+        public string TemporarySessionId { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
         public List<int> UserHistoryIds { get; set; }
@@ -176,6 +184,7 @@ namespace Services.Dto
         public bool doIpAddress { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.IpAddress))); }
         public bool doRequests { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Requests))); }
         public bool doSessionId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.SessionId))); }
+        public bool doTemporarySessionId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.TemporarySessionId))); }
         public bool doUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.User))); }
         public bool doUserHistory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.UserHistory))); }
     }

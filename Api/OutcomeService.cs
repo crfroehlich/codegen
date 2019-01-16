@@ -47,7 +47,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
 
             Execute.Run( session => 
             {
@@ -86,10 +86,22 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.Name))
-                    entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(!DocTools.IsNullOrEmpty(request.URI))
-                    entities = entities.Where(en => en.URI.Contains(request.URI));
+                if(!DocTools.IsNullOrEmpty(request.Outcome) && !DocTools.IsNullOrEmpty(request.Outcome.Id))
+                {
+                    entities = entities.Where(en => en.Outcome.Id == request.Outcome.Id );
+                }
+                if(true == request.OutcomeIds?.Any())
+                {
+                    entities = entities.Where(en => en.Outcome.Id.In(request.OutcomeIds));
+                }
+                else if(!DocTools.IsNullOrEmpty(request.Outcome) && !DocTools.IsNullOrEmpty(request.Outcome.Name))
+                {
+                    entities = entities.Where(en => en.Outcome.Name == request.Outcome.Name );
+                }
+                if(true == request.OutcomeNames?.Any())
+                {
+                    entities = entities.Where(en => en.Outcome.Name.In(request.OutcomeNames));
+                }
 
                 entities = ApplyFilters(request, entities);
 
@@ -113,8 +125,8 @@ namespace Services.API
         public object Get(OutcomeSearch request)
         {
             object tryRet = null;
-            var ret = new List<Outcome>();
-            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
+            var ret = new List<OutcomeDto>();
+            var cacheKey = GetApiCacheKey<OutcomeDto>(DocConstantModelName.OUTCOME, nameof(OutcomeDto), request);
             using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
                 var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
@@ -122,7 +134,7 @@ namespace Services.API
                 {
                     if (tryRet == null)
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,OutcomeDto>(ret, Execute, requestCancel));
                         tryRet = ret;
                         //Go ahead and cache the result for any future consumers
                         DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.OUTCOME, search: true);
@@ -153,15 +165,15 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Outcome request)
+        public object Get(OutcomeDto request)
         {
             object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
+            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<OutcomeDto>(DocConstantModelName.OUTCOME, nameof(OutcomeDto), request);
             if(null == ret)
             {
                 Execute.Run(s =>
@@ -174,7 +186,7 @@ namespace Services.API
             return ret;
         }
 
-        private Outcome _AssignValues(Outcome request, DocConstantPermission permission, Session session)
+        private OutcomeDto _AssignValues(OutcomeDto request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
@@ -184,16 +196,15 @@ namespace Services.API
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            Outcome ret = null;
+            OutcomeDto ret = null;
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
-            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
+            var cacheKey = GetApiCacheKey<OutcomeDto>(DocConstantModelName.OUTCOME, nameof(OutcomeDto), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pName = request.Name;
-            var pURI = request.URI;
+            DocEntityLookupTable pOutcome = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.Outcome?.Name, request.Outcome?.Id);
 
             DocEntityOutcome entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -212,23 +223,13 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.OUTCOME, nameof(request.Name)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pOutcome, permission, DocConstantModelName.OUTCOME, nameof(request.Outcome)))
             {
-                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
-                    entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pOutcome, entity.Outcome, nameof(request.Outcome)))
+                    entity.Outcome = pOutcome;
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pOutcome, nameof(request.Outcome)) && !request.VisibleFields.Matches(nameof(request.Outcome), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Name));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.OUTCOME, nameof(request.URI)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
-                    entity.URI = pURI;
-                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.URI));
+                    request.VisibleFields.Add(nameof(request.Outcome));
                 }
             }
             
@@ -236,20 +237,20 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, nameof(Outcome), request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, nameof(OutcomeDto), request.VisibleFields);
             ret = entity.ToDto();
 
             DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.OUTCOME);
 
             return ret;
         }
-        public Outcome Post(Outcome request)
+        public OutcomeDto Post(OutcomeDto request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            Outcome ret = null;
+            OutcomeDto ret = null;
 
             Execute.Run(ssn =>
             {
@@ -262,11 +263,11 @@ namespace Services.API
             return ret;
         }
    
-        public List<Outcome> Post(OutcomeBatch request)
+        public List<OutcomeDto> Post(OutcomeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<Outcome>();
+            var ret = new List<OutcomeDto>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -274,7 +275,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as Outcome;
+                    var obj = Post(dto) as OutcomeDto;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -309,9 +310,9 @@ namespace Services.API
             return ret;
         }
 
-        public Outcome Post(OutcomeCopy request)
+        public OutcomeDto Post(OutcomeDtoCopy request)
         {
-            Outcome ret = null;
+            OutcomeDto ret = null;
             Execute.Run(ssn =>
             {
                 var entity = DocEntityOutcome.GetOutcome(request?.Id);
@@ -319,19 +320,13 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pName = entity.Name;
-                    if(!DocTools.IsNullOrEmpty(pName))
-                        pName += " (Copy)";
-                    var pURI = entity.URI;
-                    if(!DocTools.IsNullOrEmpty(pURI))
-                        pURI += " (Copy)";
+                    var pOutcome = entity.Outcome;
                 #region Custom Before copyOutcome
                 #endregion Custom Before copyOutcome
                 var copy = new DocEntityOutcome(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Name = pName
-                                , URI = pURI
+                                , Outcome = pOutcome
                 };
                 #region Custom After copyOutcome
                 #endregion Custom After copyOutcome
@@ -342,21 +337,21 @@ namespace Services.API
         }
 
 
-        public List<Outcome> Put(OutcomeBatch request)
+        public List<OutcomeDto> Put(OutcomeBatch request)
         {
             return Patch(request);
         }
 
-        public Outcome Put(Outcome request)
+        public OutcomeDto Put(OutcomeDto request)
         {
             return Patch(request);
         }
 
-        public List<Outcome> Patch(OutcomeBatch request)
+        public List<OutcomeDto> Patch(OutcomeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<Outcome>();
+            var ret = new List<OutcomeDto>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -364,7 +359,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as Outcome;
+                    var obj = Patch(dto) as OutcomeDto;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -399,13 +394,13 @@ namespace Services.API
             return ret;
         }
 
-        public Outcome Patch(Outcome request)
+        public OutcomeDto Patch(OutcomeDto request)
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Outcome to patch.");
             
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
-            Outcome ret = null;
+            OutcomeDto ret = null;
             Execute.Run(ssn =>
             {
                 ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
@@ -457,7 +452,7 @@ namespace Services.API
             }
         }
 
-        public void Delete(Outcome request)
+        public void Delete(OutcomeDto request)
         {
             Execute.Run(ssn =>
             {
@@ -479,7 +474,7 @@ namespace Services.API
 
         public void Delete(OutcomeSearch request)
         {
-            var matches = Get(request) as List<Outcome>;
+            var matches = Get(request) as List<OutcomeDto>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
@@ -491,13 +486,13 @@ namespace Services.API
             });
         }
 
-        private Outcome GetOutcome(Outcome request)
+        private OutcomeDto GetOutcome(OutcomeDto request)
         {
             var id = request?.Id;
-            Outcome ret = null;
+            OutcomeDto ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
 
             DocEntityOutcome entity = null;
             if(id.HasValue)

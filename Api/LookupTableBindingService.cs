@@ -718,7 +718,7 @@ namespace Services.API
 
         private object _GetLookupTableBindingTermSynonym(LookupTableBindingJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
              var en = DocEntityLookupTableBinding.GetLookupTableBinding(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Synonyms", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTableBinding and TermSynonym");
@@ -740,7 +740,7 @@ namespace Services.API
 
         private object _GetLookupTableBindingWorkflow(LookupTableBindingJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
              var en = DocEntityLookupTableBinding.GetLookupTableBinding(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTableBinding and Workflow");

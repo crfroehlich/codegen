@@ -797,7 +797,7 @@ namespace Services.API
 
         private object _GetClientLookupTableBinding(ClientJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and LookupTableBinding");
@@ -806,7 +806,7 @@ namespace Services.API
 
         private object _GetClientDivision(ClientJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Division>(Dto.Division.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Division>(currentUser, "Division", request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Divisions", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Division");
@@ -828,7 +828,7 @@ namespace Services.API
 
         private object _GetClientDocumentSet(ClientJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "DocumentSets", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and DocumentSet");
@@ -850,7 +850,7 @@ namespace Services.API
 
         private object _GetClientScope(ClientJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Scope");
@@ -872,7 +872,7 @@ namespace Services.API
 
         private object _GetClientUser(ClientJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Users", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and User");
@@ -881,7 +881,7 @@ namespace Services.API
 
         private object _GetClientWorkflow(ClientJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
              var en = DocEntityClient.GetClient(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Workflow");

@@ -88,6 +88,8 @@ namespace Services.API
 
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Feature))
+                    entities = entities.Where(en => en.Feature.Contains(request.Feature));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                         if(true == request.RolesIds?.Any())
@@ -218,8 +220,8 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pDescription = request.Description;
+            var pFeature = request.Feature;
             var pName = request.Name;
-            var pPermissionTemplate = request.PermissionTemplate;
             var pRoles = request.Roles?.ToList();
 
             DocEntityFeatureSet entity = null;
@@ -248,23 +250,23 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Description));
                 }
             }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pFeature, permission, DocConstantModelName.FEATURESET, nameof(request.Feature)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pFeature, entity.Feature, nameof(request.Feature)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Feature)} cannot be modified once set.");
+                    entity.Feature = pFeature;
+                if(DocPermissionFactory.IsRequested<string>(request, pFeature, nameof(request.Feature)) && !request.VisibleFields.Matches(nameof(request.Feature), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Feature));
+                }
+            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.FEATURESET, nameof(request.Name)))
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Name));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pPermissionTemplate, permission, DocConstantModelName.FEATURESET, nameof(request.PermissionTemplate)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pPermissionTemplate, entity.PermissionTemplate, nameof(request.PermissionTemplate)))
-                    entity.PermissionTemplate = pPermissionTemplate;
-                if(DocPermissionFactory.IsRequested<string>(request, pPermissionTemplate, nameof(request.PermissionTemplate)) && !request.VisibleFields.Matches(nameof(request.PermissionTemplate), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.PermissionTemplate));
                 }
             }
             
@@ -441,7 +443,7 @@ namespace Services.API
 
         private object _GetFeatureSetRole(FeatureSetJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
              var en = DocEntityFeatureSet.GetFeatureSet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.FEATURESET, columnName: "Roles", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between FeatureSet and Role");
