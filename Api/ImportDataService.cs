@@ -118,6 +118,22 @@ namespace Services.API
                     entities = entities.Where(en => request.ImportTable.Value == en.ImportTable);
                 if(request.ImportText.HasValue)
                     entities = entities.Where(en => request.ImportText.Value == en.ImportText);
+                if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Id))
+                {
+                    entities = entities.Where(en => en.ImportType.Id == request.ImportType.Id );
+                }
+                if(true == request.ImportTypeIds?.Any())
+                {
+                    entities = entities.Where(en => en.ImportType.Id.In(request.ImportTypeIds));
+                }
+                else if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Name))
+                {
+                    entities = entities.Where(en => en.ImportType.Name == request.ImportType.Name );
+                }
+                if(true == request.ImportTypeNames?.Any())
+                {
+                    entities = entities.Where(en => en.ImportType.Name.In(request.ImportTypeNames));
+                }
                 if(request.IsLegacy.HasValue)
                     entities = entities.Where(en => request.IsLegacy.Value == en.IsLegacy);
                 if(request.Order.HasValue)
@@ -272,6 +288,7 @@ namespace Services.API
             var pImportNewName = request.ImportNewName;
             var pImportTable = request.ImportTable;
             var pImportText = request.ImportText;
+            DocEntityLookupTable pImportType = GetLookup(DocConstantLookupTable.STUDYIMPORTTYPE, request.ImportType?.Name, request.ImportType?.Id);
             var pIsLegacy = request.IsLegacy;
             var pOrder = request.Order;
             var pReferenceId = request.ReferenceId;
@@ -378,6 +395,15 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pImportText, nameof(request.ImportText)) && !request.VisibleFields.Matches(nameof(request.ImportText), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.ImportText));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pImportType, permission, DocConstantModelName.IMPORTDATA, nameof(request.ImportType)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pImportType, entity.ImportType, nameof(request.ImportType)))
+                    entity.ImportType = pImportType;
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pImportType, nameof(request.ImportType)) && !request.VisibleFields.Matches(nameof(request.ImportType), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.ImportType));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsLegacy, permission, DocConstantModelName.IMPORTDATA, nameof(request.IsLegacy)))
@@ -592,6 +618,7 @@ namespace Services.API
                     var pImportNewName = entity.ImportNewName;
                     var pImportTable = entity.ImportTable;
                     var pImportText = entity.ImportText;
+                    var pImportType = entity.ImportType;
                     var pIsLegacy = entity.IsLegacy;
                     var pOrder = entity.Order;
                     var pReferenceId = entity.ReferenceId;
@@ -613,6 +640,7 @@ namespace Services.API
                                 , ImportNewName = pImportNewName
                                 , ImportTable = pImportTable
                                 , ImportText = pImportText
+                                , ImportType = pImportType
                                 , IsLegacy = pIsLegacy
                                 , Order = pOrder
                                 , ReferenceId = pReferenceId
@@ -828,7 +856,7 @@ namespace Services.API
 
         private object _GetImportDataDocumentSet(ImportDataJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
              var en = DocEntityImportData.GetImportData(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.IMPORTDATA, columnName: "DocumentSets", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between ImportData and DocumentSet");

@@ -42,8 +42,6 @@ namespace Services.Core
                   return requestedFields.Any() ? AttributeCategory.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : AttributeCategory.Fields;
                 case "attributeinterval":
                   return requestedFields.Any() ? AttributeInterval.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : AttributeInterval.Fields;
-                case "characteristicdto":
-                  return requestedFields.Any() ? CharacteristicDto.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : CharacteristicDto.Fields;
                 case "datetimedto":
                   return requestedFields.Any() ? DateTimeDto.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : DateTimeDto.Fields;
                 case "documentattribute":
@@ -52,8 +50,6 @@ namespace Services.Core
                   return requestedFields.Any() ? ImportData.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : ImportData.Fields;
                 case "interval":
                   return requestedFields.Any() ? Interval.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : Interval.Fields;
-                case "interventiondto":
-                  return requestedFields.Any() ? InterventionDto.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : InterventionDto.Fields;
                 case "jctattributecategoryattributedocumentset":
                   return requestedFields.Any() ? JctAttributeCategoryAttributeDocumentSet.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : JctAttributeCategoryAttributeDocumentSet.Fields;
                 case "lookupcategory":
@@ -70,8 +66,6 @@ namespace Services.Core
                   return requestedFields.Any() ? MeanVariances.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : MeanVariances.Fields;
                 case "meanvariancevalue":
                   return requestedFields.Any() ? MeanVarianceValue.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : MeanVarianceValue.Fields;
-                case "outcomedto":
-                  return requestedFields.Any() ? OutcomeDto.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : OutcomeDto.Fields;
                 case "stats":
                   return requestedFields.Any() ? Stats.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : Stats.Fields;
                 case "statsrecord":

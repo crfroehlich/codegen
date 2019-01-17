@@ -97,6 +97,10 @@ namespace Services.API
                         var enClient = DocEntityFactory.GetEntity<DocEntityClient>( en.Id );
                         ret = enClient.ToDto();
                         break;
+                    case DocConstantModelName.COMPARATOR:
+                        var enComparator = DocEntityFactory.GetEntity<DocEntityComparator>( en.Id );
+                        ret = enComparator.ToDto();
+                        break;
                     case DocConstantModelName.DATABASEVERSION:
                         var enDatabaseVersion = DocEntityFactory.GetEntity<DocEntityDatabaseVersion>( en.Id );
                         ret = enDatabaseVersion.ToDto();

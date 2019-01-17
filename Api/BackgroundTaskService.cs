@@ -588,7 +588,7 @@ namespace Services.API
 
         private object _GetBackgroundTaskBackgroundTaskItem(BackgroundTaskJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<BackgroundTaskItem>(Dto.BackgroundTaskItem.Fields, request.VisibleFields);
              var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "Items", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskItem");
@@ -597,7 +597,7 @@ namespace Services.API
 
         private object _GetBackgroundTaskBackgroundTaskHistory(BackgroundTaskJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<BackgroundTaskHistory>(currentUser, "BackgroundTaskHistory", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<BackgroundTaskHistory>(Dto.BackgroundTaskHistory.Fields, request.VisibleFields);
              var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "TaskHistory", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskHistory");
