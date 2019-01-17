@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,14 @@ namespace Services.API
 {
     public partial class UpdateService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityUpdate.CACHE_KEY_PREFIX;
         private void _ExecSearch(UpdateSearch request, Action<IQueryable<DocEntityUpdate>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityUpdate>();
+            var entities = Execute.SelectAll<DocEntityUpdate>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UpdateFullTextSearch(request);
@@ -147,40 +147,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(UpdateSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<Update>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUpdate,Update>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(UpdateSearch request)
         {
             object tryRet = null;
-            var ret = new List<Update>();
-            var cacheKey = GetApiCacheKey<Update>(DocConstantModelName.UPDATE, nameof(Update), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if (tryRet == null)
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
+                        var ret = new List<Update>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUpdate,Update>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.UPDATE, search: true);
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.UPDATE, search: true);
+            });
             return tryRet;
         }
 
@@ -192,9 +206,12 @@ namespace Services.API
         public object Get(UpdateVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -206,17 +223,11 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Update>(DocConstantModelName.UPDATE, nameof(Update), request);
-            if(null == ret)
+            Execute.Run(s =>
             {
-                Execute.Run(s =>
-                {
-                    ret = GetUpdate(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UPDATE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.UPDATE);
+                request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request);
+                ret = GetUpdate(request);
+            });
             return ret;
         }
 
@@ -234,8 +245,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<Update>(DocConstantModelName.UPDATE, nameof(Update), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pBody = request.Body;
@@ -428,10 +437,8 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Events));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<Update>(currentUser, nameof(Update), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UPDATE);
 
             return ret;
         }
@@ -609,7 +616,7 @@ namespace Services.API
             Update ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request);
 
             DocEntityUpdate entity = null;
             if(id.HasValue)
@@ -637,7 +644,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

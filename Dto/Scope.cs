@@ -141,7 +141,9 @@ namespace Services.Dto
     }
 
     [Route("/scope", "POST")]
+    [Route("/profile/scope", "POST")]
     [Route("/scope/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/scope/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Scope : ScopeBase, IReturn<Scope>, IDto
     {
         public Scope()
@@ -194,9 +196,12 @@ namespace Services.Dto
     }
     
     [Route("/Scope/{Id}/copy", "POST")]
+    [Route("/profile/Scope/{Id}/copy", "POST")]
     public partial class ScopeCopy : Scope {}
     [Route("/scope", "GET")]
+    [Route("/profile/scope", "GET")]
     [Route("/scope/search", "GET, POST, DELETE")]
+    [Route("/profile/scope/search", "GET, POST, DELETE")]
     public partial class ScopeSearch : Search<Scope>
     {
         public Reference App { get; set; }
@@ -262,14 +267,21 @@ namespace Services.Dto
     public partial class ScopeVersion : ScopeSearch {}
 
     [Route("/scope/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/scope/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ScopeBatch : List<Scope> { }
 
     [Route("/scope/{Id}/lookuptablebinding", "GET, POST, DELETE")]
+    [Route("/profile/scope/{Id}/lookuptablebinding", "GET, POST, DELETE")]
     [Route("/scope/{Id}/broadcast", "GET, POST, DELETE")]
+    [Route("/profile/scope/{Id}/broadcast", "GET, POST, DELETE")]
     [Route("/scope/{Id}/help", "GET, POST, DELETE")]
+    [Route("/profile/scope/{Id}/help", "GET, POST, DELETE")]
     [Route("/scope/{Id}/termsynonym", "GET, POST, DELETE")]
+    [Route("/profile/scope/{Id}/termsynonym", "GET, POST, DELETE")]
     [Route("/scope/{Id}/variablerule", "GET, POST, DELETE")]
+    [Route("/profile/scope/{Id}/variablerule", "GET, POST, DELETE")]
     [Route("/scope/{Id}/workflow", "GET, POST, DELETE")]
+    [Route("/profile/scope/{Id}/workflow", "GET, POST, DELETE")]
     public class ScopeJunction : Search<Scope>
     {
         public int? Id { get; set; }
@@ -290,11 +302,17 @@ namespace Services.Dto
 
 
     [Route("/scope/{Id}/lookuptablebinding/version", "GET")]
+    [Route("/profile/scope/{Id}/lookuptablebinding/version", "GET")]
     [Route("/scope/{Id}/broadcast/version", "GET")]
+    [Route("/profile/scope/{Id}/broadcast/version", "GET")]
     [Route("/scope/{Id}/help/version", "GET")]
+    [Route("/profile/scope/{Id}/help/version", "GET")]
     [Route("/scope/{Id}/termsynonym/version", "GET")]
+    [Route("/profile/scope/{Id}/termsynonym/version", "GET")]
     [Route("/scope/{Id}/variablerule/version", "GET")]
+    [Route("/profile/scope/{Id}/variablerule/version", "GET")]
     [Route("/scope/{Id}/workflow/version", "GET")]
+    [Route("/profile/scope/{Id}/workflow/version", "GET")]
     public class ScopeJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

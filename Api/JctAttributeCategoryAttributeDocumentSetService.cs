@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,14 @@ namespace Services.API
 {
     public partial class JctAttributeCategoryAttributeDocumentSetService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityJctAttributeCategoryAttributeDocumentSet.CACHE_KEY_PREFIX;
         private void _ExecSearch(JctAttributeCategoryAttributeDocumentSetSearch request, Action<IQueryable<DocEntityJctAttributeCategoryAttributeDocumentSet>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>(currentUser, "JctAttributeCategoryAttributeDocumentSet", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<JctAttributeCategoryAttributeDocumentSet>(Dto.JctAttributeCategoryAttributeDocumentSet.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityJctAttributeCategoryAttributeDocumentSet>();
+            var entities = Execute.SelectAll<DocEntityJctAttributeCategoryAttributeDocumentSet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new JctAttributeCategoryAttributeDocumentSetFullTextSearch(request);
@@ -121,40 +121,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(JctAttributeCategoryAttributeDocumentSetSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<JctAttributeCategoryAttributeDocumentSet>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJctAttributeCategoryAttributeDocumentSet,JctAttributeCategoryAttributeDocumentSet>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(JctAttributeCategoryAttributeDocumentSetSearch request)
         {
             object tryRet = null;
-            var ret = new List<JctAttributeCategoryAttributeDocumentSet>();
-            var cacheKey = GetApiCacheKey<JctAttributeCategoryAttributeDocumentSet>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, nameof(JctAttributeCategoryAttributeDocumentSet), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if (tryRet == null)
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
+                        var ret = new List<JctAttributeCategoryAttributeDocumentSet>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJctAttributeCategoryAttributeDocumentSet,JctAttributeCategoryAttributeDocumentSet>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, search: true);
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, search: true);
+            });
             return tryRet;
         }
 
@@ -166,9 +180,12 @@ namespace Services.API
         public object Get(JctAttributeCategoryAttributeDocumentSetVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -180,17 +197,11 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>(currentUser, "JctAttributeCategoryAttributeDocumentSet", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<JctAttributeCategoryAttributeDocumentSet>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, nameof(JctAttributeCategoryAttributeDocumentSet), request);
-            if(null == ret)
+            Execute.Run(s =>
             {
-                Execute.Run(s =>
-                {
-                    ret = GetJctAttributeCategoryAttributeDocumentSet(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
+                request.VisibleFields = InitVisibleFields<JctAttributeCategoryAttributeDocumentSet>(Dto.JctAttributeCategoryAttributeDocumentSet.Fields, request);
+                ret = GetJctAttributeCategoryAttributeDocumentSet(request);
+            });
             return ret;
         }
 
@@ -208,8 +219,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<JctAttributeCategoryAttributeDocumentSet>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, nameof(JctAttributeCategoryAttributeDocumentSet), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pAttribute = (request.Attribute?.Id > 0) ? DocEntityAttribute.GetAttribute(request.Attribute.Id) : null;
@@ -265,10 +274,8 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>(currentUser, nameof(JctAttributeCategoryAttributeDocumentSet), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<JctAttributeCategoryAttributeDocumentSet>(Dto.JctAttributeCategoryAttributeDocumentSet.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
 
             return ret;
         }
@@ -351,8 +358,6 @@ namespace Services.API
                     var pAttribute = entity.Attribute;
                     var pAttributeCategory = entity.AttributeCategory;
                     var pDocumentSet = entity.DocumentSet;
-                #region Custom Before copyJctAttributeCategoryAttributeDocumentSet
-                #endregion Custom Before copyJctAttributeCategoryAttributeDocumentSet
                 var copy = new DocEntityJctAttributeCategoryAttributeDocumentSet(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -360,8 +365,6 @@ namespace Services.API
                                 , AttributeCategory = pAttributeCategory
                                 , DocumentSet = pDocumentSet
                 };
-                #region Custom After copyJctAttributeCategoryAttributeDocumentSet
-                #endregion Custom After copyJctAttributeCategoryAttributeDocumentSet
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -488,10 +491,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityJctAttributeCategoryAttributeDocumentSet.GetJctAttributeCategoryAttributeDocumentSet(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No JctAttributeCategoryAttributeDocumentSet could be found for Id {request?.Id}.");
@@ -524,7 +523,7 @@ namespace Services.API
             JctAttributeCategoryAttributeDocumentSet ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>(currentUser, "JctAttributeCategoryAttributeDocumentSet", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<JctAttributeCategoryAttributeDocumentSet>(Dto.JctAttributeCategoryAttributeDocumentSet.Fields, request);
 
             DocEntityJctAttributeCategoryAttributeDocumentSet entity = null;
             if(id.HasValue)
@@ -552,8 +551,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom After copyJctAttributeCategoryAttributeDocumentSet] =====
+===== [Custom Before copyJctAttributeCategoryAttributeDocumentSet] =====
+==================== Orphaned Custom Regions ====================

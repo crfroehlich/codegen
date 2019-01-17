@@ -124,10 +124,16 @@ namespace Services.Schema
         public DateTime End { get; set; }
 
 
-        [Field(Nullable = false)]
+        [Field()]
         [FieldMapping(nameof(PICO))]
         public DocEntityPackage PICO { get; set; }
         public int? PICOId { get { return PICO?.Id; } private set { var noid = value; } }
+
+
+        [Field()]
+        [FieldMapping(nameof(Product))]
+        public DocEntityProduct Product { get; set; }
+        public int? ProductId { get { return Product?.Id; } private set { var noid = value; } }
 
 
         [Field()]
@@ -368,11 +374,6 @@ namespace Services.Schema
                     isValid = false;
                     message += " End is a required property.";
                 }
-                if(DocTools.IsNullOrEmpty(PICO))
-                {
-                    isValid = false;
-                    message += " PICO is a required property.";
-                }
                 if(DocTools.IsNullOrEmpty(Start))
                 {
                     isValid = false;
@@ -456,6 +457,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.End, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.End))))
                 .ForMember(dest => dest.PICO, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICO))))
                 .ForMember(dest => dest.PICOId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICOId))))
+                .ForMember(dest => dest.Product, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Product))))
+                .ForMember(dest => dest.ProductId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ProductId))))
                 .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ReferenceId))))
                 .ForMember(dest => dest.Start, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Start))))
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Status))))

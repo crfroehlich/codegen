@@ -61,6 +61,7 @@ namespace Services.Dto
     }
 
     [Route("/studytype/{Id}", "GET")]
+    [Route("/profile/studytype/{Id}", "GET")]
     public partial class StudyType : StudyTypeBase, IReturn<StudyType>, IDto
     {
         public StudyType()
@@ -106,7 +107,9 @@ namespace Services.Dto
     }
     
     [Route("/studytype", "GET")]
+    [Route("/profile/studytype", "GET")]
     [Route("/studytype/search", "GET, POST, DELETE")]
+    [Route("/profile/studytype/search", "GET, POST, DELETE")]
     public partial class StudyTypeSearch : Search<StudyType>
     {
         public Reference Type { get; set; }
@@ -135,6 +138,7 @@ namespace Services.Dto
     public partial class StudyTypeVersion : StudyTypeSearch {}
 
     [Route("/studytype/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/studytype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StudyTypeBatch : List<StudyType> { }
 
     [Route("/admin/studytype/ids", "GET, POST")]

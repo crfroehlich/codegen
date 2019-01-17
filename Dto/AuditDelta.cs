@@ -64,7 +64,9 @@ namespace Services.Dto
     }
 
     [Route("/auditdelta", "POST")]
+    [Route("/profile/auditdelta", "POST")]
     [Route("/auditdelta/{Id}", "GET")]
+    [Route("/profile/auditdelta/{Id}", "GET")]
     public partial class AuditDelta : AuditDeltaBase, IReturn<AuditDelta>, IDto
     {
         public AuditDelta()
@@ -112,9 +114,12 @@ namespace Services.Dto
     }
     
     [Route("/AuditDelta/{Id}/copy", "POST")]
+    [Route("/profile/AuditDelta/{Id}/copy", "POST")]
     public partial class AuditDeltaCopy : AuditDelta {}
     [Route("/auditdelta", "GET")]
+    [Route("/profile/auditdelta", "GET")]
     [Route("/auditdelta/search", "GET, POST, DELETE")]
+    [Route("/profile/auditdelta/search", "GET, POST, DELETE")]
     public partial class AuditDeltaSearch : Search<AuditDelta>
     {
         public Reference Audit { get; set; }
@@ -143,6 +148,7 @@ namespace Services.Dto
     public partial class AuditDeltaVersion : AuditDeltaSearch {}
 
     [Route("/auditdelta/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/auditdelta/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AuditDeltaBatch : List<AuditDelta> { }
 
     [Route("/admin/auditdelta/ids", "GET, POST")]

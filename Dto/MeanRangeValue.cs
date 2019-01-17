@@ -93,7 +93,9 @@ namespace Services.Dto
     }
 
     [Route("/meanrangevalue", "POST")]
+    [Route("/profile/meanrangevalue", "POST")]
     [Route("/meanrangevalue/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/meanrangevalue/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class MeanRangeValue : MeanRangeValueBase, IReturn<MeanRangeValue>, IDto
     {
         public MeanRangeValue()
@@ -144,9 +146,12 @@ namespace Services.Dto
     }
     
     [Route("/MeanRangeValue/{Id}/copy", "POST")]
+    [Route("/profile/MeanRangeValue/{Id}/copy", "POST")]
     public partial class MeanRangeValueCopy : MeanRangeValue {}
     [Route("/meanrangevalue", "GET")]
+    [Route("/profile/meanrangevalue", "GET")]
     [Route("/meanrangevalue/search", "GET, POST, DELETE")]
+    [Route("/profile/meanrangevalue/search", "GET, POST, DELETE")]
     public partial class MeanRangeValueSearch : Search<MeanRangeValue>
     {
         public Reference MeanVarianceType { get; set; }
@@ -192,9 +197,11 @@ namespace Services.Dto
     public partial class MeanRangeValueVersion : MeanRangeValueSearch {}
 
     [Route("/meanrangevalue/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/meanrangevalue/batch", "DELETE, PATCH, POST, PUT")]
     public partial class MeanRangeValueBatch : List<MeanRangeValue> { }
 
     [Route("/meanrangevalue/{Id}/meanranges", "GET, POST, DELETE")]
+    [Route("/profile/meanrangevalue/{Id}/meanranges", "GET, POST, DELETE")]
     public class MeanRangeValueJunction : Search<MeanRangeValue>
     {
         public int? Id { get; set; }
@@ -215,6 +222,7 @@ namespace Services.Dto
 
 
     [Route("/meanrangevalue/{Id}/meanranges/version", "GET")]
+    [Route("/profile/meanrangevalue/{Id}/meanranges/version", "GET")]
     public class MeanRangeValueJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

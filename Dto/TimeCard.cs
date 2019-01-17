@@ -65,10 +65,16 @@ namespace Services.Dto
         public DateTime? End { get; set; }
 
 
-        [ApiMember(Name = nameof(PICO), Description = "Package", IsRequired = true)]
+        [ApiMember(Name = nameof(PICO), Description = "Package", IsRequired = false)]
         public Reference PICO { get; set; }
         [ApiMember(Name = nameof(PICOId), Description = "Primary Key of Package", IsRequired = false)]
         public int? PICOId { get; set; }
+
+
+        [ApiMember(Name = nameof(Product), Description = "Product", IsRequired = false)]
+        public Reference Product { get; set; }
+        [ApiMember(Name = nameof(ProductId), Description = "Primary Key of Product", IsRequired = false)]
+        public int? ProductId { get; set; }
 
 
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = false)]
@@ -101,7 +107,9 @@ namespace Services.Dto
     }
 
     [Route("/timecard", "POST")]
+    [Route("/profile/timecard", "POST")]
     [Route("/timecard/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/timecard/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class TimeCard : TimeCardBase, IReturn<TimeCard>, IDto
     {
         public TimeCard()
@@ -125,7 +133,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Document),nameof(DocumentId),nameof(End),nameof(Gestalt),nameof(Locked),nameof(PICO),nameof(PICOId),nameof(ReferenceId),nameof(Start),nameof(Status),nameof(StatusId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo),nameof(WorkType),nameof(WorkTypeId)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Document),nameof(DocumentId),nameof(End),nameof(Gestalt),nameof(Locked),nameof(PICO),nameof(PICOId),nameof(Product),nameof(ProductId),nameof(ReferenceId),nameof(Start),nameof(Status),nameof(StatusId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo),nameof(WorkType),nameof(WorkTypeId)})]
         public new List<string> VisibleFields
         {
             get
@@ -149,9 +157,12 @@ namespace Services.Dto
     }
     
     [Route("/TimeCard/{Id}/copy", "POST")]
+    [Route("/profile/TimeCard/{Id}/copy", "POST")]
     public partial class TimeCardCopy : TimeCard {}
     [Route("/timecard", "GET")]
+    [Route("/profile/timecard", "GET")]
     [Route("/timecard/search", "GET, POST, DELETE")]
+    [Route("/profile/timecard/search", "GET, POST, DELETE")]
     public partial class TimeCardSearch : Search<TimeCard>
     {
         public string Description { get; set; }
@@ -162,6 +173,8 @@ namespace Services.Dto
         public DateTime? EndBefore { get; set; }
         public Reference PICO { get; set; }
         public List<int> PICOIds { get; set; }
+        public Reference Product { get; set; }
+        public List<int> ProductIds { get; set; }
         public int? ReferenceId { get; set; }
         public DateTime? Start { get; set; }
         public DateTime? StartAfter { get; set; }
@@ -194,6 +207,7 @@ namespace Services.Dto
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Document))); }
         public bool doEnd { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.End))); }
         public bool doPICO { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.PICO))); }
+        public bool doProduct { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Product))); }
         public bool doReferenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.ReferenceId))); }
         public bool doStart { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Start))); }
         public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Status))); }
@@ -205,6 +219,7 @@ namespace Services.Dto
     public partial class TimeCardVersion : TimeCardSearch {}
 
     [Route("/timecard/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/timecard/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TimeCardBatch : List<TimeCard> { }
 
     [Route("/admin/timecard/ids", "GET, POST")]

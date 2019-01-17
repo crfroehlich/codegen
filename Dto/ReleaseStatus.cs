@@ -74,7 +74,9 @@ namespace Services.Dto
     }
 
     [Route("/releasestatus", "POST")]
+    [Route("/profile/releasestatus", "POST")]
     [Route("/releasestatus/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/releasestatus/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class ReleaseStatus : ReleaseStatusBase, IReturn<ReleaseStatus>, IDto
     {
         public ReleaseStatus()
@@ -122,9 +124,12 @@ namespace Services.Dto
     }
     
     [Route("/ReleaseStatus/{Id}/copy", "POST")]
+    [Route("/profile/ReleaseStatus/{Id}/copy", "POST")]
     public partial class ReleaseStatusCopy : ReleaseStatus {}
     [Route("/releasestatus", "GET")]
+    [Route("/profile/releasestatus", "GET")]
     [Route("/releasestatus/search", "GET, POST, DELETE")]
+    [Route("/profile/releasestatus/search", "GET, POST, DELETE")]
     public partial class ReleaseStatusSearch : Search<ReleaseStatus>
     {
         public string Branch { get; set; }
@@ -158,6 +163,7 @@ namespace Services.Dto
     public partial class ReleaseStatusVersion : ReleaseStatusSearch {}
 
     [Route("/releasestatus/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/releasestatus/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ReleaseStatusBatch : List<ReleaseStatus> { }
 
     [Route("/admin/releasestatus/ids", "GET, POST")]

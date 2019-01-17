@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,58 @@ namespace Services.API
 {
     public partial class TermSynonymService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityTermSynonym.CACHE_KEY_PREFIX;
+        private object _GetIdCache(TermSynonym request)
+        {
+            object ret = null;
+
+            if (true != request.IgnoreCache)
+            {
+                var key = currentUser.GetApiCacheKey(DocConstantModelName.TERMSYNONYM);
+                var cacheKey = $"TermSynonym_{key}_{request.Id}_{UrnId.Create<TermSynonym>(request.GetMD5Hash())}";
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                {
+                    object cachedRet = null;
+                    cachedRet = GetTermSynonym(request);
+                    return cachedRet;
+                });
+            }
+            ret = ret ?? GetTermSynonym(request);
+            return ret;
+        }
+
+        private object _GetSearchCache(TermSynonymSearch request, DocRequestCancellation requestCancel)
+        {
+            object tryRet = null;
+            var ret = new List<TermSynonym>();
+
+            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
+            var key = currentUser.GetApiCacheKey(DocConstantModelName.TERMSYNONYM);
+            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<TermSynonymSearch>(request.GetMD5Hash())}";
+            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+            {
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
+                return ret;
+            });
+
+            if(tryRet == null)
+            {
+                ret = new List<TermSynonym>();
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
+                return ret;
+            }
+            else
+            {
+                return tryRet;
+            }
+        }
         private void _ExecSearch(TermSynonymSearch request, Action<IQueryable<DocEntityTermSynonym>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityTermSynonym>();
+            var entities = Execute.SelectAll<DocEntityTermSynonym>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermSynonymFullTextSearch(request);
@@ -123,48 +167,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(TermSynonymSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<TermSynonym>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(TermSynonymSearch request)
         {
             object tryRet = null;
-            var ret = new List<TermSynonym>();
-            var cacheKey = GetApiCacheKey<TermSynonym>(DocConstantModelName.TERMSYNONYM, nameof(TermSynonym), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if(true != request.IgnoreCache) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                        var ret = new List<TermSynonym>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
-                            return ret;
-                        });
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TERMSYNONYM, search: true);
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.TERMSYNONYM, search: true);
+            });
             return tryRet;
         }
 
@@ -176,9 +242,12 @@ namespace Services.API
         public object Get(TermSynonymVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -190,30 +259,19 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<TermSynonym>(DocConstantModelName.TERMSYNONYM, nameof(TermSynonym), request);
-            if (true != request.IgnoreCache)
+            Execute.Run(s =>
             {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "termsynonym")) 
                 {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTermSynonym(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetTermSynonym(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM);
+                }
+            });
             return ret;
         }
 
@@ -231,8 +289,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<TermSynonym>(DocConstantModelName.TERMSYNONYM, nameof(TermSynonym), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pApproved = request.Approved;
@@ -354,10 +410,8 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Bindings));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, nameof(TermSynonym), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM);
 
             return ret;
         }
@@ -445,8 +499,6 @@ namespace Services.API
                     var pSynonym = entity.Synonym;
                     if(!DocTools.IsNullOrEmpty(pSynonym))
                         pSynonym += " (Copy)";
-                #region Custom Before copyTermSynonym
-                #endregion Custom Before copyTermSynonym
                 var copy = new DocEntityTermSynonym(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -461,8 +513,6 @@ namespace Services.API
                                 entity.Bindings.Add(item);
                             }
 
-                #region Custom After copyTermSynonym
-                #endregion Custom After copyTermSynonym
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -589,10 +639,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.TERMSYNONYM);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityTermSynonym.GetTermSynonym(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TermSynonym could be found for Id {request?.Id}.");
@@ -781,7 +827,7 @@ namespace Services.API
             TermSynonym ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request);
 
             DocEntityTermSynonym entity = null;
             if(id.HasValue)
@@ -809,8 +855,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom Before copyTermSynonym] =====
+===== [Custom After copyTermSynonym] =====
+==================== Orphaned Custom Regions ====================

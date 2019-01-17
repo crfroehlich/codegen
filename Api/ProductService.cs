@@ -400,7 +400,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDatabaseDeadline, permission, DocConstantModelName.PRODUCT, nameof(request.DatabaseDeadline)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDatabaseDeadline, entity.DatabaseDeadline, nameof(request.DatabaseDeadline)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DatabaseDeadline)} cannot be modified once set.");
                     entity.DatabaseDeadline = pDatabaseDeadline;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pDatabaseDeadline, nameof(request.DatabaseDeadline)) && !request.VisibleFields.Matches(nameof(request.DatabaseDeadline), ignoreSpaces: true))
                 {
@@ -410,7 +409,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDatabaseName, permission, DocConstantModelName.PRODUCT, nameof(request.DatabaseName)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDatabaseName, entity.DatabaseName, nameof(request.DatabaseName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DatabaseName)} cannot be modified once set.");
                     entity.DatabaseName = pDatabaseName;
                 if(DocPermissionFactory.IsRequested<string>(request, pDatabaseName, nameof(request.DatabaseName)) && !request.VisibleFields.Matches(nameof(request.DatabaseName), ignoreSpaces: true))
                 {
@@ -420,7 +418,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, request, pDataset, permission, DocConstantModelName.PRODUCT, nameof(request.Dataset)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDataset, entity.Dataset, nameof(request.Dataset)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Dataset)} cannot be modified once set.");
                     entity.Dataset = pDataset;
                 if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pDataset, nameof(request.Dataset)) && !request.VisibleFields.Matches(nameof(request.Dataset), ignoreSpaces: true))
                 {
@@ -430,7 +427,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDeliverableDeadline, permission, DocConstantModelName.PRODUCT, nameof(request.DeliverableDeadline)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDeliverableDeadline, entity.DeliverableDeadline, nameof(request.DeliverableDeadline)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DeliverableDeadline)} cannot be modified once set.");
                     entity.DeliverableDeadline = pDeliverableDeadline;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pDeliverableDeadline, nameof(request.DeliverableDeadline)) && !request.VisibleFields.Matches(nameof(request.DeliverableDeadline), ignoreSpaces: true))
                 {
@@ -440,7 +436,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pFqId, permission, DocConstantModelName.PRODUCT, nameof(request.FqId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pFqId, entity.FqId, nameof(request.FqId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FqId)} cannot be modified once set.");
                     entity.FqId = pFqId;
                 if(DocPermissionFactory.IsRequested<int?>(request, pFqId, nameof(request.FqId)) && !request.VisibleFields.Matches(nameof(request.FqId), ignoreSpaces: true))
                 {
@@ -450,7 +445,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pLegacyPackageId, permission, DocConstantModelName.PRODUCT, nameof(request.LegacyPackageId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pLegacyPackageId, entity.LegacyPackageId, nameof(request.LegacyPackageId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LegacyPackageId)} cannot be modified once set.");
                     entity.LegacyPackageId = pLegacyPackageId;
                 if(DocPermissionFactory.IsRequested<int?>(request, pLegacyPackageId, nameof(request.LegacyPackageId)) && !request.VisibleFields.Matches(nameof(request.LegacyPackageId), ignoreSpaces: true))
                 {
@@ -460,7 +454,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pLibraryPackageId, permission, DocConstantModelName.PRODUCT, nameof(request.LibraryPackageId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pLibraryPackageId, entity.LibraryPackageId, nameof(request.LibraryPackageId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LibraryPackageId)} cannot be modified once set.");
                     entity.LibraryPackageId = pLibraryPackageId;
                 if(DocPermissionFactory.IsRequested<int?>(request, pLibraryPackageId, nameof(request.LibraryPackageId)) && !request.VisibleFields.Matches(nameof(request.LibraryPackageId), ignoreSpaces: true))
                 {
@@ -470,7 +463,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLibraryPackageName, permission, DocConstantModelName.PRODUCT, nameof(request.LibraryPackageName)))
             {
                 if(DocPermissionFactory.IsRequested(request, pLibraryPackageName, entity.LibraryPackageName, nameof(request.LibraryPackageName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LibraryPackageName)} cannot be modified once set.");
                     entity.LibraryPackageName = pLibraryPackageName;
                 if(DocPermissionFactory.IsRequested<string>(request, pLibraryPackageName, nameof(request.LibraryPackageName)) && !request.VisibleFields.Matches(nameof(request.LibraryPackageName), ignoreSpaces: true))
                 {
@@ -480,7 +472,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pNumber, permission, DocConstantModelName.PRODUCT, nameof(request.Number)))
             {
                 if(DocPermissionFactory.IsRequested(request, pNumber, entity.Number, nameof(request.Number)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Number)} cannot be modified once set.");
                     entity.Number = pNumber;
                 if(DocPermissionFactory.IsRequested<string>(request, pNumber, nameof(request.Number)) && !request.VisibleFields.Matches(nameof(request.Number), ignoreSpaces: true))
                 {
@@ -490,7 +481,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pOperationsDeliverable, permission, DocConstantModelName.PRODUCT, nameof(request.OperationsDeliverable)))
             {
                 if(DocPermissionFactory.IsRequested(request, pOperationsDeliverable, entity.OperationsDeliverable, nameof(request.OperationsDeliverable)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.OperationsDeliverable)} cannot be modified once set.");
                     entity.OperationsDeliverable = pOperationsDeliverable;
                 if(DocPermissionFactory.IsRequested<string>(request, pOperationsDeliverable, nameof(request.OperationsDeliverable)) && !request.VisibleFields.Matches(nameof(request.OperationsDeliverable), ignoreSpaces: true))
                 {
@@ -500,7 +490,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pOpportunityId, permission, DocConstantModelName.PRODUCT, nameof(request.OpportunityId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pOpportunityId, entity.OpportunityId, nameof(request.OpportunityId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.OpportunityId)} cannot be modified once set.");
                     entity.OpportunityId = pOpportunityId;
                 if(DocPermissionFactory.IsRequested<string>(request, pOpportunityId, nameof(request.OpportunityId)) && !request.VisibleFields.Matches(nameof(request.OpportunityId), ignoreSpaces: true))
                 {
@@ -510,7 +499,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pOpportunityName, permission, DocConstantModelName.PRODUCT, nameof(request.OpportunityName)))
             {
                 if(DocPermissionFactory.IsRequested(request, pOpportunityName, entity.OpportunityName, nameof(request.OpportunityName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.OpportunityName)} cannot be modified once set.");
                     entity.OpportunityName = pOpportunityName;
                 if(DocPermissionFactory.IsRequested<string>(request, pOpportunityName, nameof(request.OpportunityName)) && !request.VisibleFields.Matches(nameof(request.OpportunityName), ignoreSpaces: true))
                 {
@@ -520,7 +508,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityProduct>(currentUser, request, pParent, permission, DocConstantModelName.PRODUCT, nameof(request.Parent)))
             {
                 if(DocPermissionFactory.IsRequested(request, pParent, entity.Parent, nameof(request.Parent)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Parent)} cannot be modified once set.");
                     entity.Parent = pParent;
                 if(DocPermissionFactory.IsRequested<DocEntityProduct>(request, pParent, nameof(request.Parent)) && !request.VisibleFields.Matches(nameof(request.Parent), ignoreSpaces: true))
                 {
@@ -530,7 +517,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pPICO, permission, DocConstantModelName.PRODUCT, nameof(request.PICO)))
             {
                 if(DocPermissionFactory.IsRequested(request, pPICO, entity.PICO, nameof(request.PICO)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.PICO)} cannot be modified once set.");
                     entity.PICO = pPICO;
                 if(DocPermissionFactory.IsRequested<string>(request, pPICO, nameof(request.PICO)) && !request.VisibleFields.Matches(nameof(request.PICO), ignoreSpaces: true))
                 {
@@ -540,7 +526,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pProjectId, permission, DocConstantModelName.PRODUCT, nameof(request.ProjectId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pProjectId, entity.ProjectId, nameof(request.ProjectId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ProjectId)} cannot be modified once set.");
                     entity.ProjectId = pProjectId;
                 if(DocPermissionFactory.IsRequested<string>(request, pProjectId, nameof(request.ProjectId)) && !request.VisibleFields.Matches(nameof(request.ProjectId), ignoreSpaces: true))
                 {
@@ -550,7 +535,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pProjectName, permission, DocConstantModelName.PRODUCT, nameof(request.ProjectName)))
             {
                 if(DocPermissionFactory.IsRequested(request, pProjectName, entity.ProjectName, nameof(request.ProjectName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ProjectName)} cannot be modified once set.");
                     entity.ProjectName = pProjectName;
                 if(DocPermissionFactory.IsRequested<string>(request, pProjectName, nameof(request.ProjectName)) && !request.VisibleFields.Matches(nameof(request.ProjectName), ignoreSpaces: true))
                 {
@@ -560,7 +544,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.PRODUCT, nameof(request.Status)))
             {
                 if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
                     entity.Status = pStatus;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {

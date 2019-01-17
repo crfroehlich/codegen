@@ -85,6 +85,7 @@ namespace Services.Dto
     }
 
     [Route("/app/{Id}", "GET, PATCH, PUT")]
+    [Route("/profile/app/{Id}", "GET, PATCH, PUT")]
     public partial class App : AppBase, IReturn<App>, IDto
     {
         public App()
@@ -137,7 +138,9 @@ namespace Services.Dto
     }
     
     [Route("/app", "GET")]
+    [Route("/profile/app", "GET")]
     [Route("/app/search", "GET, POST, DELETE")]
+    [Route("/profile/app/search", "GET, POST, DELETE")]
     public partial class AppSearch : Search<App>
     {
         public string Description { get; set; }
@@ -175,11 +178,15 @@ namespace Services.Dto
     public partial class AppVersion : AppSearch {}
 
     [Route("/app/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/app/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AppBatch : List<App> { }
 
     [Route("/app/{Id}/page", "GET, POST, DELETE")]
+    [Route("/profile/app/{Id}/page", "GET, POST, DELETE")]
     [Route("/app/{Id}/role", "GET, POST, DELETE")]
+    [Route("/profile/app/{Id}/role", "GET, POST, DELETE")]
     [Route("/app/{Id}/scope", "GET, POST, DELETE")]
+    [Route("/profile/app/{Id}/scope", "GET, POST, DELETE")]
     public class AppJunction : Search<App>
     {
         public int? Id { get; set; }
@@ -200,8 +207,11 @@ namespace Services.Dto
 
 
     [Route("/app/{Id}/page/version", "GET")]
+    [Route("/profile/app/{Id}/page/version", "GET")]
     [Route("/app/{Id}/role/version", "GET")]
+    [Route("/profile/app/{Id}/role/version", "GET")]
     [Route("/app/{Id}/scope/version", "GET")]
+    [Route("/profile/app/{Id}/scope/version", "GET")]
     public class AppJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

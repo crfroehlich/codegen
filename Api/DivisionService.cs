@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,58 @@ namespace Services.API
 {
     public partial class DivisionService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityDivision.CACHE_KEY_PREFIX;
+        private object _GetIdCache(Division request)
+        {
+            object ret = null;
+
+            if (true != request.IgnoreCache)
+            {
+                var key = currentUser.GetApiCacheKey(DocConstantModelName.DIVISION);
+                var cacheKey = $"Division_{key}_{request.Id}_{UrnId.Create<Division>(request.GetMD5Hash())}";
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                {
+                    object cachedRet = null;
+                    cachedRet = GetDivision(request);
+                    return cachedRet;
+                });
+            }
+            ret = ret ?? GetDivision(request);
+            return ret;
+        }
+
+        private object _GetSearchCache(DivisionSearch request, DocRequestCancellation requestCancel)
+        {
+            object tryRet = null;
+            var ret = new List<Division>();
+
+            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
+            var key = currentUser.GetApiCacheKey(DocConstantModelName.DIVISION);
+            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<DivisionSearch>(request.GetMD5Hash())}";
+            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+            {
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDivision,Division>(ret, Execute, requestCancel));
+                return ret;
+            });
+
+            if(tryRet == null)
+            {
+                ret = new List<Division>();
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDivision,Division>(ret, Execute, requestCancel));
+                return ret;
+            }
+            else
+            {
+                return tryRet;
+            }
+        }
         private void _ExecSearch(DivisionSearch request, Action<IQueryable<DocEntityDivision>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Division>(currentUser, "Division", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Division>(Dto.Division.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityDivision>();
+            var entities = Execute.SelectAll<DocEntityDivision>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DivisionFullTextSearch(request);
@@ -131,48 +175,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(DivisionSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<Division>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "division")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDivision,Division>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(DivisionSearch request)
         {
             object tryRet = null;
-            var ret = new List<Division>();
-            var cacheKey = GetApiCacheKey<Division>(DocConstantModelName.DIVISION, nameof(Division), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if(true != request.IgnoreCache) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                        var ret = new List<Division>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "division")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDivision,Division>(ret, Execute, requestCancel));
-                            return ret;
-                        });
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDivision,Division>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DIVISION, search: true);
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DIVISION, search: true);
+            });
             return tryRet;
         }
 
@@ -184,9 +250,12 @@ namespace Services.API
         public object Get(DivisionVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -198,30 +267,19 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Division>(currentUser, "Division", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Division>(DocConstantModelName.DIVISION, nameof(Division), request);
-            if (true != request.IgnoreCache)
+            Execute.Run(s =>
             {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                request.VisibleFields = InitVisibleFields<Division>(Dto.Division.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "division")) 
                 {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetDivision(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.DIVISION);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetDivision(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DIVISION);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DIVISION);
+                }
+            });
             return ret;
         }
 
@@ -239,8 +297,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<Division>(DocConstantModelName.DIVISION, nameof(Division), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pClient = (request.Client?.Id > 0) ? DocEntityClient.GetClient(request.Client.Id) : null;
@@ -406,10 +462,8 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Users));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<Division>(currentUser, nameof(Division), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Division>(Dto.Division.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DIVISION);
 
             return ret;
         }
@@ -498,8 +552,6 @@ namespace Services.API
                     var pRole = entity.Role;
                     var pSettings = entity.Settings;
                     var pUsers = entity.Users.ToList();
-                #region Custom Before copyDivision
-                #endregion Custom Before copyDivision
                 var copy = new DocEntityDivision(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -519,8 +571,6 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                #region Custom After copyDivision
-                #endregion Custom After copyDivision
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -647,10 +697,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.DIVISION);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityDivision.GetDivision(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Division could be found for Id {request?.Id}.");
@@ -913,7 +959,7 @@ namespace Services.API
             Division ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Division>(currentUser, "Division", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Division>(Dto.Division.Fields, request);
 
             DocEntityDivision entity = null;
             if(id.HasValue)
@@ -941,8 +987,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom After copyDivision] =====
+===== [Custom Before copyDivision] =====
+==================== Orphaned Custom Regions ====================

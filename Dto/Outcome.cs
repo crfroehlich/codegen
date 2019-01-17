@@ -62,7 +62,9 @@ namespace Services.Dto
     }
 
     [Route("/outcome", "POST")]
+    [Route("/profile/outcome", "POST")]
     [Route("/outcome/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/outcome/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Outcome : OutcomeBase, IReturn<Outcome>, IDto
     {
         public Outcome()
@@ -110,9 +112,12 @@ namespace Services.Dto
     }
     
     [Route("/Outcome/{Id}/copy", "POST")]
+    [Route("/profile/Outcome/{Id}/copy", "POST")]
     public partial class OutcomeCopy : Outcome {}
     [Route("/outcome", "GET")]
+    [Route("/profile/outcome", "GET")]
     [Route("/outcome/search", "GET, POST, DELETE")]
+    [Route("/profile/outcome/search", "GET, POST, DELETE")]
     public partial class OutcomeSearch : Search<Outcome>
     {
         public string Name { get; set; }
@@ -140,6 +145,7 @@ namespace Services.Dto
     public partial class OutcomeVersion : OutcomeSearch {}
 
     [Route("/outcome/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/outcome/batch", "DELETE, PATCH, POST, PUT")]
     public partial class OutcomeBatch : List<Outcome> { }
 
     [Route("/admin/outcome/ids", "GET, POST")]

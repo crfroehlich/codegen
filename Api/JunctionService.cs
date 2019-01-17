@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,14 @@ namespace Services.API
 {
     public partial class JunctionService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityJunction.CACHE_KEY_PREFIX;
         private void _ExecSearch(JunctionSearch request, Action<IQueryable<DocEntityJunction>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityJunction>();
+            var entities = Execute.SelectAll<DocEntityJunction>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new JunctionFullTextSearch(request);
@@ -141,40 +141,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(JunctionSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<Junction>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(JunctionSearch request)
         {
             object tryRet = null;
-            var ret = new List<Junction>();
-            var cacheKey = GetApiCacheKey<Junction>(DocConstantModelName.JUNCTION, nameof(Junction), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if (tryRet == null)
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
+                        var ret = new List<Junction>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJunction,Junction>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.JUNCTION, search: true);
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.JUNCTION, search: true);
+            });
             return tryRet;
         }
 
@@ -186,9 +200,12 @@ namespace Services.API
         public object Get(JunctionVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -200,17 +217,11 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Junction>(DocConstantModelName.JUNCTION, nameof(Junction), request);
-            if(null == ret)
+            Execute.Run(s =>
             {
-                Execute.Run(s =>
-                {
-                    ret = GetJunction(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JUNCTION);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.JUNCTION);
+                request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request);
+                ret = GetJunction(request);
+            });
             return ret;
         }
 
@@ -228,8 +239,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<Junction>(DocConstantModelName.JUNCTION, nameof(Junction), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pChildren = request.Children?.ToList();
@@ -387,10 +396,8 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Children));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, nameof(Junction), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JUNCTION);
 
             return ret;
         }
@@ -483,8 +490,6 @@ namespace Services.API
                         pTargetType += " (Copy)";
                     var pType = entity.Type;
                     var pUser = entity.User;
-                #region Custom Before copyJunction
-                #endregion Custom Before copyJunction
                 var copy = new DocEntityJunction(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -502,8 +507,6 @@ namespace Services.API
                                 entity.Children.Add(item);
                             }
 
-                #region Custom After copyJunction
-                #endregion Custom After copyJunction
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -630,10 +633,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.JUNCTION);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityJunction.GetJunction(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Junction could be found for Id {request?.Id}.");
@@ -822,7 +821,7 @@ namespace Services.API
             Junction ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request);
 
             DocEntityJunction entity = null;
             if(id.HasValue)
@@ -850,8 +849,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom After copyJunction] =====
+===== [Custom Before copyJunction] =====
+==================== Orphaned Custom Regions ====================

@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,14 @@ namespace Services.API
 {
     public partial class StatsRecordService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityStatsRecord.CACHE_KEY_PREFIX;
         private void _ExecSearch(StatsRecordSearch request, Action<IQueryable<DocEntityStatsRecord>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityStatsRecord>();
+            var entities = Execute.SelectAll<DocEntityStatsRecord>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new StatsRecordFullTextSearch(request);
@@ -119,40 +119,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(StatsRecordSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<StatsRecord>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityStatsRecord,StatsRecord>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(StatsRecordSearch request)
         {
             object tryRet = null;
-            var ret = new List<StatsRecord>();
-            var cacheKey = GetApiCacheKey<StatsRecord>(DocConstantModelName.STATSRECORD, nameof(StatsRecord), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if (tryRet == null)
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
+                        var ret = new List<StatsRecord>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityStatsRecord,StatsRecord>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.STATSRECORD, search: true);
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.STATSRECORD, search: true);
+            });
             return tryRet;
         }
 
@@ -164,9 +178,12 @@ namespace Services.API
         public object Get(StatsRecordVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -178,17 +195,11 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<StatsRecord>(DocConstantModelName.STATSRECORD, nameof(StatsRecord), request);
-            if(null == ret)
+            Execute.Run(s =>
             {
-                Execute.Run(s =>
-                {
-                    ret = GetStatsRecord(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.STATSRECORD);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.STATSRECORD);
+                request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request);
+                ret = GetStatsRecord(request);
+            });
             return ret;
         }
 
@@ -202,7 +213,7 @@ namespace Services.API
             StatsRecord ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request);
 
             DocEntityStatsRecord entity = null;
             if(id.HasValue)
@@ -230,7 +241,6 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }

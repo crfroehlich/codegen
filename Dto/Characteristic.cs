@@ -62,7 +62,9 @@ namespace Services.Dto
     }
 
     [Route("/characteristic", "POST")]
+    [Route("/profile/characteristic", "POST")]
     [Route("/characteristic/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/characteristic/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Characteristic : CharacteristicBase, IReturn<Characteristic>, IDto
     {
         public Characteristic()
@@ -110,9 +112,12 @@ namespace Services.Dto
     }
     
     [Route("/Characteristic/{Id}/copy", "POST")]
+    [Route("/profile/Characteristic/{Id}/copy", "POST")]
     public partial class CharacteristicCopy : Characteristic {}
     [Route("/characteristic", "GET")]
+    [Route("/profile/characteristic", "GET")]
     [Route("/characteristic/search", "GET, POST, DELETE")]
+    [Route("/profile/characteristic/search", "GET, POST, DELETE")]
     public partial class CharacteristicSearch : Search<Characteristic>
     {
         public string Name { get; set; }
@@ -140,6 +145,7 @@ namespace Services.Dto
     public partial class CharacteristicVersion : CharacteristicSearch {}
 
     [Route("/characteristic/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/characteristic/batch", "DELETE, PATCH, POST, PUT")]
     public partial class CharacteristicBatch : List<Characteristic> { }
 
     [Route("/admin/characteristic/ids", "GET, POST")]

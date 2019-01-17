@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,58 @@ namespace Services.API
 {
     public partial class UserService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityUser.CACHE_KEY_PREFIX;
+        private object _GetIdCache(User request)
+        {
+            object ret = null;
+
+            if (true != request.IgnoreCache)
+            {
+                var key = currentUser.GetApiCacheKey(DocConstantModelName.USER);
+                var cacheKey = $"User_{key}_{request.Id}_{UrnId.Create<User>(request.GetMD5Hash())}";
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                {
+                    object cachedRet = null;
+                    cachedRet = GetUser(request);
+                    return cachedRet;
+                });
+            }
+            ret = ret ?? GetUser(request);
+            return ret;
+        }
+
+        private object _GetSearchCache(UserSearch request, DocRequestCancellation requestCancel)
+        {
+            object tryRet = null;
+            var ret = new List<User>();
+
+            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
+            var key = currentUser.GetApiCacheKey(DocConstantModelName.USER);
+            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<UserSearch>(request.GetMD5Hash())}";
+            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+            {
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
+                return ret;
+            });
+
+            if(tryRet == null)
+            {
+                ret = new List<User>();
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
+                return ret;
+            }
+            else
+            {
+                return tryRet;
+            }
+        }
         private void _ExecSearch(UserSearch request, Action<IQueryable<DocEntityUser>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityUser>();
+            var entities = Execute.SelectAll<DocEntityUser>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserFullTextSearch(request);
@@ -223,48 +267,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(UserSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<User>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "user")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(UserSearch request)
         {
             object tryRet = null;
-            var ret = new List<User>();
-            var cacheKey = GetApiCacheKey<User>(DocConstantModelName.USER, nameof(User), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if(true != request.IgnoreCache) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                        var ret = new List<User>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "user")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
-                            return ret;
-                        });
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUser,User>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.USER, search: true);
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.USER, search: true);
+            });
             return tryRet;
         }
 
@@ -276,9 +342,12 @@ namespace Services.API
         public object Get(UserVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -290,30 +359,19 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<User>(DocConstantModelName.USER, nameof(User), request);
-            if (true != request.IgnoreCache)
+            Execute.Run(s =>
             {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "user")) 
                 {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetUser(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.USER);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetUser(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.USER);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.USER);
+                }
+            });
             return ret;
         }
 
@@ -331,8 +389,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<User>(DocConstantModelName.USER, nameof(User), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pClientDepartment = request.ClientDepartment;
@@ -1048,10 +1104,8 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Workflows));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<User>(currentUser, nameof(User), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.USER);
 
             return ret;
         }
@@ -1180,8 +1234,6 @@ namespace Services.API
                     var pUpdates = entity.Updates.ToList();
                     var pUserType = entity.UserType;
                     var pWorkflows = entity.Workflows.ToList();
-                #region Custom Before copyUser
-                #endregion Custom Before copyUser
                 var copy = new DocEntityUser(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -1261,8 +1313,6 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-                #region Custom After copyUser
-                #endregion Custom After copyUser
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -1834,7 +1884,7 @@ namespace Services.API
             User ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<User>(currentUser, "User", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request);
 
             DocEntityUser entity = null;
             if(id.HasValue)
@@ -1862,8 +1912,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom After copyUser] =====
+===== [Custom Before copyUser] =====
+==================== Orphaned Custom Regions ====================

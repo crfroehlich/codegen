@@ -73,7 +73,9 @@ namespace Services.Dto
     }
 
     [Route("/attributecategory", "POST")]
+    [Route("/profile/attributecategory", "POST")]
     [Route("/attributecategory/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/attributecategory/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class AttributeCategory : AttributeCategoryBase, IReturn<AttributeCategory>, IDto
     {
         public AttributeCategory()
@@ -119,9 +121,12 @@ namespace Services.Dto
     }
     
     [Route("/AttributeCategory/{Id}/copy", "POST")]
+    [Route("/profile/AttributeCategory/{Id}/copy", "POST")]
     public partial class AttributeCategoryCopy : AttributeCategory {}
     [Route("/attributecategory", "GET")]
+    [Route("/profile/attributecategory", "GET")]
     [Route("/attributecategory/search", "GET, POST, DELETE")]
+    [Route("/profile/attributecategory/search", "GET, POST, DELETE")]
     public partial class AttributeCategorySearch : Search<AttributeCategory>
     {
         public Reference DocumentSet { get; set; }
@@ -156,6 +161,7 @@ namespace Services.Dto
     public partial class AttributeCategoryVersion : AttributeCategorySearch {}
 
     [Route("/attributecategory/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/attributecategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeCategoryBatch : List<AttributeCategory> { }
 
     [Route("/admin/attributecategory/ids", "GET, POST")]

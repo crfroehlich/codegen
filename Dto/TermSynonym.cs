@@ -83,7 +83,9 @@ namespace Services.Dto
     }
 
     [Route("/termsynonym", "POST")]
+    [Route("/profile/termsynonym", "POST")]
     [Route("/termsynonym/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/termsynonym/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class TermSynonym : TermSynonymBase, IReturn<TermSynonym>, IDto
     {
         public TermSynonym()
@@ -136,9 +138,12 @@ namespace Services.Dto
     }
     
     [Route("/TermSynonym/{Id}/copy", "POST")]
+    [Route("/profile/TermSynonym/{Id}/copy", "POST")]
     public partial class TermSynonymCopy : TermSynonym {}
     [Route("/termsynonym", "GET")]
+    [Route("/profile/termsynonym", "GET")]
     [Route("/termsynonym/search", "GET, POST, DELETE")]
+    [Route("/profile/termsynonym/search", "GET, POST, DELETE")]
     public partial class TermSynonymSearch : Search<TermSynonym>
     {
         public bool? Approved { get; set; }
@@ -176,9 +181,11 @@ namespace Services.Dto
     public partial class TermSynonymVersion : TermSynonymSearch {}
 
     [Route("/termsynonym/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/termsynonym/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TermSynonymBatch : List<TermSynonym> { }
 
     [Route("/termsynonym/{Id}/lookuptablebinding", "GET, POST, DELETE")]
+    [Route("/profile/termsynonym/{Id}/lookuptablebinding", "GET, POST, DELETE")]
     public class TermSynonymJunction : Search<TermSynonym>
     {
         public int? Id { get; set; }
@@ -199,6 +206,7 @@ namespace Services.Dto
 
 
     [Route("/termsynonym/{Id}/lookuptablebinding/version", "GET")]
+    [Route("/profile/termsynonym/{Id}/lookuptablebinding/version", "GET")]
     public class TermSynonymJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

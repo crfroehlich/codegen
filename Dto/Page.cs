@@ -82,7 +82,9 @@ namespace Services.Dto
     }
 
     [Route("/page", "POST")]
+    [Route("/profile/page", "POST")]
     [Route("/page/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/page/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Page : PageBase, IReturn<Page>, IDto
     {
         public Page()
@@ -135,9 +137,12 @@ namespace Services.Dto
     }
     
     [Route("/Page/{Id}/copy", "POST")]
+    [Route("/profile/Page/{Id}/copy", "POST")]
     public partial class PageCopy : Page {}
     [Route("/page", "GET")]
+    [Route("/profile/page", "GET")]
     [Route("/page/search", "GET, POST, DELETE")]
+    [Route("/profile/page/search", "GET, POST, DELETE")]
     public partial class PageSearch : Search<Page>
     {
         public List<int> AppsIds { get; set; }
@@ -173,12 +178,17 @@ namespace Services.Dto
     public partial class PageVersion : PageSearch {}
 
     [Route("/page/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/page/batch", "DELETE, PATCH, POST, PUT")]
     public partial class PageBatch : List<Page> { }
 
     [Route("/page/{Id}/app", "GET, POST, DELETE")]
+    [Route("/profile/page/{Id}/app", "GET, POST, DELETE")]
     [Route("/page/{Id}/glossary", "GET, POST, DELETE")]
+    [Route("/profile/page/{Id}/glossary", "GET, POST, DELETE")]
     [Route("/page/{Id}/help", "GET, POST, DELETE")]
+    [Route("/profile/page/{Id}/help", "GET, POST, DELETE")]
     [Route("/page/{Id}/role", "GET, POST, DELETE")]
+    [Route("/profile/page/{Id}/role", "GET, POST, DELETE")]
     public class PageJunction : Search<Page>
     {
         public int? Id { get; set; }
@@ -199,9 +209,13 @@ namespace Services.Dto
 
 
     [Route("/page/{Id}/app/version", "GET")]
+    [Route("/profile/page/{Id}/app/version", "GET")]
     [Route("/page/{Id}/glossary/version", "GET")]
+    [Route("/profile/page/{Id}/glossary/version", "GET")]
     [Route("/page/{Id}/help/version", "GET")]
+    [Route("/profile/page/{Id}/help/version", "GET")]
     [Route("/page/{Id}/role/version", "GET")]
+    [Route("/profile/page/{Id}/role/version", "GET")]
     public class PageJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

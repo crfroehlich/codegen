@@ -56,7 +56,9 @@ namespace Services.Dto
     }
 
     [Route("/units", "POST")]
+    [Route("/profile/units", "POST")]
     [Route("/units/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/units/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class UnitsDto : UnitsBase, IReturn<UnitsDto>, IDto
     {
         public UnitsDto()
@@ -107,9 +109,12 @@ namespace Services.Dto
     }
     
     [Route("/Units/{Id}/copy", "POST")]
+    [Route("/profile/Units/{Id}/copy", "POST")]
     public partial class UnitsDtoCopy : UnitsDto {}
     [Route("/units", "GET")]
+    [Route("/profile/units", "GET")]
     [Route("/units/search", "GET, POST, DELETE")]
+    [Route("/profile/units/search", "GET, POST, DELETE")]
     public partial class UnitsSearch : Search<UnitsDto>
     {
         public List<int> UnitsIds { get; set; }
@@ -135,9 +140,11 @@ namespace Services.Dto
     public partial class UnitsVersion : UnitsSearch {}
 
     [Route("/units/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/units/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitsBatch : List<UnitsDto> { }
 
     [Route("/units/{Id}/unitvalue", "GET, POST, DELETE")]
+    [Route("/profile/units/{Id}/unitvalue", "GET, POST, DELETE")]
     public class UnitsJunction : Search<UnitsDto>
     {
         public int? Id { get; set; }
@@ -158,6 +165,7 @@ namespace Services.Dto
 
 
     [Route("/units/{Id}/unitvalue/version", "GET")]
+    [Route("/profile/units/{Id}/unitvalue/version", "GET")]
     public class UnitsJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

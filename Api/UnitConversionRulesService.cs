@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,58 @@ namespace Services.API
 {
     public partial class UnitConversionRulesService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityUnitConversionRules.CACHE_KEY_PREFIX;
+        private object _GetIdCache(UnitConversionRules request)
+        {
+            object ret = null;
+
+            if (true != request.IgnoreCache)
+            {
+                var key = currentUser.GetApiCacheKey(DocConstantModelName.UNITCONVERSIONRULES);
+                var cacheKey = $"UnitConversionRules_{key}_{request.Id}_{UrnId.Create<UnitConversionRules>(request.GetMD5Hash())}";
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                {
+                    object cachedRet = null;
+                    cachedRet = GetUnitConversionRules(request);
+                    return cachedRet;
+                });
+            }
+            ret = ret ?? GetUnitConversionRules(request);
+            return ret;
+        }
+
+        private object _GetSearchCache(UnitConversionRulesSearch request, DocRequestCancellation requestCancel)
+        {
+            object tryRet = null;
+            var ret = new List<UnitConversionRules>();
+
+            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
+            var key = currentUser.GetApiCacheKey(DocConstantModelName.UNITCONVERSIONRULES);
+            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<UnitConversionRulesSearch>(request.GetMD5Hash())}";
+            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+            {
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
+                return ret;
+            });
+
+            if(tryRet == null)
+            {
+                ret = new List<UnitConversionRules>();
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
+                return ret;
+            }
+            else
+            {
+                return tryRet;
+            }
+        }
         private void _ExecSearch(UnitConversionRulesSearch request, Action<IQueryable<DocEntityUnitConversionRules>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<UnitConversionRules>(Dto.UnitConversionRules.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityUnitConversionRules>();
+            var entities = Execute.SelectAll<DocEntityUnitConversionRules>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UnitConversionRulesFullTextSearch(request);
@@ -151,48 +195,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(UnitConversionRulesSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<UnitConversionRules>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(UnitConversionRulesSearch request)
         {
             object tryRet = null;
-            var ret = new List<UnitConversionRules>();
-            var cacheKey = GetApiCacheKey<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, nameof(UnitConversionRules), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if(true != request.IgnoreCache) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                        var ret = new List<UnitConversionRules>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
-                            return ret;
-                        });
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.UNITCONVERSIONRULES, search: true);
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.UNITCONVERSIONRULES, search: true);
+            });
             return tryRet;
         }
 
@@ -204,9 +270,12 @@ namespace Services.API
         public object Get(UnitConversionRulesVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -218,30 +287,19 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, nameof(UnitConversionRules), request);
-            if (true != request.IgnoreCache)
+            Execute.Run(s =>
             {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                request.VisibleFields = InitVisibleFields<UnitConversionRules>(Dto.UnitConversionRules.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "unitconversionrules")) 
                 {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetUnitConversionRules(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetUnitConversionRules(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES);
+                }
+            });
             return ret;
         }
 
@@ -259,8 +317,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, nameof(UnitConversionRules), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pDestinationUnit = (request.DestinationUnit?.Id > 0) ? DocEntityUnitOfMeasure.GetUnitOfMeasure(request.DestinationUnit.Id) : null;
@@ -370,10 +426,8 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, nameof(UnitConversionRules), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<UnitConversionRules>(Dto.UnitConversionRules.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES);
 
             return ret;
         }
@@ -461,8 +515,6 @@ namespace Services.API
                     var pParent = entity.Parent;
                     var pRootTerm = entity.RootTerm;
                     var pSourceUnit = entity.SourceUnit;
-                #region Custom Before copyUnitConversionRules
-                #endregion Custom Before copyUnitConversionRules
                 var copy = new DocEntityUnitConversionRules(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -475,8 +527,6 @@ namespace Services.API
                                 , RootTerm = pRootTerm
                                 , SourceUnit = pSourceUnit
                 };
-                #region Custom After copyUnitConversionRules
-                #endregion Custom After copyUnitConversionRules
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -603,10 +653,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.UNITCONVERSIONRULES);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityUnitConversionRules.GetUnitConversionRules(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UnitConversionRules could be found for Id {request?.Id}.");
@@ -639,7 +685,7 @@ namespace Services.API
             UnitConversionRules ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<UnitConversionRules>(Dto.UnitConversionRules.Fields, request);
 
             DocEntityUnitConversionRules entity = null;
             if(id.HasValue)
@@ -667,8 +713,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom After copyUnitConversionRules] =====
+===== [Custom Before copyUnitConversionRules] =====
+==================== Orphaned Custom Regions ====================

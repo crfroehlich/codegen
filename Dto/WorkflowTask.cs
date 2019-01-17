@@ -98,7 +98,9 @@ namespace Services.Dto
     }
 
     [Route("/workflowtask", "POST")]
+    [Route("/profile/workflowtask", "POST")]
     [Route("/workflowtask/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/workflowtask/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class WorkflowTask : WorkflowTaskBase, IReturn<WorkflowTask>, IDto
     {
         public WorkflowTask()
@@ -146,9 +148,12 @@ namespace Services.Dto
     }
     
     [Route("/WorkflowTask/{Id}/copy", "POST")]
+    [Route("/profile/WorkflowTask/{Id}/copy", "POST")]
     public partial class WorkflowTaskCopy : WorkflowTask {}
     [Route("/workflowtask", "GET")]
+    [Route("/profile/workflowtask", "GET")]
     [Route("/workflowtask/search", "GET, POST, DELETE")]
+    [Route("/profile/workflowtask/search", "GET, POST, DELETE")]
     public partial class WorkflowTaskSearch : Search<WorkflowTask>
     {
         public Reference Assignee { get; set; }
@@ -199,6 +204,7 @@ namespace Services.Dto
     public partial class WorkflowTaskVersion : WorkflowTaskSearch {}
 
     [Route("/workflowtask/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/workflowtask/batch", "DELETE, PATCH, POST, PUT")]
     public partial class WorkflowTaskBatch : List<WorkflowTask> { }
 
     [Route("/admin/workflowtask/ids", "GET, POST")]

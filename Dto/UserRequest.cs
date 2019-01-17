@@ -51,28 +51,12 @@ namespace Services.Dto
 
         public UserRequestBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(App), Description = "App", IsRequired = false)]
-        public Reference App { get; set; }
-        [ApiMember(Name = nameof(AppId), Description = "Primary Key of App", IsRequired = false)]
-        public int? AppId { get; set; }
-
-
         [ApiMember(Name = nameof(Method), Description = "string", IsRequired = false)]
         public string Method { get; set; }
 
 
-        [ApiMember(Name = nameof(Page), Description = "Page", IsRequired = false)]
-        public Reference Page { get; set; }
-        [ApiMember(Name = nameof(PageId), Description = "Primary Key of Page", IsRequired = false)]
-        public int? PageId { get; set; }
-
-
         [ApiMember(Name = nameof(Path), Description = "string", IsRequired = false)]
         public string Path { get; set; }
-
-
-        [ApiMember(Name = nameof(URL), Description = "string", IsRequired = false)]
-        public string URL { get; set; }
 
 
         [ApiMember(Name = nameof(UserSession), Description = "UserSession", IsRequired = true)]
@@ -84,6 +68,7 @@ namespace Services.Dto
     }
 
     [Route("/userrequest/{Id}", "GET")]
+    [Route("/profile/userrequest/{Id}", "GET")]
     public partial class UserRequest : UserRequestBase, IReturn<UserRequest>, IDto
     {
         public UserRequest()
@@ -107,7 +92,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Method),nameof(Page),nameof(PageId),nameof(Path),nameof(Updated),nameof(URL),nameof(UserSession),nameof(UserSessionId),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Method),nameof(Path),nameof(Updated),nameof(UserSession),nameof(UserSessionId),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -131,16 +116,13 @@ namespace Services.Dto
     }
     
     [Route("/userrequest", "GET")]
+    [Route("/profile/userrequest", "GET")]
     [Route("/userrequest/search", "GET, POST, DELETE")]
+    [Route("/profile/userrequest/search", "GET, POST, DELETE")]
     public partial class UserRequestSearch : Search<UserRequest>
     {
-        public Reference App { get; set; }
-        public List<int> AppIds { get; set; }
         public string Method { get; set; }
-        public Reference Page { get; set; }
-        public List<int> PageIds { get; set; }
         public string Path { get; set; }
-        public string URL { get; set; }
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }
@@ -158,11 +140,8 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.Updated))); }
         
-        public bool doApp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.App))); }
         public bool doMethod { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.Method))); }
-        public bool doPage { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.Page))); }
         public bool doPath { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.Path))); }
-        public bool doURL { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.URL))); }
         public bool doUserSession { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.UserSession))); }
     }
 
@@ -170,6 +149,7 @@ namespace Services.Dto
     public partial class UserRequestVersion : UserRequestSearch {}
 
     [Route("/userrequest/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/userrequest/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserRequestBatch : List<UserRequest> { }
 
     [Route("/admin/userrequest/ids", "GET, POST")]

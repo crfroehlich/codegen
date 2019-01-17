@@ -318,15 +318,6 @@ namespace Services.Schema
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Packages))]
-        [Association( PairTo = nameof(Package.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
-        public DocEntitySet<DocEntityPackage> Packages { get; private set; }
-
-
-        public int? PackagesCount { get { return Packages.Count(); } private set { var noid = value; } }
-
-
         [Field(Length = int.MaxValue)]
         [FieldMapping(nameof(Participants))]
         public string Participants { get; set; }
@@ -335,6 +326,15 @@ namespace Services.Schema
         [Field()]
         [FieldMapping(nameof(PRISMA))]
         public string PRISMA { get; set; }
+
+
+        [Field()]
+        [FieldMapping(nameof(Products))]
+        [Association( PairTo = nameof(Product.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        public DocEntitySet<DocEntityProduct> Products { get; private set; }
+
+
+        public int? ProductsCount { get { return Products.Count(); } private set { var noid = value; } }
 
 
         [Field()]
@@ -785,10 +785,10 @@ namespace Services.Schema
                 .ForMember(dest => dest.OutcomesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.OutcomesCount))))
                 .ForMember(dest => dest.Owner, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Owner))))
                 .ForMember(dest => dest.OwnerId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.OwnerId))))
-                .ForMember(dest => dest.Packages, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Packages))))
-                .ForMember(dest => dest.PackagesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.PackagesCount))))
                 .ForMember(dest => dest.Participants, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Participants))))
                 .ForMember(dest => dest.PRISMA, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.PRISMA))))
+                .ForMember(dest => dest.Products, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Products))))
+                .ForMember(dest => dest.ProductsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProductsCount))))
                 .ForMember(dest => dest.ProjectTeam, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProjectTeam))))
                 .ForMember(dest => dest.ProjectTeamId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProjectTeamId))))
                 .ForMember(dest => dest.ProtocolReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProtocolReferenceId))))

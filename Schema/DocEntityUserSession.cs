@@ -146,11 +146,6 @@ namespace Services.Schema
         public string SessionId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(TemporarySessionId))]
-        public string TemporarySessionId { get; set; }
-
-
         [Field(Nullable = false)]
         [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
@@ -309,7 +304,6 @@ namespace Services.Schema
             ClientId = ClientId?.TrimAndPruneSpaces();
             IpAddress = IpAddress?.TrimAndPruneSpaces();
             SessionId = SessionId?.TrimAndPruneSpaces();
-            TemporarySessionId = TemporarySessionId?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
             {
@@ -449,7 +443,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Requests, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserSession>(c, nameof(DocEntityUserSession.Requests))))
                 .ForMember(dest => dest.RequestsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserSession>(c, nameof(DocEntityUserSession.RequestsCount))))
                 .ForMember(dest => dest.SessionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserSession>(c, nameof(DocEntityUserSession.SessionId))))
-                .ForMember(dest => dest.TemporarySessionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserSession>(c, nameof(DocEntityUserSession.TemporarySessionId))))
                 .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserSession>(c, nameof(DocEntityUserSession.User))))
                 .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserSession>(c, nameof(DocEntityUserSession.UserId))))
                 .ForMember(dest => dest.UserHistory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserSession>(c, nameof(DocEntityUserSession.UserHistory))))

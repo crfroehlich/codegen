@@ -70,7 +70,9 @@ namespace Services.Dto
     }
 
     [Route("/datetime", "POST")]
+    [Route("/profile/datetime", "POST")]
     [Route("/datetime/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/datetime/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class DateTimeDto : DateTimeBase, IReturn<DateTimeDto>, IDto
     {
         public DateTimeDto()
@@ -116,9 +118,12 @@ namespace Services.Dto
     }
     
     [Route("/DateTime/{Id}/copy", "POST")]
+    [Route("/profile/DateTime/{Id}/copy", "POST")]
     public partial class DateTimeDtoCopy : DateTimeDto {}
     [Route("/datetime", "GET")]
+    [Route("/profile/datetime", "GET")]
     [Route("/datetime/search", "GET, POST, DELETE")]
+    [Route("/profile/datetime/search", "GET, POST, DELETE")]
     public partial class DateTimeSearch : Search<DateTimeDto>
     {
         public int? DateDay { get; set; }
@@ -152,6 +157,7 @@ namespace Services.Dto
     public partial class DateTimeVersion : DateTimeSearch {}
 
     [Route("/datetime/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/datetime/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DateTimeBatch : List<DateTimeDto> { }
 
     [Route("/admin/datetime/ids", "GET, POST")]

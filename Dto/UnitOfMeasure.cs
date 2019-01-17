@@ -77,7 +77,9 @@ namespace Services.Dto
     }
 
     [Route("/unitofmeasure", "POST")]
+    [Route("/profile/unitofmeasure", "POST")]
     [Route("/unitofmeasure/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/unitofmeasure/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class UnitOfMeasure : UnitOfMeasureBase, IReturn<UnitOfMeasure>, IDto
     {
         public UnitOfMeasure()
@@ -123,9 +125,12 @@ namespace Services.Dto
     }
     
     [Route("/UnitOfMeasure/{Id}/copy", "POST")]
+    [Route("/profile/UnitOfMeasure/{Id}/copy", "POST")]
     public partial class UnitOfMeasureCopy : UnitOfMeasure {}
     [Route("/unitofmeasure", "GET")]
+    [Route("/profile/unitofmeasure", "GET")]
     [Route("/unitofmeasure/search", "GET, POST, DELETE")]
+    [Route("/profile/unitofmeasure/search", "GET, POST, DELETE")]
     public partial class UnitOfMeasureSearch : Search<UnitOfMeasure>
     {
         public bool? IsSI { get; set; }
@@ -164,6 +169,7 @@ namespace Services.Dto
     public partial class UnitOfMeasureVersion : UnitOfMeasureSearch {}
 
     [Route("/unitofmeasure/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/unitofmeasure/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitOfMeasureBatch : List<UnitOfMeasure> { }
 
     [Route("/admin/unitofmeasure/ids", "GET, POST")]

@@ -96,7 +96,9 @@ namespace Services.Dto
     }
 
     [Route("/unitconversionrules", "POST")]
+    [Route("/profile/unitconversionrules", "POST")]
     [Route("/unitconversionrules/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/unitconversionrules/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class UnitConversionRules : UnitConversionRulesBase, IReturn<UnitConversionRules>, IDto
     {
         public UnitConversionRules()
@@ -142,9 +144,12 @@ namespace Services.Dto
     }
     
     [Route("/UnitConversionRules/{Id}/copy", "POST")]
+    [Route("/profile/UnitConversionRules/{Id}/copy", "POST")]
     public partial class UnitConversionRulesCopy : UnitConversionRules {}
     [Route("/unitconversionrules", "GET")]
+    [Route("/profile/unitconversionrules", "GET")]
     [Route("/unitconversionrules/search", "GET, POST, DELETE")]
+    [Route("/profile/unitconversionrules/search", "GET, POST, DELETE")]
     public partial class UnitConversionRulesSearch : Search<UnitConversionRules>
     {
         public Reference DestinationUnit { get; set; }
@@ -190,6 +195,7 @@ namespace Services.Dto
     public partial class UnitConversionRulesVersion : UnitConversionRulesSearch {}
 
     [Route("/unitconversionrules/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/unitconversionrules/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitConversionRulesBatch : List<UnitConversionRules> { }
 
     [Route("/admin/unitconversionrules/ids", "GET, POST")]

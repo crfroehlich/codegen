@@ -84,7 +84,9 @@ namespace Services.Dto
     }
 
     [Route("/lookuptablebinding", "POST")]
+    [Route("/profile/lookuptablebinding", "POST")]
     [Route("/lookuptablebinding/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/lookuptablebinding/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class LookupTableBinding : LookupTableBindingBase, IReturn<LookupTableBinding>, IDto
     {
         public LookupTableBinding()
@@ -137,9 +139,12 @@ namespace Services.Dto
     }
     
     [Route("/LookupTableBinding/{Id}/copy", "POST")]
+    [Route("/profile/LookupTableBinding/{Id}/copy", "POST")]
     public partial class LookupTableBindingCopy : LookupTableBinding {}
     [Route("/lookuptablebinding", "GET")]
+    [Route("/profile/lookuptablebinding", "GET")]
     [Route("/lookuptablebinding/search", "GET, POST, DELETE")]
+    [Route("/profile/lookuptablebinding/search", "GET, POST, DELETE")]
     public partial class LookupTableBindingSearch : Search<LookupTableBinding>
     {
         public string Binding { get; set; }
@@ -178,10 +183,13 @@ namespace Services.Dto
     public partial class LookupTableBindingVersion : LookupTableBindingSearch {}
 
     [Route("/lookuptablebinding/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/lookuptablebinding/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupTableBindingBatch : List<LookupTableBinding> { }
 
     [Route("/lookuptablebinding/{Id}/termsynonym", "GET, POST, DELETE")]
+    [Route("/profile/lookuptablebinding/{Id}/termsynonym", "GET, POST, DELETE")]
     [Route("/lookuptablebinding/{Id}/workflow", "GET, POST, DELETE")]
+    [Route("/profile/lookuptablebinding/{Id}/workflow", "GET, POST, DELETE")]
     public class LookupTableBindingJunction : Search<LookupTableBinding>
     {
         public int? Id { get; set; }
@@ -202,7 +210,9 @@ namespace Services.Dto
 
 
     [Route("/lookuptablebinding/{Id}/termsynonym/version", "GET")]
+    [Route("/profile/lookuptablebinding/{Id}/termsynonym/version", "GET")]
     [Route("/lookuptablebinding/{Id}/workflow/version", "GET")]
+    [Route("/profile/lookuptablebinding/{Id}/workflow/version", "GET")]
     public class LookupTableBindingJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

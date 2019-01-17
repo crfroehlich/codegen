@@ -79,7 +79,9 @@ namespace Services.Dto
     }
 
     [Route("/lookuptable", "POST")]
+    [Route("/profile/lookuptable", "POST")]
     [Route("/lookuptable/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/lookuptable/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class LookupTable : LookupTableBase, IReturn<LookupTable>, IDto
     {
         public LookupTable()
@@ -130,9 +132,12 @@ namespace Services.Dto
     }
     
     [Route("/LookupTable/{Id}/copy", "POST")]
+    [Route("/profile/LookupTable/{Id}/copy", "POST")]
     public partial class LookupTableCopy : LookupTable {}
     [Route("/lookuptable", "GET")]
+    [Route("/profile/lookuptable", "GET")]
     [Route("/lookuptable/search", "GET, POST, DELETE")]
+    [Route("/profile/lookuptable/search", "GET, POST, DELETE")]
     public partial class LookupTableSearch : Search<LookupTable>
     {
         public List<int> BindingsIds { get; set; }
@@ -167,11 +172,15 @@ namespace Services.Dto
     public partial class LookupTableVersion : LookupTableSearch {}
 
     [Route("/lookuptable/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/lookuptable/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupTableBatch : List<LookupTable> { }
 
     [Route("/lookuptable/{Id}/lookuptablebinding", "GET, POST, DELETE")]
+    [Route("/profile/lookuptable/{Id}/lookuptablebinding", "GET, POST, DELETE")]
     [Route("/lookuptable/{Id}/lookupcategory", "GET, POST, DELETE")]
+    [Route("/profile/lookuptable/{Id}/lookupcategory", "GET, POST, DELETE")]
     [Route("/lookuptable/{Id}/document", "GET, POST, DELETE")]
+    [Route("/profile/lookuptable/{Id}/document", "GET, POST, DELETE")]
     public class LookupTableJunction : Search<LookupTable>
     {
         public int? Id { get; set; }
@@ -192,8 +201,11 @@ namespace Services.Dto
 
 
     [Route("/lookuptable/{Id}/lookuptablebinding/version", "GET")]
+    [Route("/profile/lookuptable/{Id}/lookuptablebinding/version", "GET")]
     [Route("/lookuptable/{Id}/lookupcategory/version", "GET")]
+    [Route("/profile/lookuptable/{Id}/lookupcategory/version", "GET")]
     [Route("/lookuptable/{Id}/document/version", "GET")]
+    [Route("/profile/lookuptable/{Id}/document/version", "GET")]
     public class LookupTableJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

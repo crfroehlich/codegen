@@ -91,7 +91,9 @@ namespace Services.Dto
     }
 
     [Route("/help", "POST")]
+    [Route("/profile/help", "POST")]
     [Route("/help/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/help/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Help : HelpBase, IReturn<Help>, IDto
     {
         public Help()
@@ -144,9 +146,12 @@ namespace Services.Dto
     }
     
     [Route("/Help/{Id}/copy", "POST")]
+    [Route("/profile/Help/{Id}/copy", "POST")]
     public partial class HelpCopy : Help {}
     [Route("/help", "GET")]
+    [Route("/profile/help", "GET")]
     [Route("/help/search", "GET, POST, DELETE")]
+    [Route("/profile/help/search", "GET, POST, DELETE")]
     public partial class HelpSearch : Search<Help>
     {
         public string ConfluenceId { get; set; }
@@ -189,10 +194,13 @@ namespace Services.Dto
     public partial class HelpVersion : HelpSearch {}
 
     [Route("/help/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/help/batch", "DELETE, PATCH, POST, PUT")]
     public partial class HelpBatch : List<Help> { }
 
     [Route("/help/{Id}/page", "GET, POST, DELETE")]
+    [Route("/profile/help/{Id}/page", "GET, POST, DELETE")]
     [Route("/help/{Id}/scope", "GET, POST, DELETE")]
+    [Route("/profile/help/{Id}/scope", "GET, POST, DELETE")]
     public class HelpJunction : Search<Help>
     {
         public int? Id { get; set; }
@@ -213,7 +221,9 @@ namespace Services.Dto
 
 
     [Route("/help/{Id}/page/version", "GET")]
+    [Route("/profile/help/{Id}/page/version", "GET")]
     [Route("/help/{Id}/scope/version", "GET")]
+    [Route("/profile/help/{Id}/scope/version", "GET")]
     public class HelpJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

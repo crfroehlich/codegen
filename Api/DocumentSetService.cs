@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,58 @@ namespace Services.API
 {
     public partial class DocumentSetService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityDocumentSet.CACHE_KEY_PREFIX;
+        private object _GetIdCache(DocumentSet request)
+        {
+            object ret = null;
+
+            if (true != request.IgnoreCache)
+            {
+                var key = currentUser.GetApiCacheKey(DocConstantModelName.DOCUMENTSET);
+                var cacheKey = $"DocumentSet_{key}_{request.Id}_{UrnId.Create<DocumentSet>(request.GetMD5Hash())}";
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                {
+                    object cachedRet = null;
+                    cachedRet = GetDocumentSet(request);
+                    return cachedRet;
+                });
+            }
+            ret = ret ?? GetDocumentSet(request);
+            return ret;
+        }
+
+        private object _GetSearchCache(DocumentSetSearch request, DocRequestCancellation requestCancel)
+        {
+            object tryRet = null;
+            var ret = new List<DocumentSet>();
+
+            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
+            var key = currentUser.GetApiCacheKey(DocConstantModelName.DOCUMENTSET);
+            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<DocumentSetSearch>(request.GetMD5Hash())}";
+            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+            {
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(ret, Execute, requestCancel));
+                return ret;
+            });
+
+            if(tryRet == null)
+            {
+                ret = new List<DocumentSet>();
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(ret, Execute, requestCancel));
+                return ret;
+            }
+            else
+            {
+                return tryRet;
+            }
+        }
         private void _ExecSearch(DocumentSetSearch request, Action<IQueryable<DocEntityDocumentSet>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityDocumentSet>();
+            var entities = Execute.SelectAll<DocEntityDocumentSet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentSetFullTextSearch(request);
@@ -180,14 +224,14 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Owner.Id.In(request.OwnerIds));
                 }
-                        if(true == request.PackagesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Packages.Any(r => r.Id.In(request.PackagesIds)));
-                        }
                 if(!DocTools.IsNullOrEmpty(request.Participants))
                     entities = entities.Where(en => en.Participants.Contains(request.Participants));
                 if(!DocTools.IsNullOrEmpty(request.PRISMA))
                     entities = entities.Where(en => en.PRISMA.Contains(request.PRISMA));
+                        if(true == request.ProductsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Products.Any(r => r.Id.In(request.ProductsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.ProjectTeam) && !DocTools.IsNullOrEmpty(request.ProjectTeam.Id))
                 {
                     entities = entities.Where(en => en.ProjectTeam.Id == request.ProjectTeam.Id );
@@ -259,48 +303,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(DocumentSetSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<DocumentSet>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "documentset")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(DocumentSetSearch request)
         {
             object tryRet = null;
-            var ret = new List<DocumentSet>();
-            var cacheKey = GetApiCacheKey<DocumentSet>(DocConstantModelName.DOCUMENTSET, nameof(DocumentSet), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if(true != request.IgnoreCache) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                        var ret = new List<DocumentSet>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "documentset")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(ret, Execute, requestCancel));
-                            return ret;
-                        });
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DOCUMENTSET, search: true);
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DOCUMENTSET, search: true);
+            });
             return tryRet;
         }
 
@@ -312,9 +378,12 @@ namespace Services.API
         public object Get(DocumentSetVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -326,30 +395,19 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<DocumentSet>(DocConstantModelName.DOCUMENTSET, nameof(DocumentSet), request);
-            if (true != request.IgnoreCache)
+            Execute.Run(s =>
             {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "documentset")) 
                 {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetDocumentSet(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.DOCUMENTSET);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetDocumentSet(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DOCUMENTSET);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DOCUMENTSET);
+                }
+            });
             return ret;
         }
 
@@ -367,8 +425,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<DocumentSet>(DocConstantModelName.DOCUMENTSET, nameof(DocumentSet), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pAdditionalCriteria = request.AdditionalCriteria;
@@ -404,9 +460,9 @@ namespace Services.API
             var pOriginalSearch = request.OriginalSearch;
             var pOutcomes = request.Outcomes?.ToList();
             var pOwner = (request.Owner?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.Owner.Id) : null;
-            var pPackages = request.Packages?.ToList();
             var pParticipants = request.Participants;
             var pPRISMA = request.PRISMA;
+            var pProducts = request.Products?.ToList();
             var pProjectTeam = (request.ProjectTeam?.Id > 0) ? DocEntityTeam.GetTeam(request.ProjectTeam.Id) : null;
             var pProtocolReferenceId = request.ProtocolReferenceId;
             var pQUOROM = request.QUOROM;
@@ -495,6 +551,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pFqId, permission, DocConstantModelName.DOCUMENTSET, nameof(request.FqId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pFqId, entity.FqId, nameof(request.FqId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FqId)} cannot be modified once set.");
                     entity.FqId = pFqId;
                 if(DocPermissionFactory.IsRequested<int?>(request, pFqId, nameof(request.FqId)) && !request.VisibleFields.Matches(nameof(request.FqId), ignoreSpaces: true))
                 {
@@ -504,6 +561,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pFramedQuestionId, permission, DocConstantModelName.DOCUMENTSET, nameof(request.FramedQuestionId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pFramedQuestionId, entity.FramedQuestionId, nameof(request.FramedQuestionId)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FramedQuestionId)} cannot be modified once set.");
                     entity.FramedQuestionId = pFramedQuestionId;
                 if(DocPermissionFactory.IsRequested<int?>(request, pFramedQuestionId, nameof(request.FramedQuestionId)) && !request.VisibleFields.Matches(nameof(request.FramedQuestionId), ignoreSpaces: true))
                 {
@@ -1261,48 +1319,48 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Outcomes));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pPackages, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Packages)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pProducts, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Products)))
             {
-                if (true == pPackages?.Any() )
+                if (true == pProducts?.Any() )
                 {
-                    var requestedPackages = pPackages.Select(p => p.Id).Distinct().ToList();
-                    var existsPackages = Execute.SelectAll<DocEntityPackage>().Where(e => e.Id.In(requestedPackages)).Select( e => e.Id ).ToList();
-                    if (existsPackages.Count != requestedPackages.Count)
+                    var requestedProducts = pProducts.Select(p => p.Id).Distinct().ToList();
+                    var existsProducts = Execute.SelectAll<DocEntityProduct>().Where(e => e.Id.In(requestedProducts)).Select( e => e.Id ).ToList();
+                    if (existsProducts.Count != requestedProducts.Count)
                     {
-                        var nonExists = requestedPackages.Where(id => existsPackages.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Packages with objects that do not exist. No matching Packages(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                        var nonExists = requestedProducts.Where(id => existsProducts.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Products with objects that do not exist. No matching Products(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedPackages.Where(id => entity.Packages.All(e => e.Id != id)).ToList(); 
+                    var toAdd = requestedProducts.Where(id => entity.Products.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityPackage.GetPackage(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Packages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Packages)} to {nameof(DocumentSet)}");
-                        entity.Packages.Add(target);
+                        var target = DocEntityProduct.GetProduct(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Products)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Products)} to {nameof(DocumentSet)}");
+                        entity.Products.Add(target);
                     });
-                    var toRemove = entity.Packages.Where(e => requestedPackages.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    var toRemove = entity.Products.Where(e => requestedProducts.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityPackage.GetPackage(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Packages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Packages)} from {nameof(DocumentSet)}");
-                        entity.Packages.Remove(target);
+                        var target = DocEntityProduct.GetProduct(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Products)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Products)} from {nameof(DocumentSet)}");
+                        entity.Products.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Packages.Select(e => e.Id).ToList(); 
+                    var toRemove = entity.Products.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityPackage.GetPackage(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Packages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Packages)} from {nameof(DocumentSet)}");
-                        entity.Packages.Remove(target);
+                        var target = DocEntityProduct.GetProduct(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Products)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Products)} from {nameof(DocumentSet)}");
+                        entity.Products.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pPackages, nameof(request.Packages)) && !request.VisibleFields.Matches(nameof(request.Packages), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pProducts, nameof(request.Products)) && !request.VisibleFields.Matches(nameof(request.Products), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Packages));
+                    request.VisibleFields.Add(nameof(request.Products));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Scopes)))
@@ -1481,10 +1539,8 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Users));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, nameof(DocumentSet), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DOCUMENTSET);
 
             return ret;
         }
@@ -1601,11 +1657,11 @@ namespace Services.API
                     var pOriginalSearch = entity.OriginalSearch;
                     var pOutcomes = entity.Outcomes.ToList();
                     var pOwner = entity.Owner;
-                    var pPackages = entity.Packages.ToList();
                     var pParticipants = entity.Participants;
                     var pPRISMA = entity.PRISMA;
                     if(!DocTools.IsNullOrEmpty(pPRISMA))
                         pPRISMA += " (Copy)";
+                    var pProducts = entity.Products.ToList();
                     var pProjectTeam = entity.ProjectTeam;
                     var pProtocolReferenceId = entity.ProtocolReferenceId;
                     var pQUOROM = entity.QUOROM;
@@ -1621,8 +1677,6 @@ namespace Services.API
                     var pStudyDesigns = entity.StudyDesigns.ToList();
                     var pType = entity.Type;
                     var pUsers = entity.Users.ToList();
-                #region Custom Before copyDocumentSet
-                #endregion Custom Before copyDocumentSet
                 var copy = new DocEntityDocumentSet(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -1719,9 +1773,9 @@ namespace Services.API
                                 entity.Outcomes.Add(item);
                             }
 
-                            foreach(var item in pPackages)
+                            foreach(var item in pProducts)
                             {
-                                entity.Packages.Add(item);
+                                entity.Products.Add(item);
                             }
 
                             foreach(var item in pScopes)
@@ -1744,8 +1798,6 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                #region Custom After copyDocumentSet
-                #endregion Custom After copyDocumentSet
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -1872,10 +1924,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.DOCUMENTSET);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityDocumentSet.GetDocumentSet(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet could be found for Id {request?.Id}.");
@@ -1960,6 +2008,9 @@ namespace Services.API
                 case "package":
                     ret = _GetDocumentSetPackage(request, skip, take);
                     break;
+                case "product":
+                    ret = _GetDocumentSetProduct(request, skip, take);
+                    break;
                 case "projectlink":
                     ret = _GetDocumentSetProjectLink(request, skip, take);
                     break;
@@ -2018,9 +2069,6 @@ namespace Services.API
                     break;
                 case "outcome":
                     ret = GetDocumentSetOutcomeVersion(request);
-                    break;
-                case "package":
-                    ret = GetDocumentSetPackageVersion(request);
                     break;
                 case "scope":
                     ret = GetDocumentSetScopeVersion(request);
@@ -2276,17 +2324,13 @@ namespace Services.API
              return en?.Packages.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPackage,Package>(new List<Package>());
         }
 
-        private List<Version> GetDocumentSetPackageVersion(DocumentSetJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityDocumentSet.GetDocumentSet(request.Id);
-                ret = en?.Packages.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
+        private object _GetDocumentSetProduct(DocumentSetJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Product>(Dto.Product.Fields, request.VisibleFields);
+             var en = DocEntityDocumentSet.GetDocumentSet(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENTSET, columnName: "Products", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and Product");
+             return en?.Products.Take(take).Skip(skip).ConvertFromEntityList<DocEntityProduct,Product>(new List<Product>());
         }
 
         private object _GetDocumentSetProjectLink(DocumentSetJunction request, int skip, int take)
@@ -2422,9 +2466,6 @@ namespace Services.API
                     break;
                 case "outcome":
                     ret = _PostDocumentSetOutcome(request);
-                    break;
-                case "package":
-                    ret = _PostDocumentSetPackage(request);
                     break;
                 case "scope":
                     ret = _PostDocumentSetScope(request);
@@ -2609,27 +2650,6 @@ namespace Services.API
             return entity.ToDto();
         }
 
-        private object _PostDocumentSetPackage(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityPackage.GetPackage(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.PACKAGE, columnName: "Packages")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Packages property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Package could be found for {id}.");
-                entity.Packages.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
         private object _PostDocumentSetScope(DocumentSetJunction request)
         {
             var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
@@ -2733,9 +2753,6 @@ namespace Services.API
                     break;
                 case "outcome":
                     ret = _DeleteDocumentSetOutcome(request);
-                    break;
-                case "package":
-                    ret = _DeleteDocumentSetPackage(request);
                     break;
                 case "scope":
                     ret = _DeleteDocumentSetScope(request);
@@ -2904,25 +2921,6 @@ namespace Services.API
             return entity.ToDto();
         }
 
-        private object _DeleteDocumentSetPackage(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityPackage.GetPackage(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.PACKAGE, columnName: "Packages"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Package");
-                if(null != relationship && false == relationship.IsRemoved) entity.Packages.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
         private object _DeleteDocumentSetScope(DocumentSetJunction request)
         {
             var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
@@ -2986,7 +2984,7 @@ namespace Services.API
             DocumentSet ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request);
 
             DocEntityDocumentSet entity = null;
             if(id.HasValue)
@@ -3014,8 +3012,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom After copyDocumentSet] =====
+===== [Custom Before copyDocumentSet] =====
+==================== Orphaned Custom Regions ====================

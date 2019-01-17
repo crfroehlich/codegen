@@ -77,6 +77,7 @@ namespace Services.Dto
     }
 
     [Route("/timepoint/{Id}", "GET")]
+    [Route("/profile/timepoint/{Id}", "GET")]
     public partial class TimePoint : TimePointBase, IReturn<TimePoint>, IDto
     {
         public TimePoint()
@@ -122,7 +123,9 @@ namespace Services.Dto
     }
     
     [Route("/timepoint", "GET")]
+    [Route("/profile/timepoint", "GET")]
     [Route("/timepoint/search", "GET, POST, DELETE")]
+    [Route("/profile/timepoint/search", "GET, POST, DELETE")]
     public partial class TimePointSearch : Search<TimePoint>
     {
         public bool? IsAbsolute { get; set; }
@@ -159,6 +162,7 @@ namespace Services.Dto
     public partial class TimePointVersion : TimePointSearch {}
 
     [Route("/timepoint/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/timepoint/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TimePointBatch : List<TimePoint> { }
 
     [Route("/admin/timepoint/ids", "GET, POST")]

@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,14 @@ namespace Services.API
 {
     public partial class ForeignKeyService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityForeignKey.CACHE_KEY_PREFIX;
         private void _ExecSearch(ForeignKeySearch request, Action<IQueryable<DocEntityForeignKey>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<ForeignKey>(Dto.ForeignKey.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityForeignKey>();
+            var entities = Execute.SelectAll<DocEntityForeignKey>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ForeignKeyFullTextSearch(request);
@@ -133,40 +133,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(ForeignKeySearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<ForeignKey>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityForeignKey,ForeignKey>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(ForeignKeySearch request)
         {
             object tryRet = null;
-            var ret = new List<ForeignKey>();
-            var cacheKey = GetApiCacheKey<ForeignKey>(DocConstantModelName.FOREIGNKEY, nameof(ForeignKey), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if (tryRet == null)
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
+                        var ret = new List<ForeignKey>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityForeignKey,ForeignKey>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.FOREIGNKEY, search: true);
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.FOREIGNKEY, search: true);
+            });
             return tryRet;
         }
 
@@ -178,9 +192,12 @@ namespace Services.API
         public object Get(ForeignKeyVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -192,17 +209,11 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<ForeignKey>(DocConstantModelName.FOREIGNKEY, nameof(ForeignKey), request);
-            if(null == ret)
+            Execute.Run(s =>
             {
-                Execute.Run(s =>
-                {
-                    ret = GetForeignKey(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
+                request.VisibleFields = InitVisibleFields<ForeignKey>(Dto.ForeignKey.Fields, request);
+                ret = GetForeignKey(request);
+            });
             return ret;
         }
 
@@ -220,8 +231,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<ForeignKey>(DocConstantModelName.FOREIGNKEY, nameof(ForeignKey), request);
             
             //First, assign all the variables, do database lookups and conversions
             DocEntityLookupTable pIntegrationName = GetLookup(DocConstantLookupTable.INTEGRATIONNAME, request.IntegrationName?.Name, request.IntegrationName?.Id);
@@ -291,10 +300,8 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, nameof(ForeignKey), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<ForeignKey>(Dto.ForeignKey.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
 
             return ret;
         }
@@ -382,8 +389,6 @@ namespace Services.API
                     var pKeyName = entity.KeyName;
                     if(!DocTools.IsNullOrEmpty(pKeyName))
                         pKeyName += " (Copy)";
-                #region Custom Before copyForeignKey
-                #endregion Custom Before copyForeignKey
                 var copy = new DocEntityForeignKey(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -392,8 +397,6 @@ namespace Services.API
                                 , KeyId = pKeyId
                                 , KeyName = pKeyName
                 };
-                #region Custom After copyForeignKey
-                #endregion Custom After copyForeignKey
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -520,10 +523,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.FOREIGNKEY);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityForeignKey.GetForeignKey(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No ForeignKey could be found for Id {request?.Id}.");
@@ -556,7 +555,7 @@ namespace Services.API
             ForeignKey ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<ForeignKey>(Dto.ForeignKey.Fields, request);
 
             DocEntityForeignKey entity = null;
             if(id.HasValue)
@@ -584,8 +583,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom Before copyForeignKey] =====
+===== [Custom After copyForeignKey] =====
+==================== Orphaned Custom Regions ====================

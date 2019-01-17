@@ -102,7 +102,9 @@ namespace Services.Dto
     }
 
     [Route("/termmaster", "POST")]
+    [Route("/profile/termmaster", "POST")]
     [Route("/termmaster/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/termmaster/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class TermMaster : TermMasterBase, IReturn<TermMaster>, IDto
     {
         public TermMaster()
@@ -155,9 +157,12 @@ namespace Services.Dto
     }
     
     [Route("/TermMaster/{Id}/copy", "POST")]
+    [Route("/profile/TermMaster/{Id}/copy", "POST")]
     public partial class TermMasterCopy : TermMaster {}
     [Route("/termmaster", "GET")]
+    [Route("/profile/termmaster", "GET")]
     [Route("/termmaster/search", "GET, POST, DELETE")]
+    [Route("/profile/termmaster/search", "GET, POST, DELETE")]
     public partial class TermMasterSearch : Search<TermMaster>
     {
         public string BioPortal { get; set; }
@@ -204,10 +209,13 @@ namespace Services.Dto
     public partial class TermMasterVersion : TermMasterSearch {}
 
     [Route("/termmaster/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/termmaster/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TermMasterBatch : List<TermMaster> { }
 
     [Route("/termmaster/{Id}/termcategory", "GET, POST, DELETE")]
+    [Route("/profile/termmaster/{Id}/termcategory", "GET, POST, DELETE")]
     [Route("/termmaster/{Id}/termsynonym", "GET, POST, DELETE")]
+    [Route("/profile/termmaster/{Id}/termsynonym", "GET, POST, DELETE")]
     public class TermMasterJunction : Search<TermMaster>
     {
         public int? Id { get; set; }
@@ -228,7 +236,9 @@ namespace Services.Dto
 
 
     [Route("/termmaster/{Id}/termcategory/version", "GET")]
+    [Route("/profile/termmaster/{Id}/termcategory/version", "GET")]
     [Route("/termmaster/{Id}/termsynonym/version", "GET")]
+    [Route("/profile/termmaster/{Id}/termsynonym/version", "GET")]
     public class TermMasterJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

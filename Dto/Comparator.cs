@@ -62,7 +62,9 @@ namespace Services.Dto
     }
 
     [Route("/comparator", "POST")]
+    [Route("/profile/comparator", "POST")]
     [Route("/comparator/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/comparator/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Comparator : ComparatorBase, IReturn<Comparator>, IDto
     {
         public Comparator()
@@ -110,9 +112,12 @@ namespace Services.Dto
     }
     
     [Route("/Comparator/{Id}/copy", "POST")]
+    [Route("/profile/Comparator/{Id}/copy", "POST")]
     public partial class ComparatorCopy : Comparator {}
     [Route("/comparator", "GET")]
+    [Route("/profile/comparator", "GET")]
     [Route("/comparator/search", "GET, POST, DELETE")]
+    [Route("/profile/comparator/search", "GET, POST, DELETE")]
     public partial class ComparatorSearch : Search<Comparator>
     {
         public string Name { get; set; }
@@ -140,6 +145,7 @@ namespace Services.Dto
     public partial class ComparatorVersion : ComparatorSearch {}
 
     [Route("/comparator/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/comparator/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ComparatorBatch : List<Comparator> { }
 
     [Route("/admin/comparator/ids", "GET, POST")]

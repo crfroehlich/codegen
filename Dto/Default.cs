@@ -78,7 +78,9 @@ namespace Services.Dto
     }
 
     [Route("/default", "POST")]
+    [Route("/profile/default", "POST")]
     [Route("/default/{Id}", "GET, PATCH, PUT")]
+    [Route("/profile/default/{Id}", "GET, PATCH, PUT")]
     public partial class Default : DefaultBase, IReturn<Default>, IDto
     {
         public Default()
@@ -126,9 +128,12 @@ namespace Services.Dto
     }
     
     [Route("/Default/{Id}/copy", "POST")]
+    [Route("/profile/Default/{Id}/copy", "POST")]
     public partial class DefaultCopy : Default {}
     [Route("/default", "GET")]
+    [Route("/profile/default", "GET")]
     [Route("/default/search", "GET, POST, DELETE")]
+    [Route("/profile/default/search", "GET, POST, DELETE")]
     public partial class DefaultSearch : Search<Default>
     {
         public Reference DiseaseState { get; set; }
@@ -164,6 +169,7 @@ namespace Services.Dto
     public partial class DefaultVersion : DefaultSearch {}
 
     [Route("/default/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/default/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DefaultBatch : List<Default> { }
 
     [Route("/admin/default/ids", "GET, POST")]

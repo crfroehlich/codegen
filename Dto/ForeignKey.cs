@@ -76,7 +76,9 @@ namespace Services.Dto
     }
 
     [Route("/foreignkey", "POST")]
+    [Route("/profile/foreignkey", "POST")]
     [Route("/foreignkey/{Id}", "GET, PATCH, PUT, DELETE")]
+    [Route("/profile/foreignkey/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class ForeignKey : ForeignKeyBase, IReturn<ForeignKey>, IDto
     {
         public ForeignKey()
@@ -124,9 +126,12 @@ namespace Services.Dto
     }
     
     [Route("/ForeignKey/{Id}/copy", "POST")]
+    [Route("/profile/ForeignKey/{Id}/copy", "POST")]
     public partial class ForeignKeyCopy : ForeignKey {}
     [Route("/foreignkey", "GET")]
+    [Route("/profile/foreignkey", "GET")]
     [Route("/foreignkey/search", "GET, POST, DELETE")]
+    [Route("/profile/foreignkey/search", "GET, POST, DELETE")]
     public partial class ForeignKeySearch : Search<ForeignKey>
     {
         public Reference IntegrationName { get; set; }
@@ -164,6 +169,7 @@ namespace Services.Dto
     public partial class ForeignKeyVersion : ForeignKeySearch {}
 
     [Route("/foreignkey/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/foreignkey/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ForeignKeyBatch : List<ForeignKey> { }
 
     [Route("/admin/foreignkey/ids", "GET, POST")]

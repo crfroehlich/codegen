@@ -68,6 +68,7 @@ namespace Services.Dto
     }
 
     [Route("/valuetype/{Id}", "GET")]
+    [Route("/profile/valuetype/{Id}", "GET")]
     public partial class ValueType : ValueTypeBase, IReturn<ValueType>, IDto
     {
         public ValueType()
@@ -113,7 +114,9 @@ namespace Services.Dto
     }
     
     [Route("/valuetype", "GET")]
+    [Route("/profile/valuetype", "GET")]
     [Route("/valuetype/search", "GET, POST, DELETE")]
+    [Route("/profile/valuetype/search", "GET, POST, DELETE")]
     public partial class ValueTypeSearch : Search<ValueType>
     {
         public Reference FieldType { get; set; }
@@ -147,6 +150,7 @@ namespace Services.Dto
     public partial class ValueTypeVersion : ValueTypeSearch {}
 
     [Route("/valuetype/batch", "DELETE, PATCH, POST, PUT")]
+    [Route("/profile/valuetype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ValueTypeBatch : List<ValueType> { }
 
     [Route("/admin/valuetype/ids", "GET, POST")]

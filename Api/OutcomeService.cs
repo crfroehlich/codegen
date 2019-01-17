@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,14 @@ namespace Services.API
 {
     public partial class OutcomeService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityOutcome.CACHE_KEY_PREFIX;
         private void _ExecSearch(OutcomeSearch request, Action<IQueryable<DocEntityOutcome>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityOutcome>();
+            var entities = Execute.SelectAll<DocEntityOutcome>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new OutcomeFullTextSearch(request);
@@ -101,40 +101,54 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(OutcomeSearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<Outcome>();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(OutcomeSearch request)
         {
             object tryRet = null;
-            var ret = new List<Outcome>();
-            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if (tryRet == null)
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
+                        var ret = new List<Outcome>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
                         tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.OUTCOME, search: true);
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.OUTCOME, search: true);
+            });
             return tryRet;
         }
 
@@ -146,9 +160,12 @@ namespace Services.API
         public object Get(OutcomeVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -160,17 +177,11 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
-            if(null == ret)
+            Execute.Run(s =>
             {
-                Execute.Run(s =>
-                {
-                    ret = GetOutcome(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.OUTCOME);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.OUTCOME);
+                request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
+                ret = GetOutcome(request);
+            });
             return ret;
         }
 
@@ -188,8 +199,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pName = request.Name;
@@ -236,10 +245,8 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, nameof(Outcome), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.OUTCOME);
 
             return ret;
         }
@@ -325,16 +332,12 @@ namespace Services.API
                     var pURI = entity.URI;
                     if(!DocTools.IsNullOrEmpty(pURI))
                         pURI += " (Copy)";
-                #region Custom Before copyOutcome
-                #endregion Custom Before copyOutcome
                 var copy = new DocEntityOutcome(ssn)
                 {
                     Hash = Guid.NewGuid()
                                 , Name = pName
                                 , URI = pURI
                 };
-                #region Custom After copyOutcome
-                #endregion Custom After copyOutcome
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -461,10 +464,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.OUTCOME);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityOutcome.GetOutcome(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Outcome could be found for Id {request?.Id}.");
@@ -497,7 +496,7 @@ namespace Services.API
             Outcome ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<Outcome>(Dto.Outcome.Fields, request);
 
             DocEntityOutcome entity = null;
             if(id.HasValue)
@@ -525,8 +524,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom Before copyOutcome] =====
+===== [Custom After copyOutcome] =====
+==================== Orphaned Custom Regions ====================

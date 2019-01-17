@@ -35,6 +35,8 @@ namespace Services.Enums
         SERVICES_AUDIT,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_AUDIT_FAILURES)]
         SERVICES_AUDIT_FAILURES,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_CACHE_INVALIDATION)]
+        SERVICES_CACHE_INVALIDATION,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_DOCUMENT_UPDATE)]
         SERVICES_DOCUMENT_UPDATE,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_EXTRACT_NOTIFICATION)]
@@ -68,6 +70,7 @@ namespace Services.Enums
         public const string QUEUE_ERROR = "queue_error";
         public const string SERVICES_AUDIT = "services_audit";
         public const string SERVICES_AUDIT_FAILURES = "services_audit_failures";
+        public const string SERVICES_CACHE_INVALIDATION = "services_cache_invalidation";
         public const string SERVICES_DOCUMENT_UPDATE = "services_document_update";
         public const string SERVICES_EXTRACT_NOTIFICATION = "services_extract_notification";
         public const string SERVICES_HEARTBEAT = "services_heartbeat";

@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -43,15 +44,58 @@ namespace Services.API
 {
     public partial class AttributeCategoryService : DocServiceBase
     {
+        public const string CACHE_KEY_PREFIX = DocEntityAttributeCategory.CACHE_KEY_PREFIX;
+        private object _GetIdCache(AttributeCategory request)
+        {
+            object ret = null;
+
+            if (true != request.IgnoreCache)
+            {
+                var key = currentUser.GetApiCacheKey(DocConstantModelName.ATTRIBUTECATEGORY);
+                var cacheKey = $"AttributeCategory_{key}_{request.Id}_{UrnId.Create<AttributeCategory>(request.GetMD5Hash())}";
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                {
+                    object cachedRet = null;
+                    cachedRet = GetAttributeCategory(request);
+                    return cachedRet;
+                });
+            }
+            ret = ret ?? GetAttributeCategory(request);
+            return ret;
+        }
+
+        private object _GetSearchCache(AttributeCategorySearch request, DocRequestCancellation requestCancel)
+        {
+            object tryRet = null;
+            var ret = new List<AttributeCategory>();
+
+            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
+            var key = currentUser.GetApiCacheKey(DocConstantModelName.ATTRIBUTECATEGORY);
+            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<AttributeCategorySearch>(request.GetMD5Hash())}";
+            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+            {
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
+                return ret;
+            });
+
+            if(tryRet == null)
+            {
+                ret = new List<AttributeCategory>();
+                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
+                return ret;
+            }
+            else
+            {
+                return tryRet;
+            }
+        }
         private void _ExecSearch(AttributeCategorySearch request, Action<IQueryable<DocEntityAttributeCategory>> callBack)
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<AttributeCategory>(currentUser, "AttributeCategory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeCategory>(Dto.AttributeCategory.Fields, request);
 
-            Execute.Run( session => 
-            {
-                var entities = Execute.SelectAll<DocEntityAttributeCategory>();
+            var entities = Execute.SelectAll<DocEntityAttributeCategory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeCategoryFullTextSearch(request);
@@ -129,48 +173,70 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
-            });
+            callBack?.Invoke(entities);
         }
         
         public object Post(AttributeCategorySearch request)
         {
-            return Get(request);
+            object tryRet = null;
+            Execute.Run(s =>
+            {
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                {
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
+                    {
+                        var ret = new List<AttributeCategory>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
+                        {
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
+                            tryRet = ret;
+                        }
+                    }
+                    catch(Exception) { throw; }
+                    finally
+                    {
+                        requestCancel?.CloseRequest();
+                    }
+                }
+            });
+            return tryRet;
         }
 
         public object Get(AttributeCategorySearch request)
         {
             object tryRet = null;
-            var ret = new List<AttributeCategory>();
-            var cacheKey = GetApiCacheKey<AttributeCategory>(DocConstantModelName.ATTRIBUTECATEGORY, nameof(AttributeCategory), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
+            Execute.Run(s =>
             {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
+                using (var cancellableRequest = base.Request.CreateCancellableRequest())
                 {
-                    if(true != request.IgnoreCache) 
+                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                    try 
                     {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                        var ret = new List<AttributeCategory>();
+                        var settings = DocResources.Settings;
+                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
+                        {
+                            tryRet = _GetSearchCache(request, requestCancel);
+                        }
+                        if (tryRet == null)
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
-                            return ret;
-                        });
+                            tryRet = ret;
+                        }
                     }
-                    if (tryRet == null)
+                    catch(Exception) { throw; }
+                    finally
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeCategory,AttributeCategory>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.ATTRIBUTECATEGORY, search: true);
+                        requestCancel?.CloseRequest();
                     }
                 }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.ATTRIBUTECATEGORY, search: true);
+            });
             return tryRet;
         }
 
@@ -182,9 +248,12 @@ namespace Services.API
         public object Get(AttributeCategoryVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            Execute.Run(s =>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                _ExecSearch(request, (entities) => 
+                {
+                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                });
             });
             return ret;
         }
@@ -196,30 +265,19 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<AttributeCategory>(currentUser, "AttributeCategory", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<AttributeCategory>(DocConstantModelName.ATTRIBUTECATEGORY, nameof(AttributeCategory), request);
-            if (true != request.IgnoreCache)
+            Execute.Run(s =>
             {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
+                request.VisibleFields = InitVisibleFields<AttributeCategory>(Dto.AttributeCategory.Fields, request);
+                var settings = DocResources.Settings;
+                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "attributecategory")) 
                 {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetAttributeCategory(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTECATEGORY);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
+                    ret = _GetIdCache(request);
+                }
+                else 
                 {
                     ret = GetAttributeCategory(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTECATEGORY);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTECATEGORY);
+                }
+            });
             return ret;
         }
 
@@ -237,8 +295,6 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
-            
-            var cacheKey = GetApiCacheKey<AttributeCategory>(DocConstantModelName.ATTRIBUTECATEGORY, nameof(AttributeCategory), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.DocumentSet.Id) : null;
@@ -294,10 +350,8 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<AttributeCategory>(currentUser, nameof(AttributeCategory), request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeCategory>(Dto.AttributeCategory.Fields, request);
             ret = entity.ToDto();
-
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTECATEGORY);
 
             return ret;
         }
@@ -380,8 +434,6 @@ namespace Services.API
                     var pDocumentSet = entity.DocumentSet;
                     var pName = entity.Name;
                     var pParentAttributeCategory = entity.ParentAttributeCategory;
-                #region Custom Before copyAttributeCategory
-                #endregion Custom Before copyAttributeCategory
                 var copy = new DocEntityAttributeCategory(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -389,8 +441,6 @@ namespace Services.API
                                 , Name = pName
                                 , ParentAttributeCategory = pParentAttributeCategory
                 };
-                #region Custom After copyAttributeCategory
-                #endregion Custom After copyAttributeCategory
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -517,10 +567,6 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
-
-                DocCacheClient.RemoveSearch(DocConstantModelName.ATTRIBUTECATEGORY);
-                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityAttributeCategory.GetAttributeCategory(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No AttributeCategory could be found for Id {request?.Id}.");
@@ -553,7 +599,7 @@ namespace Services.API
             AttributeCategory ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<AttributeCategory>(currentUser, "AttributeCategory", request.VisibleFields);
+            request.VisibleFields = InitVisibleFields<AttributeCategory>(Dto.AttributeCategory.Fields, request);
 
             DocEntityAttributeCategory entity = null;
             if(id.HasValue)
@@ -581,8 +627,10 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
-
             return ret;
         }
     }
-}
+}==================== Orphaned Custom Regions ====================
+===== [Custom Before copyAttributeCategory] =====
+===== [Custom After copyAttributeCategory] =====
+==================== Orphaned Custom Regions ====================
