@@ -767,7 +767,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyTimeCard] =====
-===== [Custom Before copyTimeCard] =====
-==================== Orphaned Custom Regions ====================
+}

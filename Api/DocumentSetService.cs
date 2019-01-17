@@ -3015,7 +3015,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyDocumentSet] =====
-===== [Custom Before copyDocumentSet] =====
-==================== Orphaned Custom Regions ====================
+}

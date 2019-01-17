@@ -590,7 +590,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom Before copyInterval] =====
-===== [Custom After copyInterval] =====
-==================== Orphaned Custom Regions ====================
+}

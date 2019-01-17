@@ -1069,7 +1069,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyLookupTable] =====
-===== [Custom Before copyLookupTable] =====
-==================== Orphaned Custom Regions ====================
+}

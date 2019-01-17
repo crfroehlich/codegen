@@ -780,7 +780,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom Before copyWorkflowComment] =====
-===== [Custom After copyWorkflowComment] =====
-==================== Orphaned Custom Regions ====================
+}

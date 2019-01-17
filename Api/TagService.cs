@@ -720,7 +720,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyTag] =====
-===== [Custom Before copyTag] =====
-==================== Orphaned Custom Regions ====================
+}

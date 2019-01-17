@@ -858,7 +858,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom Before copyTermSynonym] =====
-===== [Custom After copyTermSynonym] =====
-==================== Orphaned Custom Regions ====================
+}

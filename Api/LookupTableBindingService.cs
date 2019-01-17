@@ -981,7 +981,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom Before copyLookupTableBinding] =====
-===== [Custom After copyLookupTableBinding] =====
-==================== Orphaned Custom Regions ====================
+}

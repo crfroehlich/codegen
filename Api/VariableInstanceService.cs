@@ -758,7 +758,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyVariableInstance] =====
-===== [Custom Before copyVariableInstance] =====
-==================== Orphaned Custom Regions ====================
+}

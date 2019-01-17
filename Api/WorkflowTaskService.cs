@@ -656,7 +656,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyWorkflowTask] =====
-===== [Custom Before copyWorkflowTask] =====
-==================== Orphaned Custom Regions ====================
+}

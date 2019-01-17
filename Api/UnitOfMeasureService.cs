@@ -662,7 +662,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyUnitOfMeasure] =====
-===== [Custom Before copyUnitOfMeasure] =====
-==================== Orphaned Custom Regions ====================
+}

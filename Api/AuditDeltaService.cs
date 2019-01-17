@@ -385,7 +385,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyAuditDelta] =====
-===== [Custom Before copyAuditDelta] =====
-==================== Orphaned Custom Regions ====================
+}

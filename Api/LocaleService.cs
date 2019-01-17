@@ -399,7 +399,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom Before copyLocale] =====
-===== [Custom After copyLocale] =====
-==================== Orphaned Custom Regions ====================
+}

@@ -554,7 +554,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyJctAttributeCategoryAttributeDocumentSet] =====
-===== [Custom Before copyJctAttributeCategoryAttributeDocumentSet] =====
-==================== Orphaned Custom Regions ====================
+}

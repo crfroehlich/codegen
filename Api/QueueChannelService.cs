@@ -651,7 +651,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyQueueChannel] =====
-===== [Custom Before copyQueueChannel] =====
-==================== Orphaned Custom Regions ====================
+}

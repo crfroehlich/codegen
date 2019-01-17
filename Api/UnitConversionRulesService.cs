@@ -716,7 +716,4 @@ namespace Services.API
             return ret;
         }
     }
-}==================== Orphaned Custom Regions ====================
-===== [Custom After copyUnitConversionRules] =====
-===== [Custom Before copyUnitConversionRules] =====
-==================== Orphaned Custom Regions ====================
+}
