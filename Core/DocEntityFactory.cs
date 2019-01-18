@@ -29,336 +29,336 @@ namespace Services.Schema
         public static DocConstantModelName GetEnumModelName<T>()
         {
             var ret = string.Empty;
-                if(typeof(T) == typeof(DocEntityApp))
-                {
-                    ret = DocConstantModelName.APP;
-                }
-                else if(typeof(T) == typeof(DocEntityAttribute))
-                {
-                    ret = DocConstantModelName.ATTRIBUTE;
-                }
-                else if(typeof(T) == typeof(DocEntityAttributeCategory))
-                {
-                    ret = DocConstantModelName.ATTRIBUTECATEGORY;
-                }
-                else if(typeof(T) == typeof(DocEntityAttributeInterval))
-                {
-                    ret = DocConstantModelName.ATTRIBUTEINTERVAL;
-                }
-                else if(typeof(T) == typeof(DocEntityAuditDelta))
-                {
-                    ret = DocConstantModelName.AUDITDELTA;
-                }
-                else if(typeof(T) == typeof(DocEntityAuditRecord))
-                {
-                    ret = DocConstantModelName.AUDITRECORD;
-                }
-                else if(typeof(T) == typeof(DocEntityBackgroundTask))
-                {
-                    ret = DocConstantModelName.BACKGROUNDTASK;
-                }
-                else if(typeof(T) == typeof(DocEntityBackgroundTaskHistory))
-                {
-                    ret = DocConstantModelName.BACKGROUNDTASKHISTORY;
-                }
-                else if(typeof(T) == typeof(DocEntityBackgroundTaskItem))
-                {
-                    ret = DocConstantModelName.BACKGROUNDTASKITEM;
-                }
-                else if(typeof(T) == typeof(DocEntityBroadcast))
-                {
-                    ret = DocConstantModelName.BROADCAST;
-                }
-                else if(typeof(T) == typeof(DocEntityCharacteristic))
-                {
-                    ret = DocConstantModelName.CHARACTERISTIC;
-                }
-                else if(typeof(T) == typeof(DocEntityClient))
-                {
-                    ret = DocConstantModelName.CLIENT;
-                }
-                else if(typeof(T) == typeof(DocEntityComparator))
-                {
-                    ret = DocConstantModelName.COMPARATOR;
-                }
-                else if(typeof(T) == typeof(DocEntityDatabaseVersion))
-                {
-                    ret = DocConstantModelName.DATABASEVERSION;
-                }
-                else if(typeof(T) == typeof(DocEntityDateTime))
-                {
-                    ret = DocConstantModelName.DATETIME;
-                }
-                else if(typeof(T) == typeof(DocEntityDefault))
-                {
-                    ret = DocConstantModelName.DEFAULT;
-                }
-                else if(typeof(T) == typeof(DocEntityDivision))
-                {
-                    ret = DocConstantModelName.DIVISION;
-                }
-                else if(typeof(T) == typeof(DocEntityDocument))
-                {
-                    ret = DocConstantModelName.DOCUMENT;
-                }
-                else if(typeof(T) == typeof(DocEntityDocumentAttribute))
-                {
-                    ret = DocConstantModelName.DOCUMENTATTRIBUTE;
-                }
-                else if(typeof(T) == typeof(DocEntityDocumentSet))
-                {
-                    ret = DocConstantModelName.DOCUMENTSET;
-                }
-                else if(typeof(T) == typeof(DocEntityDocumentSetHistory))
-                {
-                    ret = DocConstantModelName.DOCUMENTSETHISTORY;
-                }
-                else if(typeof(T) == typeof(DocEntityEvent))
-                {
-                    ret = DocConstantModelName.EVENT;
-                }
-                else if(typeof(T) == typeof(DocEntityFeatureSet))
-                {
-                    ret = DocConstantModelName.FEATURESET;
-                }
-                else if(typeof(T) == typeof(DocEntityForeignKey))
-                {
-                    ret = DocConstantModelName.FOREIGNKEY;
-                }
-                else if(typeof(T) == typeof(DocEntityGlossary))
-                {
-                    ret = DocConstantModelName.GLOSSARY;
-                }
-                else if(typeof(T) == typeof(DocEntityHelp))
-                {
-                    ret = DocConstantModelName.HELP;
-                }
-                else if(typeof(T) == typeof(DocEntityHistory))
-                {
-                    ret = DocConstantModelName.HISTORY;
-                }
-                else if(typeof(T) == typeof(DocEntityImpersonation))
-                {
-                    ret = DocConstantModelName.IMPERSONATION;
-                }
-                else if(typeof(T) == typeof(DocEntityImportData))
-                {
-                    ret = DocConstantModelName.IMPORTDATA;
-                }
-                else if(typeof(T) == typeof(DocEntityInterval))
-                {
-                    ret = DocConstantModelName.INTERVAL;
-                }
-                else if(typeof(T) == typeof(DocEntityIntervention))
-                {
-                    ret = DocConstantModelName.INTERVENTION;
-                }
-                else if(typeof(T) == typeof(DocEntityJctAttributeCategoryAttributeDocumentSet))
-                {
-                    ret = DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET;
-                }
-                else if(typeof(T) == typeof(DocEntityJunction))
-                {
-                    ret = DocConstantModelName.JUNCTION;
-                }
-                else if(typeof(T) == typeof(DocEntityLocale))
-                {
-                    ret = DocConstantModelName.LOCALE;
-                }
-                else if(typeof(T) == typeof(DocEntityLocaleLookup))
-                {
-                    ret = DocConstantModelName.LOCALELOOKUP;
-                }
-                else if(typeof(T) == typeof(DocEntityLookupCategory))
-                {
-                    ret = DocConstantModelName.LOOKUPCATEGORY;
-                }
-                else if(typeof(T) == typeof(DocEntityLookupTable))
-                {
-                    ret = DocConstantModelName.LOOKUPTABLE;
-                }
-                else if(typeof(T) == typeof(DocEntityLookupTableBinding))
-                {
-                    ret = DocConstantModelName.LOOKUPTABLEBINDING;
-                }
-                else if(typeof(T) == typeof(DocEntityLookupTableEnum))
-                {
-                    ret = DocConstantModelName.LOOKUPTABLEENUM;
-                }
-                else if(typeof(T) == typeof(DocEntityMeanRanges))
-                {
-                    ret = DocConstantModelName.MEANRANGES;
-                }
-                else if(typeof(T) == typeof(DocEntityMeanRangeValue))
-                {
-                    ret = DocConstantModelName.MEANRANGEVALUE;
-                }
-                else if(typeof(T) == typeof(DocEntityMeanVariances))
-                {
-                    ret = DocConstantModelName.MEANVARIANCES;
-                }
-                else if(typeof(T) == typeof(DocEntityMeanVarianceValue))
-                {
-                    ret = DocConstantModelName.MEANVARIANCEVALUE;
-                }
-                else if(typeof(T) == typeof(DocEntityOutcome))
-                {
-                    ret = DocConstantModelName.OUTCOME;
-                }
-                else if(typeof(T) == typeof(DocEntityPackage))
-                {
-                    ret = DocConstantModelName.PACKAGE;
-                }
-                else if(typeof(T) == typeof(DocEntityPage))
-                {
-                    ret = DocConstantModelName.PAGE;
-                }
-                else if(typeof(T) == typeof(DocEntityProduct))
-                {
-                    ret = DocConstantModelName.PRODUCT;
-                }
-                else if(typeof(T) == typeof(DocEntityQueueChannel))
-                {
-                    ret = DocConstantModelName.QUEUECHANNEL;
-                }
-                else if(typeof(T) == typeof(DocEntityReleaseStatus))
-                {
-                    ret = DocConstantModelName.RELEASESTATUS;
-                }
-                else if(typeof(T) == typeof(DocEntityRole))
-                {
-                    ret = DocConstantModelName.ROLE;
-                }
-                else if(typeof(T) == typeof(DocEntityScope))
-                {
-                    ret = DocConstantModelName.SCOPE;
-                }
-                else if(typeof(T) == typeof(DocEntityStats))
-                {
-                    ret = DocConstantModelName.STATS;
-                }
-                else if(typeof(T) == typeof(DocEntityStatsRecord))
-                {
-                    ret = DocConstantModelName.STATSRECORD;
-                }
-                else if(typeof(T) == typeof(DocEntityStatsStudySet))
-                {
-                    ret = DocConstantModelName.STATSSTUDYSET;
-                }
-                else if(typeof(T) == typeof(DocEntityStudyDesign))
-                {
-                    ret = DocConstantModelName.STUDYDESIGN;
-                }
-                else if(typeof(T) == typeof(DocEntityStudyType))
-                {
-                    ret = DocConstantModelName.STUDYTYPE;
-                }
-                else if(typeof(T) == typeof(DocEntityTag))
-                {
-                    ret = DocConstantModelName.TAG;
-                }
-                else if(typeof(T) == typeof(DocEntityTeam))
-                {
-                    ret = DocConstantModelName.TEAM;
-                }
-                else if(typeof(T) == typeof(DocEntityTermCategory))
-                {
-                    ret = DocConstantModelName.TERMCATEGORY;
-                }
-                else if(typeof(T) == typeof(DocEntityTermMaster))
-                {
-                    ret = DocConstantModelName.TERMMASTER;
-                }
-                else if(typeof(T) == typeof(DocEntityTermSynonym))
-                {
-                    ret = DocConstantModelName.TERMSYNONYM;
-                }
-                else if(typeof(T) == typeof(DocEntityTimeCard))
-                {
-                    ret = DocConstantModelName.TIMECARD;
-                }
-                else if(typeof(T) == typeof(DocEntityTimePoint))
-                {
-                    ret = DocConstantModelName.TIMEPOINT;
-                }
-                else if(typeof(T) == typeof(DocEntityUnitConversionRules))
-                {
-                    ret = DocConstantModelName.UNITCONVERSIONRULES;
-                }
-                else if(typeof(T) == typeof(DocEntityUnitOfMeasure))
-                {
-                    ret = DocConstantModelName.UNITOFMEASURE;
-                }
-                else if(typeof(T) == typeof(DocEntityUnits))
-                {
-                    ret = DocConstantModelName.UNITS;
-                }
-                else if(typeof(T) == typeof(DocEntityUnitValue))
-                {
-                    ret = DocConstantModelName.UNITVALUE;
-                }
-                else if(typeof(T) == typeof(DocEntityUpdate))
-                {
-                    ret = DocConstantModelName.UPDATE;
-                }
-                else if(typeof(T) == typeof(DocEntityUser))
-                {
-                    ret = DocConstantModelName.USER;
-                }
-                else if(typeof(T) == typeof(DocEntityUserRequest))
-                {
-                    ret = DocConstantModelName.USERREQUEST;
-                }
-                else if(typeof(T) == typeof(DocEntityUserSession))
-                {
-                    ret = DocConstantModelName.USERSESSION;
-                }
-                else if(typeof(T) == typeof(DocEntityUserType))
-                {
-                    ret = DocConstantModelName.USERTYPE;
-                }
-                else if(typeof(T) == typeof(DocEntityValueType))
-                {
-                    ret = DocConstantModelName.VALUETYPE;
-                }
-                else if(typeof(T) == typeof(DocEntityVariableInstance))
-                {
-                    ret = DocConstantModelName.VARIABLEINSTANCE;
-                }
-                else if(typeof(T) == typeof(DocEntityVariableRule))
-                {
-                    ret = DocConstantModelName.VARIABLERULE;
-                }
-                else if(typeof(T) == typeof(DocEntityWorkflow))
-                {
-                    ret = DocConstantModelName.WORKFLOW;
-                }
-                else if(typeof(T) == typeof(DocEntityWorkflowComment))
-                {
-                    ret = DocConstantModelName.WORKFLOWCOMMENT;
-                }
-                else if(typeof(T) == typeof(DocEntityWorkflowTask))
-                {
-                    ret = DocConstantModelName.WORKFLOWTASK;
-                }
+            if (typeof(T) == typeof(DocEntityApp))
+            {
+                ret = DocConstantModelName.APP;
+            }
+            else if (typeof(T) == typeof(DocEntityAttribute))
+            {
+                ret = DocConstantModelName.ATTRIBUTE;
+            }
+            else if (typeof(T) == typeof(DocEntityAttributeCategory))
+            {
+                ret = DocConstantModelName.ATTRIBUTECATEGORY;
+            }
+            else if (typeof(T) == typeof(DocEntityAttributeInterval))
+            {
+                ret = DocConstantModelName.ATTRIBUTEINTERVAL;
+            }
+            else if (typeof(T) == typeof(DocEntityAuditDelta))
+            {
+                ret = DocConstantModelName.AUDITDELTA;
+            }
+            else if (typeof(T) == typeof(DocEntityAuditRecord))
+            {
+                ret = DocConstantModelName.AUDITRECORD;
+            }
+            else if (typeof(T) == typeof(DocEntityBackgroundTask))
+            {
+                ret = DocConstantModelName.BACKGROUNDTASK;
+            }
+            else if (typeof(T) == typeof(DocEntityBackgroundTaskHistory))
+            {
+                ret = DocConstantModelName.BACKGROUNDTASKHISTORY;
+            }
+            else if (typeof(T) == typeof(DocEntityBackgroundTaskItem))
+            {
+                ret = DocConstantModelName.BACKGROUNDTASKITEM;
+            }
+            else if (typeof(T) == typeof(DocEntityBroadcast))
+            {
+                ret = DocConstantModelName.BROADCAST;
+            }
+            else if (typeof(T) == typeof(DocEntityCharacteristic))
+            {
+                ret = DocConstantModelName.CHARACTERISTIC;
+            }
+            else if (typeof(T) == typeof(DocEntityClient))
+            {
+                ret = DocConstantModelName.CLIENT;
+            }
+            else if (typeof(T) == typeof(DocEntityComparator))
+            {
+                ret = DocConstantModelName.COMPARATOR;
+            }
+            else if (typeof(T) == typeof(DocEntityDatabaseVersion))
+            {
+                ret = DocConstantModelName.DATABASEVERSION;
+            }
+            else if (typeof(T) == typeof(DocEntityDateTime))
+            {
+                ret = DocConstantModelName.DATETIME;
+            }
+            else if (typeof(T) == typeof(DocEntityDefault))
+            {
+                ret = DocConstantModelName.DEFAULT;
+            }
+            else if (typeof(T) == typeof(DocEntityDivision))
+            {
+                ret = DocConstantModelName.DIVISION;
+            }
+            else if (typeof(T) == typeof(DocEntityDocument))
+            {
+                ret = DocConstantModelName.DOCUMENT;
+            }
+            else if (typeof(T) == typeof(DocEntityDocumentAttribute))
+            {
+                ret = DocConstantModelName.DOCUMENTATTRIBUTE;
+            }
+            else if (typeof(T) == typeof(DocEntityDocumentSet))
+            {
+                ret = DocConstantModelName.DOCUMENTSET;
+            }
+            else if (typeof(T) == typeof(DocEntityDocumentSetHistory))
+            {
+                ret = DocConstantModelName.DOCUMENTSETHISTORY;
+            }
+            else if (typeof(T) == typeof(DocEntityEvent))
+            {
+                ret = DocConstantModelName.EVENT;
+            }
+            else if (typeof(T) == typeof(DocEntityFeatureSet))
+            {
+                ret = DocConstantModelName.FEATURESET;
+            }
+            else if (typeof(T) == typeof(DocEntityForeignKey))
+            {
+                ret = DocConstantModelName.FOREIGNKEY;
+            }
+            else if (typeof(T) == typeof(DocEntityGlossary))
+            {
+                ret = DocConstantModelName.GLOSSARY;
+            }
+            else if (typeof(T) == typeof(DocEntityHelp))
+            {
+                ret = DocConstantModelName.HELP;
+            }
+            else if (typeof(T) == typeof(DocEntityHistory))
+            {
+                ret = DocConstantModelName.HISTORY;
+            }
+            else if (typeof(T) == typeof(DocEntityImpersonation))
+            {
+                ret = DocConstantModelName.IMPERSONATION;
+            }
+            else if (typeof(T) == typeof(DocEntityImportData))
+            {
+                ret = DocConstantModelName.IMPORTDATA;
+            }
+            else if (typeof(T) == typeof(DocEntityInterval))
+            {
+                ret = DocConstantModelName.INTERVAL;
+            }
+            else if (typeof(T) == typeof(DocEntityIntervention))
+            {
+                ret = DocConstantModelName.INTERVENTION;
+            }
+            else if (typeof(T) == typeof(DocEntityJctAttributeCategoryAttributeDocumentSet))
+            {
+                ret = DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET;
+            }
+            else if (typeof(T) == typeof(DocEntityJunction))
+            {
+                ret = DocConstantModelName.JUNCTION;
+            }
+            else if (typeof(T) == typeof(DocEntityLocale))
+            {
+                ret = DocConstantModelName.LOCALE;
+            }
+            else if (typeof(T) == typeof(DocEntityLocaleLookup))
+            {
+                ret = DocConstantModelName.LOCALELOOKUP;
+            }
+            else if (typeof(T) == typeof(DocEntityLookupCategory))
+            {
+                ret = DocConstantModelName.LOOKUPCATEGORY;
+            }
+            else if (typeof(T) == typeof(DocEntityLookupTable))
+            {
+                ret = DocConstantModelName.LOOKUPTABLE;
+            }
+            else if (typeof(T) == typeof(DocEntityLookupTableBinding))
+            {
+                ret = DocConstantModelName.LOOKUPTABLEBINDING;
+            }
+            else if (typeof(T) == typeof(DocEntityLookupTableEnum))
+            {
+                ret = DocConstantModelName.LOOKUPTABLEENUM;
+            }
+            else if (typeof(T) == typeof(DocEntityMeanRanges))
+            {
+                ret = DocConstantModelName.MEANRANGES;
+            }
+            else if (typeof(T) == typeof(DocEntityMeanRangeValue))
+            {
+                ret = DocConstantModelName.MEANRANGEVALUE;
+            }
+            else if (typeof(T) == typeof(DocEntityMeanVariances))
+            {
+                ret = DocConstantModelName.MEANVARIANCES;
+            }
+            else if (typeof(T) == typeof(DocEntityMeanVarianceValue))
+            {
+                ret = DocConstantModelName.MEANVARIANCEVALUE;
+            }
+            else if (typeof(T) == typeof(DocEntityOutcome))
+            {
+                ret = DocConstantModelName.OUTCOME;
+            }
+            else if (typeof(T) == typeof(DocEntityPackage))
+            {
+                ret = DocConstantModelName.PACKAGE;
+            }
+            else if (typeof(T) == typeof(DocEntityPage))
+            {
+                ret = DocConstantModelName.PAGE;
+            }
+            else if (typeof(T) == typeof(DocEntityProject))
+            {
+                ret = DocConstantModelName.PROJECT;
+            }
+            else if (typeof(T) == typeof(DocEntityQueueChannel))
+            {
+                ret = DocConstantModelName.QUEUECHANNEL;
+            }
+            else if (typeof(T) == typeof(DocEntityReleaseStatus))
+            {
+                ret = DocConstantModelName.RELEASESTATUS;
+            }
+            else if (typeof(T) == typeof(DocEntityRole))
+            {
+                ret = DocConstantModelName.ROLE;
+            }
+            else if (typeof(T) == typeof(DocEntityScope))
+            {
+                ret = DocConstantModelName.SCOPE;
+            }
+            else if (typeof(T) == typeof(DocEntityStats))
+            {
+                ret = DocConstantModelName.STATS;
+            }
+            else if (typeof(T) == typeof(DocEntityStatsRecord))
+            {
+                ret = DocConstantModelName.STATSRECORD;
+            }
+            else if (typeof(T) == typeof(DocEntityStatsStudySet))
+            {
+                ret = DocConstantModelName.STATSSTUDYSET;
+            }
+            else if (typeof(T) == typeof(DocEntityStudyDesign))
+            {
+                ret = DocConstantModelName.STUDYDESIGN;
+            }
+            else if (typeof(T) == typeof(DocEntityStudyType))
+            {
+                ret = DocConstantModelName.STUDYTYPE;
+            }
+            else if (typeof(T) == typeof(DocEntityTag))
+            {
+                ret = DocConstantModelName.TAG;
+            }
+            else if (typeof(T) == typeof(DocEntityTeam))
+            {
+                ret = DocConstantModelName.TEAM;
+            }
+            else if (typeof(T) == typeof(DocEntityTermCategory))
+            {
+                ret = DocConstantModelName.TERMCATEGORY;
+            }
+            else if (typeof(T) == typeof(DocEntityTermMaster))
+            {
+                ret = DocConstantModelName.TERMMASTER;
+            }
+            else if (typeof(T) == typeof(DocEntityTermSynonym))
+            {
+                ret = DocConstantModelName.TERMSYNONYM;
+            }
+            else if (typeof(T) == typeof(DocEntityTimeCard))
+            {
+                ret = DocConstantModelName.TIMECARD;
+            }
+            else if (typeof(T) == typeof(DocEntityTimePoint))
+            {
+                ret = DocConstantModelName.TIMEPOINT;
+            }
+            else if (typeof(T) == typeof(DocEntityUnitConversionRules))
+            {
+                ret = DocConstantModelName.UNITCONVERSIONRULES;
+            }
+            else if (typeof(T) == typeof(DocEntityUnitOfMeasure))
+            {
+                ret = DocConstantModelName.UNITOFMEASURE;
+            }
+            else if (typeof(T) == typeof(DocEntityUnits))
+            {
+                ret = DocConstantModelName.UNITS;
+            }
+            else if (typeof(T) == typeof(DocEntityUnitValue))
+            {
+                ret = DocConstantModelName.UNITVALUE;
+            }
+            else if (typeof(T) == typeof(DocEntityUpdate))
+            {
+                ret = DocConstantModelName.UPDATE;
+            }
+            else if (typeof(T) == typeof(DocEntityUser))
+            {
+                ret = DocConstantModelName.USER;
+            }
+            else if (typeof(T) == typeof(DocEntityUserRequest))
+            {
+                ret = DocConstantModelName.USERREQUEST;
+            }
+            else if (typeof(T) == typeof(DocEntityUserSession))
+            {
+                ret = DocConstantModelName.USERSESSION;
+            }
+            else if (typeof(T) == typeof(DocEntityUserType))
+            {
+                ret = DocConstantModelName.USERTYPE;
+            }
+            else if (typeof(T) == typeof(DocEntityValueType))
+            {
+                ret = DocConstantModelName.VALUETYPE;
+            }
+            else if (typeof(T) == typeof(DocEntityVariableInstance))
+            {
+                ret = DocConstantModelName.VARIABLEINSTANCE;
+            }
+            else if (typeof(T) == typeof(DocEntityVariableRule))
+            {
+                ret = DocConstantModelName.VARIABLERULE;
+            }
+            else if (typeof(T) == typeof(DocEntityWorkflow))
+            {
+                ret = DocConstantModelName.WORKFLOW;
+            }
+            else if (typeof(T) == typeof(DocEntityWorkflowComment))
+            {
+                ret = DocConstantModelName.WORKFLOWCOMMENT;
+            }
+            else if (typeof(T) == typeof(DocEntityWorkflowTask))
+            {
+                ret = DocConstantModelName.WORKFLOWTASK;
+            }
             return ret;
         }
 
         #endregion
-        
+
         #region Create Row
 
         public static T MakeEntity<T>(Session session) where T : DocEntityBase, new()
         {
             var model = GetEnumModelName<T>();
-            return (T) MakeEntity(session, model);
+            return (T)MakeEntity(session, model);
         }
 
         public static IDocEntity MakeEntity(Session session, DocConstantModelName modelName)
         {
             DocEntityBase ret;
 
-            switch(modelName)
+            switch (modelName)
             {
                 //Cannot directly instance these types
                 case DocConstantModelName.ENTITY:
@@ -503,8 +503,8 @@ namespace Services.Schema
                 case DocConstantModelName.PAGE:
                     ret = new DocEntityPage(session);
                     break;
-                case DocConstantModelName.PRODUCT:
-                    ret = new DocEntityProduct(session);
+                case DocConstantModelName.PROJECT:
+                    ret = new DocEntityProject(session);
                     break;
                 case DocConstantModelName.QUEUECHANNEL:
                     ret = new DocEntityQueueChannel(session);
@@ -612,14 +612,14 @@ namespace Services.Schema
         public static T GetEntity<T>(int id, DocConstantModelName model = null) where T : DocEntityBase, new()
         {
             model = model ?? GetEnumModelName<T>();
-            return (T) GetEntity(id, model);
+            return (T)GetEntity(id, model);
         }
 
         public static IDocEntity GetEntity(int id, DocConstantModelName modelName)
         {
             DocEntityBase ret;
 
-            switch(modelName)
+            switch (modelName)
             {
                 case DocConstantModelName.APP:
                     ret = DocEntityApp.GetApp(id);
@@ -759,8 +759,8 @@ namespace Services.Schema
                 case DocConstantModelName.PAGE:
                     ret = DocEntityPage.GetPage(id);
                     break;
-                case DocConstantModelName.PRODUCT:
-                    ret = DocEntityProduct.GetProduct(id);
+                case DocConstantModelName.PROJECT:
+                    ret = DocEntityProject.GetProject(id);
                     break;
                 case DocConstantModelName.QUEUECHANNEL:
                     ret = DocEntityQueueChannel.GetQueueChannel(id);
@@ -860,403 +860,403 @@ namespace Services.Schema
             }
             return ret;
         }
-        
+
         #endregion Fetch Row
 
         public static List<Reference> GetReferences<T>(Session session, DocEntitySet<T> entities) where T : DocEntityBase, IDocEntity, new()
         {
             List<Reference> ret;
             var modelName = GetEnumModelName<T>();
-            switch(modelName)
+            switch (modelName)
             {
                 case DocConstantModelName.APP:
                     {
-                       ret = entities.Cast<DocEntityApp>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityApp>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.ATTRIBUTE:
                     {
-                       ret = entities.Cast<DocEntityAttribute>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityAttribute>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.ATTRIBUTECATEGORY:
                     {
-                       ret = entities.Cast<DocEntityAttributeCategory>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityAttributeCategory>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.ATTRIBUTEINTERVAL:
                     {
-                       ret = entities.Cast<DocEntityAttributeInterval>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityAttributeInterval>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.AUDITDELTA:
                     {
-                       ret = entities.Cast<DocEntityAuditDelta>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityAuditDelta>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.AUDITRECORD:
                     {
-                       ret = entities.Cast<DocEntityAuditRecord>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityAuditRecord>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.BACKGROUNDTASK:
                     {
-                       ret = entities.Cast<DocEntityBackgroundTask>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityBackgroundTask>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.BACKGROUNDTASKHISTORY:
                     {
-                       ret = entities.Cast<DocEntityBackgroundTaskHistory>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityBackgroundTaskHistory>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.BACKGROUNDTASKITEM:
                     {
-                       ret = entities.Cast<DocEntityBackgroundTaskItem>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityBackgroundTaskItem>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.BROADCAST:
                     {
-                       ret = entities.Cast<DocEntityBroadcast>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityBroadcast>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.CHARACTERISTIC:
                     {
-                       ret = entities.Cast<DocEntityCharacteristic>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityCharacteristic>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.CLIENT:
                     {
-                       ret = entities.Cast<DocEntityClient>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityClient>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.COMPARATOR:
                     {
-                       ret = entities.Cast<DocEntityComparator>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityComparator>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DATABASEVERSION:
                     {
-                       ret = entities.Cast<DocEntityDatabaseVersion>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityDatabaseVersion>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DATETIME:
                     {
-                       ret = entities.Cast<DocEntityDateTime>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityDateTime>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DEFAULT:
                     {
-                       ret = entities.Cast<DocEntityDefault>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityDefault>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DIVISION:
                     {
-                       ret = entities.Cast<DocEntityDivision>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityDivision>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DOCUMENT:
                     {
-                       ret = entities.Cast<DocEntityDocument>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityDocument>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DOCUMENTATTRIBUTE:
                     {
-                       ret = entities.Cast<DocEntityDocumentAttribute>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityDocumentAttribute>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DOCUMENTSET:
                     {
-                       ret = entities.Cast<DocEntityDocumentSet>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityDocumentSet>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.DOCUMENTSETHISTORY:
                     {
-                       ret = entities.Cast<DocEntityDocumentSetHistory>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityDocumentSetHistory>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.EVENT:
                     {
-                       ret = entities.Cast<DocEntityEvent>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityEvent>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.FEATURESET:
                     {
-                       ret = entities.Cast<DocEntityFeatureSet>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityFeatureSet>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.FOREIGNKEY:
                     {
-                       ret = entities.Cast<DocEntityForeignKey>().Select(e => new Reference() { Id = e.Id, Name = e.KeyName, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityForeignKey>().Select(e => new Reference() { Id = e.Id, Name = e.KeyName, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.GLOSSARY:
                     {
-                       ret = entities.Cast<DocEntityGlossary>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityGlossary>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.HELP:
                     {
-                       ret = entities.Cast<DocEntityHelp>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityHelp>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.HISTORY:
                     {
-                       ret = entities.Cast<DocEntityHistory>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityHistory>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.IMPERSONATION:
                     {
-                       ret = entities.Cast<DocEntityImpersonation>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityImpersonation>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.IMPORTDATA:
                     {
-                       ret = entities.Cast<DocEntityImportData>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityImportData>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.INTERVAL:
                     {
-                       ret = entities.Cast<DocEntityInterval>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityInterval>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.INTERVENTION:
                     {
-                       ret = entities.Cast<DocEntityIntervention>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityIntervention>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET:
                     {
-                       ret = entities.Cast<DocEntityJctAttributeCategoryAttributeDocumentSet>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityJctAttributeCategoryAttributeDocumentSet>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.JUNCTION:
                     {
-                       ret = entities.Cast<DocEntityJunction>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityJunction>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.LOCALE:
                     {
-                       ret = entities.Cast<DocEntityLocale>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityLocale>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.LOCALELOOKUP:
                     {
-                       ret = entities.Cast<DocEntityLocaleLookup>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityLocaleLookup>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.LOOKUPCATEGORY:
                     {
-                       ret = entities.Cast<DocEntityLookupCategory>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityLookupCategory>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.LOOKUPTABLE:
                     {
-                       ret = entities.Cast<DocEntityLookupTable>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityLookupTable>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.LOOKUPTABLEBINDING:
                     {
-                       ret = entities.Cast<DocEntityLookupTableBinding>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityLookupTableBinding>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.LOOKUPTABLEENUM:
                     {
-                       ret = entities.Cast<DocEntityLookupTableEnum>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityLookupTableEnum>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.MEANRANGES:
                     {
-                       ret = entities.Cast<DocEntityMeanRanges>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityMeanRanges>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.MEANRANGEVALUE:
                     {
-                       ret = entities.Cast<DocEntityMeanRangeValue>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityMeanRangeValue>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.MEANVARIANCES:
                     {
-                       ret = entities.Cast<DocEntityMeanVariances>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityMeanVariances>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.MEANVARIANCEVALUE:
                     {
-                       ret = entities.Cast<DocEntityMeanVarianceValue>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityMeanVarianceValue>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.OUTCOME:
                     {
-                       ret = entities.Cast<DocEntityOutcome>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityOutcome>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.PACKAGE:
                     {
-                       ret = entities.Cast<DocEntityPackage>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityPackage>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.PAGE:
                     {
-                       ret = entities.Cast<DocEntityPage>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityPage>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
-                case DocConstantModelName.PRODUCT:
+                case DocConstantModelName.PROJECT:
                     {
-                       ret = entities.Cast<DocEntityProduct>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityProject>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.QUEUECHANNEL:
                     {
-                       ret = entities.Cast<DocEntityQueueChannel>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityQueueChannel>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.RELEASESTATUS:
                     {
-                       ret = entities.Cast<DocEntityReleaseStatus>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityReleaseStatus>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.ROLE:
                     {
-                       ret = entities.Cast<DocEntityRole>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityRole>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.SCOPE:
                     {
-                       ret = entities.Cast<DocEntityScope>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityScope>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.STATS:
                     {
-                       ret = entities.Cast<DocEntityStats>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityStats>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.STATSRECORD:
                     {
-                       ret = entities.Cast<DocEntityStatsRecord>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityStatsRecord>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.STATSSTUDYSET:
                     {
-                       ret = entities.Cast<DocEntityStatsStudySet>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityStatsStudySet>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.STUDYDESIGN:
                     {
-                       ret = entities.Cast<DocEntityStudyDesign>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityStudyDesign>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.STUDYTYPE:
                     {
-                       ret = entities.Cast<DocEntityStudyType>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityStudyType>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.TAG:
                     {
-                       ret = entities.Cast<DocEntityTag>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityTag>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.TEAM:
                     {
-                       ret = entities.Cast<DocEntityTeam>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityTeam>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.TERMCATEGORY:
                     {
-                       ret = entities.Cast<DocEntityTermCategory>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityTermCategory>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.TERMMASTER:
                     {
-                       ret = entities.Cast<DocEntityTermMaster>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityTermMaster>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.TERMSYNONYM:
                     {
-                       ret = entities.Cast<DocEntityTermSynonym>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityTermSynonym>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.TIMECARD:
                     {
-                       ret = entities.Cast<DocEntityTimeCard>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityTimeCard>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.TIMEPOINT:
                     {
-                       ret = entities.Cast<DocEntityTimePoint>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityTimePoint>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.UNITCONVERSIONRULES:
                     {
-                       ret = entities.Cast<DocEntityUnitConversionRules>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUnitConversionRules>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.UNITOFMEASURE:
                     {
-                       ret = entities.Cast<DocEntityUnitOfMeasure>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUnitOfMeasure>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.UNITS:
                     {
-                       ret = entities.Cast<DocEntityUnits>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUnits>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.UNITVALUE:
                     {
-                       ret = entities.Cast<DocEntityUnitValue>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUnitValue>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.UPDATE:
                     {
-                       ret = entities.Cast<DocEntityUpdate>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUpdate>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.USER:
                     {
-                       ret = entities.Cast<DocEntityUser>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUser>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.USERREQUEST:
                     {
-                       ret = entities.Cast<DocEntityUserRequest>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUserRequest>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.USERSESSION:
                     {
-                       ret = entities.Cast<DocEntityUserSession>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUserSession>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.USERTYPE:
                     {
-                       ret = entities.Cast<DocEntityUserType>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityUserType>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.VALUETYPE:
                     {
-                       ret = entities.Cast<DocEntityValueType>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityValueType>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.VARIABLEINSTANCE:
                     {
-                       ret = entities.Cast<DocEntityVariableInstance>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityVariableInstance>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.VARIABLERULE:
                     {
-                       ret = entities.Cast<DocEntityVariableRule>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityVariableRule>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.WORKFLOW:
                     {
-                       ret = entities.Cast<DocEntityWorkflow>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityWorkflow>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.WORKFLOWCOMMENT:
                     {
-                       ret = entities.Cast<DocEntityWorkflowComment>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityWorkflowComment>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.WORKFLOWTASK:
                     {
-                       ret = entities.Cast<DocEntityWorkflowTask>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
+                        ret = entities.Cast<DocEntityWorkflowTask>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 default:

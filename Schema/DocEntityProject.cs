@@ -8,42 +8,33 @@
 
 using AutoMapper;
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Dynamic;
-using System.Net;
-using System.Runtime.Serialization;
-
 using Services.Core;
 using Services.Db;
 using Services.Dto;
 using Services.Enums;
-using Services.Models;
 
 using ServiceStack;
 
-using Typed.Notifications;
-using Typed.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic;
+using System.Net;
 
 using Xtensive.Orm;
 using Xtensive.Orm.Model;
 
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-
 namespace Services.Schema
 {
-    [TableMapping(DocConstantModelName.PRODUCT)]
-    public partial class DocEntityProduct : DocEntityBase
+    [TableMapping(DocConstantModelName.PROJECT)]
+    public partial class DocEntityProject : DocEntityBase
     {
-        private const string PRODUCT_CACHE = "ProductCache";
+        private const string PROJECT_CACHE = "ProjectCache";
 
         #region Constructor
-        public DocEntityProduct(Session session) : base(session) {}
+        public DocEntityProject(Session session) : base(session) { }
 
-        public DocEntityProduct() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityProject() : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
         #endregion Constructor
 
         #region VisibleFields
@@ -52,14 +43,14 @@ namespace Services.Schema
         {
             get
             {
-                if(null == __vf)
+                if (null == __vf)
                 {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Product());
+                    __vf = DocWebSession.GetTypeVisibleFields(new Project());
                 }
                 return __vf;
             }
         }
-        
+
         public bool IsPropertyVisible(string propertyName)
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
@@ -67,40 +58,40 @@ namespace Services.Schema
         #endregion VisibleFields
 
         #region Static Members
-        public static DocEntityProduct GetProduct(Reference reference)
+        public static DocEntityProject GetProject(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetProduct(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? GetProject(reference.Id) : null;
         }
 
-        public static DocEntityProduct GetProduct(int? primaryKey)
+        public static DocEntityProject GetProject(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
-            if(null == primaryKey) return null;
-            var ret = DocEntityThreadCache<DocEntityProduct>.GetFromCache(primaryKey, PRODUCT_CACHE);
-            if(null == ret)
+            if (null == primaryKey) return null;
+            var ret = DocEntityThreadCache<DocEntityProject>.GetFromCache(primaryKey, PROJECT_CACHE);
+            if (null == ret)
             {
-                ret = query.SelectAll<DocEntityProduct>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
-                if(null != ret) 
+                ret = query.SelectAll<DocEntityProject>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
+                if (null != ret)
                 {
-                    DocEntityThreadCache<DocEntityProduct>.UpdateCache(ret.Id, ret, PRODUCT_CACHE);
-                    DocEntityThreadCache<DocEntityProduct>.UpdateCache(ret.Hash, ret, PRODUCT_CACHE);
+                    DocEntityThreadCache<DocEntityProject>.UpdateCache(ret.Id, ret, PROJECT_CACHE);
+                    DocEntityThreadCache<DocEntityProject>.UpdateCache(ret.Hash, ret, PROJECT_CACHE);
                 }
             }
             return ret;
         }
 
-        public static DocEntityProduct GetProduct(Guid hash)
+        public static DocEntityProject GetProject(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
-            var ret = DocEntityThreadCache<DocEntityProduct>.GetFromCache(hash, PRODUCT_CACHE);
-            
-            if(null == ret)
+            var ret = DocEntityThreadCache<DocEntityProject>.GetFromCache(hash, PROJECT_CACHE);
+
+            if (null == ret)
             {
-                ret = query.SelectAll<DocEntityProduct>().Where(e => e.Hash == hash).FirstOrDefault();
-                if(null != ret) 
+                ret = query.SelectAll<DocEntityProject>().Where(e => e.Hash == hash).FirstOrDefault();
+                if (null != ret)
                 {
-                    DocEntityThreadCache<DocEntityProduct>.UpdateCache(ret.Id, ret, PRODUCT_CACHE);
-                    DocEntityThreadCache<DocEntityProduct>.UpdateCache(ret.Hash, ret, PRODUCT_CACHE);
+                    DocEntityThreadCache<DocEntityProject>.UpdateCache(ret.Id, ret, PROJECT_CACHE);
+                    DocEntityThreadCache<DocEntityProject>.UpdateCache(ret.Hash, ret, PROJECT_CACHE);
                 }
             }
             return ret;
@@ -110,8 +101,8 @@ namespace Services.Schema
         #region Properties
         [Field()]
         [FieldMapping(nameof(Children))]
-        [Association( PairTo = nameof( Product.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
-        public DocEntitySet<DocEntityProduct> Children { get; private set; }
+        [Association(PairTo = nameof(Project.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        public DocEntitySet<DocEntityProject> Children { get; private set; }
 
 
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
@@ -186,7 +177,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Parent))]
-        public DocEntityProduct Parent { get; set; }
+        public DocEntityProject Parent { get; set; }
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
 
@@ -213,7 +204,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(TimeCards))]
-        [Association( PairTo = nameof(TimeCard.Product), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(TimeCard.Project), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTimeCard> TimeCards { get; private set; }
 
 
@@ -240,9 +231,9 @@ namespace Services.Schema
         public override bool Locked { get; set; }
         private bool? _isNewlyLocked;
         private bool? _isModified;
-        
+
         private List<string> __editableFields;
-        private List<string> _editableFields 
+        private List<string> _editableFields
         {
             get
             {
@@ -256,14 +247,14 @@ namespace Services.Schema
         #endregion Properties
 
         #region Overrides of DocEntity
-        public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.PRODUCT;
+        public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.PROJECT;
 
         public override DocConstantModelName ModelName => MODEL_NAME;
 
-        public const string CACHE_KEY_PREFIX = "FindProducts";
+        public const string CACHE_KEY_PREFIX = "FindProjects";
 
 
-        public override T ToModel<T>() =>  null;
+        public override T ToModel<T>() => null;
 
         #endregion Overrides of DocEntity
 
@@ -294,7 +285,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnSetFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
-            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue)) 
+            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue))
             {
                 _isNewlyLocked = true;
             }
@@ -324,9 +315,9 @@ namespace Services.Schema
             {
                 Children.Clear(); //foreach thing in Children en.Remove();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new DocException("Failed to delete Product in Children delete", ex);
+                throw new DocException("Failed to delete Project in Children delete", ex);
             }
             base.OnRemoving();
         }
@@ -350,7 +341,7 @@ namespace Services.Schema
         {
             if (false == ValidationMessage.IsValid)
             {
-                throw new HttpError(HttpStatusCode.Conflict, $"Product requires: {ValidationMessage.Message}.");
+                throw new HttpError(HttpStatusCode.Conflict, $"Project requires: {ValidationMessage.Message}.");
             }
 
             base.OnValidate();
@@ -365,7 +356,7 @@ namespace Services.Schema
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
             var hash = GetGuid();
-            if(Hash != hash)
+            if (Hash != hash)
                 Hash = hash;
 
             DatabaseName = DatabaseName?.TrimAndPruneSpaces();
@@ -396,7 +387,7 @@ namespace Services.Schema
 
             _OnSaveChanges(permission);
 
-            if(!_validated)
+            if (!_validated)
                 OnValidate();
 
             _OnSetGestalt();
@@ -404,7 +395,7 @@ namespace Services.Schema
             //Only do permissions checks AFTER validation has finished to get better errors
             //The transaction still hasn't completed, so if we throw then the rollback will work as expected
             permission = permission ?? DocConstantPermission.EDIT;
-            if(!DocPermissionFactory.HasPermission(this, null, permission))
+            if (!DocPermissionFactory.HasPermission(this, null, permission))
             {
                 throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to {permission} this {ModelName}.");
             }
@@ -416,7 +407,7 @@ namespace Services.Schema
         {
             var ret = DocPermissionFactory.HasPermission(this, null, DocConstantPermission.UNLOCK);
             _OnUnlock();
-            if (!ret) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to unlock this {nameof(Product)}");
+            if (!ret) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to unlock this {nameof(Project)}");
             if (ret)
             {
                 _isNewlyLocked = true;
@@ -428,7 +419,7 @@ namespace Services.Schema
         public void FlushCache()
         {
             _OnFlushCache();
-            DocCacheClient.RemoveSearch("Product");
+            DocCacheClient.RemoveSearch("Project");
             DocCacheClient.RemoveById(Id);
         }
         #endregion Entity overrides
@@ -441,7 +432,7 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(null != Status && Status?.Enum?.Name != "ForeignKeyStatus")
+                if (null != Status && Status?.Enum?.Name != "ForeignKeyStatus")
                 {
                     isValid = false;
                     message += " Status is a " + Status?.Enum?.Name + ", but must be a ForeignKeyStatus.";
@@ -454,10 +445,10 @@ namespace Services.Schema
         #endregion Validation
 
         #region Hash
-        
-        public static Guid GetGuid(DocEntityProduct thing)
+
+        public static Guid GetGuid(DocEntityProject thing)
         {
-            if(thing == null) return Guid.Empty;
+            if (thing == null) return Guid.Empty;
             return thing.GetGuid();
         }
 
@@ -480,57 +471,57 @@ namespace Services.Schema
             return _ToReference(ret);
         }
 
-        public Product ToDto() => Mapper.Map<DocEntityProduct, Product>(this);
+        public Project ToDto() => Mapper.Map<DocEntityProject, Project>(this);
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }
 
-    public partial class ProductMapper : Profile
+    public partial class ProjectMapper : Profile
     {
-        private IMappingExpression<DocEntityProduct,Product> _EntityToDto;
-        private IMappingExpression<Product,DocEntityProduct> _DtoToEntity;
+        private IMappingExpression<DocEntityProject, Project> _EntityToDto;
+        private IMappingExpression<Project, DocEntityProject> _DtoToEntity;
 
-        public ProductMapper()
+        public ProjectMapper()
         {
-            CreateMap<DocEntitySet<DocEntityProduct>,List<Reference>>()
+            CreateMap<DocEntitySet<DocEntityProject>, List<Reference>>()
                 .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityProduct,Reference>()
+            CreateMap<DocEntityProject, Reference>()
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityProduct>()
+            CreateMap<Reference, DocEntityProject>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityProduct.GetProduct(c));
-            _EntityToDto = CreateMap<DocEntityProduct,Product>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, "Updated")))
-                .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.Children))))
-                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.ChildrenCount))))
-                .ForMember(dest => dest.Client, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.Client))))
-                .ForMember(dest => dest.ClientId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.ClientId))))
-                .ForMember(dest => dest.DatabaseDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.DatabaseDeadline))))
-                .ForMember(dest => dest.DatabaseName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.DatabaseName))))
-                .ForMember(dest => dest.Dataset, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.Dataset))))
-                .ForMember(dest => dest.DatasetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.DatasetId))))
-                .ForMember(dest => dest.DeliverableDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.DeliverableDeadline))))
-                .ForMember(dest => dest.FqId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.FqId))))
-                .ForMember(dest => dest.LegacyPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.LegacyPackageId))))
-                .ForMember(dest => dest.LibraryPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.LibraryPackageId))))
-                .ForMember(dest => dest.LibraryPackageName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.LibraryPackageName))))
-                .ForMember(dest => dest.Number, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.Number))))
-                .ForMember(dest => dest.OperationsDeliverable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.OperationsDeliverable))))
-                .ForMember(dest => dest.OpportunityId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.OpportunityId))))
-                .ForMember(dest => dest.OpportunityName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.OpportunityName))))
-                .ForMember(dest => dest.Parent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.Parent))))
-                .ForMember(dest => dest.ParentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.ParentId))))
-                .ForMember(dest => dest.PICO, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.PICO))))
-                .ForMember(dest => dest.ProjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.ProjectId))))
-                .ForMember(dest => dest.ProjectName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.ProjectName))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.Status))))
-                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.StatusId))))
-                .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.TimeCards))))
-                .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Product>(c, nameof(DocEntityProduct.TimeCardsCount))))
+                .ConstructUsing(c => DocEntityProject.GetProject(c));
+            _EntityToDto = CreateMap<DocEntityProject, Project>()
+                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, "Created")))
+                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, "Updated")))
+                .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Children))))
+                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ChildrenCount))))
+                .ForMember(dest => dest.Client, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Client))))
+                .ForMember(dest => dest.ClientId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ClientId))))
+                .ForMember(dest => dest.DatabaseDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DatabaseDeadline))))
+                .ForMember(dest => dest.DatabaseName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DatabaseName))))
+                .ForMember(dest => dest.Dataset, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Dataset))))
+                .ForMember(dest => dest.DatasetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DatasetId))))
+                .ForMember(dest => dest.DeliverableDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DeliverableDeadline))))
+                .ForMember(dest => dest.FqId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.FqId))))
+                .ForMember(dest => dest.LegacyPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LegacyPackageId))))
+                .ForMember(dest => dest.LibraryPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LibraryPackageId))))
+                .ForMember(dest => dest.LibraryPackageName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LibraryPackageName))))
+                .ForMember(dest => dest.Number, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Number))))
+                .ForMember(dest => dest.OperationsDeliverable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.OperationsDeliverable))))
+                .ForMember(dest => dest.OpportunityId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.OpportunityId))))
+                .ForMember(dest => dest.OpportunityName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.OpportunityName))))
+                .ForMember(dest => dest.Parent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Parent))))
+                .ForMember(dest => dest.ParentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ParentId))))
+                .ForMember(dest => dest.PICO, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.PICO))))
+                .ForMember(dest => dest.ProjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ProjectId))))
+                .ForMember(dest => dest.ProjectName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ProjectName))))
+                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Status))))
+                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.StatusId))))
+                .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCards))))
+                .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCardsCount))))
                 .MaxDepth(2);
-            _DtoToEntity = CreateMap<Product,DocEntityProduct>()
+            _DtoToEntity = CreateMap<Project, DocEntityProject>()
                 .MaxDepth(2);
             ApplyCustomMaps();
         }

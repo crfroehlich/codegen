@@ -6,52 +6,30 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using AutoMapper;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
-
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Security;
-using Typed.Settings;
 
 using ServiceStack;
-using ServiceStack.Text;
 
 using System;
-using System.Runtime.Serialization;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Net;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
-    public abstract partial class ProductBase : Dto<Product>
+    public abstract partial class ProjectBase : Dto<Project>
     {
-        public ProductBase() {}
+        public ProjectBase() { }
 
-        public ProductBase(int id) : this()
+        public ProjectBase(int id) : this()
         {
-            if(id > 0) Id = id;
+            if (id > 0) Id = id;
         }
 
-        public ProductBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
-        [ApiMember(Name = nameof(Children), Description = "Product", IsRequired = false)]
+        public ProjectBase(int? id) : this(DocConvert.ToInt(id)) { }
+
+        [ApiMember(Name = nameof(Children), Description = "Project", IsRequired = false)]
         public List<Reference> Children { get; set; }
         public int? ChildrenCount { get; set; }
 
@@ -112,9 +90,9 @@ namespace Services.Dto
         public string OpportunityName { get; set; }
 
 
-        [ApiMember(Name = nameof(Parent), Description = "Product", IsRequired = false)]
+        [ApiMember(Name = nameof(Parent), Description = "Project", IsRequired = false)]
         public Reference Parent { get; set; }
-        [ApiMember(Name = nameof(ParentId), Description = "Primary Key of Product", IsRequired = false)]
+        [ApiMember(Name = nameof(ParentId), Description = "Primary Key of Project", IsRequired = false)]
         public int? ParentId { get; set; }
 
 
@@ -131,7 +109,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
+        [ApiAllowableValues("Includes", Values = new string[] { @"Active", @"Archived", @"Inactive" })]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -144,20 +122,20 @@ namespace Services.Dto
 
     }
 
-    [Route("/product", "POST")]
-    [Route("/product/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Product : ProductBase, IReturn<Product>, IDto
+    [Route("/project", "POST")]
+    [Route("/project/{Id}", "GET, PATCH, PUT, DELETE")]
+    public partial class Project : ProjectBase, IReturn<Project>, IDto
     {
-        public Product()
+        public Project()
         {
             _Constructor();
         }
 
-        public Product(int? id) : base(DocConvert.ToInt(id)) {}
-        public Product(int id) : base(id) {}
-        
+        public Project(int? id) : base(DocConvert.ToInt(id)) { }
+        public Project(int id) : base(id) { }
+
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
             if (IgnoredVisibleFields.Matches(field, true)) return false;
@@ -165,17 +143,17 @@ namespace Services.Dto
             return ret;
         }
 
-        public static List<string> Fields => DocTools.Fields<Product>();
+        public static List<string> Fields => DocTools.Fields<Project>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LegacyPackageId),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(OpportunityId),nameof(OpportunityName),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(ProjectId),nameof(ProjectName),nameof(Status),nameof(StatusId),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] { nameof(Children), nameof(ChildrenCount), nameof(Client), nameof(ClientId), nameof(Created), nameof(CreatorId), nameof(DatabaseDeadline), nameof(DatabaseName), nameof(Dataset), nameof(DatasetId), nameof(DeliverableDeadline), nameof(FqId), nameof(Gestalt), nameof(LegacyPackageId), nameof(LibraryPackageId), nameof(LibraryPackageName), nameof(Locked), nameof(Number), nameof(OperationsDeliverable), nameof(OpportunityId), nameof(OpportunityName), nameof(Parent), nameof(ParentId), nameof(PICO), nameof(ProjectId), nameof(ProjectName), nameof(Status), nameof(StatusId), nameof(TimeCards), nameof(TimeCardsCount), nameof(Updated), nameof(VersionNo) })]
         public new List<string> VisibleFields
         {
             get
             {
-                if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if (null == this) return new List<string>();
+                if (null == _VisibleFields)
                 {
                     _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
@@ -184,8 +162,8 @@ namespace Services.Dto
             set
             {
                 var requested = value ?? new List<string>();
-                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Product>("Product",exists);
+                var exists = requested.Where(r => Fields.Any(f => DocTools.AreEqual(r, f))).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Project>("Project", exists);
             }
         }
 
@@ -196,12 +174,12 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
     }
-    
-    [Route("/Product/{Id}/copy", "POST")]
-    public partial class ProductCopy : Product {}
-    [Route("/product", "GET")]
-    [Route("/product/search", "GET, POST, DELETE")]
-    public partial class ProductSearch : Search<Product>
+
+    [Route("/Project/{Id}/copy", "POST")]
+    public partial class ProjectCopy : Project { }
+    [Route("/project", "GET")]
+    [Route("/project/search", "GET, POST, DELETE")]
+    public partial class ProjectSearch : Search<Project>
     {
         public List<int> ChildrenIds { get; set; }
         public Reference Client { get; set; }
@@ -230,55 +208,55 @@ namespace Services.Dto
         public string ProjectName { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
+        [ApiAllowableValues("Includes", Values = new string[] { @"Active", @"Archived", @"Inactive" })]
         public List<string> StatusNames { get; set; }
         public List<int> TimeCardsIds { get; set; }
     }
-    
-    public class ProductFullTextSearch
+
+    public class ProjectFullTextSearch
     {
-        private ProductSearch _request;
-        public ProductFullTextSearch(ProductSearch request) => _request = request;
-        
+        private ProjectSearch _request;
+        public ProjectFullTextSearch(ProjectSearch request) => _request = request;
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Updated))); }
-        
-        public bool doChildren { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Children))); }
-        public bool doClient { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Client))); }
-        public bool doDatabaseDeadline { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.DatabaseDeadline))); }
-        public bool doDatabaseName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.DatabaseName))); }
-        public bool doDataset { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Dataset))); }
-        public bool doDeliverableDeadline { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.DeliverableDeadline))); }
-        public bool doFqId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.FqId))); }
-        public bool doLegacyPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.LegacyPackageId))); }
-        public bool doLibraryPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.LibraryPackageId))); }
-        public bool doLibraryPackageName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.LibraryPackageName))); }
-        public bool doNumber { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Number))); }
-        public bool doOperationsDeliverable { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.OperationsDeliverable))); }
-        public bool doOpportunityId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.OpportunityId))); }
-        public bool doOpportunityName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.OpportunityName))); }
-        public bool doParent { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Parent))); }
-        public bool doPICO { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.PICO))); }
-        public bool doProjectId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.ProjectId))); }
-        public bool doProjectName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.ProjectName))); }
-        public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.Status))); }
-        public bool doTimeCards { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Product.TimeCards))); }
+        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Created))); }
+        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Updated))); }
+
+        public bool doChildren { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Children))); }
+        public bool doClient { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Client))); }
+        public bool doDatabaseDeadline { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.DatabaseDeadline))); }
+        public bool doDatabaseName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.DatabaseName))); }
+        public bool doDataset { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Dataset))); }
+        public bool doDeliverableDeadline { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.DeliverableDeadline))); }
+        public bool doFqId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.FqId))); }
+        public bool doLegacyPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.LegacyPackageId))); }
+        public bool doLibraryPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.LibraryPackageId))); }
+        public bool doLibraryPackageName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.LibraryPackageName))); }
+        public bool doNumber { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Number))); }
+        public bool doOperationsDeliverable { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.OperationsDeliverable))); }
+        public bool doOpportunityId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.OpportunityId))); }
+        public bool doOpportunityName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.OpportunityName))); }
+        public bool doParent { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Parent))); }
+        public bool doPICO { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.PICO))); }
+        public bool doProjectId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.ProjectId))); }
+        public bool doProjectName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.ProjectName))); }
+        public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Status))); }
+        public bool doTimeCards { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.TimeCards))); }
     }
 
-    [Route("/product/version", "GET, POST")]
-    public partial class ProductVersion : ProductSearch {}
+    [Route("/project/version", "GET, POST")]
+    public partial class ProjectVersion : ProjectSearch { }
 
-    [Route("/product/batch", "DELETE, PATCH, POST, PUT")]
-    public partial class ProductBatch : List<Product> { }
+    [Route("/project/batch", "DELETE, PATCH, POST, PUT")]
+    public partial class ProjectBatch : List<Project> { }
 
-    [Route("/product/{Id}/product", "GET, POST, DELETE")]
-    [Route("/product/{Id}/timecard", "GET, POST, DELETE")]
-    public class ProductJunction : Search<Product>
+    [Route("/project/{Id}/project", "GET, POST, DELETE")]
+    [Route("/project/{Id}/timecard", "GET, POST, DELETE")]
+    public class ProjectJunction : Search<Project>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
@@ -289,7 +267,7 @@ namespace Services.Dto
         }
 
 
-        public ProductJunction(int id, List<int> ids)
+        public ProjectJunction(int id, List<int> ids)
         {
             this.Id = id;
             this.Ids = ids;
@@ -297,9 +275,9 @@ namespace Services.Dto
     }
 
 
-    [Route("/product/{Id}/product/version", "GET")]
-    [Route("/product/{Id}/timecard/version", "GET")]
-    public class ProductJunctionVersion : IReturn<Version>
+    [Route("/project/{Id}/project/version", "GET")]
+    [Route("/project/{Id}/timecard/version", "GET")]
+    public class ProjectJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
@@ -309,8 +287,8 @@ namespace Services.Dto
             { return false; }
         }
     }
-    [Route("/admin/product/ids", "GET, POST")]
-    public class ProductIds
+    [Route("/admin/project/ids", "GET, POST")]
+    public class ProjectIds
     {
         public bool All { get; set; }
     }

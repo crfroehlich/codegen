@@ -8,11 +8,11 @@ namespace Services.Schema
     public class TypeMap
     {
         public int TypeId { get; set; }
-        
+
         public string SchemaName { get; set; }
-        
+
         public string TableName { get; set; }
-        
+
         public string ClassName { get; set; }
 
         public string DtoName { get; set; }
@@ -22,7 +22,7 @@ namespace Services.Schema
     {
         public static List<TypeMap> Maps { get; } = new List<TypeMap>
         {
-            new TypeMap() { SchemaName = typeof(DocEntityProduct).FullName, TypeId = 20135, TableName = DocConstantModelName.PRODUCT, ClassName = "Product", DtoName = nameof(Product) },
+            new TypeMap() { SchemaName = typeof(DocEntityProject).FullName, TypeId = 20135, TableName = DocConstantModelName.PROJECT, ClassName = "Project", DtoName = nameof(Project) },
             new TypeMap() { SchemaName = typeof(DocEntityComparator).FullName, TypeId = 20035, TableName = DocConstantModelName.COMPARATOR, ClassName = "Comparator", DtoName = nameof(Comparator) },
             new TypeMap() { SchemaName = typeof(DocEntityBackgroundTaskItem).FullName, TypeId = 19935, TableName = DocConstantModelName.BACKGROUNDTASKITEM, ClassName = "BackgroundTaskItem", DtoName = nameof(BackgroundTaskItem) },
             new TypeMap() { SchemaName = typeof(DocEntityReleaseStatus).FullName, TypeId = 19835, TableName = DocConstantModelName.RELEASESTATUS, ClassName = "ReleaseStatus", DtoName = nameof(ReleaseStatus) },

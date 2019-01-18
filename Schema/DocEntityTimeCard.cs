@@ -8,30 +8,21 @@
 
 using AutoMapper;
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Dynamic;
-using System.Net;
-using System.Runtime.Serialization;
-
 using Services.Core;
 using Services.Db;
 using Services.Dto;
 using Services.Enums;
-using Services.Models;
 
 using ServiceStack;
 
-using Typed.Notifications;
-using Typed.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic;
+using System.Net;
 
 using Xtensive.Orm;
 using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
 
 namespace Services.Schema
 {
@@ -41,9 +32,9 @@ namespace Services.Schema
         private const string TIMECARD_CACHE = "TimeCardCache";
 
         #region Constructor
-        public DocEntityTimeCard(Session session) : base(session) {}
+        public DocEntityTimeCard(Session session) : base(session) { }
 
-        public DocEntityTimeCard() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityTimeCard() : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
         #endregion Constructor
 
         #region VisibleFields
@@ -52,14 +43,14 @@ namespace Services.Schema
         {
             get
             {
-                if(null == __vf)
+                if (null == __vf)
                 {
                     __vf = DocWebSession.GetTypeVisibleFields(new TimeCard());
                 }
                 return __vf;
             }
         }
-        
+
         public bool IsPropertyVisible(string propertyName)
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
@@ -75,12 +66,12 @@ namespace Services.Schema
         public static DocEntityTimeCard GetTimeCard(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
-            if(null == primaryKey) return null;
+            if (null == primaryKey) return null;
             var ret = DocEntityThreadCache<DocEntityTimeCard>.GetFromCache(primaryKey, TIMECARD_CACHE);
-            if(null == ret)
+            if (null == ret)
             {
                 ret = query.SelectAll<DocEntityTimeCard>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
-                if(null != ret) 
+                if (null != ret)
                 {
                     DocEntityThreadCache<DocEntityTimeCard>.UpdateCache(ret.Id, ret, TIMECARD_CACHE);
                     DocEntityThreadCache<DocEntityTimeCard>.UpdateCache(ret.Hash, ret, TIMECARD_CACHE);
@@ -93,11 +84,11 @@ namespace Services.Schema
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityTimeCard>.GetFromCache(hash, TIMECARD_CACHE);
-            
-            if(null == ret)
+
+            if (null == ret)
             {
                 ret = query.SelectAll<DocEntityTimeCard>().Where(e => e.Hash == hash).FirstOrDefault();
-                if(null != ret) 
+                if (null != ret)
                 {
                     DocEntityThreadCache<DocEntityTimeCard>.UpdateCache(ret.Id, ret, TIMECARD_CACHE);
                     DocEntityThreadCache<DocEntityTimeCard>.UpdateCache(ret.Hash, ret, TIMECARD_CACHE);
@@ -131,9 +122,9 @@ namespace Services.Schema
 
 
         [Field()]
-        [FieldMapping(nameof(Product))]
-        public DocEntityProduct Product { get; set; }
-        public int? ProductId { get { return Product?.Id; } private set { var noid = value; } }
+        [FieldMapping(nameof(Project))]
+        public DocEntityProject Project { get; set; }
+        public int? ProjectId { get { return Project?.Id; } private set { var noid = value; } }
 
 
         [Field()]
@@ -184,9 +175,9 @@ namespace Services.Schema
         public override bool Locked { get; set; }
         private bool? _isNewlyLocked;
         private bool? _isModified;
-        
+
         private List<string> __editableFields;
-        private List<string> _editableFields 
+        private List<string> _editableFields
         {
             get
             {
@@ -207,7 +198,7 @@ namespace Services.Schema
         public const string CACHE_KEY_PREFIX = "FindTimeCards";
 
 
-        public override T ToModel<T>() =>  null;
+        public override T ToModel<T>() => null;
 
         #endregion Overrides of DocEntity
 
@@ -238,7 +229,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnSetFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
-            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue)) 
+            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue))
             {
                 _isNewlyLocked = true;
             }
@@ -301,7 +292,7 @@ namespace Services.Schema
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
             var hash = GetGuid();
-            if(Hash != hash)
+            if (Hash != hash)
                 Hash = hash;
 
             Description = Description?.TrimAndPruneSpaces();
@@ -324,7 +315,7 @@ namespace Services.Schema
 
             _OnSaveChanges(permission);
 
-            if(!_validated)
+            if (!_validated)
                 OnValidate();
 
             _OnSetGestalt();
@@ -332,7 +323,7 @@ namespace Services.Schema
             //Only do permissions checks AFTER validation has finished to get better errors
             //The transaction still hasn't completed, so if we throw then the rollback will work as expected
             permission = permission ?? DocConstantPermission.EDIT;
-            if(!DocPermissionFactory.HasPermission(this, null, permission))
+            if (!DocPermissionFactory.HasPermission(this, null, permission))
             {
                 throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to {permission} this {ModelName}.");
             }
@@ -369,27 +360,27 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(End))
+                if (DocTools.IsNullOrEmpty(End))
                 {
                     isValid = false;
                     message += " End is a required property.";
                 }
-                if(DocTools.IsNullOrEmpty(Start))
+                if (DocTools.IsNullOrEmpty(Start))
                 {
                     isValid = false;
                     message += " Start is a required property.";
                 }
-                if(null != Status && Status?.Enum?.Name != "TimeCardStatus")
+                if (null != Status && Status?.Enum?.Name != "TimeCardStatus")
                 {
                     isValid = false;
                     message += " Status is a " + Status?.Enum?.Name + ", but must be a TimeCardStatus.";
                 }
-                if(DocTools.IsNullOrEmpty(User))
+                if (DocTools.IsNullOrEmpty(User))
                 {
                     isValid = false;
                     message += " User is a required property.";
                 }
-                if(null != WorkType && WorkType?.Enum?.Name != "WorkType")
+                if (null != WorkType && WorkType?.Enum?.Name != "WorkType")
                 {
                     isValid = false;
                     message += " WorkType is a " + WorkType?.Enum?.Name + ", but must be a WorkType.";
@@ -402,10 +393,10 @@ namespace Services.Schema
         #endregion Validation
 
         #region Hash
-        
+
         public static Guid GetGuid(DocEntityTimeCard thing)
         {
-            if(thing == null) return Guid.Empty;
+            if (thing == null) return Guid.Empty;
             return thing.GetGuid();
         }
 
@@ -436,19 +427,19 @@ namespace Services.Schema
 
     public partial class TimeCardMapper : Profile
     {
-        private IMappingExpression<DocEntityTimeCard,TimeCard> _EntityToDto;
-        private IMappingExpression<TimeCard,DocEntityTimeCard> _DtoToEntity;
+        private IMappingExpression<DocEntityTimeCard, TimeCard> _EntityToDto;
+        private IMappingExpression<TimeCard, DocEntityTimeCard> _DtoToEntity;
 
         public TimeCardMapper()
         {
-            CreateMap<DocEntitySet<DocEntityTimeCard>,List<Reference>>()
+            CreateMap<DocEntitySet<DocEntityTimeCard>, List<Reference>>()
                 .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityTimeCard,Reference>()
+            CreateMap<DocEntityTimeCard, Reference>()
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityTimeCard>()
+            CreateMap<Reference, DocEntityTimeCard>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
                 .ConstructUsing(c => DocEntityTimeCard.GetTimeCard(c));
-            _EntityToDto = CreateMap<DocEntityTimeCard,TimeCard>()
+            _EntityToDto = CreateMap<DocEntityTimeCard, TimeCard>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, "Updated")))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Description))))
@@ -457,8 +448,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.End, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.End))))
                 .ForMember(dest => dest.PICO, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICO))))
                 .ForMember(dest => dest.PICOId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICOId))))
-                .ForMember(dest => dest.Product, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Product))))
-                .ForMember(dest => dest.ProductId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ProductId))))
+                .ForMember(dest => dest.Project, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Project))))
+                .ForMember(dest => dest.ProjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ProjectId))))
                 .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ReferenceId))))
                 .ForMember(dest => dest.Start, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Start))))
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Status))))
@@ -468,7 +459,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.WorkType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.WorkType))))
                 .ForMember(dest => dest.WorkTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.WorkTypeId))))
                 .MaxDepth(2);
-            _DtoToEntity = CreateMap<TimeCard,DocEntityTimeCard>()
+            _DtoToEntity = CreateMap<TimeCard, DocEntityTimeCard>()
                 .MaxDepth(2);
             ApplyCustomMaps();
         }

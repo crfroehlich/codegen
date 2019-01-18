@@ -8,30 +8,21 @@
 
 using AutoMapper;
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Linq.Dynamic;
-using System.Net;
-using System.Runtime.Serialization;
-
 using Services.Core;
 using Services.Db;
 using Services.Dto;
 using Services.Enums;
-using Services.Models;
 
 using ServiceStack;
 
-using Typed.Notifications;
-using Typed.Settings;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Dynamic;
+using System.Net;
 
 using Xtensive.Orm;
 using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
 
 namespace Services.Schema
 {
@@ -41,9 +32,9 @@ namespace Services.Schema
         private const string DOCUMENTSET_CACHE = "DocumentSetCache";
 
         #region Constructor
-        public DocEntityDocumentSet(Session session) : base(session) {}
+        public DocEntityDocumentSet(Session session) : base(session) { }
 
-        public DocEntityDocumentSet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityDocumentSet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
         #endregion Constructor
 
         #region VisibleFields
@@ -52,14 +43,14 @@ namespace Services.Schema
         {
             get
             {
-                if(null == __vf)
+                if (null == __vf)
                 {
                     __vf = DocWebSession.GetTypeVisibleFields(new DocumentSet());
                 }
                 return __vf;
             }
         }
-        
+
         public bool IsPropertyVisible(string propertyName)
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
@@ -75,12 +66,12 @@ namespace Services.Schema
         public static DocEntityDocumentSet GetDocumentSet(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
-            if(null == primaryKey) return null;
+            if (null == primaryKey) return null;
             var ret = DocEntityThreadCache<DocEntityDocumentSet>.GetFromCache(primaryKey, DOCUMENTSET_CACHE);
-            if(null == ret)
+            if (null == ret)
             {
                 ret = query.SelectAll<DocEntityDocumentSet>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
-                if(null != ret) 
+                if (null != ret)
                 {
                     DocEntityThreadCache<DocEntityDocumentSet>.UpdateCache(ret.Id, ret, DOCUMENTSET_CACHE);
                     DocEntityThreadCache<DocEntityDocumentSet>.UpdateCache(ret.Hash, ret, DOCUMENTSET_CACHE);
@@ -93,11 +84,11 @@ namespace Services.Schema
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityDocumentSet>.GetFromCache(hash, DOCUMENTSET_CACHE);
-            
-            if(null == ret)
+
+            if (null == ret)
             {
                 ret = query.SelectAll<DocEntityDocumentSet>().Where(e => e.Hash == hash).FirstOrDefault();
-                if(null != ret) 
+                if (null != ret)
                 {
                     DocEntityThreadCache<DocEntityDocumentSet>.UpdateCache(ret.Id, ret, DOCUMENTSET_CACHE);
                     DocEntityThreadCache<DocEntityDocumentSet>.UpdateCache(ret.Hash, ret, DOCUMENTSET_CACHE);
@@ -120,7 +111,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Categories))]
-        [Association( PairTo = nameof(JctAttributeCategoryAttributeDocumentSet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(JctAttributeCategoryAttributeDocumentSet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityJctAttributeCategoryAttributeDocumentSet> Categories { get; private set; }
 
 
@@ -137,7 +128,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Clients))]
-        [Association( PairTo = nameof(Client.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(Client.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityClient> Clients { get; private set; }
 
 
@@ -164,7 +155,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Divisions))]
-        [Association( PairTo = nameof(Division.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(Division.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDivision> Divisions { get; private set; }
 
 
@@ -173,7 +164,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Documents))]
-        [Association( PairTo = nameof(Document.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(Document.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
 
 
@@ -182,7 +173,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(DocumentSets))]
-        [Association( PairTo = nameof(DocumentSet.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(DocumentSet.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
@@ -216,7 +207,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Histories))]
-        [Association( PairTo = nameof(DocumentSetHistory.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(DocumentSetHistory.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocumentSetHistory> Histories { get; private set; }
 
 
@@ -230,7 +221,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Imports))]
-        [Association( PairTo = nameof(ImportData.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(ImportData.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityImportData> Imports { get; private set; }
 
 
@@ -262,7 +253,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(NonDigitizedDocuments))]
-        [Association( PairTo = nameof(Document.NonDigitizedDocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(Document.NonDigitizedDocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocument> NonDigitizedDocuments { get; private set; }
 
 
@@ -329,12 +320,12 @@ namespace Services.Schema
 
 
         [Field()]
-        [FieldMapping(nameof(Products))]
-        [Association( PairTo = nameof(Product.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
-        public DocEntitySet<DocEntityProduct> Products { get; private set; }
+        [FieldMapping(nameof(Projects))]
+        [Association(PairTo = nameof(Project.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        public DocEntitySet<DocEntityProject> Projects { get; private set; }
 
 
-        public int? ProductsCount { get { return Products.Count(); } private set { var noid = value; } }
+        public int? ProjectsCount { get { return Projects.Count(); } private set { var noid = value; } }
 
 
         [Field()]
@@ -355,7 +346,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Scopes))]
-        [Association( PairTo = nameof(Scope.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(Scope.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
@@ -389,7 +380,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Stats))]
-        [Association( PairTo = nameof(StatsStudySet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(StatsStudySet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityStatsStudySet> Stats { get; private set; }
 
 
@@ -412,7 +403,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Users))]
-        [Association( PairTo = nameof(User.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
+        [Association(PairTo = nameof(User.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
 
@@ -439,9 +430,9 @@ namespace Services.Schema
         public override bool Locked { get; set; }
         private bool? _isNewlyLocked;
         private bool? _isModified;
-        
+
         private List<string> __editableFields;
-        private List<string> _editableFields 
+        private List<string> _editableFields
         {
             get
             {
@@ -462,7 +453,7 @@ namespace Services.Schema
         public const string CACHE_KEY_PREFIX = "FindDocumentSets";
 
 
-        public override T ToModel<T>() =>  null;
+        public override T ToModel<T>() => null;
 
         #endregion Overrides of DocEntity
 
@@ -493,7 +484,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnSetFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
-            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue)) 
+            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue))
             {
                 _isNewlyLocked = true;
             }
@@ -523,7 +514,7 @@ namespace Services.Schema
             {
                 Categories.Clear(); //foreach thing in Categories en.Remove();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new DocException("Failed to delete DocumentSet in Categories delete", ex);
             }
@@ -531,7 +522,7 @@ namespace Services.Schema
             {
                 DocumentSets.Clear(); //foreach thing in DocumentSets en.Remove();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new DocException("Failed to delete DocumentSet in DocumentSets delete", ex);
             }
@@ -539,7 +530,7 @@ namespace Services.Schema
             {
                 Histories.Clear(); //foreach thing in Histories en.Remove();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new DocException("Failed to delete DocumentSet in Histories delete", ex);
             }
@@ -547,7 +538,7 @@ namespace Services.Schema
             {
                 Scopes.Clear(); //foreach thing in Scopes en.Remove();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new DocException("Failed to delete DocumentSet in Scopes delete", ex);
             }
@@ -555,7 +546,7 @@ namespace Services.Schema
             {
                 Stats.Clear(); //foreach thing in Stats en.Remove();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new DocException("Failed to delete DocumentSet in Stats delete", ex);
             }
@@ -596,7 +587,7 @@ namespace Services.Schema
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
             var hash = GetGuid();
-            if(Hash != hash)
+            if (Hash != hash)
                 Hash = hash;
 
             Name = Name?.TrimAndPruneSpaces();
@@ -622,7 +613,7 @@ namespace Services.Schema
 
             _OnSaveChanges(permission);
 
-            if(!_validated)
+            if (!_validated)
                 OnValidate();
 
             _OnSetGestalt();
@@ -630,7 +621,7 @@ namespace Services.Schema
             //Only do permissions checks AFTER validation has finished to get better errors
             //The transaction still hasn't completed, so if we throw then the rollback will work as expected
             permission = permission ?? DocConstantPermission.EDIT;
-            if(!DocPermissionFactory.HasPermission(this, null, permission))
+            if (!DocPermissionFactory.HasPermission(this, null, permission))
             {
                 throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to {permission} this {ModelName}.");
             }
@@ -667,17 +658,17 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(Confidential))
+                if (DocTools.IsNullOrEmpty(Confidential))
                 {
                     isValid = false;
                     message += " Confidential is a required property.";
                 }
-                if(DocTools.IsNullOrEmpty(Name))
+                if (DocTools.IsNullOrEmpty(Name))
                 {
                     isValid = false;
                     message += " Name is a required property.";
                 }
-                if(null != Type && Type?.Enum?.Name != "DocumentSetType")
+                if (null != Type && Type?.Enum?.Name != "DocumentSetType")
                 {
                     isValid = false;
                     message += " Type is a " + Type?.Enum?.Name + ", but must be a DocumentSetType.";
@@ -690,10 +681,10 @@ namespace Services.Schema
         #endregion Validation
 
         #region Hash
-        
+
         public static Guid GetGuid(DocEntityDocumentSet thing)
         {
-            if(thing == null) return Guid.Empty;
+            if (thing == null) return Guid.Empty;
             return thing.GetGuid();
         }
 
@@ -712,7 +703,7 @@ namespace Services.Schema
 
         public override Reference ToReference()
         {
-            var ret = new Reference(Id, Name , Gestalt);
+            var ret = new Reference(Id, Name, Gestalt);
             return _ToReference(ret);
         }
 
@@ -724,19 +715,19 @@ namespace Services.Schema
 
     public partial class DocumentSetMapper : Profile
     {
-        private IMappingExpression<DocEntityDocumentSet,DocumentSet> _EntityToDto;
-        private IMappingExpression<DocumentSet,DocEntityDocumentSet> _DtoToEntity;
+        private IMappingExpression<DocEntityDocumentSet, DocumentSet> _EntityToDto;
+        private IMappingExpression<DocumentSet, DocEntityDocumentSet> _DtoToEntity;
 
         public DocumentSetMapper()
         {
-            CreateMap<DocEntitySet<DocEntityDocumentSet>,List<Reference>>()
+            CreateMap<DocEntitySet<DocEntityDocumentSet>, List<Reference>>()
                 .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityDocumentSet,Reference>()
+            CreateMap<DocEntityDocumentSet, Reference>()
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityDocumentSet>()
+            CreateMap<Reference, DocEntityDocumentSet>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
                 .ConstructUsing(c => DocEntityDocumentSet.GetDocumentSet(c));
-            _EntityToDto = CreateMap<DocEntityDocumentSet,DocumentSet>()
+            _EntityToDto = CreateMap<DocEntityDocumentSet, DocumentSet>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, "Updated")))
                 .ForMember(dest => dest.AdditionalCriteria, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.AdditionalCriteria))))
@@ -787,8 +778,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.OwnerId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.OwnerId))))
                 .ForMember(dest => dest.Participants, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Participants))))
                 .ForMember(dest => dest.PRISMA, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.PRISMA))))
-                .ForMember(dest => dest.Products, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Products))))
-                .ForMember(dest => dest.ProductsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProductsCount))))
+                .ForMember(dest => dest.Projects, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Projects))))
+                .ForMember(dest => dest.ProjectsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProjectsCount))))
                 .ForMember(dest => dest.ProjectTeam, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProjectTeam))))
                 .ForMember(dest => dest.ProjectTeamId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProjectTeamId))))
                 .ForMember(dest => dest.ProtocolReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ProtocolReferenceId))))
@@ -809,7 +800,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Users))))
                 .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.UsersCount))))
                 .MaxDepth(2);
-            _DtoToEntity = CreateMap<DocumentSet,DocEntityDocumentSet>()
+            _DtoToEntity = CreateMap<DocumentSet, DocEntityDocumentSet>()
                 .MaxDepth(2);
             ApplyCustomMaps();
         }

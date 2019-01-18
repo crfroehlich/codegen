@@ -7,14 +7,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace Services.Enums
 {
@@ -117,8 +117,8 @@ namespace Services.Enums
         PACKAGE,
         [EnumMember(Value = DocConstantModelName.PAGE)]
         PAGE,
-        [EnumMember(Value = DocConstantModelName.PRODUCT)]
-        PRODUCT,
+        [EnumMember(Value = DocConstantModelName.PROJECT)]
+        PROJECT,
         [EnumMember(Value = DocConstantModelName.QUEUECHANNEL)]
         QUEUECHANNEL,
         [EnumMember(Value = DocConstantModelName.RELEASESTATUS)]
@@ -182,7 +182,7 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantModelName.WORKFLOWTASK)]
         WORKFLOWTASK
     }
-    
+
     public sealed partial class DocConstantModelName
     {
         public const string APP = "App";
@@ -233,7 +233,7 @@ namespace Services.Enums
         public const string OUTCOME = "Outcome";
         public const string PACKAGE = "Package";
         public const string PAGE = "Page";
-        public const string PRODUCT = "Product";
+        public const string PROJECT = "Project";
         public const string QUEUECHANNEL = "QueueChannel";
         public const string RELEASESTATUS = "ReleaseStatus";
         public const string ROLE = "Role";
@@ -265,12 +265,12 @@ namespace Services.Enums
         public const string WORKFLOW = "Workflow";
         public const string WORKFLOWCOMMENT = "WorkflowComment";
         public const string WORKFLOWTASK = "WorkflowTask";
-        
+
         #region Internals
-        
+
         private static List<string> _all;
-        
-        public static List<string> All => _all ?? (_all = typeof(DocConstantModelName).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
+
+        public static List<string> All => _all ?? (_all = typeof(DocConstantModelName).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select(fi => fi.GetRawConstantValue().ToString()).OrderBy(n => n).ToList());
 
         /// <summary>
         ///    The string value of the current instance
@@ -291,7 +291,7 @@ namespace Services.Enums
         /// Determines if the Constant contains an exact match (case insensitive) for the name
         /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
-        
+
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
         /// <summary>
@@ -368,13 +368,13 @@ namespace Services.Enums
         public override bool Equals(object obj)
         {
             var ret = false;
-            if(!(obj is DocConstantModelName))
+            if (!(obj is DocConstantModelName))
             {
                 ret = false;
             }
             else
             {
-                ret = this == (DocConstantModelName) obj;
+                ret = this == (DocConstantModelName)obj;
             }
             return ret;
         }
