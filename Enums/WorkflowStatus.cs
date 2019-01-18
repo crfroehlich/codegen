@@ -21,8 +21,12 @@ namespace Services.Enums
     [JsonConverter(typeof(StringEnumConverter))]
     public enum WorkflowStatusEnm
     {
+        [EnumMember(Value = DocConstantWorkflowStatus.ACCEPTED)]
+        ACCEPTED,
         [EnumMember(Value = DocConstantWorkflowStatus.COLLECTED)]
         COLLECTED,
+        [EnumMember(Value = DocConstantWorkflowStatus.REJECTED)]
+        REJECTED,
         [EnumMember(Value = DocConstantWorkflowStatus.REQUESTED)]
         REQUESTED,
         [EnumMember(Value = DocConstantWorkflowStatus.UNAVAILABLE)]
@@ -31,7 +35,9 @@ namespace Services.Enums
     
     public sealed partial class DocConstantWorkflowStatus
     {
+        public const string ACCEPTED = "Accepted";
         public const string COLLECTED = "Collected";
+        public const string REJECTED = "Rejected";
         public const string REQUESTED = "Requested";
         public const string UNAVAILABLE = "Unavailable";
         
