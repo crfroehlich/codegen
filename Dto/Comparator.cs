@@ -51,6 +51,11 @@ namespace Services.Dto
 
         public ComparatorBase(int? id) : this(DocConvert.ToInt(id)) {}
     
+        [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
+        public List<Reference> DocumentSets { get; set; }
+        public int? DocumentSetsCount { get; set; }
+
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
 
@@ -86,7 +91,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(URI),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(URI),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -107,6 +112,11 @@ namespace Services.Dto
         }
 
         #endregion Fields
+        private List<string> _collections = new List<string>
+        {
+            nameof(DocumentSets), nameof(DocumentSetsCount)
+        };
+        private List<string> collections { get { return _collections; } }
     }
     
     [Route("/Comparator/{Id}/copy", "POST")]
@@ -115,6 +125,7 @@ namespace Services.Dto
     [Route("/comparator/search", "GET, POST, DELETE")]
     public partial class ComparatorSearch : Search<Comparator>
     {
+        public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
@@ -132,6 +143,7 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.Updated))); }
         
+        public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.DocumentSets))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.Name))); }
         public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.URI))); }
     }
@@ -142,6 +154,37 @@ namespace Services.Dto
     [Route("/comparator/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ComparatorBatch : List<Comparator> { }
 
+    [Route("/comparator/{Id}/documentset", "GET, POST, DELETE")]
+    public class ComparatorJunction : Search<Comparator>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+
+
+        public ComparatorJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/comparator/{Id}/documentset/version", "GET")]
+    public class ComparatorJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/comparator/ids", "GET, POST")]
     public class ComparatorIds
     {

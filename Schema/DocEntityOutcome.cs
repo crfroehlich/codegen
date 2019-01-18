@@ -108,6 +108,14 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
+        [Field()]
+        [FieldMapping(nameof(DocumentSets))]
+        public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
+
+
+        public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
+
+
         [Field(Nullable = false, NullableOnUpgrade = true)]
         [FieldMapping(nameof(Name))]
         public string Name { get; set; }
@@ -384,6 +392,8 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityOutcome,Outcome>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, "Updated")))
+                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.DocumentSets))))
+                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.DocumentSetsCount))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.Name))))
                 .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.URI))))
                 .MaxDepth(2);
