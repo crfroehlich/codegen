@@ -65,9 +65,7 @@ namespace Services.Dto
     }
 
     [Route("/termcategory", "POST")]
-    [Route("/profile/termcategory", "POST")]
     [Route("/termcategory/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/termcategory/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class TermCategory : TermCategoryBase, IReturn<TermCategory>, IDto
     {
         public TermCategory()
@@ -118,12 +116,9 @@ namespace Services.Dto
     }
     
     [Route("/TermCategory/{Id}/copy", "POST")]
-    [Route("/profile/TermCategory/{Id}/copy", "POST")]
     public partial class TermCategoryCopy : TermCategory {}
     [Route("/termcategory", "GET")]
-    [Route("/profile/termcategory", "GET")]
     [Route("/termcategory/search", "GET, POST, DELETE")]
-    [Route("/profile/termcategory/search", "GET, POST, DELETE")]
     public partial class TermCategorySearch : Search<TermCategory>
     {
         public Reference ParentCategory { get; set; }
@@ -153,11 +148,9 @@ namespace Services.Dto
     public partial class TermCategoryVersion : TermCategorySearch {}
 
     [Route("/termcategory/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/termcategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TermCategoryBatch : List<TermCategory> { }
 
     [Route("/termcategory/{Id}/termmaster", "GET, POST, DELETE")]
-    [Route("/profile/termcategory/{Id}/termmaster", "GET, POST, DELETE")]
     public class TermCategoryJunction : Search<TermCategory>
     {
         public int? Id { get; set; }
@@ -178,7 +171,6 @@ namespace Services.Dto
 
 
     [Route("/termcategory/{Id}/termmaster/version", "GET")]
-    [Route("/profile/termcategory/{Id}/termmaster/version", "GET")]
     public class TermCategoryJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

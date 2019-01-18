@@ -114,7 +114,6 @@ namespace Services.Dto
     }
 
     [Route("/statsstudyset/{Id}", "GET")]
-    [Route("/profile/statsstudyset/{Id}", "GET")]
     public partial class StatsStudySet : StatsStudySetBase, IReturn<StatsStudySet>, IDto
     {
         public StatsStudySet()
@@ -165,9 +164,7 @@ namespace Services.Dto
     }
     
     [Route("/statsstudyset", "GET")]
-    [Route("/profile/statsstudyset", "GET")]
     [Route("/statsstudyset/search", "GET, POST, DELETE")]
-    [Route("/profile/statsstudyset/search", "GET, POST, DELETE")]
     public partial class StatsStudySetSearch : Search<StatsStudySet>
     {
         public int? BoundTerms { get; set; }
@@ -222,7 +219,6 @@ namespace Services.Dto
     public partial class StatsStudySetVersion : StatsStudySetSearch {}
 
     [Route("/statsstudyset/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/statsstudyset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsStudySetBatch : List<StatsStudySet> { }
 
     public class StatsStudySetJunction : Search<StatsStudySet>

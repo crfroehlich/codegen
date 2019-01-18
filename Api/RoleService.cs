@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class RoleService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityRole.CACHE_KEY_PREFIX;
-        private object _GetIdCache(Role request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.ROLE);
-                var cacheKey = $"Role_{key}_{request.Id}_{UrnId.Create<Role>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetRole(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetRole(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(RoleSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<Role>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.ROLE);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<RoleSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityRole,Role>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<Role>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityRole,Role>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(RoleSearch request, Action<IQueryable<DocEntityRole>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityRole>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityRole>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new RoleFullTextSearch(request);
@@ -173,70 +129,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(RoleSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Role>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "role")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityRole,Role>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(RoleSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Role>();
+            var cacheKey = GetApiCacheKey<Role>(DocConstantModelName.ROLE, nameof(Role), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<Role>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "role")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityRole,Role>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityRole,Role>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.ROLE, search: true);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.ROLE, search: true);
             return tryRet;
         }
 
@@ -248,12 +182,9 @@ namespace Services.API
         public object Get(RoleVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -265,19 +196,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Role>(DocConstantModelName.ROLE, nameof(Role), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "role")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetRole(request);
+                    });
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.ROLE);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetRole(request);
-                }
-            });
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ROLE);
+                });
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.ROLE);
             return ret;
         }
 
@@ -295,6 +237,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<Role>(DocConstantModelName.ROLE, nameof(Role), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pAdminTeam = (request.AdminTeam?.Id > 0) ? DocEntityTeam.GetTeam(request.AdminTeam.Id) : null;
@@ -561,8 +505,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Users));
                 }
             }
-            request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Role>(currentUser, nameof(Role), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ROLE);
 
             return ret;
         }
@@ -657,6 +603,8 @@ namespace Services.API
                     var pPages = entity.Pages.ToList();
                     var pPermissions = entity.Permissions;
                     var pUsers = entity.Users.ToList();
+                #region Custom Before copyRole
+                #endregion Custom Before copyRole
                 var copy = new DocEntityRole(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -688,6 +636,8 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
+                #region Custom After copyRole
+                #endregion Custom After copyRole
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -814,6 +764,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.ROLE);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityRole.GetRole(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Role could be found for Id {request?.Id}.");
@@ -1224,7 +1178,7 @@ namespace Services.API
             Role ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
 
             DocEntityRole entity = null;
             if(id.HasValue)
@@ -1252,6 +1206,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

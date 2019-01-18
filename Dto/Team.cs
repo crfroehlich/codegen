@@ -104,9 +104,7 @@ namespace Services.Dto
     }
 
     [Route("/team", "POST")]
-    [Route("/profile/team", "POST")]
     [Route("/team/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/team/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Team : TeamBase, IReturn<Team>, IDto
     {
         public Team()
@@ -159,12 +157,9 @@ namespace Services.Dto
     }
     
     [Route("/Team/{Id}/copy", "POST")]
-    [Route("/profile/Team/{Id}/copy", "POST")]
     public partial class TeamCopy : Team {}
     [Route("/team", "GET")]
-    [Route("/profile/team", "GET")]
     [Route("/team/search", "GET, POST, DELETE")]
-    [Route("/profile/team/search", "GET, POST, DELETE")]
     public partial class TeamSearch : Search<Team>
     {
         public List<int> AdminRolesIds { get; set; }
@@ -211,17 +206,12 @@ namespace Services.Dto
     public partial class TeamVersion : TeamSearch {}
 
     [Route("/team/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/team/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TeamBatch : List<Team> { }
 
     [Route("/team/{Id}/role", "GET, POST, DELETE")]
-    [Route("/profile/team/{Id}/role", "GET, POST, DELETE")]
     [Route("/team/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/profile/team/{Id}/scope", "GET, POST, DELETE")]
     [Route("/team/{Id}/update", "GET, POST, DELETE")]
-    [Route("/profile/team/{Id}/update", "GET, POST, DELETE")]
     [Route("/team/{Id}/user", "GET, POST, DELETE")]
-    [Route("/profile/team/{Id}/user", "GET, POST, DELETE")]
     public class TeamJunction : Search<Team>
     {
         public int? Id { get; set; }
@@ -242,13 +232,9 @@ namespace Services.Dto
 
 
     [Route("/team/{Id}/role/version", "GET")]
-    [Route("/profile/team/{Id}/role/version", "GET")]
     [Route("/team/{Id}/scope/version", "GET")]
-    [Route("/profile/team/{Id}/scope/version", "GET")]
     [Route("/team/{Id}/update/version", "GET")]
-    [Route("/profile/team/{Id}/update/version", "GET")]
     [Route("/team/{Id}/user/version", "GET")]
-    [Route("/profile/team/{Id}/user/version", "GET")]
     public class TeamJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

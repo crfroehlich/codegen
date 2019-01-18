@@ -79,9 +79,7 @@ namespace Services.Dto
     }
 
     [Route("/unitvalue", "POST")]
-    [Route("/profile/unitvalue", "POST")]
     [Route("/unitvalue/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/unitvalue/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class UnitValue : UnitValueBase, IReturn<UnitValue>, IDto
     {
         public UnitValue()
@@ -132,12 +130,9 @@ namespace Services.Dto
     }
     
     [Route("/UnitValue/{Id}/copy", "POST")]
-    [Route("/profile/UnitValue/{Id}/copy", "POST")]
     public partial class UnitValueCopy : UnitValue {}
     [Route("/unitvalue", "GET")]
-    [Route("/profile/unitvalue", "GET")]
     [Route("/unitvalue/search", "GET, POST, DELETE")]
-    [Route("/profile/unitvalue/search", "GET, POST, DELETE")]
     public partial class UnitValueSearch : Search<UnitValue>
     {
         public Reference EqualityOperator { get; set; }
@@ -176,7 +171,6 @@ namespace Services.Dto
     public partial class UnitValueVersion : UnitValueSearch {}
 
     [Route("/unitvalue/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/unitvalue/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitValueBatch : List<UnitValue> { }
 
     public class UnitValueJunction : Search<UnitValue>

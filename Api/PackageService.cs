@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class PackageService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityPackage.CACHE_KEY_PREFIX;
-        private object _GetIdCache(Package request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.PACKAGE);
-                var cacheKey = $"Package_{key}_{request.Id}_{UrnId.Create<Package>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetPackage(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetPackage(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(PackageSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<Package>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.PACKAGE);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<PackageSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<Package>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(PackageSearch request, Action<IQueryable<DocEntityPackage>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityPackage>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityPackage>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new PackageFullTextSearch(request);
@@ -233,70 +189,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(PackageSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Package>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "package")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(PackageSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Package>();
+            var cacheKey = GetApiCacheKey<Package>(DocConstantModelName.PACKAGE, nameof(Package), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<Package>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "package")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPackage,Package>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.PACKAGE, search: true);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.PACKAGE, search: true);
             return tryRet;
         }
 
@@ -308,12 +242,9 @@ namespace Services.API
         public object Get(PackageVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -325,19 +256,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Package>(DocConstantModelName.PACKAGE, nameof(Package), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "package")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetPackage(request);
+                    });
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.PACKAGE);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetPackage(request);
-                }
-            });
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.PACKAGE);
+                });
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.PACKAGE);
             return ret;
         }
 
@@ -355,6 +297,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<Package>(DocConstantModelName.PACKAGE, nameof(Package), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pArchived = request.Archived;
@@ -630,8 +574,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.LegacyTimeCards));
                 }
             }
-            request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Package>(currentUser, nameof(Package), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.PACKAGE);
 
             return ret;
         }
@@ -739,6 +685,8 @@ namespace Services.API
                         pPICO += " (Copy)";
                     var pProject = entity.Project;
                     var pStatus = entity.Status;
+                #region Custom Before copyPackage
+                #endregion Custom Before copyPackage
                 var copy = new DocEntityPackage(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -769,6 +717,8 @@ namespace Services.API
                                 entity.LegacyTimeCards.Add(item);
                             }
 
+                #region Custom After copyPackage
+                #endregion Custom After copyPackage
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -895,6 +845,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.PACKAGE);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityPackage.GetPackage(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Package could be found for Id {request?.Id}.");
@@ -1033,7 +987,7 @@ namespace Services.API
             Package ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
 
             DocEntityPackage entity = null;
             if(id.HasValue)
@@ -1061,6 +1015,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

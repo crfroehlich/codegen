@@ -66,9 +66,7 @@ namespace Services.Dto
     }
 
     [Route("/lookuptableenum", "POST")]
-    [Route("/profile/lookuptableenum", "POST")]
     [Route("/lookuptableenum/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/lookuptableenum/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class LookupTableEnum : LookupTableEnumBase, IReturn<LookupTableEnum>, IDto
     {
         public LookupTableEnum()
@@ -114,12 +112,9 @@ namespace Services.Dto
     }
     
     [Route("/LookupTableEnum/{Id}/copy", "POST")]
-    [Route("/profile/LookupTableEnum/{Id}/copy", "POST")]
     public partial class LookupTableEnumCopy : LookupTableEnum {}
     [Route("/lookuptableenum", "GET")]
-    [Route("/profile/lookuptableenum", "GET")]
     [Route("/lookuptableenum/search", "GET, POST, DELETE")]
-    [Route("/profile/lookuptableenum/search", "GET, POST, DELETE")]
     public partial class LookupTableEnumSearch : Search<LookupTableEnum>
     {
         public bool? IsBindable { get; set; }
@@ -149,7 +144,6 @@ namespace Services.Dto
     public partial class LookupTableEnumVersion : LookupTableEnumSearch {}
 
     [Route("/lookuptableenum/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/lookuptableenum/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupTableEnumBatch : List<LookupTableEnum> { }
 
     [Route("/admin/lookuptableenum/ids", "GET, POST")]

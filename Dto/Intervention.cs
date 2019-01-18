@@ -62,9 +62,7 @@ namespace Services.Dto
     }
 
     [Route("/intervention", "POST")]
-    [Route("/profile/intervention", "POST")]
     [Route("/intervention/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/intervention/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Intervention : InterventionBase, IReturn<Intervention>, IDto
     {
         public Intervention()
@@ -112,12 +110,9 @@ namespace Services.Dto
     }
     
     [Route("/Intervention/{Id}/copy", "POST")]
-    [Route("/profile/Intervention/{Id}/copy", "POST")]
     public partial class InterventionCopy : Intervention {}
     [Route("/intervention", "GET")]
-    [Route("/profile/intervention", "GET")]
     [Route("/intervention/search", "GET, POST, DELETE")]
-    [Route("/profile/intervention/search", "GET, POST, DELETE")]
     public partial class InterventionSearch : Search<Intervention>
     {
         public string Name { get; set; }
@@ -145,7 +140,6 @@ namespace Services.Dto
     public partial class InterventionVersion : InterventionSearch {}
 
     [Route("/intervention/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/intervention/batch", "DELETE, PATCH, POST, PUT")]
     public partial class InterventionBatch : List<Intervention> { }
 
     [Route("/admin/intervention/ids", "GET, POST")]

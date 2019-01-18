@@ -141,9 +141,7 @@ namespace Services.Dto
     }
 
     [Route("/package", "POST")]
-    [Route("/profile/package", "POST")]
     [Route("/package/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/package/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Package : PackageBase, IReturn<Package>, IDto
     {
         public Package()
@@ -196,12 +194,9 @@ namespace Services.Dto
     }
     
     [Route("/Package/{Id}/copy", "POST")]
-    [Route("/profile/Package/{Id}/copy", "POST")]
     public partial class PackageCopy : Package {}
     [Route("/package", "GET")]
-    [Route("/profile/package", "GET")]
     [Route("/package/search", "GET, POST, DELETE")]
-    [Route("/profile/package/search", "GET, POST, DELETE")]
     public partial class PackageSearch : Search<Package>
     {
         public bool? Archived { get; set; }
@@ -273,13 +268,10 @@ namespace Services.Dto
     public partial class PackageVersion : PackageSearch {}
 
     [Route("/package/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/package/batch", "DELETE, PATCH, POST, PUT")]
     public partial class PackageBatch : List<Package> { }
 
     [Route("/package/{Id}/package", "GET, POST, DELETE")]
-    [Route("/profile/package/{Id}/package", "GET, POST, DELETE")]
     [Route("/package/{Id}/timecard", "GET, POST, DELETE")]
-    [Route("/profile/package/{Id}/timecard", "GET, POST, DELETE")]
     public class PackageJunction : Search<Package>
     {
         public int? Id { get; set; }
@@ -300,9 +292,7 @@ namespace Services.Dto
 
 
     [Route("/package/{Id}/package/version", "GET")]
-    [Route("/profile/package/{Id}/package/version", "GET")]
     [Route("/package/{Id}/timecard/version", "GET")]
-    [Route("/profile/package/{Id}/timecard/version", "GET")]
     public class PackageJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

@@ -109,13 +109,30 @@ namespace Services.Schema
 
         #region Properties
         [Field()]
+        [FieldMapping(nameof(App))]
+        public DocEntityApp App { get; set; }
+        public int? AppId { get { return App?.Id; } private set { var noid = value; } }
+
+
+        [Field()]
         [FieldMapping(nameof(Method))]
         public string Method { get; set; }
 
 
         [Field()]
+        [FieldMapping(nameof(Page))]
+        public DocEntityPage Page { get; set; }
+        public int? PageId { get { return Page?.Id; } private set { var noid = value; } }
+
+
+        [Field()]
         [FieldMapping(nameof(Path))]
         public string Path { get; set; }
+
+
+        [Field()]
+        [FieldMapping(nameof(URL))]
+        public string URL { get; set; }
 
 
         [Field(Nullable = false)]
@@ -265,6 +282,7 @@ namespace Services.Schema
 
             Method = Method?.TrimAndPruneSpaces();
             Path = Path?.TrimAndPruneSpaces();
+            URL = URL?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
             {
@@ -390,8 +408,13 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityUserRequest,UserRequest>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, "Updated")))
+                .ForMember(dest => dest.App, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.App))))
+                .ForMember(dest => dest.AppId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.AppId))))
                 .ForMember(dest => dest.Method, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.Method))))
+                .ForMember(dest => dest.Page, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.Page))))
+                .ForMember(dest => dest.PageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.PageId))))
                 .ForMember(dest => dest.Path, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.Path))))
+                .ForMember(dest => dest.URL, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.URL))))
                 .ForMember(dest => dest.UserSession, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.UserSession))))
                 .ForMember(dest => dest.UserSessionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.UserSessionId))))
                 .MaxDepth(2);

@@ -117,7 +117,6 @@ namespace Services.Dto
     }
 
     [Route("/auditrecord/{Id}", "GET")]
-    [Route("/profile/auditrecord/{Id}", "GET")]
     public partial class AuditRecord : AuditRecordBase, IReturn<AuditRecord>, IDto
     {
         public AuditRecord()
@@ -170,9 +169,7 @@ namespace Services.Dto
     }
     
     [Route("/auditrecord", "GET")]
-    [Route("/profile/auditrecord", "GET")]
     [Route("/auditrecord/search", "GET, POST, DELETE")]
-    [Route("/profile/auditrecord/search", "GET, POST, DELETE")]
     public partial class AuditRecordSearch : Search<AuditRecord>
     {
         public string Action { get; set; }
@@ -229,11 +226,9 @@ namespace Services.Dto
     public partial class AuditRecordVersion : AuditRecordSearch {}
 
     [Route("/auditrecord/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/auditrecord/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AuditRecordBatch : List<AuditRecord> { }
 
     [Route("/auditrecord/{Id}/auditdelta", "GET, POST, DELETE")]
-    [Route("/profile/auditrecord/{Id}/auditdelta", "GET, POST, DELETE")]
     public class AuditRecordJunction : Search<AuditRecord>
     {
         public int? Id { get; set; }
@@ -254,7 +249,6 @@ namespace Services.Dto
 
 
     [Route("/auditrecord/{Id}/auditdelta/version", "GET")]
-    [Route("/profile/auditrecord/{Id}/auditdelta/version", "GET")]
     public class AuditRecordJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

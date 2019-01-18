@@ -778,7 +778,6 @@
     "QUEUE_ERROR": "queue_error",
     "SERVICES_AUDIT": "services_audit",
     "SERVICES_AUDIT_FAILURES": "services_audit_failures",
-    "SERVICES_CACHE_INVALIDATION": "services_cache_invalidation",
     "SERVICES_DOCUMENT_UPDATE": "services_document_update",
     "SERVICES_EXTRACT_NOTIFICATION": "services_extract_notification",
     "SERVICES_HEARTBEAT": "services_heartbeat",
@@ -787,6 +786,7 @@
     "SERVICES_LOG_TO_SLACK": "services_log_to_slack",
     "SERVICES_LOG_TO_STACKIFY": "services_log_to_stackify",
     "SERVICES_LOGGING": "services_logging",
+    "SERVICES_SALESFORCE": "services_salesforce",
     "SERVICES_SLACK": "services_slack",
     "SERVICES_USER_SESSION": "services_user_session",
     "SERVICES_USER_UPDATE": "services_user_update"

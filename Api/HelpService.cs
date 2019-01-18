@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,58 +43,15 @@ namespace Services.API
 {
     public partial class HelpService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityHelp.CACHE_KEY_PREFIX;
-        private object _GetIdCache(Help request)
-        {
-            object ret = null;
-
-            if (true != request.IgnoreCache)
-            {
-                var key = currentUser.GetApiCacheKey(DocConstantModelName.HELP);
-                var cacheKey = $"Help_{key}_{request.Id}_{UrnId.Create<Help>(request.GetMD5Hash())}";
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    cachedRet = GetHelp(request);
-                    return cachedRet;
-                });
-            }
-            ret = ret ?? GetHelp(request);
-            return ret;
-        }
-
-        private object _GetSearchCache(HelpSearch request, DocRequestCancellation requestCancel)
-        {
-            object tryRet = null;
-            var ret = new List<Help>();
-
-            //Keys need to be customized to factor in permissions/scoping. Often, including the current user's Role Id is sufficient in the key
-            var key = currentUser.GetApiCacheKey(DocConstantModelName.HELP);
-            var cacheKey = $"{CACHE_KEY_PREFIX}_{key}_{UrnId.Create<HelpSearch>(request.GetMD5Hash())}";
-            tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-            {
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHelp,Help>(ret, Execute, requestCancel));
-                return ret;
-            });
-
-            if(tryRet == null)
-            {
-                ret = new List<Help>();
-                _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHelp,Help>(ret, Execute, requestCancel));
-                return ret;
-            }
-            else
-            {
-                return tryRet;
-            }
-        }
         private void _ExecSearch(HelpSearch request, Action<IQueryable<DocEntityHelp>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Help>(currentUser, "Help", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityHelp>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityHelp>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new HelpFullTextSearch(request);
@@ -175,70 +131,48 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(HelpSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<Help>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "help")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHelp,Help>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(HelpSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<Help>();
+            var cacheKey = GetApiCacheKey<Help>(DocConstantModelName.HELP, nameof(Help), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if(true != request.IgnoreCache) 
                     {
-                        var ret = new List<Help>();
-                        var settings = DocResources.Settings;
-                        if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "help")) 
-                        {
-                            tryRet = _GetSearchCache(request, requestCancel);
-                        }
-                        if (tryRet == null)
+                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
                             _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHelp,Help>(ret, Execute, requestCancel));
-                            tryRet = ret;
-                        }
+                            return ret;
+                        });
                     }
-                    catch(Exception) { throw; }
-                    finally
+                    if (tryRet == null)
                     {
-                        requestCancel?.CloseRequest();
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHelp,Help>(ret, Execute, requestCancel));
+                        tryRet = ret;
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.HELP, search: true);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.HELP, search: true);
             return tryRet;
         }
 
@@ -250,12 +184,9 @@ namespace Services.API
         public object Get(HelpVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -267,19 +198,30 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<Help>(currentUser, "Help", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Help>(DocConstantModelName.HELP, nameof(Help), request);
+            if (true != request.IgnoreCache)
             {
-                request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request);
-                var settings = DocResources.Settings;
-                if(true != request.IgnoreCache && settings.Cache.CacheWebServices && true != settings.Cache.ExcludedServicesFromCache?.Any(webservice => webservice.ToLower().Trim() == "help")) 
+                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                 {
-                    ret = _GetIdCache(request);
-                }
-                else 
+                    object cachedRet = null;
+                    Execute.Run(s =>
+                    {
+                        cachedRet = GetHelp(request);
+                    });
+                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.HELP);
+                    return cachedRet;
+                });
+            }
+            if(null == ret)
+            {
+                Execute.Run(s =>
                 {
                     ret = GetHelp(request);
-                }
-            });
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HELP);
+                });
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.HELP);
             return ret;
         }
 
@@ -297,6 +239,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<Help>(DocConstantModelName.HELP, nameof(Help), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pConfluenceId = request.ConfluenceId;
@@ -472,8 +416,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Scopes));
                 }
             }
-            request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Help>(currentUser, nameof(Help), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HELP);
 
             return ret;
         }
@@ -569,6 +515,8 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pTitle))
                         pTitle += " (Copy)";
                     var pType = entity.Type;
+                #region Custom Before copyHelp
+                #endregion Custom Before copyHelp
                 var copy = new DocEntityHelp(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -589,6 +537,8 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
+                #region Custom After copyHelp
+                #endregion Custom After copyHelp
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -715,6 +665,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.HELP);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityHelp.GetHelp(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Help could be found for Id {request?.Id}.");
@@ -977,7 +931,7 @@ namespace Services.API
             Help ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request);
+            DocPermissionFactory.SetVisibleFields<Help>(currentUser, "Help", request.VisibleFields);
 
             DocEntityHelp entity = null;
             if(id.HasValue)
@@ -1005,6 +959,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

@@ -82,7 +82,6 @@ namespace Services.Dto
     }
 
     [Route("/stats/{Id}", "GET")]
-    [Route("/profile/stats/{Id}", "GET")]
     public partial class Stats : StatsBase, IReturn<Stats>, IDto
     {
         public Stats()
@@ -128,9 +127,7 @@ namespace Services.Dto
     }
     
     [Route("/stats", "GET")]
-    [Route("/profile/stats", "GET")]
     [Route("/stats/search", "GET, POST, DELETE")]
-    [Route("/profile/stats/search", "GET, POST, DELETE")]
     public partial class StatsSearch : Search<Stats>
     {
         public Reference App { get; set; }
@@ -168,7 +165,6 @@ namespace Services.Dto
     public partial class StatsVersion : StatsSearch {}
 
     [Route("/stats/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/stats/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsBatch : List<Stats> { }
 
     [Route("/admin/stats/ids", "GET, POST")]

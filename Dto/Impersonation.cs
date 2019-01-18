@@ -72,7 +72,6 @@ namespace Services.Dto
     }
 
     [Route("/impersonation/{Id}", "GET")]
-    [Route("/profile/impersonation/{Id}", "GET")]
     public partial class Impersonation : ImpersonationBase, IReturn<Impersonation>, IDto
     {
         public Impersonation()
@@ -120,9 +119,7 @@ namespace Services.Dto
     }
     
     [Route("/impersonation", "GET")]
-    [Route("/profile/impersonation", "GET")]
     [Route("/impersonation/search", "GET, POST, DELETE")]
-    [Route("/profile/impersonation/search", "GET, POST, DELETE")]
     public partial class ImpersonationSearch : Search<Impersonation>
     {
         public Reference AuthenticatedUser { get; set; }
@@ -155,7 +152,6 @@ namespace Services.Dto
     public partial class ImpersonationVersion : ImpersonationSearch {}
 
     [Route("/impersonation/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/impersonation/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ImpersonationBatch : List<Impersonation> { }
 
     [Route("/admin/impersonation/ids", "GET, POST")]

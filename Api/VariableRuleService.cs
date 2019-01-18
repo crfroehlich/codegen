@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class VariableRuleService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityVariableRule.CACHE_KEY_PREFIX;
         private void _ExecSearch(VariableRuleSearch request, Action<IQueryable<DocEntityVariableRule>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request);
+            DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityVariableRule>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityVariableRule>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableRuleFullTextSearch(request);
@@ -151,54 +151,40 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(VariableRuleSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<VariableRule>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableRule,VariableRule>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(VariableRuleSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<VariableRule>();
+            var cacheKey = GetApiCacheKey<VariableRule>(DocConstantModelName.VARIABLERULE, nameof(VariableRule), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<VariableRule>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableRule,VariableRule>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.VARIABLERULE, search: true);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.VARIABLERULE, search: true);
             return tryRet;
         }
 
@@ -210,12 +196,9 @@ namespace Services.API
         public object Get(VariableRuleVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -227,11 +210,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<VariableRule>(DocConstantModelName.VARIABLERULE, nameof(VariableRule), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request);
-                ret = GetVariableRule(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetVariableRule(request);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
+                });
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
             return ret;
         }
 
@@ -249,6 +238,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<VariableRule>(DocConstantModelName.VARIABLERULE, nameof(VariableRule), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pChildren = request.Children?.ToList();
@@ -461,8 +452,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Scopes));
                 }
             }
-            request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request);
+            DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, nameof(VariableRule), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
 
             return ret;
         }
@@ -552,6 +545,8 @@ namespace Services.API
                     var pRule = entity.Rule;
                     var pScopes = entity.Scopes.ToList();
                     var pType = entity.Type;
+                #region Custom Before copyVariableRule
+                #endregion Custom Before copyVariableRule
                 var copy = new DocEntityVariableRule(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -576,6 +571,8 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
+                #region Custom After copyVariableRule
+                #endregion Custom After copyVariableRule
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -702,6 +699,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.VARIABLERULE);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityVariableRule.GetVariableRule(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule could be found for Id {request?.Id}.");
@@ -1038,7 +1039,7 @@ namespace Services.API
             VariableRule ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request);
+            DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
 
             DocEntityVariableRule entity = null;
             if(id.HasValue)
@@ -1066,6 +1067,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

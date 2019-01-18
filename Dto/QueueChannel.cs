@@ -78,9 +78,7 @@ namespace Services.Dto
     }
 
     [Route("/queuechannel", "POST")]
-    [Route("/profile/queuechannel", "POST")]
     [Route("/queuechannel/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/queuechannel/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class QueueChannel : QueueChannelBase, IReturn<QueueChannel>, IDto
     {
         public QueueChannel()
@@ -128,12 +126,9 @@ namespace Services.Dto
     }
     
     [Route("/QueueChannel/{Id}/copy", "POST")]
-    [Route("/profile/QueueChannel/{Id}/copy", "POST")]
     public partial class QueueChannelCopy : QueueChannel {}
     [Route("/queuechannel", "GET")]
-    [Route("/profile/queuechannel", "GET")]
     [Route("/queuechannel/search", "GET, POST, DELETE")]
-    [Route("/profile/queuechannel/search", "GET, POST, DELETE")]
     public partial class QueueChannelSearch : Search<QueueChannel>
     {
         public bool? AutoDelete { get; set; }
@@ -169,7 +164,6 @@ namespace Services.Dto
     public partial class QueueChannelVersion : QueueChannelSearch {}
 
     [Route("/queuechannel/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/queuechannel/batch", "DELETE, PATCH, POST, PUT")]
     public partial class QueueChannelBatch : List<QueueChannel> { }
 
     [Route("/admin/queuechannel/ids", "GET, POST")]

@@ -107,7 +107,6 @@ namespace Services.Dto
     }
 
     [Route("/update/{Id}", "GET, PATCH")]
-    [Route("/profile/update/{Id}", "GET, PATCH")]
     public partial class Update : UpdateBase, IReturn<Update>, IDto
     {
         public Update()
@@ -160,9 +159,7 @@ namespace Services.Dto
     }
     
     [Route("/update", "GET")]
-    [Route("/profile/update", "GET")]
     [Route("/update/search", "GET, POST, DELETE")]
-    [Route("/profile/update/search", "GET, POST, DELETE")]
     public partial class UpdateSearch : Search<Update>
     {
         public string Body { get; set; }
@@ -218,11 +215,9 @@ namespace Services.Dto
     public partial class UpdateVersion : UpdateSearch {}
 
     [Route("/update/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/update/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UpdateBatch : List<Update> { }
 
     [Route("/update/{Id}/event", "GET, POST, DELETE")]
-    [Route("/profile/update/{Id}/event", "GET, POST, DELETE")]
     public class UpdateJunction : Search<Update>
     {
         public int? Id { get; set; }
@@ -243,7 +238,6 @@ namespace Services.Dto
 
 
     [Route("/update/{Id}/event/version", "GET")]
-    [Route("/profile/update/{Id}/event/version", "GET")]
     public class UpdateJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

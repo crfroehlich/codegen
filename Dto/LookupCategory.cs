@@ -69,9 +69,7 @@ namespace Services.Dto
     }
 
     [Route("/lookupcategory", "POST")]
-    [Route("/profile/lookupcategory", "POST")]
     [Route("/lookupcategory/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/lookupcategory/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class LookupCategory : LookupCategoryBase, IReturn<LookupCategory>, IDto
     {
         public LookupCategory()
@@ -122,12 +120,9 @@ namespace Services.Dto
     }
     
     [Route("/LookupCategory/{Id}/copy", "POST")]
-    [Route("/profile/LookupCategory/{Id}/copy", "POST")]
     public partial class LookupCategoryCopy : LookupCategory {}
     [Route("/lookupcategory", "GET")]
-    [Route("/profile/lookupcategory", "GET")]
     [Route("/lookupcategory/search", "GET, POST, DELETE")]
-    [Route("/profile/lookupcategory/search", "GET, POST, DELETE")]
     public partial class LookupCategorySearch : Search<LookupCategory>
     {
         public string Category { get; set; }
@@ -158,11 +153,9 @@ namespace Services.Dto
     public partial class LookupCategoryVersion : LookupCategorySearch {}
 
     [Route("/lookupcategory/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/lookupcategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupCategoryBatch : List<LookupCategory> { }
 
     [Route("/lookupcategory/{Id}/lookuptable", "GET, POST, DELETE")]
-    [Route("/profile/lookupcategory/{Id}/lookuptable", "GET, POST, DELETE")]
     public class LookupCategoryJunction : Search<LookupCategory>
     {
         public int? Id { get; set; }
@@ -183,7 +176,6 @@ namespace Services.Dto
 
 
     [Route("/lookupcategory/{Id}/lookuptable/version", "GET")]
-    [Route("/profile/lookupcategory/{Id}/lookuptable/version", "GET")]
     public class LookupCategoryJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

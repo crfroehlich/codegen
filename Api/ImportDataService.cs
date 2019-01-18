@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class ImportDataService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityImportData.CACHE_KEY_PREFIX;
         private void _ExecSearch(ImportDataSearch request, Action<IQueryable<DocEntityImportData>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<ImportData>(Dto.ImportData.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityImportData>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityImportData>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ImportDataFullTextSearch(request);
@@ -187,54 +187,40 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(ImportDataSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<ImportData>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(ImportDataSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<ImportData>();
+            var cacheKey = GetApiCacheKey<ImportData>(DocConstantModelName.IMPORTDATA, nameof(ImportData), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<ImportData>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImportData,ImportData>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.IMPORTDATA, search: true);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.IMPORTDATA, search: true);
             return tryRet;
         }
 
@@ -246,12 +232,9 @@ namespace Services.API
         public object Get(ImportDataVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -263,11 +246,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<ImportData>(DocConstantModelName.IMPORTDATA, nameof(ImportData), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<ImportData>(Dto.ImportData.Fields, request);
-                ret = GetImportData(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetImportData(request);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.IMPORTDATA);
+                });
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.IMPORTDATA);
             return ret;
         }
 
@@ -285,6 +274,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<ImportData>(DocConstantModelName.IMPORTDATA, nameof(ImportData), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pCompletedOn = request.CompletedOn;
@@ -532,8 +523,10 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.DocumentSets));
                 }
             }
-            request.VisibleFields = InitVisibleFields<ImportData>(Dto.ImportData.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, nameof(ImportData), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.IMPORTDATA);
 
             return ret;
         }
@@ -633,6 +626,8 @@ namespace Services.API
                     var pRequestedOn = entity.RequestedOn;
                     var pStartedOn = entity.StartedOn;
                     var pStatus = entity.Status;
+                #region Custom Before copyImportData
+                #endregion Custom Before copyImportData
                 var copy = new DocEntityImportData(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -659,6 +654,8 @@ namespace Services.API
                                 entity.DocumentSets.Add(item);
                             }
 
+                #region Custom After copyImportData
+                #endregion Custom After copyImportData
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -785,6 +782,10 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+
+                DocCacheClient.RemoveSearch(DocConstantModelName.IMPORTDATA);
+                DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityImportData.GetImportData(request?.Id);
 
                 if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No ImportData could be found for Id {request?.Id}.");
@@ -973,7 +974,7 @@ namespace Services.API
             ImportData ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<ImportData>(Dto.ImportData.Fields, request);
+            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
 
             DocEntityImportData entity = null;
             if(id.HasValue)
@@ -1001,6 +1002,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

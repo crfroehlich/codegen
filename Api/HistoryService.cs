@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class HistoryService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityHistory.CACHE_KEY_PREFIX;
         private void _ExecSearch(HistorySearch request, Action<IQueryable<DocEntityHistory>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request);
+            DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityHistory>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityHistory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new HistoryFullTextSearch(request);
@@ -155,54 +155,40 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(HistorySearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<History>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHistory,History>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(HistorySearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<History>();
+            var cacheKey = GetApiCacheKey<History>(DocConstantModelName.HISTORY, nameof(History), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<History>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHistory,History>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.HISTORY, search: true);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.HISTORY, search: true);
             return tryRet;
         }
 
@@ -214,12 +200,9 @@ namespace Services.API
         public object Get(HistoryVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -231,11 +214,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<History>(DocConstantModelName.HISTORY, nameof(History), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request);
-                ret = GetHistory(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetHistory(request);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
+                });
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
             return ret;
         }
 
@@ -253,6 +242,8 @@ namespace Services.API
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
+            var cacheKey = GetApiCacheKey<History>(DocConstantModelName.HISTORY, nameof(History), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
@@ -366,8 +357,10 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request);
+            DocPermissionFactory.SetVisibleFields<History>(currentUser, nameof(History), request.VisibleFields);
             ret = entity.ToDto();
+
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
 
             return ret;
         }
@@ -457,6 +450,8 @@ namespace Services.API
                     var pUser = entity.User;
                     var pUserSession = entity.UserSession;
                     var pWorkflow = entity.Workflow;
+                #region Custom Before copyHistory
+                #endregion Custom Before copyHistory
                 var copy = new DocEntityHistory(ssn)
                 {
                     Hash = Guid.NewGuid()
@@ -469,6 +464,8 @@ namespace Services.API
                                 , UserSession = pUserSession
                                 , Workflow = pWorkflow
                 };
+                #region Custom After copyHistory
+                #endregion Custom After copyHistory
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -484,7 +481,7 @@ namespace Services.API
             History ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request);
+            DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
 
             DocEntityHistory entity = null;
             if(id.HasValue)
@@ -512,6 +509,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

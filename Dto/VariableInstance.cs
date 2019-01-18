@@ -75,9 +75,7 @@ namespace Services.Dto
     }
 
     [Route("/variableinstance", "POST")]
-    [Route("/profile/variableinstance", "POST")]
     [Route("/variableinstance/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/variableinstance/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class VariableInstance : VariableInstanceBase, IReturn<VariableInstance>, IDto
     {
         public VariableInstance()
@@ -130,12 +128,9 @@ namespace Services.Dto
     }
     
     [Route("/VariableInstance/{Id}/copy", "POST")]
-    [Route("/profile/VariableInstance/{Id}/copy", "POST")]
     public partial class VariableInstanceCopy : VariableInstance {}
     [Route("/variableinstance", "GET")]
-    [Route("/profile/variableinstance", "GET")]
     [Route("/variableinstance/search", "GET, POST, DELETE")]
-    [Route("/profile/variableinstance/search", "GET, POST, DELETE")]
     public partial class VariableInstanceSearch : Search<VariableInstance>
     {
         public string Data { get; set; }
@@ -169,11 +164,9 @@ namespace Services.Dto
     public partial class VariableInstanceVersion : VariableInstanceSearch {}
 
     [Route("/variableinstance/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/variableinstance/batch", "DELETE, PATCH, POST, PUT")]
     public partial class VariableInstanceBatch : List<VariableInstance> { }
 
     [Route("/variableinstance/{Id}/workflow", "GET, POST, DELETE")]
-    [Route("/profile/variableinstance/{Id}/workflow", "GET, POST, DELETE")]
     public class VariableInstanceJunction : Search<VariableInstance>
     {
         public int? Id { get; set; }
@@ -194,7 +187,6 @@ namespace Services.Dto
 
 
     [Route("/variableinstance/{Id}/workflow/version", "GET")]
-    [Route("/profile/variableinstance/{Id}/workflow/version", "GET")]
     public class VariableInstanceJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

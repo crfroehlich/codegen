@@ -97,9 +97,7 @@ namespace Services.Dto
     }
 
     [Route("/variablerule", "POST")]
-    [Route("/profile/variablerule", "POST")]
     [Route("/variablerule/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/variablerule/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class VariableRule : VariableRuleBase, IReturn<VariableRule>, IDto
     {
         public VariableRule()
@@ -152,12 +150,9 @@ namespace Services.Dto
     }
     
     [Route("/VariableRule/{Id}/copy", "POST")]
-    [Route("/profile/VariableRule/{Id}/copy", "POST")]
     public partial class VariableRuleCopy : VariableRule {}
     [Route("/variablerule", "GET")]
-    [Route("/profile/variablerule", "GET")]
     [Route("/variablerule/search", "GET, POST, DELETE")]
-    [Route("/profile/variablerule/search", "GET, POST, DELETE")]
     public partial class VariableRuleSearch : Search<VariableRule>
     {
         public List<int> ChildrenIds { get; set; }
@@ -204,15 +199,11 @@ namespace Services.Dto
     public partial class VariableRuleVersion : VariableRuleSearch {}
 
     [Route("/variablerule/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/variablerule/batch", "DELETE, PATCH, POST, PUT")]
     public partial class VariableRuleBatch : List<VariableRule> { }
 
     [Route("/variablerule/{Id}/variablerule", "GET, POST, DELETE")]
-    [Route("/profile/variablerule/{Id}/variablerule", "GET, POST, DELETE")]
     [Route("/variablerule/{Id}/variableinstance", "GET, POST, DELETE")]
-    [Route("/profile/variablerule/{Id}/variableinstance", "GET, POST, DELETE")]
     [Route("/variablerule/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/profile/variablerule/{Id}/scope", "GET, POST, DELETE")]
     public class VariableRuleJunction : Search<VariableRule>
     {
         public int? Id { get; set; }
@@ -233,11 +224,8 @@ namespace Services.Dto
 
 
     [Route("/variablerule/{Id}/variablerule/version", "GET")]
-    [Route("/profile/variablerule/{Id}/variablerule/version", "GET")]
     [Route("/variablerule/{Id}/variableinstance/version", "GET")]
-    [Route("/profile/variablerule/{Id}/variableinstance/version", "GET")]
     [Route("/variablerule/{Id}/scope/version", "GET")]
-    [Route("/profile/variablerule/{Id}/scope/version", "GET")]
     public class VariableRuleJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

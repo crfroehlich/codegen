@@ -145,9 +145,7 @@ namespace Services.Dto
     }
 
     [Route("/product", "POST")]
-    [Route("/profile/product", "POST")]
     [Route("/product/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/product/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Product : ProductBase, IReturn<Product>, IDto
     {
         public Product()
@@ -200,12 +198,9 @@ namespace Services.Dto
     }
     
     [Route("/Product/{Id}/copy", "POST")]
-    [Route("/profile/Product/{Id}/copy", "POST")]
     public partial class ProductCopy : Product {}
     [Route("/product", "GET")]
-    [Route("/profile/product", "GET")]
     [Route("/product/search", "GET, POST, DELETE")]
-    [Route("/profile/product/search", "GET, POST, DELETE")]
     public partial class ProductSearch : Search<Product>
     {
         public List<int> ChildrenIds { get; set; }
@@ -279,13 +274,10 @@ namespace Services.Dto
     public partial class ProductVersion : ProductSearch {}
 
     [Route("/product/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/product/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ProductBatch : List<Product> { }
 
     [Route("/product/{Id}/product", "GET, POST, DELETE")]
-    [Route("/profile/product/{Id}/product", "GET, POST, DELETE")]
     [Route("/product/{Id}/timecard", "GET, POST, DELETE")]
-    [Route("/profile/product/{Id}/timecard", "GET, POST, DELETE")]
     public class ProductJunction : Search<Product>
     {
         public int? Id { get; set; }
@@ -306,9 +298,7 @@ namespace Services.Dto
 
 
     [Route("/product/{Id}/product/version", "GET")]
-    [Route("/profile/product/{Id}/product/version", "GET")]
     [Route("/product/{Id}/timecard/version", "GET")]
-    [Route("/profile/product/{Id}/timecard/version", "GET")]
     public class ProductJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

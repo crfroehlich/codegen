@@ -66,9 +66,7 @@ namespace Services.Dto
     }
 
     [Route("/documentattribute", "POST")]
-    [Route("/profile/documentattribute", "POST")]
     [Route("/documentattribute/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/documentattribute/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class DocumentAttribute : DocumentAttributeBase, IReturn<DocumentAttribute>, IDto
     {
         public DocumentAttribute()
@@ -114,12 +112,9 @@ namespace Services.Dto
     }
     
     [Route("/DocumentAttribute/{Id}/copy", "POST")]
-    [Route("/profile/DocumentAttribute/{Id}/copy", "POST")]
     public partial class DocumentAttributeCopy : DocumentAttribute {}
     [Route("/documentattribute", "GET")]
-    [Route("/profile/documentattribute", "GET")]
     [Route("/documentattribute/search", "GET, POST, DELETE")]
-    [Route("/profile/documentattribute/search", "GET, POST, DELETE")]
     public partial class DocumentAttributeSearch : Search<DocumentAttribute>
     {
         public Reference Attribute { get; set; }
@@ -149,7 +144,6 @@ namespace Services.Dto
     public partial class DocumentAttributeVersion : DocumentAttributeSearch {}
 
     [Route("/documentattribute/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/documentattribute/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentAttributeBatch : List<DocumentAttribute> { }
 
     [Route("/admin/documentattribute/ids", "GET, POST")]

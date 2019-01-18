@@ -87,7 +87,6 @@ namespace Services.Dto
     }
 
     [Route("/event/{Id}", "GET")]
-    [Route("/profile/event/{Id}", "GET")]
     public partial class Event : EventBase, IReturn<Event>, IDto
     {
         public Event()
@@ -140,9 +139,7 @@ namespace Services.Dto
     }
     
     [Route("/event", "GET")]
-    [Route("/profile/event", "GET")]
     [Route("/event/search", "GET, POST, DELETE")]
-    [Route("/profile/event/search", "GET, POST, DELETE")]
     public partial class EventSearch : Search<Event>
     {
         public Reference AuditRecord { get; set; }
@@ -183,15 +180,11 @@ namespace Services.Dto
     public partial class EventVersion : EventSearch {}
 
     [Route("/event/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/event/batch", "DELETE, PATCH, POST, PUT")]
     public partial class EventBatch : List<Event> { }
 
     [Route("/event/{Id}/team", "GET, POST, DELETE")]
-    [Route("/profile/event/{Id}/team", "GET, POST, DELETE")]
     [Route("/event/{Id}/update", "GET, POST, DELETE")]
-    [Route("/profile/event/{Id}/update", "GET, POST, DELETE")]
     [Route("/event/{Id}/user", "GET, POST, DELETE")]
-    [Route("/profile/event/{Id}/user", "GET, POST, DELETE")]
     public class EventJunction : Search<Event>
     {
         public int? Id { get; set; }
@@ -212,11 +205,8 @@ namespace Services.Dto
 
 
     [Route("/event/{Id}/team/version", "GET")]
-    [Route("/profile/event/{Id}/team/version", "GET")]
     [Route("/event/{Id}/update/version", "GET")]
-    [Route("/profile/event/{Id}/update/version", "GET")]
     [Route("/event/{Id}/user/version", "GET")]
-    [Route("/profile/event/{Id}/user/version", "GET")]
     public class EventJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

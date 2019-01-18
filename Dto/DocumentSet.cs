@@ -274,9 +274,7 @@ namespace Services.Dto
     }
 
     [Route("/documentset", "POST")]
-    [Route("/profile/documentset", "POST")]
     [Route("/documentset/{Id}", "GET, PATCH, PUT, DELETE")]
-    [Route("/profile/documentset/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class DocumentSet : DocumentSetBase, IReturn<DocumentSet>, IDto
     {
         public DocumentSet()
@@ -329,12 +327,9 @@ namespace Services.Dto
     }
     
     [Route("/DocumentSet/{Id}/copy", "POST")]
-    [Route("/profile/DocumentSet/{Id}/copy", "POST")]
     public partial class DocumentSetCopy : DocumentSet {}
     [Route("/documentset", "GET")]
-    [Route("/profile/documentset", "GET")]
     [Route("/documentset/search", "GET, POST, DELETE")]
-    [Route("/profile/documentset/search", "GET, POST, DELETE")]
     public partial class DocumentSetSearch : Search<DocumentSet>
     {
         public string AdditionalCriteria { get; set; }
@@ -465,53 +460,30 @@ namespace Services.Dto
     public partial class DocumentSetVersion : DocumentSetSearch {}
 
     [Route("/documentset/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/documentset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentSetBatch : List<DocumentSet> { }
 
     [Route("/documentset/{Id}/allusers", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/allusers", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/lookuptablebinding", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/jctattributecategoryattributedocumentset", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/jctattributecategoryattributedocumentset", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/characteristic", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/characteristic", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/client", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/client", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/comparator", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/comparator", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/division", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/division", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/document", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/document", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/documentset", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/documentsethistory", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/documentsethistory", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/importdata", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/importdata", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/intervention", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/intervention", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/nondigitizeddocument", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/nondigitizeddocument", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/outcome", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/outcome", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/package", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/package", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/product", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/product", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/projectlink", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/projectlink", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/scope", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/statsstudyset", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/statsstudyset", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/studydesign", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/studydesign", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/user", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/user", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/workflow", "GET, POST, DELETE")]
-    [Route("/profile/documentset/{Id}/workflow", "GET, POST, DELETE")]
     public class DocumentSetJunction : Search<DocumentSet>
     {
         public int? Id { get; set; }
@@ -532,49 +504,27 @@ namespace Services.Dto
 
 
     [Route("/documentset/{Id}/allusers/version", "GET")]
-    [Route("/profile/documentset/{Id}/allusers/version", "GET")]
     [Route("/documentset/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/profile/documentset/{Id}/lookuptablebinding/version", "GET")]
     [Route("/documentset/{Id}/jctattributecategoryattributedocumentset/version", "GET")]
-    [Route("/profile/documentset/{Id}/jctattributecategoryattributedocumentset/version", "GET")]
     [Route("/documentset/{Id}/characteristic/version", "GET")]
-    [Route("/profile/documentset/{Id}/characteristic/version", "GET")]
     [Route("/documentset/{Id}/client/version", "GET")]
-    [Route("/profile/documentset/{Id}/client/version", "GET")]
     [Route("/documentset/{Id}/comparator/version", "GET")]
-    [Route("/profile/documentset/{Id}/comparator/version", "GET")]
     [Route("/documentset/{Id}/division/version", "GET")]
-    [Route("/profile/documentset/{Id}/division/version", "GET")]
     [Route("/documentset/{Id}/document/version", "GET")]
-    [Route("/profile/documentset/{Id}/document/version", "GET")]
     [Route("/documentset/{Id}/documentset/version", "GET")]
-    [Route("/profile/documentset/{Id}/documentset/version", "GET")]
     [Route("/documentset/{Id}/documentsethistory/version", "GET")]
-    [Route("/profile/documentset/{Id}/documentsethistory/version", "GET")]
     [Route("/documentset/{Id}/importdata/version", "GET")]
-    [Route("/profile/documentset/{Id}/importdata/version", "GET")]
     [Route("/documentset/{Id}/intervention/version", "GET")]
-    [Route("/profile/documentset/{Id}/intervention/version", "GET")]
     [Route("/documentset/{Id}/nondigitizeddocument/version", "GET")]
-    [Route("/profile/documentset/{Id}/nondigitizeddocument/version", "GET")]
     [Route("/documentset/{Id}/outcome/version", "GET")]
-    [Route("/profile/documentset/{Id}/outcome/version", "GET")]
     [Route("/documentset/{Id}/package/version", "GET")]
-    [Route("/profile/documentset/{Id}/package/version", "GET")]
     [Route("/documentset/{Id}/product/version", "GET")]
-    [Route("/profile/documentset/{Id}/product/version", "GET")]
     [Route("/documentset/{Id}/projectlink/version", "GET")]
-    [Route("/profile/documentset/{Id}/projectlink/version", "GET")]
     [Route("/documentset/{Id}/scope/version", "GET")]
-    [Route("/profile/documentset/{Id}/scope/version", "GET")]
     [Route("/documentset/{Id}/statsstudyset/version", "GET")]
-    [Route("/profile/documentset/{Id}/statsstudyset/version", "GET")]
     [Route("/documentset/{Id}/studydesign/version", "GET")]
-    [Route("/profile/documentset/{Id}/studydesign/version", "GET")]
     [Route("/documentset/{Id}/user/version", "GET")]
-    [Route("/profile/documentset/{Id}/user/version", "GET")]
     [Route("/documentset/{Id}/workflow/version", "GET")]
-    [Route("/profile/documentset/{Id}/workflow/version", "GET")]
     public class DocumentSetJunctionVersion : IReturn<Version>
     {
         public int? Id { get; set; }

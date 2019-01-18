@@ -100,9 +100,7 @@ namespace Services.Dto
     }
 
     [Route("/history", "POST")]
-    [Route("/profile/history", "POST")]
     [Route("/history/{Id}", "GET")]
-    [Route("/profile/history/{Id}", "GET")]
     public partial class History : HistoryBase, IReturn<History>, IDto
     {
         public History()
@@ -150,12 +148,9 @@ namespace Services.Dto
     }
     
     [Route("/History/{Id}/copy", "POST")]
-    [Route("/profile/History/{Id}/copy", "POST")]
     public partial class HistoryCopy : History {}
     [Route("/history", "GET")]
-    [Route("/profile/history", "GET")]
     [Route("/history/search", "GET, POST, DELETE")]
-    [Route("/profile/history/search", "GET, POST, DELETE")]
     public partial class HistorySearch : Search<History>
     {
         public Reference App { get; set; }
@@ -202,7 +197,6 @@ namespace Services.Dto
     public partial class HistoryVersion : HistorySearch {}
 
     [Route("/history/batch", "DELETE, PATCH, POST, PUT")]
-    [Route("/profile/history/batch", "DELETE, PATCH, POST, PUT")]
     public partial class HistoryBatch : List<History> { }
 
     [Route("/admin/history/ids", "GET, POST")]

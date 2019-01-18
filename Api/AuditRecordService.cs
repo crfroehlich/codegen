@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -44,14 +43,15 @@ namespace Services.API
 {
     public partial class AuditRecordService : DocServiceBase
     {
-        public const string CACHE_KEY_PREFIX = DocEntityAuditRecord.CACHE_KEY_PREFIX;
         private void _ExecSearch(AuditRecordSearch request, Action<IQueryable<DocEntityAuditRecord>> callBack)
         {
             request = InitSearch(request);
             
-            request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request);
+            DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
 
-            var entities = Execute.SelectAll<DocEntityAuditRecord>();
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityAuditRecord>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AuditRecordFullTextSearch(request);
@@ -147,54 +147,40 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            callBack?.Invoke(entities);
+                callBack?.Invoke(entities);
+            });
         }
         
         public object Post(AuditRecordSearch request)
         {
-            object tryRet = null;
-            Execute.Run(s =>
-            {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
-                {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
-                    {
-                        var ret = new List<AuditRecord>();
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAuditRecord,AuditRecord>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
-                    }
-                }
-            });
-            return tryRet;
+            return Get(request);
         }
 
         public object Get(AuditRecordSearch request)
         {
             object tryRet = null;
-            Execute.Run(s =>
+            var ret = new List<AuditRecord>();
+            var cacheKey = GetApiCacheKey<AuditRecord>(DocConstantModelName.AUDITRECORD, nameof(AuditRecord), request);
+            using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
-                using (var cancellableRequest = base.Request.CreateCancellableRequest())
+                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
+                try 
                 {
-                    var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                    try 
+                    if (tryRet == null)
                     {
-                        var ret = new List<AuditRecord>();
                         _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAuditRecord,AuditRecord>(ret, Execute, requestCancel));
                         tryRet = ret;
-                    }
-                    catch(Exception) { throw; }
-                    finally
-                    {
-                        requestCancel?.CloseRequest();
+                        //Go ahead and cache the result for any future consumers
+                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.AUDITRECORD, search: true);
                     }
                 }
-            });
+                catch(Exception) { throw; }
+                finally
+                {
+                    requestCancel?.CloseRequest();
+                }
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.AUDITRECORD, search: true);
             return tryRet;
         }
 
@@ -206,12 +192,9 @@ namespace Services.API
         public object Get(AuditRecordVersion request) 
         {
             var ret = new List<Version>();
-            Execute.Run(s =>
+            _ExecSearch(request, (entities) => 
             {
-                _ExecSearch(request, (entities) => 
-                {
-                    ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-                });
+                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
@@ -223,11 +206,17 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            Execute.Run(s =>
+            DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<AuditRecord>(DocConstantModelName.AUDITRECORD, nameof(AuditRecord), request);
+            if(null == ret)
             {
-                request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request);
-                ret = GetAuditRecord(request);
-            });
+                Execute.Run(s =>
+                {
+                    ret = GetAuditRecord(request);
+                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.AUDITRECORD);
+                });
+            }
+            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.AUDITRECORD);
             return ret;
         }
 
@@ -335,7 +324,7 @@ namespace Services.API
             AuditRecord ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request);
+            DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
 
             DocEntityAuditRecord entity = null;
             if(id.HasValue)
@@ -363,6 +352,7 @@ namespace Services.API
             {
                 throw new HttpError(HttpStatusCode.Forbidden);
             }
+
             return ret;
         }
     }

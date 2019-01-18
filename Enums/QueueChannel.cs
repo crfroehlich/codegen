@@ -35,8 +35,6 @@ namespace Services.Enums
         SERVICES_AUDIT,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_AUDIT_FAILURES)]
         SERVICES_AUDIT_FAILURES,
-        [EnumMember(Value = DocConstantQueueChannel.SERVICES_CACHE_INVALIDATION)]
-        SERVICES_CACHE_INVALIDATION,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_DOCUMENT_UPDATE)]
         SERVICES_DOCUMENT_UPDATE,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_EXTRACT_NOTIFICATION)]
@@ -53,6 +51,8 @@ namespace Services.Enums
         SERVICES_LOG_TO_STACKIFY,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGGING)]
         SERVICES_LOGGING,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_SALESFORCE)]
+        SERVICES_SALESFORCE,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_SLACK)]
         SERVICES_SLACK,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_SESSION)]
@@ -70,7 +70,6 @@ namespace Services.Enums
         public const string QUEUE_ERROR = "queue_error";
         public const string SERVICES_AUDIT = "services_audit";
         public const string SERVICES_AUDIT_FAILURES = "services_audit_failures";
-        public const string SERVICES_CACHE_INVALIDATION = "services_cache_invalidation";
         public const string SERVICES_DOCUMENT_UPDATE = "services_document_update";
         public const string SERVICES_EXTRACT_NOTIFICATION = "services_extract_notification";
         public const string SERVICES_HEARTBEAT = "services_heartbeat";
@@ -79,6 +78,7 @@ namespace Services.Enums
         public const string SERVICES_LOG_TO_SLACK = "services_log_to_slack";
         public const string SERVICES_LOG_TO_STACKIFY = "services_log_to_stackify";
         public const string SERVICES_LOGGING = "services_logging";
+        public const string SERVICES_SALESFORCE = "services_salesforce";
         public const string SERVICES_SLACK = "services_slack";
         public const string SERVICES_USER_SESSION = "services_user_session";
         public const string SERVICES_USER_UPDATE = "services_user_update";
