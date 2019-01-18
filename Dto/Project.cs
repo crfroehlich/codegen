@@ -6,29 +6,51 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using AutoMapper;
 
 using Services.Core;
+using Services.Db;
+using Services.Dto;
+using Services.Enums;
+using Services.Models;
+using Services.Schema;
+
+using Typed;
+using Typed.Bindings;
+using Typed.Notifications;
+using Typed.Security;
+using Typed.Settings;
 
 using ServiceStack;
+using ServiceStack.Text;
 
 using System;
+using System.Runtime.Serialization;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net;
+
+using Xtensive.Orm;
+using Xtensive.Orm.Model;
+
+using Attribute = Services.Dto.Attribute;
+using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
     public abstract partial class ProjectBase : Dto<Project>
     {
-        public ProjectBase() { }
+        public ProjectBase() {}
 
         public ProjectBase(int id) : this()
         {
-            if (id > 0) Id = id;
+            if(id > 0) Id = id;
         }
 
-        public ProjectBase(int? id) : this(DocConvert.ToInt(id)) { }
-
+        public ProjectBase(int? id) : this(DocConvert.ToInt(id)) {}
+    
         [ApiMember(Name = nameof(Children), Description = "Project", IsRequired = false)]
         public List<Reference> Children { get; set; }
         public int? ChildrenCount { get; set; }
@@ -109,7 +131,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] { @"Active", @"Archived", @"Inactive" })]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -131,11 +153,11 @@ namespace Services.Dto
             _Constructor();
         }
 
-        public Project(int? id) : base(DocConvert.ToInt(id)) { }
-        public Project(int id) : base(id) { }
-
+        public Project(int? id) : base(DocConvert.ToInt(id)) {}
+        public Project(int id) : base(id) {}
+        
         #region Fields
-
+        
         public bool? ShouldSerialize(string field)
         {
             if (IgnoredVisibleFields.Matches(field, true)) return false;
@@ -147,13 +169,13 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] { nameof(Children), nameof(ChildrenCount), nameof(Client), nameof(ClientId), nameof(Created), nameof(CreatorId), nameof(DatabaseDeadline), nameof(DatabaseName), nameof(Dataset), nameof(DatasetId), nameof(DeliverableDeadline), nameof(FqId), nameof(Gestalt), nameof(LegacyPackageId), nameof(LibraryPackageId), nameof(LibraryPackageName), nameof(Locked), nameof(Number), nameof(OperationsDeliverable), nameof(OpportunityId), nameof(OpportunityName), nameof(Parent), nameof(ParentId), nameof(PICO), nameof(ProjectId), nameof(ProjectName), nameof(Status), nameof(StatusId), nameof(TimeCards), nameof(TimeCardsCount), nameof(Updated), nameof(VersionNo) })]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LegacyPackageId),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(OpportunityId),nameof(OpportunityName),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(ProjectId),nameof(ProjectName),nameof(Status),nameof(StatusId),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
             {
-                if (null == this) return new List<string>();
-                if (null == _VisibleFields)
+                if(null == this) return new List<string>();
+                if(null == _VisibleFields)
                 {
                     _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
@@ -162,8 +184,8 @@ namespace Services.Dto
             set
             {
                 var requested = value ?? new List<string>();
-                var exists = requested.Where(r => Fields.Any(f => DocTools.AreEqual(r, f))).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Project>("Project", exists);
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Project>("Project",exists);
             }
         }
 
@@ -174,9 +196,9 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
     }
-
+    
     [Route("/Project/{Id}/copy", "POST")]
-    public partial class ProjectCopy : Project { }
+    public partial class ProjectCopy : Project {}
     [Route("/project", "GET")]
     [Route("/project/search", "GET, POST, DELETE")]
     public partial class ProjectSearch : Search<Project>
@@ -208,16 +230,16 @@ namespace Services.Dto
         public string ProjectName { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] { @"Active", @"Archived", @"Inactive" })]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         public List<string> StatusNames { get; set; }
         public List<int> TimeCardsIds { get; set; }
     }
-
+    
     public class ProjectFullTextSearch
     {
         private ProjectSearch _request;
         public ProjectFullTextSearch(ProjectSearch request) => _request = request;
-
+        
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -225,7 +247,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Updated))); }
-
+        
         public bool doChildren { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Children))); }
         public bool doClient { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.Client))); }
         public bool doDatabaseDeadline { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.DatabaseDeadline))); }
@@ -249,7 +271,7 @@ namespace Services.Dto
     }
 
     [Route("/project/version", "GET, POST")]
-    public partial class ProjectVersion : ProjectSearch { }
+    public partial class ProjectVersion : ProjectSearch {}
 
     [Route("/project/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ProjectBatch : List<Project> { }

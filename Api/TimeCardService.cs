@@ -6,24 +6,37 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using AutoMapper;
 
 using Services.Core;
 using Services.Db;
 using Services.Dto;
 using Services.Enums;
+using Services.Models;
 using Services.Schema;
 
+using Typed;
+using Typed.Bindings;
+using Typed.Notifications;
+using Typed.Settings;
+
 using ServiceStack;
+using ServiceStack.Text;
 
 using System;
+using System.Runtime.Serialization;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Net;
 using System.Web;
 
 using Xtensive.Orm;
+using Xtensive.Orm.Model;
 
+using Attribute = Services.Dto.Attribute;
+using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
 
 namespace Services.API
@@ -33,141 +46,141 @@ namespace Services.API
         private void _ExecSearch(TimeCardSearch request, Action<IQueryable<DocEntityTimeCard>> callBack)
         {
             request = InitSearch(request);
-
+            
             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
 
-            Execute.Run(session =>
-           {
-               var entities = Execute.SelectAll<DocEntityTimeCard>();
-               if (!DocTools.IsNullOrEmpty(request.FullTextSearch))
-               {
-                   var fts = new TimeCardFullTextSearch(request);
-                   entities = GetFullTextSearch(fts, entities);
-               }
+            Execute.Run( session => 
+            {
+                var entities = Execute.SelectAll<DocEntityTimeCard>();
+                if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
+                {
+                    var fts = new TimeCardFullTextSearch(request);
+                    entities = GetFullTextSearch(fts, entities);
+                }
 
-               if (null != request.Ids && request.Ids.Any())
-                   entities = entities.Where(en => en.Id.In(request.Ids));
+                if(null != request.Ids && request.Ids.Any())
+                    entities = entities.Where(en => en.Id.In(request.Ids));
 
-               if (!DocTools.IsNullOrEmpty(request.Updated))
-               {
-                   entities = entities.Where(e => null != e.Updated && e.Updated.Value.Date == request.Updated.Value.Date);
-               }
-               if (!DocTools.IsNullOrEmpty(request.UpdatedBefore))
-               {
-                   entities = entities.Where(e => null != e.Updated && e.Updated <= request.UpdatedBefore);
-               }
-               if (!DocTools.IsNullOrEmpty(request.UpdatedAfter))
-               {
-                   entities = entities.Where(e => null != e.Updated && e.Updated >= request.UpdatedAfter);
-               }
-               if (!DocTools.IsNullOrEmpty(request.Created))
-               {
-                   entities = entities.Where(e => null != e.Created && e.Created.Value.Date == request.Created.Value.Date);
-               }
-               if (!DocTools.IsNullOrEmpty(request.CreatedBefore))
-               {
-                   entities = entities.Where(e => null != e.Created && e.Created <= request.CreatedBefore);
-               }
-               if (!DocTools.IsNullOrEmpty(request.CreatedAfter))
-               {
-                   entities = entities.Where(e => null != e.Created && e.Created >= request.CreatedAfter);
-               }
+                if (!DocTools.IsNullOrEmpty(request.Updated))
+                {
+                    entities = entities.Where(e => null != e.Updated && e.Updated.Value.Date == request.Updated.Value.Date);
+                }
+                if (!DocTools.IsNullOrEmpty(request.UpdatedBefore))
+                {
+                    entities = entities.Where(e => null != e.Updated && e.Updated <= request.UpdatedBefore);
+                }
+                if( !DocTools.IsNullOrEmpty( request.UpdatedAfter ) )
+                {
+                    entities = entities.Where(e => null != e.Updated && e.Updated >= request.UpdatedAfter);
+                }
+                if (!DocTools.IsNullOrEmpty(request.Created))
+                {
+                    entities = entities.Where(e => null!= e.Created && e.Created.Value.Date == request.Created.Value.Date);
+                }
+                if (!DocTools.IsNullOrEmpty(request.CreatedBefore))
+                {
+                    entities = entities.Where(e => null!= e.Created && e.Created <= request.CreatedBefore);
+                }
+                if( !DocTools.IsNullOrEmpty( request.CreatedAfter ) )
+                {
+                    entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
+                }
 
-               if (!DocTools.IsNullOrEmpty(request.Description))
-                   entities = entities.Where(en => en.Description.Contains(request.Description));
-               if (!DocTools.IsNullOrEmpty(request.Document) && !DocTools.IsNullOrEmpty(request.Document.Id))
-               {
-                   entities = entities.Where(en => en.Document.Id == request.Document.Id);
-               }
-               if (true == request.DocumentIds?.Any())
-               {
-                   entities = entities.Where(en => en.Document.Id.In(request.DocumentIds));
-               }
-               if (!DocTools.IsNullOrEmpty(request.End))
-                   entities = entities.Where(en => request.End.Value.Date == en.End.Date);
-               if (!DocTools.IsNullOrEmpty(request.EndBefore))
-                   entities = entities.Where(en => en.End <= request.EndBefore);
-               if (!DocTools.IsNullOrEmpty(request.EndAfter))
-                   entities = entities.Where(en => en.End >= request.EndAfter);
-               if (!DocTools.IsNullOrEmpty(request.PICO) && !DocTools.IsNullOrEmpty(request.PICO.Id))
-               {
-                   entities = entities.Where(en => en.PICO.Id == request.PICO.Id);
-               }
-               if (true == request.PICOIds?.Any())
-               {
-                   entities = entities.Where(en => en.PICO.Id.In(request.PICOIds));
-               }
-               if (!DocTools.IsNullOrEmpty(request.Project) && !DocTools.IsNullOrEmpty(request.Project.Id))
-               {
-                   entities = entities.Where(en => en.Project.Id == request.Project.Id);
-               }
-               if (true == request.ProjectIds?.Any())
-               {
-                   entities = entities.Where(en => en.Project.Id.In(request.ProjectIds));
-               }
-               if (request.ReferenceId.HasValue)
-                   entities = entities.Where(en => request.ReferenceId.Value == en.ReferenceId);
-               if (!DocTools.IsNullOrEmpty(request.Start))
-                   entities = entities.Where(en => request.Start.Value.Date == en.Start.Date);
-               if (!DocTools.IsNullOrEmpty(request.StartBefore))
-                   entities = entities.Where(en => en.Start <= request.StartBefore);
-               if (!DocTools.IsNullOrEmpty(request.StartAfter))
-                   entities = entities.Where(en => en.Start >= request.StartAfter);
-               if (!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Id))
-               {
-                   entities = entities.Where(en => en.Status.Id == request.Status.Id);
-               }
-               if (true == request.StatusIds?.Any())
-               {
-                   entities = entities.Where(en => en.Status.Id.In(request.StatusIds));
-               }
-               else if (!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Name))
-               {
-                   entities = entities.Where(en => en.Status.Name == request.Status.Name);
-               }
-               if (true == request.StatusNames?.Any())
-               {
-                   entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
-               }
-               if (!DocTools.IsNullOrEmpty(request.User) && !DocTools.IsNullOrEmpty(request.User.Id))
-               {
-                   entities = entities.Where(en => en.User.Id == request.User.Id);
-               }
-               if (true == request.UserIds?.Any())
-               {
-                   entities = entities.Where(en => en.User.Id.In(request.UserIds));
-               }
-               if (!DocTools.IsNullOrEmpty(request.WorkType) && !DocTools.IsNullOrEmpty(request.WorkType.Id))
-               {
-                   entities = entities.Where(en => en.WorkType.Id == request.WorkType.Id);
-               }
-               if (true == request.WorkTypeIds?.Any())
-               {
-                   entities = entities.Where(en => en.WorkType.Id.In(request.WorkTypeIds));
-               }
-               else if (!DocTools.IsNullOrEmpty(request.WorkType) && !DocTools.IsNullOrEmpty(request.WorkType.Name))
-               {
-                   entities = entities.Where(en => en.WorkType.Name == request.WorkType.Name);
-               }
-               if (true == request.WorkTypeNames?.Any())
-               {
-                   entities = entities.Where(en => en.WorkType.Name.In(request.WorkTypeNames));
-               }
+                if(!DocTools.IsNullOrEmpty(request.Description))
+                    entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.Document) && !DocTools.IsNullOrEmpty(request.Document.Id))
+                {
+                    entities = entities.Where(en => en.Document.Id == request.Document.Id );
+                }
+                if(true == request.DocumentIds?.Any())
+                {
+                    entities = entities.Where(en => en.Document.Id.In(request.DocumentIds));
+                }
+                if(!DocTools.IsNullOrEmpty(request.End))
+                    entities = entities.Where(en => request.End.Value.Date == en.End.Date);
+                if(!DocTools.IsNullOrEmpty(request.EndBefore))
+                    entities = entities.Where(en => en.End <= request.EndBefore);
+                if(!DocTools.IsNullOrEmpty(request.EndAfter))
+                    entities = entities.Where(en => en.End >= request.EndAfter);
+                if(!DocTools.IsNullOrEmpty(request.PICO) && !DocTools.IsNullOrEmpty(request.PICO.Id))
+                {
+                    entities = entities.Where(en => en.PICO.Id == request.PICO.Id );
+                }
+                if(true == request.PICOIds?.Any())
+                {
+                    entities = entities.Where(en => en.PICO.Id.In(request.PICOIds));
+                }
+                if(!DocTools.IsNullOrEmpty(request.Project) && !DocTools.IsNullOrEmpty(request.Project.Id))
+                {
+                    entities = entities.Where(en => en.Project.Id == request.Project.Id );
+                }
+                if(true == request.ProjectIds?.Any())
+                {
+                    entities = entities.Where(en => en.Project.Id.In(request.ProjectIds));
+                }
+                if(request.ReferenceId.HasValue)
+                    entities = entities.Where(en => request.ReferenceId.Value == en.ReferenceId);
+                if(!DocTools.IsNullOrEmpty(request.Start))
+                    entities = entities.Where(en => request.Start.Value.Date == en.Start.Date);
+                if(!DocTools.IsNullOrEmpty(request.StartBefore))
+                    entities = entities.Where(en => en.Start <= request.StartBefore);
+                if(!DocTools.IsNullOrEmpty(request.StartAfter))
+                    entities = entities.Where(en => en.Start >= request.StartAfter);
+                if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Id))
+                {
+                    entities = entities.Where(en => en.Status.Id == request.Status.Id );
+                }
+                if(true == request.StatusIds?.Any())
+                {
+                    entities = entities.Where(en => en.Status.Id.In(request.StatusIds));
+                }
+                else if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Name))
+                {
+                    entities = entities.Where(en => en.Status.Name == request.Status.Name );
+                }
+                if(true == request.StatusNames?.Any())
+                {
+                    entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
+                }
+                if(!DocTools.IsNullOrEmpty(request.User) && !DocTools.IsNullOrEmpty(request.User.Id))
+                {
+                    entities = entities.Where(en => en.User.Id == request.User.Id );
+                }
+                if(true == request.UserIds?.Any())
+                {
+                    entities = entities.Where(en => en.User.Id.In(request.UserIds));
+                }
+                if(!DocTools.IsNullOrEmpty(request.WorkType) && !DocTools.IsNullOrEmpty(request.WorkType.Id))
+                {
+                    entities = entities.Where(en => en.WorkType.Id == request.WorkType.Id );
+                }
+                if(true == request.WorkTypeIds?.Any())
+                {
+                    entities = entities.Where(en => en.WorkType.Id.In(request.WorkTypeIds));
+                }
+                else if(!DocTools.IsNullOrEmpty(request.WorkType) && !DocTools.IsNullOrEmpty(request.WorkType.Name))
+                {
+                    entities = entities.Where(en => en.WorkType.Name == request.WorkType.Name );
+                }
+                if(true == request.WorkTypeNames?.Any())
+                {
+                    entities = entities.Where(en => en.WorkType.Name.In(request.WorkTypeNames));
+                }
 
-               entities = ApplyFilters(request, entities);
+                entities = ApplyFilters(request, entities);
 
-               if (request.Skip > 0)
-                   entities = entities.Skip(request.Skip.Value);
-               if (request.Take > 0)
-                   entities = entities.Take(request.Take.Value);
-               if (true == request?.OrderBy?.Any())
-                   entities = entities.OrderBy(request.OrderBy);
-               if (true == request?.OrderByDesc?.Any())
-                   entities = entities.OrderByDescending(request.OrderByDesc);
-               callBack?.Invoke(entities);
-           });
+                if(request.Skip > 0)
+                    entities = entities.Skip(request.Skip.Value);
+                if(request.Take > 0)
+                    entities = entities.Take(request.Take.Value);
+                if(true == request?.OrderBy?.Any())
+                    entities = entities.OrderBy(request.OrderBy);
+                if(true == request?.OrderByDesc?.Any())
+                    entities = entities.OrderByDescending(request.OrderByDesc);
+                callBack?.Invoke(entities);
+            });
         }
-
+        
         public object Post(TimeCardSearch request)
         {
             return Get(request);
@@ -181,25 +194,25 @@ namespace Services.API
             using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
                 var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try
+                try 
                 {
-                    if (true != request.IgnoreCache)
+                    if(true != request.IgnoreCache) 
                     {
                         tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
                         {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard, TimeCard>(ret, Execute, requestCancel));
+                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard,TimeCard>(ret, Execute, requestCancel));
                             return ret;
                         });
                     }
                     if (tryRet == null)
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard, TimeCard>(ret, Execute, requestCancel));
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard,TimeCard>(ret, Execute, requestCancel));
                         tryRet = ret;
                         //Go ahead and cache the result for any future consumers
                         DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TIMECARD, search: true);
                     }
                 }
-                catch (Exception) { throw; }
+                catch(Exception) { throw; }
                 finally
                 {
                     requestCancel?.CloseRequest();
@@ -209,15 +222,15 @@ namespace Services.API
             return tryRet;
         }
 
-        public object Post(TimeCardVersion request)
+        public object Post(TimeCardVersion request) 
         {
             return Get(request);
         }
 
-        public object Get(TimeCardVersion request)
+        public object Get(TimeCardVersion request) 
         {
             var ret = new List<Version>();
-            _ExecSearch(request, (entities) =>
+            _ExecSearch(request, (entities) => 
             {
                 ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
@@ -227,8 +240,8 @@ namespace Services.API
         public object Get(TimeCard request)
         {
             object ret = null;
-
-            if (!(request.Id > 0))
+            
+            if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
@@ -246,7 +259,7 @@ namespace Services.API
                     return cachedRet;
                 });
             }
-            if (null == ret)
+            if(null == ret)
             {
                 Execute.Run(s =>
                 {
@@ -260,10 +273,10 @@ namespace Services.API
 
         private TimeCard _AssignValues(TimeCard request, DocConstantPermission permission, Session session)
         {
-            if (permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
-            if (permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "TimeCard"))
+            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "TimeCard"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
@@ -271,10 +284,10 @@ namespace Services.API
             TimeCard ret = null;
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
-            if (permission == DocConstantPermission.ADD && request.Id > 0) return request;
-
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
             var cacheKey = GetApiCacheKey<TimeCard>(DocConstantModelName.TIMECARD, nameof(TimeCard), request);
-
+            
             //First, assign all the variables, do database lookups and conversions
             var pDescription = request.Description;
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.GetDocument(request.Document.Id) : null;
@@ -288,7 +301,7 @@ namespace Services.API
             DocEntityLookupTable pWorkType = GetLookup(DocConstantLookupTable.WORKTYPE, request.WorkType?.Name, request.WorkType?.Id);
 
             DocEntityTimeCard entity = null;
-            if (permission == DocConstantPermission.ADD)
+            if(permission == DocConstantPermission.ADD)
             {
                 var now = DateTime.UtcNow;
                 entity = new DocEntityTimeCard(session)
@@ -300,108 +313,108 @@ namespace Services.API
             else
             {
                 entity = DocEntityTimeCard.GetTimeCard(request.Id);
-                if (null == entity)
+                if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.TIMECARD, nameof(request.Description)))
             {
-                if (DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
+                if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
                     entity.Description = pDescription;
-                if (DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Description));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocument>(currentUser, request, pDocument, permission, DocConstantModelName.TIMECARD, nameof(request.Document)))
             {
-                if (DocPermissionFactory.IsRequested(request, pDocument, entity.Document, nameof(request.Document)))
+                if(DocPermissionFactory.IsRequested(request, pDocument, entity.Document, nameof(request.Document)))
                     entity.Document = pDocument;
-                if (DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.VisibleFields.Matches(nameof(request.Document), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.VisibleFields.Matches(nameof(request.Document), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Document));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pEnd, permission, DocConstantModelName.TIMECARD, nameof(request.End)))
             {
-                if (DocPermissionFactory.IsRequested(request, pEnd, entity.End, nameof(request.End)))
-                    if (null != pEnd)
-                        entity.End = (DateTime)pEnd;
-                if (DocPermissionFactory.IsRequested<DateTime?>(request, pEnd, nameof(request.End)) && !request.VisibleFields.Matches(nameof(request.End), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pEnd, entity.End, nameof(request.End)))
+                        if(null != pEnd)
+                    entity.End = (DateTime) pEnd;
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pEnd, nameof(request.End)) && !request.VisibleFields.Matches(nameof(request.End), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.End));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPackage>(currentUser, request, pPICO, permission, DocConstantModelName.TIMECARD, nameof(request.PICO)))
             {
-                if (DocPermissionFactory.IsRequested(request, pPICO, entity.PICO, nameof(request.PICO)))
+                if(DocPermissionFactory.IsRequested(request, pPICO, entity.PICO, nameof(request.PICO)))
                     if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.PICO)} cannot be modified once set.");
-                entity.PICO = pPICO;
-                if (DocPermissionFactory.IsRequested<DocEntityPackage>(request, pPICO, nameof(request.PICO)) && !request.VisibleFields.Matches(nameof(request.PICO), ignoreSpaces: true))
+                    entity.PICO = pPICO;
+                if(DocPermissionFactory.IsRequested<DocEntityPackage>(request, pPICO, nameof(request.PICO)) && !request.VisibleFields.Matches(nameof(request.PICO), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.PICO));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityProject>(currentUser, request, pProject, permission, DocConstantModelName.TIMECARD, nameof(request.Project)))
             {
-                if (DocPermissionFactory.IsRequested(request, pProject, entity.Project, nameof(request.Project)))
+                if(DocPermissionFactory.IsRequested(request, pProject, entity.Project, nameof(request.Project)))
                     entity.Project = pProject;
-                if (DocPermissionFactory.IsRequested<DocEntityProject>(request, pProject, nameof(request.Project)) && !request.VisibleFields.Matches(nameof(request.Project), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityProject>(request, pProject, nameof(request.Project)) && !request.VisibleFields.Matches(nameof(request.Project), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Project));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pReferenceId, permission, DocConstantModelName.TIMECARD, nameof(request.ReferenceId)))
             {
-                if (DocPermissionFactory.IsRequested(request, pReferenceId, entity.ReferenceId, nameof(request.ReferenceId)))
+                if(DocPermissionFactory.IsRequested(request, pReferenceId, entity.ReferenceId, nameof(request.ReferenceId)))
                     entity.ReferenceId = pReferenceId;
-                if (DocPermissionFactory.IsRequested<int?>(request, pReferenceId, nameof(request.ReferenceId)) && !request.VisibleFields.Matches(nameof(request.ReferenceId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(request, pReferenceId, nameof(request.ReferenceId)) && !request.VisibleFields.Matches(nameof(request.ReferenceId), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.ReferenceId));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pStart, permission, DocConstantModelName.TIMECARD, nameof(request.Start)))
             {
-                if (DocPermissionFactory.IsRequested(request, pStart, entity.Start, nameof(request.Start)))
-                    if (null != pStart)
-                        entity.Start = (DateTime)pStart;
-                if (DocPermissionFactory.IsRequested<DateTime?>(request, pStart, nameof(request.Start)) && !request.VisibleFields.Matches(nameof(request.Start), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pStart, entity.Start, nameof(request.Start)))
+                        if(null != pStart)
+                    entity.Start = (DateTime) pStart;
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pStart, nameof(request.Start)) && !request.VisibleFields.Matches(nameof(request.Start), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Start));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.TIMECARD, nameof(request.Status)))
             {
-                if (DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
+                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
                     entity.Status = pStatus;
-                if (DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Status));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pUser, permission, DocConstantModelName.TIMECARD, nameof(request.User)))
             {
-                if (DocPermissionFactory.IsRequested(request, pUser, entity.User, nameof(request.User)))
+                if(DocPermissionFactory.IsRequested(request, pUser, entity.User, nameof(request.User)))
                     entity.User = pUser;
-                if (DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.VisibleFields.Matches(nameof(request.User), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.VisibleFields.Matches(nameof(request.User), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.User));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pWorkType, permission, DocConstantModelName.TIMECARD, nameof(request.WorkType)))
             {
-                if (DocPermissionFactory.IsRequested(request, pWorkType, entity.WorkType, nameof(request.WorkType)))
+                if(DocPermissionFactory.IsRequested(request, pWorkType, entity.WorkType, nameof(request.WorkType)))
                     entity.WorkType = pWorkType;
-                if (DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pWorkType, nameof(request.WorkType)) && !request.VisibleFields.Matches(nameof(request.WorkType), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pWorkType, nameof(request.WorkType)) && !request.VisibleFields.Matches(nameof(request.WorkType), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.WorkType));
                 }
             }
-
+            
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-
+            
             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, nameof(TimeCard), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -411,7 +424,7 @@ namespace Services.API
         }
         public TimeCard Post(TimeCard request)
         {
-            if (request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
@@ -419,7 +432,7 @@ namespace Services.API
 
             Execute.Run(ssn =>
             {
-                if (!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TimeCard"))
+                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TimeCard")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                 ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
@@ -427,10 +440,10 @@ namespace Services.API
 
             return ret;
         }
-
+   
         public List<TimeCard> Post(TimeCardBatch request)
         {
-            if (true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
             var ret = new List<TimeCard>();
             var errors = new List<ResponseError>();
@@ -481,47 +494,37 @@ namespace Services.API
             Execute.Run(ssn =>
             {
                 var entity = DocEntityTimeCard.GetTimeCard(request?.Id);
-                if (null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-
-                var pDescription = entity.Description;
-                if (!DocTools.IsNullOrEmpty(pDescription))
-                    pDescription += " (Copy)";
-                var pDocument = entity.Document;
-                var pEnd = entity.End;
-                var pPICO = entity.PICO;
-                var pProject = entity.Project;
-                var pReferenceId = entity.ReferenceId;
-                var pStart = entity.Start;
-                var pStatus = entity.Status;
-                var pUser = entity.User;
-                var pWorkType = entity.WorkType;
+                
+                    var pDescription = entity.Description;
+                    if(!DocTools.IsNullOrEmpty(pDescription))
+                        pDescription += " (Copy)";
+                    var pDocument = entity.Document;
+                    var pEnd = entity.End;
+                    var pPICO = entity.PICO;
+                    var pProject = entity.Project;
+                    var pReferenceId = entity.ReferenceId;
+                    var pStart = entity.Start;
+                    var pStatus = entity.Status;
+                    var pUser = entity.User;
+                    var pWorkType = entity.WorkType;
                 #region Custom Before copyTimeCard
                 #endregion Custom Before copyTimeCard
                 var copy = new DocEntityTimeCard(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                ,
-                    Description = pDescription
-                                ,
-                    Document = pDocument
-                                ,
-                    End = pEnd
-                                ,
-                    PICO = pPICO
-                                ,
-                    Project = pProject
-                                ,
-                    ReferenceId = pReferenceId
-                                ,
-                    Start = pStart
-                                ,
-                    Status = pStatus
-                                ,
-                    User = pUser
-                                ,
-                    WorkType = pWorkType
+                                , Description = pDescription
+                                , Document = pDocument
+                                , End = pEnd
+                                , PICO = pPICO
+                                , Project = pProject
+                                , ReferenceId = pReferenceId
+                                , Start = pStart
+                                , Status = pStatus
+                                , User = pUser
+                                , WorkType = pWorkType
                 };
                 #region Custom After copyTimeCard
                 #endregion Custom After copyTimeCard
@@ -544,7 +547,7 @@ namespace Services.API
 
         public List<TimeCard> Patch(TimeCardBatch request)
         {
-            if (true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
             var ret = new List<TimeCard>();
             var errors = new List<ResponseError>();
@@ -591,10 +594,10 @@ namespace Services.API
 
         public TimeCard Patch(TimeCard request)
         {
-            if (true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TimeCard to patch.");
-
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the TimeCard to patch.");
+            
             request.VisibleFields = request.VisibleFields ?? new List<string>();
-
+            
             TimeCard ret = null;
             Execute.Run(ssn =>
             {
@@ -605,7 +608,7 @@ namespace Services.API
 
         public void Delete(TimeCardBatch request)
         {
-            if (true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
@@ -628,7 +631,7 @@ namespace Services.API
                 }
                 i += 1;
             });
-            base.Response.AddHeader("X-AutoBatch-Completed", $"{request.Count - errors.Count} succeeded");
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{request.Count-errors.Count} succeeded");
             if (errors.Any())
             {
                 throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
@@ -651,18 +654,18 @@ namespace Services.API
         {
             Execute.Run(ssn =>
             {
-                if (!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
                 DocCacheClient.RemoveSearch(DocConstantModelName.TIMECARD);
                 DocCacheClient.RemoveById(request.Id);
                 var en = DocEntityTimeCard.GetTimeCard(request?.Id);
 
-                if (null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TimeCard could be found for Id {request?.Id}.");
-                if (en.IsRemoved) return;
-
-                if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TimeCard could be found for Id {request?.Id}.");
+                if(en.IsRemoved) return;
+                
+                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
-
+                
                 en.Remove();
             });
         }
@@ -670,7 +673,7 @@ namespace Services.API
         public void Delete(TimeCardSearch request)
         {
             var matches = Get(request) as List<TimeCard>;
-            if (true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
+            if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
             {
@@ -690,16 +693,16 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
 
             DocEntityTimeCard entity = null;
-            if (id.HasValue)
+            if(id.HasValue)
             {
                 entity = DocEntityTimeCard.GetTimeCard(id.Value);
             }
-            if (null == entity)
+            if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No TimeCard found for Id {id.Value}");
 
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.VIEW))
+            if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.VIEW))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
-
+            
             ret = entity?.ToDto();
             return ret;
         }

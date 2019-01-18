@@ -3311,14 +3311,14 @@
         "Type": "string",
         "UIType": ""
       },
-      "Products": {
+      "Projects": {
         "Association": {
           "OnOwnerRemove": "Cascade",
           "OnTargetRemove": "Clear",
-          "PairTo": "Product.Client"
+          "PairTo": "Project.Client"
         },
-        "Description": "All Salesforce Products assigned to this client",
-        "DisplayName": "Salesforce Products",
+        "Description": "All Salesforce Projects assigned to this client",
+        "DisplayName": "Salesforce Projects",
         "IsAllowAddInForm": false,
         "IsAllowCreateInForm": false,
         "IsAllowEditInForm": false,
@@ -3329,25 +3329,25 @@
         "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
-        "Name": "Products",
+        "Name": "Projects",
         "Order": 31,
         "SetDefaultValue": "",
-        "Tab": "Products",
+        "Tab": "Projects",
         "TabOrder": 11,
-        "Target": "Product",
+        "Target": "Project",
         "Type": "relationships",
         "UIType": ""
       },
-      "ProductsCount": {
-        "DisplayName": "Salesforce Products Count",
+      "ProjectsCount": {
+        "DisplayName": "Salesforce Projects Count",
         "IsDisplayInForm": false,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
         "IsReadOnly": true,
         "IsRelationshipCount": true,
-        "Name": "ProductsCount",
+        "Name": "ProjectsCount",
         "Order": 32,
-        "Tab": "Products",
+        "Tab": "Projects",
         "Type": "int?"
       },
       "Role": {
@@ -6762,11 +6762,11 @@
         "Type": "string",
         "UIType": ""
       },
-      "Products": {
+      "Projects": {
         "Association": {
           "OnOwnerRemove": "Clear",
           "OnTargetRemove": "Clear",
-          "PairTo": "Product.Dataset"
+          "PairTo": "Project.Dataset"
         },
         "Description": "All the Salesforce Projects on this data set",
         "DisplayName": "Salesforce Projects",
@@ -6780,23 +6780,23 @@
         "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
-        "Name": "Products",
+        "Name": "Projects",
         "Order": 45,
         "SetDefaultValue": "",
         "Tab": "Salesforce Projects",
         "TabOrder": 34,
-        "Target": "Product",
+        "Target": "Project",
         "Type": "relationships",
         "UIType": ""
       },
-      "ProductsCount": {
+      "ProjectsCount": {
         "DisplayName": "Salesforce Projects Count",
         "IsDisplayInForm": false,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
         "IsReadOnly": true,
         "IsRelationshipCount": true,
-        "Name": "ProductsCount",
+        "Name": "ProjectsCount",
         "Order": 46,
         "Tab": "Salesforce Projects",
         "Type": "int?"
@@ -13590,10 +13590,10 @@
       }
     }
   },
-  "Product": {
+  "Project": {
     "Attributes": {
       "IsCached": true,
-      "Name": "Product",
+      "Name": "Project",
       "TypeId": 20135
     },
     "Domain": {},
@@ -13612,9 +13612,9 @@
         "Association": {
           "OnOwnerRemove": "Cascade",
           "OnTargetRemove": "Clear",
-          "PairTo": " Product.Parent"
+          "PairTo": " Project.Parent"
         },
-        "Description": "Children of the parent product",
+        "Description": "Children of the parent Project",
         "DisplayName": "Children",
         "IsAllowAddInForm": false,
         "IsAllowCreateInForm": false,
@@ -13631,7 +13631,7 @@
         "SetDefaultValue": "",
         "Tab": "Children",
         "TabOrder": 20,
-        "Target": "Product",
+        "Target": "Project",
         "Type": "relationships",
         "UIType": ""
       },
@@ -13649,7 +13649,7 @@
       },
       "Client": {
         "AutoCreateMissing": false,
-        "Description": "Optional client to associate with this product",
+        "Description": "Optional client to associate with this Project",
         "DisplayName": "Client",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -13662,7 +13662,7 @@
         "Name": "Client",
         "Order": 0,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "Client",
         "UIType": ""
@@ -13675,7 +13675,7 @@
         "IsReadOnly": true,
         "Name": "ClientId",
         "Order": 1,
-        "Tab": "Product",
+        "Tab": "Project",
         "Type": "int?"
       },
       "Created": {
@@ -13712,7 +13712,7 @@
         "Name": "DatabaseDeadline",
         "Order": 80,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "DateTime?",
         "UIType": ""
@@ -13731,14 +13731,14 @@
         "Name": "DatabaseName",
         "Order": 53,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
       },
       "Dataset": {
         "AutoCreateMissing": false,
-        "Description": "Optional data set to associate with this product",
+        "Description": "Optional data set to associate with this Project",
         "DisplayName": "Dataset",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -13751,7 +13751,7 @@
         "Name": "Dataset",
         "Order": 20,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "DocumentSet",
         "UIType": ""
@@ -13764,7 +13764,7 @@
         "IsReadOnly": true,
         "Name": "DatasetId",
         "Order": 21,
-        "Tab": "Product",
+        "Tab": "Project",
         "Type": "int?"
       },
       "DeliverableDeadline": {
@@ -13781,14 +13781,14 @@
         "Name": "DeliverableDeadline",
         "Order": 90,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "DateTime?",
         "UIType": ""
       },
       "FqId": {
         "AutoCreateMissing": false,
-        "Description": "Optional FQ Id to associate with this product",
+        "Description": "Optional FQ Id to associate with this Project",
         "DisplayName": "FQ Id",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -13800,7 +13800,7 @@
         "Name": "FqId",
         "Order": 21,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "int?",
         "UIType": ""
@@ -13812,7 +13812,7 @@
         "IsReadOnly": true,
         "Name": "Gestalt",
         "Order": -10,
-        "Tab": "Product",
+        "Tab": "Project",
         "Type": "string"
       },
       "History": {
@@ -13836,7 +13836,7 @@
         "IsReadOnly": true,
         "Name": "Id",
         "Order": -9,
-        "Tab": "Product",
+        "Tab": "Project",
         "Type": "int"
       },
       "LegacyPackageId": {
@@ -13853,7 +13853,7 @@
         "Name": "LegacyPackageId",
         "Order": 120,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "int?",
         "UIType": ""
@@ -13872,7 +13872,7 @@
         "Name": "LibraryPackageId",
         "Order": 51,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "int?",
         "UIType": ""
@@ -13891,7 +13891,7 @@
         "Name": "LibraryPackageName",
         "Order": 52,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
@@ -13909,7 +13909,7 @@
       "Number": {
         "AutoCreateMissing": false,
         "DefaultValue": "001",
-        "Description": "Optional sequence to associate with this product",
+        "Description": "Optional sequence to associate with this Project",
         "DisplayName": "Number",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -13921,7 +13921,7 @@
         "Name": "Number",
         "Order": 60,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
@@ -13940,14 +13940,14 @@
         "Name": "OperationsDeliverable",
         "Order": 54,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
       },
       "OpportunityId": {
         "AutoCreateMissing": false,
-        "Description": "Salesforce Opportunity Id to associate with this product",
+        "Description": "Salesforce Opportunity Id to associate with this Project",
         "DisplayName": "Salesforce Opportunity Id",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -13960,14 +13960,14 @@
         "Name": "OpportunityId",
         "Order": 40,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
       },
       "OpportunityName": {
         "AutoCreateMissing": false,
-        "Description": "Salesforce Opportunity Name to associate with this product",
+        "Description": "Salesforce Opportunity Name to associate with this Project",
         "DisplayName": "Opportunity Name",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -13980,13 +13980,13 @@
         "Name": "OpportunityName",
         "Order": 41,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
       },
       "Parent": {
-        "Description": "Optional parent project of this product",
+        "Description": "Optional parent project of this Project",
         "DisplayName": "Parent",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -13999,9 +13999,9 @@
         "Name": "Parent",
         "Order": 100,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
-        "Type": "Product",
+        "Type": "Project",
         "UIType": ""
       },
       "ParentId": {
@@ -14012,7 +14012,7 @@
         "IsReadOnly": true,
         "Name": "ParentId",
         "Order": 101,
-        "Tab": "Product",
+        "Tab": "Project",
         "Type": "int?"
       },
       "PICO": {
@@ -14029,14 +14029,14 @@
         "Name": "PICO",
         "Order": 50,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
       },
       "ProjectId": {
         "AutoCreateMissing": false,
-        "Description": "Salesforce Taskray Project Id to associate with this product",
+        "Description": "Salesforce Taskray Project Id to associate with this Project",
         "DisplayName": "Salesforce Project Id",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -14049,14 +14049,14 @@
         "Name": "ProjectId",
         "Order": 30,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
       },
       "ProjectName": {
         "AutoCreateMissing": false,
-        "Description": "Salesforce Taskray Project Name to associate with this product",
+        "Description": "Salesforce Taskray Project Name to associate with this Project",
         "DisplayName": "Project Name",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -14069,13 +14069,13 @@
         "Name": "ProjectName",
         "Order": 31,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
       },
       "Status": {
-        "Description": "Product status",
+        "Description": "Project status",
         "DisplayName": "Status",
         "IsAudited": true,
         "IsDisplayInForm": true,
@@ -14090,7 +14090,7 @@
         "Name": "Status",
         "Order": 70,
         "SetDefaultValue": "",
-        "Tab": "Product",
+        "Tab": "Project",
         "TabOrder": 0,
         "Type": "LookupTable",
         "UIType": ""
@@ -14103,16 +14103,16 @@
         "IsReadOnly": true,
         "Name": "StatusId",
         "Order": 71,
-        "Tab": "Product",
+        "Tab": "Project",
         "Type": "int?"
       },
       "TimeCards": {
         "Association": {
           "OnOwnerRemove": "Clear",
           "OnTargetRemove": "Clear",
-          "PairTo": "TimeCard.Product"
+          "PairTo": "TimeCard.Project"
         },
-        "Description": "Time Cards associated with this Product",
+        "Description": "Time Cards associated with this Project",
         "DisplayName": "Time Cards",
         "IsAllowAddInForm": true,
         "IsAllowCreateInForm": true,
@@ -14162,7 +14162,7 @@
         "IsReadOnly": true,
         "Name": "VersionNo",
         "Order": 9999999,
-        "Tab": "Product",
+        "Tab": "Project",
         "Type": "int"
       }
     }
@@ -18204,7 +18204,7 @@
         "Tab": "TimeCard",
         "Type": "int?"
       },
-      "Product": {
+      "Project": {
         "AutoCreateMissing": false,
         "Description": "Salesforce Project",
         "DisplayName": "Project",
@@ -18215,21 +18215,21 @@
         "IsRequired": false,
         "IsRequiredInForm": true,
         "IsUniqueConstraint": true,
-        "Name": "Product",
+        "Name": "Project",
         "Order": 41,
         "SetDefaultValue": "",
         "Tab": "TimeCard",
         "TabOrder": 0,
-        "Type": "Product",
+        "Type": "Project",
         "UIType": ""
       },
-      "ProductId": {
+      "ProjectId": {
         "DisplayName": "Project Id",
         "IsDisplayInForm": false,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
         "IsReadOnly": true,
-        "Name": "ProductId",
+        "Name": "ProjectId",
         "Order": 42,
         "Tab": "TimeCard",
         "Type": "int?"

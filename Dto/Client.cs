@@ -6,31 +6,51 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using AutoMapper;
 
 using Services.Core;
-
-using ServiceStack;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic;
+using Services.Db;
+using Services.Dto;
+using Services.Enums;
+using Services.Models;
+using Services.Schema;
 
 using Typed;
+using Typed.Bindings;
+using Typed.Notifications;
+using Typed.Security;
+using Typed.Settings;
+
+using ServiceStack;
+using ServiceStack.Text;
+
+using System;
+using System.Runtime.Serialization;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Linq.Dynamic;
+using System.Net;
+
+using Xtensive.Orm;
+using Xtensive.Orm.Model;
+
+using Attribute = Services.Dto.Attribute;
+using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
     public abstract partial class ClientBase : Dto<Client>
     {
-        public ClientBase() { }
+        public ClientBase() {}
 
         public ClientBase(int id) : this()
         {
-            if (id > 0) Id = id;
+            if(id > 0) Id = id;
         }
 
-        public ClientBase(int? id) : this(DocConvert.ToInt(id)) { }
-
+        public ClientBase(int? id) : this(DocConvert.ToInt(id)) {}
+    
         [ApiMember(Name = nameof(Account), Description = "ForeignKey", IsRequired = false)]
         public Reference Account { get; set; }
         [ApiMember(Name = nameof(AccountId), Description = "Primary Key of ForeignKey", IsRequired = false)]
@@ -57,7 +77,7 @@ namespace Services.Dto
         public string Name { get; set; }
 
 
-        [ApiMember(Name = nameof(Projects), Description = "Projects", IsRequired = false)]
+        [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
         public List<Reference> Projects { get; set; }
         public int? ProjectsCount { get; set; }
 
@@ -92,11 +112,11 @@ namespace Services.Dto
             _Constructor();
         }
 
-        public Client(int? id) : base(DocConvert.ToInt(id)) { }
-        public Client(int id) : base(id) { }
-
+        public Client(int? id) : base(DocConvert.ToInt(id)) {}
+        public Client(int id) : base(id) {}
+        
         #region Fields
-
+        
         public bool? ShouldSerialize(string field)
         {
             if (IgnoredVisibleFields.Matches(field, true)) return false;
@@ -108,13 +128,13 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] { nameof(Account), nameof(AccountId), nameof(Created), nameof(CreatorId), nameof(DefaultLocale), nameof(DefaultLocaleId), nameof(Divisions), nameof(DivisionsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Gestalt), nameof(Locked), nameof(Name), nameof(Projects), nameof(ProjectsCount), nameof(Role), nameof(RoleId), nameof(SalesforceAccountId), nameof(Scopes), nameof(ScopesCount), nameof(Settings), nameof(Updated), nameof(VersionNo) })]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Account),nameof(AccountId),nameof(Created),nameof(CreatorId),nameof(DefaultLocale),nameof(DefaultLocaleId),nameof(Divisions),nameof(DivisionsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Projects),nameof(ProjectsCount),nameof(Role),nameof(RoleId),nameof(SalesforceAccountId),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
             {
-                if (null == this) return new List<string>();
-                if (null == _VisibleFields)
+                if(null == this) return new List<string>();
+                if(null == _VisibleFields)
                 {
                     _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
@@ -123,8 +143,8 @@ namespace Services.Dto
             set
             {
                 var requested = value ?? new List<string>();
-                var exists = requested.Where(r => Fields.Any(f => DocTools.AreEqual(r, f))).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Client>("Client", exists);
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Client>("Client",exists);
             }
         }
 
@@ -135,9 +155,9 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
     }
-
+    
     [Route("/Client/{Id}/copy", "POST")]
-    public partial class ClientCopy : Client { }
+    public partial class ClientCopy : Client {}
     [Route("/client", "GET")]
     [Route("/client/search", "GET, POST, DELETE")]
     public partial class ClientSearch : Search<Client>
@@ -149,19 +169,19 @@ namespace Services.Dto
         public List<int> DivisionsIds { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
-        public List<int> ProjectIds { get; set; }
+        public List<int> ProjectsIds { get; set; }
         public Reference Role { get; set; }
         public List<int> RoleIds { get; set; }
         public string SalesforceAccountId { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Settings { get; set; }
     }
-
+    
     public class ClientFullTextSearch
     {
         private ClientSearch _request;
         public ClientFullTextSearch(ClientSearch request) => _request = request;
-
+        
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -169,13 +189,13 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Updated))); }
-
+        
         public bool doAccount { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Account))); }
         public bool doDefaultLocale { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.DefaultLocale))); }
         public bool doDivisions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Divisions))); }
         public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.DocumentSets))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Name))); }
-        public bool doProjects { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ClientBase.Projects))); }
+        public bool doProjects { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Projects))); }
         public bool doRole { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Role))); }
         public bool doSalesforceAccountId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.SalesforceAccountId))); }
         public bool doScopes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Scopes))); }
@@ -183,7 +203,7 @@ namespace Services.Dto
     }
 
     [Route("/client/version", "GET, POST")]
-    public partial class ClientVersion : ClientSearch { }
+    public partial class ClientVersion : ClientSearch {}
 
     [Route("/client/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ClientBatch : List<Client> { }

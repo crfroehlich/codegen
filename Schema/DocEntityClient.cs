@@ -8,21 +8,30 @@
 
 using AutoMapper;
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Linq.Dynamic;
+using System.Net;
+using System.Runtime.Serialization;
+
 using Services.Core;
 using Services.Db;
 using Services.Dto;
 using Services.Enums;
+using Services.Models;
 
 using ServiceStack;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic;
-using System.Net;
+using Typed.Notifications;
+using Typed.Settings;
 
 using Xtensive.Orm;
 using Xtensive.Orm.Model;
+
+using Attribute = Services.Dto.Attribute;
+using ValueType = Services.Dto.ValueType;
 
 namespace Services.Schema
 {
@@ -32,9 +41,9 @@ namespace Services.Schema
         private const string CLIENT_CACHE = "ClientCache";
 
         #region Constructor
-        public DocEntityClient(Session session) : base(session) { }
+        public DocEntityClient(Session session) : base(session) {}
 
-        public DocEntityClient() : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
+        public DocEntityClient() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
         #region VisibleFields
@@ -43,14 +52,14 @@ namespace Services.Schema
         {
             get
             {
-                if (null == __vf)
+                if(null == __vf)
                 {
                     __vf = DocWebSession.GetTypeVisibleFields(new Client());
                 }
                 return __vf;
             }
         }
-
+        
         public bool IsPropertyVisible(string propertyName)
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
@@ -66,12 +75,12 @@ namespace Services.Schema
         public static DocEntityClient GetClient(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
-            if (null == primaryKey) return null;
+            if(null == primaryKey) return null;
             var ret = DocEntityThreadCache<DocEntityClient>.GetFromCache(primaryKey, CLIENT_CACHE);
-            if (null == ret)
+            if(null == ret)
             {
                 ret = query.SelectAll<DocEntityClient>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
-                if (null != ret)
+                if(null != ret) 
                 {
                     DocEntityThreadCache<DocEntityClient>.UpdateCache(ret.Id, ret, CLIENT_CACHE);
                     DocEntityThreadCache<DocEntityClient>.UpdateCache(ret.Hash, ret, CLIENT_CACHE);
@@ -84,11 +93,11 @@ namespace Services.Schema
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityClient>.GetFromCache(hash, CLIENT_CACHE);
-
-            if (null == ret)
+            
+            if(null == ret)
             {
                 ret = query.SelectAll<DocEntityClient>().Where(e => e.Hash == hash).FirstOrDefault();
-                if (null != ret)
+                if(null != ret) 
                 {
                     DocEntityThreadCache<DocEntityClient>.UpdateCache(ret.Id, ret, CLIENT_CACHE);
                     DocEntityThreadCache<DocEntityClient>.UpdateCache(ret.Hash, ret, CLIENT_CACHE);
@@ -113,7 +122,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Divisions))]
-        [Association(PairTo = nameof(Division.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Division.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityDivision> Divisions { get; private set; }
 
 
@@ -135,7 +144,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Projects))]
-        [Association(PairTo = nameof(Project.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Project.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityProject> Projects { get; private set; }
 
 
@@ -155,7 +164,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Scopes))]
-        [Association(PairTo = nameof(Scope.Client), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Scope.Client), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
@@ -187,9 +196,9 @@ namespace Services.Schema
         public override bool Locked { get; set; }
         private bool? _isNewlyLocked;
         private bool? _isModified;
-
+        
         private List<string> __editableFields;
-        private List<string> _editableFields
+        private List<string> _editableFields 
         {
             get
             {
@@ -210,7 +219,7 @@ namespace Services.Schema
         public const string CACHE_KEY_PREFIX = "FindClients";
 
 
-        public override T ToModel<T>() => null;
+        public override T ToModel<T>() =>  null;
 
         #endregion Overrides of DocEntity
 
@@ -241,7 +250,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnSetFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
-            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue))
+            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue)) 
             {
                 _isNewlyLocked = true;
             }
@@ -271,7 +280,7 @@ namespace Services.Schema
             {
                 Divisions.Clear(); //foreach thing in Divisions en.Remove();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 throw new DocException("Failed to delete Client in Divisions delete", ex);
             }
@@ -279,7 +288,7 @@ namespace Services.Schema
             {
                 Projects.Clear(); //foreach thing in Projects en.Remove();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 throw new DocException("Failed to delete Client in Projects delete", ex);
             }
@@ -320,7 +329,7 @@ namespace Services.Schema
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
             var hash = GetGuid();
-            if (Hash != hash)
+            if(Hash != hash)
                 Hash = hash;
 
             Name = Name?.TrimAndPruneSpaces();
@@ -344,7 +353,7 @@ namespace Services.Schema
 
             _OnSaveChanges(permission);
 
-            if (!_validated)
+            if(!_validated)
                 OnValidate();
 
             _OnSetGestalt();
@@ -352,7 +361,7 @@ namespace Services.Schema
             //Only do permissions checks AFTER validation has finished to get better errors
             //The transaction still hasn't completed, so if we throw then the rollback will work as expected
             permission = permission ?? DocConstantPermission.EDIT;
-            if (!DocPermissionFactory.HasPermission(this, null, permission))
+            if(!DocPermissionFactory.HasPermission(this, null, permission))
             {
                 throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to {permission} this {ModelName}.");
             }
@@ -389,12 +398,12 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if (DocTools.IsNullOrEmpty(Name))
+                if(DocTools.IsNullOrEmpty(Name))
                 {
                     isValid = false;
                     message += " Name is a required property.";
                 }
-                if (DocTools.IsNullOrEmpty(Role))
+                if(DocTools.IsNullOrEmpty(Role))
                 {
                     isValid = false;
                     message += " Role is a required property.";
@@ -407,10 +416,10 @@ namespace Services.Schema
         #endregion Validation
 
         #region Hash
-
+        
         public static Guid GetGuid(DocEntityClient thing)
         {
-            if (thing == null) return Guid.Empty;
+            if(thing == null) return Guid.Empty;
             return thing.GetGuid();
         }
 
@@ -429,7 +438,7 @@ namespace Services.Schema
 
         public override Reference ToReference()
         {
-            var ret = new Reference(Id, Name, Gestalt);
+            var ret = new Reference(Id, Name , Gestalt);
             return _ToReference(ret);
         }
 
@@ -441,19 +450,19 @@ namespace Services.Schema
 
     public partial class ClientMapper : Profile
     {
-        private IMappingExpression<DocEntityClient, Client> _EntityToDto;
-        private IMappingExpression<Client, DocEntityClient> _DtoToEntity;
+        private IMappingExpression<DocEntityClient,Client> _EntityToDto;
+        private IMappingExpression<Client,DocEntityClient> _DtoToEntity;
 
         public ClientMapper()
         {
-            CreateMap<DocEntitySet<DocEntityClient>, List<Reference>>()
+            CreateMap<DocEntitySet<DocEntityClient>,List<Reference>>()
                 .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityClient, Reference>()
+            CreateMap<DocEntityClient,Reference>()
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference, DocEntityClient>()
+            CreateMap<Reference,DocEntityClient>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
                 .ConstructUsing(c => DocEntityClient.GetClient(c));
-            _EntityToDto = CreateMap<DocEntityClient, Client>()
+            _EntityToDto = CreateMap<DocEntityClient,Client>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, "Updated")))
                 .ForMember(dest => dest.Account, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Account))))
@@ -465,7 +474,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DocumentSets))))
                 .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DocumentSetsCount))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Name))))
-                .ForMember(dest => ((ClientBase)dest).Projects, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Projects))))
+                .ForMember(dest => dest.Projects, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Projects))))
                 .ForMember(dest => dest.ProjectsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.ProjectsCount))))
                 .ForMember(dest => dest.Role, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Role))))
                 .ForMember(dest => dest.RoleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.RoleId))))
@@ -474,7 +483,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.ScopesCount))))
                 .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Settings))))
                 .MaxDepth(2);
-            _DtoToEntity = CreateMap<Client, DocEntityClient>()
+            _DtoToEntity = CreateMap<Client,DocEntityClient>()
                 .MaxDepth(2);
             ApplyCustomMaps();
         }

@@ -8,21 +8,30 @@
 
 using AutoMapper;
 
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Linq.Dynamic;
+using System.Net;
+using System.Runtime.Serialization;
+
 using Services.Core;
 using Services.Db;
 using Services.Dto;
 using Services.Enums;
+using Services.Models;
 
 using ServiceStack;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic;
-using System.Net;
+using Typed.Notifications;
+using Typed.Settings;
 
 using Xtensive.Orm;
 using Xtensive.Orm.Model;
+
+using Attribute = Services.Dto.Attribute;
+using ValueType = Services.Dto.ValueType;
 
 namespace Services.Schema
 {
@@ -32,9 +41,9 @@ namespace Services.Schema
         private const string PROJECT_CACHE = "ProjectCache";
 
         #region Constructor
-        public DocEntityProject(Session session) : base(session) { }
+        public DocEntityProject(Session session) : base(session) {}
 
-        public DocEntityProject() : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
+        public DocEntityProject() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
         #region VisibleFields
@@ -43,14 +52,14 @@ namespace Services.Schema
         {
             get
             {
-                if (null == __vf)
+                if(null == __vf)
                 {
                     __vf = DocWebSession.GetTypeVisibleFields(new Project());
                 }
                 return __vf;
             }
         }
-
+        
         public bool IsPropertyVisible(string propertyName)
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
@@ -66,12 +75,12 @@ namespace Services.Schema
         public static DocEntityProject GetProject(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
-            if (null == primaryKey) return null;
+            if(null == primaryKey) return null;
             var ret = DocEntityThreadCache<DocEntityProject>.GetFromCache(primaryKey, PROJECT_CACHE);
-            if (null == ret)
+            if(null == ret)
             {
                 ret = query.SelectAll<DocEntityProject>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
-                if (null != ret)
+                if(null != ret) 
                 {
                     DocEntityThreadCache<DocEntityProject>.UpdateCache(ret.Id, ret, PROJECT_CACHE);
                     DocEntityThreadCache<DocEntityProject>.UpdateCache(ret.Hash, ret, PROJECT_CACHE);
@@ -84,11 +93,11 @@ namespace Services.Schema
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityProject>.GetFromCache(hash, PROJECT_CACHE);
-
-            if (null == ret)
+            
+            if(null == ret)
             {
                 ret = query.SelectAll<DocEntityProject>().Where(e => e.Hash == hash).FirstOrDefault();
-                if (null != ret)
+                if(null != ret) 
                 {
                     DocEntityThreadCache<DocEntityProject>.UpdateCache(ret.Id, ret, PROJECT_CACHE);
                     DocEntityThreadCache<DocEntityProject>.UpdateCache(ret.Hash, ret, PROJECT_CACHE);
@@ -101,7 +110,7 @@ namespace Services.Schema
         #region Properties
         [Field()]
         [FieldMapping(nameof(Children))]
-        [Association(PairTo = nameof(Project.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof( Project.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityProject> Children { get; private set; }
 
 
@@ -204,7 +213,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(TimeCards))]
-        [Association(PairTo = nameof(TimeCard.Project), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(TimeCard.Project), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityTimeCard> TimeCards { get; private set; }
 
 
@@ -231,9 +240,9 @@ namespace Services.Schema
         public override bool Locked { get; set; }
         private bool? _isNewlyLocked;
         private bool? _isModified;
-
+        
         private List<string> __editableFields;
-        private List<string> _editableFields
+        private List<string> _editableFields 
         {
             get
             {
@@ -254,7 +263,7 @@ namespace Services.Schema
         public const string CACHE_KEY_PREFIX = "FindProjects";
 
 
-        public override T ToModel<T>() => null;
+        public override T ToModel<T>() =>  null;
 
         #endregion Overrides of DocEntity
 
@@ -285,7 +294,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnSetFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
-            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue))
+            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue)) 
             {
                 _isNewlyLocked = true;
             }
@@ -315,7 +324,7 @@ namespace Services.Schema
             {
                 Children.Clear(); //foreach thing in Children en.Remove();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 throw new DocException("Failed to delete Project in Children delete", ex);
             }
@@ -356,7 +365,7 @@ namespace Services.Schema
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
             var hash = GetGuid();
-            if (Hash != hash)
+            if(Hash != hash)
                 Hash = hash;
 
             DatabaseName = DatabaseName?.TrimAndPruneSpaces();
@@ -387,7 +396,7 @@ namespace Services.Schema
 
             _OnSaveChanges(permission);
 
-            if (!_validated)
+            if(!_validated)
                 OnValidate();
 
             _OnSetGestalt();
@@ -395,7 +404,7 @@ namespace Services.Schema
             //Only do permissions checks AFTER validation has finished to get better errors
             //The transaction still hasn't completed, so if we throw then the rollback will work as expected
             permission = permission ?? DocConstantPermission.EDIT;
-            if (!DocPermissionFactory.HasPermission(this, null, permission))
+            if(!DocPermissionFactory.HasPermission(this, null, permission))
             {
                 throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to {permission} this {ModelName}.");
             }
@@ -432,7 +441,7 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if (null != Status && Status?.Enum?.Name != "ForeignKeyStatus")
+                if(null != Status && Status?.Enum?.Name != "ForeignKeyStatus")
                 {
                     isValid = false;
                     message += " Status is a " + Status?.Enum?.Name + ", but must be a ForeignKeyStatus.";
@@ -445,10 +454,10 @@ namespace Services.Schema
         #endregion Validation
 
         #region Hash
-
+        
         public static Guid GetGuid(DocEntityProject thing)
         {
-            if (thing == null) return Guid.Empty;
+            if(thing == null) return Guid.Empty;
             return thing.GetGuid();
         }
 
@@ -479,19 +488,19 @@ namespace Services.Schema
 
     public partial class ProjectMapper : Profile
     {
-        private IMappingExpression<DocEntityProject, Project> _EntityToDto;
-        private IMappingExpression<Project, DocEntityProject> _DtoToEntity;
+        private IMappingExpression<DocEntityProject,Project> _EntityToDto;
+        private IMappingExpression<Project,DocEntityProject> _DtoToEntity;
 
         public ProjectMapper()
         {
-            CreateMap<DocEntitySet<DocEntityProject>, List<Reference>>()
+            CreateMap<DocEntitySet<DocEntityProject>,List<Reference>>()
                 .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityProject, Reference>()
+            CreateMap<DocEntityProject,Reference>()
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference, DocEntityProject>()
+            CreateMap<Reference,DocEntityProject>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
                 .ConstructUsing(c => DocEntityProject.GetProject(c));
-            _EntityToDto = CreateMap<DocEntityProject, Project>()
+            _EntityToDto = CreateMap<DocEntityProject,Project>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, "Updated")))
                 .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Children))))
@@ -521,7 +530,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCards))))
                 .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCardsCount))))
                 .MaxDepth(2);
-            _DtoToEntity = CreateMap<Project, DocEntityProject>()
+            _DtoToEntity = CreateMap<Project,DocEntityProject>()
                 .MaxDepth(2);
             ApplyCustomMaps();
         }

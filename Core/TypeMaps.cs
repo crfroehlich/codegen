@@ -8,11 +8,11 @@ namespace Services.Schema
     public class TypeMap
     {
         public int TypeId { get; set; }
-
+        
         public string SchemaName { get; set; }
-
+        
         public string TableName { get; set; }
-
+        
         public string ClassName { get; set; }
 
         public string DtoName { get; set; }
