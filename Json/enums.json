@@ -786,7 +786,14 @@
     "SERVICES_LOGGING": "services_logging",
     "SERVICES_SLACK": "services_slack",
     "SERVICES_USER_SESSION": "services_user_session",
-    "SERVICES_USER_UPDATE": "services_user_update"
+    "SERVICES_USER_UPDATE": "services_user_update",
+    "SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT": "services_user_update_document_set_assignment",
+    "SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT": "services_user_update_document_assignment",
+    "SERVICES_USER_UPDATE_ROLES": "services_user_update_roles",
+    "SERVICES_USER_UPDATE_WORKFLOW_SHARING": "services_user_update_workflow_sharing",
+    "SERVICES_USER_UPDATE_BROADCASTS": "services_user_update_broadcasts",
+    "SERVICES_USER_UPDATE_DOCUMENT_SET_ARCHIVING": "services_user_update_document_set_archiving",
+    "SERVICES_USER_UPDATE_DOCUMENT_IMPORTS": "services_user_update_document_imports"
   },
   "Randomization": {
     "NR": "Not Reported",

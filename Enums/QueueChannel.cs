@@ -41,22 +41,36 @@ namespace Services.Enums
         SERVICES_EXTRACT_NOTIFICATION,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_HEARTBEAT)]
         SERVICES_HEARTBEAT,
-        [EnumMember(Value = DocConstantQueueChannel.SERVICES_IMPORT)]
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_DOCUMENT_IMPORT)]
         SERVICES_IMPORT,
-        [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOG_TO_SEGMENT)]
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS_TO_SEGMENT)]
         SERVICES_LOG_TO_SEGMENT,
-        [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOG_TO_SLACK)]
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS_TO_SLACK)]
         SERVICES_LOG_TO_SLACK,
-        [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOG_TO_STACKIFY)]
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS_TO_STACKIFY)]
         SERVICES_LOG_TO_STACKIFY,
-        [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGGING)]
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS)]
         SERVICES_LOGGING,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_SLACK)]
         SERVICES_SLACK,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_SESSION)]
         SERVICES_USER_SESSION,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE)]
-        SERVICES_USER_UPDATE
+        SERVICES_USER_UPDATE,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_BROADCASTS)]
+        SERVICES_USER_UPDATE_BROADCASTS,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT)]
+        SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_IMPORTS)]
+        SERVICES_USER_UPDATE_DOCUMENT_IMPORTS,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_SET_ARCHIVING)]
+        SERVICES_USER_UPDATE_DOCUMENT_SET_ARCHIVING,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT)]
+        SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_ROLES)]
+        SERVICES_USER_UPDATE_ROLES,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_WORKFLOW_SHARING)]
+        SERVICES_USER_UPDATE_WORKFLOW_SHARING
     }
     
     public sealed partial class DocConstantQueueChannel
@@ -71,14 +85,21 @@ namespace Services.Enums
         public const string SERVICES_DOCUMENT_UPDATE = "services_document_update";
         public const string SERVICES_EXTRACT_NOTIFICATION = "services_extract_notification";
         public const string SERVICES_HEARTBEAT = "services_heartbeat";
-        public const string SERVICES_IMPORT = "services_import";
-        public const string SERVICES_LOG_TO_SEGMENT = "services_log_to_segment";
-        public const string SERVICES_LOG_TO_SLACK = "services_log_to_slack";
-        public const string SERVICES_LOG_TO_STACKIFY = "services_log_to_stackify";
-        public const string SERVICES_LOGGING = "services_logging";
+        public const string SERVICES_DOCUMENT_IMPORT = "services_import";
+        public const string SERVICES_LOGS_TO_SEGMENT = "services_log_to_segment";
+        public const string SERVICES_LOGS_TO_SLACK = "services_log_to_slack";
+        public const string SERVICES_LOGS_TO_STACKIFY = "services_log_to_stackify";
+        public const string SERVICES_LOGS = "services_logging";
         public const string SERVICES_SLACK = "services_slack";
         public const string SERVICES_USER_SESSION = "services_user_session";
         public const string SERVICES_USER_UPDATE = "services_user_update";
+        public const string SERVICES_USER_UPDATE_BROADCASTS = "services_user_update_broadcasts";
+        public const string SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT = "services_user_update_document_assignment";
+        public const string SERVICES_USER_UPDATE_DOCUMENT_IMPORTS = "services_user_update_document_imports";
+        public const string SERVICES_USER_UPDATE_DOCUMENT_SET_ARCHIVING = "services_user_update_document_set_archiving";
+        public const string SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT = "services_user_update_document_set_assignment";
+        public const string SERVICES_USER_UPDATE_ROLES = "services_user_update_roles";
+        public const string SERVICES_USER_UPDATE_WORKFLOW_SHARING = "services_user_update_workflow_sharing";
         
         #region Internals
         
