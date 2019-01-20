@@ -56,6 +56,12 @@ namespace Services.Dto
         public int? AppId { get; set; }
 
 
+        [ApiMember(Name = nameof(Channel), Description = "QueueChannel", IsRequired = false)]
+        public Reference Channel { get; set; }
+        [ApiMember(Name = nameof(ChannelId), Description = "Primary Key of QueueChannel", IsRequired = false)]
+        public int? ChannelId { get; set; }
+
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -140,7 +146,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Enabled),nameof(Frequency),nameof(Gestalt),nameof(HistoryRetention),nameof(Items),nameof(ItemsCount),nameof(LastRunVersion),nameof(Locked),nameof(LogError),nameof(LogInfo),nameof(Name),nameof(RowsToProcessPerIteration),nameof(RunNow),nameof(StartAt),nameof(TaskHistory),nameof(TaskHistoryCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Channel),nameof(ChannelId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Enabled),nameof(Frequency),nameof(Gestalt),nameof(HistoryRetention),nameof(Items),nameof(ItemsCount),nameof(LastRunVersion),nameof(Locked),nameof(LogError),nameof(LogInfo),nameof(Name),nameof(RowsToProcessPerIteration),nameof(RunNow),nameof(StartAt),nameof(TaskHistory),nameof(TaskHistoryCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -174,6 +180,8 @@ namespace Services.Dto
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
+        public Reference Channel { get; set; }
+        public List<int> ChannelIds { get; set; }
         public string Description { get; set; }
         public bool? Enabled { get; set; }
         public int? Frequency { get; set; }
@@ -203,6 +211,7 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Updated))); }
         
         public bool doApp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.App))); }
+        public bool doChannel { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Channel))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Description))); }
         public bool doEnabled { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Enabled))); }
         public bool doFrequency { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Frequency))); }

@@ -54,6 +54,12 @@ namespace Services.Dto
         public bool AutoDelete { get; set; }
 
 
+        [ApiMember(Name = nameof(BackgroundTask), Description = "BackgroundTask", IsRequired = false)]
+        public Reference BackgroundTask { get; set; }
+        [ApiMember(Name = nameof(BackgroundTaskId), Description = "Primary Key of BackgroundTask", IsRequired = false)]
+        public int? BackgroundTaskId { get; set; }
+
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -105,7 +111,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AutoDelete),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Durable),nameof(Enabled),nameof(Exclusive),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AutoDelete),nameof(BackgroundTask),nameof(BackgroundTaskId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Durable),nameof(Enabled),nameof(Exclusive),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -135,6 +141,8 @@ namespace Services.Dto
     public partial class QueueChannelSearch : Search<QueueChannel>
     {
         public bool? AutoDelete { get; set; }
+        public Reference BackgroundTask { get; set; }
+        public List<int> BackgroundTaskIds { get; set; }
         public string Description { get; set; }
         public bool? Durable { get; set; }
         public bool? Enabled { get; set; }
@@ -156,6 +164,7 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(QueueChannel.Updated))); }
         
         public bool doAutoDelete { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(QueueChannel.AutoDelete))); }
+        public bool doBackgroundTask { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(QueueChannel.BackgroundTask))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(QueueChannel.Description))); }
         public bool doDurable { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(QueueChannel.Durable))); }
         public bool doEnabled { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(QueueChannel.Enabled))); }

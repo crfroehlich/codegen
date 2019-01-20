@@ -1568,6 +1568,35 @@
         "Tab": "BackgroundTask",
         "Type": "int?"
       },
+      "Channel": {
+        "Description": "Q Channel to process audits created by this task",
+        "DisplayName": "Channel",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsInsertOnly": true,
+        "IsRelationship": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "Channel",
+        "Order": 21,
+        "Tab": "BackgroundTask",
+        "TabOrder": 0,
+        "Type": "QueueChannel",
+        "UIType": ""
+      },
+      "ChannelId": {
+        "DisplayName": "Channel Id",
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "ChannelId",
+        "Order": 22,
+        "Tab": "BackgroundTask",
+        "Type": "int?"
+      },
       "Created": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -13312,6 +13341,35 @@
         "TabOrder": 0,
         "Type": "bool",
         "UIType": ""
+      },
+      "BackgroundTask": {
+        "Description": "Background Task that processes this channel",
+        "DisplayName": "Background Task",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsInsertOnly": true,
+        "IsRelationship": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "Name": "BackgroundTask",
+        "Order": 50,
+        "Tab": "Queue Channel",
+        "TabOrder": 0,
+        "Type": "BackgroundTask",
+        "UIType": ""
+      },
+      "BackgroundTaskId": {
+        "DisplayName": "Background Task Id",
+        "IsDisplayInForm": false,
+        "IsDisplayInGrid": false,
+        "IsInsertOnly": true,
+        "IsReadOnly": true,
+        "Name": "BackgroundTaskId",
+        "Order": 51,
+        "Tab": "Queue Channel",
+        "Type": "int?"
       },
       "Created": {
         "IsDisplayInForm": true,

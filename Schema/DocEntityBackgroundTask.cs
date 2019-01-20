@@ -132,6 +132,12 @@ namespace Services.Schema
 
 
         [Field()]
+        [FieldMapping(nameof(Channel))]
+        public DocEntityQueueChannel Channel { get; set; }
+        public int? ChannelId { get { return Channel?.Id; } private set { var noid = value; } }
+
+
+        [Field()]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
 
@@ -528,6 +534,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, "Updated")))
                 .ForMember(dest => dest.App, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.App))))
                 .ForMember(dest => dest.AppId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.AppId))))
+                .ForMember(dest => dest.Channel, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.Channel))))
+                .ForMember(dest => dest.ChannelId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.ChannelId))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.Description))))
                 .ForMember(dest => dest.Enabled, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.Enabled))))
                 .ForMember(dest => dest.Frequency, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.Frequency))))

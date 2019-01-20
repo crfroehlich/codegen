@@ -94,6 +94,14 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.App.Id.In(request.AppIds));
                 }
+                if(!DocTools.IsNullOrEmpty(request.Channel) && !DocTools.IsNullOrEmpty(request.Channel.Id))
+                {
+                    entities = entities.Where(en => en.Channel.Id == request.Channel.Id );
+                }
+                if(true == request.ChannelIds?.Any())
+                {
+                    entities = entities.Where(en => en.Channel.Id.In(request.ChannelIds));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(request.Enabled.HasValue)
@@ -227,6 +235,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
+            var pChannel = (request.Channel?.Id > 0) ? DocEntityQueueChannel.GetQueueChannel(request.Channel.Id) : null;
             var pDescription = request.Description;
             var pEnabled = request.Enabled;
             var pFrequency = request.Frequency;
@@ -266,6 +275,16 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityApp>(request, pApp, nameof(request.App)) && !request.VisibleFields.Matches(nameof(request.App), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.App));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityQueueChannel>(currentUser, request, pChannel, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.Channel)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pChannel, entity.Channel, nameof(request.Channel)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Channel)} cannot be modified once set.");
+                    entity.Channel = pChannel;
+                if(DocPermissionFactory.IsRequested<DocEntityQueueChannel>(request, pChannel, nameof(request.Channel)) && !request.VisibleFields.Matches(nameof(request.Channel), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Channel));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.Description)))

@@ -88,6 +88,14 @@ namespace Services.API
 
                 if(request.AutoDelete.HasValue)
                     entities = entities.Where(en => request.AutoDelete.Value == en.AutoDelete);
+                if(!DocTools.IsNullOrEmpty(request.BackgroundTask) && !DocTools.IsNullOrEmpty(request.BackgroundTask.Id))
+                {
+                    entities = entities.Where(en => en.BackgroundTask.Id == request.BackgroundTask.Id );
+                }
+                if(true == request.BackgroundTaskIds?.Any())
+                {
+                    entities = entities.Where(en => en.BackgroundTask.Id.In(request.BackgroundTaskIds));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(request.Durable.HasValue)
@@ -222,6 +230,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAutoDelete = request.AutoDelete;
+            var pBackgroundTask = (request.BackgroundTask?.Id > 0) ? DocEntityBackgroundTask.GetBackgroundTask(request.BackgroundTask.Id) : null;
             var pDescription = request.Description;
             var pDurable = request.Durable;
             var pEnabled = request.Enabled;
@@ -252,6 +261,16 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pAutoDelete, nameof(request.AutoDelete)) && !request.VisibleFields.Matches(nameof(request.AutoDelete), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.AutoDelete));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityBackgroundTask>(currentUser, request, pBackgroundTask, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.BackgroundTask)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pBackgroundTask, entity.BackgroundTask, nameof(request.BackgroundTask)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.BackgroundTask)} cannot be modified once set.");
+                    entity.BackgroundTask = pBackgroundTask;
+                if(DocPermissionFactory.IsRequested<DocEntityBackgroundTask>(request, pBackgroundTask, nameof(request.BackgroundTask)) && !request.VisibleFields.Matches(nameof(request.BackgroundTask), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.BackgroundTask));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.QUEUECHANNEL, nameof(request.Description)))
@@ -389,6 +408,7 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
                     var pAutoDelete = entity.AutoDelete;
+                    var pBackgroundTask = entity.BackgroundTask;
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
@@ -404,6 +424,7 @@ namespace Services.API
                 {
                     Hash = Guid.NewGuid()
                                 , AutoDelete = pAutoDelete
+                                , BackgroundTask = pBackgroundTask
                                 , Description = pDescription
                                 , Durable = pDurable
                                 , Enabled = pEnabled
