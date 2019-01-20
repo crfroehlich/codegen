@@ -275,7 +275,7 @@ namespace Services.API
 
         private object _GetUserSessionImpersonation(UserSessionJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
              var en = DocEntityUserSession.GetUserSession(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "Impersonations", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and Impersonation");
@@ -297,7 +297,7 @@ namespace Services.API
 
         private object _GetUserSessionRequest(UserSessionJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<UserRequest>(Dto.UserRequest.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<UserRequest>(currentUser, "UserRequest", request.VisibleFields);
              var en = DocEntityUserSession.GetUserSession(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "Requests", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and UserRequest");
@@ -306,7 +306,7 @@ namespace Services.API
 
         private object _GetUserSessionHistory(UserSessionJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
              var en = DocEntityUserSession.GetUserSession(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "UserHistory", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and History");

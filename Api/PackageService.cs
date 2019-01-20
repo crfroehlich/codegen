@@ -86,8 +86,6 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(request.Archived.HasValue)
-                    entities = entities.Where(en => request.Archived.Value == en.Archived);
                         if(true == request.ChildrenIds?.Any())
                         {
                             entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
@@ -124,10 +122,6 @@ namespace Services.API
                     entities = entities.Where(en => en.DeliverableDeadline >= request.DeliverableDeadlineAfter);
                 if(request.FqId.HasValue)
                     entities = entities.Where(en => request.FqId.Value == en.FqId);
-                        if(true == request.LegacyTimeCardsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.LegacyTimeCards.Any(r => r.Id.In(request.LegacyTimeCardsIds)));
-                        }
                 if(request.LibraryPackageId.HasValue)
                     entities = entities.Where(en => request.LibraryPackageId.Value == en.LibraryPackageId);
                 if(!DocTools.IsNullOrEmpty(request.LibraryPackageName))
@@ -301,7 +295,6 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Package>(DocConstantModelName.PACKAGE, nameof(Package), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pArchived = request.Archived;
             var pChildren = request.Children?.ToList();
             var pClient = (request.Client?.Id > 0) ? DocEntityClient.GetClient(request.Client.Id) : null;
             var pDatabaseDeadline = request.DatabaseDeadline;
@@ -309,7 +302,6 @@ namespace Services.API
             var pDataset = (request.Dataset?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.Dataset.Id) : null;
             var pDeliverableDeadline = request.DeliverableDeadline;
             var pFqId = request.FqId;
-            var pLegacyTimeCards = request.LegacyTimeCards?.ToList();
             var pLibraryPackageId = request.LibraryPackageId;
             var pLibraryPackageName = request.LibraryPackageName;
             var pNumber = request.Number;
@@ -337,15 +329,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pArchived, permission, DocConstantModelName.PACKAGE, nameof(request.Archived)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Archived));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityClient>(currentUser, request, pClient, permission, DocConstantModelName.PACKAGE, nameof(request.Client)))
             {
                 if(DocPermissionFactory.IsRequested(request, pClient, entity.Client, nameof(request.Client)))
@@ -530,50 +513,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Children));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pLegacyTimeCards, permission, DocConstantModelName.PACKAGE, nameof(request.LegacyTimeCards)))
-            {
-                if (true == pLegacyTimeCards?.Any() )
-                {
-                    var requestedLegacyTimeCards = pLegacyTimeCards.Select(p => p.Id).Distinct().ToList();
-                    var existsLegacyTimeCards = Execute.SelectAll<DocEntityTimeCard>().Where(e => e.Id.In(requestedLegacyTimeCards)).Select( e => e.Id ).ToList();
-                    if (existsLegacyTimeCards.Count != requestedLegacyTimeCards.Count)
-                    {
-                        var nonExists = requestedLegacyTimeCards.Where(id => existsLegacyTimeCards.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection LegacyTimeCards with objects that do not exist. No matching LegacyTimeCards(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedLegacyTimeCards.Where(id => entity.LegacyTimeCards.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Package), columnName: nameof(request.LegacyTimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.LegacyTimeCards)} to {nameof(Package)}");
-                        entity.LegacyTimeCards.Add(target);
-                    });
-                    var toRemove = entity.LegacyTimeCards.Where(e => requestedLegacyTimeCards.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Package), columnName: nameof(request.LegacyTimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.LegacyTimeCards)} from {nameof(Package)}");
-                        entity.LegacyTimeCards.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.LegacyTimeCards.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Package), columnName: nameof(request.LegacyTimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.LegacyTimeCards)} from {nameof(Package)}");
-                        entity.LegacyTimeCards.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pLegacyTimeCards, nameof(request.LegacyTimeCards)) && !request.VisibleFields.Matches(nameof(request.LegacyTimeCards), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.LegacyTimeCards));
-                }
-            }
             DocPermissionFactory.SetVisibleFields<Package>(currentUser, nameof(Package), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -657,7 +596,6 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pArchived = entity.Archived;
                     var pChildren = entity.Children.ToList();
                     var pClient = entity.Client;
                     var pDatabaseDeadline = entity.DatabaseDeadline;
@@ -667,7 +605,6 @@ namespace Services.API
                     var pDataset = entity.Dataset;
                     var pDeliverableDeadline = entity.DeliverableDeadline;
                     var pFqId = entity.FqId;
-                    var pLegacyTimeCards = entity.LegacyTimeCards.ToList();
                     var pLibraryPackageId = entity.LibraryPackageId;
                     var pLibraryPackageName = entity.LibraryPackageName;
                     if(!DocTools.IsNullOrEmpty(pLibraryPackageName))
@@ -690,7 +627,6 @@ namespace Services.API
                 var copy = new DocEntityPackage(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Archived = pArchived
                                 , Client = pClient
                                 , DatabaseDeadline = pDatabaseDeadline
                                 , DatabaseName = pDatabaseName
@@ -710,11 +646,6 @@ namespace Services.API
                             foreach(var item in pChildren)
                             {
                                 entity.Children.Add(item);
-                            }
-
-                            foreach(var item in pLegacyTimeCards)
-                            {
-                                entity.LegacyTimeCards.Add(item);
                             }
 
                 #region Custom After copyPackage
@@ -891,9 +822,6 @@ namespace Services.API
                 case "package":
                     ret = _GetPackagePackage(request, skip, take);
                     break;
-                case "timecard":
-                    ret = _GetPackageTimeCard(request, skip, take);
-                    break;
                 }
             });
             return ret;
@@ -919,20 +847,11 @@ namespace Services.API
 
         private object _GetPackagePackage(PackageJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Package>(currentUser, "Package", request.VisibleFields);
              var en = DocEntityPackage.GetPackage(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PACKAGE, columnName: "Children", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Package and Package");
              return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPackage,Package>(new List<Package>());
-        }
-
-        private object _GetPackageTimeCard(PackageJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request.VisibleFields);
-             var en = DocEntityPackage.GetPackage(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PACKAGE, columnName: "LegacyTimeCards", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Package and TimeCard");
-             return en?.LegacyTimeCards.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTimeCard,TimeCard>(new List<TimeCard>());
         }
         
         public object Post(PackageJunction request)

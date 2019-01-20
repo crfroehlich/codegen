@@ -88,6 +88,14 @@ namespace Services.API
 
                 if(!DocTools.IsNullOrEmpty(request.Action))
                     entities = entities.Where(en => en.Action.Contains(request.Action));
+                if(!DocTools.IsNullOrEmpty(request.BackgroundTask) && !DocTools.IsNullOrEmpty(request.BackgroundTask.Id))
+                {
+                    entities = entities.Where(en => en.BackgroundTask.Id == request.BackgroundTask.Id );
+                }
+                if(true == request.BackgroundTaskIds?.Any())
+                {
+                    entities = entities.Where(en => en.BackgroundTask.Id.In(request.BackgroundTaskIds));
+                }
                 if(!DocTools.IsNullOrEmpty(request.ChangedOnDate))
                     entities = entities.Where(en => request.ChangedOnDate.Value.Date == en.ChangedOnDate.Date);
                 if(!DocTools.IsNullOrEmpty(request.ChangedOnDateBefore))
@@ -265,7 +273,7 @@ namespace Services.API
 
         private object _GetAuditRecordAuditDelta(AuditRecordJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<AuditDelta>(Dto.AuditDelta.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, "AuditDelta", request.VisibleFields);
              var en = DocEntityAuditRecord.GetAuditRecord(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.AUDITRECORD, columnName: "Deltas", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between AuditRecord and AuditDelta");

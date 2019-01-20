@@ -51,8 +51,6 @@ namespace Services.Enums
         SERVICES_LOG_TO_STACKIFY,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGGING)]
         SERVICES_LOGGING,
-        [EnumMember(Value = DocConstantQueueChannel.SERVICES_SALESFORCE)]
-        SERVICES_SALESFORCE,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_SLACK)]
         SERVICES_SLACK,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_SESSION)]
@@ -78,7 +76,6 @@ namespace Services.Enums
         public const string SERVICES_LOG_TO_SLACK = "services_log_to_slack";
         public const string SERVICES_LOG_TO_STACKIFY = "services_log_to_stackify";
         public const string SERVICES_LOGGING = "services_logging";
-        public const string SERVICES_SALESFORCE = "services_salesforce";
         public const string SERVICES_SLACK = "services_slack";
         public const string SERVICES_USER_SESSION = "services_user_session";
         public const string SERVICES_USER_UPDATE = "services_user_update";

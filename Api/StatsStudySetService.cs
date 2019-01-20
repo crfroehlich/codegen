@@ -259,7 +259,7 @@ namespace Services.API
 
         private object _GetStatsStudySetStatsRecord(StatsStudySetJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
              var en = DocEntityStatsStudySet.GetStatsStudySet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.STATSSTUDYSET, columnName: "Records", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between StatsStudySet and StatsRecord");

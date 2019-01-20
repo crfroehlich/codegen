@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -40,7 +39,7 @@ using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
-    public abstract partial class OutcomeBase : Dto<Outcome>
+    public abstract partial class OutcomeBase : Dto<OutcomeDto>
     {
         public OutcomeBase() {}
 
@@ -51,47 +50,44 @@ namespace Services.Dto
 
         public OutcomeBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
-        public List<Reference> DocumentSets { get; set; }
-        public int? DocumentSetsCount { get; set; }
-
-
-        [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
-        public string Name { get; set; }
-
-
-        [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
-        public string URI { get; set; }
+        [ApiMember(Name = nameof(Outcome), Description = "LookupTable", IsRequired = true)]
+        public Reference Outcome { get; set; }
+        [ApiMember(Name = nameof(OutcomeId), Description = "Primary Key of LookupTable", IsRequired = false)]
+        public int? OutcomeId { get; set; }
 
 
     }
 
     [Route("/outcome", "POST")]
     [Route("/outcome/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Outcome : OutcomeBase, IReturn<Outcome>, IDto
+    public partial class OutcomeDto : OutcomeBase, IReturn<OutcomeDto>, IDto
     {
-        public Outcome()
+        public OutcomeDto()
         {
             _Constructor();
         }
 
-        public Outcome(int? id) : base(DocConvert.ToInt(id)) {}
-        public Outcome(int id) : base(id) {}
+        public OutcomeDto(int? id) : base(DocConvert.ToInt(id)) {}
+        public OutcomeDto(int id) : base(id) {}
         
         #region Fields
         
         public bool? ShouldSerialize(string field)
         {
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
-            return ret;
+            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
+            if (DocTools.AreEqual(nameof(Fields), field)) return false;
+            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
+            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
+            if (DocTools.AreEqual(nameof(Id), field)) return true;
+            return true == VisibleFields?.Matches(field, true);
         }
 
-        public static List<string> Fields => DocTools.Fields<Outcome>();
+        private static List<string> _fields;
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<OutcomeDto>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(URI),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Outcome),nameof(OutcomeId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -99,35 +95,28 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
                 }
                 return _VisibleFields;
             }
             set
             {
-                var requested = value ?? new List<string>();
-                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Outcome>("Outcome",exists);
+                _VisibleFields = Fields;
             }
         }
 
         #endregion Fields
-        private List<string> _collections = new List<string>
-        {
-            nameof(DocumentSets), nameof(DocumentSetsCount)
-        };
-        private List<string> collections { get { return _collections; } }
     }
     
     [Route("/Outcome/{Id}/copy", "POST")]
-    public partial class OutcomeCopy : Outcome {}
+    public partial class OutcomeDtoCopy : OutcomeDto {}
     [Route("/outcome", "GET")]
     [Route("/outcome/search", "GET, POST, DELETE")]
-    public partial class OutcomeSearch : Search<Outcome>
+    public partial class OutcomeSearch : Search<OutcomeDto>
     {
-        public List<int> DocumentSetsIds { get; set; }
-        public string Name { get; set; }
-        public string URI { get; set; }
+        public Reference Outcome { get; set; }
+        public List<int> OutcomeIds { get; set; }
+        public List<string> OutcomeNames { get; set; }
     }
     
     public class OutcomeFullTextSearch
@@ -140,51 +129,18 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.Updated))); }
+        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(OutcomeDto.Created))); }
+        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(OutcomeDto.Updated))); }
         
-        public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.DocumentSets))); }
-        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.Name))); }
-        public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.URI))); }
+        public bool doOutcome { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(OutcomeDto.Outcome))); }
     }
 
     [Route("/outcome/version", "GET, POST")]
     public partial class OutcomeVersion : OutcomeSearch {}
 
     [Route("/outcome/batch", "DELETE, PATCH, POST, PUT")]
-    public partial class OutcomeBatch : List<Outcome> { }
+    public partial class OutcomeBatch : List<OutcomeDto> { }
 
-    [Route("/outcome/{Id}/documentset", "GET, POST, DELETE")]
-    public class OutcomeJunction : Search<Outcome>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-
-
-        public OutcomeJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/outcome/{Id}/documentset/version", "GET")]
-    public class OutcomeJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/outcome/ids", "GET, POST")]
     public class OutcomeIds
     {

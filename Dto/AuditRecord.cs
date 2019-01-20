@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -53,6 +52,12 @@ namespace Services.Dto
     
         [ApiMember(Name = nameof(Action), Description = "string", IsRequired = false)]
         public string Action { get; set; }
+
+
+        [ApiMember(Name = nameof(BackgroundTask), Description = "BackgroundTask", IsRequired = false)]
+        public Reference BackgroundTask { get; set; }
+        [ApiMember(Name = nameof(BackgroundTaskId), Description = "Primary Key of BackgroundTask", IsRequired = false)]
+        public int? BackgroundTaskId { get; set; }
 
 
         [ApiMember(Name = nameof(ChangedOnDate), Description = "DateTime?", IsRequired = true)]
@@ -131,16 +136,20 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
-            return ret;
+            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
+            if (DocTools.AreEqual(nameof(Fields), field)) return false;
+            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
+            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
+            if (DocTools.AreEqual(nameof(Id), field)) return true;
+            return true == VisibleFields?.Matches(field, true);
         }
 
-        public static List<string> Fields => DocTools.Fields<AuditRecord>();
+        private static List<string> _fields;
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<AuditRecord>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Action),nameof(ChangedOnDate),nameof(Created),nameof(CreatorId),nameof(Data),nameof(DatabaseSessionId),nameof(Deltas),nameof(DeltasCount),nameof(EntityId),nameof(EntityType),nameof(EntityVersion),nameof(Gestalt),nameof(Impersonation),nameof(ImpersonationId),nameof(Locked),nameof(TargetId),nameof(TargetType),nameof(TargetVersion),nameof(Updated),nameof(User),nameof(UserId),nameof(UserSession),nameof(UserSessionId),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Action),nameof(BackgroundTask),nameof(BackgroundTaskId),nameof(ChangedOnDate),nameof(Created),nameof(CreatorId),nameof(Data),nameof(DatabaseSessionId),nameof(Deltas),nameof(DeltasCount),nameof(EntityId),nameof(EntityType),nameof(EntityVersion),nameof(Gestalt),nameof(Impersonation),nameof(ImpersonationId),nameof(Locked),nameof(TargetId),nameof(TargetType),nameof(TargetVersion),nameof(Updated),nameof(User),nameof(UserId),nameof(UserSession),nameof(UserSessionId),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -173,6 +182,8 @@ namespace Services.Dto
     public partial class AuditRecordSearch : Search<AuditRecord>
     {
         public string Action { get; set; }
+        public Reference BackgroundTask { get; set; }
+        public List<int> BackgroundTaskIds { get; set; }
         public DateTime? ChangedOnDate { get; set; }
         public DateTime? ChangedOnDateAfter { get; set; }
         public DateTime? ChangedOnDateBefore { get; set; }
@@ -207,6 +218,7 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.Updated))); }
         
         public bool doAction { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.Action))); }
+        public bool doBackgroundTask { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.BackgroundTask))); }
         public bool doChangedOnDate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.ChangedOnDate))); }
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.Data))); }
         public bool doDatabaseSessionId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.DatabaseSessionId))); }

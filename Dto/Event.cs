@@ -18,7 +18,6 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
-using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -86,7 +85,8 @@ namespace Services.Dto
 
     }
 
-    [Route("/event/{Id}", "GET")]
+    [Route("/event", "POST")]
+    [Route("/event/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class Event : EventBase, IReturn<Event>, IDto
     {
         public Event()
@@ -101,12 +101,16 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
-            return ret;
+            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
+            if (DocTools.AreEqual(nameof(Fields), field)) return false;
+            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
+            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
+            if (DocTools.AreEqual(nameof(Id), field)) return true;
+            return true == VisibleFields?.Matches(field, true);
         }
 
-        public static List<string> Fields => DocTools.Fields<Event>();
+        private static List<string> _fields;
+        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<Event>());
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
@@ -138,6 +142,8 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
+    [Route("/Event/{Id}/copy", "POST")]
+    public partial class EventCopy : Event {}
     [Route("/event", "GET")]
     [Route("/event/search", "GET, POST, DELETE")]
     public partial class EventSearch : Search<Event>

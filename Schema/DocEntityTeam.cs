@@ -36,17 +36,30 @@ using ValueType = Services.Dto.ValueType;
 namespace Services.Schema
 {
     [TableMapping(DocConstantModelName.TEAM)]
+
     public partial class DocEntityTeam : DocEntityBase
     {
         private const string TEAM_CACHE = "TeamCache";
 
         #region Constructor
-        public DocEntityTeam(Session session) : base(session) {}
 
-        public DocEntityTeam() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        /// <summary>
+        ///    Initializes a new instance of this class.
+        /// </summary>
+        /// <param name="session">The session.</param>
+        public DocEntityTeam(Session session)
+            : base(session) { }
+
+        /// <summary>
+        ///    Initializes a new instance of this class as a default, session-less object.
+        /// </summary>
+        public DocEntityTeam()
+            : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
+
         #endregion Constructor
 
         #region VisibleFields
+        
         private List<string> __vf;
         private List<string> _visibleFields
         {
@@ -64,9 +77,11 @@ namespace Services.Schema
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
         }
+        
         #endregion VisibleFields
 
         #region Static Members
+
         public static DocEntityTeam GetTeam(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? GetTeam(reference.Id) : null;
@@ -105,17 +120,10 @@ namespace Services.Schema
             }
             return ret;
         }
+
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(AdminRoles))]
-        [Association( PairTo = nameof(Role.AdminTeam), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
-        public DocEntitySet<DocEntityRole> AdminRoles { get; private set; }
-
-
-        public int? AdminRolesCount { get { return AdminRoles.Count(); } private set { var noid = value; } }
-
 
         [Field()]
         [FieldMapping(nameof(Description))]
@@ -152,11 +160,6 @@ namespace Services.Schema
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
-        [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Settings))]
-        public string Settings { get; set; }
-
-
         [Field()]
         [FieldMapping(nameof(Slack))]
         public string Slack { get; set; }
@@ -181,22 +184,25 @@ namespace Services.Schema
 
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [FieldMapping(DocEntityConstants.PropertyName.GESTALT)]
         public override string Gestalt { get; set; }
 
-        [Field]
+        [Field()]
+        [FieldMapping(BasePropertyName.HASH)]
         public override Guid Hash { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
         public override int VersionNo { get; set; }
 
-        [Field]
+        [Field()]
         public override DateTime? Created { get; set; }
 
-        [Field]
+        [Field()]
         public override DateTime? Updated { get; set; }
 
-        [Field]
+        [Field()]
         public override bool Locked { get; set; }
+
         private bool? _isNewlyLocked;
         private bool? _isModified;
         
@@ -215,18 +221,35 @@ namespace Services.Schema
         #endregion Properties
 
         #region Overrides of DocEntity
+
+        /// <summary>
+        ///    The Model name of this class is <see cref="DocConstantModelName.TEAM" />
+        /// </summary>
         public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.TEAM;
 
-        public override DocConstantModelName ModelName => MODEL_NAME;
-
+        /// <summary>
+        ///    The Model name of this instance is always the same as <see cref="MODEL_NAME" />
+        /// </summary>
+        public override DocConstantModelName ModelName
+        {
+            get { return MODEL_NAME; }
+        }
+        
         public const string CACHE_KEY_PREFIX = "FindTeams";
 
+        /// <summary>
+        ///    Converts this Domain object to its corresponding Model.
+        /// </summary>
+        public override T ToModel<T>()
+        {
+            return  null;
 
-        public override T ToModel<T>() =>  null;
+        }
 
         #endregion Overrides of DocEntity
 
         #region Entity overrides
+
         protected override object AdjustFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
             if (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name))
@@ -238,7 +261,7 @@ namespace Services.Schema
                 return oldValue;
             }
         }
-
+        
         ///    Called before field value is about to be changed. This event is raised only on actual change attempt (i.e. when new value differs from the current one).
         protected override void OnSettingFieldValue(FieldInfo fieldInfo, object value)
         {
@@ -279,30 +302,6 @@ namespace Services.Schema
             }
 
             _OnRemoving();
-            try
-            {
-                AdminRoles.Clear(); //foreach thing in AdminRoles en.Remove();
-            }
-            catch(Exception ex)
-            {
-                throw new DocException("Failed to delete Team in AdminRoles delete", ex);
-            }
-            try
-            {
-                Scopes.Clear(); //foreach thing in Scopes en.Remove();
-            }
-            catch(Exception ex)
-            {
-                throw new DocException("Failed to delete Team in Scopes delete", ex);
-            }
-            try
-            {
-                Updates.Clear(); //foreach thing in Updates en.Remove();
-            }
-            catch(Exception ex)
-            {
-                throw new DocException("Failed to delete Team in Updates delete", ex);
-            }
             base.OnRemoving();
         }
 
@@ -333,12 +332,13 @@ namespace Services.Schema
             FlushCache();
 
             _validated = true;
-
+            
 
         }
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
+
             var hash = GetGuid();
             if(Hash != hash)
                 Hash = hash;
@@ -401,9 +401,11 @@ namespace Services.Schema
             DocCacheClient.RemoveSearch("Team");
             DocCacheClient.RemoveById(Id);
         }
+
         #endregion Entity overrides
 
         #region Validation
+
         public DocValidationMessage ValidationMessage
         {
             get
@@ -421,7 +423,7 @@ namespace Services.Schema
                     isValid = false;
                     message += " Name is a required property.";
                 }
-                if(DocTools.IsNullOrEmpty(Owner))
+                if(null == Owner)
                 {
                     isValid = false;
                     message += " Owner is a required property.";
@@ -430,10 +432,13 @@ namespace Services.Schema
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;
             }
+
         }
+
         #endregion Validation
 
         #region Hash
+
         
         public static Guid GetGuid(DocEntityTeam thing)
         {
@@ -449,9 +454,11 @@ namespace Services.Schema
         {
             return GetGuid(this);
         }
+
         #endregion Hash
 
         #region Converters
+
         public override string ToString() => _ToString();
 
         public override Reference ToReference()
@@ -463,6 +470,7 @@ namespace Services.Schema
         public Team ToDto() => Mapper.Map<DocEntityTeam, Team>(this);
 
         public override IDto ToIDto() => ToDto();
+
         #endregion Converters
     }
 
@@ -483,8 +491,6 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityTeam,Team>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, "Updated")))
-                .ForMember(dest => dest.AdminRoles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.AdminRoles))))
-                .ForMember(dest => dest.AdminRolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.AdminRolesCount))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Description))))
                 .ForMember(dest => dest.Email, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Email))))
                 .ForMember(dest => dest.IsInternal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.IsInternal))))
@@ -493,7 +499,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.OwnerId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.OwnerId))))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.ScopesCount))))
-                .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Settings))))
                 .ForMember(dest => dest.Slack, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Slack))))
                 .ForMember(dest => dest.Updates, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Updates))))
                 .ForMember(dest => dest.UpdatesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.UpdatesCount))))

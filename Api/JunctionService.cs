@@ -704,7 +704,7 @@ namespace Services.API
 
         private object _GetJunctionJunction(JunctionJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
              var en = DocEntityJunction.GetJunction(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.JUNCTION, columnName: "Children", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Junction and Junction");

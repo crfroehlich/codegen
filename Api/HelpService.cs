@@ -745,7 +745,7 @@ namespace Services.API
 
         private object _GetHelpPage(HelpJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Page>(currentUser, "Page", request.VisibleFields);
              var en = DocEntityHelp.GetHelp(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.HELP, columnName: "Pages", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Help and Page");
@@ -767,7 +767,7 @@ namespace Services.API
 
         private object _GetHelpScope(HelpJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
              var en = DocEntityHelp.GetHelp(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.HELP, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Help and Scope");
