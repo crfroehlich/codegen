@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class ForeignKeyService : DocServiceBase
     {
-        private void _ExecSearch(ForeignKeySearch request, Action<IQueryable<DocEntityForeignKey>> callBack)
+        private IQueryable<DocEntityForeignKey> _ExecSearch(ForeignKeySearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityForeignKey> entities = null;
             
             DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityForeignKey>();
+                entities = Execute.SelectAll<DocEntityForeignKey>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ForeignKeyFullTextSearch(request);
@@ -133,78 +135,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(ForeignKeySearch request)
-        {
-            return Get(request);
-        }
+        public object Post(ForeignKeySearch request) => Get(request);
 
-        public object Get(ForeignKeySearch request)
-        {
-            object tryRet = null;
-            var ret = new List<ForeignKey>();
-            var cacheKey = GetApiCacheKey<ForeignKey>(DocConstantModelName.FOREIGNKEY, nameof(ForeignKey), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityForeignKey,ForeignKey>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.FOREIGNKEY, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.FOREIGNKEY, search: true);
-            return tryRet;
-        }
+        public object Get(ForeignKeySearch request) => GetSearchResult<ForeignKey,DocEntityForeignKey,ForeignKeySearch>(DocConstantModelName.FOREIGNKEY, request, _ExecSearch);
 
-        public object Post(ForeignKeyVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(ForeignKeyVersion request) => Get(request);
 
         public object Get(ForeignKeyVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(ForeignKey request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<ForeignKey>(DocConstantModelName.FOREIGNKEY, nameof(ForeignKey), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetForeignKey(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
-            return ret;
-        }
+        public object Get(ForeignKey request) => GetEntity<ForeignKey>(DocConstantModelName.FOREIGNKEY, request, GetForeignKey);
 
         private ForeignKey _AssignValues(ForeignKey request, DocConstantPermission permission, Session session)
         {

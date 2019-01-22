@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class DocumentService : DocServiceBase
     {
-        private void _ExecSearch(DocumentSearch request, Action<IQueryable<DocEntityDocument>> callBack)
+        private IQueryable<DocEntityDocument> _ExecSearch(DocumentSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityDocument> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Document>(currentUser, "Document", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityDocument>();
+                entities = Execute.SelectAll<DocEntityDocument>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentFullTextSearch(request);
@@ -231,99 +233,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(DocumentSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(DocumentSearch request) => Get(request);
 
-        public object Get(DocumentSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Document>();
-            var cacheKey = GetApiCacheKey<Document>(DocConstantModelName.DOCUMENT, nameof(Document), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocument,Document>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocument,Document>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DOCUMENT, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DOCUMENT, search: true);
-            return tryRet;
-        }
+        public object Get(DocumentSearch request) => GetSearchResult<Document,DocEntityDocument,DocumentSearch>(DocConstantModelName.DOCUMENT, request, _ExecSearch);
 
-        public object Post(DocumentVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(DocumentVersion request) => Get(request);
 
         public object Get(DocumentVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Document request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Document>(currentUser, "Document", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Document>(DocConstantModelName.DOCUMENT, nameof(Document), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetDocument(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.DOCUMENT);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetDocument(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DOCUMENT);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DOCUMENT);
-            return ret;
-        }
+        public object Get(Document request) => GetEntity<Document>(DocConstantModelName.DOCUMENT, request, GetDocument);
 
         private Document _AssignValues(Document request, DocConstantPermission permission, Session session)
         {

@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class DefaultService : DocServiceBase
     {
-        private void _ExecSearch(DefaultSearch request, Action<IQueryable<DocEntityDefault>> callBack)
+        private IQueryable<DocEntityDefault> _ExecSearch(DefaultSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityDefault> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Default>(currentUser, "Default", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityDefault>();
+                entities = Execute.SelectAll<DocEntityDefault>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DefaultFullTextSearch(request);
@@ -129,78 +131,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(DefaultSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(DefaultSearch request) => Get(request);
 
-        public object Get(DefaultSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Default>();
-            var cacheKey = GetApiCacheKey<Default>(DocConstantModelName.DEFAULT, nameof(Default), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDefault,Default>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DEFAULT, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DEFAULT, search: true);
-            return tryRet;
-        }
+        public object Get(DefaultSearch request) => GetSearchResult<Default,DocEntityDefault,DefaultSearch>(DocConstantModelName.DEFAULT, request, _ExecSearch);
 
-        public object Post(DefaultVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(DefaultVersion request) => Get(request);
 
         public object Get(DefaultVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Default request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Default>(currentUser, "Default", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Default>(DocConstantModelName.DEFAULT, nameof(Default), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetDefault(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DEFAULT);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DEFAULT);
-            return ret;
-        }
+        public object Get(Default request) => GetEntity<Default>(DocConstantModelName.DEFAULT, request, GetDefault);
 
         private Default _AssignValues(Default request, DocConstantPermission permission, Session session)
         {

@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class ValueTypeService : DocServiceBase
     {
-        private void _ExecSearch(ValueTypeSearch request, Action<IQueryable<DocEntityValueType>> callBack)
+        private IQueryable<DocEntityValueType> _ExecSearch(ValueTypeSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityValueType> entities = null;
             
             DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityValueType>();
+                entities = Execute.SelectAll<DocEntityValueType>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ValueTypeFullTextSearch(request);
@@ -129,78 +131,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(ValueTypeSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(ValueTypeSearch request) => Get(request);
 
-        public object Get(ValueTypeSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<ValueType>();
-            var cacheKey = GetApiCacheKey<ValueType>(DocConstantModelName.VALUETYPE, nameof(ValueType), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityValueType,ValueType>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.VALUETYPE, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.VALUETYPE, search: true);
-            return tryRet;
-        }
+        public object Get(ValueTypeSearch request) => GetSearchResult<ValueType,DocEntityValueType,ValueTypeSearch>(DocConstantModelName.VALUETYPE, request, _ExecSearch);
 
-        public object Post(ValueTypeVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(ValueTypeVersion request) => Get(request);
 
         public object Get(ValueTypeVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(ValueType request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<ValueType>(DocConstantModelName.VALUETYPE, nameof(ValueType), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetValueType(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VALUETYPE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.VALUETYPE);
-            return ret;
-        }
+        public object Get(ValueType request) => GetEntity<ValueType>(DocConstantModelName.VALUETYPE, request, GetValueType);
 
 
 

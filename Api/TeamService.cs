@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class TeamService : DocServiceBase
     {
-        private void _ExecSearch(TeamSearch request, Action<IQueryable<DocEntityTeam>> callBack)
+        private IQueryable<DocEntityTeam> _ExecSearch(TeamSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityTeam> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityTeam>();
+                entities = Execute.SelectAll<DocEntityTeam>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TeamFullTextSearch(request);
@@ -131,99 +133,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(TeamSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(TeamSearch request) => Get(request);
 
-        public object Get(TeamSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Team>();
-            var cacheKey = GetApiCacheKey<Team>(DocConstantModelName.TEAM, nameof(Team), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTeam,Team>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTeam,Team>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TEAM, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.TEAM, search: true);
-            return tryRet;
-        }
+        public object Get(TeamSearch request) => GetSearchResult<Team,DocEntityTeam,TeamSearch>(DocConstantModelName.TEAM, request, _ExecSearch);
 
-        public object Post(TeamVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(TeamVersion request) => Get(request);
 
         public object Get(TeamVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Team request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Team>(DocConstantModelName.TEAM, nameof(Team), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTeam(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.TEAM);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTeam(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TEAM);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.TEAM);
-            return ret;
-        }
+        public object Get(Team request) => GetEntity<Team>(DocConstantModelName.TEAM, request, GetTeam);
 
         private Team _AssignValues(Team request, DocConstantPermission permission, Session session)
         {

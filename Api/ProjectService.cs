@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class ProjectService : DocServiceBase
     {
-        private void _ExecSearch(ProjectSearch request, Action<IQueryable<DocEntityProject>> callBack)
+        private IQueryable<DocEntityProject> _ExecSearch(ProjectSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityProject> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Project>(currentUser, "Project", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityProject>();
+                entities = Execute.SelectAll<DocEntityProject>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ProjectFullTextSearch(request);
@@ -181,99 +183,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(ProjectSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(ProjectSearch request) => Get(request);
 
-        public object Get(ProjectSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Project>();
-            var cacheKey = GetApiCacheKey<Project>(DocConstantModelName.PROJECT, nameof(Project), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityProject,Project>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityProject,Project>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.PROJECT, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.PROJECT, search: true);
-            return tryRet;
-        }
+        public object Get(ProjectSearch request) => GetSearchResult<Project,DocEntityProject,ProjectSearch>(DocConstantModelName.PROJECT, request, _ExecSearch);
 
-        public object Post(ProjectVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(ProjectVersion request) => Get(request);
 
         public object Get(ProjectVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Project request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Project>(currentUser, "Project", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Project>(DocConstantModelName.PROJECT, nameof(Project), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetProject(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.PROJECT);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetProject(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.PROJECT);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.PROJECT);
-            return ret;
-        }
+        public object Get(Project request) => GetEntity<Project>(DocConstantModelName.PROJECT, request, GetProject);
 
         private Project _AssignValues(Project request, DocConstantPermission permission, Session session)
         {

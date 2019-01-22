@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class PageService : DocServiceBase
     {
-        private void _ExecSearch(PageSearch request, Action<IQueryable<DocEntityPage>> callBack)
+        private IQueryable<DocEntityPage> _ExecSearch(PageSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityPage> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Page>(currentUser, "Page", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityPage>();
+                entities = Execute.SelectAll<DocEntityPage>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new PageFullTextSearch(request);
@@ -117,99 +119,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(PageSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(PageSearch request) => Get(request);
 
-        public object Get(PageSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Page>();
-            var cacheKey = GetApiCacheKey<Page>(DocConstantModelName.PAGE, nameof(Page), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPage,Page>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityPage,Page>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.PAGE, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.PAGE, search: true);
-            return tryRet;
-        }
+        public object Get(PageSearch request) => GetSearchResult<Page,DocEntityPage,PageSearch>(DocConstantModelName.PAGE, request, _ExecSearch);
 
-        public object Post(PageVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(PageVersion request) => Get(request);
 
         public object Get(PageVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Page request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Page>(currentUser, "Page", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Page>(DocConstantModelName.PAGE, nameof(Page), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetPage(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.PAGE);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetPage(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.PAGE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.PAGE);
-            return ret;
-        }
+        public object Get(Page request) => GetEntity<Page>(DocConstantModelName.PAGE, request, GetPage);
 
         private Page _AssignValues(Page request, DocConstantPermission permission, Session session)
         {

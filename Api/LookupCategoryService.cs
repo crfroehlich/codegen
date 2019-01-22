@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class LookupCategoryService : DocServiceBase
     {
-        private void _ExecSearch(LookupCategorySearch request, Action<IQueryable<DocEntityLookupCategory>> callBack)
+        private IQueryable<DocEntityLookupCategory> _ExecSearch(LookupCategorySearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityLookupCategory> entities = null;
             
             DocPermissionFactory.SetVisibleFields<LookupCategory>(currentUser, "LookupCategory", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityLookupCategory>();
+                entities = Execute.SelectAll<DocEntityLookupCategory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupCategoryFullTextSearch(request);
@@ -111,99 +113,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(LookupCategorySearch request)
-        {
-            return Get(request);
-        }
+        public object Post(LookupCategorySearch request) => Get(request);
 
-        public object Get(LookupCategorySearch request)
-        {
-            object tryRet = null;
-            var ret = new List<LookupCategory>();
-            var cacheKey = GetApiCacheKey<LookupCategory>(DocConstantModelName.LOOKUPCATEGORY, nameof(LookupCategory), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupCategory,LookupCategory>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupCategory,LookupCategory>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOOKUPCATEGORY, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOOKUPCATEGORY, search: true);
-            return tryRet;
-        }
+        public object Get(LookupCategorySearch request) => GetSearchResult<LookupCategory,DocEntityLookupCategory,LookupCategorySearch>(DocConstantModelName.LOOKUPCATEGORY, request, _ExecSearch);
 
-        public object Post(LookupCategoryVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(LookupCategoryVersion request) => Get(request);
 
         public object Get(LookupCategoryVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(LookupCategory request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<LookupCategory>(currentUser, "LookupCategory", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<LookupCategory>(DocConstantModelName.LOOKUPCATEGORY, nameof(LookupCategory), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetLookupCategory(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.LOOKUPCATEGORY);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetLookupCategory(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPCATEGORY);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOOKUPCATEGORY);
-            return ret;
-        }
+        public object Get(LookupCategory request) => GetEntity<LookupCategory>(DocConstantModelName.LOOKUPCATEGORY, request, GetLookupCategory);
 
         private LookupCategory _AssignValues(LookupCategory request, DocConstantPermission permission, Session session)
         {

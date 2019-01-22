@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class EventService : DocServiceBase
     {
-        private void _ExecSearch(EventSearch request, Action<IQueryable<DocEntityEvent>> callBack)
+        private IQueryable<DocEntityEvent> _ExecSearch(EventSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityEvent> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityEvent>();
+                entities = Execute.SelectAll<DocEntityEvent>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new EventFullTextSearch(request);
@@ -127,78 +129,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(EventSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(EventSearch request) => Get(request);
 
-        public object Get(EventSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Event>();
-            var cacheKey = GetApiCacheKey<Event>(DocConstantModelName.EVENT, nameof(Event), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityEvent,Event>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.EVENT, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.EVENT, search: true);
-            return tryRet;
-        }
+        public object Get(EventSearch request) => GetSearchResult<Event,DocEntityEvent,EventSearch>(DocConstantModelName.EVENT, request, _ExecSearch);
 
-        public object Post(EventVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(EventVersion request) => Get(request);
 
         public object Get(EventVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Event request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Event>(DocConstantModelName.EVENT, nameof(Event), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetEvent(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.EVENT);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.EVENT);
-            return ret;
-        }
+        public object Get(Event request) => GetEntity<Event>(DocConstantModelName.EVENT, request, GetEvent);
 
 
 

@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class ReleaseStatusService : DocServiceBase
     {
-        private void _ExecSearch(ReleaseStatusSearch request, Action<IQueryable<DocEntityReleaseStatus>> callBack)
+        private IQueryable<DocEntityReleaseStatus> _ExecSearch(ReleaseStatusSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityReleaseStatus> entities = null;
             
             DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityReleaseStatus>();
+                entities = Execute.SelectAll<DocEntityReleaseStatus>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ReleaseStatusFullTextSearch(request);
@@ -107,78 +109,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(ReleaseStatusSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(ReleaseStatusSearch request) => Get(request);
 
-        public object Get(ReleaseStatusSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<ReleaseStatus>();
-            var cacheKey = GetApiCacheKey<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, nameof(ReleaseStatus), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityReleaseStatus,ReleaseStatus>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.RELEASESTATUS, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.RELEASESTATUS, search: true);
-            return tryRet;
-        }
+        public object Get(ReleaseStatusSearch request) => GetSearchResult<ReleaseStatus,DocEntityReleaseStatus,ReleaseStatusSearch>(DocConstantModelName.RELEASESTATUS, request, _ExecSearch);
 
-        public object Post(ReleaseStatusVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(ReleaseStatusVersion request) => Get(request);
 
         public object Get(ReleaseStatusVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(ReleaseStatus request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, nameof(ReleaseStatus), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetReleaseStatus(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.RELEASESTATUS);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.RELEASESTATUS);
-            return ret;
-        }
+        public object Get(ReleaseStatus request) => GetEntity<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, request, GetReleaseStatus);
 
         private ReleaseStatus _AssignValues(ReleaseStatus request, DocConstantPermission permission, Session session)
         {

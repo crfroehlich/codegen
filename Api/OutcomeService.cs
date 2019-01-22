@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class OutcomeService : DocServiceBase
     {
-        private void _ExecSearch(OutcomeSearch request, Action<IQueryable<DocEntityOutcome>> callBack)
+        private IQueryable<DocEntityOutcome> _ExecSearch(OutcomeSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityOutcome> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityOutcome>();
+                entities = Execute.SelectAll<DocEntityOutcome>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new OutcomeFullTextSearch(request);
@@ -105,78 +107,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(OutcomeSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(OutcomeSearch request) => Get(request);
 
-        public object Get(OutcomeSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Outcome>();
-            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.OUTCOME, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.OUTCOME, search: true);
-            return tryRet;
-        }
+        public object Get(OutcomeSearch request) => GetSearchResult<Outcome,DocEntityOutcome,OutcomeSearch>(DocConstantModelName.OUTCOME, request, _ExecSearch);
 
-        public object Post(OutcomeVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(OutcomeVersion request) => Get(request);
 
         public object Get(OutcomeVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Outcome request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetOutcome(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.OUTCOME);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.OUTCOME);
-            return ret;
-        }
+        public object Get(Outcome request) => GetEntity<Outcome>(DocConstantModelName.OUTCOME, request, GetOutcome);
 
         private Outcome _AssignValues(Outcome request, DocConstantPermission permission, Session session)
         {

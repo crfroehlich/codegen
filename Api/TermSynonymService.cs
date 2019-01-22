@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class TermSynonymService : DocServiceBase
     {
-        private void _ExecSearch(TermSynonymSearch request, Action<IQueryable<DocEntityTermSynonym>> callBack)
+        private IQueryable<DocEntityTermSynonym> _ExecSearch(TermSynonymSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityTermSynonym> entities = null;
             
             DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityTermSynonym>();
+                entities = Execute.SelectAll<DocEntityTermSynonym>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermSynonymFullTextSearch(request);
@@ -123,99 +125,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(TermSynonymSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(TermSynonymSearch request) => Get(request);
 
-        public object Get(TermSynonymSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<TermSynonym>();
-            var cacheKey = GetApiCacheKey<TermSynonym>(DocConstantModelName.TERMSYNONYM, nameof(TermSynonym), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TERMSYNONYM, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.TERMSYNONYM, search: true);
-            return tryRet;
-        }
+        public object Get(TermSynonymSearch request) => GetSearchResult<TermSynonym,DocEntityTermSynonym,TermSynonymSearch>(DocConstantModelName.TERMSYNONYM, request, _ExecSearch);
 
-        public object Post(TermSynonymVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(TermSynonymVersion request) => Get(request);
 
         public object Get(TermSynonymVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(TermSynonym request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<TermSynonym>(DocConstantModelName.TERMSYNONYM, nameof(TermSynonym), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTermSynonym(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTermSynonym(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM);
-            return ret;
-        }
+        public object Get(TermSynonym request) => GetEntity<TermSynonym>(DocConstantModelName.TERMSYNONYM, request, GetTermSynonym);
 
         private TermSynonym _AssignValues(TermSynonym request, DocConstantPermission permission, Session session)
         {

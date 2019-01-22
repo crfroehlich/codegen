@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class HistoryService : DocServiceBase
     {
-        private void _ExecSearch(HistorySearch request, Action<IQueryable<DocEntityHistory>> callBack)
+        private IQueryable<DocEntityHistory> _ExecSearch(HistorySearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityHistory> entities = null;
             
             DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityHistory>();
+                entities = Execute.SelectAll<DocEntityHistory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new HistoryFullTextSearch(request);
@@ -155,78 +157,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(HistorySearch request)
-        {
-            return Get(request);
-        }
+        public object Post(HistorySearch request) => Get(request);
 
-        public object Get(HistorySearch request)
-        {
-            object tryRet = null;
-            var ret = new List<History>();
-            var cacheKey = GetApiCacheKey<History>(DocConstantModelName.HISTORY, nameof(History), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityHistory,History>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.HISTORY, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.HISTORY, search: true);
-            return tryRet;
-        }
+        public object Get(HistorySearch request) => GetSearchResult<History,DocEntityHistory,HistorySearch>(DocConstantModelName.HISTORY, request, _ExecSearch);
 
-        public object Post(HistoryVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(HistoryVersion request) => Get(request);
 
         public object Get(HistoryVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(History request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<History>(DocConstantModelName.HISTORY, nameof(History), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetHistory(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
-            return ret;
-        }
+        public object Get(History request) => GetEntity<History>(DocConstantModelName.HISTORY, request, GetHistory);
 
         private History _AssignValues(History request, DocConstantPermission permission, Session session)
         {

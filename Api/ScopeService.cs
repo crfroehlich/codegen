@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class ScopeService : DocServiceBase
     {
-        private void _ExecSearch(ScopeSearch request, Action<IQueryable<DocEntityScope>> callBack)
+        private IQueryable<DocEntityScope> _ExecSearch(ScopeSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityScope> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityScope>();
+                entities = Execute.SelectAll<DocEntityScope>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ScopeFullTextSearch(request);
@@ -187,99 +189,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(ScopeSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(ScopeSearch request) => Get(request);
 
-        public object Get(ScopeSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Scope>();
-            var cacheKey = GetApiCacheKey<Scope>(DocConstantModelName.SCOPE, nameof(Scope), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityScope,Scope>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityScope,Scope>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.SCOPE, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.SCOPE, search: true);
-            return tryRet;
-        }
+        public object Get(ScopeSearch request) => GetSearchResult<Scope,DocEntityScope,ScopeSearch>(DocConstantModelName.SCOPE, request, _ExecSearch);
 
-        public object Post(ScopeVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(ScopeVersion request) => Get(request);
 
         public object Get(ScopeVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Scope request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Scope>(DocConstantModelName.SCOPE, nameof(Scope), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetScope(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.SCOPE);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetScope(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.SCOPE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.SCOPE);
-            return ret;
-        }
+        public object Get(Scope request) => GetEntity<Scope>(DocConstantModelName.SCOPE, request, GetScope);
 
         private Scope _AssignValues(Scope request, DocConstantPermission permission, Session session)
         {

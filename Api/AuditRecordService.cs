@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class AuditRecordService : DocServiceBase
     {
-        private void _ExecSearch(AuditRecordSearch request, Action<IQueryable<DocEntityAuditRecord>> callBack)
+        private IQueryable<DocEntityAuditRecord> _ExecSearch(AuditRecordSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityAuditRecord> entities = null;
             
             DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityAuditRecord>();
+                entities = Execute.SelectAll<DocEntityAuditRecord>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AuditRecordFullTextSearch(request);
@@ -155,78 +157,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(AuditRecordSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(AuditRecordSearch request) => Get(request);
 
-        public object Get(AuditRecordSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<AuditRecord>();
-            var cacheKey = GetApiCacheKey<AuditRecord>(DocConstantModelName.AUDITRECORD, nameof(AuditRecord), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAuditRecord,AuditRecord>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.AUDITRECORD, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.AUDITRECORD, search: true);
-            return tryRet;
-        }
+        public object Get(AuditRecordSearch request) => GetSearchResult<AuditRecord,DocEntityAuditRecord,AuditRecordSearch>(DocConstantModelName.AUDITRECORD, request, _ExecSearch);
 
-        public object Post(AuditRecordVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(AuditRecordVersion request) => Get(request);
 
         public object Get(AuditRecordVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(AuditRecord request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<AuditRecord>(DocConstantModelName.AUDITRECORD, nameof(AuditRecord), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetAuditRecord(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.AUDITRECORD);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.AUDITRECORD);
-            return ret;
-        }
+        public object Get(AuditRecord request) => GetEntity<AuditRecord>(DocConstantModelName.AUDITRECORD, request, GetAuditRecord);
 
 
 

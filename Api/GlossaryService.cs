@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class GlossaryService : DocServiceBase
     {
-        private void _ExecSearch(GlossarySearch request, Action<IQueryable<DocEntityGlossary>> callBack)
+        private IQueryable<DocEntityGlossary> _ExecSearch(GlossarySearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityGlossary> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, "Glossary", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityGlossary>();
+                entities = Execute.SelectAll<DocEntityGlossary>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new GlossaryFullTextSearch(request);
@@ -125,99 +127,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(GlossarySearch request)
-        {
-            return Get(request);
-        }
+        public object Post(GlossarySearch request) => Get(request);
 
-        public object Get(GlossarySearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Glossary>();
-            var cacheKey = GetApiCacheKey<Glossary>(DocConstantModelName.GLOSSARY, nameof(Glossary), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityGlossary,Glossary>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityGlossary,Glossary>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.GLOSSARY, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.GLOSSARY, search: true);
-            return tryRet;
-        }
+        public object Get(GlossarySearch request) => GetSearchResult<Glossary,DocEntityGlossary,GlossarySearch>(DocConstantModelName.GLOSSARY, request, _ExecSearch);
 
-        public object Post(GlossaryVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(GlossaryVersion request) => Get(request);
 
         public object Get(GlossaryVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Glossary request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, "Glossary", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Glossary>(DocConstantModelName.GLOSSARY, nameof(Glossary), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetGlossary(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetGlossary(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY);
-            return ret;
-        }
+        public object Get(Glossary request) => GetEntity<Glossary>(DocConstantModelName.GLOSSARY, request, GetGlossary);
 
         private Glossary _AssignValues(Glossary request, DocConstantPermission permission, Session session)
         {

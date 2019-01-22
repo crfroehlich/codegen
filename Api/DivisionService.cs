@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class DivisionService : DocServiceBase
     {
-        private void _ExecSearch(DivisionSearch request, Action<IQueryable<DocEntityDivision>> callBack)
+        private IQueryable<DocEntityDivision> _ExecSearch(DivisionSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityDivision> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Division>(currentUser, "Division", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityDivision>();
+                entities = Execute.SelectAll<DocEntityDivision>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DivisionFullTextSearch(request);
@@ -131,99 +133,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(DivisionSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(DivisionSearch request) => Get(request);
 
-        public object Get(DivisionSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Division>();
-            var cacheKey = GetApiCacheKey<Division>(DocConstantModelName.DIVISION, nameof(Division), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDivision,Division>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDivision,Division>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DIVISION, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DIVISION, search: true);
-            return tryRet;
-        }
+        public object Get(DivisionSearch request) => GetSearchResult<Division,DocEntityDivision,DivisionSearch>(DocConstantModelName.DIVISION, request, _ExecSearch);
 
-        public object Post(DivisionVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(DivisionVersion request) => Get(request);
 
         public object Get(DivisionVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Division request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Division>(currentUser, "Division", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Division>(DocConstantModelName.DIVISION, nameof(Division), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetDivision(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.DIVISION);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetDivision(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DIVISION);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DIVISION);
-            return ret;
-        }
+        public object Get(Division request) => GetEntity<Division>(DocConstantModelName.DIVISION, request, GetDivision);
 
         private Division _AssignValues(Division request, DocConstantPermission permission, Session session)
         {

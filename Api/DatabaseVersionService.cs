@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class DatabaseVersionService : DocServiceBase
     {
-        private void _ExecSearch(DatabaseVersionSearch request, Action<IQueryable<DocEntityDatabaseVersion>> callBack)
+        private IQueryable<DocEntityDatabaseVersion> _ExecSearch(DatabaseVersionSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityDatabaseVersion> entities = null;
             
             DocPermissionFactory.SetVisibleFields<DatabaseVersion>(currentUser, "DatabaseVersion", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityDatabaseVersion>();
+                entities = Execute.SelectAll<DocEntityDatabaseVersion>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DatabaseVersionFullTextSearch(request);
@@ -103,78 +105,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(DatabaseVersionSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(DatabaseVersionSearch request) => Get(request);
 
-        public object Get(DatabaseVersionSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<DatabaseVersion>();
-            var cacheKey = GetApiCacheKey<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, nameof(DatabaseVersion), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDatabaseVersion,DatabaseVersion>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DATABASEVERSION, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DATABASEVERSION, search: true);
-            return tryRet;
-        }
+        public object Get(DatabaseVersionSearch request) => GetSearchResult<DatabaseVersion,DocEntityDatabaseVersion,DatabaseVersionSearch>(DocConstantModelName.DATABASEVERSION, request, _ExecSearch);
 
-        public object Post(DatabaseVersionVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(DatabaseVersionVersion request) => Get(request);
 
         public object Get(DatabaseVersionVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(DatabaseVersion request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<DatabaseVersion>(currentUser, "DatabaseVersion", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, nameof(DatabaseVersion), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetDatabaseVersion(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATABASEVERSION);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DATABASEVERSION);
-            return ret;
-        }
+        public object Get(DatabaseVersion request) => GetEntity<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, request, GetDatabaseVersion);
 
 
 

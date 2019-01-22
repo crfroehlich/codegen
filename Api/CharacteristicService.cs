@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class CharacteristicService : DocServiceBase
     {
-        private void _ExecSearch(CharacteristicSearch request, Action<IQueryable<DocEntityCharacteristic>> callBack)
+        private IQueryable<DocEntityCharacteristic> _ExecSearch(CharacteristicSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityCharacteristic> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, "Characteristic", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityCharacteristic>();
+                entities = Execute.SelectAll<DocEntityCharacteristic>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new CharacteristicFullTextSearch(request);
@@ -105,78 +107,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(CharacteristicSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(CharacteristicSearch request) => Get(request);
 
-        public object Get(CharacteristicSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Characteristic>();
-            var cacheKey = GetApiCacheKey<Characteristic>(DocConstantModelName.CHARACTERISTIC, nameof(Characteristic), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityCharacteristic,Characteristic>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.CHARACTERISTIC, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.CHARACTERISTIC, search: true);
-            return tryRet;
-        }
+        public object Get(CharacteristicSearch request) => GetSearchResult<Characteristic,DocEntityCharacteristic,CharacteristicSearch>(DocConstantModelName.CHARACTERISTIC, request, _ExecSearch);
 
-        public object Post(CharacteristicVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(CharacteristicVersion request) => Get(request);
 
         public object Get(CharacteristicVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Characteristic request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, "Characteristic", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Characteristic>(DocConstantModelName.CHARACTERISTIC, nameof(Characteristic), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetCharacteristic(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.CHARACTERISTIC);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.CHARACTERISTIC);
-            return ret;
-        }
+        public object Get(Characteristic request) => GetEntity<Characteristic>(DocConstantModelName.CHARACTERISTIC, request, GetCharacteristic);
 
         private Characteristic _AssignValues(Characteristic request, DocConstantPermission permission, Session session)
         {

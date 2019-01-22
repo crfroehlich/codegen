@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class TermCategoryService : DocServiceBase
     {
-        private void _ExecSearch(TermCategorySearch request, Action<IQueryable<DocEntityTermCategory>> callBack)
+        private IQueryable<DocEntityTermCategory> _ExecSearch(TermCategorySearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityTermCategory> entities = null;
             
             DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, "TermCategory", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityTermCategory>();
+                entities = Execute.SelectAll<DocEntityTermCategory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermCategoryFullTextSearch(request);
@@ -125,99 +127,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(TermCategorySearch request)
-        {
-            return Get(request);
-        }
+        public object Post(TermCategorySearch request) => Get(request);
 
-        public object Get(TermCategorySearch request)
-        {
-            object tryRet = null;
-            var ret = new List<TermCategory>();
-            var cacheKey = GetApiCacheKey<TermCategory>(DocConstantModelName.TERMCATEGORY, nameof(TermCategory), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermCategory,TermCategory>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermCategory,TermCategory>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TERMCATEGORY, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.TERMCATEGORY, search: true);
-            return tryRet;
-        }
+        public object Get(TermCategorySearch request) => GetSearchResult<TermCategory,DocEntityTermCategory,TermCategorySearch>(DocConstantModelName.TERMCATEGORY, request, _ExecSearch);
 
-        public object Post(TermCategoryVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(TermCategoryVersion request) => Get(request);
 
         public object Get(TermCategoryVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(TermCategory request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, "TermCategory", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<TermCategory>(DocConstantModelName.TERMCATEGORY, nameof(TermCategory), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTermCategory(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.TERMCATEGORY);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTermCategory(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMCATEGORY);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.TERMCATEGORY);
-            return ret;
-        }
+        public object Get(TermCategory request) => GetEntity<TermCategory>(DocConstantModelName.TERMCATEGORY, request, GetTermCategory);
 
         private TermCategory _AssignValues(TermCategory request, DocConstantPermission permission, Session session)
         {

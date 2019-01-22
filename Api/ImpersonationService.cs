@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class ImpersonationService : DocServiceBase
     {
-        private void _ExecSearch(ImpersonationSearch request, Action<IQueryable<DocEntityImpersonation>> callBack)
+        private IQueryable<DocEntityImpersonation> _ExecSearch(ImpersonationSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityImpersonation> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityImpersonation>();
+                entities = Execute.SelectAll<DocEntityImpersonation>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ImpersonationFullTextSearch(request);
@@ -121,78 +123,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(ImpersonationSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(ImpersonationSearch request) => Get(request);
 
-        public object Get(ImpersonationSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Impersonation>();
-            var cacheKey = GetApiCacheKey<Impersonation>(DocConstantModelName.IMPERSONATION, nameof(Impersonation), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityImpersonation,Impersonation>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.IMPERSONATION, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.IMPERSONATION, search: true);
-            return tryRet;
-        }
+        public object Get(ImpersonationSearch request) => GetSearchResult<Impersonation,DocEntityImpersonation,ImpersonationSearch>(DocConstantModelName.IMPERSONATION, request, _ExecSearch);
 
-        public object Post(ImpersonationVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(ImpersonationVersion request) => Get(request);
 
         public object Get(ImpersonationVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Impersonation request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Impersonation>(DocConstantModelName.IMPERSONATION, nameof(Impersonation), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetImpersonation(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.IMPERSONATION);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.IMPERSONATION);
-            return ret;
-        }
+        public object Get(Impersonation request) => GetEntity<Impersonation>(DocConstantModelName.IMPERSONATION, request, GetImpersonation);
 
 
 

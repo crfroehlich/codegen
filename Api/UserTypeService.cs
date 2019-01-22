@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class UserTypeService : DocServiceBase
     {
-        private void _ExecSearch(UserTypeSearch request, Action<IQueryable<DocEntityUserType>> callBack)
+        private IQueryable<DocEntityUserType> _ExecSearch(UserTypeSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityUserType> entities = null;
             
             DocPermissionFactory.SetVisibleFields<UserType>(currentUser, "UserType", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityUserType>();
+                entities = Execute.SelectAll<DocEntityUserType>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserTypeFullTextSearch(request);
@@ -149,99 +151,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(UserTypeSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(UserTypeSearch request) => Get(request);
 
-        public object Get(UserTypeSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<UserType>();
-            var cacheKey = GetApiCacheKey<UserType>(DocConstantModelName.USERTYPE, nameof(UserType), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserType,UserType>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.USERTYPE, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.USERTYPE, search: true);
-            return tryRet;
-        }
+        public object Get(UserTypeSearch request) => GetSearchResult<UserType,DocEntityUserType,UserTypeSearch>(DocConstantModelName.USERTYPE, request, _ExecSearch);
 
-        public object Post(UserTypeVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(UserTypeVersion request) => Get(request);
 
         public object Get(UserTypeVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(UserType request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<UserType>(currentUser, "UserType", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<UserType>(DocConstantModelName.USERTYPE, nameof(UserType), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetUserType(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.USERTYPE);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetUserType(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.USERTYPE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.USERTYPE);
-            return ret;
-        }
+        public object Get(UserType request) => GetEntity<UserType>(DocConstantModelName.USERTYPE, request, GetUserType);
 
         private UserType _AssignValues(UserType request, DocConstantPermission permission, Session session)
         {

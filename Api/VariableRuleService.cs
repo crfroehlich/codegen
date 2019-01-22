@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class VariableRuleService : DocServiceBase
     {
-        private void _ExecSearch(VariableRuleSearch request, Action<IQueryable<DocEntityVariableRule>> callBack)
+        private IQueryable<DocEntityVariableRule> _ExecSearch(VariableRuleSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityVariableRule> entities = null;
             
             DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityVariableRule>();
+                entities = Execute.SelectAll<DocEntityVariableRule>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableRuleFullTextSearch(request);
@@ -151,78 +153,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(VariableRuleSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(VariableRuleSearch request) => Get(request);
 
-        public object Get(VariableRuleSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<VariableRule>();
-            var cacheKey = GetApiCacheKey<VariableRule>(DocConstantModelName.VARIABLERULE, nameof(VariableRule), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityVariableRule,VariableRule>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.VARIABLERULE, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.VARIABLERULE, search: true);
-            return tryRet;
-        }
+        public object Get(VariableRuleSearch request) => GetSearchResult<VariableRule,DocEntityVariableRule,VariableRuleSearch>(DocConstantModelName.VARIABLERULE, request, _ExecSearch);
 
-        public object Post(VariableRuleVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(VariableRuleVersion request) => Get(request);
 
         public object Get(VariableRuleVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(VariableRule request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<VariableRule>(DocConstantModelName.VARIABLERULE, nameof(VariableRule), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetVariableRule(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
-            return ret;
-        }
+        public object Get(VariableRule request) => GetEntity<VariableRule>(DocConstantModelName.VARIABLERULE, request, GetVariableRule);
 
         private VariableRule _AssignValues(VariableRule request, DocConstantPermission permission, Session session)
         {

@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class InterventionService : DocServiceBase
     {
-        private void _ExecSearch(InterventionSearch request, Action<IQueryable<DocEntityIntervention>> callBack)
+        private IQueryable<DocEntityIntervention> _ExecSearch(InterventionSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityIntervention> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, "Intervention", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityIntervention>();
+                entities = Execute.SelectAll<DocEntityIntervention>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new InterventionFullTextSearch(request);
@@ -105,78 +107,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(InterventionSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(InterventionSearch request) => Get(request);
 
-        public object Get(InterventionSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Intervention>();
-            var cacheKey = GetApiCacheKey<Intervention>(DocConstantModelName.INTERVENTION, nameof(Intervention), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityIntervention,Intervention>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.INTERVENTION, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.INTERVENTION, search: true);
-            return tryRet;
-        }
+        public object Get(InterventionSearch request) => GetSearchResult<Intervention,DocEntityIntervention,InterventionSearch>(DocConstantModelName.INTERVENTION, request, _ExecSearch);
 
-        public object Post(InterventionVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(InterventionVersion request) => Get(request);
 
         public object Get(InterventionVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Intervention request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, "Intervention", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Intervention>(DocConstantModelName.INTERVENTION, nameof(Intervention), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetIntervention(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVENTION);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.INTERVENTION);
-            return ret;
-        }
+        public object Get(Intervention request) => GetEntity<Intervention>(DocConstantModelName.INTERVENTION, request, GetIntervention);
 
         private Intervention _AssignValues(Intervention request, DocConstantPermission permission, Session session)
         {

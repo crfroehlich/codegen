@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class LocaleService : DocServiceBase
     {
-        private void _ExecSearch(LocaleSearch request, Action<IQueryable<DocEntityLocale>> callBack)
+        private IQueryable<DocEntityLocale> _ExecSearch(LocaleSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityLocale> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Locale>(currentUser, "Locale", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityLocale>();
+                entities = Execute.SelectAll<DocEntityLocale>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LocaleFullTextSearch(request);
@@ -103,78 +105,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(LocaleSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(LocaleSearch request) => Get(request);
 
-        public object Get(LocaleSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Locale>();
-            var cacheKey = GetApiCacheKey<Locale>(DocConstantModelName.LOCALE, nameof(Locale), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLocale,Locale>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOCALE, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOCALE, search: true);
-            return tryRet;
-        }
+        public object Get(LocaleSearch request) => GetSearchResult<Locale,DocEntityLocale,LocaleSearch>(DocConstantModelName.LOCALE, request, _ExecSearch);
 
-        public object Post(LocaleVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(LocaleVersion request) => Get(request);
 
         public object Get(LocaleVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Locale request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Locale>(currentUser, "Locale", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Locale>(DocConstantModelName.LOCALE, nameof(Locale), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetLocale(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOCALE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOCALE);
-            return ret;
-        }
+        public object Get(Locale request) => GetEntity<Locale>(DocConstantModelName.LOCALE, request, GetLocale);
 
         private Locale _AssignValues(Locale request, DocConstantPermission permission, Session session)
         {

@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class AttributeIntervalService : DocServiceBase
     {
-        private void _ExecSearch(AttributeIntervalSearch request, Action<IQueryable<DocEntityAttributeInterval>> callBack)
+        private IQueryable<DocEntityAttributeInterval> _ExecSearch(AttributeIntervalSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityAttributeInterval> entities = null;
             
             DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityAttributeInterval>();
+                entities = Execute.SelectAll<DocEntityAttributeInterval>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeIntervalFullTextSearch(request);
@@ -97,78 +99,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(AttributeIntervalSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(AttributeIntervalSearch request) => Get(request);
 
-        public object Get(AttributeIntervalSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<AttributeInterval>();
-            var cacheKey = GetApiCacheKey<AttributeInterval>(DocConstantModelName.ATTRIBUTEINTERVAL, nameof(AttributeInterval), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAttributeInterval,AttributeInterval>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.ATTRIBUTEINTERVAL, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.ATTRIBUTEINTERVAL, search: true);
-            return tryRet;
-        }
+        public object Get(AttributeIntervalSearch request) => GetSearchResult<AttributeInterval,DocEntityAttributeInterval,AttributeIntervalSearch>(DocConstantModelName.ATTRIBUTEINTERVAL, request, _ExecSearch);
 
-        public object Post(AttributeIntervalVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(AttributeIntervalVersion request) => Get(request);
 
         public object Get(AttributeIntervalVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(AttributeInterval request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<AttributeInterval>(DocConstantModelName.ATTRIBUTEINTERVAL, nameof(AttributeInterval), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetAttributeInterval(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTEINTERVAL);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTEINTERVAL);
-            return ret;
-        }
+        public object Get(AttributeInterval request) => GetEntity<AttributeInterval>(DocConstantModelName.ATTRIBUTEINTERVAL, request, GetAttributeInterval);
 
         private AttributeInterval _AssignValues(AttributeInterval request, DocConstantPermission permission, Session session)
         {

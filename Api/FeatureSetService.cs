@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class FeatureSetService : DocServiceBase
     {
-        private void _ExecSearch(FeatureSetSearch request, Action<IQueryable<DocEntityFeatureSet>> callBack)
+        private IQueryable<DocEntityFeatureSet> _ExecSearch(FeatureSetSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityFeatureSet> entities = null;
             
             DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, "FeatureSet", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityFeatureSet>();
+                entities = Execute.SelectAll<DocEntityFeatureSet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new FeatureSetFullTextSearch(request);
@@ -105,99 +107,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(FeatureSetSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(FeatureSetSearch request) => Get(request);
 
-        public object Get(FeatureSetSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<FeatureSet>();
-            var cacheKey = GetApiCacheKey<FeatureSet>(DocConstantModelName.FEATURESET, nameof(FeatureSet), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityFeatureSet,FeatureSet>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityFeatureSet,FeatureSet>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.FEATURESET, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.FEATURESET, search: true);
-            return tryRet;
-        }
+        public object Get(FeatureSetSearch request) => GetSearchResult<FeatureSet,DocEntityFeatureSet,FeatureSetSearch>(DocConstantModelName.FEATURESET, request, _ExecSearch);
 
-        public object Post(FeatureSetVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(FeatureSetVersion request) => Get(request);
 
         public object Get(FeatureSetVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(FeatureSet request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, "FeatureSet", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<FeatureSet>(DocConstantModelName.FEATURESET, nameof(FeatureSet), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetFeatureSet(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.FEATURESET);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetFeatureSet(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FEATURESET);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.FEATURESET);
-            return ret;
-        }
+        public object Get(FeatureSet request) => GetEntity<FeatureSet>(DocConstantModelName.FEATURESET, request, GetFeatureSet);
 
         private FeatureSet _AssignValues(FeatureSet request, DocConstantPermission permission, Session session)
         {

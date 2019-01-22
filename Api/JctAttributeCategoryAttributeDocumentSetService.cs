@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class JctAttributeCategoryAttributeDocumentSetService : DocServiceBase
     {
-        private void _ExecSearch(JctAttributeCategoryAttributeDocumentSetSearch request, Action<IQueryable<DocEntityJctAttributeCategoryAttributeDocumentSet>> callBack)
+        private IQueryable<DocEntityJctAttributeCategoryAttributeDocumentSet> _ExecSearch(JctAttributeCategoryAttributeDocumentSetSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityJctAttributeCategoryAttributeDocumentSet> entities = null;
             
             DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>(currentUser, "JctAttributeCategoryAttributeDocumentSet", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityJctAttributeCategoryAttributeDocumentSet>();
+                entities = Execute.SelectAll<DocEntityJctAttributeCategoryAttributeDocumentSet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new JctAttributeCategoryAttributeDocumentSetFullTextSearch(request);
@@ -121,78 +123,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(JctAttributeCategoryAttributeDocumentSetSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(JctAttributeCategoryAttributeDocumentSetSearch request) => Get(request);
 
-        public object Get(JctAttributeCategoryAttributeDocumentSetSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<JctAttributeCategoryAttributeDocumentSet>();
-            var cacheKey = GetApiCacheKey<JctAttributeCategoryAttributeDocumentSet>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, nameof(JctAttributeCategoryAttributeDocumentSet), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityJctAttributeCategoryAttributeDocumentSet,JctAttributeCategoryAttributeDocumentSet>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, search: true);
-            return tryRet;
-        }
+        public object Get(JctAttributeCategoryAttributeDocumentSetSearch request) => GetSearchResult<JctAttributeCategoryAttributeDocumentSet,DocEntityJctAttributeCategoryAttributeDocumentSet,JctAttributeCategoryAttributeDocumentSetSearch>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, request, _ExecSearch);
 
-        public object Post(JctAttributeCategoryAttributeDocumentSetVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(JctAttributeCategoryAttributeDocumentSetVersion request) => Get(request);
 
         public object Get(JctAttributeCategoryAttributeDocumentSetVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(JctAttributeCategoryAttributeDocumentSet request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>(currentUser, "JctAttributeCategoryAttributeDocumentSet", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<JctAttributeCategoryAttributeDocumentSet>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, nameof(JctAttributeCategoryAttributeDocumentSet), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetJctAttributeCategoryAttributeDocumentSet(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET);
-            return ret;
-        }
+        public object Get(JctAttributeCategoryAttributeDocumentSet request) => GetEntity<JctAttributeCategoryAttributeDocumentSet>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, request, GetJctAttributeCategoryAttributeDocumentSet);
 
         private JctAttributeCategoryAttributeDocumentSet _AssignValues(JctAttributeCategoryAttributeDocumentSet request, DocConstantPermission permission, Session session)
         {

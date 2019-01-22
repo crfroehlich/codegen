@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class ComparatorService : DocServiceBase
     {
-        private void _ExecSearch(ComparatorSearch request, Action<IQueryable<DocEntityComparator>> callBack)
+        private IQueryable<DocEntityComparator> _ExecSearch(ComparatorSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityComparator> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, "Comparator", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityComparator>();
+                entities = Execute.SelectAll<DocEntityComparator>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ComparatorFullTextSearch(request);
@@ -105,78 +107,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(ComparatorSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(ComparatorSearch request) => Get(request);
 
-        public object Get(ComparatorSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Comparator>();
-            var cacheKey = GetApiCacheKey<Comparator>(DocConstantModelName.COMPARATOR, nameof(Comparator), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityComparator,Comparator>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.COMPARATOR, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.COMPARATOR, search: true);
-            return tryRet;
-        }
+        public object Get(ComparatorSearch request) => GetSearchResult<Comparator,DocEntityComparator,ComparatorSearch>(DocConstantModelName.COMPARATOR, request, _ExecSearch);
 
-        public object Post(ComparatorVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(ComparatorVersion request) => Get(request);
 
         public object Get(ComparatorVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Comparator request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, "Comparator", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Comparator>(DocConstantModelName.COMPARATOR, nameof(Comparator), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetComparator(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.COMPARATOR);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.COMPARATOR);
-            return ret;
-        }
+        public object Get(Comparator request) => GetEntity<Comparator>(DocConstantModelName.COMPARATOR, request, GetComparator);
 
         private Comparator _AssignValues(Comparator request, DocConstantPermission permission, Session session)
         {

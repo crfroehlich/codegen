@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class TimePointService : DocServiceBase
     {
-        private void _ExecSearch(TimePointSearch request, Action<IQueryable<DocEntityTimePoint>> callBack)
+        private IQueryable<DocEntityTimePoint> _ExecSearch(TimePointSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityTimePoint> entities = null;
             
             DocPermissionFactory.SetVisibleFields<TimePoint>(currentUser, "TimePoint", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityTimePoint>();
+                entities = Execute.SelectAll<DocEntityTimePoint>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimePointFullTextSearch(request);
@@ -115,78 +117,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(TimePointSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(TimePointSearch request) => Get(request);
 
-        public object Get(TimePointSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<TimePoint>();
-            var cacheKey = GetApiCacheKey<TimePoint>(DocConstantModelName.TIMEPOINT, nameof(TimePoint), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimePoint,TimePoint>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TIMEPOINT, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.TIMEPOINT, search: true);
-            return tryRet;
-        }
+        public object Get(TimePointSearch request) => GetSearchResult<TimePoint,DocEntityTimePoint,TimePointSearch>(DocConstantModelName.TIMEPOINT, request, _ExecSearch);
 
-        public object Post(TimePointVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(TimePointVersion request) => Get(request);
 
         public object Get(TimePointVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(TimePoint request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<TimePoint>(currentUser, "TimePoint", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<TimePoint>(DocConstantModelName.TIMEPOINT, nameof(TimePoint), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTimePoint(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TIMEPOINT);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.TIMEPOINT);
-            return ret;
-        }
+        public object Get(TimePoint request) => GetEntity<TimePoint>(DocConstantModelName.TIMEPOINT, request, GetTimePoint);
 
 
 

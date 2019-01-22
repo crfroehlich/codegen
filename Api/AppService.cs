@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class AppService : DocServiceBase
     {
-        private void _ExecSearch(AppSearch request, Action<IQueryable<DocEntityApp>> callBack)
+        private IQueryable<DocEntityApp> _ExecSearch(AppSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityApp> entities = null;
             
             DocPermissionFactory.SetVisibleFields<App>(currentUser, "App", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityApp>();
+                entities = Execute.SelectAll<DocEntityApp>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AppFullTextSearch(request);
@@ -117,99 +119,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(AppSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(AppSearch request) => Get(request);
 
-        public object Get(AppSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<App>();
-            var cacheKey = GetApiCacheKey<App>(DocConstantModelName.APP, nameof(App), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityApp,App>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityApp,App>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.APP, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.APP, search: true);
-            return tryRet;
-        }
+        public object Get(AppSearch request) => GetSearchResult<App,DocEntityApp,AppSearch>(DocConstantModelName.APP, request, _ExecSearch);
 
-        public object Post(AppVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(AppVersion request) => Get(request);
 
         public object Get(AppVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(App request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<App>(currentUser, "App", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<App>(DocConstantModelName.APP, nameof(App), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetApp(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.APP);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetApp(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.APP);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.APP);
-            return ret;
-        }
+        public object Get(App request) => GetEntity<App>(DocConstantModelName.APP, request, GetApp);
 
         private App _AssignValues(App request, DocConstantPermission permission, Session session)
         {

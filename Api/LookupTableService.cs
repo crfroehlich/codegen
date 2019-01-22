@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class LookupTableService : DocServiceBase
     {
-        private void _ExecSearch(LookupTableSearch request, Action<IQueryable<DocEntityLookupTable>> callBack)
+        private IQueryable<DocEntityLookupTable> _ExecSearch(LookupTableSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityLookupTable> entities = null;
             
             DocPermissionFactory.SetVisibleFields<LookupTable>(currentUser, "LookupTable", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityLookupTable>();
+                entities = Execute.SelectAll<DocEntityLookupTable>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableFullTextSearch(request);
@@ -119,99 +121,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(LookupTableSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(LookupTableSearch request) => Get(request);
 
-        public object Get(LookupTableSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<LookupTable>();
-            var cacheKey = GetApiCacheKey<LookupTable>(DocConstantModelName.LOOKUPTABLE, nameof(LookupTable), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTable,LookupTable>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTable,LookupTable>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOOKUPTABLE, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOOKUPTABLE, search: true);
-            return tryRet;
-        }
+        public object Get(LookupTableSearch request) => GetSearchResult<LookupTable,DocEntityLookupTable,LookupTableSearch>(DocConstantModelName.LOOKUPTABLE, request, _ExecSearch);
 
-        public object Post(LookupTableVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(LookupTableVersion request) => Get(request);
 
         public object Get(LookupTableVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(LookupTable request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<LookupTable>(currentUser, "LookupTable", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<LookupTable>(DocConstantModelName.LOOKUPTABLE, nameof(LookupTable), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetLookupTable(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLE);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetLookupTable(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLE);
-            return ret;
-        }
+        public object Get(LookupTable request) => GetEntity<LookupTable>(DocConstantModelName.LOOKUPTABLE, request, GetLookupTable);
 
         private LookupTable _AssignValues(LookupTable request, DocConstantPermission permission, Session session)
         {

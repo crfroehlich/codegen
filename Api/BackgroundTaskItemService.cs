@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class BackgroundTaskItemService : DocServiceBase
     {
-        private void _ExecSearch(BackgroundTaskItemSearch request, Action<IQueryable<DocEntityBackgroundTaskItem>> callBack)
+        private IQueryable<DocEntityBackgroundTaskItem> _ExecSearch(BackgroundTaskItemSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityBackgroundTaskItem> entities = null;
             
             DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityBackgroundTaskItem>();
+                entities = Execute.SelectAll<DocEntityBackgroundTaskItem>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskItemFullTextSearch(request);
@@ -141,78 +143,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(BackgroundTaskItemSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(BackgroundTaskItemSearch request) => Get(request);
 
-        public object Get(BackgroundTaskItemSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<BackgroundTaskItem>();
-            var cacheKey = GetApiCacheKey<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, nameof(BackgroundTaskItem), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityBackgroundTaskItem,BackgroundTaskItem>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.BACKGROUNDTASKITEM, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.BACKGROUNDTASKITEM, search: true);
-            return tryRet;
-        }
+        public object Get(BackgroundTaskItemSearch request) => GetSearchResult<BackgroundTaskItem,DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(DocConstantModelName.BACKGROUNDTASKITEM, request, _ExecSearch);
 
-        public object Post(BackgroundTaskItemVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(BackgroundTaskItemVersion request) => Get(request);
 
         public object Get(BackgroundTaskItemVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(BackgroundTaskItem request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, nameof(BackgroundTaskItem), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetBackgroundTaskItem(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASKITEM);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASKITEM);
-            return ret;
-        }
+        public object Get(BackgroundTaskItem request) => GetEntity<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, request, GetBackgroundTaskItem);
 
 
 

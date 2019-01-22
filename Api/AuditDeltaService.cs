@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class AuditDeltaService : DocServiceBase
     {
-        private void _ExecSearch(AuditDeltaSearch request, Action<IQueryable<DocEntityAuditDelta>> callBack)
+        private IQueryable<DocEntityAuditDelta> _ExecSearch(AuditDeltaSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityAuditDelta> entities = null;
             
             DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, "AuditDelta", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityAuditDelta>();
+                entities = Execute.SelectAll<DocEntityAuditDelta>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AuditDeltaFullTextSearch(request);
@@ -105,78 +107,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(AuditDeltaSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(AuditDeltaSearch request) => Get(request);
 
-        public object Get(AuditDeltaSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<AuditDelta>();
-            var cacheKey = GetApiCacheKey<AuditDelta>(DocConstantModelName.AUDITDELTA, nameof(AuditDelta), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityAuditDelta,AuditDelta>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.AUDITDELTA, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.AUDITDELTA, search: true);
-            return tryRet;
-        }
+        public object Get(AuditDeltaSearch request) => GetSearchResult<AuditDelta,DocEntityAuditDelta,AuditDeltaSearch>(DocConstantModelName.AUDITDELTA, request, _ExecSearch);
 
-        public object Post(AuditDeltaVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(AuditDeltaVersion request) => Get(request);
 
         public object Get(AuditDeltaVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(AuditDelta request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, "AuditDelta", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<AuditDelta>(DocConstantModelName.AUDITDELTA, nameof(AuditDelta), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetAuditDelta(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.AUDITDELTA);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.AUDITDELTA);
-            return ret;
-        }
+        public object Get(AuditDelta request) => GetEntity<AuditDelta>(DocConstantModelName.AUDITDELTA, request, GetAuditDelta);
 
         private AuditDelta _AssignValues(AuditDelta request, DocConstantPermission permission, Session session)
         {

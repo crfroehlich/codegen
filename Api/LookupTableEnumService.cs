@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class LookupTableEnumService : DocServiceBase
     {
-        private void _ExecSearch(LookupTableEnumSearch request, Action<IQueryable<DocEntityLookupTableEnum>> callBack)
+        private IQueryable<DocEntityLookupTableEnum> _ExecSearch(LookupTableEnumSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityLookupTableEnum> entities = null;
             
             DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, "LookupTableEnum", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityLookupTableEnum>();
+                entities = Execute.SelectAll<DocEntityLookupTableEnum>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableEnumFullTextSearch(request);
@@ -103,99 +105,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(LookupTableEnumSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(LookupTableEnumSearch request) => Get(request);
 
-        public object Get(LookupTableEnumSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<LookupTableEnum>();
-            var cacheKey = GetApiCacheKey<LookupTableEnum>(DocConstantModelName.LOOKUPTABLEENUM, nameof(LookupTableEnum), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTableEnum,LookupTableEnum>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTableEnum,LookupTableEnum>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOOKUPTABLEENUM, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOOKUPTABLEENUM, search: true);
-            return tryRet;
-        }
+        public object Get(LookupTableEnumSearch request) => GetSearchResult<LookupTableEnum,DocEntityLookupTableEnum,LookupTableEnumSearch>(DocConstantModelName.LOOKUPTABLEENUM, request, _ExecSearch);
 
-        public object Post(LookupTableEnumVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(LookupTableEnumVersion request) => Get(request);
 
         public object Get(LookupTableEnumVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(LookupTableEnum request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, "LookupTableEnum", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<LookupTableEnum>(DocConstantModelName.LOOKUPTABLEENUM, nameof(LookupTableEnum), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetLookupTableEnum(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetLookupTableEnum(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM);
-            return ret;
-        }
+        public object Get(LookupTableEnum request) => GetEntity<LookupTableEnum>(DocConstantModelName.LOOKUPTABLEENUM, request, GetLookupTableEnum);
 
         private LookupTableEnum _AssignValues(LookupTableEnum request, DocConstantPermission permission, Session session)
         {

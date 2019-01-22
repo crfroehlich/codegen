@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class TimeCardService : DocServiceBase
     {
-        private void _ExecSearch(TimeCardSearch request, Action<IQueryable<DocEntityTimeCard>> callBack)
+        private IQueryable<DocEntityTimeCard> _ExecSearch(TimeCardSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityTimeCard> entities = null;
             
             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityTimeCard>();
+                entities = Execute.SelectAll<DocEntityTimeCard>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimeCardFullTextSearch(request);
@@ -177,99 +179,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(TimeCardSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(TimeCardSearch request) => Get(request);
 
-        public object Get(TimeCardSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<TimeCard>();
-            var cacheKey = GetApiCacheKey<TimeCard>(DocConstantModelName.TIMECARD, nameof(TimeCard), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard,TimeCard>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTimeCard,TimeCard>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TIMECARD, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.TIMECARD, search: true);
-            return tryRet;
-        }
+        public object Get(TimeCardSearch request) => GetSearchResult<TimeCard,DocEntityTimeCard,TimeCardSearch>(DocConstantModelName.TIMECARD, request, _ExecSearch);
 
-        public object Post(TimeCardVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(TimeCardVersion request) => Get(request);
 
         public object Get(TimeCardVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(TimeCard request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<TimeCard>(DocConstantModelName.TIMECARD, nameof(TimeCard), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTimeCard(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.TIMECARD);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTimeCard(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TIMECARD);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.TIMECARD);
-            return ret;
-        }
+        public object Get(TimeCard request) => GetEntity<TimeCard>(DocConstantModelName.TIMECARD, request, GetTimeCard);
 
         private TimeCard _AssignValues(TimeCard request, DocConstantPermission permission, Session session)
         {

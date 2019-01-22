@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class UserRequestService : DocServiceBase
     {
-        private void _ExecSearch(UserRequestSearch request, Action<IQueryable<DocEntityUserRequest>> callBack)
+        private IQueryable<DocEntityUserRequest> _ExecSearch(UserRequestSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityUserRequest> entities = null;
             
             DocPermissionFactory.SetVisibleFields<UserRequest>(currentUser, "UserRequest", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityUserRequest>();
+                entities = Execute.SelectAll<DocEntityUserRequest>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserRequestFullTextSearch(request);
@@ -127,78 +129,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(UserRequestSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(UserRequestSearch request) => Get(request);
 
-        public object Get(UserRequestSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<UserRequest>();
-            var cacheKey = GetApiCacheKey<UserRequest>(DocConstantModelName.USERREQUEST, nameof(UserRequest), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUserRequest,UserRequest>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.USERREQUEST, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.USERREQUEST, search: true);
-            return tryRet;
-        }
+        public object Get(UserRequestSearch request) => GetSearchResult<UserRequest,DocEntityUserRequest,UserRequestSearch>(DocConstantModelName.USERREQUEST, request, _ExecSearch);
 
-        public object Post(UserRequestVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(UserRequestVersion request) => Get(request);
 
         public object Get(UserRequestVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(UserRequest request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<UserRequest>(currentUser, "UserRequest", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<UserRequest>(DocConstantModelName.USERREQUEST, nameof(UserRequest), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetUserRequest(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.USERREQUEST);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.USERREQUEST);
-            return ret;
-        }
+        public object Get(UserRequest request) => GetEntity<UserRequest>(DocConstantModelName.USERREQUEST, request, GetUserRequest);
 
 
 

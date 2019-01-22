@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class IntervalService : DocServiceBase
     {
-        private void _ExecSearch(IntervalSearch request, Action<IQueryable<DocEntityInterval>> callBack)
+        private IQueryable<DocEntityInterval> _ExecSearch(IntervalSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityInterval> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Interval>(currentUser, "Interval", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityInterval>();
+                entities = Execute.SelectAll<DocEntityInterval>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new IntervalFullTextSearch(request);
@@ -131,78 +133,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(IntervalSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(IntervalSearch request) => Get(request);
 
-        public object Get(IntervalSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Interval>();
-            var cacheKey = GetApiCacheKey<Interval>(DocConstantModelName.INTERVAL, nameof(Interval), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityInterval,Interval>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.INTERVAL, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.INTERVAL, search: true);
-            return tryRet;
-        }
+        public object Get(IntervalSearch request) => GetSearchResult<Interval,DocEntityInterval,IntervalSearch>(DocConstantModelName.INTERVAL, request, _ExecSearch);
 
-        public object Post(IntervalVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(IntervalVersion request) => Get(request);
 
         public object Get(IntervalVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Interval request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Interval>(currentUser, "Interval", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Interval>(DocConstantModelName.INTERVAL, nameof(Interval), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetInterval(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVAL);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.INTERVAL);
-            return ret;
-        }
+        public object Get(Interval request) => GetEntity<Interval>(DocConstantModelName.INTERVAL, request, GetInterval);
 
         private Interval _AssignValues(Interval request, DocConstantPermission permission, Session session)
         {

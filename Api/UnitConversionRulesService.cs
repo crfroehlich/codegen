@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class UnitConversionRulesService : DocServiceBase
     {
-        private void _ExecSearch(UnitConversionRulesSearch request, Action<IQueryable<DocEntityUnitConversionRules>> callBack)
+        private IQueryable<DocEntityUnitConversionRules> _ExecSearch(UnitConversionRulesSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityUnitConversionRules> entities = null;
             
             DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityUnitConversionRules>();
+                entities = Execute.SelectAll<DocEntityUnitConversionRules>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UnitConversionRulesFullTextSearch(request);
@@ -151,99 +153,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(UnitConversionRulesSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(UnitConversionRulesSearch request) => Get(request);
 
-        public object Get(UnitConversionRulesSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<UnitConversionRules>();
-            var cacheKey = GetApiCacheKey<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, nameof(UnitConversionRules), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitConversionRules,UnitConversionRules>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.UNITCONVERSIONRULES, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.UNITCONVERSIONRULES, search: true);
-            return tryRet;
-        }
+        public object Get(UnitConversionRulesSearch request) => GetSearchResult<UnitConversionRules,DocEntityUnitConversionRules,UnitConversionRulesSearch>(DocConstantModelName.UNITCONVERSIONRULES, request, _ExecSearch);
 
-        public object Post(UnitConversionRulesVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(UnitConversionRulesVersion request) => Get(request);
 
         public object Get(UnitConversionRulesVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(UnitConversionRules request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, nameof(UnitConversionRules), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetUnitConversionRules(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetUnitConversionRules(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES);
-            return ret;
-        }
+        public object Get(UnitConversionRules request) => GetEntity<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, request, GetUnitConversionRules);
 
         private UnitConversionRules _AssignValues(UnitConversionRules request, DocConstantPermission permission, Session session)
         {

@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class UnitOfMeasureService : DocServiceBase
     {
-        private void _ExecSearch(UnitOfMeasureSearch request, Action<IQueryable<DocEntityUnitOfMeasure>> callBack)
+        private IQueryable<DocEntityUnitOfMeasure> _ExecSearch(UnitOfMeasureSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityUnitOfMeasure> entities = null;
             
             DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, "UnitOfMeasure", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityUnitOfMeasure>();
+                entities = Execute.SelectAll<DocEntityUnitOfMeasure>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UnitOfMeasureFullTextSearch(request);
@@ -147,99 +149,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(UnitOfMeasureSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(UnitOfMeasureSearch request) => Get(request);
 
-        public object Get(UnitOfMeasureSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<UnitOfMeasure>();
-            var cacheKey = GetApiCacheKey<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, nameof(UnitOfMeasure), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityUnitOfMeasure,UnitOfMeasure>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.UNITOFMEASURE, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.UNITOFMEASURE, search: true);
-            return tryRet;
-        }
+        public object Get(UnitOfMeasureSearch request) => GetSearchResult<UnitOfMeasure,DocEntityUnitOfMeasure,UnitOfMeasureSearch>(DocConstantModelName.UNITOFMEASURE, request, _ExecSearch);
 
-        public object Post(UnitOfMeasureVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(UnitOfMeasureVersion request) => Get(request);
 
         public object Get(UnitOfMeasureVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(UnitOfMeasure request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, "UnitOfMeasure", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, nameof(UnitOfMeasure), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetUnitOfMeasure(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetUnitOfMeasure(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE);
-            return ret;
-        }
+        public object Get(UnitOfMeasure request) => GetEntity<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, request, GetUnitOfMeasure);
 
         private UnitOfMeasure _AssignValues(UnitOfMeasure request, DocConstantPermission permission, Session session)
         {

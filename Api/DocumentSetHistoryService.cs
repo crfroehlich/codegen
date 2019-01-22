@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class DocumentSetHistoryService : DocServiceBase
     {
-        private void _ExecSearch(DocumentSetHistorySearch request, Action<IQueryable<DocEntityDocumentSetHistory>> callBack)
+        private IQueryable<DocEntityDocumentSetHistory> _ExecSearch(DocumentSetHistorySearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityDocumentSetHistory> entities = null;
             
             DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityDocumentSetHistory>();
+                entities = Execute.SelectAll<DocEntityDocumentSetHistory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentSetHistoryFullTextSearch(request);
@@ -113,78 +115,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(DocumentSetHistorySearch request)
-        {
-            return Get(request);
-        }
+        public object Post(DocumentSetHistorySearch request) => Get(request);
 
-        public object Get(DocumentSetHistorySearch request)
-        {
-            object tryRet = null;
-            var ret = new List<DocumentSetHistory>();
-            var cacheKey = GetApiCacheKey<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, nameof(DocumentSetHistory), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDocumentSetHistory,DocumentSetHistory>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DOCUMENTSETHISTORY, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DOCUMENTSETHISTORY, search: true);
-            return tryRet;
-        }
+        public object Get(DocumentSetHistorySearch request) => GetSearchResult<DocumentSetHistory,DocEntityDocumentSetHistory,DocumentSetHistorySearch>(DocConstantModelName.DOCUMENTSETHISTORY, request, _ExecSearch);
 
-        public object Post(DocumentSetHistoryVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(DocumentSetHistoryVersion request) => Get(request);
 
         public object Get(DocumentSetHistoryVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(DocumentSetHistory request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, nameof(DocumentSetHistory), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetDocumentSetHistory(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DOCUMENTSETHISTORY);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DOCUMENTSETHISTORY);
-            return ret;
-        }
+        public object Get(DocumentSetHistory request) => GetEntity<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, request, GetDocumentSetHistory);
 
 
 

@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class WorkflowService : DocServiceBase
     {
-        private void _ExecSearch(WorkflowSearch request, Action<IQueryable<DocEntityWorkflow>> callBack)
+        private IQueryable<DocEntityWorkflow> _ExecSearch(WorkflowSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityWorkflow> entities = null;
             
             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityWorkflow>();
+                entities = Execute.SelectAll<DocEntityWorkflow>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowFullTextSearch(request);
@@ -183,99 +185,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(WorkflowSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(WorkflowSearch request) => Get(request);
 
-        public object Get(WorkflowSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<Workflow>();
-            var cacheKey = GetApiCacheKey<Workflow>(DocConstantModelName.WORKFLOW, nameof(Workflow), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflow,Workflow>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityWorkflow,Workflow>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.WORKFLOW, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.WORKFLOW, search: true);
-            return tryRet;
-        }
+        public object Get(WorkflowSearch request) => GetSearchResult<Workflow,DocEntityWorkflow,WorkflowSearch>(DocConstantModelName.WORKFLOW, request, _ExecSearch);
 
-        public object Post(WorkflowVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(WorkflowVersion request) => Get(request);
 
         public object Get(WorkflowVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(Workflow request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<Workflow>(DocConstantModelName.WORKFLOW, nameof(Workflow), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetWorkflow(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetWorkflow(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW);
-            return ret;
-        }
+        public object Get(Workflow request) => GetEntity<Workflow>(DocConstantModelName.WORKFLOW, request, GetWorkflow);
 
         private Workflow _AssignValues(Workflow request, DocConstantPermission permission, Session session)
         {

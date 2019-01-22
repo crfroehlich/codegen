@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class TermMasterService : DocServiceBase
     {
-        private void _ExecSearch(TermMasterSearch request, Action<IQueryable<DocEntityTermMaster>> callBack)
+        private IQueryable<DocEntityTermMaster> _ExecSearch(TermMasterSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityTermMaster> entities = null;
             
             DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityTermMaster>();
+                entities = Execute.SelectAll<DocEntityTermMaster>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermMasterFullTextSearch(request);
@@ -129,99 +131,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(TermMasterSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(TermMasterSearch request) => Get(request);
 
-        public object Get(TermMasterSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<TermMaster>();
-            var cacheKey = GetApiCacheKey<TermMaster>(DocConstantModelName.TERMMASTER, nameof(TermMaster), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityTermMaster,TermMaster>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.TERMMASTER, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.TERMMASTER, search: true);
-            return tryRet;
-        }
+        public object Get(TermMasterSearch request) => GetSearchResult<TermMaster,DocEntityTermMaster,TermMasterSearch>(DocConstantModelName.TERMMASTER, request, _ExecSearch);
 
-        public object Post(TermMasterVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(TermMasterVersion request) => Get(request);
 
         public object Get(TermMasterVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(TermMaster request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<TermMaster>(DocConstantModelName.TERMMASTER, nameof(TermMaster), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetTermMaster(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.TERMMASTER);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetTermMaster(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMMASTER);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.TERMMASTER);
-            return ret;
-        }
+        public object Get(TermMaster request) => GetEntity<TermMaster>(DocConstantModelName.TERMMASTER, request, GetTermMaster);
 
         private TermMaster _AssignValues(TermMaster request, DocConstantPermission permission, Session session)
         {

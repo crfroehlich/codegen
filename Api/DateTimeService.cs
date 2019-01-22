@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class DateTimeService : DocServiceBase
     {
-        private void _ExecSearch(DateTimeSearch request, Action<IQueryable<DocEntityDateTime>> callBack)
+        private IQueryable<DocEntityDateTime> _ExecSearch(DateTimeSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityDateTime> entities = null;
             
             DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, "DateTime", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityDateTime>();
+                entities = Execute.SelectAll<DocEntityDateTime>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DateTimeFullTextSearch(request);
@@ -109,78 +111,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(DateTimeSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(DateTimeSearch request) => Get(request);
 
-        public object Get(DateTimeSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<DateTimeDto>();
-            var cacheKey = GetApiCacheKey<DateTimeDto>(DocConstantModelName.DATETIME, nameof(DateTimeDto), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityDateTime,DateTimeDto>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.DATETIME, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.DATETIME, search: true);
-            return tryRet;
-        }
+        public object Get(DateTimeSearch request) => GetSearchResult<DateTimeDto,DocEntityDateTime,DateTimeSearch>(DocConstantModelName.DATETIME, request, _ExecSearch);
 
-        public object Post(DateTimeVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(DateTimeVersion request) => Get(request);
 
         public object Get(DateTimeVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(DateTimeDto request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, "DateTime", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<DateTimeDto>(DocConstantModelName.DATETIME, nameof(DateTimeDto), request);
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetDateTime(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATETIME);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.DATETIME);
-            return ret;
-        }
+        public object Get(DateTimeDto request) => GetEntity<DateTimeDto>(DocConstantModelName.DATETIME, request, GetDateTime);
 
         private DateTimeDto _AssignValues(DateTimeDto request, DocConstantPermission permission, Session session)
         {

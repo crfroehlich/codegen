@@ -43,15 +43,17 @@ namespace Services.API
 {
     public partial class LookupTableBindingService : DocServiceBase
     {
-        private void _ExecSearch(LookupTableBindingSearch request, Action<IQueryable<DocEntityLookupTableBinding>> callBack)
+        private IQueryable<DocEntityLookupTableBinding> _ExecSearch(LookupTableBindingSearch request)
         {
             request = InitSearch(request);
+            
+            IQueryable<DocEntityLookupTableBinding> entities = null;
             
             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
 
             Execute.Run( session => 
             {
-                var entities = Execute.SelectAll<DocEntityLookupTableBinding>();
+                entities = Execute.SelectAll<DocEntityLookupTableBinding>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableBindingFullTextSearch(request);
@@ -131,99 +133,28 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-                callBack?.Invoke(entities);
             });
+            
+            return entities;
         }
         
-        public object Post(LookupTableBindingSearch request)
-        {
-            return Get(request);
-        }
+        public object Post(LookupTableBindingSearch request) => Get(request);
 
-        public object Get(LookupTableBindingSearch request)
-        {
-            object tryRet = null;
-            var ret = new List<LookupTableBinding>();
-            var cacheKey = GetApiCacheKey<LookupTableBinding>(DocConstantModelName.LOOKUPTABLEBINDING, nameof(LookupTableBinding), request);
-            using (var cancellableRequest = base.Request.CreateCancellableRequest())
-            {
-                var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
-                try 
-                {
-                    if(true != request.IgnoreCache) 
-                    {
-                        tryRet = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                        {
-                            _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(ret, Execute, requestCancel));
-                            return ret;
-                        });
-                    }
-                    if (tryRet == null)
-                    {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(ret, Execute, requestCancel));
-                        tryRet = ret;
-                        //Go ahead and cache the result for any future consumers
-                        DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.LOOKUPTABLEBINDING, search: true);
-                    }
-                }
-                catch(Exception) { throw; }
-                finally
-                {
-                    requestCancel?.CloseRequest();
-                }
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityType: DocConstantModelName.LOOKUPTABLEBINDING, search: true);
-            return tryRet;
-        }
+        public object Get(LookupTableBindingSearch request) => GetSearchResult<LookupTableBinding,DocEntityLookupTableBinding,LookupTableBindingSearch>(DocConstantModelName.LOOKUPTABLEBINDING, request, _ExecSearch);
 
-        public object Post(LookupTableBindingVersion request) 
-        {
-            return Get(request);
-        }
+        public object Post(LookupTableBindingVersion request) => Get(request);
 
         public object Get(LookupTableBindingVersion request) 
         {
-            var ret = new List<Version>();
-            _ExecSearch(request, (entities) => 
+            List<Version> ret = null;
+            Execute.Run(s=>
             {
-                ret = entities.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
             });
             return ret;
         }
 
-        public object Get(LookupTableBinding request)
-        {
-            object ret = null;
-            
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-
-            DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<LookupTableBinding>(DocConstantModelName.LOOKUPTABLEBINDING, nameof(LookupTableBinding), request);
-            if (true != request.IgnoreCache)
-            {
-                ret = Request.ToOptimizedResultUsingCache(Cache, cacheKey, new TimeSpan(0, DocResources.Settings.SessionTimeout, 0), () =>
-                {
-                    object cachedRet = null;
-                    Execute.Run(s =>
-                    {
-                        cachedRet = GetLookupTableBinding(request);
-                    });
-                    DocCacheClient.Set(key: cacheKey, value: cachedRet, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEBINDING);
-                    return cachedRet;
-                });
-            }
-            if(null == ret)
-            {
-                Execute.Run(s =>
-                {
-                    ret = GetLookupTableBinding(request);
-                    DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEBINDING);
-                });
-            }
-            DocCacheClient.SyncKeys(key: cacheKey, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEBINDING);
-            return ret;
-        }
+        public object Get(LookupTableBinding request) => GetEntity<LookupTableBinding>(DocConstantModelName.LOOKUPTABLEBINDING, request, GetLookupTableBinding);
 
         private LookupTableBinding _AssignValues(LookupTableBinding request, DocConstantPermission permission, Session session)
         {
