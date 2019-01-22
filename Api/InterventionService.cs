@@ -47,7 +47,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, "Intervention", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, "Intervention", request.VisibleFields);
 
             Execute.Run( session => 
             {
@@ -86,22 +86,14 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.Intervention) && !DocTools.IsNullOrEmpty(request.Intervention.Id))
-                {
-                    entities = entities.Where(en => en.Intervention.Id == request.Intervention.Id );
-                }
-                if(true == request.InterventionIds?.Any())
-                {
-                    entities = entities.Where(en => en.Intervention.Id.In(request.InterventionIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.Intervention) && !DocTools.IsNullOrEmpty(request.Intervention.Name))
-                {
-                    entities = entities.Where(en => en.Intervention.Name == request.Intervention.Name );
-                }
-                if(true == request.InterventionNames?.Any())
-                {
-                    entities = entities.Where(en => en.Intervention.Name.In(request.InterventionNames));
-                }
+                        if(true == request.DocumentSetsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
+                        }
+                if(!DocTools.IsNullOrEmpty(request.Name))
+                    entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.URI))
+                    entities = entities.Where(en => en.URI.Contains(request.URI));
 
                 entities = ApplyFilters(request, entities);
 
@@ -125,8 +117,8 @@ namespace Services.API
         public object Get(InterventionSearch request)
         {
             object tryRet = null;
-            var ret = new List<InterventionDto>();
-            var cacheKey = GetApiCacheKey<InterventionDto>(DocConstantModelName.INTERVENTION, nameof(InterventionDto), request);
+            var ret = new List<Intervention>();
+            var cacheKey = GetApiCacheKey<Intervention>(DocConstantModelName.INTERVENTION, nameof(Intervention), request);
             using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
                 var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
@@ -134,7 +126,7 @@ namespace Services.API
                 {
                     if (tryRet == null)
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityIntervention,InterventionDto>(ret, Execute, requestCancel));
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityIntervention,Intervention>(ret, Execute, requestCancel));
                         tryRet = ret;
                         //Go ahead and cache the result for any future consumers
                         DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.INTERVENTION, search: true);
@@ -165,15 +157,15 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(InterventionDto request)
+        public object Get(Intervention request)
         {
             object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, "Intervention", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<InterventionDto>(DocConstantModelName.INTERVENTION, nameof(InterventionDto), request);
+            DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, "Intervention", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Intervention>(DocConstantModelName.INTERVENTION, nameof(Intervention), request);
             if(null == ret)
             {
                 Execute.Run(s =>
@@ -186,7 +178,7 @@ namespace Services.API
             return ret;
         }
 
-        private InterventionDto _AssignValues(InterventionDto request, DocConstantPermission permission, Session session)
+        private Intervention _AssignValues(Intervention request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
@@ -196,15 +188,17 @@ namespace Services.API
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            InterventionDto ret = null;
+            Intervention ret = null;
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
-            var cacheKey = GetApiCacheKey<InterventionDto>(DocConstantModelName.INTERVENTION, nameof(InterventionDto), request);
+            var cacheKey = GetApiCacheKey<Intervention>(DocConstantModelName.INTERVENTION, nameof(Intervention), request);
             
             //First, assign all the variables, do database lookups and conversions
-            DocEntityLookupTable pIntervention = GetLookup(DocConstantLookupTable.INTERVENTION, request.Intervention?.Name, request.Intervention?.Id);
+            var pDocumentSets = request.DocumentSets?.ToList();
+            var pName = request.Name;
+            var pURI = request.URI;
 
             DocEntityIntervention entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -223,13 +217,23 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pIntervention, permission, DocConstantModelName.INTERVENTION, nameof(request.Intervention)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.INTERVENTION, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIntervention, entity.Intervention, nameof(request.Intervention)))
-                    entity.Intervention = pIntervention;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pIntervention, nameof(request.Intervention)) && !request.VisibleFields.Matches(nameof(request.Intervention), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                    entity.Name = pName;
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Intervention));
+                    request.VisibleFields.Add(nameof(request.Name));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.INTERVENTION, nameof(request.URI)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
+                    entity.URI = pURI;
+                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.URI));
                 }
             }
             
@@ -237,20 +241,64 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, nameof(InterventionDto), request.VisibleFields);
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocumentSets, permission, DocConstantModelName.INTERVENTION, nameof(request.DocumentSets)))
+            {
+                if (true == pDocumentSets?.Any() )
+                {
+                    var requestedDocumentSets = pDocumentSets.Select(p => p.Id).Distinct().ToList();
+                    var existsDocumentSets = Execute.SelectAll<DocEntityDocumentSet>().Where(e => e.Id.In(requestedDocumentSets)).Select( e => e.Id ).ToList();
+                    if (existsDocumentSets.Count != requestedDocumentSets.Count)
+                    {
+                        var nonExists = requestedDocumentSets.Where(id => existsDocumentSets.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DocumentSets with objects that do not exist. No matching DocumentSets(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedDocumentSets.Where(id => entity.DocumentSets.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Intervention), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(Intervention)}");
+                        entity.DocumentSets.Add(target);
+                    });
+                    var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Intervention), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Intervention)}");
+                        entity.DocumentSets.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.DocumentSets.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Intervention), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Intervention)}");
+                        entity.DocumentSets.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.VisibleFields.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.DocumentSets));
+                }
+            }
+            DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, nameof(Intervention), request.VisibleFields);
             ret = entity.ToDto();
 
             DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVENTION);
 
             return ret;
         }
-        public InterventionDto Post(InterventionDto request)
+        public Intervention Post(Intervention request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            InterventionDto ret = null;
+            Intervention ret = null;
 
             Execute.Run(ssn =>
             {
@@ -263,11 +311,11 @@ namespace Services.API
             return ret;
         }
    
-        public List<InterventionDto> Post(InterventionBatch request)
+        public List<Intervention> Post(InterventionBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<InterventionDto>();
+            var ret = new List<Intervention>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -275,7 +323,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as InterventionDto;
+                    var obj = Post(dto) as Intervention;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -310,9 +358,9 @@ namespace Services.API
             return ret;
         }
 
-        public InterventionDto Post(InterventionDtoCopy request)
+        public Intervention Post(InterventionCopy request)
         {
-            InterventionDto ret = null;
+            Intervention ret = null;
             Execute.Run(ssn =>
             {
                 var entity = DocEntityIntervention.GetIntervention(request?.Id);
@@ -320,14 +368,26 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pIntervention = entity.Intervention;
+                    var pDocumentSets = entity.DocumentSets.ToList();
+                    var pName = entity.Name;
+                    if(!DocTools.IsNullOrEmpty(pName))
+                        pName += " (Copy)";
+                    var pURI = entity.URI;
+                    if(!DocTools.IsNullOrEmpty(pURI))
+                        pURI += " (Copy)";
                 #region Custom Before copyIntervention
                 #endregion Custom Before copyIntervention
                 var copy = new DocEntityIntervention(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Intervention = pIntervention
+                                , Name = pName
+                                , URI = pURI
                 };
+                            foreach(var item in pDocumentSets)
+                            {
+                                entity.DocumentSets.Add(item);
+                            }
+
                 #region Custom After copyIntervention
                 #endregion Custom After copyIntervention
                 copy.SaveChanges(DocConstantPermission.ADD);
@@ -337,21 +397,21 @@ namespace Services.API
         }
 
 
-        public List<InterventionDto> Put(InterventionBatch request)
+        public List<Intervention> Put(InterventionBatch request)
         {
             return Patch(request);
         }
 
-        public InterventionDto Put(InterventionDto request)
+        public Intervention Put(Intervention request)
         {
             return Patch(request);
         }
 
-        public List<InterventionDto> Patch(InterventionBatch request)
+        public List<Intervention> Patch(InterventionBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<InterventionDto>();
+            var ret = new List<Intervention>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -359,7 +419,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as InterventionDto;
+                    var obj = Patch(dto) as Intervention;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -394,13 +454,13 @@ namespace Services.API
             return ret;
         }
 
-        public InterventionDto Patch(InterventionDto request)
+        public Intervention Patch(Intervention request)
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Intervention to patch.");
             
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
-            InterventionDto ret = null;
+            Intervention ret = null;
             Execute.Run(ssn =>
             {
                 ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
@@ -452,7 +512,7 @@ namespace Services.API
             }
         }
 
-        public void Delete(InterventionDto request)
+        public void Delete(Intervention request)
         {
             Execute.Run(ssn =>
             {
@@ -474,7 +534,7 @@ namespace Services.API
 
         public void Delete(InterventionSearch request)
         {
-            var matches = Get(request) as List<InterventionDto>;
+            var matches = Get(request) as List<Intervention>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
@@ -485,14 +545,170 @@ namespace Services.API
                 });
             });
         }
+        public object Get(InterventionJunction request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
+            Execute.Run( s => 
+            {
+                switch(method)
+                {
+                case "documentset":
+                    ret = _GetInterventionDocumentSet(request, skip, take);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
+        public object Get(InterventionJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "documentset":
+                    ret = GetInterventionDocumentSetVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
-        private InterventionDto GetIntervention(InterventionDto request)
+        private object _GetInterventionDocumentSet(InterventionJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             var en = DocEntityIntervention.GetIntervention(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.INTERVENTION, columnName: "DocumentSets", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Intervention and DocumentSet");
+             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
+        }
+
+        private List<Version> GetInterventionDocumentSetVersion(InterventionJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityIntervention.GetIntervention(request.Id);
+                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
+        public object Post(InterventionJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                case "documentset":
+                    ret = _PostInterventionDocumentSet(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+
+
+        private object _PostInterventionDocumentSet(InterventionJunction request)
+        {
+            var entity = DocEntityIntervention.GetIntervention(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Intervention found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Intervention");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Intervention with objects that do not exist. No matching DocumentSet could be found for {id}.");
+                entity.DocumentSets.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        public object Delete(InterventionJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                case "documentset":
+                    ret = _DeleteInterventionDocumentSet(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+
+
+        private object _DeleteInterventionDocumentSet(InterventionJunction request)
+        {
+            var entity = DocEntityIntervention.GetIntervention(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Intervention found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Intervention");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Intervention and DocumentSet");
+                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private Intervention GetIntervention(Intervention request)
         {
             var id = request?.Id;
-            InterventionDto ret = null;
+            Intervention ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<InterventionDto>(currentUser, "Intervention", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, "Intervention", request.VisibleFields);
 
             DocEntityIntervention entity = null;
             if(id.HasValue)

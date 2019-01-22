@@ -1431,7 +1431,7 @@ namespace Services.API
 
         private object _GetUserAuditRecord(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Audits", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and AuditRecord");
@@ -1440,7 +1440,7 @@ namespace Services.API
 
         private object _GetUserLookupTableBinding(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and LookupTableBinding");
@@ -1449,7 +1449,7 @@ namespace Services.API
 
         private object _GetUserDocumentSet(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<DocumentSet>(currentUser, "DocumentSet", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "DocumentSets", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and DocumentSet");
@@ -1471,7 +1471,7 @@ namespace Services.API
 
         private object _GetUserHistory(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "History", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and History");
@@ -1480,7 +1480,7 @@ namespace Services.API
 
         private object _GetUserImpersonatedUser(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Impersonated", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Impersonation");
@@ -1489,7 +1489,7 @@ namespace Services.API
 
         private object _GetUserImpersonatingUser(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Impersonating", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Impersonation");
@@ -1498,7 +1498,7 @@ namespace Services.API
 
         private object _GetUserRole(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Role>(currentUser, "Role", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Roles", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Role");
@@ -1520,7 +1520,7 @@ namespace Services.API
 
         private object _GetUserScope(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Scope");
@@ -1542,7 +1542,7 @@ namespace Services.API
 
         private object _GetUserSession(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<UserSession>(Dto.UserSession.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Sessions", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and UserSession");
@@ -1551,7 +1551,7 @@ namespace Services.API
 
         private object _GetUserTeam(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Team>(currentUser, "Team", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Teams", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Team");
@@ -1560,7 +1560,7 @@ namespace Services.API
 
         private object _GetUserTimeCard(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "TimeCards", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and TimeCard");
@@ -1569,7 +1569,7 @@ namespace Services.API
 
         private object _GetUserUpdate(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Updates", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Update");
@@ -1591,7 +1591,7 @@ namespace Services.API
 
         private object _GetUserWorkflow(UserJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
              var en = DocEntityUser.GetUser(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Workflow");

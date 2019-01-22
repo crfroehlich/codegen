@@ -110,6 +110,14 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.PICO.Id.In(request.PICOIds));
                 }
+                if(!DocTools.IsNullOrEmpty(request.Project) && !DocTools.IsNullOrEmpty(request.Project.Id))
+                {
+                    entities = entities.Where(en => en.Project.Id == request.Project.Id );
+                }
+                if(true == request.ProjectIds?.Any())
+                {
+                    entities = entities.Where(en => en.Project.Id.In(request.ProjectIds));
+                }
                 if(request.ReferenceId.HasValue)
                     entities = entities.Where(en => request.ReferenceId.Value == en.ReferenceId);
                 if(!DocTools.IsNullOrEmpty(request.Start))
@@ -285,6 +293,7 @@ namespace Services.API
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.GetDocument(request.Document.Id) : null;
             var pEnd = request.End;
             var pPICO = (request.PICO?.Id > 0) ? DocEntityPackage.GetPackage(request.PICO.Id) : null;
+            var pProject = (request.Project?.Id > 0) ? DocEntityProject.GetProject(request.Project.Id) : null;
             var pReferenceId = request.ReferenceId;
             var pStart = request.Start;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.TIMECARDSTATUS, request.Status?.Name, request.Status?.Id);
@@ -339,10 +348,20 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPackage>(currentUser, request, pPICO, permission, DocConstantModelName.TIMECARD, nameof(request.PICO)))
             {
                 if(DocPermissionFactory.IsRequested(request, pPICO, entity.PICO, nameof(request.PICO)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.PICO)} cannot be modified once set.");
                     entity.PICO = pPICO;
                 if(DocPermissionFactory.IsRequested<DocEntityPackage>(request, pPICO, nameof(request.PICO)) && !request.VisibleFields.Matches(nameof(request.PICO), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.PICO));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityProject>(currentUser, request, pProject, permission, DocConstantModelName.TIMECARD, nameof(request.Project)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pProject, entity.Project, nameof(request.Project)))
+                    entity.Project = pProject;
+                if(DocPermissionFactory.IsRequested<DocEntityProject>(request, pProject, nameof(request.Project)) && !request.VisibleFields.Matches(nameof(request.Project), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Project));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pReferenceId, permission, DocConstantModelName.TIMECARD, nameof(request.ReferenceId)))
@@ -485,6 +504,7 @@ namespace Services.API
                     var pDocument = entity.Document;
                     var pEnd = entity.End;
                     var pPICO = entity.PICO;
+                    var pProject = entity.Project;
                     var pReferenceId = entity.ReferenceId;
                     var pStart = entity.Start;
                     var pStatus = entity.Status;
@@ -499,6 +519,7 @@ namespace Services.API
                                 , Document = pDocument
                                 , End = pEnd
                                 , PICO = pPICO
+                                , Project = pProject
                                 , ReferenceId = pReferenceId
                                 , Start = pStart
                                 , Status = pStatus

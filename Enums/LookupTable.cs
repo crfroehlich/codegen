@@ -169,8 +169,6 @@ namespace Services.Enums
         RESPONSESCOLLECTEDBY,
         [EnumMember(Value = DocConstantLookupTable.RESULTSCATEGORY)]
         RESULTSCATEGORY,
-        [EnumMember(Value = DocConstantLookupTable.ROLE)]
-        ROLE,
         [EnumMember(Value = DocConstantLookupTable.SCOPE)]
         SCOPE,
         [EnumMember(Value = DocConstantLookupTable.SETTINGTYPE)]
@@ -335,7 +333,6 @@ namespace Services.Enums
         public const string REPRESENTATIVESAMPLE = "RepresentativeSample";
         public const string RESPONSESCOLLECTEDBY = "ResponsesCollectedBy";
         public const string RESULTSCATEGORY = "ResultsCategory";
-        public const string ROLE = "Role";
         public const string SCOPE = "Scope";
         public const string SETTINGTYPE = "SettingType";
         public const string STATISTICALSIGNIFICANCE = "StatisticalSignificance";

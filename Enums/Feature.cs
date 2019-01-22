@@ -23,14 +23,8 @@ namespace Services.Enums
     {
         [EnumMember(Value = DocConstantFeature.ACCESS_BACKEND)]
         ACCESS_BACKEND,
-        [EnumMember(Value = DocConstantFeature.ALL_ENTITIES_ADD)]
-        ALL_ENTITIES_ADD,
-        [EnumMember(Value = DocConstantFeature.ALL_ENTITIES_DELETE)]
-        ALL_ENTITIES_DELETE,
-        [EnumMember(Value = DocConstantFeature.ALL_ENTITIES_EDIT)]
-        ALL_ENTITIES_EDIT,
-        [EnumMember(Value = DocConstantFeature.ALL_ENTITIES_VIEW)]
-        ALL_ENTITIES_VIEW,
+        [EnumMember(Value = DocConstantFeature.ALL_ENTITIES)]
+        ALL_ENTITIES,
         [EnumMember(Value = DocConstantFeature.ALL_FEATURES)]
         ALL_FEATURES,
         [EnumMember(Value = DocConstantFeature.ALL_PAGES)]
@@ -53,6 +47,8 @@ namespace Services.Enums
         DISPLAY_BROADCASTS,
         [EnumMember(Value = DocConstantFeature.DISPLAY_NOTIFICATIONS)]
         DISPLAY_NOTIFICATIONS,
+        [EnumMember(Value = DocConstantFeature.DOCUMENT_SET_ACCESS)]
+        DOCUMENT_SET_ACCESS,
         [EnumMember(Value = DocConstantFeature.ERROR_REPORTS)]
         ERROR_REPORTS,
         [EnumMember(Value = DocConstantFeature.EXTRACTION)]
@@ -71,27 +67,24 @@ namespace Services.Enums
         QC,
         [EnumMember(Value = DocConstantFeature.RATINGS)]
         RATINGS,
+        [EnumMember(Value = DocConstantFeature.RISK_OF_BIAS)]
+        RISK_OF_BIAS,
         [EnumMember(Value = DocConstantFeature.SALESFORCE_DATA)]
         SALESFORCE_DATA,
-        [EnumMember(Value = DocConstantFeature.SHARE_GLOBALLY)]
-        SHARE_GLOBALLY,
-        [EnumMember(Value = DocConstantFeature.SHARE_INTERNALLY)]
-        SHARE_INTERNALLY,
-        [EnumMember(Value = DocConstantFeature.SHARE_LOCALLY)]
-        SHARE_LOCALLY,
+        [EnumMember(Value = DocConstantFeature.SHARING)]
+        SHARING,
         [EnumMember(Value = DocConstantFeature.SUBMIT_FEEDBACK)]
         SUBMIT_FEEDBACK,
         [EnumMember(Value = DocConstantFeature.TERMS_ADMIN)]
-        TERMS_ADMIN
+        TERMS_ADMIN,
+        [EnumMember(Value = DocConstantFeature.WORKFLOW_ACCESS)]
+        WORKFLOW_ACCESS
     }
     
     public sealed partial class DocConstantFeature
     {
         public const string ACCESS_BACKEND = "Access Doc Data Backend";
-        public const string ALL_ENTITIES_ADD = "All Entities (Add)";
-        public const string ALL_ENTITIES_DELETE = "All Entities (Delete)";
-        public const string ALL_ENTITIES_EDIT = "All Entities (Edit)";
-        public const string ALL_ENTITIES_VIEW = "All Entities (View)";
+        public const string ALL_ENTITIES = "All Entities";
         public const string ALL_FEATURES = "All Features";
         public const string ALL_PAGES = "All Pages";
         public const string ALL_STUDY_SETS = "All Study Sets";
@@ -103,6 +96,7 @@ namespace Services.Enums
         public const string DEBUG = "Debug";
         public const string DISPLAY_BROADCASTS = "Display Broadcasts";
         public const string DISPLAY_NOTIFICATIONS = "Display Notifications";
+        public const string DOCUMENT_SET_ACCESS = "Document Set Access";
         public const string ERROR_REPORTS = "Error Reports";
         public const string EXTRACTION = "Extraction";
         public const string IMPERSONATION = "Impersonation";
@@ -112,12 +106,12 @@ namespace Services.Enums
         public const string PROTOCOL_ADMIN = "Protocol Admin";
         public const string QC = "QC";
         public const string RATINGS = "Ratings";
+        public const string RISK_OF_BIAS = "Risk of Bias";
         public const string SALESFORCE_DATA = "Salesforce Data";
-        public const string SHARE_GLOBALLY = "Share Globally";
-        public const string SHARE_INTERNALLY = "Share Internally";
-        public const string SHARE_LOCALLY = "Share Locally";
+        public const string SHARING = "Sharing";
         public const string SUBMIT_FEEDBACK = "Submit Feedback";
         public const string TERMS_ADMIN = "Master Terms Admin";
+        public const string WORKFLOW_ACCESS = "Workflow Access";
         
         #region Internals
         

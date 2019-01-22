@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -110,7 +111,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"R Snippet",@"RMD Snippet",@"FAQ",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -150,16 +151,12 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
-            if (DocTools.AreEqual(nameof(Fields), field)) return false;
-            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
-            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
-            if (DocTools.AreEqual(nameof(Id), field)) return true;
-            return true == VisibleFields?.Matches(field, true);
+            if (IgnoredVisibleFields.Matches(field, true)) return false;
+            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            return ret;
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<Workflow>());
+        public static List<string> Fields => DocTools.Fields<Workflow>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
@@ -215,7 +212,7 @@ namespace Services.Dto
         public List<int> TasksIds { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"R Snippet",@"RMD Snippet",@"FAQ",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
         public List<string> TypeNames { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }

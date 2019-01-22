@@ -1083,7 +1083,7 @@ namespace Services.API
 
         private object _GetWorkflowLookupTableBinding(WorkflowJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
              var en = DocEntityWorkflow.GetWorkflow(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOW, columnName: "Bindings", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Workflow and LookupTableBinding");
@@ -1105,7 +1105,7 @@ namespace Services.API
 
         private object _GetWorkflowWorkflowComment(WorkflowJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, "WorkflowComment", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request.VisibleFields);
              var en = DocEntityWorkflow.GetWorkflow(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOW, columnName: "Comments", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Workflow and WorkflowComment");
@@ -1127,7 +1127,7 @@ namespace Services.API
 
         private object _GetWorkflowDocument(WorkflowJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Document>(currentUser, "Document", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Document>(Dto.Document.Fields, request.VisibleFields);
              var en = DocEntityWorkflow.GetWorkflow(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOW, columnName: "Documents", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Workflow and Document");
@@ -1149,7 +1149,7 @@ namespace Services.API
 
         private object _GetWorkflowScope(WorkflowJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Scope>(currentUser, "Scope", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
              var en = DocEntityWorkflow.GetWorkflow(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOW, columnName: "Scopes", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Workflow and Scope");
@@ -1171,7 +1171,7 @@ namespace Services.API
 
         private object _GetWorkflowTag(WorkflowJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Tag>(currentUser, "Tag", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Tag>(Dto.Tag.Fields, request.VisibleFields);
              var en = DocEntityWorkflow.GetWorkflow(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOW, columnName: "Tags", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Workflow and Tag");
@@ -1193,7 +1193,7 @@ namespace Services.API
 
         private object _GetWorkflowWorkflowTask(WorkflowJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<WorkflowTask>(Dto.WorkflowTask.Fields, request.VisibleFields);
              var en = DocEntityWorkflow.GetWorkflow(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOW, columnName: "Tasks", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Workflow and WorkflowTask");
@@ -1215,7 +1215,7 @@ namespace Services.API
 
         private object _GetWorkflowVariableInstance(WorkflowJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, "VariableInstance", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<VariableInstance>(Dto.VariableInstance.Fields, request.VisibleFields);
              var en = DocEntityWorkflow.GetWorkflow(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOW, columnName: "Variables", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Workflow and VariableInstance");
@@ -1237,7 +1237,7 @@ namespace Services.API
 
         private object _GetWorkflowWorkflow(WorkflowJunction request, int skip, int take)
         {
-             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
              var en = DocEntityWorkflow.GetWorkflow(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOW, columnName: "Workflows", targetEntity: null))
                  throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Workflow and Workflow");

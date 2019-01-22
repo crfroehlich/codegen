@@ -71,11 +71,14 @@ namespace Services.Dto
         public TypeBoolean BooleanValue{ get; set; }
         public TypeCalendarDate CalendarDateValue{ get; set; }
         public TypeCalendarDates CalendarDatesValue{ get; set; }
+        public TypeContact ContactValue{ get; set; }
         public TypeDateTime DateTimeValue{ get; set; }
         public TypeDateTimeRange DateTimeRangeValue{ get; set; }
         public TypeDecimal DecimalValue{ get; set; }
         public TypeDecimalRange DecimalRangeValue{ get; set; }
         public TypeDesignNestedStudyIdLink DesignNestedStudyIdLinkValue{ get; set; }
+        public TypeEventCounts EventCountsValue{ get; set; }
+        public TypeFacility FacilityValue{ get; set; }
         public TypeFixedDoseIntervention FixedDoseInterventionValue{ get; set; }
         public TypeFlag FlagValue{ get; set; }
         public TypeFunding FundingValue{ get; set; }
@@ -87,11 +90,14 @@ namespace Services.Dto
         public TypeNPersons NPersonsValue{ get; set; }
         public TypeParticipant ParticipantValue{ get; set; }
         public TypeParticipants ParticipantsValue{ get; set; }
+        public TypePopulationAnalyzed PopulationAnalyzedValue{ get; set; }
         public TypePValue PValueValue{ get; set; }
         public TypeRate RateValue{ get; set; }
         public TypeSettingLocation SettingLocationValue{ get; set; }
         public TypeSettingLocationTotal SettingLocationTotalValue{ get; set; }
+        public TypeStudyDoc StudyDocValue{ get; set; }
         public TypeStudyObjective StudyObjectiveValue{ get; set; }
+        public TypeStudyReference StudyReferenceValue{ get; set; }
         public TypeSubgroupDescriptor SubgroupDescriptorValue{ get; set; }
         public TypeTimepoint TimepointValue{ get; set; }
         public TypeTimepoints TimepointsValue{ get; set; }
@@ -119,6 +125,9 @@ namespace Services.Dto
                 case DocConstantValueType.CALENDARDATES:
                     ret = Mapper.Map<TypeCalendarDates, DocTypeCalendarDates>(CalendarDatesValue);
                     break;
+                case DocConstantValueType.CONTACT:
+                    ret = Mapper.Map<TypeContact, DocTypeContact>(ContactValue);
+                    break;
                 case DocConstantValueType.DATETIME:
                     ret = Mapper.Map<TypeDateTime, DocTypeDateTime>(DateTimeValue);
                     break;
@@ -133,6 +142,12 @@ namespace Services.Dto
                     break;
                 case DocConstantValueType.DESIGNNESTEDSTUDYIDLINK:
                     ret = Mapper.Map<TypeDesignNestedStudyIdLink, DocTypeDesignNestedStudyIdLink>(DesignNestedStudyIdLinkValue);
+                    break;
+                case DocConstantValueType.EVENTCOUNTS:
+                    ret = Mapper.Map<TypeEventCounts, DocTypeEventCounts>(EventCountsValue);
+                    break;
+                case DocConstantValueType.FACILITY:
+                    ret = Mapper.Map<TypeFacility, DocTypeFacility>(FacilityValue);
                     break;
                 case DocConstantValueType.FIXEDDOSEINTERVENTION:
                     ret = Mapper.Map<TypeFixedDoseIntervention, DocTypeFixedDoseIntervention>(FixedDoseInterventionValue);
@@ -167,6 +182,9 @@ namespace Services.Dto
                 case DocConstantValueType.PARTICIPANTS:
                     ret = Mapper.Map<TypeParticipants, DocTypeParticipants>(ParticipantsValue);
                     break;
+                case DocConstantValueType.POPULATIONANALYZED:
+                    ret = Mapper.Map<TypePopulationAnalyzed, DocTypePopulationAnalyzed>(PopulationAnalyzedValue);
+                    break;
                 case DocConstantValueType.PVALUE:
                     ret = Mapper.Map<TypePValue, DocTypePValue>(PValueValue);
                     break;
@@ -179,8 +197,14 @@ namespace Services.Dto
                 case DocConstantValueType.SETTINGLOCATIONTOTAL:
                     ret = Mapper.Map<TypeSettingLocationTotal, DocTypeSettingLocationTotal>(SettingLocationTotalValue);
                     break;
+                case DocConstantValueType.STUDYDOC:
+                    ret = Mapper.Map<TypeStudyDoc, DocTypeStudyDoc>(StudyDocValue);
+                    break;
                 case DocConstantValueType.STUDYOBJECTIVE:
                     ret = Mapper.Map<TypeStudyObjective, DocTypeStudyObjective>(StudyObjectiveValue);
+                    break;
+                case DocConstantValueType.STUDYREFERENCE:
+                    ret = Mapper.Map<TypeStudyReference, DocTypeStudyReference>(StudyReferenceValue);
                     break;
                 case DocConstantValueType.SUBGROUPDESCRIPTOR:
                     ret = Mapper.Map<TypeSubgroupDescriptor, DocTypeSubgroupDescriptor>(SubgroupDescriptorValue);
@@ -252,6 +276,9 @@ namespace Services.Dto
                 case DocConstantValueType.CALENDARDATES:
                     ret = CalendarDatesValue.ToValueFlat();
                     break;
+                case DocConstantValueType.CONTACT:
+                    ret = ContactValue.ToValueFlat();
+                    break;
                 case DocConstantValueType.DATETIME:
                     ret = DateTimeValue.ToValueFlat();
                     break;
@@ -266,6 +293,12 @@ namespace Services.Dto
                     break;
                 case DocConstantValueType.DESIGNNESTEDSTUDYIDLINK:
                     ret = DesignNestedStudyIdLinkValue.ToValueFlat();
+                    break;
+                case DocConstantValueType.EVENTCOUNTS:
+                    ret = EventCountsValue.ToValueFlat();
+                    break;
+                case DocConstantValueType.FACILITY:
+                    ret = FacilityValue.ToValueFlat();
                     break;
                 case DocConstantValueType.FIXEDDOSEINTERVENTION:
                     ret = FixedDoseInterventionValue.ToValueFlat();
@@ -300,6 +333,9 @@ namespace Services.Dto
                 case DocConstantValueType.PARTICIPANTS:
                     ret = ParticipantsValue.ToValueFlat();
                     break;
+                case DocConstantValueType.POPULATIONANALYZED:
+                    ret = PopulationAnalyzedValue.ToValueFlat();
+                    break;
                 case DocConstantValueType.PVALUE:
                     ret = PValueValue.ToValueFlat();
                     break;
@@ -312,8 +348,14 @@ namespace Services.Dto
                 case DocConstantValueType.SETTINGLOCATIONTOTAL:
                     ret = SettingLocationTotalValue.ToValueFlat();
                     break;
+                case DocConstantValueType.STUDYDOC:
+                    ret = StudyDocValue.ToValueFlat();
+                    break;
                 case DocConstantValueType.STUDYOBJECTIVE:
                     ret = StudyObjectiveValue.ToValueFlat();
+                    break;
+                case DocConstantValueType.STUDYREFERENCE:
+                    ret = StudyReferenceValue.ToValueFlat();
                     break;
                 case DocConstantValueType.SUBGROUPDESCRIPTOR:
                     ret = SubgroupDescriptorValue.ToValueFlat();

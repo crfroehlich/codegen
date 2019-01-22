@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -50,6 +51,10 @@ namespace Services.Dto
 
         public DatabaseVersionBase(int? id) : this(DocConvert.ToInt(id)) {}
     
+        [ApiMember(Name = nameof(DatabaseState), Description = "string", IsRequired = false)]
+        public string DatabaseState { get; set; }
+
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -79,20 +84,16 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
-            if (DocTools.AreEqual(nameof(Fields), field)) return false;
-            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
-            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
-            if (DocTools.AreEqual(nameof(Id), field)) return true;
-            return true == VisibleFields?.Matches(field, true);
+            if (IgnoredVisibleFields.Matches(field, true)) return false;
+            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            return ret;
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<DatabaseVersion>());
+        public static List<string> Fields => DocTools.Fields<DatabaseVersion>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Release),nameof(Updated),nameof(VersionName),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(DatabaseState),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Release),nameof(Updated),nameof(VersionName),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -119,6 +120,7 @@ namespace Services.Dto
     [Route("/databaseversion/search", "GET, POST, DELETE")]
     public partial class DatabaseVersionSearch : Search<DatabaseVersion>
     {
+        public string DatabaseState { get; set; }
         public string Description { get; set; }
         public string Release { get; set; }
         public string VersionName { get; set; }
@@ -137,6 +139,7 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DatabaseVersion.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DatabaseVersion.Updated))); }
         
+        public bool doDatabaseState { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DatabaseVersion.DatabaseState))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DatabaseVersion.Description))); }
         public bool doRelease { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DatabaseVersion.Release))); }
         public bool doVersionName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DatabaseVersion.VersionName))); }

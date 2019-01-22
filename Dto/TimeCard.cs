@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -64,10 +65,16 @@ namespace Services.Dto
         public DateTime? End { get; set; }
 
 
-        [ApiMember(Name = nameof(PICO), Description = "Package", IsRequired = true)]
+        [ApiMember(Name = nameof(PICO), Description = "Package", IsRequired = false)]
         public Reference PICO { get; set; }
         [ApiMember(Name = nameof(PICOId), Description = "Primary Key of Package", IsRequired = false)]
         public int? PICOId { get; set; }
+
+
+        [ApiMember(Name = nameof(Project), Description = "Project", IsRequired = false)]
+        public Reference Project { get; set; }
+        [ApiMember(Name = nameof(ProjectId), Description = "Primary Key of Project", IsRequired = false)]
+        public int? ProjectId { get; set; }
 
 
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = false)]
@@ -115,20 +122,16 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
-            if (DocTools.AreEqual(nameof(Fields), field)) return false;
-            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
-            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
-            if (DocTools.AreEqual(nameof(Id), field)) return true;
-            return true == VisibleFields?.Matches(field, true);
+            if (IgnoredVisibleFields.Matches(field, true)) return false;
+            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            return ret;
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<TimeCard>());
+        public static List<string> Fields => DocTools.Fields<TimeCard>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Document),nameof(DocumentId),nameof(End),nameof(Gestalt),nameof(Locked),nameof(PICO),nameof(PICOId),nameof(ReferenceId),nameof(Start),nameof(Status),nameof(StatusId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo),nameof(WorkType),nameof(WorkTypeId)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Document),nameof(DocumentId),nameof(End),nameof(Gestalt),nameof(Locked),nameof(PICO),nameof(PICOId),nameof(Project),nameof(ProjectId),nameof(ReferenceId),nameof(Start),nameof(Status),nameof(StatusId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo),nameof(WorkType),nameof(WorkTypeId)})]
         public new List<string> VisibleFields
         {
             get
@@ -165,6 +168,8 @@ namespace Services.Dto
         public DateTime? EndBefore { get; set; }
         public Reference PICO { get; set; }
         public List<int> PICOIds { get; set; }
+        public Reference Project { get; set; }
+        public List<int> ProjectIds { get; set; }
         public int? ReferenceId { get; set; }
         public DateTime? Start { get; set; }
         public DateTime? StartAfter { get; set; }
@@ -197,6 +202,7 @@ namespace Services.Dto
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Document))); }
         public bool doEnd { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.End))); }
         public bool doPICO { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.PICO))); }
+        public bool doProject { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Project))); }
         public bool doReferenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.ReferenceId))); }
         public bool doStart { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Start))); }
         public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Status))); }

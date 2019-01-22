@@ -36,30 +36,17 @@ using ValueType = Services.Dto.ValueType;
 namespace Services.Schema
 {
     [TableMapping(DocConstantModelName.CLIENT)]
-
     public partial class DocEntityClient : DocEntityBase
     {
         private const string CLIENT_CACHE = "ClientCache";
 
         #region Constructor
+        public DocEntityClient(Session session) : base(session) {}
 
-        /// <summary>
-        ///    Initializes a new instance of this class.
-        /// </summary>
-        /// <param name="session">The session.</param>
-        public DocEntityClient(Session session)
-            : base(session) { }
-
-        /// <summary>
-        ///    Initializes a new instance of this class as a default, session-less object.
-        /// </summary>
-        public DocEntityClient()
-            : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
-
+        public DocEntityClient() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
         #region VisibleFields
-        
         private List<string> __vf;
         private List<string> _visibleFields
         {
@@ -77,11 +64,9 @@ namespace Services.Schema
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
         }
-        
         #endregion VisibleFields
 
         #region Static Members
-
         public static DocEntityClient GetClient(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? GetClient(reference.Id) : null;
@@ -120,11 +105,9 @@ namespace Services.Schema
             }
             return ret;
         }
-
         #endregion Static Members
 
         #region Properties
-
         [Field()]
         [FieldMapping(nameof(Account))]
         public DocEntityForeignKey Account { get; set; }
@@ -159,10 +142,24 @@ namespace Services.Schema
         public string Name { get; set; }
 
 
+        [Field()]
+        [FieldMapping(nameof(Projects))]
+        [Association( PairTo = nameof(Project.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
+        public DocEntitySet<DocEntityProject> Projects { get; private set; }
+
+
+        public int? ProjectsCount { get { return Projects.Count(); } private set { var noid = value; } }
+
+
         [Field(Nullable = false)]
         [FieldMapping(nameof(Role))]
         public DocEntityRole Role { get; set; }
         public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
+
+
+        [Field()]
+        [FieldMapping(nameof(SalesforceAccountId))]
+        public string SalesforceAccountId { get; set; }
 
 
         [Field()]
@@ -181,25 +178,22 @@ namespace Services.Schema
 
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
-        [FieldMapping(DocEntityConstants.PropertyName.GESTALT)]
         public override string Gestalt { get; set; }
 
-        [Field()]
-        [FieldMapping(BasePropertyName.HASH)]
+        [Field]
         public override Guid Hash { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
         public override int VersionNo { get; set; }
 
-        [Field()]
+        [Field]
         public override DateTime? Created { get; set; }
 
-        [Field()]
+        [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field()]
+        [Field]
         public override bool Locked { get; set; }
-
         private bool? _isNewlyLocked;
         private bool? _isModified;
         
@@ -218,35 +212,18 @@ namespace Services.Schema
         #endregion Properties
 
         #region Overrides of DocEntity
-
-        /// <summary>
-        ///    The Model name of this class is <see cref="DocConstantModelName.CLIENT" />
-        /// </summary>
         public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.CLIENT;
 
-        /// <summary>
-        ///    The Model name of this instance is always the same as <see cref="MODEL_NAME" />
-        /// </summary>
-        public override DocConstantModelName ModelName
-        {
-            get { return MODEL_NAME; }
-        }
-        
+        public override DocConstantModelName ModelName => MODEL_NAME;
+
         public const string CACHE_KEY_PREFIX = "FindClients";
 
-        /// <summary>
-        ///    Converts this Domain object to its corresponding Model.
-        /// </summary>
-        public override T ToModel<T>()
-        {
-            return  null;
 
-        }
+        public override T ToModel<T>() =>  null;
 
         #endregion Overrides of DocEntity
 
         #region Entity overrides
-
         protected override object AdjustFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
             if (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name))
@@ -258,7 +235,7 @@ namespace Services.Schema
                 return oldValue;
             }
         }
-        
+
         ///    Called before field value is about to be changed. This event is raised only on actual change attempt (i.e. when new value differs from the current one).
         protected override void OnSettingFieldValue(FieldInfo fieldInfo, object value)
         {
@@ -299,6 +276,22 @@ namespace Services.Schema
             }
 
             _OnRemoving();
+            try
+            {
+                Divisions.Clear(); //foreach thing in Divisions en.Remove();
+            }
+            catch(Exception ex)
+            {
+                throw new DocException("Failed to delete Client in Divisions delete", ex);
+            }
+            try
+            {
+                Projects.Clear(); //foreach thing in Projects en.Remove();
+            }
+            catch(Exception ex)
+            {
+                throw new DocException("Failed to delete Client in Projects delete", ex);
+            }
             base.OnRemoving();
         }
 
@@ -329,18 +322,18 @@ namespace Services.Schema
             FlushCache();
 
             _validated = true;
-            
+
 
         }
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
-
             var hash = GetGuid();
             if(Hash != hash)
                 Hash = hash;
 
             Name = Name?.TrimAndPruneSpaces();
+            SalesforceAccountId = SalesforceAccountId?.TrimAndPruneSpaces();
 
             if (DocTools.IsNullOrEmpty(Created))
             {
@@ -395,11 +388,9 @@ namespace Services.Schema
             DocCacheClient.RemoveSearch("Client");
             DocCacheClient.RemoveById(Id);
         }
-
         #endregion Entity overrides
 
         #region Validation
-
         public DocValidationMessage ValidationMessage
         {
             get
@@ -412,7 +403,7 @@ namespace Services.Schema
                     isValid = false;
                     message += " Name is a required property.";
                 }
-                if(null == Role)
+                if(DocTools.IsNullOrEmpty(Role))
                 {
                     isValid = false;
                     message += " Role is a required property.";
@@ -421,13 +412,10 @@ namespace Services.Schema
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;
             }
-
         }
-
         #endregion Validation
 
         #region Hash
-
         
         public static Guid GetGuid(DocEntityClient thing)
         {
@@ -443,11 +431,9 @@ namespace Services.Schema
         {
             return GetGuid(this);
         }
-
         #endregion Hash
 
         #region Converters
-
         public override string ToString() => _ToString();
 
         public override Reference ToReference()
@@ -459,7 +445,6 @@ namespace Services.Schema
         public Client ToDto() => Mapper.Map<DocEntityClient, Client>(this);
 
         public override IDto ToIDto() => ToDto();
-
         #endregion Converters
     }
 
@@ -489,8 +474,11 @@ namespace Services.Schema
                 .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DocumentSets))))
                 .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DocumentSetsCount))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Name))))
+                .ForMember(dest => dest.Projects, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Projects))))
+                .ForMember(dest => dest.ProjectsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.ProjectsCount))))
                 .ForMember(dest => dest.Role, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Role))))
                 .ForMember(dest => dest.RoleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.RoleId))))
+                .ForMember(dest => dest.SalesforceAccountId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.SalesforceAccountId))))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.ScopesCount))))
                 .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Settings))))

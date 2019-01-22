@@ -18,6 +18,7 @@ using Services.Schema;
 using Typed;
 using Typed.Bindings;
 using Typed.Notifications;
+using Typed.Security;
 using Typed.Settings;
 
 using ServiceStack;
@@ -73,7 +74,7 @@ namespace Services.Dto
         public int? ClientsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Comparators), Description = "Intervention", IsRequired = false)]
+        [ApiMember(Name = nameof(Comparators), Description = "Comparator", IsRequired = false)]
         public List<Reference> Comparators { get; set; }
         public int? ComparatorsCount { get; set; }
 
@@ -196,17 +197,17 @@ namespace Services.Dto
         public int? OwnerId { get; set; }
 
 
-        [ApiMember(Name = nameof(Packages), Description = "Package", IsRequired = false)]
-        public List<Reference> Packages { get; set; }
-        public int? PackagesCount { get; set; }
-
-
         [ApiMember(Name = nameof(Participants), Description = "string", IsRequired = false)]
         public string Participants { get; set; }
 
 
         [ApiMember(Name = nameof(PRISMA), Description = "string", IsRequired = false)]
         public string PRISMA { get; set; }
+
+
+        [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
+        public List<Reference> Projects { get; set; }
+        public int? ProjectsCount { get; set; }
 
 
         [ApiMember(Name = nameof(ProjectTeam), Description = "Team", IsRequired = false)]
@@ -259,7 +260,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set",@"SERVE Portal"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -288,20 +289,16 @@ namespace Services.Dto
         
         public bool? ShouldSerialize(string field)
         {
-            if (DocTools.AreEqual(nameof(VisibleFields), field)) return false;
-            if (DocTools.AreEqual(nameof(Fields), field)) return false;
-            if (DocTools.AreEqual(nameof(AssignFields), field)) return false;
-            if (DocTools.AreEqual(nameof(IgnoreCache), field)) return false;
-            if (DocTools.AreEqual(nameof(Id), field)) return true;
-            return true == VisibleFields?.Matches(field, true);
+            if (IgnoredVisibleFields.Matches(field, true)) return false;
+            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            return ret;
         }
 
-        private static List<string> _fields;
-        public static List<string> Fields => _fields ?? (_fields = DocTools.Fields<DocumentSet>());
+        public static List<string> Fields => DocTools.Fields<DocumentSet>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Archived),nameof(Categories),nameof(CategoriesCount),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(NonDigitizedDocuments),nameof(NonDigitizedDocumentsCount),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Packages),nameof(PackagesCount),nameof(Participants),nameof(PRISMA),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SelectionCriteria),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Archived),nameof(Categories),nameof(CategoriesCount),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(NonDigitizedDocuments),nameof(NonDigitizedDocumentsCount),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Participants),nameof(PRISMA),nameof(Projects),nameof(ProjectsCount),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SelectionCriteria),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -324,7 +321,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Categories), nameof(CategoriesCount), nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(NonDigitizedDocuments), nameof(NonDigitizedDocumentsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Packages), nameof(PackagesCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
+            nameof(Categories), nameof(CategoriesCount), nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(NonDigitizedDocuments), nameof(NonDigitizedDocumentsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Projects), nameof(ProjectsCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
     }
@@ -369,9 +366,9 @@ namespace Services.Dto
         public List<int> OutcomesIds { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
-        public List<int> PackagesIds { get; set; }
         public string Participants { get; set; }
         public string PRISMA { get; set; }
+        public List<int> ProjectsIds { get; set; }
         public Reference ProjectTeam { get; set; }
         public List<int> ProjectTeamIds { get; set; }
         public int? ProtocolReferenceId { get; set; }
@@ -390,7 +387,7 @@ namespace Services.Dto
         public List<int> StudyDesignsIds { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Global",@"Therapeutic Area",@"Disease State",@"Data Set",@"SERVE Portal"})]
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }
@@ -441,9 +438,9 @@ namespace Services.Dto
         public bool doOriginalSearch { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalSearch))); }
         public bool doOutcomes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Outcomes))); }
         public bool doOwner { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Owner))); }
-        public bool doPackages { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Packages))); }
         public bool doParticipants { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Participants))); }
         public bool doPRISMA { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.PRISMA))); }
+        public bool doProjects { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Projects))); }
         public bool doProjectTeam { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProjectTeam))); }
         public bool doProtocolReferenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProtocolReferenceId))); }
         public bool doQUOROM { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.QUOROM))); }
@@ -481,6 +478,7 @@ namespace Services.Dto
     [Route("/documentset/{Id}/outcome", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/package", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/projectlink", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/project", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/scope", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/statsstudyset", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/studydesign", "GET, POST, DELETE")]
@@ -521,6 +519,7 @@ namespace Services.Dto
     [Route("/documentset/{Id}/outcome/version", "GET")]
     [Route("/documentset/{Id}/package/version", "GET")]
     [Route("/documentset/{Id}/projectlink/version", "GET")]
+    [Route("/documentset/{Id}/project/version", "GET")]
     [Route("/documentset/{Id}/scope/version", "GET")]
     [Route("/documentset/{Id}/statsstudyset/version", "GET")]
     [Route("/documentset/{Id}/studydesign/version", "GET")]

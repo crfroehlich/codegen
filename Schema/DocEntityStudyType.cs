@@ -36,30 +36,17 @@ using ValueType = Services.Dto.ValueType;
 namespace Services.Schema
 {
     [TableMapping(DocConstantModelName.STUDYTYPE)]
-
     public partial class DocEntityStudyType : DocEntityBase
     {
         private const string STUDYTYPE_CACHE = "StudyTypeCache";
 
         #region Constructor
+        public DocEntityStudyType(Session session) : base(session) {}
 
-        /// <summary>
-        ///    Initializes a new instance of this class.
-        /// </summary>
-        /// <param name="session">The session.</param>
-        public DocEntityStudyType(Session session)
-            : base(session) { }
-
-        /// <summary>
-        ///    Initializes a new instance of this class as a default, session-less object.
-        /// </summary>
-        public DocEntityStudyType()
-            : base(new DocDbSession(Xtensive.Orm.Session.Current)) { }
-
+        public DocEntityStudyType() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
         #region VisibleFields
-        
         private List<string> __vf;
         private List<string> _visibleFields
         {
@@ -77,11 +64,9 @@ namespace Services.Schema
         {
             return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
         }
-        
         #endregion VisibleFields
 
         #region Static Members
-
         public static DocEntityStudyType GetStudyType(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? GetStudyType(reference.Id) : null;
@@ -120,11 +105,9 @@ namespace Services.Schema
             }
             return ret;
         }
-
         #endregion Static Members
 
         #region Properties
-
         [Field(Nullable = false)]
         [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
@@ -133,25 +116,22 @@ namespace Services.Schema
 
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
-        [FieldMapping(DocEntityConstants.PropertyName.GESTALT)]
         public override string Gestalt { get; set; }
 
-        [Field()]
-        [FieldMapping(BasePropertyName.HASH)]
+        [Field]
         public override Guid Hash { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
         public override int VersionNo { get; set; }
 
-        [Field()]
+        [Field]
         public override DateTime? Created { get; set; }
 
-        [Field()]
+        [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field()]
+        [Field]
         public override bool Locked { get; set; }
-
         private bool? _isNewlyLocked;
         private bool? _isModified;
         
@@ -170,35 +150,18 @@ namespace Services.Schema
         #endregion Properties
 
         #region Overrides of DocEntity
-
-        /// <summary>
-        ///    The Model name of this class is <see cref="DocConstantModelName.STUDYTYPE" />
-        /// </summary>
         public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.STUDYTYPE;
 
-        /// <summary>
-        ///    The Model name of this instance is always the same as <see cref="MODEL_NAME" />
-        /// </summary>
-        public override DocConstantModelName ModelName
-        {
-            get { return MODEL_NAME; }
-        }
-        
+        public override DocConstantModelName ModelName => MODEL_NAME;
+
         public const string CACHE_KEY_PREFIX = "FindStudyTypes";
 
-        /// <summary>
-        ///    Converts this Domain object to its corresponding Model.
-        /// </summary>
-        public override T ToModel<T>()
-        {
-            return  null;
 
-        }
+        public override T ToModel<T>() =>  null;
 
         #endregion Overrides of DocEntity
 
         #region Entity overrides
-
         protected override object AdjustFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
         {
             if (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name))
@@ -210,7 +173,7 @@ namespace Services.Schema
                 return oldValue;
             }
         }
-        
+
         ///    Called before field value is about to be changed. This event is raised only on actual change attempt (i.e. when new value differs from the current one).
         protected override void OnSettingFieldValue(FieldInfo fieldInfo, object value)
         {
@@ -281,13 +244,12 @@ namespace Services.Schema
             FlushCache();
 
             _validated = true;
-            
+
 
         }
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
-
             var hash = GetGuid();
             if(Hash != hash)
                 Hash = hash;
@@ -346,11 +308,9 @@ namespace Services.Schema
             DocCacheClient.RemoveSearch("StudyType");
             DocCacheClient.RemoveById(Id);
         }
-
         #endregion Entity overrides
 
         #region Validation
-
         public DocValidationMessage ValidationMessage
         {
             get
@@ -358,7 +318,7 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(null == Type)
+                if(DocTools.IsNullOrEmpty(Type))
                 {
                     isValid = false;
                     message += " Type is a required property.";
@@ -375,13 +335,10 @@ namespace Services.Schema
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;
             }
-
         }
-
         #endregion Validation
 
         #region Hash
-
         
         public static Guid GetGuid(DocEntityStudyType thing)
         {
@@ -397,11 +354,9 @@ namespace Services.Schema
         {
             return GetGuid(this);
         }
-
         #endregion Hash
 
         #region Converters
-
         public override string ToString() => _ToString();
 
         public override Reference ToReference()
@@ -413,7 +368,6 @@ namespace Services.Schema
         public StudyType ToDto() => Mapper.Map<DocEntityStudyType, StudyType>(this);
 
         public override IDto ToIDto() => ToDto();
-
         #endregion Converters
     }
 

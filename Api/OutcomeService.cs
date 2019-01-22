@@ -47,7 +47,7 @@ namespace Services.API
         {
             request = InitSearch(request);
             
-            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
 
             Execute.Run( session => 
             {
@@ -86,22 +86,14 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.Outcome) && !DocTools.IsNullOrEmpty(request.Outcome.Id))
-                {
-                    entities = entities.Where(en => en.Outcome.Id == request.Outcome.Id );
-                }
-                if(true == request.OutcomeIds?.Any())
-                {
-                    entities = entities.Where(en => en.Outcome.Id.In(request.OutcomeIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.Outcome) && !DocTools.IsNullOrEmpty(request.Outcome.Name))
-                {
-                    entities = entities.Where(en => en.Outcome.Name == request.Outcome.Name );
-                }
-                if(true == request.OutcomeNames?.Any())
-                {
-                    entities = entities.Where(en => en.Outcome.Name.In(request.OutcomeNames));
-                }
+                        if(true == request.DocumentSetsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
+                        }
+                if(!DocTools.IsNullOrEmpty(request.Name))
+                    entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.URI))
+                    entities = entities.Where(en => en.URI.Contains(request.URI));
 
                 entities = ApplyFilters(request, entities);
 
@@ -125,8 +117,8 @@ namespace Services.API
         public object Get(OutcomeSearch request)
         {
             object tryRet = null;
-            var ret = new List<OutcomeDto>();
-            var cacheKey = GetApiCacheKey<OutcomeDto>(DocConstantModelName.OUTCOME, nameof(OutcomeDto), request);
+            var ret = new List<Outcome>();
+            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
             using (var cancellableRequest = base.Request.CreateCancellableRequest())
             {
                 var requestCancel = new DocRequestCancellation(HttpContext.Current.Response, cancellableRequest);
@@ -134,7 +126,7 @@ namespace Services.API
                 {
                     if (tryRet == null)
                     {
-                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,OutcomeDto>(ret, Execute, requestCancel));
+                        _ExecSearch(request, (entities) => entities.ConvertFromEntityList<DocEntityOutcome,Outcome>(ret, Execute, requestCancel));
                         tryRet = ret;
                         //Go ahead and cache the result for any future consumers
                         DocCacheClient.Set(key: cacheKey, value: ret, entityType: DocConstantModelName.OUTCOME, search: true);
@@ -165,15 +157,15 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(OutcomeDto request)
+        public object Get(Outcome request)
         {
             object ret = null;
             
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
 
-            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
-            var cacheKey = GetApiCacheKey<OutcomeDto>(DocConstantModelName.OUTCOME, nameof(OutcomeDto), request);
+            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
+            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
             if(null == ret)
             {
                 Execute.Run(s =>
@@ -186,7 +178,7 @@ namespace Services.API
             return ret;
         }
 
-        private OutcomeDto _AssignValues(OutcomeDto request, DocConstantPermission permission, Session session)
+        private Outcome _AssignValues(Outcome request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
@@ -196,15 +188,17 @@ namespace Services.API
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            OutcomeDto ret = null;
+            Outcome ret = null;
             request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
-            var cacheKey = GetApiCacheKey<OutcomeDto>(DocConstantModelName.OUTCOME, nameof(OutcomeDto), request);
+            var cacheKey = GetApiCacheKey<Outcome>(DocConstantModelName.OUTCOME, nameof(Outcome), request);
             
             //First, assign all the variables, do database lookups and conversions
-            DocEntityLookupTable pOutcome = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.Outcome?.Name, request.Outcome?.Id);
+            var pDocumentSets = request.DocumentSets?.ToList();
+            var pName = request.Name;
+            var pURI = request.URI;
 
             DocEntityOutcome entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -223,13 +217,23 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pOutcome, permission, DocConstantModelName.OUTCOME, nameof(request.Outcome)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.OUTCOME, nameof(request.Name)))
             {
-                if(DocPermissionFactory.IsRequested(request, pOutcome, entity.Outcome, nameof(request.Outcome)))
-                    entity.Outcome = pOutcome;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pOutcome, nameof(request.Outcome)) && !request.VisibleFields.Matches(nameof(request.Outcome), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                    entity.Name = pName;
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Outcome));
+                    request.VisibleFields.Add(nameof(request.Name));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.OUTCOME, nameof(request.URI)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
+                    entity.URI = pURI;
+                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.URI));
                 }
             }
             
@@ -237,20 +241,64 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, nameof(OutcomeDto), request.VisibleFields);
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocumentSets, permission, DocConstantModelName.OUTCOME, nameof(request.DocumentSets)))
+            {
+                if (true == pDocumentSets?.Any() )
+                {
+                    var requestedDocumentSets = pDocumentSets.Select(p => p.Id).Distinct().ToList();
+                    var existsDocumentSets = Execute.SelectAll<DocEntityDocumentSet>().Where(e => e.Id.In(requestedDocumentSets)).Select( e => e.Id ).ToList();
+                    if (existsDocumentSets.Count != requestedDocumentSets.Count)
+                    {
+                        var nonExists = requestedDocumentSets.Where(id => existsDocumentSets.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DocumentSets with objects that do not exist. No matching DocumentSets(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedDocumentSets.Where(id => entity.DocumentSets.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Outcome), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(Outcome)}");
+                        entity.DocumentSets.Add(target);
+                    });
+                    var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Outcome), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Outcome)}");
+                        entity.DocumentSets.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.DocumentSets.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Outcome), columnName: nameof(request.DocumentSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Outcome)}");
+                        entity.DocumentSets.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.VisibleFields.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.DocumentSets));
+                }
+            }
+            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, nameof(Outcome), request.VisibleFields);
             ret = entity.ToDto();
 
             DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.OUTCOME);
 
             return ret;
         }
-        public OutcomeDto Post(OutcomeDto request)
+        public Outcome Post(Outcome request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            OutcomeDto ret = null;
+            Outcome ret = null;
 
             Execute.Run(ssn =>
             {
@@ -263,11 +311,11 @@ namespace Services.API
             return ret;
         }
    
-        public List<OutcomeDto> Post(OutcomeBatch request)
+        public List<Outcome> Post(OutcomeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<OutcomeDto>();
+            var ret = new List<Outcome>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -275,7 +323,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as OutcomeDto;
+                    var obj = Post(dto) as Outcome;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -310,9 +358,9 @@ namespace Services.API
             return ret;
         }
 
-        public OutcomeDto Post(OutcomeDtoCopy request)
+        public Outcome Post(OutcomeCopy request)
         {
-            OutcomeDto ret = null;
+            Outcome ret = null;
             Execute.Run(ssn =>
             {
                 var entity = DocEntityOutcome.GetOutcome(request?.Id);
@@ -320,14 +368,26 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pOutcome = entity.Outcome;
+                    var pDocumentSets = entity.DocumentSets.ToList();
+                    var pName = entity.Name;
+                    if(!DocTools.IsNullOrEmpty(pName))
+                        pName += " (Copy)";
+                    var pURI = entity.URI;
+                    if(!DocTools.IsNullOrEmpty(pURI))
+                        pURI += " (Copy)";
                 #region Custom Before copyOutcome
                 #endregion Custom Before copyOutcome
                 var copy = new DocEntityOutcome(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Outcome = pOutcome
+                                , Name = pName
+                                , URI = pURI
                 };
+                            foreach(var item in pDocumentSets)
+                            {
+                                entity.DocumentSets.Add(item);
+                            }
+
                 #region Custom After copyOutcome
                 #endregion Custom After copyOutcome
                 copy.SaveChanges(DocConstantPermission.ADD);
@@ -337,21 +397,21 @@ namespace Services.API
         }
 
 
-        public List<OutcomeDto> Put(OutcomeBatch request)
+        public List<Outcome> Put(OutcomeBatch request)
         {
             return Patch(request);
         }
 
-        public OutcomeDto Put(OutcomeDto request)
+        public Outcome Put(Outcome request)
         {
             return Patch(request);
         }
 
-        public List<OutcomeDto> Patch(OutcomeBatch request)
+        public List<Outcome> Patch(OutcomeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<OutcomeDto>();
+            var ret = new List<Outcome>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -359,7 +419,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as OutcomeDto;
+                    var obj = Patch(dto) as Outcome;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -394,13 +454,13 @@ namespace Services.API
             return ret;
         }
 
-        public OutcomeDto Patch(OutcomeDto request)
+        public Outcome Patch(Outcome request)
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Outcome to patch.");
             
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
-            OutcomeDto ret = null;
+            Outcome ret = null;
             Execute.Run(ssn =>
             {
                 ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
@@ -452,7 +512,7 @@ namespace Services.API
             }
         }
 
-        public void Delete(OutcomeDto request)
+        public void Delete(Outcome request)
         {
             Execute.Run(ssn =>
             {
@@ -474,7 +534,7 @@ namespace Services.API
 
         public void Delete(OutcomeSearch request)
         {
-            var matches = Get(request) as List<OutcomeDto>;
+            var matches = Get(request) as List<Outcome>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
@@ -485,14 +545,170 @@ namespace Services.API
                 });
             });
         }
+        public object Get(OutcomeJunction request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
+            Execute.Run( s => 
+            {
+                switch(method)
+                {
+                case "documentset":
+                    ret = _GetOutcomeDocumentSet(request, skip, take);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
+        public object Get(OutcomeJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "documentset":
+                    ret = GetOutcomeDocumentSetVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
-        private OutcomeDto GetOutcome(OutcomeDto request)
+        private object _GetOutcomeDocumentSet(OutcomeJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             var en = DocEntityOutcome.GetOutcome(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.OUTCOME, columnName: "DocumentSets", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Outcome and DocumentSet");
+             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
+        }
+
+        private List<Version> GetOutcomeDocumentSetVersion(OutcomeJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityOutcome.GetOutcome(request.Id);
+                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
+        public object Post(OutcomeJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                case "documentset":
+                    ret = _PostOutcomeDocumentSet(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+
+
+        private object _PostOutcomeDocumentSet(OutcomeJunction request)
+        {
+            var entity = DocEntityOutcome.GetOutcome(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Outcome found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Outcome");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Outcome with objects that do not exist. No matching DocumentSet could be found for {id}.");
+                entity.DocumentSets.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        public object Delete(OutcomeJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                case "documentset":
+                    ret = _DeleteOutcomeDocumentSet(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+
+
+        private object _DeleteOutcomeDocumentSet(OutcomeJunction request)
+        {
+            var entity = DocEntityOutcome.GetOutcome(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Outcome found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Outcome");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Outcome and DocumentSet");
+                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private Outcome GetOutcome(Outcome request)
         {
             var id = request?.Id;
-            OutcomeDto ret = null;
+            Outcome ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<OutcomeDto>(currentUser, "Outcome", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Outcome>(currentUser, "Outcome", request.VisibleFields);
 
             DocEntityOutcome entity = null;
             if(id.HasValue)
