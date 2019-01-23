@@ -109,10 +109,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(LocaleSearch request) => Get(request);
 
-        public object Get(LocaleSearch request) => GetSearchResult<Locale,DocEntityLocale,LocaleSearch>(DocConstantModelName.LOCALE, request, _ExecSearch);
+        public List<Locale> Post(LocaleSearch request) => Get(request);
+
+        public List<Locale> Get(LocaleSearch request) => GetSearchResult<Locale,DocEntityLocale,LocaleSearch>(DocConstantModelName.LOCALE, request, _ExecSearch);
 
         public object Post(LocaleVersion request) => Get(request);
 
@@ -126,8 +126,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Locale request) => GetEntity<Locale>(DocConstantModelName.LOCALE, request, GetLocale);
-
+        public Locale Get(Locale request) => GetEntity<Locale>(DocConstantModelName.LOCALE, request, GetLocale);
         private Locale _AssignValues(Locale request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

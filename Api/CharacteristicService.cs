@@ -111,10 +111,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(CharacteristicSearch request) => Get(request);
 
-        public object Get(CharacteristicSearch request) => GetSearchResult<Characteristic,DocEntityCharacteristic,CharacteristicSearch>(DocConstantModelName.CHARACTERISTIC, request, _ExecSearch);
+        public List<Characteristic> Post(CharacteristicSearch request) => Get(request);
+
+        public List<Characteristic> Get(CharacteristicSearch request) => GetSearchResult<Characteristic,DocEntityCharacteristic,CharacteristicSearch>(DocConstantModelName.CHARACTERISTIC, request, _ExecSearch);
 
         public object Post(CharacteristicVersion request) => Get(request);
 
@@ -128,8 +128,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Characteristic request) => GetEntity<Characteristic>(DocConstantModelName.CHARACTERISTIC, request, GetCharacteristic);
-
+        public Characteristic Get(Characteristic request) => GetEntity<Characteristic>(DocConstantModelName.CHARACTERISTIC, request, GetCharacteristic);
         private Characteristic _AssignValues(Characteristic request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

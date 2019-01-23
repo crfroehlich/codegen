@@ -167,10 +167,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(WorkflowTaskSearch request) => Get(request);
 
-        public object Get(WorkflowTaskSearch request) => GetSearchResult<WorkflowTask,DocEntityWorkflowTask,WorkflowTaskSearch>(DocConstantModelName.WORKFLOWTASK, request, _ExecSearch);
+        public List<WorkflowTask> Post(WorkflowTaskSearch request) => Get(request);
+
+        public List<WorkflowTask> Get(WorkflowTaskSearch request) => GetSearchResult<WorkflowTask,DocEntityWorkflowTask,WorkflowTaskSearch>(DocConstantModelName.WORKFLOWTASK, request, _ExecSearch);
 
         public object Post(WorkflowTaskVersion request) => Get(request);
 
@@ -184,8 +184,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(WorkflowTask request) => GetEntity<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, request, GetWorkflowTask);
-
+        public WorkflowTask Get(WorkflowTask request) => GetEntity<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, request, GetWorkflowTask);
         private WorkflowTask _AssignValues(WorkflowTask request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

@@ -121,10 +121,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(TimePointSearch request) => Get(request);
 
-        public object Get(TimePointSearch request) => GetSearchResult<TimePoint,DocEntityTimePoint,TimePointSearch>(DocConstantModelName.TIMEPOINT, request, _ExecSearch);
+        public List<TimePoint> Post(TimePointSearch request) => Get(request);
+
+        public List<TimePoint> Get(TimePointSearch request) => GetSearchResult<TimePoint,DocEntityTimePoint,TimePointSearch>(DocConstantModelName.TIMEPOINT, request, _ExecSearch);
 
         public object Post(TimePointVersion request) => Get(request);
 
@@ -138,8 +138,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(TimePoint request) => GetEntity<TimePoint>(DocConstantModelName.TIMEPOINT, request, GetTimePoint);
-
+        public TimePoint Get(TimePoint request) => GetEntity<TimePoint>(DocConstantModelName.TIMEPOINT, request, GetTimePoint);
 
 
 

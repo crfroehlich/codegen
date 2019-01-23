@@ -149,10 +149,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(BackgroundTaskSearch request) => Get(request);
 
-        public object Get(BackgroundTaskSearch request) => GetSearchResult<BackgroundTask,DocEntityBackgroundTask,BackgroundTaskSearch>(DocConstantModelName.BACKGROUNDTASK, request, _ExecSearch);
+        public List<BackgroundTask> Post(BackgroundTaskSearch request) => Get(request);
+
+        public List<BackgroundTask> Get(BackgroundTaskSearch request) => GetSearchResult<BackgroundTask,DocEntityBackgroundTask,BackgroundTaskSearch>(DocConstantModelName.BACKGROUNDTASK, request, _ExecSearch);
 
         public object Post(BackgroundTaskVersion request) => Get(request);
 
@@ -166,8 +166,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(BackgroundTask request) => GetEntity<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, request, GetBackgroundTask);
-
+        public BackgroundTask Get(BackgroundTask request) => GetEntity<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, request, GetBackgroundTask);
         private BackgroundTask _AssignValues(BackgroundTask request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

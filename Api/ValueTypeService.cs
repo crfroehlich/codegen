@@ -135,10 +135,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(ValueTypeSearch request) => Get(request);
 
-        public object Get(ValueTypeSearch request) => GetSearchResult<ValueType,DocEntityValueType,ValueTypeSearch>(DocConstantModelName.VALUETYPE, request, _ExecSearch);
+        public List<ValueType> Post(ValueTypeSearch request) => Get(request);
+
+        public List<ValueType> Get(ValueTypeSearch request) => GetSearchResult<ValueType,DocEntityValueType,ValueTypeSearch>(DocConstantModelName.VALUETYPE, request, _ExecSearch);
 
         public object Post(ValueTypeVersion request) => Get(request);
 
@@ -152,8 +152,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(ValueType request) => GetEntity<ValueType>(DocConstantModelName.VALUETYPE, request, GetValueType);
-
+        public ValueType Get(ValueType request) => GetEntity<ValueType>(DocConstantModelName.VALUETYPE, request, GetValueType);
 
 
 

@@ -229,10 +229,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(UserSearch request) => Get(request);
 
-        public object Get(UserSearch request) => GetSearchResult<User,DocEntityUser,UserSearch>(DocConstantModelName.USER, request, _ExecSearch);
+        public object Get(UserSearch request) => GetSearchResultWithCache<User,DocEntityUser,UserSearch>(DocConstantModelName.USER, request, _ExecSearch);
 
         public object Post(UserVersion request) => Get(request);
 
@@ -246,8 +246,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(User request) => GetEntity<User>(DocConstantModelName.USER, request, GetUser);
-
+        public object Get(User request) => GetEntityWithCache<User>(DocConstantModelName.USER, request, GetUser);
         private User _AssignValues(User request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

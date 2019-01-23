@@ -137,10 +137,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(HelpSearch request) => Get(request);
 
-        public object Get(HelpSearch request) => GetSearchResult<Help,DocEntityHelp,HelpSearch>(DocConstantModelName.HELP, request, _ExecSearch);
+        public object Get(HelpSearch request) => GetSearchResultWithCache<Help,DocEntityHelp,HelpSearch>(DocConstantModelName.HELP, request, _ExecSearch);
 
         public object Post(HelpVersion request) => Get(request);
 
@@ -154,8 +154,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Help request) => GetEntity<Help>(DocConstantModelName.HELP, request, GetHelp);
-
+        public object Get(Help request) => GetEntityWithCache<Help>(DocConstantModelName.HELP, request, GetHelp);
         private Help _AssignValues(Help request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

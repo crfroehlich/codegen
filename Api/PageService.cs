@@ -123,10 +123,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(PageSearch request) => Get(request);
 
-        public object Get(PageSearch request) => GetSearchResult<Page,DocEntityPage,PageSearch>(DocConstantModelName.PAGE, request, _ExecSearch);
+        public object Get(PageSearch request) => GetSearchResultWithCache<Page,DocEntityPage,PageSearch>(DocConstantModelName.PAGE, request, _ExecSearch);
 
         public object Post(PageVersion request) => Get(request);
 
@@ -140,8 +140,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Page request) => GetEntity<Page>(DocConstantModelName.PAGE, request, GetPage);
-
+        public object Get(Page request) => GetEntityWithCache<Page>(DocConstantModelName.PAGE, request, GetPage);
         private Page _AssignValues(Page request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

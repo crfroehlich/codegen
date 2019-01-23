@@ -157,10 +157,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(UnitConversionRulesSearch request) => Get(request);
 
-        public object Get(UnitConversionRulesSearch request) => GetSearchResult<UnitConversionRules,DocEntityUnitConversionRules,UnitConversionRulesSearch>(DocConstantModelName.UNITCONVERSIONRULES, request, _ExecSearch);
+        public object Get(UnitConversionRulesSearch request) => GetSearchResultWithCache<UnitConversionRules,DocEntityUnitConversionRules,UnitConversionRulesSearch>(DocConstantModelName.UNITCONVERSIONRULES, request, _ExecSearch);
 
         public object Post(UnitConversionRulesVersion request) => Get(request);
 
@@ -174,8 +174,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(UnitConversionRules request) => GetEntity<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, request, GetUnitConversionRules);
-
+        public object Get(UnitConversionRules request) => GetEntityWithCache<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, request, GetUnitConversionRules);
         private UnitConversionRules _AssignValues(UnitConversionRules request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

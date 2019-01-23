@@ -111,10 +111,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(InterventionSearch request) => Get(request);
 
-        public object Get(InterventionSearch request) => GetSearchResult<Intervention,DocEntityIntervention,InterventionSearch>(DocConstantModelName.INTERVENTION, request, _ExecSearch);
+        public List<Intervention> Post(InterventionSearch request) => Get(request);
+
+        public List<Intervention> Get(InterventionSearch request) => GetSearchResult<Intervention,DocEntityIntervention,InterventionSearch>(DocConstantModelName.INTERVENTION, request, _ExecSearch);
 
         public object Post(InterventionVersion request) => Get(request);
 
@@ -128,8 +128,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Intervention request) => GetEntity<Intervention>(DocConstantModelName.INTERVENTION, request, GetIntervention);
-
+        public Intervention Get(Intervention request) => GetEntity<Intervention>(DocConstantModelName.INTERVENTION, request, GetIntervention);
         private Intervention _AssignValues(Intervention request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

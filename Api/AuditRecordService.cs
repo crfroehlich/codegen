@@ -161,10 +161,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(AuditRecordSearch request) => Get(request);
 
-        public object Get(AuditRecordSearch request) => GetSearchResult<AuditRecord,DocEntityAuditRecord,AuditRecordSearch>(DocConstantModelName.AUDITRECORD, request, _ExecSearch);
+        public List<AuditRecord> Post(AuditRecordSearch request) => Get(request);
+
+        public List<AuditRecord> Get(AuditRecordSearch request) => GetSearchResult<AuditRecord,DocEntityAuditRecord,AuditRecordSearch>(DocConstantModelName.AUDITRECORD, request, _ExecSearch);
 
         public object Post(AuditRecordVersion request) => Get(request);
 
@@ -178,8 +178,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(AuditRecord request) => GetEntity<AuditRecord>(DocConstantModelName.AUDITRECORD, request, GetAuditRecord);
-
+        public AuditRecord Get(AuditRecord request) => GetEntity<AuditRecord>(DocConstantModelName.AUDITRECORD, request, GetAuditRecord);
 
 
 

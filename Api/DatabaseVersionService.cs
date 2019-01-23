@@ -109,10 +109,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(DatabaseVersionSearch request) => Get(request);
 
-        public object Get(DatabaseVersionSearch request) => GetSearchResult<DatabaseVersion,DocEntityDatabaseVersion,DatabaseVersionSearch>(DocConstantModelName.DATABASEVERSION, request, _ExecSearch);
+        public List<DatabaseVersion> Post(DatabaseVersionSearch request) => Get(request);
+
+        public List<DatabaseVersion> Get(DatabaseVersionSearch request) => GetSearchResult<DatabaseVersion,DocEntityDatabaseVersion,DatabaseVersionSearch>(DocConstantModelName.DATABASEVERSION, request, _ExecSearch);
 
         public object Post(DatabaseVersionVersion request) => Get(request);
 
@@ -126,8 +126,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(DatabaseVersion request) => GetEntity<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, request, GetDatabaseVersion);
-
+        public DatabaseVersion Get(DatabaseVersion request) => GetEntity<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, request, GetDatabaseVersion);
 
 
 

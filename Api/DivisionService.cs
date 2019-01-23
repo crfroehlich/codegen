@@ -137,10 +137,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(DivisionSearch request) => Get(request);
 
-        public object Get(DivisionSearch request) => GetSearchResult<Division,DocEntityDivision,DivisionSearch>(DocConstantModelName.DIVISION, request, _ExecSearch);
+        public object Get(DivisionSearch request) => GetSearchResultWithCache<Division,DocEntityDivision,DivisionSearch>(DocConstantModelName.DIVISION, request, _ExecSearch);
 
         public object Post(DivisionVersion request) => Get(request);
 
@@ -154,8 +154,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Division request) => GetEntity<Division>(DocConstantModelName.DIVISION, request, GetDivision);
-
+        public object Get(Division request) => GetEntityWithCache<Division>(DocConstantModelName.DIVISION, request, GetDivision);
         private Division _AssignValues(Division request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

@@ -113,10 +113,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(ReleaseStatusSearch request) => Get(request);
 
-        public object Get(ReleaseStatusSearch request) => GetSearchResult<ReleaseStatus,DocEntityReleaseStatus,ReleaseStatusSearch>(DocConstantModelName.RELEASESTATUS, request, _ExecSearch);
+        public List<ReleaseStatus> Post(ReleaseStatusSearch request) => Get(request);
+
+        public List<ReleaseStatus> Get(ReleaseStatusSearch request) => GetSearchResult<ReleaseStatus,DocEntityReleaseStatus,ReleaseStatusSearch>(DocConstantModelName.RELEASESTATUS, request, _ExecSearch);
 
         public object Post(ReleaseStatusVersion request) => Get(request);
 
@@ -130,8 +130,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(ReleaseStatus request) => GetEntity<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, request, GetReleaseStatus);
-
+        public ReleaseStatus Get(ReleaseStatus request) => GetEntity<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, request, GetReleaseStatus);
         private ReleaseStatus _AssignValues(ReleaseStatus request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

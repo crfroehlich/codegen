@@ -127,10 +127,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(JctAttributeCategoryAttributeDocumentSetSearch request) => Get(request);
 
-        public object Get(JctAttributeCategoryAttributeDocumentSetSearch request) => GetSearchResult<JctAttributeCategoryAttributeDocumentSet,DocEntityJctAttributeCategoryAttributeDocumentSet,JctAttributeCategoryAttributeDocumentSetSearch>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, request, _ExecSearch);
+        public List<JctAttributeCategoryAttributeDocumentSet> Post(JctAttributeCategoryAttributeDocumentSetSearch request) => Get(request);
+
+        public List<JctAttributeCategoryAttributeDocumentSet> Get(JctAttributeCategoryAttributeDocumentSetSearch request) => GetSearchResult<JctAttributeCategoryAttributeDocumentSet,DocEntityJctAttributeCategoryAttributeDocumentSet,JctAttributeCategoryAttributeDocumentSetSearch>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, request, _ExecSearch);
 
         public object Post(JctAttributeCategoryAttributeDocumentSetVersion request) => Get(request);
 
@@ -144,8 +144,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(JctAttributeCategoryAttributeDocumentSet request) => GetEntity<JctAttributeCategoryAttributeDocumentSet>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, request, GetJctAttributeCategoryAttributeDocumentSet);
-
+        public JctAttributeCategoryAttributeDocumentSet Get(JctAttributeCategoryAttributeDocumentSet request) => GetEntity<JctAttributeCategoryAttributeDocumentSet>(DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, request, GetJctAttributeCategoryAttributeDocumentSet);
         private JctAttributeCategoryAttributeDocumentSet _AssignValues(JctAttributeCategoryAttributeDocumentSet request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

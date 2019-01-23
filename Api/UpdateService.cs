@@ -153,10 +153,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(UpdateSearch request) => Get(request);
 
-        public object Get(UpdateSearch request) => GetSearchResult<Update,DocEntityUpdate,UpdateSearch>(DocConstantModelName.UPDATE, request, _ExecSearch);
+        public List<Update> Post(UpdateSearch request) => Get(request);
+
+        public List<Update> Get(UpdateSearch request) => GetSearchResult<Update,DocEntityUpdate,UpdateSearch>(DocConstantModelName.UPDATE, request, _ExecSearch);
 
         public object Post(UpdateVersion request) => Get(request);
 
@@ -170,8 +170,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Update request) => GetEntity<Update>(DocConstantModelName.UPDATE, request, GetUpdate);
-
+        public Update Get(Update request) => GetEntity<Update>(DocConstantModelName.UPDATE, request, GetUpdate);
         private Update _AssignValues(Update request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

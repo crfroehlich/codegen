@@ -123,10 +123,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(VariableInstanceSearch request) => Get(request);
 
-        public object Get(VariableInstanceSearch request) => GetSearchResult<VariableInstance,DocEntityVariableInstance,VariableInstanceSearch>(DocConstantModelName.VARIABLEINSTANCE, request, _ExecSearch);
+        public List<VariableInstance> Post(VariableInstanceSearch request) => Get(request);
+
+        public List<VariableInstance> Get(VariableInstanceSearch request) => GetSearchResult<VariableInstance,DocEntityVariableInstance,VariableInstanceSearch>(DocConstantModelName.VARIABLEINSTANCE, request, _ExecSearch);
 
         public object Post(VariableInstanceVersion request) => Get(request);
 
@@ -140,8 +140,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(VariableInstance request) => GetEntity<VariableInstance>(DocConstantModelName.VARIABLEINSTANCE, request, GetVariableInstance);
-
+        public VariableInstance Get(VariableInstance request) => GetEntity<VariableInstance>(DocConstantModelName.VARIABLEINSTANCE, request, GetVariableInstance);
         private VariableInstance _AssignValues(VariableInstance request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

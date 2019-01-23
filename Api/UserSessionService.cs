@@ -133,10 +133,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(UserSessionSearch request) => Get(request);
 
-        public object Get(UserSessionSearch request) => GetSearchResult<UserSession,DocEntityUserSession,UserSessionSearch>(DocConstantModelName.USERSESSION, request, _ExecSearch);
+        public object Get(UserSessionSearch request) => GetSearchResultWithCache<UserSession,DocEntityUserSession,UserSessionSearch>(DocConstantModelName.USERSESSION, request, _ExecSearch);
 
         public object Post(UserSessionVersion request) => Get(request);
 
@@ -150,8 +150,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(UserSession request) => GetEntity<UserSession>(DocConstantModelName.USERSESSION, request, GetUserSession);
-
+        public object Get(UserSession request) => GetEntityWithCache<UserSession>(DocConstantModelName.USERSESSION, request, GetUserSession);
 
 
 

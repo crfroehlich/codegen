@@ -155,10 +155,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(UserTypeSearch request) => Get(request);
 
-        public object Get(UserTypeSearch request) => GetSearchResult<UserType,DocEntityUserType,UserTypeSearch>(DocConstantModelName.USERTYPE, request, _ExecSearch);
+        public object Get(UserTypeSearch request) => GetSearchResultWithCache<UserType,DocEntityUserType,UserTypeSearch>(DocConstantModelName.USERTYPE, request, _ExecSearch);
 
         public object Post(UserTypeVersion request) => Get(request);
 
@@ -172,8 +172,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(UserType request) => GetEntity<UserType>(DocConstantModelName.USERTYPE, request, GetUserType);
-
+        public object Get(UserType request) => GetEntityWithCache<UserType>(DocConstantModelName.USERTYPE, request, GetUserType);
         private UserType _AssignValues(UserType request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

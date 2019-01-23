@@ -147,10 +147,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(BackgroundTaskItemSearch request) => Get(request);
 
-        public object Get(BackgroundTaskItemSearch request) => GetSearchResult<BackgroundTaskItem,DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(DocConstantModelName.BACKGROUNDTASKITEM, request, _ExecSearch);
+        public List<BackgroundTaskItem> Post(BackgroundTaskItemSearch request) => Get(request);
+
+        public List<BackgroundTaskItem> Get(BackgroundTaskItemSearch request) => GetSearchResult<BackgroundTaskItem,DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(DocConstantModelName.BACKGROUNDTASKITEM, request, _ExecSearch);
 
         public object Post(BackgroundTaskItemVersion request) => Get(request);
 
@@ -164,8 +164,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(BackgroundTaskItem request) => GetEntity<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, request, GetBackgroundTaskItem);
-
+        public BackgroundTaskItem Get(BackgroundTaskItem request) => GetEntity<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, request, GetBackgroundTaskItem);
 
 
 

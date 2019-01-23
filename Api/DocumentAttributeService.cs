@@ -119,10 +119,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(DocumentAttributeSearch request) => Get(request);
 
-        public object Get(DocumentAttributeSearch request) => GetSearchResult<DocumentAttribute,DocEntityDocumentAttribute,DocumentAttributeSearch>(DocConstantModelName.DOCUMENTATTRIBUTE, request, _ExecSearch);
+        public List<DocumentAttribute> Post(DocumentAttributeSearch request) => Get(request);
+
+        public List<DocumentAttribute> Get(DocumentAttributeSearch request) => GetSearchResult<DocumentAttribute,DocEntityDocumentAttribute,DocumentAttributeSearch>(DocConstantModelName.DOCUMENTATTRIBUTE, request, _ExecSearch);
 
         public object Post(DocumentAttributeVersion request) => Get(request);
 
@@ -136,8 +136,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(DocumentAttribute request) => GetEntity<DocumentAttribute>(DocConstantModelName.DOCUMENTATTRIBUTE, request, GetDocumentAttribute);
-
+        public DocumentAttribute Get(DocumentAttribute request) => GetEntity<DocumentAttribute>(DocConstantModelName.DOCUMENTATTRIBUTE, request, GetDocumentAttribute);
         private DocumentAttribute _AssignValues(DocumentAttribute request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

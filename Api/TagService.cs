@@ -109,10 +109,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(TagSearch request) => Get(request);
 
-        public object Get(TagSearch request) => GetSearchResult<Tag,DocEntityTag,TagSearch>(DocConstantModelName.TAG, request, _ExecSearch);
+        public object Get(TagSearch request) => GetSearchResultWithCache<Tag,DocEntityTag,TagSearch>(DocConstantModelName.TAG, request, _ExecSearch);
 
         public object Post(TagVersion request) => Get(request);
 
@@ -126,8 +126,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Tag request) => GetEntity<Tag>(DocConstantModelName.TAG, request, GetTag);
-
+        public object Get(Tag request) => GetEntityWithCache<Tag>(DocConstantModelName.TAG, request, GetTag);
         private Tag _AssignValues(Tag request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

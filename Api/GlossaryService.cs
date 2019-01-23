@@ -131,10 +131,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(GlossarySearch request) => Get(request);
 
-        public object Get(GlossarySearch request) => GetSearchResult<Glossary,DocEntityGlossary,GlossarySearch>(DocConstantModelName.GLOSSARY, request, _ExecSearch);
+        public object Get(GlossarySearch request) => GetSearchResultWithCache<Glossary,DocEntityGlossary,GlossarySearch>(DocConstantModelName.GLOSSARY, request, _ExecSearch);
 
         public object Post(GlossaryVersion request) => Get(request);
 
@@ -148,8 +148,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Glossary request) => GetEntity<Glossary>(DocConstantModelName.GLOSSARY, request, GetGlossary);
-
+        public object Get(Glossary request) => GetEntityWithCache<Glossary>(DocConstantModelName.GLOSSARY, request, GetGlossary);
         private Glossary _AssignValues(Glossary request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

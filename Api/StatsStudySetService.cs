@@ -147,10 +147,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(StatsStudySetSearch request) => Get(request);
 
-        public object Get(StatsStudySetSearch request) => GetSearchResult<StatsStudySet,DocEntityStatsStudySet,StatsStudySetSearch>(DocConstantModelName.STATSSTUDYSET, request, _ExecSearch);
+        public List<StatsStudySet> Post(StatsStudySetSearch request) => Get(request);
+
+        public List<StatsStudySet> Get(StatsStudySetSearch request) => GetSearchResult<StatsStudySet,DocEntityStatsStudySet,StatsStudySetSearch>(DocConstantModelName.STATSSTUDYSET, request, _ExecSearch);
 
         public object Post(StatsStudySetVersion request) => Get(request);
 
@@ -164,8 +164,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(StatsStudySet request) => GetEntity<StatsStudySet>(DocConstantModelName.STATSSTUDYSET, request, GetStatsStudySet);
-
+        public StatsStudySet Get(StatsStudySet request) => GetEntity<StatsStudySet>(DocConstantModelName.STATSSTUDYSET, request, GetStatsStudySet);
 
 
 

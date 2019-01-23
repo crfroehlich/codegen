@@ -133,10 +133,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(UserRequestSearch request) => Get(request);
 
-        public object Get(UserRequestSearch request) => GetSearchResult<UserRequest,DocEntityUserRequest,UserRequestSearch>(DocConstantModelName.USERREQUEST, request, _ExecSearch);
+        public List<UserRequest> Post(UserRequestSearch request) => Get(request);
+
+        public List<UserRequest> Get(UserRequestSearch request) => GetSearchResult<UserRequest,DocEntityUserRequest,UserRequestSearch>(DocConstantModelName.USERREQUEST, request, _ExecSearch);
 
         public object Post(UserRequestVersion request) => Get(request);
 
@@ -150,8 +150,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(UserRequest request) => GetEntity<UserRequest>(DocConstantModelName.USERREQUEST, request, GetUserRequest);
-
+        public UserRequest Get(UserRequest request) => GetEntity<UserRequest>(DocConstantModelName.USERREQUEST, request, GetUserRequest);
 
 
 

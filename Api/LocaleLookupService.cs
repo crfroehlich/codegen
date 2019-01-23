@@ -113,10 +113,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(LocaleLookupSearch request) => Get(request);
 
-        public object Get(LocaleLookupSearch request) => GetSearchResult<LocaleLookup,DocEntityLocaleLookup,LocaleLookupSearch>(DocConstantModelName.LOCALELOOKUP, request, _ExecSearch);
+        public List<LocaleLookup> Post(LocaleLookupSearch request) => Get(request);
+
+        public List<LocaleLookup> Get(LocaleLookupSearch request) => GetSearchResult<LocaleLookup,DocEntityLocaleLookup,LocaleLookupSearch>(DocConstantModelName.LOCALELOOKUP, request, _ExecSearch);
 
         public object Post(LocaleLookupVersion request) => Get(request);
 
@@ -130,8 +130,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(LocaleLookup request) => GetEntity<LocaleLookup>(DocConstantModelName.LOCALELOOKUP, request, GetLocaleLookup);
-
+        public LocaleLookup Get(LocaleLookup request) => GetEntity<LocaleLookup>(DocConstantModelName.LOCALELOOKUP, request, GetLocaleLookup);
         private LocaleLookup _AssignValues(LocaleLookup request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

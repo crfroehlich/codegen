@@ -127,10 +127,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(ImpersonationSearch request) => Get(request);
 
-        public object Get(ImpersonationSearch request) => GetSearchResult<Impersonation,DocEntityImpersonation,ImpersonationSearch>(DocConstantModelName.IMPERSONATION, request, _ExecSearch);
+        public List<Impersonation> Post(ImpersonationSearch request) => Get(request);
+
+        public List<Impersonation> Get(ImpersonationSearch request) => GetSearchResult<Impersonation,DocEntityImpersonation,ImpersonationSearch>(DocConstantModelName.IMPERSONATION, request, _ExecSearch);
 
         public object Post(ImpersonationVersion request) => Get(request);
 
@@ -144,8 +144,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Impersonation request) => GetEntity<Impersonation>(DocConstantModelName.IMPERSONATION, request, GetImpersonation);
-
+        public Impersonation Get(Impersonation request) => GetEntity<Impersonation>(DocConstantModelName.IMPERSONATION, request, GetImpersonation);
 
 
 

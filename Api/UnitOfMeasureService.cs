@@ -153,10 +153,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(UnitOfMeasureSearch request) => Get(request);
 
-        public object Get(UnitOfMeasureSearch request) => GetSearchResult<UnitOfMeasure,DocEntityUnitOfMeasure,UnitOfMeasureSearch>(DocConstantModelName.UNITOFMEASURE, request, _ExecSearch);
+        public object Get(UnitOfMeasureSearch request) => GetSearchResultWithCache<UnitOfMeasure,DocEntityUnitOfMeasure,UnitOfMeasureSearch>(DocConstantModelName.UNITOFMEASURE, request, _ExecSearch);
 
         public object Post(UnitOfMeasureVersion request) => Get(request);
 
@@ -170,8 +170,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(UnitOfMeasure request) => GetEntity<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, request, GetUnitOfMeasure);
-
+        public object Get(UnitOfMeasure request) => GetEntityWithCache<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, request, GetUnitOfMeasure);
         private UnitOfMeasure _AssignValues(UnitOfMeasure request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

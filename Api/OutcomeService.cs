@@ -111,10 +111,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(OutcomeSearch request) => Get(request);
 
-        public object Get(OutcomeSearch request) => GetSearchResult<Outcome,DocEntityOutcome,OutcomeSearch>(DocConstantModelName.OUTCOME, request, _ExecSearch);
+        public List<Outcome> Post(OutcomeSearch request) => Get(request);
+
+        public List<Outcome> Get(OutcomeSearch request) => GetSearchResult<Outcome,DocEntityOutcome,OutcomeSearch>(DocConstantModelName.OUTCOME, request, _ExecSearch);
 
         public object Post(OutcomeVersion request) => Get(request);
 
@@ -128,8 +128,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Outcome request) => GetEntity<Outcome>(DocConstantModelName.OUTCOME, request, GetOutcome);
-
+        public Outcome Get(Outcome request) => GetEntity<Outcome>(DocConstantModelName.OUTCOME, request, GetOutcome);
         private Outcome _AssignValues(Outcome request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

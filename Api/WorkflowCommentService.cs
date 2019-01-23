@@ -133,10 +133,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(WorkflowCommentSearch request) => Get(request);
 
-        public object Get(WorkflowCommentSearch request) => GetSearchResult<WorkflowComment,DocEntityWorkflowComment,WorkflowCommentSearch>(DocConstantModelName.WORKFLOWCOMMENT, request, _ExecSearch);
+        public List<WorkflowComment> Post(WorkflowCommentSearch request) => Get(request);
+
+        public List<WorkflowComment> Get(WorkflowCommentSearch request) => GetSearchResult<WorkflowComment,DocEntityWorkflowComment,WorkflowCommentSearch>(DocConstantModelName.WORKFLOWCOMMENT, request, _ExecSearch);
 
         public object Post(WorkflowCommentVersion request) => Get(request);
 
@@ -150,8 +150,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(WorkflowComment request) => GetEntity<WorkflowComment>(DocConstantModelName.WORKFLOWCOMMENT, request, GetWorkflowComment);
-
+        public WorkflowComment Get(WorkflowComment request) => GetEntity<WorkflowComment>(DocConstantModelName.WORKFLOWCOMMENT, request, GetWorkflowComment);
         private WorkflowComment _AssignValues(WorkflowComment request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

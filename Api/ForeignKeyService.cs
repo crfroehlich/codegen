@@ -139,10 +139,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(ForeignKeySearch request) => Get(request);
 
-        public object Get(ForeignKeySearch request) => GetSearchResult<ForeignKey,DocEntityForeignKey,ForeignKeySearch>(DocConstantModelName.FOREIGNKEY, request, _ExecSearch);
+        public List<ForeignKey> Post(ForeignKeySearch request) => Get(request);
+
+        public List<ForeignKey> Get(ForeignKeySearch request) => GetSearchResult<ForeignKey,DocEntityForeignKey,ForeignKeySearch>(DocConstantModelName.FOREIGNKEY, request, _ExecSearch);
 
         public object Post(ForeignKeyVersion request) => Get(request);
 
@@ -156,8 +156,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(ForeignKey request) => GetEntity<ForeignKey>(DocConstantModelName.FOREIGNKEY, request, GetForeignKey);
-
+        public ForeignKey Get(ForeignKey request) => GetEntity<ForeignKey>(DocConstantModelName.FOREIGNKEY, request, GetForeignKey);
         private ForeignKey _AssignValues(ForeignKey request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

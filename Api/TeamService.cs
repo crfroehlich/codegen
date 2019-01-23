@@ -137,10 +137,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(TeamSearch request) => Get(request);
 
-        public object Get(TeamSearch request) => GetSearchResult<Team,DocEntityTeam,TeamSearch>(DocConstantModelName.TEAM, request, _ExecSearch);
+        public object Get(TeamSearch request) => GetSearchResultWithCache<Team,DocEntityTeam,TeamSearch>(DocConstantModelName.TEAM, request, _ExecSearch);
 
         public object Post(TeamVersion request) => Get(request);
 
@@ -154,8 +154,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Team request) => GetEntity<Team>(DocConstantModelName.TEAM, request, GetTeam);
-
+        public object Get(Team request) => GetEntityWithCache<Team>(DocConstantModelName.TEAM, request, GetTeam);
         private Team _AssignValues(Team request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

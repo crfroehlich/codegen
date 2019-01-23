@@ -193,10 +193,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(ScopeSearch request) => Get(request);
 
-        public object Get(ScopeSearch request) => GetSearchResult<Scope,DocEntityScope,ScopeSearch>(DocConstantModelName.SCOPE, request, _ExecSearch);
+        public object Get(ScopeSearch request) => GetSearchResultWithCache<Scope,DocEntityScope,ScopeSearch>(DocConstantModelName.SCOPE, request, _ExecSearch);
 
         public object Post(ScopeVersion request) => Get(request);
 
@@ -210,8 +210,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Scope request) => GetEntity<Scope>(DocConstantModelName.SCOPE, request, GetScope);
-
+        public object Get(Scope request) => GetEntityWithCache<Scope>(DocConstantModelName.SCOPE, request, GetScope);
         private Scope _AssignValues(Scope request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

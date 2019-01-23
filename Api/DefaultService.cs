@@ -135,10 +135,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(DefaultSearch request) => Get(request);
 
-        public object Get(DefaultSearch request) => GetSearchResult<Default,DocEntityDefault,DefaultSearch>(DocConstantModelName.DEFAULT, request, _ExecSearch);
+        public List<Default> Post(DefaultSearch request) => Get(request);
+
+        public List<Default> Get(DefaultSearch request) => GetSearchResult<Default,DocEntityDefault,DefaultSearch>(DocConstantModelName.DEFAULT, request, _ExecSearch);
 
         public object Post(DefaultVersion request) => Get(request);
 
@@ -152,8 +152,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Default request) => GetEntity<Default>(DocConstantModelName.DEFAULT, request, GetDefault);
-
+        public Default Get(Default request) => GetEntity<Default>(DocConstantModelName.DEFAULT, request, GetDefault);
         private Default _AssignValues(Default request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

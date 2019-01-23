@@ -135,10 +135,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(TermMasterSearch request) => Get(request);
 
-        public object Get(TermMasterSearch request) => GetSearchResult<TermMaster,DocEntityTermMaster,TermMasterSearch>(DocConstantModelName.TERMMASTER, request, _ExecSearch);
+        public object Get(TermMasterSearch request) => GetSearchResultWithCache<TermMaster,DocEntityTermMaster,TermMasterSearch>(DocConstantModelName.TERMMASTER, request, _ExecSearch);
 
         public object Post(TermMasterVersion request) => Get(request);
 
@@ -152,8 +152,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(TermMaster request) => GetEntity<TermMaster>(DocConstantModelName.TERMMASTER, request, GetTermMaster);
-
+        public object Get(TermMaster request) => GetEntityWithCache<TermMaster>(DocConstantModelName.TERMMASTER, request, GetTermMaster);
         private TermMaster _AssignValues(TermMaster request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

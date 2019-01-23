@@ -119,10 +119,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(DocumentSetHistorySearch request) => Get(request);
 
-        public object Get(DocumentSetHistorySearch request) => GetSearchResult<DocumentSetHistory,DocEntityDocumentSetHistory,DocumentSetHistorySearch>(DocConstantModelName.DOCUMENTSETHISTORY, request, _ExecSearch);
+        public List<DocumentSetHistory> Post(DocumentSetHistorySearch request) => Get(request);
+
+        public List<DocumentSetHistory> Get(DocumentSetHistorySearch request) => GetSearchResult<DocumentSetHistory,DocEntityDocumentSetHistory,DocumentSetHistorySearch>(DocConstantModelName.DOCUMENTSETHISTORY, request, _ExecSearch);
 
         public object Post(DocumentSetHistoryVersion request) => Get(request);
 
@@ -136,8 +136,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(DocumentSetHistory request) => GetEntity<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, request, GetDocumentSetHistory);
-
+        public DocumentSetHistory Get(DocumentSetHistory request) => GetEntity<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, request, GetDocumentSetHistory);
 
 
 

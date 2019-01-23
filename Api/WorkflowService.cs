@@ -189,10 +189,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(WorkflowSearch request) => Get(request);
 
-        public object Get(WorkflowSearch request) => GetSearchResult<Workflow,DocEntityWorkflow,WorkflowSearch>(DocConstantModelName.WORKFLOW, request, _ExecSearch);
+        public object Get(WorkflowSearch request) => GetSearchResultWithCache<Workflow,DocEntityWorkflow,WorkflowSearch>(DocConstantModelName.WORKFLOW, request, _ExecSearch);
 
         public object Post(WorkflowVersion request) => Get(request);
 
@@ -206,8 +206,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Workflow request) => GetEntity<Workflow>(DocConstantModelName.WORKFLOW, request, GetWorkflow);
-
+        public object Get(Workflow request) => GetEntityWithCache<Workflow>(DocConstantModelName.WORKFLOW, request, GetWorkflow);
         private Workflow _AssignValues(Workflow request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

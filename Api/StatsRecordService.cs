@@ -125,10 +125,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(StatsRecordSearch request) => Get(request);
 
-        public object Get(StatsRecordSearch request) => GetSearchResult<StatsRecord,DocEntityStatsRecord,StatsRecordSearch>(DocConstantModelName.STATSRECORD, request, _ExecSearch);
+        public List<StatsRecord> Post(StatsRecordSearch request) => Get(request);
+
+        public List<StatsRecord> Get(StatsRecordSearch request) => GetSearchResult<StatsRecord,DocEntityStatsRecord,StatsRecordSearch>(DocConstantModelName.STATSRECORD, request, _ExecSearch);
 
         public object Post(StatsRecordVersion request) => Get(request);
 
@@ -142,8 +142,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(StatsRecord request) => GetEntity<StatsRecord>(DocConstantModelName.STATSRECORD, request, GetStatsRecord);
-
+        public StatsRecord Get(StatsRecord request) => GetEntity<StatsRecord>(DocConstantModelName.STATSRECORD, request, GetStatsRecord);
 
 
 

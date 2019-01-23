@@ -123,10 +123,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(AppSearch request) => Get(request);
 
-        public object Get(AppSearch request) => GetSearchResult<App,DocEntityApp,AppSearch>(DocConstantModelName.APP, request, _ExecSearch);
+        public object Get(AppSearch request) => GetSearchResultWithCache<App,DocEntityApp,AppSearch>(DocConstantModelName.APP, request, _ExecSearch);
 
         public object Post(AppVersion request) => Get(request);
 
@@ -140,8 +140,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(App request) => GetEntity<App>(DocConstantModelName.APP, request, GetApp);
-
+        public object Get(App request) => GetEntityWithCache<App>(DocConstantModelName.APP, request, GetApp);
         private App _AssignValues(App request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

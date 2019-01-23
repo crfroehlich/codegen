@@ -161,10 +161,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(HistorySearch request) => Get(request);
 
-        public object Get(HistorySearch request) => GetSearchResult<History,DocEntityHistory,HistorySearch>(DocConstantModelName.HISTORY, request, _ExecSearch);
+        public List<History> Post(HistorySearch request) => Get(request);
+
+        public List<History> Get(HistorySearch request) => GetSearchResult<History,DocEntityHistory,HistorySearch>(DocConstantModelName.HISTORY, request, _ExecSearch);
 
         public object Post(HistoryVersion request) => Get(request);
 
@@ -178,8 +178,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(History request) => GetEntity<History>(DocConstantModelName.HISTORY, request, GetHistory);
-
+        public History Get(History request) => GetEntity<History>(DocConstantModelName.HISTORY, request, GetHistory);
         private History _AssignValues(History request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

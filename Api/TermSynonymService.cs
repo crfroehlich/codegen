@@ -129,10 +129,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(TermSynonymSearch request) => Get(request);
 
-        public object Get(TermSynonymSearch request) => GetSearchResult<TermSynonym,DocEntityTermSynonym,TermSynonymSearch>(DocConstantModelName.TERMSYNONYM, request, _ExecSearch);
+        public object Get(TermSynonymSearch request) => GetSearchResultWithCache<TermSynonym,DocEntityTermSynonym,TermSynonymSearch>(DocConstantModelName.TERMSYNONYM, request, _ExecSearch);
 
         public object Post(TermSynonymVersion request) => Get(request);
 
@@ -146,8 +146,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(TermSynonym request) => GetEntity<TermSynonym>(DocConstantModelName.TERMSYNONYM, request, GetTermSynonym);
-
+        public object Get(TermSynonym request) => GetEntityWithCache<TermSynonym>(DocConstantModelName.TERMSYNONYM, request, GetTermSynonym);
         private TermSynonym _AssignValues(TermSynonym request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

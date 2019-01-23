@@ -193,10 +193,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(ImportDataSearch request) => Get(request);
 
-        public object Get(ImportDataSearch request) => GetSearchResult<ImportData,DocEntityImportData,ImportDataSearch>(DocConstantModelName.IMPORTDATA, request, _ExecSearch);
+        public List<ImportData> Post(ImportDataSearch request) => Get(request);
+
+        public List<ImportData> Get(ImportDataSearch request) => GetSearchResult<ImportData,DocEntityImportData,ImportDataSearch>(DocConstantModelName.IMPORTDATA, request, _ExecSearch);
 
         public object Post(ImportDataVersion request) => Get(request);
 
@@ -210,8 +210,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(ImportData request) => GetEntity<ImportData>(DocConstantModelName.IMPORTDATA, request, GetImportData);
-
+        public ImportData Get(ImportData request) => GetEntity<ImportData>(DocConstantModelName.IMPORTDATA, request, GetImportData);
         private ImportData _AssignValues(ImportData request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

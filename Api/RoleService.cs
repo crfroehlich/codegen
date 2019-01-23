@@ -135,10 +135,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(RoleSearch request) => Get(request);
 
-        public object Get(RoleSearch request) => GetSearchResult<Role,DocEntityRole,RoleSearch>(DocConstantModelName.ROLE, request, _ExecSearch);
+        public object Get(RoleSearch request) => GetSearchResultWithCache<Role,DocEntityRole,RoleSearch>(DocConstantModelName.ROLE, request, _ExecSearch);
 
         public object Post(RoleVersion request) => Get(request);
 
@@ -152,8 +152,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Role request) => GetEntity<Role>(DocConstantModelName.ROLE, request, GetRole);
-
+        public object Get(Role request) => GetEntityWithCache<Role>(DocConstantModelName.ROLE, request, GetRole);
         private Role _AssignValues(Role request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

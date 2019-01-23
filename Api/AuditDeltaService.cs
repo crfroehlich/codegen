@@ -111,10 +111,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(AuditDeltaSearch request) => Get(request);
 
-        public object Get(AuditDeltaSearch request) => GetSearchResult<AuditDelta,DocEntityAuditDelta,AuditDeltaSearch>(DocConstantModelName.AUDITDELTA, request, _ExecSearch);
+        public List<AuditDelta> Post(AuditDeltaSearch request) => Get(request);
+
+        public List<AuditDelta> Get(AuditDeltaSearch request) => GetSearchResult<AuditDelta,DocEntityAuditDelta,AuditDeltaSearch>(DocConstantModelName.AUDITDELTA, request, _ExecSearch);
 
         public object Post(AuditDeltaVersion request) => Get(request);
 
@@ -128,8 +128,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(AuditDelta request) => GetEntity<AuditDelta>(DocConstantModelName.AUDITDELTA, request, GetAuditDelta);
-
+        public AuditDelta Get(AuditDelta request) => GetEntity<AuditDelta>(DocConstantModelName.AUDITDELTA, request, GetAuditDelta);
         private AuditDelta _AssignValues(AuditDelta request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

@@ -135,10 +135,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(AttributeCategorySearch request) => Get(request);
 
-        public object Get(AttributeCategorySearch request) => GetSearchResult<AttributeCategory,DocEntityAttributeCategory,AttributeCategorySearch>(DocConstantModelName.ATTRIBUTECATEGORY, request, _ExecSearch);
+        public object Get(AttributeCategorySearch request) => GetSearchResultWithCache<AttributeCategory,DocEntityAttributeCategory,AttributeCategorySearch>(DocConstantModelName.ATTRIBUTECATEGORY, request, _ExecSearch);
 
         public object Post(AttributeCategoryVersion request) => Get(request);
 
@@ -152,8 +152,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(AttributeCategory request) => GetEntity<AttributeCategory>(DocConstantModelName.ATTRIBUTECATEGORY, request, GetAttributeCategory);
-
+        public object Get(AttributeCategory request) => GetEntityWithCache<AttributeCategory>(DocConstantModelName.ATTRIBUTECATEGORY, request, GetAttributeCategory);
         private AttributeCategory _AssignValues(AttributeCategory request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

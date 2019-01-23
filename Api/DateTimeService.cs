@@ -115,10 +115,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(DateTimeSearch request) => Get(request);
 
-        public object Get(DateTimeSearch request) => GetSearchResult<DateTimeDto,DocEntityDateTime,DateTimeSearch>(DocConstantModelName.DATETIME, request, _ExecSearch);
+        public List<DateTimeDto> Post(DateTimeSearch request) => Get(request);
+
+        public List<DateTimeDto> Get(DateTimeSearch request) => GetSearchResult<DateTimeDto,DocEntityDateTime,DateTimeSearch>(DocConstantModelName.DATETIME, request, _ExecSearch);
 
         public object Post(DateTimeVersion request) => Get(request);
 
@@ -132,8 +132,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(DateTimeDto request) => GetEntity<DateTimeDto>(DocConstantModelName.DATETIME, request, GetDateTime);
-
+        public DateTimeDto Get(DateTimeDto request) => GetEntity<DateTimeDto>(DocConstantModelName.DATETIME, request, GetDateTime);
         private DateTimeDto _AssignValues(DateTimeDto request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

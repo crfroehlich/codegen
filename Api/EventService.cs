@@ -133,10 +133,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(EventSearch request) => Get(request);
 
-        public object Get(EventSearch request) => GetSearchResult<Event,DocEntityEvent,EventSearch>(DocConstantModelName.EVENT, request, _ExecSearch);
+        public List<Event> Post(EventSearch request) => Get(request);
+
+        public List<Event> Get(EventSearch request) => GetSearchResult<Event,DocEntityEvent,EventSearch>(DocConstantModelName.EVENT, request, _ExecSearch);
 
         public object Post(EventVersion request) => Get(request);
 
@@ -150,8 +150,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Event request) => GetEntity<Event>(DocConstantModelName.EVENT, request, GetEvent);
-
+        public Event Get(Event request) => GetEntity<Event>(DocConstantModelName.EVENT, request, GetEvent);
 
 
 

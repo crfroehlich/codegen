@@ -103,10 +103,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(AttributeIntervalSearch request) => Get(request);
 
-        public object Get(AttributeIntervalSearch request) => GetSearchResult<AttributeInterval,DocEntityAttributeInterval,AttributeIntervalSearch>(DocConstantModelName.ATTRIBUTEINTERVAL, request, _ExecSearch);
+        public List<AttributeInterval> Post(AttributeIntervalSearch request) => Get(request);
+
+        public List<AttributeInterval> Get(AttributeIntervalSearch request) => GetSearchResult<AttributeInterval,DocEntityAttributeInterval,AttributeIntervalSearch>(DocConstantModelName.ATTRIBUTEINTERVAL, request, _ExecSearch);
 
         public object Post(AttributeIntervalVersion request) => Get(request);
 
@@ -120,8 +120,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(AttributeInterval request) => GetEntity<AttributeInterval>(DocConstantModelName.ATTRIBUTEINTERVAL, request, GetAttributeInterval);
-
+        public AttributeInterval Get(AttributeInterval request) => GetEntity<AttributeInterval>(DocConstantModelName.ATTRIBUTEINTERVAL, request, GetAttributeInterval);
         private AttributeInterval _AssignValues(AttributeInterval request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

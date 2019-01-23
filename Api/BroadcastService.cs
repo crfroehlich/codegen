@@ -159,10 +159,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(BroadcastSearch request) => Get(request);
 
-        public object Get(BroadcastSearch request) => GetSearchResult<Broadcast,DocEntityBroadcast,BroadcastSearch>(DocConstantModelName.BROADCAST, request, _ExecSearch);
+        public object Get(BroadcastSearch request) => GetSearchResultWithCache<Broadcast,DocEntityBroadcast,BroadcastSearch>(DocConstantModelName.BROADCAST, request, _ExecSearch);
 
         public object Post(BroadcastVersion request) => Get(request);
 
@@ -176,8 +176,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Broadcast request) => GetEntity<Broadcast>(DocConstantModelName.BROADCAST, request, GetBroadcast);
-
+        public object Get(Broadcast request) => GetEntityWithCache<Broadcast>(DocConstantModelName.BROADCAST, request, GetBroadcast);
         private Broadcast _AssignValues(Broadcast request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

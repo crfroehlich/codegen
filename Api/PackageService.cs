@@ -195,10 +195,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(PackageSearch request) => Get(request);
 
-        public object Get(PackageSearch request) => GetSearchResult<Package,DocEntityPackage,PackageSearch>(DocConstantModelName.PACKAGE, request, _ExecSearch);
+        public object Get(PackageSearch request) => GetSearchResultWithCache<Package,DocEntityPackage,PackageSearch>(DocConstantModelName.PACKAGE, request, _ExecSearch);
 
         public object Post(PackageVersion request) => Get(request);
 
@@ -212,8 +212,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Package request) => GetEntity<Package>(DocConstantModelName.PACKAGE, request, GetPackage);
-
+        public object Get(Package request) => GetEntityWithCache<Package>(DocConstantModelName.PACKAGE, request, GetPackage);
         private Package _AssignValues(Package request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

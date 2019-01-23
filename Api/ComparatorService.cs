@@ -111,10 +111,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(ComparatorSearch request) => Get(request);
 
-        public object Get(ComparatorSearch request) => GetSearchResult<Comparator,DocEntityComparator,ComparatorSearch>(DocConstantModelName.COMPARATOR, request, _ExecSearch);
+        public List<Comparator> Post(ComparatorSearch request) => Get(request);
+
+        public List<Comparator> Get(ComparatorSearch request) => GetSearchResult<Comparator,DocEntityComparator,ComparatorSearch>(DocConstantModelName.COMPARATOR, request, _ExecSearch);
 
         public object Post(ComparatorVersion request) => Get(request);
 
@@ -128,8 +128,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Comparator request) => GetEntity<Comparator>(DocConstantModelName.COMPARATOR, request, GetComparator);
-
+        public Comparator Get(Comparator request) => GetEntity<Comparator>(DocConstantModelName.COMPARATOR, request, GetComparator);
         private Comparator _AssignValues(Comparator request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

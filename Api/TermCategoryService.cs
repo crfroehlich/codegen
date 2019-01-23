@@ -131,10 +131,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(TermCategorySearch request) => Get(request);
 
-        public object Get(TermCategorySearch request) => GetSearchResult<TermCategory,DocEntityTermCategory,TermCategorySearch>(DocConstantModelName.TERMCATEGORY, request, _ExecSearch);
+        public object Get(TermCategorySearch request) => GetSearchResultWithCache<TermCategory,DocEntityTermCategory,TermCategorySearch>(DocConstantModelName.TERMCATEGORY, request, _ExecSearch);
 
         public object Post(TermCategoryVersion request) => Get(request);
 
@@ -148,8 +148,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(TermCategory request) => GetEntity<TermCategory>(DocConstantModelName.TERMCATEGORY, request, GetTermCategory);
-
+        public object Get(TermCategory request) => GetEntityWithCache<TermCategory>(DocConstantModelName.TERMCATEGORY, request, GetTermCategory);
         private TermCategory _AssignValues(TermCategory request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

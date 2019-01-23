@@ -109,10 +109,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(LookupTableEnumSearch request) => Get(request);
 
-        public object Get(LookupTableEnumSearch request) => GetSearchResult<LookupTableEnum,DocEntityLookupTableEnum,LookupTableEnumSearch>(DocConstantModelName.LOOKUPTABLEENUM, request, _ExecSearch);
+        public object Get(LookupTableEnumSearch request) => GetSearchResultWithCache<LookupTableEnum,DocEntityLookupTableEnum,LookupTableEnumSearch>(DocConstantModelName.LOOKUPTABLEENUM, request, _ExecSearch);
 
         public object Post(LookupTableEnumVersion request) => Get(request);
 
@@ -126,8 +126,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(LookupTableEnum request) => GetEntity<LookupTableEnum>(DocConstantModelName.LOOKUPTABLEENUM, request, GetLookupTableEnum);
-
+        public object Get(LookupTableEnum request) => GetEntityWithCache<LookupTableEnum>(DocConstantModelName.LOOKUPTABLEENUM, request, GetLookupTableEnum);
         private LookupTableEnum _AssignValues(LookupTableEnum request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

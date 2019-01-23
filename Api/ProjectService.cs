@@ -187,10 +187,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(ProjectSearch request) => Get(request);
 
-        public object Get(ProjectSearch request) => GetSearchResult<Project,DocEntityProject,ProjectSearch>(DocConstantModelName.PROJECT, request, _ExecSearch);
+        public object Get(ProjectSearch request) => GetSearchResultWithCache<Project,DocEntityProject,ProjectSearch>(DocConstantModelName.PROJECT, request, _ExecSearch);
 
         public object Post(ProjectVersion request) => Get(request);
 
@@ -204,8 +204,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Project request) => GetEntity<Project>(DocConstantModelName.PROJECT, request, GetProject);
-
+        public object Get(Project request) => GetEntityWithCache<Project>(DocConstantModelName.PROJECT, request, GetProject);
         private Project _AssignValues(Project request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

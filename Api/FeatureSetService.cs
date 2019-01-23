@@ -111,10 +111,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(FeatureSetSearch request) => Get(request);
 
-        public object Get(FeatureSetSearch request) => GetSearchResult<FeatureSet,DocEntityFeatureSet,FeatureSetSearch>(DocConstantModelName.FEATURESET, request, _ExecSearch);
+        public object Get(FeatureSetSearch request) => GetSearchResultWithCache<FeatureSet,DocEntityFeatureSet,FeatureSetSearch>(DocConstantModelName.FEATURESET, request, _ExecSearch);
 
         public object Post(FeatureSetVersion request) => Get(request);
 
@@ -128,8 +128,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(FeatureSet request) => GetEntity<FeatureSet>(DocConstantModelName.FEATURESET, request, GetFeatureSet);
-
+        public object Get(FeatureSet request) => GetEntityWithCache<FeatureSet>(DocConstantModelName.FEATURESET, request, GetFeatureSet);
         private FeatureSet _AssignValues(FeatureSet request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

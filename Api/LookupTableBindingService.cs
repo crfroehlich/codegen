@@ -137,10 +137,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(LookupTableBindingSearch request) => Get(request);
 
-        public object Get(LookupTableBindingSearch request) => GetSearchResult<LookupTableBinding,DocEntityLookupTableBinding,LookupTableBindingSearch>(DocConstantModelName.LOOKUPTABLEBINDING, request, _ExecSearch);
+        public object Get(LookupTableBindingSearch request) => GetSearchResultWithCache<LookupTableBinding,DocEntityLookupTableBinding,LookupTableBindingSearch>(DocConstantModelName.LOOKUPTABLEBINDING, request, _ExecSearch);
 
         public object Post(LookupTableBindingVersion request) => Get(request);
 
@@ -154,8 +154,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(LookupTableBinding request) => GetEntity<LookupTableBinding>(DocConstantModelName.LOOKUPTABLEBINDING, request, GetLookupTableBinding);
-
+        public object Get(LookupTableBinding request) => GetEntityWithCache<LookupTableBinding>(DocConstantModelName.LOOKUPTABLEBINDING, request, GetLookupTableBinding);
         private LookupTableBinding _AssignValues(LookupTableBinding request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

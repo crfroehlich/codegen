@@ -265,10 +265,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(DocumentSetSearch request) => Get(request);
 
-        public object Get(DocumentSetSearch request) => GetSearchResult<DocumentSet,DocEntityDocumentSet,DocumentSetSearch>(DocConstantModelName.DOCUMENTSET, request, _ExecSearch);
+        public object Get(DocumentSetSearch request) => GetSearchResultWithCache<DocumentSet,DocEntityDocumentSet,DocumentSetSearch>(DocConstantModelName.DOCUMENTSET, request, _ExecSearch);
 
         public object Post(DocumentSetVersion request) => Get(request);
 
@@ -282,8 +282,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(DocumentSet request) => GetEntity<DocumentSet>(DocConstantModelName.DOCUMENTSET, request, GetDocumentSet);
-
+        public object Get(DocumentSet request) => GetEntityWithCache<DocumentSet>(DocConstantModelName.DOCUMENTSET, request, GetDocumentSet);
         private DocumentSet _AssignValues(DocumentSet request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

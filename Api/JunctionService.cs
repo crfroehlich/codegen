@@ -147,10 +147,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(JunctionSearch request) => Get(request);
 
-        public object Get(JunctionSearch request) => GetSearchResult<Junction,DocEntityJunction,JunctionSearch>(DocConstantModelName.JUNCTION, request, _ExecSearch);
+        public List<Junction> Post(JunctionSearch request) => Get(request);
+
+        public List<Junction> Get(JunctionSearch request) => GetSearchResult<Junction,DocEntityJunction,JunctionSearch>(DocConstantModelName.JUNCTION, request, _ExecSearch);
 
         public object Post(JunctionVersion request) => Get(request);
 
@@ -164,8 +164,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Junction request) => GetEntity<Junction>(DocConstantModelName.JUNCTION, request, GetJunction);
-
+        public Junction Get(Junction request) => GetEntity<Junction>(DocConstantModelName.JUNCTION, request, GetJunction);
         private Junction _AssignValues(Junction request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

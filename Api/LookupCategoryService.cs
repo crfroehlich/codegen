@@ -117,10 +117,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(LookupCategorySearch request) => Get(request);
 
-        public object Get(LookupCategorySearch request) => GetSearchResult<LookupCategory,DocEntityLookupCategory,LookupCategorySearch>(DocConstantModelName.LOOKUPCATEGORY, request, _ExecSearch);
+        public object Get(LookupCategorySearch request) => GetSearchResultWithCache<LookupCategory,DocEntityLookupCategory,LookupCategorySearch>(DocConstantModelName.LOOKUPCATEGORY, request, _ExecSearch);
 
         public object Post(LookupCategoryVersion request) => Get(request);
 
@@ -134,8 +134,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(LookupCategory request) => GetEntity<LookupCategory>(DocConstantModelName.LOOKUPCATEGORY, request, GetLookupCategory);
-
+        public object Get(LookupCategory request) => GetEntityWithCache<LookupCategory>(DocConstantModelName.LOOKUPCATEGORY, request, GetLookupCategory);
         private LookupCategory _AssignValues(LookupCategory request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

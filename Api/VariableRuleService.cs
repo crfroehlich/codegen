@@ -157,10 +157,10 @@ namespace Services.API
             
             return entities;
         }
-        
-        public object Post(VariableRuleSearch request) => Get(request);
 
-        public object Get(VariableRuleSearch request) => GetSearchResult<VariableRule,DocEntityVariableRule,VariableRuleSearch>(DocConstantModelName.VARIABLERULE, request, _ExecSearch);
+        public List<VariableRule> Post(VariableRuleSearch request) => Get(request);
+
+        public List<VariableRule> Get(VariableRuleSearch request) => GetSearchResult<VariableRule,DocEntityVariableRule,VariableRuleSearch>(DocConstantModelName.VARIABLERULE, request, _ExecSearch);
 
         public object Post(VariableRuleVersion request) => Get(request);
 
@@ -174,8 +174,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(VariableRule request) => GetEntity<VariableRule>(DocConstantModelName.VARIABLERULE, request, GetVariableRule);
-
+        public VariableRule Get(VariableRule request) => GetEntity<VariableRule>(DocConstantModelName.VARIABLERULE, request, GetVariableRule);
         private VariableRule _AssignValues(VariableRule request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

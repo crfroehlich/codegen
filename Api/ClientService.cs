@@ -147,10 +147,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(ClientSearch request) => Get(request);
 
-        public object Get(ClientSearch request) => GetSearchResult<Client,DocEntityClient,ClientSearch>(DocConstantModelName.CLIENT, request, _ExecSearch);
+        public object Get(ClientSearch request) => GetSearchResultWithCache<Client,DocEntityClient,ClientSearch>(DocConstantModelName.CLIENT, request, _ExecSearch);
 
         public object Post(ClientVersion request) => Get(request);
 
@@ -164,8 +164,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(Client request) => GetEntity<Client>(DocConstantModelName.CLIENT, request, GetClient);
-
+        public object Get(Client request) => GetEntityWithCache<Client>(DocConstantModelName.CLIENT, request, GetClient);
         private Client _AssignValues(Client request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))

@@ -123,10 +123,10 @@ namespace Services.API
             
             return entities;
         }
-        
+
         public object Post(QueueChannelSearch request) => Get(request);
 
-        public object Get(QueueChannelSearch request) => GetSearchResult<QueueChannel,DocEntityQueueChannel,QueueChannelSearch>(DocConstantModelName.QUEUECHANNEL, request, _ExecSearch);
+        public object Get(QueueChannelSearch request) => GetSearchResultWithCache<QueueChannel,DocEntityQueueChannel,QueueChannelSearch>(DocConstantModelName.QUEUECHANNEL, request, _ExecSearch);
 
         public object Post(QueueChannelVersion request) => Get(request);
 
@@ -140,8 +140,7 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(QueueChannel request) => GetEntity<QueueChannel>(DocConstantModelName.QUEUECHANNEL, request, GetQueueChannel);
-
+        public object Get(QueueChannel request) => GetEntityWithCache<QueueChannel>(DocConstantModelName.QUEUECHANNEL, request, GetQueueChannel);
         private QueueChannel _AssignValues(QueueChannel request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
