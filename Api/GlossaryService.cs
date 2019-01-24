@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityGlossary> _ExecSearch(GlossarySearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityGlossary> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, "Glossary", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityGlossary>();
@@ -128,7 +124,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

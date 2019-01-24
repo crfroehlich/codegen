@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityJctAttributeCategoryAttributeDocumentSet> _ExecSearch(JctAttributeCategoryAttributeDocumentSetSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityJctAttributeCategoryAttributeDocumentSet> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>(currentUser, "JctAttributeCategoryAttributeDocumentSet", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityJctAttributeCategoryAttributeDocumentSet>();
@@ -124,7 +120,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

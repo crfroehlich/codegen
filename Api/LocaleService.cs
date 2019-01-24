@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityLocale> _ExecSearch(LocaleSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityLocale> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Locale>(currentUser, "Locale", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityLocale>();
@@ -106,7 +102,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityIntervention> _ExecSearch(InterventionSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityIntervention> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, "Intervention", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityIntervention>();
@@ -108,7 +104,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

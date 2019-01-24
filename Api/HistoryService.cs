@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityHistory> _ExecSearch(HistorySearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityHistory> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<History>(currentUser, "History", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityHistory>();
@@ -158,7 +154,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

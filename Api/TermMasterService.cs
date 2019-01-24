@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityTermMaster> _ExecSearch(TermMasterSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityTermMaster> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, "TermMaster", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityTermMaster>();
@@ -132,7 +128,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

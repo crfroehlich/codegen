@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityJunction> _ExecSearch(JunctionSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityJunction> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Junction>(currentUser, "Junction", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityJunction>();
@@ -144,7 +140,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityTermSynonym> _ExecSearch(TermSynonymSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityTermSynonym> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, "TermSynonym", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityTermSynonym>();
@@ -126,7 +122,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

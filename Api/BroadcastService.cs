@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityBroadcast> _ExecSearch(BroadcastSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityBroadcast> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, "Broadcast", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityBroadcast>();
@@ -156,7 +152,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

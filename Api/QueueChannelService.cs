@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityQueueChannel> _ExecSearch(QueueChannelSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityQueueChannel> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, "QueueChannel", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityQueueChannel>();
@@ -120,7 +116,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

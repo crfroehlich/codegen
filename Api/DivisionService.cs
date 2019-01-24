@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityDivision> _ExecSearch(DivisionSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityDivision> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Division>(currentUser, "Division", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityDivision>();
@@ -134,7 +130,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

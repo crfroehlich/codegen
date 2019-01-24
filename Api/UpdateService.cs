@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityUpdate> _ExecSearch(UpdateSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityUpdate> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityUpdate>();
@@ -150,7 +146,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

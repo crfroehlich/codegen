@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityDateTime> _ExecSearch(DateTimeSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityDateTime> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, "DateTime", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityDateTime>();
@@ -112,7 +108,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

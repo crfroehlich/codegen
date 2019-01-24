@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityDefault> _ExecSearch(DefaultSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityDefault> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Default>(currentUser, "Default", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityDefault>();
@@ -132,7 +128,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

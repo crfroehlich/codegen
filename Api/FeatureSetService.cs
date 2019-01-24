@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityFeatureSet> _ExecSearch(FeatureSetSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityFeatureSet> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, "FeatureSet", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityFeatureSet>();
@@ -108,7 +104,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

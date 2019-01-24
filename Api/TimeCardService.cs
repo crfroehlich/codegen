@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityTimeCard> _ExecSearch(TimeCardSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityTimeCard> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, "TimeCard", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityTimeCard>();
@@ -180,7 +176,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

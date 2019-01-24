@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityImpersonation> _ExecSearch(ImpersonationSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityImpersonation> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityImpersonation>();
@@ -124,7 +120,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

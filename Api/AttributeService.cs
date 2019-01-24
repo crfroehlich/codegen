@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityAttribute> _ExecSearch(AttributeSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityAttribute> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Attribute>(currentUser, "Attribute", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityAttribute>();
@@ -156,7 +152,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

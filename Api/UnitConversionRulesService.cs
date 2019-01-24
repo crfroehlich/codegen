@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityUnitConversionRules> _ExecSearch(UnitConversionRulesSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityUnitConversionRules> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, "UnitConversionRules", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityUnitConversionRules>();
@@ -154,7 +150,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

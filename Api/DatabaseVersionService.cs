@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityDatabaseVersion> _ExecSearch(DatabaseVersionSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityDatabaseVersion> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<DatabaseVersion>(currentUser, "DatabaseVersion", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityDatabaseVersion>();
@@ -106,7 +102,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

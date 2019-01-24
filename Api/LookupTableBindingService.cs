@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityLookupTableBinding> _ExecSearch(LookupTableBindingSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityLookupTableBinding> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<LookupTableBinding>(currentUser, "LookupTableBinding", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityLookupTableBinding>();
@@ -134,7 +130,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

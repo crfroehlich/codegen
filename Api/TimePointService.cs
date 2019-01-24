@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityTimePoint> _ExecSearch(TimePointSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityTimePoint> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<TimePoint>(currentUser, "TimePoint", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityTimePoint>();
@@ -118,7 +114,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

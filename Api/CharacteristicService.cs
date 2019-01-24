@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityCharacteristic> _ExecSearch(CharacteristicSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityCharacteristic> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, "Characteristic", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityCharacteristic>();
@@ -108,7 +104,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

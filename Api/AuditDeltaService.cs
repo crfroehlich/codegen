@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityAuditDelta> _ExecSearch(AuditDeltaSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityAuditDelta> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, "AuditDelta", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityAuditDelta>();
@@ -108,7 +104,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

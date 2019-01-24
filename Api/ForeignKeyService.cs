@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityForeignKey> _ExecSearch(ForeignKeySearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityForeignKey> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityForeignKey>();
@@ -136,7 +132,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

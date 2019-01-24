@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityAuditRecord> _ExecSearch(AuditRecordSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityAuditRecord> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityAuditRecord>();
@@ -158,7 +154,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

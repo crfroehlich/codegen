@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityWorkflow> _ExecSearch(WorkflowSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityWorkflow> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, "Workflow", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityWorkflow>();
@@ -186,7 +182,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

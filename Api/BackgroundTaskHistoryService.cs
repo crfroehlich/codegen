@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityBackgroundTaskHistory> _ExecSearch(BackgroundTaskHistorySearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityBackgroundTaskHistory> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<BackgroundTaskHistory>(currentUser, "BackgroundTaskHistory", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityBackgroundTaskHistory>();
@@ -124,7 +120,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

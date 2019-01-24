@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityLookupCategory> _ExecSearch(LookupCategorySearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityLookupCategory> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<LookupCategory>(currentUser, "LookupCategory", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityLookupCategory>();
@@ -114,7 +110,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityAttributeInterval> _ExecSearch(AttributeIntervalSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityAttributeInterval> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, "AttributeInterval", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityAttributeInterval>();
@@ -100,7 +96,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

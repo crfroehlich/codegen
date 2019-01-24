@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityTermCategory> _ExecSearch(TermCategorySearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityTermCategory> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, "TermCategory", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityTermCategory>();
@@ -128,7 +124,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityVariableRule> _ExecSearch(VariableRuleSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityVariableRule> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, "VariableRule", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityVariableRule>();
@@ -154,7 +150,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityValueType> _ExecSearch(ValueTypeSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityValueType> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityValueType>();
@@ -132,7 +128,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityComparator> _ExecSearch(ComparatorSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityComparator> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, "Comparator", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityComparator>();
@@ -108,7 +104,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

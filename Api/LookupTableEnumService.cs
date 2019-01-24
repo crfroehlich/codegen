@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityLookupTableEnum> _ExecSearch(LookupTableEnumSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityLookupTableEnum> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, "LookupTableEnum", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityLookupTableEnum>();
@@ -106,7 +102,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

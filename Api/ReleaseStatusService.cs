@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityReleaseStatus> _ExecSearch(ReleaseStatusSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityReleaseStatus> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, "ReleaseStatus", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityReleaseStatus>();
@@ -110,7 +106,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

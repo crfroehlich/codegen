@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityImportData> _ExecSearch(ImportDataSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityImportData> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, "ImportData", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityImportData>();
@@ -190,7 +186,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 

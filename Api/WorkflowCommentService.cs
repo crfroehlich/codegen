@@ -46,11 +46,7 @@ namespace Services.API
         private IQueryable<DocEntityWorkflowComment> _ExecSearch(WorkflowCommentSearch request)
         {
             request = InitSearch(request);
-            
             IQueryable<DocEntityWorkflowComment> entities = null;
-            
-            DocPermissionFactory.SetVisibleFields<WorkflowComment>(currentUser, "WorkflowComment", request.VisibleFields);
-
             Execute.Run( session => 
             {
                 entities = Execute.SelectAll<DocEntityWorkflowComment>();
@@ -130,7 +126,6 @@ namespace Services.API
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
             });
-            
             return entities;
         }
 
