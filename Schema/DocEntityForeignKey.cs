@@ -410,7 +410,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ForeignKeyMapper : Profile
+    public partial class ForeignKeyMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityForeignKey,ForeignKey> _EntityToDto;
         private IMappingExpression<ForeignKey,DocEntityForeignKey> _DtoToEntity;

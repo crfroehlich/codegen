@@ -381,7 +381,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class DocumentSetHistoryMapper : Profile
+    public partial class DocumentSetHistoryMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityDocumentSetHistory,DocumentSetHistory> _EntityToDto;
         private IMappingExpression<DocumentSetHistory,DocEntityDocumentSetHistory> _DtoToEntity;

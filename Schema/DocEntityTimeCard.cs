@@ -434,7 +434,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TimeCardMapper : Profile
+    public partial class TimeCardMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityTimeCard,TimeCard> _EntityToDto;
         private IMappingExpression<TimeCard,DocEntityTimeCard> _DtoToEntity;

@@ -416,7 +416,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ValueTypeMapper : Profile
+    public partial class ValueTypeMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityValueType,ValueType> _EntityToDto;
         private IMappingExpression<ValueType,DocEntityValueType> _DtoToEntity;

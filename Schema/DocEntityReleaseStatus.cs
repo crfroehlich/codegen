@@ -405,7 +405,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ReleaseStatusMapper : Profile
+    public partial class ReleaseStatusMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityReleaseStatus,ReleaseStatus> _EntityToDto;
         private IMappingExpression<ReleaseStatus,DocEntityReleaseStatus> _DtoToEntity;

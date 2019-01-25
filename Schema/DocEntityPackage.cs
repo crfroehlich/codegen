@@ -474,7 +474,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class PackageMapper : Profile
+    public partial class PackageMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityPackage,Package> _EntityToDto;
         private IMappingExpression<Package,DocEntityPackage> _DtoToEntity;

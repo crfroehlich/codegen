@@ -448,7 +448,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class IntervalMapper : Profile
+    public partial class IntervalMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityInterval,Interval> _EntityToDto;
         private IMappingExpression<Interval,DocEntityInterval> _DtoToEntity;
