@@ -252,9 +252,7 @@ namespace Services.Dto
     
     [Route("/User/{Id}/copy", "POST")]
     public partial class UserCopy : User {}
-    [Route("/user", "GET")]
-    [Route("/user/search", "GET, POST, DELETE")]
-    public partial class UserSearch : Search<User>
+    public partial class UserSearchBase : Search<User>
     {
         public string ClientDepartment { get; set; }
         public Reference Division { get; set; }
@@ -300,7 +298,13 @@ namespace Services.Dto
         public List<int> UserTypeIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-    
+
+    [Route("/user", "GET")]
+    [Route("/user/search", "GET, POST, DELETE")]
+    public partial class UserSearch : UserSearchBase
+    {
+    }
+
     public class UserFullTextSearch
     {
         private UserSearch _request;

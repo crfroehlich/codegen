@@ -124,9 +124,7 @@ namespace Services.Dto
     
     [Route("/UnitOfMeasure/{Id}/copy", "POST")]
     public partial class UnitOfMeasureCopy : UnitOfMeasure {}
-    [Route("/unitofmeasure", "GET")]
-    [Route("/unitofmeasure/search", "GET, POST, DELETE")]
-    public partial class UnitOfMeasureSearch : Search<UnitOfMeasure>
+    public partial class UnitOfMeasureSearchBase : Search<UnitOfMeasure>
     {
         public bool? IsSI { get; set; }
         public Reference Name { get; set; }
@@ -140,7 +138,13 @@ namespace Services.Dto
         public List<int> UnitIds { get; set; }
         public List<string> UnitNames { get; set; }
     }
-    
+
+    [Route("/unitofmeasure", "GET")]
+    [Route("/unitofmeasure/search", "GET, POST, DELETE")]
+    public partial class UnitOfMeasureSearch : UnitOfMeasureSearchBase
+    {
+    }
+
     public class UnitOfMeasureFullTextSearch
     {
         private UnitOfMeasureSearch _request;

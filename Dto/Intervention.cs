@@ -121,15 +121,19 @@ namespace Services.Dto
     
     [Route("/Intervention/{Id}/copy", "POST")]
     public partial class InterventionCopy : Intervention {}
-    [Route("/intervention", "GET")]
-    [Route("/intervention/search", "GET, POST, DELETE")]
-    public partial class InterventionSearch : Search<Intervention>
+    public partial class InterventionSearchBase : Search<Intervention>
     {
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-    
+
+    [Route("/intervention", "GET")]
+    [Route("/intervention/search", "GET, POST, DELETE")]
+    public partial class InterventionSearch : InterventionSearchBase
+    {
+    }
+
     public class InterventionFullTextSearch
     {
         private InterventionSearch _request;

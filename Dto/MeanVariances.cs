@@ -108,13 +108,17 @@ namespace Services.Dto
     
     [Route("/MeanVariances/{Id}/copy", "POST")]
     public partial class MeanVariancesCopy : MeanVariances {}
-    [Route("/meanvariances", "GET")]
-    [Route("/meanvariances/search", "GET, POST, DELETE")]
-    public partial class MeanVariancesSearch : Search<MeanVariances>
+    public partial class MeanVariancesSearchBase : Search<MeanVariances>
     {
         public List<int> VariancesIds { get; set; }
     }
-    
+
+    [Route("/meanvariances", "GET")]
+    [Route("/meanvariances/search", "GET, POST, DELETE")]
+    public partial class MeanVariancesSearch : MeanVariancesSearchBase
+    {
+    }
+
     public class MeanVariancesFullTextSearch
     {
         private MeanVariancesSearch _request;

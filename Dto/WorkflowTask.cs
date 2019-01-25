@@ -147,9 +147,7 @@ namespace Services.Dto
     
     [Route("/WorkflowTask/{Id}/copy", "POST")]
     public partial class WorkflowTaskCopy : WorkflowTask {}
-    [Route("/workflowtask", "GET")]
-    [Route("/workflowtask/search", "GET, POST, DELETE")]
-    public partial class WorkflowTaskSearch : Search<WorkflowTask>
+    public partial class WorkflowTaskSearchBase : Search<WorkflowTask>
     {
         public Reference Assignee { get; set; }
         public List<int> AssigneeIds { get; set; }
@@ -171,7 +169,13 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-    
+
+    [Route("/workflowtask", "GET")]
+    [Route("/workflowtask/search", "GET, POST, DELETE")]
+    public partial class WorkflowTaskSearch : WorkflowTaskSearchBase
+    {
+    }
+
     public class WorkflowTaskFullTextSearch
     {
         private WorkflowTaskSearch _request;

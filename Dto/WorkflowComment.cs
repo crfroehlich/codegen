@@ -135,9 +135,7 @@ namespace Services.Dto
     
     [Route("/WorkflowComment/{Id}/copy", "POST")]
     public partial class WorkflowCommentCopy : WorkflowComment {}
-    [Route("/workflowcomment", "GET")]
-    [Route("/workflowcomment/search", "GET, POST, DELETE")]
-    public partial class WorkflowCommentSearch : Search<WorkflowComment>
+    public partial class WorkflowCommentSearchBase : Search<WorkflowComment>
     {
         public List<int> ChildrenIds { get; set; }
         public Reference Parent { get; set; }
@@ -148,7 +146,13 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-    
+
+    [Route("/workflowcomment", "GET")]
+    [Route("/workflowcomment/search", "GET, POST, DELETE")]
+    public partial class WorkflowCommentSearch : WorkflowCommentSearchBase
+    {
+    }
+
     public class WorkflowCommentFullTextSearch
     {
         private WorkflowCommentSearch _request;

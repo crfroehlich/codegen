@@ -116,16 +116,20 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/databaseversion", "GET")]
-    [Route("/databaseversion/search", "GET, POST, DELETE")]
-    public partial class DatabaseVersionSearch : Search<DatabaseVersion>
+    public partial class DatabaseVersionSearchBase : Search<DatabaseVersion>
     {
         public string DatabaseState { get; set; }
         public string Description { get; set; }
         public string Release { get; set; }
         public string VersionName { get; set; }
     }
-    
+
+    [Route("/databaseversion", "GET")]
+    [Route("/databaseversion/search", "GET, POST, DELETE")]
+    public partial class DatabaseVersionSearch : DatabaseVersionSearchBase
+    {
+    }
+
     public class DatabaseVersionFullTextSearch
     {
         private DatabaseVersionSearch _request;

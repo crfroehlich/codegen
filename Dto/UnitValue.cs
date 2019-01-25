@@ -131,9 +131,7 @@ namespace Services.Dto
     
     [Route("/UnitValue/{Id}/copy", "POST")]
     public partial class UnitValueCopy : UnitValue {}
-    [Route("/unitvalue", "GET")]
-    [Route("/unitvalue/search", "GET, POST, DELETE")]
-    public partial class UnitValueSearch : Search<UnitValue>
+    public partial class UnitValueSearchBase : Search<UnitValue>
     {
         public Reference EqualityOperator { get; set; }
         public List<int> EqualityOperatorIds { get; set; }
@@ -145,7 +143,13 @@ namespace Services.Dto
         public Reference Unit { get; set; }
         public List<int> UnitIds { get; set; }
     }
-    
+
+    [Route("/unitvalue", "GET")]
+    [Route("/unitvalue/search", "GET, POST, DELETE")]
+    public partial class UnitValueSearch : UnitValueSearchBase
+    {
+    }
+
     public class UnitValueFullTextSearch
     {
         private UnitValueSearch _request;

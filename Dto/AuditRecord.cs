@@ -174,9 +174,7 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/auditrecord", "GET")]
-    [Route("/auditrecord/search", "GET, POST, DELETE")]
-    public partial class AuditRecordSearch : Search<AuditRecord>
+    public partial class AuditRecordSearchBase : Search<AuditRecord>
     {
         public string Action { get; set; }
         public Reference BackgroundTask { get; set; }
@@ -200,7 +198,13 @@ namespace Services.Dto
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }
-    
+
+    [Route("/auditrecord", "GET")]
+    [Route("/auditrecord/search", "GET, POST, DELETE")]
+    public partial class AuditRecordSearch : AuditRecordSearchBase
+    {
+    }
+
     public class AuditRecordFullTextSearch
     {
         private AuditRecordSearch _request;

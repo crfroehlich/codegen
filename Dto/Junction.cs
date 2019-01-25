@@ -152,9 +152,7 @@ namespace Services.Dto
     
     [Route("/Junction/{Id}/copy", "POST")]
     public partial class JunctionCopy : Junction {}
-    [Route("/junction", "GET")]
-    [Route("/junction/search", "GET, POST, DELETE")]
-    public partial class JunctionSearch : Search<Junction>
+    public partial class JunctionSearchBase : Search<Junction>
     {
         public List<int> ChildrenIds { get; set; }
         public string Data { get; set; }
@@ -171,7 +169,13 @@ namespace Services.Dto
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
     }
-    
+
+    [Route("/junction", "GET")]
+    [Route("/junction/search", "GET, POST, DELETE")]
+    public partial class JunctionSearch : JunctionSearchBase
+    {
+    }
+
     public class JunctionFullTextSearch
     {
         private JunctionSearch _request;

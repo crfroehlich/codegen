@@ -136,9 +136,7 @@ namespace Services.Dto
     
     [Route("/Attribute/{Id}/copy", "POST")]
     public partial class AttributeCopy : Attribute {}
-    [Route("/attribute", "GET")]
-    [Route("/attribute/search", "GET, POST, DELETE")]
-    public partial class AttributeSearch : Search<Attribute>
+    public partial class AttributeSearchBase : Search<Attribute>
     {
         public Reference AttributeName { get; set; }
         public List<int> AttributeNameIds { get; set; }
@@ -154,7 +152,13 @@ namespace Services.Dto
         public bool? IsPositive { get; set; }
         public string UniqueKey { get; set; }
     }
-    
+
+    [Route("/attribute", "GET")]
+    [Route("/attribute/search", "GET, POST, DELETE")]
+    public partial class AttributeSearch : AttributeSearchBase
+    {
+    }
+
     public class AttributeFullTextSearch
     {
         private AttributeSearch _request;

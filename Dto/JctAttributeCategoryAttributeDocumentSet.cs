@@ -119,9 +119,7 @@ namespace Services.Dto
     
     [Route("/JctAttributeCategoryAttributeDocumentSet/{Id}/copy", "POST")]
     public partial class JctAttributeCategoryAttributeDocumentSetCopy : JctAttributeCategoryAttributeDocumentSet {}
-    [Route("/jctattributecategoryattributedocumentset", "GET")]
-    [Route("/jctattributecategoryattributedocumentset/search", "GET, POST, DELETE")]
-    public partial class JctAttributeCategoryAttributeDocumentSetSearch : Search<JctAttributeCategoryAttributeDocumentSet>
+    public partial class JctAttributeCategoryAttributeDocumentSetSearchBase : Search<JctAttributeCategoryAttributeDocumentSet>
     {
         public Reference Attribute { get; set; }
         public List<int> AttributeIds { get; set; }
@@ -130,7 +128,13 @@ namespace Services.Dto
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
     }
-    
+
+    [Route("/jctattributecategoryattributedocumentset", "GET")]
+    [Route("/jctattributecategoryattributedocumentset/search", "GET, POST, DELETE")]
+    public partial class JctAttributeCategoryAttributeDocumentSetSearch : JctAttributeCategoryAttributeDocumentSetSearchBase
+    {
+    }
+
     public class JctAttributeCategoryAttributeDocumentSetFullTextSearch
     {
         private JctAttributeCategoryAttributeDocumentSetSearch _request;

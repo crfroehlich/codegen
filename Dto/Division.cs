@@ -144,9 +144,7 @@ namespace Services.Dto
     
     [Route("/Division/{Id}/copy", "POST")]
     public partial class DivisionCopy : Division {}
-    [Route("/division", "GET")]
-    [Route("/division/search", "GET, POST, DELETE")]
-    public partial class DivisionSearch : Search<Division>
+    public partial class DivisionSearchBase : Search<Division>
     {
         public Reference Client { get; set; }
         public List<int> ClientIds { get; set; }
@@ -159,7 +157,13 @@ namespace Services.Dto
         public string Settings { get; set; }
         public List<int> UsersIds { get; set; }
     }
-    
+
+    [Route("/division", "GET")]
+    [Route("/division/search", "GET, POST, DELETE")]
+    public partial class DivisionSearch : DivisionSearchBase
+    {
+    }
+
     public class DivisionFullTextSearch
     {
         private DivisionSearch _request;

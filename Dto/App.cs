@@ -136,9 +136,7 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/app", "GET")]
-    [Route("/app/search", "GET, POST, DELETE")]
-    public partial class AppSearch : Search<App>
+    public partial class AppSearchBase : Search<App>
     {
         public string Description { get; set; }
         public string Icon { get; set; }
@@ -148,7 +146,13 @@ namespace Services.Dto
         public List<int> ScopesIds { get; set; }
         public decimal? Version { get; set; }
     }
-    
+
+    [Route("/app", "GET")]
+    [Route("/app/search", "GET, POST, DELETE")]
+    public partial class AppSearch : AppSearchBase
+    {
+    }
+
     public class AppFullTextSearch
     {
         private AppSearch _request;

@@ -134,9 +134,7 @@ namespace Services.Dto
     
     [Route("/UserType/{Id}/copy", "POST")]
     public partial class UserTypeCopy : UserType {}
-    [Route("/usertype", "GET")]
-    [Route("/usertype/search", "GET, POST, DELETE")]
-    public partial class UserTypeSearch : Search<UserType>
+    public partial class UserTypeSearchBase : Search<UserType>
     {
         public Reference PayrollStatus { get; set; }
         public List<int> PayrollStatusIds { get; set; }
@@ -152,7 +150,13 @@ namespace Services.Dto
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }
-    
+
+    [Route("/usertype", "GET")]
+    [Route("/usertype/search", "GET, POST, DELETE")]
+    public partial class UserTypeSearch : UserTypeSearchBase
+    {
+    }
+
     public class UserTypeFullTextSearch
     {
         private UserTypeSearch _request;

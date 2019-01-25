@@ -121,15 +121,19 @@ namespace Services.Dto
     
     [Route("/Characteristic/{Id}/copy", "POST")]
     public partial class CharacteristicCopy : Characteristic {}
-    [Route("/characteristic", "GET")]
-    [Route("/characteristic/search", "GET, POST, DELETE")]
-    public partial class CharacteristicSearch : Search<Characteristic>
+    public partial class CharacteristicSearchBase : Search<Characteristic>
     {
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-    
+
+    [Route("/characteristic", "GET")]
+    [Route("/characteristic/search", "GET, POST, DELETE")]
+    public partial class CharacteristicSearch : CharacteristicSearchBase
+    {
+    }
+
     public class CharacteristicFullTextSearch
     {
         private CharacteristicSearch _request;

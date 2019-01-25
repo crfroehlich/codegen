@@ -156,9 +156,7 @@ namespace Services.Dto
     
     [Route("/TimeCard/{Id}/copy", "POST")]
     public partial class TimeCardCopy : TimeCard {}
-    [Route("/timecard", "GET")]
-    [Route("/timecard/search", "GET, POST, DELETE")]
-    public partial class TimeCardSearch : Search<TimeCard>
+    public partial class TimeCardSearchBase : Search<TimeCard>
     {
         public string Description { get; set; }
         public Reference Document { get; set; }
@@ -184,7 +182,13 @@ namespace Services.Dto
         public List<int> WorkTypeIds { get; set; }
         public List<string> WorkTypeNames { get; set; }
     }
-    
+
+    [Route("/timecard", "GET")]
+    [Route("/timecard/search", "GET, POST, DELETE")]
+    public partial class TimeCardSearch : TimeCardSearchBase
+    {
+    }
+
     public class TimeCardFullTextSearch
     {
         private TimeCardSearch _request;

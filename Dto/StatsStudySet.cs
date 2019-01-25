@@ -163,9 +163,7 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/statsstudyset", "GET")]
-    [Route("/statsstudyset/search", "GET, POST, DELETE")]
-    public partial class StatsStudySetSearch : Search<StatsStudySet>
+    public partial class StatsStudySetSearchBase : Search<StatsStudySet>
     {
         public int? BoundTerms { get; set; }
         public int? Characteristics { get; set; }
@@ -184,7 +182,13 @@ namespace Services.Dto
         public string TypeList { get; set; }
         public int? UnboundTerms { get; set; }
     }
-    
+
+    [Route("/statsstudyset", "GET")]
+    [Route("/statsstudyset/search", "GET, POST, DELETE")]
+    public partial class StatsStudySetSearch : StatsStudySetSearchBase
+    {
+    }
+
     public class StatsStudySetFullTextSearch
     {
         private StatsStudySetSearch _request;

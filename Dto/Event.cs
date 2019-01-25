@@ -138,9 +138,7 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/event", "GET")]
-    [Route("/event/search", "GET, POST, DELETE")]
-    public partial class EventSearch : Search<Event>
+    public partial class EventSearchBase : Search<Event>
     {
         public Reference AuditRecord { get; set; }
         public List<int> AuditRecordIds { get; set; }
@@ -153,7 +151,13 @@ namespace Services.Dto
         public List<int> UpdatesIds { get; set; }
         public List<int> UsersIds { get; set; }
     }
-    
+
+    [Route("/event", "GET")]
+    [Route("/event/search", "GET, POST, DELETE")]
+    public partial class EventSearch : EventSearchBase
+    {
+    }
+
     public class EventFullTextSearch
     {
         private EventSearch _request;

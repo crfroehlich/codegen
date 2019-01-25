@@ -195,9 +195,7 @@ namespace Services.Dto
     
     [Route("/Scope/{Id}/copy", "POST")]
     public partial class ScopeCopy : Scope {}
-    [Route("/scope", "GET")]
-    [Route("/scope/search", "GET, POST, DELETE")]
-    public partial class ScopeSearch : Search<Scope>
+    public partial class ScopeSearchBase : Search<Scope>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -225,7 +223,13 @@ namespace Services.Dto
         public bool? View { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-    
+
+    [Route("/scope", "GET")]
+    [Route("/scope/search", "GET, POST, DELETE")]
+    public partial class ScopeSearch : ScopeSearchBase
+    {
+    }
+
     public class ScopeFullTextSearch
     {
         private ScopeSearch _request;

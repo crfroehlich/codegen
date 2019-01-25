@@ -158,9 +158,7 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/update", "GET")]
-    [Route("/update/search", "GET, POST, DELETE")]
-    public partial class UpdateSearch : Search<Update>
+    public partial class UpdateSearchBase : Search<Update>
     {
         public string Body { get; set; }
         public string DeliveryStatus { get; set; }
@@ -183,7 +181,13 @@ namespace Services.Dto
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
     }
-    
+
+    [Route("/update", "GET")]
+    [Route("/update/search", "GET, POST, DELETE")]
+    public partial class UpdateSearch : UpdateSearchBase
+    {
+    }
+
     public class UpdateFullTextSearch
     {
         private UpdateSearch _request;

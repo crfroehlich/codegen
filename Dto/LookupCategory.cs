@@ -121,16 +121,20 @@ namespace Services.Dto
     
     [Route("/LookupCategory/{Id}/copy", "POST")]
     public partial class LookupCategoryCopy : LookupCategory {}
-    [Route("/lookupcategory", "GET")]
-    [Route("/lookupcategory/search", "GET, POST, DELETE")]
-    public partial class LookupCategorySearch : Search<LookupCategory>
+    public partial class LookupCategorySearchBase : Search<LookupCategory>
     {
         public string Category { get; set; }
         public Reference Enum { get; set; }
         public List<int> EnumIds { get; set; }
         public List<int> LookupsIds { get; set; }
     }
-    
+
+    [Route("/lookupcategory", "GET")]
+    [Route("/lookupcategory/search", "GET, POST, DELETE")]
+    public partial class LookupCategorySearch : LookupCategorySearchBase
+    {
+    }
+
     public class LookupCategoryFullTextSearch
     {
         private LookupCategorySearch _request;

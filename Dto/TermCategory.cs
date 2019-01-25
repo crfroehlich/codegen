@@ -117,15 +117,19 @@ namespace Services.Dto
     
     [Route("/TermCategory/{Id}/copy", "POST")]
     public partial class TermCategoryCopy : TermCategory {}
-    [Route("/termcategory", "GET")]
-    [Route("/termcategory/search", "GET, POST, DELETE")]
-    public partial class TermCategorySearch : Search<TermCategory>
+    public partial class TermCategorySearchBase : Search<TermCategory>
     {
         public Reference ParentCategory { get; set; }
         public List<int> ParentCategoryIds { get; set; }
         public List<int> TermsIds { get; set; }
     }
-    
+
+    [Route("/termcategory", "GET")]
+    [Route("/termcategory/search", "GET, POST, DELETE")]
+    public partial class TermCategorySearch : TermCategorySearchBase
+    {
+    }
+
     public class TermCategoryFullTextSearch
     {
         private TermCategorySearch _request;

@@ -145,9 +145,7 @@ namespace Services.Dto
     
     [Route("/Help/{Id}/copy", "POST")]
     public partial class HelpCopy : Help {}
-    [Route("/help", "GET")]
-    [Route("/help/search", "GET, POST, DELETE")]
-    public partial class HelpSearch : Search<Help>
+    public partial class HelpSearchBase : Search<Help>
     {
         public string ConfluenceId { get; set; }
         public string Description { get; set; }
@@ -161,7 +159,13 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Sidebar",@"Dialog",@"Manual",@"Section"})]
         public List<string> TypeNames { get; set; }
     }
-    
+
+    [Route("/help", "GET")]
+    [Route("/help/search", "GET, POST, DELETE")]
+    public partial class HelpSearch : HelpSearchBase
+    {
+    }
+
     public class HelpFullTextSearch
     {
         private HelpSearch _request;

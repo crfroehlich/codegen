@@ -300,9 +300,7 @@ namespace Services.Dto
     
     [Route("/Document/{Id}/copy", "POST")]
     public partial class DocumentCopy : Document {}
-    [Route("/document", "GET")]
-    [Route("/document/search", "GET, POST, DELETE")]
-    public partial class DocumentSearch : Search<Document>
+    public partial class DocumentSearchBase : Search<Document>
     {
         public string Abstract { get; set; }
         public string AccessionID { get; set; }
@@ -362,7 +360,13 @@ namespace Services.Dto
         public List<int> VariableDataIds { get; set; }
         public string Volume { get; set; }
     }
-    
+
+    [Route("/document", "GET")]
+    [Route("/document/search", "GET, POST, DELETE")]
+    public partial class DocumentSearch : DocumentSearchBase
+    {
+    }
+
     public class DocumentFullTextSearch
     {
         private DocumentSearch _request;

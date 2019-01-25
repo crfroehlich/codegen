@@ -149,9 +149,7 @@ namespace Services.Dto
     
     [Route("/Broadcast/{Id}/copy", "POST")]
     public partial class BroadcastCopy : Broadcast {}
-    [Route("/broadcast", "GET")]
-    [Route("/broadcast/search", "GET, POST, DELETE")]
-    public partial class BroadcastSearch : Search<Broadcast>
+    public partial class BroadcastSearchBase : Search<Broadcast>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -171,7 +169,13 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"System Alert",@"Terms of Service",@"Scope Specific"})]
         public List<string> TypeNames { get; set; }
     }
-    
+
+    [Route("/broadcast", "GET")]
+    [Route("/broadcast/search", "GET, POST, DELETE")]
+    public partial class BroadcastSearch : BroadcastSearchBase
+    {
+    }
+
     public class BroadcastFullTextSearch
     {
         private BroadcastSearch _request;

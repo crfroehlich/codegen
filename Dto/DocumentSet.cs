@@ -328,9 +328,7 @@ namespace Services.Dto
     
     [Route("/DocumentSet/{Id}/copy", "POST")]
     public partial class DocumentSetCopy : DocumentSet {}
-    [Route("/documentset", "GET")]
-    [Route("/documentset/search", "GET, POST, DELETE")]
-    public partial class DocumentSetSearch : Search<DocumentSet>
+    public partial class DocumentSetSearchBase : Search<DocumentSet>
     {
         public string AdditionalCriteria { get; set; }
         public bool? Archived { get; set; }
@@ -391,7 +389,13 @@ namespace Services.Dto
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }
-    
+
+    [Route("/documentset", "GET")]
+    [Route("/documentset/search", "GET, POST, DELETE")]
+    public partial class DocumentSetSearch : DocumentSetSearchBase
+    {
+    }
+
     public class DocumentSetFullTextSearch
     {
         private DocumentSetSearch _request;

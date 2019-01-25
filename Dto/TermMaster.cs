@@ -156,9 +156,7 @@ namespace Services.Dto
     
     [Route("/TermMaster/{Id}/copy", "POST")]
     public partial class TermMasterCopy : TermMaster {}
-    [Route("/termmaster", "GET")]
-    [Route("/termmaster/search", "GET, POST, DELETE")]
-    public partial class TermMasterSearch : Search<TermMaster>
+    public partial class TermMasterSearchBase : Search<TermMaster>
     {
         public string BioPortal { get; set; }
         public List<int> CategoriesIds { get; set; }
@@ -173,7 +171,13 @@ namespace Services.Dto
         public string TUI { get; set; }
         public string URI { get; set; }
     }
-    
+
+    [Route("/termmaster", "GET")]
+    [Route("/termmaster/search", "GET, POST, DELETE")]
+    public partial class TermMasterSearch : TermMasterSearchBase
+    {
+    }
+
     public class TermMasterFullTextSearch
     {
         private TermMasterSearch _request;

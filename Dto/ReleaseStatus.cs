@@ -123,9 +123,7 @@ namespace Services.Dto
     
     [Route("/ReleaseStatus/{Id}/copy", "POST")]
     public partial class ReleaseStatusCopy : ReleaseStatus {}
-    [Route("/releasestatus", "GET")]
-    [Route("/releasestatus/search", "GET, POST, DELETE")]
-    public partial class ReleaseStatusSearch : Search<ReleaseStatus>
+    public partial class ReleaseStatusSearchBase : Search<ReleaseStatus>
     {
         public string Branch { get; set; }
         public string Release { get; set; }
@@ -133,7 +131,13 @@ namespace Services.Dto
         public string URL { get; set; }
         public string Version { get; set; }
     }
-    
+
+    [Route("/releasestatus", "GET")]
+    [Route("/releasestatus/search", "GET, POST, DELETE")]
+    public partial class ReleaseStatusSearch : ReleaseStatusSearchBase
+    {
+    }
+
     public class ReleaseStatusFullTextSearch
     {
         private ReleaseStatusSearch _request;

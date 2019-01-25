@@ -122,16 +122,20 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/featureset", "GET")]
-    [Route("/featureset/search", "GET, POST, DELETE")]
-    public partial class FeatureSetSearch : Search<FeatureSet>
+    public partial class FeatureSetSearchBase : Search<FeatureSet>
     {
         public string Description { get; set; }
         public string Name { get; set; }
         public string PermissionTemplate { get; set; }
         public List<int> RolesIds { get; set; }
     }
-    
+
+    [Route("/featureset", "GET")]
+    [Route("/featureset/search", "GET, POST, DELETE")]
+    public partial class FeatureSetSearch : FeatureSetSearchBase
+    {
+    }
+
     public class FeatureSetFullTextSearch
     {
         private FeatureSetSearch _request;

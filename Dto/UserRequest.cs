@@ -130,9 +130,7 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/userrequest", "GET")]
-    [Route("/userrequest/search", "GET, POST, DELETE")]
-    public partial class UserRequestSearch : Search<UserRequest>
+    public partial class UserRequestSearchBase : Search<UserRequest>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -144,7 +142,13 @@ namespace Services.Dto
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }
-    
+
+    [Route("/userrequest", "GET")]
+    [Route("/userrequest/search", "GET, POST, DELETE")]
+    public partial class UserRequestSearch : UserRequestSearchBase
+    {
+    }
+
     public class UserRequestFullTextSearch
     {
         private UserRequestSearch _request;

@@ -158,9 +158,7 @@ namespace Services.Dto
     
     [Route("/Team/{Id}/copy", "POST")]
     public partial class TeamCopy : Team {}
-    [Route("/team", "GET")]
-    [Route("/team/search", "GET, POST, DELETE")]
-    public partial class TeamSearch : Search<Team>
+    public partial class TeamSearchBase : Search<Team>
     {
         public List<int> AdminRolesIds { get; set; }
         public string Description { get; set; }
@@ -175,7 +173,13 @@ namespace Services.Dto
         public List<int> UpdatesIds { get; set; }
         public List<int> UsersIds { get; set; }
     }
-    
+
+    [Route("/team", "GET")]
+    [Route("/team/search", "GET, POST, DELETE")]
+    public partial class TeamSearch : TeamSearchBase
+    {
+    }
+
     public class TeamFullTextSearch
     {
         private TeamSearch _request;

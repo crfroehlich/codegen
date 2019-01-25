@@ -121,15 +121,19 @@ namespace Services.Dto
     
     [Route("/Outcome/{Id}/copy", "POST")]
     public partial class OutcomeCopy : Outcome {}
-    [Route("/outcome", "GET")]
-    [Route("/outcome/search", "GET, POST, DELETE")]
-    public partial class OutcomeSearch : Search<Outcome>
+    public partial class OutcomeSearchBase : Search<Outcome>
     {
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-    
+
+    [Route("/outcome", "GET")]
+    [Route("/outcome/search", "GET, POST, DELETE")]
+    public partial class OutcomeSearch : OutcomeSearchBase
+    {
+    }
+
     public class OutcomeFullTextSearch
     {
         private OutcomeSearch _request;

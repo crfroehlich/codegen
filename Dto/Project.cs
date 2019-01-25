@@ -199,9 +199,7 @@ namespace Services.Dto
     
     [Route("/Project/{Id}/copy", "POST")]
     public partial class ProjectCopy : Project {}
-    [Route("/project", "GET")]
-    [Route("/project/search", "GET, POST, DELETE")]
-    public partial class ProjectSearch : Search<Project>
+    public partial class ProjectSearchBase : Search<Project>
     {
         public List<int> ChildrenIds { get; set; }
         public Reference Client { get; set; }
@@ -234,7 +232,13 @@ namespace Services.Dto
         public List<string> StatusNames { get; set; }
         public List<int> TimeCardsIds { get; set; }
     }
-    
+
+    [Route("/project", "GET")]
+    [Route("/project/search", "GET, POST, DELETE")]
+    public partial class ProjectSearch : ProjectSearchBase
+    {
+    }
+
     public class ProjectFullTextSearch
     {
         private ProjectSearch _request;

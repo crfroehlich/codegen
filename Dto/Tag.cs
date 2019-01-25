@@ -117,14 +117,18 @@ namespace Services.Dto
     
     [Route("/Tag/{Id}/copy", "POST")]
     public partial class TagCopy : Tag {}
-    [Route("/tag", "GET")]
-    [Route("/tag/search", "GET, POST, DELETE")]
-    public partial class TagSearch : Search<Tag>
+    public partial class TagSearchBase : Search<Tag>
     {
         public string Name { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-    
+
+    [Route("/tag", "GET")]
+    [Route("/tag/search", "GET, POST, DELETE")]
+    public partial class TagSearch : TagSearchBase
+    {
+    }
+
     public class TagFullTextSearch
     {
         private TagSearch _request;

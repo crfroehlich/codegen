@@ -118,9 +118,7 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/impersonation", "GET")]
-    [Route("/impersonation/search", "GET, POST, DELETE")]
-    public partial class ImpersonationSearch : Search<Impersonation>
+    public partial class ImpersonationSearchBase : Search<Impersonation>
     {
         public Reference AuthenticatedUser { get; set; }
         public List<int> AuthenticatedUserIds { get; set; }
@@ -129,7 +127,13 @@ namespace Services.Dto
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }
-    
+
+    [Route("/impersonation", "GET")]
+    [Route("/impersonation/search", "GET, POST, DELETE")]
+    public partial class ImpersonationSearch : ImpersonationSearchBase
+    {
+    }
+
     public class ImpersonationFullTextSearch
     {
         private ImpersonationSearch _request;

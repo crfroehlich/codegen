@@ -105,16 +105,20 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/studydesign", "GET")]
-    [Route("/studydesign/search", "GET, POST, DELETE")]
-    public partial class StudyDesignSearch : Search<StudyDesign>
+    public partial class StudyDesignSearchBase : Search<StudyDesign>
     {
         public Reference Design { get; set; }
         public List<int> DesignIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Before and After Trial",@"Case Control",@"Case Report",@"Case Series",@"Cluster RCT",@"Cohort Study",@"Controlled Before and After Trial",@"Cross Sectional Study",@"Expanded Access Program",@"Follow-up/Extension",@"Literature Review",@"Non-Comparative\, Other",@"Non-Controlled Clinical Trial",@"Non-Randomized Controlled Trial",@"Non-Randomized Crossover",@"Observational Non-Comparative Study",@"Pooled Analysis",@"Posthoc Analysis",@"Prospective Cohort Study",@"Qualitative Research",@"Randomized Controlled Trial",@"Randomized Crossover",@"Randomized Non-Controlled Trial",@"Retrospective Cohort Study",@"Sub-Group Analysis"})]
         public List<string> DesignNames { get; set; }
     }
-    
+
+    [Route("/studydesign", "GET")]
+    [Route("/studydesign/search", "GET, POST, DELETE")]
+    public partial class StudyDesignSearch : StudyDesignSearchBase
+    {
+    }
+
     public class StudyDesignFullTextSearch
     {
         private StudyDesignSearch _request;

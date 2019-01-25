@@ -137,9 +137,7 @@ namespace Services.Dto
     
     [Route("/TermSynonym/{Id}/copy", "POST")]
     public partial class TermSynonymCopy : TermSynonym {}
-    [Route("/termsynonym", "GET")]
-    [Route("/termsynonym/search", "GET, POST, DELETE")]
-    public partial class TermSynonymSearch : Search<TermSynonym>
+    public partial class TermSynonymSearchBase : Search<TermSynonym>
     {
         public bool? Approved { get; set; }
         public List<int> BindingsIds { get; set; }
@@ -150,7 +148,13 @@ namespace Services.Dto
         public List<int> ScopeIds { get; set; }
         public string Synonym { get; set; }
     }
-    
+
+    [Route("/termsynonym", "GET")]
+    [Route("/termsynonym/search", "GET, POST, DELETE")]
+    public partial class TermSynonymSearch : TermSynonymSearchBase
+    {
+    }
+
     public class TermSynonymFullTextSearch
     {
         private TermSynonymSearch _request;

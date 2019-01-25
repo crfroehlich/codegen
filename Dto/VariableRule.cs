@@ -151,9 +151,7 @@ namespace Services.Dto
     
     [Route("/VariableRule/{Id}/copy", "POST")]
     public partial class VariableRuleCopy : VariableRule {}
-    [Route("/variablerule", "GET")]
-    [Route("/variablerule/search", "GET, POST, DELETE")]
-    public partial class VariableRuleSearch : Search<VariableRule>
+    public partial class VariableRuleSearchBase : Search<VariableRule>
     {
         public List<int> ChildrenIds { get; set; }
         public string Definition { get; set; }
@@ -171,7 +169,13 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Template",@"Applied",@"Override"})]
         public List<string> TypeNames { get; set; }
     }
-    
+
+    [Route("/variablerule", "GET")]
+    [Route("/variablerule/search", "GET, POST, DELETE")]
+    public partial class VariableRuleSearch : VariableRuleSearchBase
+    {
+    }
+
     public class VariableRuleFullTextSearch
     {
         private VariableRuleSearch _request;

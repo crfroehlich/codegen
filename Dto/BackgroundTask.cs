@@ -171,9 +171,7 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/backgroundtask", "GET")]
-    [Route("/backgroundtask/search", "GET, POST, DELETE")]
-    public partial class BackgroundTaskSearch : Search<BackgroundTask>
+    public partial class BackgroundTaskSearchBase : Search<BackgroundTask>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -193,7 +191,13 @@ namespace Services.Dto
         public string StartAt { get; set; }
         public List<int> TaskHistoryIds { get; set; }
     }
-    
+
+    [Route("/backgroundtask", "GET")]
+    [Route("/backgroundtask/search", "GET, POST, DELETE")]
+    public partial class BackgroundTaskSearch : BackgroundTaskSearchBase
+    {
+    }
+
     public class BackgroundTaskFullTextSearch
     {
         private BackgroundTaskSearch _request;

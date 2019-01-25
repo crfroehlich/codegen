@@ -121,9 +121,7 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/timepoint", "GET")]
-    [Route("/timepoint/search", "GET, POST, DELETE")]
-    public partial class TimePointSearch : Search<TimePoint>
+    public partial class TimePointSearchBase : Search<TimePoint>
     {
         public bool? IsAbsolute { get; set; }
         public TypeMeanBase MeanValue { get; set; }
@@ -134,7 +132,13 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Duration",@"Maximum",@"Average",@"Mean",@"Median",@"Total",@"Max Range",@"Time Zero",@"Not Reported",@"N/A",@"None",@"Varies",@"Before",@"During",@"After"})]
         public List<string> TypeNames { get; set; }
     }
-    
+
+    [Route("/timepoint", "GET")]
+    [Route("/timepoint/search", "GET, POST, DELETE")]
+    public partial class TimePointSearch : TimePointSearchBase
+    {
+    }
+
     public class TimePointFullTextSearch
     {
         private TimePointSearch _request;

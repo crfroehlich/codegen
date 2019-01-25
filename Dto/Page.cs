@@ -136,9 +136,7 @@ namespace Services.Dto
     
     [Route("/Page/{Id}/copy", "POST")]
     public partial class PageCopy : Page {}
-    [Route("/page", "GET")]
-    [Route("/page/search", "GET, POST, DELETE")]
-    public partial class PageSearch : Search<Page>
+    public partial class PageSearchBase : Search<Page>
     {
         public List<int> AppsIds { get; set; }
         public string Description { get; set; }
@@ -147,7 +145,13 @@ namespace Services.Dto
         public string Name { get; set; }
         public List<int> RolesIds { get; set; }
     }
-    
+
+    [Route("/page", "GET")]
+    [Route("/page/search", "GET, POST, DELETE")]
+    public partial class PageSearch : PageSearchBase
+    {
+    }
+
     public class PageFullTextSearch
     {
         private PageSearch _request;

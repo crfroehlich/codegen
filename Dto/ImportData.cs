@@ -189,9 +189,7 @@ namespace Services.Dto
     
     [Route("/ImportData/{Id}/copy", "POST")]
     public partial class ImportDataCopy : ImportData {}
-    [Route("/importdata", "GET")]
-    [Route("/importdata/search", "GET, POST, DELETE")]
-    public partial class ImportDataSearch : Search<ImportData>
+    public partial class ImportDataSearchBase : Search<ImportData>
     {
         public DateTime? CompletedOn { get; set; }
         public DateTime? CompletedOnAfter { get; set; }
@@ -226,7 +224,13 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Queued",@"Processing",@"Succeeded",@"Already Imported",@"Failed",@"No JSON Found",@"Cancelled"})]
         public List<string> StatusNames { get; set; }
     }
-    
+
+    [Route("/importdata", "GET")]
+    [Route("/importdata/search", "GET, POST, DELETE")]
+    public partial class ImportDataSearch : ImportDataSearchBase
+    {
+    }
+
     public class ImportDataFullTextSearch
     {
         private ImportDataSearch _request;

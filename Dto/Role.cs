@@ -158,9 +158,7 @@ namespace Services.Dto
     
     [Route("/Role/{Id}/copy", "POST")]
     public partial class RoleCopy : Role {}
-    [Route("/role", "GET")]
-    [Route("/role/search", "GET, POST, DELETE")]
-    public partial class RoleSearch : Search<Role>
+    public partial class RoleSearchBase : Search<Role>
     {
         public Reference AdminTeam { get; set; }
         public List<int> AdminTeamIds { get; set; }
@@ -175,7 +173,13 @@ namespace Services.Dto
         public string Permissions { get; set; }
         public List<int> UsersIds { get; set; }
     }
-    
+
+    [Route("/role", "GET")]
+    [Route("/role/search", "GET, POST, DELETE")]
+    public partial class RoleSearch : RoleSearchBase
+    {
+    }
+
     public class RoleFullTextSearch
     {
         private RoleSearch _request;

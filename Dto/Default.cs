@@ -127,9 +127,7 @@ namespace Services.Dto
     
     [Route("/Default/{Id}/copy", "POST")]
     public partial class DefaultCopy : Default {}
-    [Route("/default", "GET")]
-    [Route("/default/search", "GET, POST, DELETE")]
-    public partial class DefaultSearch : Search<Default>
+    public partial class DefaultSearchBase : Search<Default>
     {
         public Reference DiseaseState { get; set; }
         public List<int> DiseaseStateIds { get; set; }
@@ -140,7 +138,13 @@ namespace Services.Dto
         public Reference TherapeuticArea { get; set; }
         public List<int> TherapeuticAreaIds { get; set; }
     }
-    
+
+    [Route("/default", "GET")]
+    [Route("/default/search", "GET, POST, DELETE")]
+    public partial class DefaultSearch : DefaultSearchBase
+    {
+    }
+
     public class DefaultFullTextSearch
     {
         private DefaultSearch _request;

@@ -125,9 +125,7 @@ namespace Services.Dto
     
     [Route("/ForeignKey/{Id}/copy", "POST")]
     public partial class ForeignKeyCopy : ForeignKey {}
-    [Route("/foreignkey", "GET")]
-    [Route("/foreignkey/search", "GET, POST, DELETE")]
-    public partial class ForeignKeySearch : Search<ForeignKey>
+    public partial class ForeignKeySearchBase : Search<ForeignKey>
     {
         public Reference IntegrationName { get; set; }
         public List<int> IntegrationNameIds { get; set; }
@@ -140,7 +138,13 @@ namespace Services.Dto
         public string KeyId { get; set; }
         public string KeyName { get; set; }
     }
-    
+
+    [Route("/foreignkey", "GET")]
+    [Route("/foreignkey/search", "GET, POST, DELETE")]
+    public partial class ForeignKeySearch : ForeignKeySearchBase
+    {
+    }
+
     public class ForeignKeyFullTextSearch
     {
         private ForeignKeySearch _request;

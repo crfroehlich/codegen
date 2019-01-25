@@ -131,9 +131,7 @@ namespace Services.Dto
     
     [Route("/LookupTable/{Id}/copy", "POST")]
     public partial class LookupTableCopy : LookupTable {}
-    [Route("/lookuptable", "GET")]
-    [Route("/lookuptable/search", "GET, POST, DELETE")]
-    public partial class LookupTableSearch : Search<LookupTable>
+    public partial class LookupTableSearchBase : Search<LookupTable>
     {
         public List<int> BindingsIds { get; set; }
         public List<int> CategoriesIds { get; set; }
@@ -142,7 +140,13 @@ namespace Services.Dto
         public List<int> EnumIds { get; set; }
         public string Name { get; set; }
     }
-    
+
+    [Route("/lookuptable", "GET")]
+    [Route("/lookuptable/search", "GET, POST, DELETE")]
+    public partial class LookupTableSearch : LookupTableSearchBase
+    {
+    }
+
     public class LookupTableFullTextSearch
     {
         private LookupTableSearch _request;

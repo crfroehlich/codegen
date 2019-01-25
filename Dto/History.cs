@@ -149,9 +149,7 @@ namespace Services.Dto
     
     [Route("/History/{Id}/copy", "POST")]
     public partial class HistoryCopy : History {}
-    [Route("/history", "GET")]
-    [Route("/history/search", "GET, POST, DELETE")]
-    public partial class HistorySearch : Search<History>
+    public partial class HistorySearchBase : Search<History>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -169,7 +167,13 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-    
+
+    [Route("/history", "GET")]
+    [Route("/history/search", "GET, POST, DELETE")]
+    public partial class HistorySearch : HistorySearchBase
+    {
+    }
+
     public class HistoryFullTextSearch
     {
         private HistorySearch _request;

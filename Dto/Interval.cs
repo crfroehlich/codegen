@@ -129,9 +129,7 @@ namespace Services.Dto
     
     [Route("/Interval/{Id}/copy", "POST")]
     public partial class IntervalCopy : Interval {}
-    [Route("/interval", "GET")]
-    [Route("/interval/search", "GET, POST, DELETE")]
-    public partial class IntervalSearch : Search<Interval>
+    public partial class IntervalSearchBase : Search<Interval>
     {
         public Reference CalendarDateEnd { get; set; }
         public List<int> CalendarDateEndIds { get; set; }
@@ -143,7 +141,13 @@ namespace Services.Dto
         public Reference TimeOfDay { get; set; }
         public List<int> TimeOfDayIds { get; set; }
     }
-    
+
+    [Route("/interval", "GET")]
+    [Route("/interval/search", "GET, POST, DELETE")]
+    public partial class IntervalSearch : IntervalSearchBase
+    {
+    }
+
     public class IntervalFullTextSearch
     {
         private IntervalSearch _request;

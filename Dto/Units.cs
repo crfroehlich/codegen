@@ -108,13 +108,17 @@ namespace Services.Dto
     
     [Route("/Units/{Id}/copy", "POST")]
     public partial class UnitsDtoCopy : UnitsDto {}
-    [Route("/units", "GET")]
-    [Route("/units/search", "GET, POST, DELETE")]
-    public partial class UnitsSearch : Search<UnitsDto>
+    public partial class UnitsSearchBase : Search<UnitsDto>
     {
         public List<int> UnitsIds { get; set; }
     }
-    
+
+    [Route("/units", "GET")]
+    [Route("/units/search", "GET, POST, DELETE")]
+    public partial class UnitsSearch : UnitsSearchBase
+    {
+    }
+
     public class UnitsFullTextSearch
     {
         private UnitsSearch _request;

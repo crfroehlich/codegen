@@ -190,9 +190,7 @@ namespace Services.Dto
     
     [Route("/Workflow/{Id}/copy", "POST")]
     public partial class WorkflowCopy : Workflow {}
-    [Route("/workflow", "GET")]
-    [Route("/workflow/search", "GET, POST, DELETE")]
-    public partial class WorkflowSearch : Search<Workflow>
+    public partial class WorkflowSearchBase : Search<Workflow>
     {
         public bool? Archived { get; set; }
         public List<int> BindingsIds { get; set; }
@@ -219,7 +217,13 @@ namespace Services.Dto
         public List<int> VariablesIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-    
+
+    [Route("/workflow", "GET")]
+    [Route("/workflow/search", "GET, POST, DELETE")]
+    public partial class WorkflowSearch : WorkflowSearchBase
+    {
+    }
+
     public class WorkflowFullTextSearch
     {
         private WorkflowSearch _request;

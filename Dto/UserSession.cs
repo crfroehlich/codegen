@@ -146,9 +146,7 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/usersession", "GET")]
-    [Route("/usersession/search", "GET, POST, DELETE")]
-    public partial class UserSessionSearch : Search<UserSession>
+    public partial class UserSessionSearchBase : Search<UserSession>
     {
         public string ClientId { get; set; }
         public int? Hits { get; set; }
@@ -161,7 +159,13 @@ namespace Services.Dto
         public List<int> UserIds { get; set; }
         public List<int> UserHistoryIds { get; set; }
     }
-    
+
+    [Route("/usersession", "GET")]
+    [Route("/usersession/search", "GET, POST, DELETE")]
+    public partial class UserSessionSearch : UserSessionSearchBase
+    {
+    }
+
     public class UserSessionFullTextSearch
     {
         private UserSessionSearch _request;

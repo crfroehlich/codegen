@@ -158,9 +158,7 @@ namespace Services.Dto
     
     [Route("/Client/{Id}/copy", "POST")]
     public partial class ClientCopy : Client {}
-    [Route("/client", "GET")]
-    [Route("/client/search", "GET, POST, DELETE")]
-    public partial class ClientSearch : Search<Client>
+    public partial class ClientSearchBase : Search<Client>
     {
         public Reference Account { get; set; }
         public List<int> AccountIds { get; set; }
@@ -176,7 +174,13 @@ namespace Services.Dto
         public List<int> ScopesIds { get; set; }
         public string Settings { get; set; }
     }
-    
+
+    [Route("/client", "GET")]
+    [Route("/client/search", "GET, POST, DELETE")]
+    public partial class ClientSearch : ClientSearchBase
+    {
+    }
+
     public class ClientFullTextSearch
     {
         private ClientSearch _request;

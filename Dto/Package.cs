@@ -195,9 +195,7 @@ namespace Services.Dto
     
     [Route("/Package/{Id}/copy", "POST")]
     public partial class PackageCopy : Package {}
-    [Route("/package", "GET")]
-    [Route("/package/search", "GET, POST, DELETE")]
-    public partial class PackageSearch : Search<Package>
+    public partial class PackageSearchBase : Search<Package>
     {
         public bool? Archived { get; set; }
         public List<int> ChildrenIds { get; set; }
@@ -230,7 +228,13 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         public List<string> StatusNames { get; set; }
     }
-    
+
+    [Route("/package", "GET")]
+    [Route("/package/search", "GET, POST, DELETE")]
+    public partial class PackageSearch : PackageSearchBase
+    {
+    }
+
     public class PackageFullTextSearch
     {
         private PackageSearch _request;

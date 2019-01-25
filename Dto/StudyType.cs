@@ -105,16 +105,20 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/studytype", "GET")]
-    [Route("/studytype/search", "GET, POST, DELETE")]
-    public partial class StudyTypeSearch : Search<StudyType>
+    public partial class StudyTypeSearchBase : Search<StudyType>
     {
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Causation/Etiology",@"Diagnosis",@"Harm",@"Modeling",@"Other",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Therapy"})]
         public List<string> TypeNames { get; set; }
     }
-    
+
+    [Route("/studytype", "GET")]
+    [Route("/studytype/search", "GET, POST, DELETE")]
+    public partial class StudyTypeSearch : StudyTypeSearchBase
+    {
+    }
+
     public class StudyTypeFullTextSearch
     {
         private StudyTypeSearch _request;

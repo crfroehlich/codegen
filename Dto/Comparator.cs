@@ -121,15 +121,19 @@ namespace Services.Dto
     
     [Route("/Comparator/{Id}/copy", "POST")]
     public partial class ComparatorCopy : Comparator {}
-    [Route("/comparator", "GET")]
-    [Route("/comparator/search", "GET, POST, DELETE")]
-    public partial class ComparatorSearch : Search<Comparator>
+    public partial class ComparatorSearchBase : Search<Comparator>
     {
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-    
+
+    [Route("/comparator", "GET")]
+    [Route("/comparator/search", "GET, POST, DELETE")]
+    public partial class ComparatorSearch : ComparatorSearchBase
+    {
+    }
+
     public class ComparatorFullTextSearch
     {
         private ComparatorSearch _request;
