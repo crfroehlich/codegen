@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTermSynonym> _ExecSearch(TermSynonymSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<TermSynonym, TermSynonymSearch>(request);
             IQueryable<DocEntityTermSynonym> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermSynonymFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityTermSynonym,TermSynonymFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -111,7 +111,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Synonym))
                     entities = entities.Where(en => en.Synonym.Contains(request.Synonym));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityTermSynonym,TermSynonymSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -153,7 +153,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermSynonym ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<TermSynonym>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

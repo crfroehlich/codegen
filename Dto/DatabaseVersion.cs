@@ -132,6 +132,7 @@ namespace Services.Dto
 
     public class DatabaseVersionFullTextSearch
     {
+        public DatabaseVersionFullTextSearch() {}
         private DatabaseVersionSearch _request;
         public DatabaseVersionFullTextSearch(DatabaseVersionSearch request) => _request = request;
         

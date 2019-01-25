@@ -153,6 +153,7 @@ namespace Services.Dto
 
     public class QueueChannelFullTextSearch
     {
+        public QueueChannelFullTextSearch() {}
         private QueueChannelSearch _request;
         public QueueChannelFullTextSearch(QueueChannelSearch request) => _request = request;
         

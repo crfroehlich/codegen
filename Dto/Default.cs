@@ -147,6 +147,7 @@ namespace Services.Dto
 
     public class DefaultFullTextSearch
     {
+        public DefaultFullTextSearch() {}
         private DefaultSearch _request;
         public DefaultFullTextSearch(DefaultSearch request) => _request = request;
         

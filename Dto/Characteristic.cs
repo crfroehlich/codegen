@@ -136,6 +136,7 @@ namespace Services.Dto
 
     public class CharacteristicFullTextSearch
     {
+        public CharacteristicFullTextSearch() {}
         private CharacteristicSearch _request;
         public CharacteristicFullTextSearch(CharacteristicSearch request) => _request = request;
         
@@ -159,15 +160,11 @@ namespace Services.Dto
     public partial class CharacteristicBatch : List<Characteristic> { }
 
     [Route("/characteristic/{Id}/documentset", "GET, POST, DELETE")]
-    public class CharacteristicJunction : Search<Characteristic>
+    public class CharacteristicJunction : CharacteristicSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public CharacteristicJunction(int id, List<int> ids)

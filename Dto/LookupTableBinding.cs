@@ -159,6 +159,7 @@ namespace Services.Dto
 
     public class LookupTableBindingFullTextSearch
     {
+        public LookupTableBindingFullTextSearch() {}
         private LookupTableBindingSearch _request;
         public LookupTableBindingFullTextSearch(LookupTableBindingSearch request) => _request = request;
         
@@ -186,15 +187,11 @@ namespace Services.Dto
 
     [Route("/lookuptablebinding/{Id}/termsynonym", "GET, POST, DELETE")]
     [Route("/lookuptablebinding/{Id}/workflow", "GET, POST, DELETE")]
-    public class LookupTableBindingJunction : Search<LookupTableBinding>
+    public class LookupTableBindingJunction : LookupTableBindingSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public LookupTableBindingJunction(int id, List<int> ids)

@@ -155,6 +155,7 @@ namespace Services.Dto
 
     public class WorkflowCommentFullTextSearch
     {
+        public WorkflowCommentFullTextSearch() {}
         private WorkflowCommentSearch _request;
         public WorkflowCommentFullTextSearch(WorkflowCommentSearch request) => _request = request;
         
@@ -180,15 +181,11 @@ namespace Services.Dto
     public partial class WorkflowCommentBatch : List<WorkflowComment> { }
 
     [Route("/workflowcomment/{Id}/workflowcomment", "GET, POST, DELETE")]
-    public class WorkflowCommentJunction : Search<WorkflowComment>
+    public class WorkflowCommentJunction : WorkflowCommentSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public WorkflowCommentJunction(int id, List<int> ids)

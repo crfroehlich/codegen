@@ -178,6 +178,7 @@ namespace Services.Dto
 
     public class VariableRuleFullTextSearch
     {
+        public VariableRuleFullTextSearch() {}
         private VariableRuleSearch _request;
         public VariableRuleFullTextSearch(VariableRuleSearch request) => _request = request;
         
@@ -208,15 +209,11 @@ namespace Services.Dto
     [Route("/variablerule/{Id}/variablerule", "GET, POST, DELETE")]
     [Route("/variablerule/{Id}/variableinstance", "GET, POST, DELETE")]
     [Route("/variablerule/{Id}/scope", "GET, POST, DELETE")]
-    public class VariableRuleJunction : Search<VariableRule>
+    public class VariableRuleJunction : VariableRuleSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public VariableRuleJunction(int id, List<int> ids)

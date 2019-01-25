@@ -171,6 +171,7 @@ namespace Services.Dto
 
     public class MeanRangeValueFullTextSearch
     {
+        public MeanRangeValueFullTextSearch() {}
         private MeanRangeValueSearch _request;
         public MeanRangeValueFullTextSearch(MeanRangeValueSearch request) => _request = request;
         
@@ -199,15 +200,11 @@ namespace Services.Dto
     public partial class MeanRangeValueBatch : List<MeanRangeValue> { }
 
     [Route("/meanrangevalue/{Id}/meanranges", "GET, POST, DELETE")]
-    public class MeanRangeValueJunction : Search<MeanRangeValue>
+    public class MeanRangeValueJunction : MeanRangeValueSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public MeanRangeValueJunction(int id, List<int> ids)

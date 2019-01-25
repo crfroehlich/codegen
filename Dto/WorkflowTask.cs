@@ -76,7 +76,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Rejected",@"Collected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Requested",@"Collected",@"Unavailable"})]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -160,7 +160,7 @@ namespace Services.Dto
         public List<int> ReporterIds { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Rejected",@"Collected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Requested",@"Collected",@"Unavailable"})]
         public List<string> StatusNames { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
@@ -178,6 +178,7 @@ namespace Services.Dto
 
     public class WorkflowTaskFullTextSearch
     {
+        public WorkflowTaskFullTextSearch() {}
         private WorkflowTaskSearch _request;
         public WorkflowTaskFullTextSearch(WorkflowTaskSearch request) => _request = request;
         

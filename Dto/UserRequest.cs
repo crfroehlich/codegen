@@ -151,6 +151,7 @@ namespace Services.Dto
 
     public class UserRequestFullTextSearch
     {
+        public UserRequestFullTextSearch() {}
         private UserRequestSearch _request;
         public UserRequestFullTextSearch(UserRequestSearch request) => _request = request;
         

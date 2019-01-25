@@ -160,6 +160,7 @@ namespace Services.Dto
 
     public class EventFullTextSearch
     {
+        public EventFullTextSearch() {}
         private EventSearch _request;
         public EventFullTextSearch(EventSearch request) => _request = request;
         
@@ -189,15 +190,11 @@ namespace Services.Dto
     [Route("/event/{Id}/team", "GET, POST, DELETE")]
     [Route("/event/{Id}/update", "GET, POST, DELETE")]
     [Route("/event/{Id}/user", "GET, POST, DELETE")]
-    public class EventJunction : Search<Event>
+    public class EventJunction : EventSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public EventJunction(int id, List<int> ids)

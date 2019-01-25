@@ -307,6 +307,7 @@ namespace Services.Dto
 
     public class UserFullTextSearch
     {
+        public UserFullTextSearch() {}
         private UserSearch _request;
         public UserFullTextSearch(UserSearch request) => _request = request;
         
@@ -370,15 +371,11 @@ namespace Services.Dto
     [Route("/user/{Id}/timecard", "GET, POST, DELETE")]
     [Route("/user/{Id}/update", "GET, POST, DELETE")]
     [Route("/user/{Id}/workflow", "GET, POST, DELETE")]
-    public class UserJunction : Search<User>
+    public class UserJunction : UserSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public UserJunction(int id, List<int> ids)

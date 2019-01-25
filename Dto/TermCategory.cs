@@ -132,6 +132,7 @@ namespace Services.Dto
 
     public class TermCategoryFullTextSearch
     {
+        public TermCategoryFullTextSearch() {}
         private TermCategorySearch _request;
         public TermCategoryFullTextSearch(TermCategorySearch request) => _request = request;
         
@@ -155,15 +156,11 @@ namespace Services.Dto
     public partial class TermCategoryBatch : List<TermCategory> { }
 
     [Route("/termcategory/{Id}/termmaster", "GET, POST, DELETE")]
-    public class TermCategoryJunction : Search<TermCategory>
+    public class TermCategoryJunction : TermCategorySearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public TermCategoryJunction(int id, List<int> ids)

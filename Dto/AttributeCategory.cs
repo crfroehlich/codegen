@@ -140,6 +140,7 @@ namespace Services.Dto
 
     public class AttributeCategoryFullTextSearch
     {
+        public AttributeCategoryFullTextSearch() {}
         private AttributeCategorySearch _request;
         public AttributeCategoryFullTextSearch(AttributeCategorySearch request) => _request = request;
         

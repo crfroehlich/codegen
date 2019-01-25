@@ -166,6 +166,7 @@ namespace Services.Dto
 
     public class DivisionFullTextSearch
     {
+        public DivisionFullTextSearch() {}
         private DivisionSearch _request;
         public DivisionFullTextSearch(DivisionSearch request) => _request = request;
         
@@ -194,15 +195,11 @@ namespace Services.Dto
 
     [Route("/division/{Id}/documentset", "GET, POST, DELETE")]
     [Route("/division/{Id}/user", "GET, POST, DELETE")]
-    public class DivisionJunction : Search<Division>
+    public class DivisionJunction : DivisionSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public DivisionJunction(int id, List<int> ids)

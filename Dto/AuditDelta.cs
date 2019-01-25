@@ -128,6 +128,7 @@ namespace Services.Dto
 
     public class AuditDeltaFullTextSearch
     {
+        public AuditDeltaFullTextSearch() {}
         private AuditDeltaSearch _request;
         public AuditDeltaFullTextSearch(AuditDeltaSearch request) => _request = request;
         

@@ -147,6 +147,7 @@ namespace Services.Dto
 
     public class UnitOfMeasureFullTextSearch
     {
+        public UnitOfMeasureFullTextSearch() {}
         private UnitOfMeasureSearch _request;
         public UnitOfMeasureFullTextSearch(UnitOfMeasureSearch request) => _request = request;
         

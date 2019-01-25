@@ -136,6 +136,7 @@ namespace Services.Dto
 
     public class ComparatorFullTextSearch
     {
+        public ComparatorFullTextSearch() {}
         private ComparatorSearch _request;
         public ComparatorFullTextSearch(ComparatorSearch request) => _request = request;
         
@@ -159,15 +160,11 @@ namespace Services.Dto
     public partial class ComparatorBatch : List<Comparator> { }
 
     [Route("/comparator/{Id}/documentset", "GET, POST, DELETE")]
-    public class ComparatorJunction : Search<Comparator>
+    public class ComparatorJunction : ComparatorSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public ComparatorJunction(int id, List<int> ids)

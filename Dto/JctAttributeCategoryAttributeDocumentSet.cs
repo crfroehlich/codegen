@@ -137,6 +137,7 @@ namespace Services.Dto
 
     public class JctAttributeCategoryAttributeDocumentSetFullTextSearch
     {
+        public JctAttributeCategoryAttributeDocumentSetFullTextSearch() {}
         private JctAttributeCategoryAttributeDocumentSetSearch _request;
         public JctAttributeCategoryAttributeDocumentSetFullTextSearch(JctAttributeCategoryAttributeDocumentSetSearch request) => _request = request;
         

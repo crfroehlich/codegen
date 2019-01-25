@@ -140,6 +140,7 @@ namespace Services.Dto
 
     public class ReleaseStatusFullTextSearch
     {
+        public ReleaseStatusFullTextSearch() {}
         private ReleaseStatusSearch _request;
         public ReleaseStatusFullTextSearch(ReleaseStatusSearch request) => _request = request;
         

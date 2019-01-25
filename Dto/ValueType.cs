@@ -132,6 +132,7 @@ namespace Services.Dto
 
     public class ValueTypeFullTextSearch
     {
+        public ValueTypeFullTextSearch() {}
         private ValueTypeSearch _request;
         public ValueTypeFullTextSearch(ValueTypeSearch request) => _request = request;
         

@@ -136,6 +136,7 @@ namespace Services.Dto
 
     public class ImpersonationFullTextSearch
     {
+        public ImpersonationFullTextSearch() {}
         private ImpersonationSearch _request;
         public ImpersonationFullTextSearch(ImpersonationSearch request) => _request = request;
         

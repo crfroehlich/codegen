@@ -182,6 +182,7 @@ namespace Services.Dto
 
     public class RoleFullTextSearch
     {
+        public RoleFullTextSearch() {}
         private RoleSearch _request;
         public RoleFullTextSearch(RoleSearch request) => _request = request;
         
@@ -216,15 +217,11 @@ namespace Services.Dto
     [Route("/role/{Id}/featureset", "GET, POST, DELETE")]
     [Route("/role/{Id}/page", "GET, POST, DELETE")]
     [Route("/role/{Id}/user", "GET, POST, DELETE")]
-    public class RoleJunction : Search<Role>
+    public class RoleJunction : RoleSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public RoleJunction(int id, List<int> ids)

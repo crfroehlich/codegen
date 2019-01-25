@@ -150,6 +150,7 @@ namespace Services.Dto
 
     public class IntervalFullTextSearch
     {
+        public IntervalFullTextSearch() {}
         private IntervalSearch _request;
         public IntervalFullTextSearch(IntervalSearch request) => _request = request;
         

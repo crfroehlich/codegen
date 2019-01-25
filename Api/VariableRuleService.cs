@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityVariableRule> _ExecSearch(VariableRuleSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<VariableRule, VariableRuleSearch>(request);
             IQueryable<DocEntityVariableRule> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableRuleFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityVariableRule,VariableRuleFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -139,7 +139,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityVariableRule,VariableRuleSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -181,7 +181,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             VariableRule ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<VariableRule>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

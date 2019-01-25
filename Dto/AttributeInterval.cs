@@ -118,6 +118,7 @@ namespace Services.Dto
 
     public class AttributeIntervalFullTextSearch
     {
+        public AttributeIntervalFullTextSearch() {}
         private AttributeIntervalSearch _request;
         public AttributeIntervalFullTextSearch(AttributeIntervalSearch request) => _request = request;
         

@@ -133,6 +133,7 @@ namespace Services.Dto
 
     public class LocaleLookupFullTextSearch
     {
+        public LocaleLookupFullTextSearch() {}
         private LocaleLookupSearch _request;
         public LocaleLookupFullTextSearch(LocaleLookupSearch request) => _request = request;
         

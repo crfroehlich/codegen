@@ -137,6 +137,7 @@ namespace Services.Dto
 
     public class LookupCategoryFullTextSearch
     {
+        public LookupCategoryFullTextSearch() {}
         private LookupCategorySearch _request;
         public LookupCategoryFullTextSearch(LookupCategorySearch request) => _request = request;
         
@@ -160,15 +161,11 @@ namespace Services.Dto
     public partial class LookupCategoryBatch : List<LookupCategory> { }
 
     [Route("/lookupcategory/{Id}/lookuptable", "GET, POST, DELETE")]
-    public class LookupCategoryJunction : Search<LookupCategory>
+    public class LookupCategoryJunction : LookupCategorySearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public LookupCategoryJunction(int id, List<int> ids)

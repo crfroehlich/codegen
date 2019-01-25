@@ -94,7 +94,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Rejected",@"Collected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Requested",@"Collected",@"Unavailable"})]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -204,7 +204,7 @@ namespace Services.Dto
         public List<int> ScopesIds { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Rejected",@"Collected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Requested",@"Collected",@"Unavailable"})]
         public List<string> StatusNames { get; set; }
         public List<int> TagsIds { get; set; }
         public List<int> TasksIds { get; set; }
@@ -226,6 +226,7 @@ namespace Services.Dto
 
     public class WorkflowFullTextSearch
     {
+        public WorkflowFullTextSearch() {}
         private WorkflowSearch _request;
         public WorkflowFullTextSearch(WorkflowSearch request) => _request = request;
         
@@ -269,15 +270,11 @@ namespace Services.Dto
     [Route("/workflow/{Id}/workflowtask", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/variableinstance", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/workflow", "GET, POST, DELETE")]
-    public class WorkflowJunction : Search<Workflow>
+    public class WorkflowJunction : WorkflowSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public WorkflowJunction(int id, List<int> ids)

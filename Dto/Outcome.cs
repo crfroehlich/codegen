@@ -136,6 +136,7 @@ namespace Services.Dto
 
     public class OutcomeFullTextSearch
     {
+        public OutcomeFullTextSearch() {}
         private OutcomeSearch _request;
         public OutcomeFullTextSearch(OutcomeSearch request) => _request = request;
         
@@ -159,15 +160,11 @@ namespace Services.Dto
     public partial class OutcomeBatch : List<Outcome> { }
 
     [Route("/outcome/{Id}/documentset", "GET, POST, DELETE")]
-    public class OutcomeJunction : Search<Outcome>
+    public class OutcomeJunction : OutcomeSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public OutcomeJunction(int id, List<int> ids)

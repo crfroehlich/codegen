@@ -159,6 +159,7 @@ namespace Services.Dto
 
     public class UserTypeFullTextSearch
     {
+        public UserTypeFullTextSearch() {}
         private UserTypeSearch _request;
         public UserTypeFullTextSearch(UserTypeSearch request) => _request = request;
         
@@ -183,15 +184,11 @@ namespace Services.Dto
     public partial class UserTypeBatch : List<UserType> { }
 
     [Route("/usertype/{Id}/user", "GET, POST, DELETE")]
-    public class UserTypeJunction : Search<UserType>
+    public class UserTypeJunction : UserTypeSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public UserTypeJunction(int id, List<int> ids)

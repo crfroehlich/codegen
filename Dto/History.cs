@@ -176,6 +176,7 @@ namespace Services.Dto
 
     public class HistoryFullTextSearch
     {
+        public HistoryFullTextSearch() {}
         private HistorySearch _request;
         public HistoryFullTextSearch(HistorySearch request) => _request = request;
         

@@ -237,6 +237,7 @@ namespace Services.Dto
 
     public class PackageFullTextSearch
     {
+        public PackageFullTextSearch() {}
         private PackageSearch _request;
         public PackageFullTextSearch(PackageSearch request) => _request = request;
         
@@ -276,15 +277,11 @@ namespace Services.Dto
 
     [Route("/package/{Id}/package", "GET, POST, DELETE")]
     [Route("/package/{Id}/timecard", "GET, POST, DELETE")]
-    public class PackageJunction : Search<Package>
+    public class PackageJunction : PackageSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public PackageJunction(int id, List<int> ids)

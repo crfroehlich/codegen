@@ -241,6 +241,7 @@ namespace Services.Dto
 
     public class ProjectFullTextSearch
     {
+        public ProjectFullTextSearch() {}
         private ProjectSearch _request;
         public ProjectFullTextSearch(ProjectSearch request) => _request = request;
         
@@ -282,15 +283,11 @@ namespace Services.Dto
 
     [Route("/project/{Id}/project", "GET, POST, DELETE")]
     [Route("/project/{Id}/timecard", "GET, POST, DELETE")]
-    public class ProjectJunction : Search<Project>
+    public class ProjectJunction : ProjectSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public ProjectJunction(int id, List<int> ids)

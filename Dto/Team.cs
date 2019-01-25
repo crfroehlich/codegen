@@ -182,6 +182,7 @@ namespace Services.Dto
 
     public class TeamFullTextSearch
     {
+        public TeamFullTextSearch() {}
         private TeamSearch _request;
         public TeamFullTextSearch(TeamSearch request) => _request = request;
         
@@ -216,15 +217,11 @@ namespace Services.Dto
     [Route("/team/{Id}/scope", "GET, POST, DELETE")]
     [Route("/team/{Id}/update", "GET, POST, DELETE")]
     [Route("/team/{Id}/user", "GET, POST, DELETE")]
-    public class TeamJunction : Search<Team>
+    public class TeamJunction : TeamSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public TeamJunction(int id, List<int> ids)

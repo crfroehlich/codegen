@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityDatabaseVersion> _ExecSearch(DatabaseVersionSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<DatabaseVersion, DatabaseVersionSearch>(request);
             IQueryable<DocEntityDatabaseVersion> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DatabaseVersionFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityDatabaseVersion,DatabaseVersionFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -91,7 +91,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.VersionName))
                     entities = entities.Where(en => en.VersionName.Contains(request.VersionName));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityDatabaseVersion,DatabaseVersionSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);

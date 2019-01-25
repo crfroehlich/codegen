@@ -121,6 +121,7 @@ namespace Services.Dto
 
     public class MeanVariancesFullTextSearch
     {
+        public MeanVariancesFullTextSearch() {}
         private MeanVariancesSearch _request;
         public MeanVariancesFullTextSearch(MeanVariancesSearch request) => _request = request;
         
@@ -142,15 +143,11 @@ namespace Services.Dto
     public partial class MeanVariancesBatch : List<MeanVariances> { }
 
     [Route("/meanvariances/{Id}/meanvariancevalue", "GET, POST, DELETE")]
-    public class MeanVariancesJunction : Search<MeanVariances>
+    public class MeanVariancesJunction : MeanVariancesSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public MeanVariancesJunction(int id, List<int> ids)

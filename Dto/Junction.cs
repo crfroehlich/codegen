@@ -178,6 +178,7 @@ namespace Services.Dto
 
     public class JunctionFullTextSearch
     {
+        public JunctionFullTextSearch() {}
         private JunctionSearch _request;
         public JunctionFullTextSearch(JunctionSearch request) => _request = request;
         
@@ -207,15 +208,11 @@ namespace Services.Dto
     public partial class JunctionBatch : List<Junction> { }
 
     [Route("/junction/{Id}/junction", "GET, POST, DELETE")]
-    public class JunctionJunction : Search<Junction>
+    public class JunctionJunction : JunctionSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public JunctionJunction(int id, List<int> ids)

@@ -147,6 +147,7 @@ namespace Services.Dto
 
     public class VariableInstanceFullTextSearch
     {
+        public VariableInstanceFullTextSearch() {}
         private VariableInstanceSearch _request;
         public VariableInstanceFullTextSearch(VariableInstanceSearch request) => _request = request;
         
@@ -171,15 +172,11 @@ namespace Services.Dto
     public partial class VariableInstanceBatch : List<VariableInstance> { }
 
     [Route("/variableinstance/{Id}/workflow", "GET, POST, DELETE")]
-    public class VariableInstanceJunction : Search<VariableInstance>
+    public class VariableInstanceJunction : VariableInstanceSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public VariableInstanceJunction(int id, List<int> ids)

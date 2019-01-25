@@ -152,6 +152,7 @@ namespace Services.Dto
 
     public class UnitValueFullTextSearch
     {
+        public UnitValueFullTextSearch() {}
         private UnitValueSearch _request;
         public UnitValueFullTextSearch(UnitValueSearch request) => _request = request;
         
@@ -177,15 +178,11 @@ namespace Services.Dto
     [Route("/unitvalue/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitValueBatch : List<UnitValue> { }
 
-    public class UnitValueJunction : Search<UnitValue>
+    public class UnitValueJunction : UnitValueSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public UnitValueJunction(int id, List<int> ids)

@@ -136,6 +136,7 @@ namespace Services.Dto
 
     public class InterventionFullTextSearch
     {
+        public InterventionFullTextSearch() {}
         private InterventionSearch _request;
         public InterventionFullTextSearch(InterventionSearch request) => _request = request;
         
@@ -159,15 +160,11 @@ namespace Services.Dto
     public partial class InterventionBatch : List<Intervention> { }
 
     [Route("/intervention/{Id}/documentset", "GET, POST, DELETE")]
-    public class InterventionJunction : Search<Intervention>
+    public class InterventionJunction : InterventionSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public InterventionJunction(int id, List<int> ids)

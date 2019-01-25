@@ -190,6 +190,7 @@ namespace Services.Dto
 
     public class UpdateFullTextSearch
     {
+        public UpdateFullTextSearch() {}
         private UpdateSearch _request;
         public UpdateFullTextSearch(UpdateSearch request) => _request = request;
         
@@ -222,15 +223,11 @@ namespace Services.Dto
     public partial class UpdateBatch : List<Update> { }
 
     [Route("/update/{Id}/event", "GET, POST, DELETE")]
-    public class UpdateJunction : Search<Update>
+    public class UpdateJunction : UpdateSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public UpdateJunction(int id, List<int> ids)

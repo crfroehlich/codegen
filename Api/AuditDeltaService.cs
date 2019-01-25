@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityAuditDelta> _ExecSearch(AuditDeltaSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<AuditDelta, AuditDeltaSearch>(request);
             IQueryable<DocEntityAuditDelta> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AuditDeltaFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityAuditDelta,AuditDeltaFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -93,7 +93,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Audit.Id.In(request.AuditIds));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityAuditDelta,AuditDeltaSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -135,7 +135,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             AuditDelta ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<AuditDelta>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

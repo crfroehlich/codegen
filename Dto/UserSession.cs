@@ -168,6 +168,7 @@ namespace Services.Dto
 
     public class UserSessionFullTextSearch
     {
+        public UserSessionFullTextSearch() {}
         private UserSessionSearch _request;
         public UserSessionFullTextSearch(UserSessionSearch request) => _request = request;
         
@@ -199,15 +200,11 @@ namespace Services.Dto
     [Route("/usersession/{Id}/impersonation", "GET, POST, DELETE")]
     [Route("/usersession/{Id}/request", "GET, POST, DELETE")]
     [Route("/usersession/{Id}/history", "GET, POST, DELETE")]
-    public class UserSessionJunction : Search<UserSession>
+    public class UserSessionJunction : UserSessionSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public UserSessionJunction(int id, List<int> ids)

@@ -138,6 +138,7 @@ namespace Services.Dto
 
     public class FeatureSetFullTextSearch
     {
+        public FeatureSetFullTextSearch() {}
         private FeatureSetSearch _request;
         public FeatureSetFullTextSearch(FeatureSetSearch request) => _request = request;
         
@@ -162,15 +163,11 @@ namespace Services.Dto
     public partial class FeatureSetBatch : List<FeatureSet> { }
 
     [Route("/featureset/{Id}/role", "GET, POST, DELETE")]
-    public class FeatureSetJunction : Search<FeatureSet>
+    public class FeatureSetJunction : FeatureSetSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public FeatureSetJunction(int id, List<int> ids)

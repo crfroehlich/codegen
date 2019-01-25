@@ -149,6 +149,7 @@ namespace Services.Dto
 
     public class GlossaryFullTextSearch
     {
+        public GlossaryFullTextSearch() {}
         private GlossarySearch _request;
         public GlossaryFullTextSearch(GlossarySearch request) => _request = request;
         

@@ -178,6 +178,7 @@ namespace Services.Dto
 
     public class BroadcastFullTextSearch
     {
+        public BroadcastFullTextSearch() {}
         private BroadcastSearch _request;
         public BroadcastFullTextSearch(BroadcastSearch request) => _request = request;
         
@@ -206,15 +207,11 @@ namespace Services.Dto
     public partial class BroadcastBatch : List<Broadcast> { }
 
     [Route("/broadcast/{Id}/scope", "GET, POST, DELETE")]
-    public class BroadcastJunction : Search<Broadcast>
+    public class BroadcastJunction : BroadcastSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public BroadcastJunction(int id, List<int> ids)

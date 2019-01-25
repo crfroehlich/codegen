@@ -154,6 +154,7 @@ namespace Services.Dto
 
     public class PageFullTextSearch
     {
+        public PageFullTextSearch() {}
         private PageSearch _request;
         public PageFullTextSearch(PageSearch request) => _request = request;
         
@@ -183,15 +184,11 @@ namespace Services.Dto
     [Route("/page/{Id}/glossary", "GET, POST, DELETE")]
     [Route("/page/{Id}/help", "GET, POST, DELETE")]
     [Route("/page/{Id}/role", "GET, POST, DELETE")]
-    public class PageJunction : Search<Page>
+    public class PageJunction : PageSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public PageJunction(int id, List<int> ids)

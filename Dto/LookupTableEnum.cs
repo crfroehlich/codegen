@@ -128,6 +128,7 @@ namespace Services.Dto
 
     public class LookupTableEnumFullTextSearch
     {
+        public LookupTableEnumFullTextSearch() {}
         private LookupTableEnumSearch _request;
         public LookupTableEnumFullTextSearch(LookupTableEnumSearch request) => _request = request;
         

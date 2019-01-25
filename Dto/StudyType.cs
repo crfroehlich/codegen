@@ -121,6 +121,7 @@ namespace Services.Dto
 
     public class StudyTypeFullTextSearch
     {
+        public StudyTypeFullTextSearch() {}
         private StudyTypeSearch _request;
         public StudyTypeFullTextSearch(StudyTypeSearch request) => _request = request;
         

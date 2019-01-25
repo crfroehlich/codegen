@@ -191,6 +191,7 @@ namespace Services.Dto
 
     public class StatsStudySetFullTextSearch
     {
+        public StatsStudySetFullTextSearch() {}
         private StatsStudySetSearch _request;
         public StatsStudySetFullTextSearch(StatsStudySetSearch request) => _request = request;
         
@@ -225,15 +226,11 @@ namespace Services.Dto
     [Route("/statsstudyset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsStudySetBatch : List<StatsStudySet> { }
 
-    public class StatsStudySetJunction : Search<StatsStudySet>
+    public class StatsStudySetJunction : StatsStudySetSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public StatsStudySetJunction(int id, List<int> ids)

@@ -131,6 +131,7 @@ namespace Services.Dto
 
     public class TagFullTextSearch
     {
+        public TagFullTextSearch() {}
         private TagSearch _request;
         public TagFullTextSearch(TagSearch request) => _request = request;
         
@@ -153,15 +154,11 @@ namespace Services.Dto
     public partial class TagBatch : List<Tag> { }
 
     [Route("/tag/{Id}/workflow", "GET, POST, DELETE")]
-    public class TagJunction : Search<Tag>
+    public class TagJunction : TagSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public TagJunction(int id, List<int> ids)

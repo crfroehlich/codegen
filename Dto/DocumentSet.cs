@@ -398,6 +398,7 @@ namespace Services.Dto
 
     public class DocumentSetFullTextSearch
     {
+        public DocumentSetFullTextSearch() {}
         private DocumentSetSearch _request;
         public DocumentSetFullTextSearch(DocumentSetSearch request) => _request = request;
         
@@ -488,15 +489,11 @@ namespace Services.Dto
     [Route("/documentset/{Id}/studydesign", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/user", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/workflow", "GET, POST, DELETE")]
-    public class DocumentSetJunction : Search<DocumentSet>
+    public class DocumentSetJunction : DocumentSetSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public DocumentSetJunction(int id, List<int> ids)

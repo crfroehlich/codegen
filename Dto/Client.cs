@@ -183,6 +183,7 @@ namespace Services.Dto
 
     public class ClientFullTextSearch
     {
+        public ClientFullTextSearch() {}
         private ClientSearch _request;
         public ClientFullTextSearch(ClientSearch request) => _request = request;
         
@@ -219,15 +220,11 @@ namespace Services.Dto
     [Route("/client/{Id}/scope", "GET, POST, DELETE")]
     [Route("/client/{Id}/user", "GET, POST, DELETE")]
     [Route("/client/{Id}/workflow", "GET, POST, DELETE")]
-    public class ClientJunction : Search<Client>
+    public class ClientJunction : ClientSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public ClientJunction(int id, List<int> ids)

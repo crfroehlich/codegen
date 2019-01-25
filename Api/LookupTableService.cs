@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityLookupTable> _ExecSearch(LookupTableSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<LookupTable, LookupTableSearch>(request);
             IQueryable<DocEntityLookupTable> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityLookupTable,LookupTableFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -107,7 +107,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityLookupTable,LookupTableSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -149,7 +149,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LookupTable ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<LookupTable>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

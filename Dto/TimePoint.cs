@@ -141,6 +141,7 @@ namespace Services.Dto
 
     public class TimePointFullTextSearch
     {
+        public TimePointFullTextSearch() {}
         private TimePointSearch _request;
         public TimePointFullTextSearch(TimePointSearch request) => _request = request;
         

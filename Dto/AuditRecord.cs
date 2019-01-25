@@ -207,6 +207,7 @@ namespace Services.Dto
 
     public class AuditRecordFullTextSearch
     {
+        public AuditRecordFullTextSearch() {}
         private AuditRecordSearch _request;
         public AuditRecordFullTextSearch(AuditRecordSearch request) => _request = request;
         
@@ -242,15 +243,11 @@ namespace Services.Dto
     public partial class AuditRecordBatch : List<AuditRecord> { }
 
     [Route("/auditrecord/{Id}/auditdelta", "GET, POST, DELETE")]
-    public class AuditRecordJunction : Search<AuditRecord>
+    public class AuditRecordJunction : AuditRecordSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public AuditRecordJunction(int id, List<int> ids)

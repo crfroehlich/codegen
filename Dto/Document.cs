@@ -369,6 +369,7 @@ namespace Services.Dto
 
     public class DocumentFullTextSearch
     {
+        public DocumentFullTextSearch() {}
         private DocumentSearch _request;
         public DocumentFullTextSearch(DocumentSearch request) => _request = request;
         
@@ -437,15 +438,11 @@ namespace Services.Dto
     [Route("/document/{Id}/lookuptable", "GET, POST, DELETE")]
     [Route("/document/{Id}/nondigitizeddocumentset", "GET, POST, DELETE")]
     [Route("/document/{Id}/variableinstance", "GET, POST, DELETE")]
-    public class DocumentJunction : Search<Document>
+    public class DocumentJunction : DocumentSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public DocumentJunction(int id, List<int> ids)

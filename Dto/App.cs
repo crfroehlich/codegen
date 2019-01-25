@@ -155,6 +155,7 @@ namespace Services.Dto
 
     public class AppFullTextSearch
     {
+        public AppFullTextSearch() {}
         private AppSearch _request;
         public AppFullTextSearch(AppSearch request) => _request = request;
         
@@ -184,15 +185,11 @@ namespace Services.Dto
     [Route("/app/{Id}/page", "GET, POST, DELETE")]
     [Route("/app/{Id}/role", "GET, POST, DELETE")]
     [Route("/app/{Id}/scope", "GET, POST, DELETE")]
-    public class AppJunction : Search<App>
+    public class AppJunction : AppSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public AppJunction(int id, List<int> ids)

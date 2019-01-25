@@ -180,6 +180,7 @@ namespace Services.Dto
 
     public class TermMasterFullTextSearch
     {
+        public TermMasterFullTextSearch() {}
         private TermMasterSearch _request;
         public TermMasterFullTextSearch(TermMasterSearch request) => _request = request;
         
@@ -212,15 +213,11 @@ namespace Services.Dto
 
     [Route("/termmaster/{Id}/termcategory", "GET, POST, DELETE")]
     [Route("/termmaster/{Id}/termsynonym", "GET, POST, DELETE")]
-    public class TermMasterJunction : Search<TermMaster>
+    public class TermMasterJunction : TermMasterSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public TermMasterJunction(int id, List<int> ids)

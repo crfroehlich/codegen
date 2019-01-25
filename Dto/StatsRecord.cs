@@ -136,6 +136,7 @@ namespace Services.Dto
 
     public class StatsRecordFullTextSearch
     {
+        public StatsRecordFullTextSearch() {}
         private StatsRecordSearch _request;
         public StatsRecordFullTextSearch(StatsRecordSearch request) => _request = request;
         

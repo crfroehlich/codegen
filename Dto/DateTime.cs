@@ -135,6 +135,7 @@ namespace Services.Dto
 
     public class DateTimeFullTextSearch
     {
+        public DateTimeFullTextSearch() {}
         private DateTimeSearch _request;
         public DateTimeFullTextSearch(DateTimeSearch request) => _request = request;
         

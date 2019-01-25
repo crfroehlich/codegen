@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityQueueChannel> _ExecSearch(QueueChannelSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<QueueChannel, QueueChannelSearch>(request);
             IQueryable<DocEntityQueueChannel> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new QueueChannelFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityQueueChannel,QueueChannelFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -105,7 +105,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityQueueChannel,QueueChannelSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -147,7 +147,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             QueueChannel ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<QueueChannel>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

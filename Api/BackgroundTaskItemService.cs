@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityBackgroundTaskItem> _ExecSearch(BackgroundTaskItemSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<BackgroundTaskItem, BackgroundTaskItemSearch>(request);
             IQueryable<DocEntityBackgroundTaskItem> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskItemFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityBackgroundTaskItem,BackgroundTaskItemFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -129,7 +129,7 @@ namespace Services.API
                             entities = entities.Where(en => en.TaskHistory.Any(r => r.Id.In(request.TaskHistoryIds)));
                         }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);

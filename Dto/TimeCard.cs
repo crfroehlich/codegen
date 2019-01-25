@@ -191,6 +191,7 @@ namespace Services.Dto
 
     public class TimeCardFullTextSearch
     {
+        public TimeCardFullTextSearch() {}
         private TimeCardSearch _request;
         public TimeCardFullTextSearch(TimeCardSearch request) => _request = request;
         

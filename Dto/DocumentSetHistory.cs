@@ -140,6 +140,7 @@ namespace Services.Dto
 
     public class DocumentSetHistoryFullTextSearch
     {
+        public DocumentSetHistoryFullTextSearch() {}
         private DocumentSetHistorySearch _request;
         public DocumentSetHistoryFullTextSearch(DocumentSetHistorySearch request) => _request = request;
         

@@ -168,6 +168,7 @@ namespace Services.Dto
 
     public class HelpFullTextSearch
     {
+        public HelpFullTextSearch() {}
         private HelpSearch _request;
         public HelpFullTextSearch(HelpSearch request) => _request = request;
         
@@ -197,15 +198,11 @@ namespace Services.Dto
 
     [Route("/help/{Id}/page", "GET, POST, DELETE")]
     [Route("/help/{Id}/scope", "GET, POST, DELETE")]
-    public class HelpJunction : Search<Help>
+    public class HelpJunction : HelpSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public HelpJunction(int id, List<int> ids)

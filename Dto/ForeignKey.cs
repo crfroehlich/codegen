@@ -147,6 +147,7 @@ namespace Services.Dto
 
     public class ForeignKeyFullTextSearch
     {
+        public ForeignKeyFullTextSearch() {}
         private ForeignKeySearch _request;
         public ForeignKeyFullTextSearch(ForeignKeySearch request) => _request = request;
         

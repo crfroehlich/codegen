@@ -188,6 +188,7 @@ namespace Services.Dto
 
     public class BackgroundTaskItemFullTextSearch
     {
+        public BackgroundTaskItemFullTextSearch() {}
         private BackgroundTaskItemSearch _request;
         public BackgroundTaskItemFullTextSearch(BackgroundTaskItemSearch request) => _request = request;
         
@@ -220,15 +221,11 @@ namespace Services.Dto
     public partial class BackgroundTaskItemBatch : List<BackgroundTaskItem> { }
 
     [Route("/backgroundtaskitem/{Id}/backgroundtaskhistory", "GET, POST, DELETE")]
-    public class BackgroundTaskItemJunction : Search<BackgroundTaskItem>
+    public class BackgroundTaskItemJunction : BackgroundTaskItemSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public BackgroundTaskItemJunction(int id, List<int> ids)

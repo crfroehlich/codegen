@@ -129,6 +129,7 @@ namespace Services.Dto
 
     public class DocumentAttributeFullTextSearch
     {
+        public DocumentAttributeFullTextSearch() {}
         private DocumentAttributeSearch _request;
         public DocumentAttributeFullTextSearch(DocumentAttributeSearch request) => _request = request;
         

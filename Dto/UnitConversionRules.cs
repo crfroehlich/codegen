@@ -169,6 +169,7 @@ namespace Services.Dto
 
     public class UnitConversionRulesFullTextSearch
     {
+        public UnitConversionRulesFullTextSearch() {}
         private UnitConversionRulesSearch _request;
         public UnitConversionRulesFullTextSearch(UnitConversionRulesSearch request) => _request = request;
         

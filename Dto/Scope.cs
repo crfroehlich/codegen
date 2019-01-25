@@ -232,6 +232,7 @@ namespace Services.Dto
 
     public class ScopeFullTextSearch
     {
+        public ScopeFullTextSearch() {}
         private ScopeSearch _request;
         public ScopeFullTextSearch(ScopeSearch request) => _request = request;
         
@@ -274,15 +275,11 @@ namespace Services.Dto
     [Route("/scope/{Id}/termsynonym", "GET, POST, DELETE")]
     [Route("/scope/{Id}/variablerule", "GET, POST, DELETE")]
     [Route("/scope/{Id}/workflow", "GET, POST, DELETE")]
-    public class ScopeJunction : Search<Scope>
+    public class ScopeJunction : ScopeSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public ScopeJunction(int id, List<int> ids)

@@ -233,6 +233,7 @@ namespace Services.Dto
 
     public class ImportDataFullTextSearch
     {
+        public ImportDataFullTextSearch() {}
         private ImportDataSearch _request;
         public ImportDataFullTextSearch(ImportDataSearch request) => _request = request;
         
@@ -271,15 +272,11 @@ namespace Services.Dto
     public partial class ImportDataBatch : List<ImportData> { }
 
     [Route("/importdata/{Id}/documentset", "GET, POST, DELETE")]
-    public class ImportDataJunction : Search<ImportData>
+    public class ImportDataJunction : ImportDataSearchBase
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
 
 
         public ImportDataJunction(int id, List<int> ids)
