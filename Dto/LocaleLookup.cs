@@ -117,23 +117,18 @@ namespace Services.Dto
     
     [Route("/LocaleLookup/{Id}/copy", "POST")]
     public partial class LocaleLookupCopy : LocaleLookup {}
-    public partial class LocaleLookupSearchBase : Search<LocaleLookup>
+    [Route("/localelookup", "GET")]
+    [Route("/localelookup/search", "GET, POST, DELETE")]
+    public partial class LocaleLookupSearch : Search<LocaleLookup>
     {
         public string Data { get; set; }
         public string IpAddress { get; set; }
         public Reference Locale { get; set; }
         public List<int> LocaleIds { get; set; }
     }
-
-    [Route("/localelookup", "GET")]
-    [Route("/localelookup/search", "GET, POST, DELETE")]
-    public partial class LocaleLookupSearch : LocaleLookupSearchBase
-    {
-    }
-
+    
     public class LocaleLookupFullTextSearch
     {
-        public LocaleLookupFullTextSearch() {}
         private LocaleLookupSearch _request;
         public LocaleLookupFullTextSearch(LocaleLookupSearch request) => _request = request;
         

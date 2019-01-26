@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUserSession> _ExecSearch(UserSessionSearch request)
         {
-            request = InitSearch<UserSession, UserSessionSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityUserSession> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserSessionFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityUserSession,UserSessionFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -115,7 +115,7 @@ namespace Services.API
                             entities = entities.Where(en => en.UserHistory.Any(r => r.Id.In(request.UserHistoryIds)));
                         }
 
-                entities = ApplyFilters<DocEntityUserSession,UserSessionSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);

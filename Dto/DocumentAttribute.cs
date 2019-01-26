@@ -113,23 +113,18 @@ namespace Services.Dto
     
     [Route("/DocumentAttribute/{Id}/copy", "POST")]
     public partial class DocumentAttributeCopy : DocumentAttribute {}
-    public partial class DocumentAttributeSearchBase : Search<DocumentAttribute>
+    [Route("/documentattribute", "GET")]
+    [Route("/documentattribute/search", "GET, POST, DELETE")]
+    public partial class DocumentAttributeSearch : Search<DocumentAttribute>
     {
         public Reference Attribute { get; set; }
         public List<int> AttributeIds { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
     }
-
-    [Route("/documentattribute", "GET")]
-    [Route("/documentattribute/search", "GET, POST, DELETE")]
-    public partial class DocumentAttributeSearch : DocumentAttributeSearchBase
-    {
-    }
-
+    
     public class DocumentAttributeFullTextSearch
     {
-        public DocumentAttributeFullTextSearch() {}
         private DocumentAttributeSearch _request;
         public DocumentAttributeFullTextSearch(DocumentAttributeSearch request) => _request = request;
         

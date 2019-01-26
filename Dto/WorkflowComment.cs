@@ -135,7 +135,9 @@ namespace Services.Dto
     
     [Route("/WorkflowComment/{Id}/copy", "POST")]
     public partial class WorkflowCommentCopy : WorkflowComment {}
-    public partial class WorkflowCommentSearchBase : Search<WorkflowComment>
+    [Route("/workflowcomment", "GET")]
+    [Route("/workflowcomment/search", "GET, POST, DELETE")]
+    public partial class WorkflowCommentSearch : Search<WorkflowComment>
     {
         public List<int> ChildrenIds { get; set; }
         public Reference Parent { get; set; }
@@ -146,16 +148,9 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-
-    [Route("/workflowcomment", "GET")]
-    [Route("/workflowcomment/search", "GET, POST, DELETE")]
-    public partial class WorkflowCommentSearch : WorkflowCommentSearchBase
-    {
-    }
-
+    
     public class WorkflowCommentFullTextSearch
     {
-        public WorkflowCommentFullTextSearch() {}
         private WorkflowCommentSearch _request;
         public WorkflowCommentFullTextSearch(WorkflowCommentSearch request) => _request = request;
         
@@ -181,11 +176,15 @@ namespace Services.Dto
     public partial class WorkflowCommentBatch : List<WorkflowComment> { }
 
     [Route("/workflowcomment/{Id}/workflowcomment", "GET, POST, DELETE")]
-    public class WorkflowCommentJunction : WorkflowCommentSearchBase
+    public class WorkflowCommentJunction : Search<WorkflowComment>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public WorkflowCommentJunction(int id, List<int> ids)

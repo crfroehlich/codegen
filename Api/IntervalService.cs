@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityInterval> _ExecSearch(IntervalSearch request)
         {
-            request = InitSearch<Interval, IntervalSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityInterval> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new IntervalFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityInterval,IntervalFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -119,7 +119,7 @@ namespace Services.API
                     entities = entities.Where(en => en.TimeOfDay.Id.In(request.TimeOfDayIds));
                 }
 
-                entities = ApplyFilters<DocEntityInterval,IntervalSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -161,7 +161,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Interval ret = null;
-            request = _InitAssignValues<Interval>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

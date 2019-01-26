@@ -433,7 +433,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class BroadcastMapper : DocMapperBase
+    public partial class BroadcastMapper : Profile
     {
         private IMappingExpression<DocEntityBroadcast,Broadcast> _EntityToDto;
         private IMappingExpression<Broadcast,DocEntityBroadcast> _DtoToEntity;

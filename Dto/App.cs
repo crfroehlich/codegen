@@ -136,7 +136,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class AppSearchBase : Search<App>
+    [Route("/app", "GET")]
+    [Route("/app/search", "GET, POST, DELETE")]
+    public partial class AppSearch : Search<App>
     {
         public string Description { get; set; }
         public string Icon { get; set; }
@@ -146,16 +148,9 @@ namespace Services.Dto
         public List<int> ScopesIds { get; set; }
         public decimal? Version { get; set; }
     }
-
-    [Route("/app", "GET")]
-    [Route("/app/search", "GET, POST, DELETE")]
-    public partial class AppSearch : AppSearchBase
-    {
-    }
-
+    
     public class AppFullTextSearch
     {
-        public AppFullTextSearch() {}
         private AppSearch _request;
         public AppFullTextSearch(AppSearch request) => _request = request;
         
@@ -185,11 +180,15 @@ namespace Services.Dto
     [Route("/app/{Id}/page", "GET, POST, DELETE")]
     [Route("/app/{Id}/role", "GET, POST, DELETE")]
     [Route("/app/{Id}/scope", "GET, POST, DELETE")]
-    public class AppJunction : AppSearchBase
+    public class AppJunction : Search<App>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public AppJunction(int id, List<int> ids)

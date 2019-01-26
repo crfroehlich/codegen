@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityDivision> _ExecSearch(DivisionSearch request)
         {
-            request = InitSearch<Division, DivisionSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityDivision> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DivisionFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityDivision,DivisionFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -119,7 +119,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
                         }
 
-                entities = ApplyFilters<DocEntityDivision,DivisionSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -161,7 +161,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Division ret = null;
-            request = _InitAssignValues<Division>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

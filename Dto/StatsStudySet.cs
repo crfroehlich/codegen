@@ -163,7 +163,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class StatsStudySetSearchBase : Search<StatsStudySet>
+    [Route("/statsstudyset", "GET")]
+    [Route("/statsstudyset/search", "GET, POST, DELETE")]
+    public partial class StatsStudySetSearch : Search<StatsStudySet>
     {
         public int? BoundTerms { get; set; }
         public int? Characteristics { get; set; }
@@ -182,16 +184,9 @@ namespace Services.Dto
         public string TypeList { get; set; }
         public int? UnboundTerms { get; set; }
     }
-
-    [Route("/statsstudyset", "GET")]
-    [Route("/statsstudyset/search", "GET, POST, DELETE")]
-    public partial class StatsStudySetSearch : StatsStudySetSearchBase
-    {
-    }
-
+    
     public class StatsStudySetFullTextSearch
     {
-        public StatsStudySetFullTextSearch() {}
         private StatsStudySetSearch _request;
         public StatsStudySetFullTextSearch(StatsStudySetSearch request) => _request = request;
         
@@ -226,11 +221,15 @@ namespace Services.Dto
     [Route("/statsstudyset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsStudySetBatch : List<StatsStudySet> { }
 
-    public class StatsStudySetJunction : StatsStudySetSearchBase
+    public class StatsStudySetJunction : Search<StatsStudySet>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public StatsStudySetJunction(int id, List<int> ids)

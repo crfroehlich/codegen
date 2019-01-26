@@ -117,7 +117,9 @@ namespace Services.Dto
     
     [Route("/DateTime/{Id}/copy", "POST")]
     public partial class DateTimeDtoCopy : DateTimeDto {}
-    public partial class DateTimeSearchBase : Search<DateTimeDto>
+    [Route("/datetime", "GET")]
+    [Route("/datetime/search", "GET, POST, DELETE")]
+    public partial class DateTimeSearch : Search<DateTimeDto>
     {
         public int? DateDay { get; set; }
         public int? DateMonth { get; set; }
@@ -126,16 +128,9 @@ namespace Services.Dto
         public DateTime? DateTimeBefore { get; set; }
         public int? DateYear { get; set; }
     }
-
-    [Route("/datetime", "GET")]
-    [Route("/datetime/search", "GET, POST, DELETE")]
-    public partial class DateTimeSearch : DateTimeSearchBase
-    {
-    }
-
+    
     public class DateTimeFullTextSearch
     {
-        public DateTimeFullTextSearch() {}
         private DateTimeSearch _request;
         public DateTimeFullTextSearch(DateTimeSearch request) => _request = request;
         

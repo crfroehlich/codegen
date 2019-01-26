@@ -131,7 +131,9 @@ namespace Services.Dto
     
     [Route("/LookupTable/{Id}/copy", "POST")]
     public partial class LookupTableCopy : LookupTable {}
-    public partial class LookupTableSearchBase : Search<LookupTable>
+    [Route("/lookuptable", "GET")]
+    [Route("/lookuptable/search", "GET, POST, DELETE")]
+    public partial class LookupTableSearch : Search<LookupTable>
     {
         public List<int> BindingsIds { get; set; }
         public List<int> CategoriesIds { get; set; }
@@ -140,16 +142,9 @@ namespace Services.Dto
         public List<int> EnumIds { get; set; }
         public string Name { get; set; }
     }
-
-    [Route("/lookuptable", "GET")]
-    [Route("/lookuptable/search", "GET, POST, DELETE")]
-    public partial class LookupTableSearch : LookupTableSearchBase
-    {
-    }
-
+    
     public class LookupTableFullTextSearch
     {
-        public LookupTableFullTextSearch() {}
         private LookupTableSearch _request;
         public LookupTableFullTextSearch(LookupTableSearch request) => _request = request;
         
@@ -177,11 +172,15 @@ namespace Services.Dto
     [Route("/lookuptable/{Id}/lookuptablebinding", "GET, POST, DELETE")]
     [Route("/lookuptable/{Id}/lookupcategory", "GET, POST, DELETE")]
     [Route("/lookuptable/{Id}/document", "GET, POST, DELETE")]
-    public class LookupTableJunction : LookupTableSearchBase
+    public class LookupTableJunction : Search<LookupTable>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public LookupTableJunction(int id, List<int> ids)

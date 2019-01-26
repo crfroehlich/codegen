@@ -452,7 +452,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class VariableRuleMapper : DocMapperBase
+    public partial class VariableRuleMapper : Profile
     {
         private IMappingExpression<DocEntityVariableRule,VariableRule> _EntityToDto;
         private IMappingExpression<VariableRule,DocEntityVariableRule> _DtoToEntity;

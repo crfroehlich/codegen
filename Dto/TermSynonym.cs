@@ -137,7 +137,9 @@ namespace Services.Dto
     
     [Route("/TermSynonym/{Id}/copy", "POST")]
     public partial class TermSynonymCopy : TermSynonym {}
-    public partial class TermSynonymSearchBase : Search<TermSynonym>
+    [Route("/termsynonym", "GET")]
+    [Route("/termsynonym/search", "GET, POST, DELETE")]
+    public partial class TermSynonymSearch : Search<TermSynonym>
     {
         public bool? Approved { get; set; }
         public List<int> BindingsIds { get; set; }
@@ -148,16 +150,9 @@ namespace Services.Dto
         public List<int> ScopeIds { get; set; }
         public string Synonym { get; set; }
     }
-
-    [Route("/termsynonym", "GET")]
-    [Route("/termsynonym/search", "GET, POST, DELETE")]
-    public partial class TermSynonymSearch : TermSynonymSearchBase
-    {
-    }
-
+    
     public class TermSynonymFullTextSearch
     {
-        public TermSynonymFullTextSearch() {}
         private TermSynonymSearch _request;
         public TermSynonymFullTextSearch(TermSynonymSearch request) => _request = request;
         
@@ -184,11 +179,15 @@ namespace Services.Dto
     public partial class TermSynonymBatch : List<TermSynonym> { }
 
     [Route("/termsynonym/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    public class TermSynonymJunction : TermSynonymSearchBase
+    public class TermSynonymJunction : Search<TermSynonym>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public TermSynonymJunction(int id, List<int> ids)

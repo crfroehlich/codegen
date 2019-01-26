@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityDocumentSetHistory> _ExecSearch(DocumentSetHistorySearch request)
         {
-            request = InitSearch<DocumentSetHistory, DocumentSetHistorySearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityDocumentSetHistory> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentSetHistoryFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityDocumentSetHistory,DocumentSetHistoryFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -101,7 +101,7 @@ namespace Services.API
                 if(request.StudyCountFQ.HasValue)
                     entities = entities.Where(en => request.StudyCountFQ.Value == en.StudyCountFQ);
 
-                entities = ApplyFilters<DocEntityDocumentSetHistory,DocumentSetHistorySearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);

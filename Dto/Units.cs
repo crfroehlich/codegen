@@ -6,28 +6,51 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using AutoMapper;
+
 using Services.Core;
+using Services.Db;
+using Services.Dto;
+using Services.Enums;
+using Services.Models;
+using Services.Schema;
+
+using Typed;
+using Typed.Bindings;
+using Typed.Notifications;
+using Services.Dto.Security;
+using Typed.Settings;
 
 using ServiceStack;
+using ServiceStack.Text;
 
 using System;
+using System.Runtime.Serialization;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Net;
+
+using Xtensive.Orm;
+using Xtensive.Orm.Model;
+
+using Attribute = Services.Dto.Attribute;
+using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
     public abstract partial class UnitsBase : Dto<UnitsDto>
     {
-        public UnitsBase() { }
+        public UnitsBase() {}
 
         public UnitsBase(int id) : this()
         {
-            if (id > 0) Id = id;
+            if(id > 0) Id = id;
         }
 
-        public UnitsBase(int? id) : this(DocConvert.ToInt(id)) { }
-
+        public UnitsBase(int? id) : this(DocConvert.ToInt(id)) {}
+    
 
 
     }
@@ -41,11 +64,11 @@ namespace Services.Dto
             _Constructor();
         }
 
-        public UnitsDto(int? id) : base(DocConvert.ToInt(id)) { }
-        public UnitsDto(int id) : base(id) { }
-
+        public UnitsDto(int? id) : base(DocConvert.ToInt(id)) {}
+        public UnitsDto(int id) : base(id) {}
+        
         #region Fields
-
+        
         public bool? ShouldSerialize(string field)
         {
             if (IgnoredVisibleFields.Matches(field, true)) return false;
@@ -57,13 +80,13 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] { nameof(Created), nameof(CreatorId), nameof(Gestalt), nameof(Locked), nameof(Units), nameof(Updated), nameof(VersionNo) })]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Units),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
             {
-                if (null == this) return new List<string>();
-                if (null == _VisibleFields)
+                if(null == this) return new List<string>();
+                if(null == _VisibleFields)
                 {
                     _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
                 }
@@ -82,26 +105,21 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
     }
-
+    
     [Route("/Units/{Id}/copy", "POST")]
-    public partial class UnitsDtoCopy : UnitsDto { }
-    public partial class UnitsSearchBase : Search<UnitsDto>
+    public partial class UnitsDtoCopy : UnitsDto {}
+    [Route("/units", "GET")]
+    [Route("/units/search", "GET, POST, DELETE")]
+    public partial class UnitsSearch : Search<UnitsDto>
     {
         public List<int> UnitsIds { get; set; }
     }
-
-    [Route("/units", "GET")]
-    [Route("/units/search", "GET, POST, DELETE")]
-    public partial class UnitsSearch : UnitsSearchBase
-    {
-    }
-
+    
     public class UnitsFullTextSearch
     {
-        public UnitsFullTextSearch() { }
         private UnitsSearch _request;
         public UnitsFullTextSearch(UnitsSearch request) => _request = request;
-
+        
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -109,22 +127,26 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitsDto.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitsDto.Updated))); }
-
+        
         public bool doUnits { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitsDto.Units))); }
     }
 
     [Route("/units/version", "GET, POST")]
-    public partial class UnitsVersion : UnitsSearch { }
+    public partial class UnitsVersion : UnitsSearch {}
 
     [Route("/units/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitsBatch : List<UnitsDto> { }
 
     [Route("/units/{Id}/unitvalue", "GET, POST, DELETE")]
-    public class UnitsJunction : UnitsSearchBase
+    public class UnitsJunction : Search<UnitsDto>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public UnitsJunction(int id, List<int> ids)

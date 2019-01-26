@@ -138,7 +138,9 @@ namespace Services.Dto
     
     [Route("/LookupTableBinding/{Id}/copy", "POST")]
     public partial class LookupTableBindingCopy : LookupTableBinding {}
-    public partial class LookupTableBindingSearchBase : Search<LookupTableBinding>
+    [Route("/lookuptablebinding", "GET")]
+    [Route("/lookuptablebinding/search", "GET, POST, DELETE")]
+    public partial class LookupTableBindingSearch : Search<LookupTableBinding>
     {
         public string Binding { get; set; }
         public string BoundName { get; set; }
@@ -150,16 +152,9 @@ namespace Services.Dto
         public List<int> SynonymsIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/lookuptablebinding", "GET")]
-    [Route("/lookuptablebinding/search", "GET, POST, DELETE")]
-    public partial class LookupTableBindingSearch : LookupTableBindingSearchBase
-    {
-    }
-
+    
     public class LookupTableBindingFullTextSearch
     {
-        public LookupTableBindingFullTextSearch() {}
         private LookupTableBindingSearch _request;
         public LookupTableBindingFullTextSearch(LookupTableBindingSearch request) => _request = request;
         
@@ -187,11 +182,15 @@ namespace Services.Dto
 
     [Route("/lookuptablebinding/{Id}/termsynonym", "GET, POST, DELETE")]
     [Route("/lookuptablebinding/{Id}/workflow", "GET, POST, DELETE")]
-    public class LookupTableBindingJunction : LookupTableBindingSearchBase
+    public class LookupTableBindingJunction : Search<LookupTableBinding>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public LookupTableBindingJunction(int id, List<int> ids)

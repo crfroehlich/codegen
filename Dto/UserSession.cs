@@ -146,7 +146,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class UserSessionSearchBase : Search<UserSession>
+    [Route("/usersession", "GET")]
+    [Route("/usersession/search", "GET, POST, DELETE")]
+    public partial class UserSessionSearch : Search<UserSession>
     {
         public string ClientId { get; set; }
         public int? Hits { get; set; }
@@ -159,16 +161,9 @@ namespace Services.Dto
         public List<int> UserIds { get; set; }
         public List<int> UserHistoryIds { get; set; }
     }
-
-    [Route("/usersession", "GET")]
-    [Route("/usersession/search", "GET, POST, DELETE")]
-    public partial class UserSessionSearch : UserSessionSearchBase
-    {
-    }
-
+    
     public class UserSessionFullTextSearch
     {
-        public UserSessionFullTextSearch() {}
         private UserSessionSearch _request;
         public UserSessionFullTextSearch(UserSessionSearch request) => _request = request;
         
@@ -200,11 +195,15 @@ namespace Services.Dto
     [Route("/usersession/{Id}/impersonation", "GET, POST, DELETE")]
     [Route("/usersession/{Id}/request", "GET, POST, DELETE")]
     [Route("/usersession/{Id}/history", "GET, POST, DELETE")]
-    public class UserSessionJunction : UserSessionSearchBase
+    public class UserSessionJunction : Search<UserSession>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public UserSessionJunction(int id, List<int> ids)

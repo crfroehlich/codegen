@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityAttribute> _ExecSearch(AttributeSearch request)
         {
-            request = InitSearch<Attribute, AttributeSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityAttribute> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityAttribute,AttributeFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -141,7 +141,7 @@ namespace Services.API
                     entities = entities.Where(en => en.ValueType.Id.In(request.ValueTypeIds));
                 }
 
-                entities = ApplyFilters<DocEntityAttribute,AttributeSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -183,7 +183,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Attribute ret = null;
-            request = _InitAssignValues<Attribute>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

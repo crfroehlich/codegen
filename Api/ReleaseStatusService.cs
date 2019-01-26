@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityReleaseStatus> _ExecSearch(ReleaseStatusSearch request)
         {
-            request = InitSearch<ReleaseStatus, ReleaseStatusSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityReleaseStatus> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ReleaseStatusFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityReleaseStatus,ReleaseStatusFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -95,7 +95,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Version))
                     entities = entities.Where(en => en.Version.Contains(request.Version));
 
-                entities = ApplyFilters<DocEntityReleaseStatus,ReleaseStatusSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -137,7 +137,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             ReleaseStatus ret = null;
-            request = _InitAssignValues<ReleaseStatus>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

@@ -113,22 +113,17 @@ namespace Services.Dto
     
     [Route("/AuditDelta/{Id}/copy", "POST")]
     public partial class AuditDeltaCopy : AuditDelta {}
-    public partial class AuditDeltaSearchBase : Search<AuditDelta>
+    [Route("/auditdelta", "GET")]
+    [Route("/auditdelta/search", "GET, POST, DELETE")]
+    public partial class AuditDeltaSearch : Search<AuditDelta>
     {
         public Reference Audit { get; set; }
         public List<int> AuditIds { get; set; }
         public string Delta { get; set; }
     }
-
-    [Route("/auditdelta", "GET")]
-    [Route("/auditdelta/search", "GET, POST, DELETE")]
-    public partial class AuditDeltaSearch : AuditDeltaSearchBase
-    {
-    }
-
+    
     public class AuditDeltaFullTextSearch
     {
-        public AuditDeltaFullTextSearch() {}
         private AuditDeltaSearch _request;
         public AuditDeltaFullTextSearch(AuditDeltaSearch request) => _request = request;
         

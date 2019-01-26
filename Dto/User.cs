@@ -252,7 +252,9 @@ namespace Services.Dto
     
     [Route("/User/{Id}/copy", "POST")]
     public partial class UserCopy : User {}
-    public partial class UserSearchBase : Search<User>
+    [Route("/user", "GET")]
+    [Route("/user/search", "GET, POST, DELETE")]
+    public partial class UserSearch : Search<User>
     {
         public string ClientDepartment { get; set; }
         public Reference Division { get; set; }
@@ -298,16 +300,9 @@ namespace Services.Dto
         public List<int> UserTypeIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/user", "GET")]
-    [Route("/user/search", "GET, POST, DELETE")]
-    public partial class UserSearch : UserSearchBase
-    {
-    }
-
+    
     public class UserFullTextSearch
     {
-        public UserFullTextSearch() {}
         private UserSearch _request;
         public UserFullTextSearch(UserSearch request) => _request = request;
         
@@ -371,11 +366,15 @@ namespace Services.Dto
     [Route("/user/{Id}/timecard", "GET, POST, DELETE")]
     [Route("/user/{Id}/update", "GET, POST, DELETE")]
     [Route("/user/{Id}/workflow", "GET, POST, DELETE")]
-    public class UserJunction : UserSearchBase
+    public class UserJunction : Search<User>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public UserJunction(int id, List<int> ids)

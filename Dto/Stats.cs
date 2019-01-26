@@ -126,7 +126,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    public partial class StatsSearchBase : Search<Stats>
+    [Route("/stats", "GET")]
+    [Route("/stats/search", "GET, POST, DELETE")]
+    public partial class StatsSearch : Search<Stats>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -137,16 +139,9 @@ namespace Services.Dto
         public Reference StudySetStats { get; set; }
         public List<int> StudySetStatsIds { get; set; }
     }
-
-    [Route("/stats", "GET")]
-    [Route("/stats/search", "GET, POST, DELETE")]
-    public partial class StatsSearch : StatsSearchBase
-    {
-    }
-
+    
     public class StatsFullTextSearch
     {
-        public StatsFullTextSearch() {}
         private StatsSearch _request;
         public StatsFullTextSearch(StatsSearch request) => _request = request;
         

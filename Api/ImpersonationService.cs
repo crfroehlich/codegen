@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityImpersonation> _ExecSearch(ImpersonationSearch request)
         {
-            request = InitSearch<Impersonation, ImpersonationSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityImpersonation> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ImpersonationFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityImpersonation,ImpersonationFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -109,7 +109,7 @@ namespace Services.API
                     entities = entities.Where(en => en.UserSession.Id.In(request.UserSessionIds));
                 }
 
-                entities = ApplyFilters<DocEntityImpersonation,ImpersonationSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);

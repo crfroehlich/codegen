@@ -136,7 +136,9 @@ namespace Services.Dto
     
     [Route("/Page/{Id}/copy", "POST")]
     public partial class PageCopy : Page {}
-    public partial class PageSearchBase : Search<Page>
+    [Route("/page", "GET")]
+    [Route("/page/search", "GET, POST, DELETE")]
+    public partial class PageSearch : Search<Page>
     {
         public List<int> AppsIds { get; set; }
         public string Description { get; set; }
@@ -145,16 +147,9 @@ namespace Services.Dto
         public string Name { get; set; }
         public List<int> RolesIds { get; set; }
     }
-
-    [Route("/page", "GET")]
-    [Route("/page/search", "GET, POST, DELETE")]
-    public partial class PageSearch : PageSearchBase
-    {
-    }
-
+    
     public class PageFullTextSearch
     {
-        public PageFullTextSearch() {}
         private PageSearch _request;
         public PageFullTextSearch(PageSearch request) => _request = request;
         
@@ -184,11 +179,15 @@ namespace Services.Dto
     [Route("/page/{Id}/glossary", "GET, POST, DELETE")]
     [Route("/page/{Id}/help", "GET, POST, DELETE")]
     [Route("/page/{Id}/role", "GET, POST, DELETE")]
-    public class PageJunction : PageSearchBase
+    public class PageJunction : Search<Page>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public PageJunction(int id, List<int> ids)

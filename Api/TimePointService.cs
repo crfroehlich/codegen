@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTimePoint> _ExecSearch(TimePointSearch request)
         {
-            request = InitSearch<TimePoint, TimePointSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTimePoint> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimePointFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTimePoint,TimePointFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -103,7 +103,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
                 }
 
-                entities = ApplyFilters<DocEntityTimePoint,TimePointSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);

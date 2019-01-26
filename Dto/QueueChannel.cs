@@ -133,7 +133,9 @@ namespace Services.Dto
     
     [Route("/QueueChannel/{Id}/copy", "POST")]
     public partial class QueueChannelCopy : QueueChannel {}
-    public partial class QueueChannelSearchBase : Search<QueueChannel>
+    [Route("/queuechannel", "GET")]
+    [Route("/queuechannel/search", "GET, POST, DELETE")]
+    public partial class QueueChannelSearch : Search<QueueChannel>
     {
         public bool? AutoDelete { get; set; }
         public Reference BackgroundTask { get; set; }
@@ -144,16 +146,9 @@ namespace Services.Dto
         public bool? Exclusive { get; set; }
         public string Name { get; set; }
     }
-
-    [Route("/queuechannel", "GET")]
-    [Route("/queuechannel/search", "GET, POST, DELETE")]
-    public partial class QueueChannelSearch : QueueChannelSearchBase
-    {
-    }
-
+    
     public class QueueChannelFullTextSearch
     {
-        public QueueChannelFullTextSearch() {}
         private QueueChannelSearch _request;
         public QueueChannelFullTextSearch(QueueChannelSearch request) => _request = request;
         

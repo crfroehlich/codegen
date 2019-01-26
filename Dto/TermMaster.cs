@@ -156,7 +156,9 @@ namespace Services.Dto
     
     [Route("/TermMaster/{Id}/copy", "POST")]
     public partial class TermMasterCopy : TermMaster {}
-    public partial class TermMasterSearchBase : Search<TermMaster>
+    [Route("/termmaster", "GET")]
+    [Route("/termmaster/search", "GET, POST, DELETE")]
+    public partial class TermMasterSearch : Search<TermMaster>
     {
         public string BioPortal { get; set; }
         public List<int> CategoriesIds { get; set; }
@@ -171,16 +173,9 @@ namespace Services.Dto
         public string TUI { get; set; }
         public string URI { get; set; }
     }
-
-    [Route("/termmaster", "GET")]
-    [Route("/termmaster/search", "GET, POST, DELETE")]
-    public partial class TermMasterSearch : TermMasterSearchBase
-    {
-    }
-
+    
     public class TermMasterFullTextSearch
     {
-        public TermMasterFullTextSearch() {}
         private TermMasterSearch _request;
         public TermMasterFullTextSearch(TermMasterSearch request) => _request = request;
         
@@ -213,11 +208,15 @@ namespace Services.Dto
 
     [Route("/termmaster/{Id}/termcategory", "GET, POST, DELETE")]
     [Route("/termmaster/{Id}/termsynonym", "GET, POST, DELETE")]
-    public class TermMasterJunction : TermMasterSearchBase
+    public class TermMasterJunction : Search<TermMaster>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public TermMasterJunction(int id, List<int> ids)

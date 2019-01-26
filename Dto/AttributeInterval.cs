@@ -105,20 +105,15 @@ namespace Services.Dto
     
     [Route("/AttributeInterval/{Id}/copy", "POST")]
     public partial class AttributeIntervalCopy : AttributeInterval {}
-    public partial class AttributeIntervalSearchBase : Search<AttributeInterval>
+    [Route("/attributeinterval", "GET")]
+    [Route("/attributeinterval/search", "GET, POST, DELETE")]
+    public partial class AttributeIntervalSearch : Search<AttributeInterval>
     {
         public TypeInterval Interval { get; set; }
     }
-
-    [Route("/attributeinterval", "GET")]
-    [Route("/attributeinterval/search", "GET, POST, DELETE")]
-    public partial class AttributeIntervalSearch : AttributeIntervalSearchBase
-    {
-    }
-
+    
     public class AttributeIntervalFullTextSearch
     {
-        public AttributeIntervalFullTextSearch() {}
         private AttributeIntervalSearch _request;
         public AttributeIntervalFullTextSearch(AttributeIntervalSearch request) => _request = request;
         

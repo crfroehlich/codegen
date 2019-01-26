@@ -400,7 +400,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class WorkflowCommentMapper : DocMapperBase
+    public partial class WorkflowCommentMapper : Profile
     {
         private IMappingExpression<DocEntityWorkflowComment,WorkflowComment> _EntityToDto;
         private IMappingExpression<WorkflowComment,DocEntityWorkflowComment> _DtoToEntity;

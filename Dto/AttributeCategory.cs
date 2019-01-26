@@ -120,7 +120,9 @@ namespace Services.Dto
     
     [Route("/AttributeCategory/{Id}/copy", "POST")]
     public partial class AttributeCategoryCopy : AttributeCategory {}
-    public partial class AttributeCategorySearchBase : Search<AttributeCategory>
+    [Route("/attributecategory", "GET")]
+    [Route("/attributecategory/search", "GET, POST, DELETE")]
+    public partial class AttributeCategorySearch : Search<AttributeCategory>
     {
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
@@ -131,16 +133,9 @@ namespace Services.Dto
         public Reference ParentAttributeCategory { get; set; }
         public List<int> ParentAttributeCategoryIds { get; set; }
     }
-
-    [Route("/attributecategory", "GET")]
-    [Route("/attributecategory/search", "GET, POST, DELETE")]
-    public partial class AttributeCategorySearch : AttributeCategorySearchBase
-    {
-    }
-
+    
     public class AttributeCategoryFullTextSearch
     {
-        public AttributeCategoryFullTextSearch() {}
         private AttributeCategorySearch _request;
         public AttributeCategoryFullTextSearch(AttributeCategorySearch request) => _request = request;
         

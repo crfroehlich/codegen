@@ -143,7 +143,9 @@ namespace Services.Dto
     
     [Route("/UnitConversionRules/{Id}/copy", "POST")]
     public partial class UnitConversionRulesCopy : UnitConversionRules {}
-    public partial class UnitConversionRulesSearchBase : Search<UnitConversionRules>
+    [Route("/unitconversionrules", "GET")]
+    [Route("/unitconversionrules/search", "GET, POST, DELETE")]
+    public partial class UnitConversionRulesSearch : Search<UnitConversionRules>
     {
         public Reference DestinationUnit { get; set; }
         public List<int> DestinationUnitIds { get; set; }
@@ -160,16 +162,9 @@ namespace Services.Dto
         public Reference SourceUnit { get; set; }
         public List<int> SourceUnitIds { get; set; }
     }
-
-    [Route("/unitconversionrules", "GET")]
-    [Route("/unitconversionrules/search", "GET, POST, DELETE")]
-    public partial class UnitConversionRulesSearch : UnitConversionRulesSearchBase
-    {
-    }
-
+    
     public class UnitConversionRulesFullTextSearch
     {
-        public UnitConversionRulesFullTextSearch() {}
         private UnitConversionRulesSearch _request;
         public UnitConversionRulesFullTextSearch(UnitConversionRulesSearch request) => _request = request;
         

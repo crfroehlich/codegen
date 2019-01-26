@@ -121,22 +121,17 @@ namespace Services.Dto
     
     [Route("/Outcome/{Id}/copy", "POST")]
     public partial class OutcomeCopy : Outcome {}
-    public partial class OutcomeSearchBase : Search<Outcome>
+    [Route("/outcome", "GET")]
+    [Route("/outcome/search", "GET, POST, DELETE")]
+    public partial class OutcomeSearch : Search<Outcome>
     {
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-
-    [Route("/outcome", "GET")]
-    [Route("/outcome/search", "GET, POST, DELETE")]
-    public partial class OutcomeSearch : OutcomeSearchBase
-    {
-    }
-
+    
     public class OutcomeFullTextSearch
     {
-        public OutcomeFullTextSearch() {}
         private OutcomeSearch _request;
         public OutcomeFullTextSearch(OutcomeSearch request) => _request = request;
         
@@ -160,11 +155,15 @@ namespace Services.Dto
     public partial class OutcomeBatch : List<Outcome> { }
 
     [Route("/outcome/{Id}/documentset", "GET, POST, DELETE")]
-    public class OutcomeJunction : OutcomeSearchBase
+    public class OutcomeJunction : Search<Outcome>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public OutcomeJunction(int id, List<int> ids)

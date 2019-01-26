@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUser> _ExecSearch(UserSearch request)
         {
-            request = InitSearch<User, UserSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityUser> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityUser,UserFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -211,7 +211,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Workflows.Any(r => r.Id.In(request.WorkflowsIds)));
                         }
 
-                entities = ApplyFilters<DocEntityUser,UserSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -253,7 +253,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             User ret = null;
-            request = _InitAssignValues<User>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

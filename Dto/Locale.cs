@@ -115,22 +115,17 @@ namespace Services.Dto
     
     [Route("/Locale/{Id}/copy", "POST")]
     public partial class LocaleCopy : Locale {}
-    public partial class LocaleSearchBase : Search<Locale>
+    [Route("/locale", "GET")]
+    [Route("/locale/search", "GET, POST, DELETE")]
+    public partial class LocaleSearch : Search<Locale>
     {
         public string Country { get; set; }
         public string Language { get; set; }
         public string TimeZone { get; set; }
     }
-
-    [Route("/locale", "GET")]
-    [Route("/locale/search", "GET, POST, DELETE")]
-    public partial class LocaleSearch : LocaleSearchBase
-    {
-    }
-
+    
     public class LocaleFullTextSearch
     {
-        public LocaleFullTextSearch() {}
         private LocaleSearch _request;
         public LocaleFullTextSearch(LocaleSearch request) => _request = request;
         

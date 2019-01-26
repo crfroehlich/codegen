@@ -328,7 +328,9 @@ namespace Services.Dto
     
     [Route("/DocumentSet/{Id}/copy", "POST")]
     public partial class DocumentSetCopy : DocumentSet {}
-    public partial class DocumentSetSearchBase : Search<DocumentSet>
+    [Route("/documentset", "GET")]
+    [Route("/documentset/search", "GET, POST, DELETE")]
+    public partial class DocumentSetSearch : Search<DocumentSet>
     {
         public string AdditionalCriteria { get; set; }
         public bool? Archived { get; set; }
@@ -389,16 +391,9 @@ namespace Services.Dto
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/documentset", "GET")]
-    [Route("/documentset/search", "GET, POST, DELETE")]
-    public partial class DocumentSetSearch : DocumentSetSearchBase
-    {
-    }
-
+    
     public class DocumentSetFullTextSearch
     {
-        public DocumentSetFullTextSearch() {}
         private DocumentSetSearch _request;
         public DocumentSetFullTextSearch(DocumentSetSearch request) => _request = request;
         
@@ -481,7 +476,6 @@ namespace Services.Dto
     [Route("/documentset/{Id}/intervention", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/nondigitizeddocument", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/outcome", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/package", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/projectlink", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/project", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/scope", "GET, POST, DELETE")]
@@ -489,11 +483,15 @@ namespace Services.Dto
     [Route("/documentset/{Id}/studydesign", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/user", "GET, POST, DELETE")]
     [Route("/documentset/{Id}/workflow", "GET, POST, DELETE")]
-    public class DocumentSetJunction : DocumentSetSearchBase
+    public class DocumentSetJunction : Search<DocumentSet>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public DocumentSetJunction(int id, List<int> ids)
@@ -518,7 +516,6 @@ namespace Services.Dto
     [Route("/documentset/{Id}/intervention/version", "GET")]
     [Route("/documentset/{Id}/nondigitizeddocument/version", "GET")]
     [Route("/documentset/{Id}/outcome/version", "GET")]
-    [Route("/documentset/{Id}/package/version", "GET")]
     [Route("/documentset/{Id}/projectlink/version", "GET")]
     [Route("/documentset/{Id}/project/version", "GET")]
     [Route("/documentset/{Id}/scope/version", "GET")]

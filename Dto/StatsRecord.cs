@@ -117,7 +117,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    public partial class StatsRecordSearchBase : Search<StatsRecord>
+    [Route("/statsrecord", "GET")]
+    [Route("/statsrecord/search", "GET, POST, DELETE")]
+    public partial class StatsRecordSearch : Search<StatsRecord>
     {
         public Reference Name { get; set; }
         public List<int> NameIds { get; set; }
@@ -127,16 +129,9 @@ namespace Services.Dto
         public string OwnerType { get; set; }
         public decimal? Value { get; set; }
     }
-
-    [Route("/statsrecord", "GET")]
-    [Route("/statsrecord/search", "GET, POST, DELETE")]
-    public partial class StatsRecordSearch : StatsRecordSearchBase
-    {
-    }
-
+    
     public class StatsRecordFullTextSearch
     {
-        public StatsRecordFullTextSearch() {}
         private StatsRecordSearch _request;
         public StatsRecordFullTextSearch(StatsRecordSearch request) => _request = request;
         

@@ -122,7 +122,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    public partial class DocumentSetHistorySearchBase : Search<DocumentSetHistory>
+    [Route("/documentsethistory", "GET")]
+    [Route("/documentsethistory/search", "GET, POST, DELETE")]
+    public partial class DocumentSetHistorySearch : Search<DocumentSetHistory>
     {
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
@@ -131,16 +133,9 @@ namespace Services.Dto
         public int? StudyCount { get; set; }
         public int? StudyCountFQ { get; set; }
     }
-
-    [Route("/documentsethistory", "GET")]
-    [Route("/documentsethistory/search", "GET, POST, DELETE")]
-    public partial class DocumentSetHistorySearch : DocumentSetHistorySearchBase
-    {
-    }
-
+    
     public class DocumentSetHistoryFullTextSearch
     {
-        public DocumentSetHistoryFullTextSearch() {}
         private DocumentSetHistorySearch _request;
         public DocumentSetHistoryFullTextSearch(DocumentSetHistorySearch request) => _request = request;
         

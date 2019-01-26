@@ -609,7 +609,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class UserMapper : DocMapperBase
+    public partial class UserMapper : Profile
     {
         private IMappingExpression<DocEntityUser,User> _EntityToDto;
         private IMappingExpression<User,DocEntityUser> _DtoToEntity;

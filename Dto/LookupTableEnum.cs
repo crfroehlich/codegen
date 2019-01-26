@@ -113,22 +113,17 @@ namespace Services.Dto
     
     [Route("/LookupTableEnum/{Id}/copy", "POST")]
     public partial class LookupTableEnumCopy : LookupTableEnum {}
-    public partial class LookupTableEnumSearchBase : Search<LookupTableEnum>
+    [Route("/lookuptableenum", "GET")]
+    [Route("/lookuptableenum/search", "GET, POST, DELETE")]
+    public partial class LookupTableEnumSearch : Search<LookupTableEnum>
     {
         public bool? IsBindable { get; set; }
         public bool? IsGlobal { get; set; }
         public string Name { get; set; }
     }
-
-    [Route("/lookuptableenum", "GET")]
-    [Route("/lookuptableenum/search", "GET, POST, DELETE")]
-    public partial class LookupTableEnumSearch : LookupTableEnumSearchBase
-    {
-    }
-
+    
     public class LookupTableEnumFullTextSearch
     {
-        public LookupTableEnumFullTextSearch() {}
         private LookupTableEnumSearch _request;
         public LookupTableEnumFullTextSearch(LookupTableEnumSearch request) => _request = request;
         

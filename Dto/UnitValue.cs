@@ -131,7 +131,9 @@ namespace Services.Dto
     
     [Route("/UnitValue/{Id}/copy", "POST")]
     public partial class UnitValueCopy : UnitValue {}
-    public partial class UnitValueSearchBase : Search<UnitValue>
+    [Route("/unitvalue", "GET")]
+    [Route("/unitvalue/search", "GET, POST, DELETE")]
+    public partial class UnitValueSearch : Search<UnitValue>
     {
         public Reference EqualityOperator { get; set; }
         public List<int> EqualityOperatorIds { get; set; }
@@ -143,16 +145,9 @@ namespace Services.Dto
         public Reference Unit { get; set; }
         public List<int> UnitIds { get; set; }
     }
-
-    [Route("/unitvalue", "GET")]
-    [Route("/unitvalue/search", "GET, POST, DELETE")]
-    public partial class UnitValueSearch : UnitValueSearchBase
-    {
-    }
-
+    
     public class UnitValueFullTextSearch
     {
-        public UnitValueFullTextSearch() {}
         private UnitValueSearch _request;
         public UnitValueFullTextSearch(UnitValueSearch request) => _request = request;
         
@@ -178,11 +173,15 @@ namespace Services.Dto
     [Route("/unitvalue/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitValueBatch : List<UnitValue> { }
 
-    public class UnitValueJunction : UnitValueSearchBase
+    public class UnitValueJunction : Search<UnitValue>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public UnitValueJunction(int id, List<int> ids)

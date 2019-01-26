@@ -112,7 +112,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    public partial class ValueTypeSearchBase : Search<ValueType>
+    [Route("/valuetype", "GET")]
+    [Route("/valuetype/search", "GET, POST, DELETE")]
+    public partial class ValueTypeSearch : Search<ValueType>
     {
         public Reference FieldType { get; set; }
         public List<int> FieldTypeIds { get; set; }
@@ -123,16 +125,9 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"AssociationMeasure",@"Boolean",@"CalendarDate",@"CalendarDates",@"Contact",@"DateTime",@"DateTimeRange",@"Decimal",@"DecimalRange",@"DesignNestedStudyIdLink",@"EventCounts",@"Facility",@"FixedDoseIntervention",@"Flag",@"Funding",@"Integer",@"Interval",@"Intervals",@"Lookup",@"Memo",@"NPersons",@"Participant",@"Participants",@"PopulationAnalyzed",@"PValue",@"Rate",@"SettingLocation",@"SettingLocationTotal",@"StudyDoc",@"StudyObjective",@"StudyReference",@"SubgroupDescriptor",@"Timepoint",@"Timepoints",@"UncollectedValue",@"UnitRange",@"Units",@"UnitsRange",@"UnitValue",@"YesNoNa"})]
         public List<string> NameNames { get; set; }
     }
-
-    [Route("/valuetype", "GET")]
-    [Route("/valuetype/search", "GET, POST, DELETE")]
-    public partial class ValueTypeSearch : ValueTypeSearchBase
-    {
-    }
-
+    
     public class ValueTypeFullTextSearch
     {
-        public ValueTypeFullTextSearch() {}
         private ValueTypeSearch _request;
         public ValueTypeFullTextSearch(ValueTypeSearch request) => _request = request;
         

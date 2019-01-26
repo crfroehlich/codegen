@@ -189,7 +189,9 @@ namespace Services.Dto
     
     [Route("/ImportData/{Id}/copy", "POST")]
     public partial class ImportDataCopy : ImportData {}
-    public partial class ImportDataSearchBase : Search<ImportData>
+    [Route("/importdata", "GET")]
+    [Route("/importdata/search", "GET, POST, DELETE")]
+    public partial class ImportDataSearch : Search<ImportData>
     {
         public DateTime? CompletedOn { get; set; }
         public DateTime? CompletedOnAfter { get; set; }
@@ -224,16 +226,9 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Queued",@"Processing",@"Succeeded",@"Already Imported",@"Failed",@"No JSON Found",@"Cancelled"})]
         public List<string> StatusNames { get; set; }
     }
-
-    [Route("/importdata", "GET")]
-    [Route("/importdata/search", "GET, POST, DELETE")]
-    public partial class ImportDataSearch : ImportDataSearchBase
-    {
-    }
-
+    
     public class ImportDataFullTextSearch
     {
-        public ImportDataFullTextSearch() {}
         private ImportDataSearch _request;
         public ImportDataFullTextSearch(ImportDataSearch request) => _request = request;
         
@@ -272,11 +267,15 @@ namespace Services.Dto
     public partial class ImportDataBatch : List<ImportData> { }
 
     [Route("/importdata/{Id}/documentset", "GET, POST, DELETE")]
-    public class ImportDataJunction : ImportDataSearchBase
+    public class ImportDataJunction : Search<ImportData>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public ImportDataJunction(int id, List<int> ids)

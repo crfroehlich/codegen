@@ -386,7 +386,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class VariableInstanceMapper : DocMapperBase
+    public partial class VariableInstanceMapper : Profile
     {
         private IMappingExpression<DocEntityVariableInstance,VariableInstance> _EntityToDto;
         private IMappingExpression<VariableInstance,DocEntityVariableInstance> _DtoToEntity;

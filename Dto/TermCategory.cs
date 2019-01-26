@@ -117,22 +117,17 @@ namespace Services.Dto
     
     [Route("/TermCategory/{Id}/copy", "POST")]
     public partial class TermCategoryCopy : TermCategory {}
-    public partial class TermCategorySearchBase : Search<TermCategory>
+    [Route("/termcategory", "GET")]
+    [Route("/termcategory/search", "GET, POST, DELETE")]
+    public partial class TermCategorySearch : Search<TermCategory>
     {
         public Reference ParentCategory { get; set; }
         public List<int> ParentCategoryIds { get; set; }
         public List<int> TermsIds { get; set; }
     }
-
-    [Route("/termcategory", "GET")]
-    [Route("/termcategory/search", "GET, POST, DELETE")]
-    public partial class TermCategorySearch : TermCategorySearchBase
-    {
-    }
-
+    
     public class TermCategoryFullTextSearch
     {
-        public TermCategoryFullTextSearch() {}
         private TermCategorySearch _request;
         public TermCategoryFullTextSearch(TermCategorySearch request) => _request = request;
         
@@ -156,11 +151,15 @@ namespace Services.Dto
     public partial class TermCategoryBatch : List<TermCategory> { }
 
     [Route("/termcategory/{Id}/termmaster", "GET, POST, DELETE")]
-    public class TermCategoryJunction : TermCategorySearchBase
+    public class TermCategoryJunction : Search<TermCategory>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public TermCategoryJunction(int id, List<int> ids)

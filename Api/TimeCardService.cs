@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTimeCard> _ExecSearch(TimeCardSearch request)
         {
-            request = InitSearch<TimeCard, TimeCardSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTimeCard> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimeCardFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTimeCard,TimeCardFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -100,14 +100,6 @@ namespace Services.API
                     entities = entities.Where(en => en.End <= request.EndBefore);
                 if(!DocTools.IsNullOrEmpty(request.EndAfter))
                     entities = entities.Where(en => en.End >= request.EndAfter);
-                if(!DocTools.IsNullOrEmpty(request.PICO) && !DocTools.IsNullOrEmpty(request.PICO.Id))
-                {
-                    entities = entities.Where(en => en.PICO.Id == request.PICO.Id );
-                }
-                if(true == request.PICOIds?.Any())
-                {
-                    entities = entities.Where(en => en.PICO.Id.In(request.PICOIds));
-                }
                 if(!DocTools.IsNullOrEmpty(request.Project) && !DocTools.IsNullOrEmpty(request.Project.Id))
                 {
                     entities = entities.Where(en => en.Project.Id == request.Project.Id );
@@ -165,7 +157,7 @@ namespace Services.API
                     entities = entities.Where(en => en.WorkType.Name.In(request.WorkTypeNames));
                 }
 
-                entities = ApplyFilters<DocEntityTimeCard,TimeCardSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -207,7 +199,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TimeCard ret = null;
-            request = _InitAssignValues<TimeCard>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -217,7 +209,6 @@ namespace Services.API
             var pDescription = request.Description;
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.GetDocument(request.Document.Id) : null;
             var pEnd = request.End;
-            var pPICO = (request.PICO?.Id > 0) ? DocEntityPackage.GetPackage(request.PICO.Id) : null;
             var pProject = (request.Project?.Id > 0) ? DocEntityProject.GetProject(request.Project.Id) : null;
             var pReferenceId = request.ReferenceId;
             var pStart = request.Start;
@@ -268,16 +259,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pEnd, nameof(request.End)) && !request.VisibleFields.Matches(nameof(request.End), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.End));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPackage>(currentUser, request, pPICO, permission, DocConstantModelName.TIMECARD, nameof(request.PICO)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pPICO, entity.PICO, nameof(request.PICO)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.PICO)} cannot be modified once set.");
-                    entity.PICO = pPICO;
-                if(DocPermissionFactory.IsRequested<DocEntityPackage>(request, pPICO, nameof(request.PICO)) && !request.VisibleFields.Matches(nameof(request.PICO), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.PICO));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityProject>(currentUser, request, pProject, permission, DocConstantModelName.TIMECARD, nameof(request.Project)))
@@ -428,7 +409,6 @@ namespace Services.API
                         pDescription += " (Copy)";
                     var pDocument = entity.Document;
                     var pEnd = entity.End;
-                    var pPICO = entity.PICO;
                     var pProject = entity.Project;
                     var pReferenceId = entity.ReferenceId;
                     var pStart = entity.Start;
@@ -443,7 +423,6 @@ namespace Services.API
                                 , Description = pDescription
                                 , Document = pDocument
                                 , End = pEnd
-                                , PICO = pPICO
                                 , Project = pProject
                                 , ReferenceId = pReferenceId
                                 , Start = pStart

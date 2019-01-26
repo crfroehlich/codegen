@@ -129,7 +129,9 @@ namespace Services.Dto
     
     [Route("/Glossary/{Id}/copy", "POST")]
     public partial class GlossaryCopy : Glossary {}
-    public partial class GlossarySearchBase : Search<Glossary>
+    [Route("/glossary", "GET")]
+    [Route("/glossary/search", "GET, POST, DELETE")]
+    public partial class GlossarySearch : Search<Glossary>
     {
         public string Definition { get; set; }
         public Reference Enum { get; set; }
@@ -140,16 +142,9 @@ namespace Services.Dto
         public Reference Term { get; set; }
         public List<int> TermIds { get; set; }
     }
-
-    [Route("/glossary", "GET")]
-    [Route("/glossary/search", "GET, POST, DELETE")]
-    public partial class GlossarySearch : GlossarySearchBase
-    {
-    }
-
+    
     public class GlossaryFullTextSearch
     {
-        public GlossaryFullTextSearch() {}
         private GlossarySearch _request;
         public GlossaryFullTextSearch(GlossarySearch request) => _request = request;
         

@@ -389,7 +389,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class DefaultMapper : DocMapperBase
+    public partial class DefaultMapper : Profile
     {
         private IMappingExpression<DocEntityDefault,Default> _EntityToDto;
         private IMappingExpression<Default,DocEntityDefault> _DtoToEntity;

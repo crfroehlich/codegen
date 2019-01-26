@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityStatsRecord> _ExecSearch(StatsRecordSearch request)
         {
-            request = InitSearch<StatsRecord, StatsRecordSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityStatsRecord> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new StatsRecordFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityStatsRecord,StatsRecordFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -107,7 +107,7 @@ namespace Services.API
                 if(request.Value.HasValue)
                     entities = entities.Where(en => request.Value.Value == en.Value);
 
-                entities = ApplyFilters<DocEntityStatsRecord,StatsRecordSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);

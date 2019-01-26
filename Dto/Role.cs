@@ -158,7 +158,9 @@ namespace Services.Dto
     
     [Route("/Role/{Id}/copy", "POST")]
     public partial class RoleCopy : Role {}
-    public partial class RoleSearchBase : Search<Role>
+    [Route("/role", "GET")]
+    [Route("/role/search", "GET, POST, DELETE")]
+    public partial class RoleSearch : Search<Role>
     {
         public Reference AdminTeam { get; set; }
         public List<int> AdminTeamIds { get; set; }
@@ -173,16 +175,9 @@ namespace Services.Dto
         public string Permissions { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/role", "GET")]
-    [Route("/role/search", "GET, POST, DELETE")]
-    public partial class RoleSearch : RoleSearchBase
-    {
-    }
-
+    
     public class RoleFullTextSearch
     {
-        public RoleFullTextSearch() {}
         private RoleSearch _request;
         public RoleFullTextSearch(RoleSearch request) => _request = request;
         
@@ -217,11 +212,15 @@ namespace Services.Dto
     [Route("/role/{Id}/featureset", "GET, POST, DELETE")]
     [Route("/role/{Id}/page", "GET, POST, DELETE")]
     [Route("/role/{Id}/user", "GET, POST, DELETE")]
-    public class RoleJunction : RoleSearchBase
+    public class RoleJunction : Search<Role>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public RoleJunction(int id, List<int> ids)

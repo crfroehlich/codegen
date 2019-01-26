@@ -519,7 +519,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ImportDataMapper : DocMapperBase
+    public partial class ImportDataMapper : Profile
     {
         private IMappingExpression<DocEntityImportData,ImportData> _EntityToDto;
         private IMappingExpression<ImportData,DocEntityImportData> _DtoToEntity;

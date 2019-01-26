@@ -300,7 +300,9 @@ namespace Services.Dto
     
     [Route("/Document/{Id}/copy", "POST")]
     public partial class DocumentCopy : Document {}
-    public partial class DocumentSearchBase : Search<Document>
+    [Route("/document", "GET")]
+    [Route("/document/search", "GET, POST, DELETE")]
+    public partial class DocumentSearch : Search<Document>
     {
         public string Abstract { get; set; }
         public string AccessionID { get; set; }
@@ -360,16 +362,9 @@ namespace Services.Dto
         public List<int> VariableDataIds { get; set; }
         public string Volume { get; set; }
     }
-
-    [Route("/document", "GET")]
-    [Route("/document/search", "GET, POST, DELETE")]
-    public partial class DocumentSearch : DocumentSearchBase
-    {
-    }
-
+    
     public class DocumentFullTextSearch
     {
-        public DocumentFullTextSearch() {}
         private DocumentSearch _request;
         public DocumentFullTextSearch(DocumentSearch request) => _request = request;
         
@@ -438,11 +433,15 @@ namespace Services.Dto
     [Route("/document/{Id}/lookuptable", "GET, POST, DELETE")]
     [Route("/document/{Id}/nondigitizeddocumentset", "GET, POST, DELETE")]
     [Route("/document/{Id}/variableinstance", "GET, POST, DELETE")]
-    public class DocumentJunction : DocumentSearchBase
+    public class DocumentJunction : Search<Document>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public DocumentJunction(int id, List<int> ids)

@@ -411,7 +411,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class LookupTableBindingMapper : DocMapperBase
+    public partial class LookupTableBindingMapper : Profile
     {
         private IMappingExpression<DocEntityLookupTableBinding,LookupTableBinding> _EntityToDto;
         private IMappingExpression<LookupTableBinding,DocEntityLookupTableBinding> _DtoToEntity;

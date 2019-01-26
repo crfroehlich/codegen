@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTermMaster> _ExecSearch(TermMasterSearch request)
         {
-            request = InitSearch<TermMaster, TermMasterSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTermMaster> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermMasterFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTermMaster,TermMasterFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -117,7 +117,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.URI))
                     entities = entities.Where(en => en.URI.Contains(request.URI));
 
-                entities = ApplyFilters<DocEntityTermMaster,TermMasterSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -159,7 +159,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermMaster ret = null;
-            request = _InitAssignValues<TermMaster>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

@@ -122,23 +122,18 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class FeatureSetSearchBase : Search<FeatureSet>
+    [Route("/featureset", "GET")]
+    [Route("/featureset/search", "GET, POST, DELETE")]
+    public partial class FeatureSetSearch : Search<FeatureSet>
     {
         public string Description { get; set; }
         public string Name { get; set; }
         public string PermissionTemplate { get; set; }
         public List<int> RolesIds { get; set; }
     }
-
-    [Route("/featureset", "GET")]
-    [Route("/featureset/search", "GET, POST, DELETE")]
-    public partial class FeatureSetSearch : FeatureSetSearchBase
-    {
-    }
-
+    
     public class FeatureSetFullTextSearch
     {
-        public FeatureSetFullTextSearch() {}
         private FeatureSetSearch _request;
         public FeatureSetFullTextSearch(FeatureSetSearch request) => _request = request;
         
@@ -163,11 +158,15 @@ namespace Services.Dto
     public partial class FeatureSetBatch : List<FeatureSet> { }
 
     [Route("/featureset/{Id}/role", "GET, POST, DELETE")]
-    public class FeatureSetJunction : FeatureSetSearchBase
+    public class FeatureSetJunction : Search<FeatureSet>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public FeatureSetJunction(int id, List<int> ids)

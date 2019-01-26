@@ -121,22 +121,17 @@ namespace Services.Dto
     
     [Route("/Intervention/{Id}/copy", "POST")]
     public partial class InterventionCopy : Intervention {}
-    public partial class InterventionSearchBase : Search<Intervention>
+    [Route("/intervention", "GET")]
+    [Route("/intervention/search", "GET, POST, DELETE")]
+    public partial class InterventionSearch : Search<Intervention>
     {
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-
-    [Route("/intervention", "GET")]
-    [Route("/intervention/search", "GET, POST, DELETE")]
-    public partial class InterventionSearch : InterventionSearchBase
-    {
-    }
-
+    
     public class InterventionFullTextSearch
     {
-        public InterventionFullTextSearch() {}
         private InterventionSearch _request;
         public InterventionFullTextSearch(InterventionSearch request) => _request = request;
         
@@ -160,11 +155,15 @@ namespace Services.Dto
     public partial class InterventionBatch : List<Intervention> { }
 
     [Route("/intervention/{Id}/documentset", "GET, POST, DELETE")]
-    public class InterventionJunction : InterventionSearchBase
+    public class InterventionJunction : Search<Intervention>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public InterventionJunction(int id, List<int> ids)

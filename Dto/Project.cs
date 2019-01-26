@@ -199,7 +199,9 @@ namespace Services.Dto
     
     [Route("/Project/{Id}/copy", "POST")]
     public partial class ProjectCopy : Project {}
-    public partial class ProjectSearchBase : Search<Project>
+    [Route("/project", "GET")]
+    [Route("/project/search", "GET, POST, DELETE")]
+    public partial class ProjectSearch : Search<Project>
     {
         public List<int> ChildrenIds { get; set; }
         public Reference Client { get; set; }
@@ -232,16 +234,9 @@ namespace Services.Dto
         public List<string> StatusNames { get; set; }
         public List<int> TimeCardsIds { get; set; }
     }
-
-    [Route("/project", "GET")]
-    [Route("/project/search", "GET, POST, DELETE")]
-    public partial class ProjectSearch : ProjectSearchBase
-    {
-    }
-
+    
     public class ProjectFullTextSearch
     {
-        public ProjectFullTextSearch() {}
         private ProjectSearch _request;
         public ProjectFullTextSearch(ProjectSearch request) => _request = request;
         
@@ -283,11 +278,15 @@ namespace Services.Dto
 
     [Route("/project/{Id}/project", "GET, POST, DELETE")]
     [Route("/project/{Id}/timecard", "GET, POST, DELETE")]
-    public class ProjectJunction : ProjectSearchBase
+    public class ProjectJunction : Search<Project>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public ProjectJunction(int id, List<int> ids)

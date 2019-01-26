@@ -174,7 +174,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class AuditRecordSearchBase : Search<AuditRecord>
+    [Route("/auditrecord", "GET")]
+    [Route("/auditrecord/search", "GET, POST, DELETE")]
+    public partial class AuditRecordSearch : Search<AuditRecord>
     {
         public string Action { get; set; }
         public Reference BackgroundTask { get; set; }
@@ -198,16 +200,9 @@ namespace Services.Dto
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }
-
-    [Route("/auditrecord", "GET")]
-    [Route("/auditrecord/search", "GET, POST, DELETE")]
-    public partial class AuditRecordSearch : AuditRecordSearchBase
-    {
-    }
-
+    
     public class AuditRecordFullTextSearch
     {
-        public AuditRecordFullTextSearch() {}
         private AuditRecordSearch _request;
         public AuditRecordFullTextSearch(AuditRecordSearch request) => _request = request;
         
@@ -243,11 +238,15 @@ namespace Services.Dto
     public partial class AuditRecordBatch : List<AuditRecord> { }
 
     [Route("/auditrecord/{Id}/auditdelta", "GET, POST, DELETE")]
-    public class AuditRecordJunction : AuditRecordSearchBase
+    public class AuditRecordJunction : Search<AuditRecord>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public AuditRecordJunction(int id, List<int> ids)

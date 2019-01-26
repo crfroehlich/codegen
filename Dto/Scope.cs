@@ -195,7 +195,9 @@ namespace Services.Dto
     
     [Route("/Scope/{Id}/copy", "POST")]
     public partial class ScopeCopy : Scope {}
-    public partial class ScopeSearchBase : Search<Scope>
+    [Route("/scope", "GET")]
+    [Route("/scope/search", "GET, POST, DELETE")]
+    public partial class ScopeSearch : Search<Scope>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -223,16 +225,9 @@ namespace Services.Dto
         public bool? View { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/scope", "GET")]
-    [Route("/scope/search", "GET, POST, DELETE")]
-    public partial class ScopeSearch : ScopeSearchBase
-    {
-    }
-
+    
     public class ScopeFullTextSearch
     {
-        public ScopeFullTextSearch() {}
         private ScopeSearch _request;
         public ScopeFullTextSearch(ScopeSearch request) => _request = request;
         
@@ -275,11 +270,15 @@ namespace Services.Dto
     [Route("/scope/{Id}/termsynonym", "GET, POST, DELETE")]
     [Route("/scope/{Id}/variablerule", "GET, POST, DELETE")]
     [Route("/scope/{Id}/workflow", "GET, POST, DELETE")]
-    public class ScopeJunction : ScopeSearchBase
+    public class ScopeJunction : Search<Scope>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public ScopeJunction(int id, List<int> ids)

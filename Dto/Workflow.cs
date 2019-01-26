@@ -190,7 +190,9 @@ namespace Services.Dto
     
     [Route("/Workflow/{Id}/copy", "POST")]
     public partial class WorkflowCopy : Workflow {}
-    public partial class WorkflowSearchBase : Search<Workflow>
+    [Route("/workflow", "GET")]
+    [Route("/workflow/search", "GET, POST, DELETE")]
+    public partial class WorkflowSearch : Search<Workflow>
     {
         public bool? Archived { get; set; }
         public List<int> BindingsIds { get; set; }
@@ -217,16 +219,9 @@ namespace Services.Dto
         public List<int> VariablesIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/workflow", "GET")]
-    [Route("/workflow/search", "GET, POST, DELETE")]
-    public partial class WorkflowSearch : WorkflowSearchBase
-    {
-    }
-
+    
     public class WorkflowFullTextSearch
     {
-        public WorkflowFullTextSearch() {}
         private WorkflowSearch _request;
         public WorkflowFullTextSearch(WorkflowSearch request) => _request = request;
         
@@ -270,11 +265,15 @@ namespace Services.Dto
     [Route("/workflow/{Id}/workflowtask", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/variableinstance", "GET, POST, DELETE")]
     [Route("/workflow/{Id}/workflow", "GET, POST, DELETE")]
-    public class WorkflowJunction : WorkflowSearchBase
+    public class WorkflowJunction : Search<Workflow>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public WorkflowJunction(int id, List<int> ids)

@@ -145,7 +145,9 @@ namespace Services.Dto
     
     [Route("/Help/{Id}/copy", "POST")]
     public partial class HelpCopy : Help {}
-    public partial class HelpSearchBase : Search<Help>
+    [Route("/help", "GET")]
+    [Route("/help/search", "GET, POST, DELETE")]
+    public partial class HelpSearch : Search<Help>
     {
         public string ConfluenceId { get; set; }
         public string Description { get; set; }
@@ -159,16 +161,9 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Sidebar",@"Dialog",@"Manual",@"Section"})]
         public List<string> TypeNames { get; set; }
     }
-
-    [Route("/help", "GET")]
-    [Route("/help/search", "GET, POST, DELETE")]
-    public partial class HelpSearch : HelpSearchBase
-    {
-    }
-
+    
     public class HelpFullTextSearch
     {
-        public HelpFullTextSearch() {}
         private HelpSearch _request;
         public HelpFullTextSearch(HelpSearch request) => _request = request;
         
@@ -198,11 +193,15 @@ namespace Services.Dto
 
     [Route("/help/{Id}/page", "GET, POST, DELETE")]
     [Route("/help/{Id}/scope", "GET, POST, DELETE")]
-    public class HelpJunction : HelpSearchBase
+    public class HelpJunction : Search<Help>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public HelpJunction(int id, List<int> ids)

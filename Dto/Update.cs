@@ -158,7 +158,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class UpdateSearchBase : Search<Update>
+    [Route("/update", "GET")]
+    [Route("/update/search", "GET, POST, DELETE")]
+    public partial class UpdateSearch : Search<Update>
     {
         public string Body { get; set; }
         public string DeliveryStatus { get; set; }
@@ -181,16 +183,9 @@ namespace Services.Dto
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
     }
-
-    [Route("/update", "GET")]
-    [Route("/update/search", "GET, POST, DELETE")]
-    public partial class UpdateSearch : UpdateSearchBase
-    {
-    }
-
+    
     public class UpdateFullTextSearch
     {
-        public UpdateFullTextSearch() {}
         private UpdateSearch _request;
         public UpdateFullTextSearch(UpdateSearch request) => _request = request;
         
@@ -223,11 +218,15 @@ namespace Services.Dto
     public partial class UpdateBatch : List<Update> { }
 
     [Route("/update/{Id}/event", "GET, POST, DELETE")]
-    public class UpdateJunction : UpdateSearchBase
+    public class UpdateJunction : Search<Update>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public UpdateJunction(int id, List<int> ids)

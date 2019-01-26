@@ -171,7 +171,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class BackgroundTaskSearchBase : Search<BackgroundTask>
+    [Route("/backgroundtask", "GET")]
+    [Route("/backgroundtask/search", "GET, POST, DELETE")]
+    public partial class BackgroundTaskSearch : Search<BackgroundTask>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -191,16 +193,9 @@ namespace Services.Dto
         public string StartAt { get; set; }
         public List<int> TaskHistoryIds { get; set; }
     }
-
-    [Route("/backgroundtask", "GET")]
-    [Route("/backgroundtask/search", "GET, POST, DELETE")]
-    public partial class BackgroundTaskSearch : BackgroundTaskSearchBase
-    {
-    }
-
+    
     public class BackgroundTaskFullTextSearch
     {
-        public BackgroundTaskFullTextSearch() {}
         private BackgroundTaskSearch _request;
         public BackgroundTaskFullTextSearch(BackgroundTaskSearch request) => _request = request;
         
@@ -237,11 +232,15 @@ namespace Services.Dto
 
     [Route("/backgroundtask/{Id}/backgroundtaskitem", "GET, POST, DELETE")]
     [Route("/backgroundtask/{Id}/backgroundtaskhistory", "GET, POST, DELETE")]
-    public class BackgroundTaskJunction : BackgroundTaskSearchBase
+    public class BackgroundTaskJunction : Search<BackgroundTask>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public BackgroundTaskJunction(int id, List<int> ids)

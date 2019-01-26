@@ -144,7 +144,9 @@ namespace Services.Dto
     
     [Route("/Division/{Id}/copy", "POST")]
     public partial class DivisionCopy : Division {}
-    public partial class DivisionSearchBase : Search<Division>
+    [Route("/division", "GET")]
+    [Route("/division/search", "GET, POST, DELETE")]
+    public partial class DivisionSearch : Search<Division>
     {
         public Reference Client { get; set; }
         public List<int> ClientIds { get; set; }
@@ -157,16 +159,9 @@ namespace Services.Dto
         public string Settings { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/division", "GET")]
-    [Route("/division/search", "GET, POST, DELETE")]
-    public partial class DivisionSearch : DivisionSearchBase
-    {
-    }
-
+    
     public class DivisionFullTextSearch
     {
-        public DivisionFullTextSearch() {}
         private DivisionSearch _request;
         public DivisionFullTextSearch(DivisionSearch request) => _request = request;
         
@@ -195,11 +190,15 @@ namespace Services.Dto
 
     [Route("/division/{Id}/documentset", "GET, POST, DELETE")]
     [Route("/division/{Id}/user", "GET, POST, DELETE")]
-    public class DivisionJunction : DivisionSearchBase
+    public class DivisionJunction : Search<Division>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public DivisionJunction(int id, List<int> ids)

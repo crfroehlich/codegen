@@ -149,7 +149,9 @@ namespace Services.Dto
     
     [Route("/Broadcast/{Id}/copy", "POST")]
     public partial class BroadcastCopy : Broadcast {}
-    public partial class BroadcastSearchBase : Search<Broadcast>
+    [Route("/broadcast", "GET")]
+    [Route("/broadcast/search", "GET, POST, DELETE")]
+    public partial class BroadcastSearch : Search<Broadcast>
     {
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
@@ -169,16 +171,9 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"System Alert",@"Terms of Service",@"Scope Specific"})]
         public List<string> TypeNames { get; set; }
     }
-
-    [Route("/broadcast", "GET")]
-    [Route("/broadcast/search", "GET, POST, DELETE")]
-    public partial class BroadcastSearch : BroadcastSearchBase
-    {
-    }
-
+    
     public class BroadcastFullTextSearch
     {
-        public BroadcastFullTextSearch() {}
         private BroadcastSearch _request;
         public BroadcastFullTextSearch(BroadcastSearch request) => _request = request;
         
@@ -207,11 +202,15 @@ namespace Services.Dto
     public partial class BroadcastBatch : List<Broadcast> { }
 
     [Route("/broadcast/{Id}/scope", "GET, POST, DELETE")]
-    public class BroadcastJunction : BroadcastSearchBase
+    public class BroadcastJunction : Search<Broadcast>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public BroadcastJunction(int id, List<int> ids)

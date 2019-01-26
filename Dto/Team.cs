@@ -158,7 +158,9 @@ namespace Services.Dto
     
     [Route("/Team/{Id}/copy", "POST")]
     public partial class TeamCopy : Team {}
-    public partial class TeamSearchBase : Search<Team>
+    [Route("/team", "GET")]
+    [Route("/team/search", "GET, POST, DELETE")]
+    public partial class TeamSearch : Search<Team>
     {
         public List<int> AdminRolesIds { get; set; }
         public string Description { get; set; }
@@ -173,16 +175,9 @@ namespace Services.Dto
         public List<int> UpdatesIds { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/team", "GET")]
-    [Route("/team/search", "GET, POST, DELETE")]
-    public partial class TeamSearch : TeamSearchBase
-    {
-    }
-
+    
     public class TeamFullTextSearch
     {
-        public TeamFullTextSearch() {}
         private TeamSearch _request;
         public TeamFullTextSearch(TeamSearch request) => _request = request;
         
@@ -217,11 +212,15 @@ namespace Services.Dto
     [Route("/team/{Id}/scope", "GET, POST, DELETE")]
     [Route("/team/{Id}/update", "GET, POST, DELETE")]
     [Route("/team/{Id}/user", "GET, POST, DELETE")]
-    public class TeamJunction : TeamSearchBase
+    public class TeamJunction : Search<Team>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public TeamJunction(int id, List<int> ids)

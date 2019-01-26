@@ -377,7 +377,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class LocaleLookupMapper : DocMapperBase
+    public partial class LocaleLookupMapper : Profile
     {
         private IMappingExpression<DocEntityLocaleLookup,LocaleLookup> _EntityToDto;
         private IMappingExpression<LocaleLookup,DocEntityLocaleLookup> _DtoToEntity;

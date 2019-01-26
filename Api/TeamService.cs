@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTeam> _ExecSearch(TeamSearch request)
         {
-            request = InitSearch<Team, TeamSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTeam> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TeamFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTeam,TeamFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -119,7 +119,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
                         }
 
-                entities = ApplyFilters<DocEntityTeam,TeamSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -161,7 +161,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Team ret = null;
-            request = _InitAssignValues<Team>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

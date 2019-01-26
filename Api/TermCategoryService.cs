@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTermCategory> _ExecSearch(TermCategorySearch request)
         {
-            request = InitSearch<TermCategory, TermCategorySearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTermCategory> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermCategoryFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTermCategory,TermCategoryFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -113,7 +113,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Terms.Any(r => r.Id.In(request.TermsIds)));
                         }
 
-                entities = ApplyFilters<DocEntityTermCategory,TermCategorySearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -155,7 +155,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermCategory ret = null;
-            request = _InitAssignValues<TermCategory>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

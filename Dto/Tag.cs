@@ -117,21 +117,16 @@ namespace Services.Dto
     
     [Route("/Tag/{Id}/copy", "POST")]
     public partial class TagCopy : Tag {}
-    public partial class TagSearchBase : Search<Tag>
+    [Route("/tag", "GET")]
+    [Route("/tag/search", "GET, POST, DELETE")]
+    public partial class TagSearch : Search<Tag>
     {
         public string Name { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/tag", "GET")]
-    [Route("/tag/search", "GET, POST, DELETE")]
-    public partial class TagSearch : TagSearchBase
-    {
-    }
-
+    
     public class TagFullTextSearch
     {
-        public TagFullTextSearch() {}
         private TagSearch _request;
         public TagFullTextSearch(TagSearch request) => _request = request;
         
@@ -154,11 +149,15 @@ namespace Services.Dto
     public partial class TagBatch : List<Tag> { }
 
     [Route("/tag/{Id}/workflow", "GET, POST, DELETE")]
-    public class TagJunction : TagSearchBase
+    public class TagJunction : Search<Tag>
     {
         public int? Id { get; set; }
         public List<int> Ids { get; set; }
         public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
         public TagJunction(int id, List<int> ids)
