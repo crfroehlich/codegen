@@ -449,7 +449,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TimePointMapper : Profile
+    public partial class TimePointMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityTimePoint,TimePoint> _EntityToDto;
         private IMappingExpression<TimePoint,DocEntityTimePoint> _DtoToEntity;

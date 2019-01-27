@@ -195,18 +195,6 @@ namespace Services.API
 
         public object Get(PackageSearch request) => GetSearchResultWithCache<Package,DocEntityPackage,PackageSearch>(DocConstantModelName.PACKAGE, request, _ExecSearch);
 
-        public object Post(PackageVersion request) => Get(request);
-
-        public object Get(PackageVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(Package request) => GetEntityWithCache<Package>(DocConstantModelName.PACKAGE, request, GetPackage);
         private Package _AssignValues(Package request, DocConstantPermission permission, Session session)
         {
@@ -814,52 +802,27 @@ namespace Services.API
                 switch(method)
                 {
                 case "package":
-                    ret = _GetPackagePackage(request, skip, take);
+                    ret = GetJunctionSearchResult<Package, DocEntityPackage, DocEntityPackage, Package, PackageSearch>((int)request.Id, DocConstantModelName.PACKAGE, "Children", request,
+                        (ss) =>
+                        { 
+                            var service = HostContext.ResolveService<PackageService>(Request);
+                            return service.Get(ss);
+                        });
                     break;
                 case "timecard":
-                    ret = _GetPackageTimeCard(request, skip, take);
+                    ret = GetJunctionSearchResult<Package, DocEntityPackage, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "LegacyTimeCards", request,
+                        (ss) =>
+                        { 
+                            var service = HostContext.ResolveService<TimeCardService>(Request);
+                            return service.Get(ss);
+                        });
                     break;
                 }
             });
             return ret;
         }
-        
-        public object Get(PackageJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetPackagePackage(PackageJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request.VisibleFields);
-             var en = DocEntityPackage.GetPackage(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PACKAGE, columnName: "Children", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Package and Package");
-             return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPackage,Package>(new List<Package>());
-        }
 
-        private object _GetPackageTimeCard(PackageJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request.VisibleFields);
-             var en = DocEntityPackage.GetPackage(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PACKAGE, columnName: "LegacyTimeCards", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Package and TimeCard");
-             return en?.LegacyTimeCards.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTimeCard,TimeCard>(new List<TimeCard>());
-        }
-        
         public object Post(PackageJunction request)
         {
             if (request == null)

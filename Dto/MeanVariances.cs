@@ -108,15 +108,22 @@ namespace Services.Dto
     
     [Route("/MeanVariances/{Id}/copy", "POST")]
     public partial class MeanVariancesCopy : MeanVariances {}
-    [Route("/meanvariances", "GET")]
-    [Route("/meanvariances/search", "GET, POST, DELETE")]
-    public partial class MeanVariancesSearch : Search<MeanVariances>
+    public partial class MeanVariancesSearchBase : Search<MeanVariances>
     {
+        public int? Id { get; set; }
         public List<int> VariancesIds { get; set; }
     }
-    
+
+    [Route("/meanvariances", "GET")]
+    [Route("/meanvariances/version", "GET, POST")]
+    [Route("/meanvariances/search", "GET, POST, DELETE")]
+    public partial class MeanVariancesSearch : MeanVariancesSearchBase
+    {
+    }
+
     public class MeanVariancesFullTextSearch
     {
+        public MeanVariancesFullTextSearch() {}
         private MeanVariancesSearch _request;
         public MeanVariancesFullTextSearch(MeanVariancesSearch request) => _request = request;
         
@@ -131,43 +138,14 @@ namespace Services.Dto
         public bool doVariances { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVariances.Variances))); }
     }
 
-    [Route("/meanvariances/version", "GET, POST")]
-    public partial class MeanVariancesVersion : MeanVariancesSearch {}
-
     [Route("/meanvariances/batch", "DELETE, PATCH, POST, PUT")]
     public partial class MeanVariancesBatch : List<MeanVariances> { }
 
+    [Route("/meanvariances/{Id}/meanvariancevalue/version", "GET, POST")]
     [Route("/meanvariances/{Id}/meanvariancevalue", "GET, POST, DELETE")]
-    public class MeanVariancesJunction : Search<MeanVariances>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    public class MeanVariancesJunction : MeanVariancesSearchBase {}
 
 
-        public MeanVariancesJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/meanvariances/{Id}/meanvariancevalue/version", "GET")]
-    public class MeanVariancesJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/meanvariances/ids", "GET, POST")]
     public class MeanVariancesIds
     {

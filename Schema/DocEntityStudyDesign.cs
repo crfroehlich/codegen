@@ -369,7 +369,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class StudyDesignMapper : Profile
+    public partial class StudyDesignMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityStudyDesign,StudyDesign> _EntityToDto;
         private IMappingExpression<StudyDesign,DocEntityStudyDesign> _DtoToEntity;

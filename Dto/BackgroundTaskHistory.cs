@@ -148,10 +148,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/backgroundtaskhistory", "GET")]
-    [Route("/backgroundtaskhistory/search", "GET, POST, DELETE")]
-    public partial class BackgroundTaskHistorySearch : Search<BackgroundTaskHistory>
+    public partial class BackgroundTaskHistorySearchBase : Search<BackgroundTaskHistory>
     {
+        public int? Id { get; set; }
         public int? Completed { get; set; }
         public string Data { get; set; }
         public DateTime? Ended { get; set; }
@@ -166,9 +165,17 @@ namespace Services.Dto
         public Reference Task { get; set; }
         public List<int> TaskIds { get; set; }
     }
-    
+
+    [Route("/backgroundtaskhistory", "GET")]
+    [Route("/backgroundtaskhistory/version", "GET, POST")]
+    [Route("/backgroundtaskhistory/search", "GET, POST, DELETE")]
+    public partial class BackgroundTaskHistorySearch : BackgroundTaskHistorySearchBase
+    {
+    }
+
     public class BackgroundTaskHistoryFullTextSearch
     {
+        public BackgroundTaskHistoryFullTextSearch() {}
         private BackgroundTaskHistorySearch _request;
         public BackgroundTaskHistoryFullTextSearch(BackgroundTaskHistorySearch request) => _request = request;
         
@@ -192,43 +199,14 @@ namespace Services.Dto
         public bool doTask { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskHistory.Task))); }
     }
 
-    [Route("/backgroundtaskhistory/version", "GET, POST")]
-    public partial class BackgroundTaskHistoryVersion : BackgroundTaskHistorySearch {}
-
     [Route("/backgroundtaskhistory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class BackgroundTaskHistoryBatch : List<BackgroundTaskHistory> { }
 
+    [Route("/backgroundtaskhistory/{Id}/backgroundtaskitem/version", "GET, POST")]
     [Route("/backgroundtaskhistory/{Id}/backgroundtaskitem", "GET, POST, DELETE")]
-    public class BackgroundTaskHistoryJunction : Search<BackgroundTaskHistory>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    public class BackgroundTaskHistoryJunction : BackgroundTaskHistorySearchBase {}
 
 
-        public BackgroundTaskHistoryJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/backgroundtaskhistory/{Id}/backgroundtaskitem/version", "GET")]
-    public class BackgroundTaskHistoryJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/backgroundtaskhistory/ids", "GET, POST")]
     public class BackgroundTaskHistoryIds
     {

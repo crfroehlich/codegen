@@ -117,10 +117,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/statsrecord", "GET")]
-    [Route("/statsrecord/search", "GET, POST, DELETE")]
-    public partial class StatsRecordSearch : Search<StatsRecord>
+    public partial class StatsRecordSearchBase : Search<StatsRecord>
     {
+        public int? Id { get; set; }
         public Reference Name { get; set; }
         public List<int> NameIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Total Studies",@"Data Studies",@"FR Studies",@"Total MainGroups",@"Collected MainGroups",@"Uncollected MainGroups",@"SubGroups",@"Comparisons",@"Interventions",@"Total Study Level Variables",@"Bound Study Level Variables",@"Total Group Variables",@"Bound Group Variables",@"Total Characteristic Variables",@"Collected Characteristic Variables",@"Uncollected Characteristic Variables",@"Bound Characteristic Variables",@"Total Outcome Variables",@"Collected Outcome Variables",@"Uncollected Outcome Variables",@"Bound Outcome Variables",@"Total Outcome Iterations",@"Bound Outcome Iterations",@"Total Comparative Statements",@"Total Variables",@"Bound Total Variables",@"Data Points Avg",@"Data Points Max",@"Data Points Total",@"Total Participants",@"Ambispective Observational",@"Case Control",@"Case Report",@"Case Series",@"Cross-Sectional",@"Follow-up/Extension",@"Non-Randomized Controlled Trial",@"Non-Randomized Crossover",@"Non-Randomized Non-Controlled Trial",@"Pooled Analysis",@"Posthoc Analysis",@"Prospective Observational",@"Randomized Controlled Trial",@"Randomized Crossover",@"Randomized Non-Controlled Trial",@"Retrospective Observational",@"Study Design Overview",@"Sub-Group Analysis",@"Diagnosis",@"Harm",@"Modeling",@"Other",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Therapy"})]
@@ -129,9 +128,17 @@ namespace Services.Dto
         public string OwnerType { get; set; }
         public decimal? Value { get; set; }
     }
-    
+
+    [Route("/statsrecord", "GET")]
+    [Route("/statsrecord/version", "GET, POST")]
+    [Route("/statsrecord/search", "GET, POST, DELETE")]
+    public partial class StatsRecordSearch : StatsRecordSearchBase
+    {
+    }
+
     public class StatsRecordFullTextSearch
     {
+        public StatsRecordFullTextSearch() {}
         private StatsRecordSearch _request;
         public StatsRecordFullTextSearch(StatsRecordSearch request) => _request = request;
         
@@ -148,9 +155,6 @@ namespace Services.Dto
         public bool doOwnerType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsRecord.OwnerType))); }
         public bool doValue { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsRecord.Value))); }
     }
-
-    [Route("/statsrecord/version", "GET, POST")]
-    public partial class StatsRecordVersion : StatsRecordSearch {}
 
     [Route("/statsrecord/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsRecordBatch : List<StatsRecord> { }

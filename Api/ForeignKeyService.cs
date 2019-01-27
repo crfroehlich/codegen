@@ -139,18 +139,6 @@ namespace Services.API
 
         public List<ForeignKey> Get(ForeignKeySearch request) => GetSearchResult<ForeignKey,DocEntityForeignKey,ForeignKeySearch>(DocConstantModelName.FOREIGNKEY, request, _ExecSearch);
 
-        public object Post(ForeignKeyVersion request) => Get(request);
-
-        public object Get(ForeignKeyVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public ForeignKey Get(ForeignKey request) => GetEntity<ForeignKey>(DocConstantModelName.FOREIGNKEY, request, GetForeignKey);
         private ForeignKey _AssignValues(ForeignKey request, DocConstantPermission permission, Session session)
         {

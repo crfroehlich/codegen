@@ -439,7 +439,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class RoleMapper : Profile
+    public partial class RoleMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityRole,Role> _EntityToDto;
         private IMappingExpression<Role,DocEntityRole> _DtoToEntity;
