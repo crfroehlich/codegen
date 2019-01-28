@@ -437,7 +437,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class DateTimeDtoMapper : DocMapperBase
+    public partial class DateTimeDtoMapper : Profile
     {
         private IMappingExpression<DocEntityDateTime,DateTimeDto> _EntityToDto;
         private IMappingExpression<DateTimeDto,DocEntityDateTime> _DtoToEntity;

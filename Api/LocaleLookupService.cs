@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityLocaleLookup> _ExecSearch(LocaleLookupSearch request)
         {
-            request = InitSearch<LocaleLookup, LocaleLookupSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityLocaleLookup> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LocaleLookupFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityLocaleLookup,LocaleLookupFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -95,7 +95,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Locale.Id.In(request.LocaleIds));
                 }
 
-                entities = ApplyFilters<DocEntityLocaleLookup,LocaleLookupSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -113,6 +113,18 @@ namespace Services.API
 
         public List<LocaleLookup> Get(LocaleLookupSearch request) => GetSearchResult<LocaleLookup,DocEntityLocaleLookup,LocaleLookupSearch>(DocConstantModelName.LOCALELOOKUP, request, _ExecSearch);
 
+        public object Post(LocaleLookupVersion request) => Get(request);
+
+        public object Get(LocaleLookupVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public LocaleLookup Get(LocaleLookup request) => GetEntity<LocaleLookup>(DocConstantModelName.LOCALELOOKUP, request, GetLocaleLookup);
         private LocaleLookup _AssignValues(LocaleLookup request, DocConstantPermission permission, Session session)
         {
@@ -125,7 +137,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LocaleLookup ret = null;
-            request = _InitAssignValues<LocaleLookup>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

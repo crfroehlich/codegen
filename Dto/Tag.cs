@@ -117,23 +117,16 @@ namespace Services.Dto
     
     [Route("/Tag/{Id}/copy", "POST")]
     public partial class TagCopy : Tag {}
-    public partial class TagSearchBase : Search<Tag>
+    [Route("/tag", "GET")]
+    [Route("/tag/search", "GET, POST, DELETE")]
+    public partial class TagSearch : Search<Tag>
     {
-        public int? Id { get; set; }
         public string Name { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/tag", "GET")]
-    [Route("/tag/version", "GET, POST")]
-    [Route("/tag/search", "GET, POST, DELETE")]
-    public partial class TagSearch : TagSearchBase
-    {
-    }
-
+    
     public class TagFullTextSearch
     {
-        public TagFullTextSearch() {}
         private TagSearch _request;
         public TagFullTextSearch(TagSearch request) => _request = request;
         
@@ -149,14 +142,43 @@ namespace Services.Dto
         public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Tag.Workflows))); }
     }
 
+    [Route("/tag/version", "GET, POST")]
+    public partial class TagVersion : TagSearch {}
+
     [Route("/tag/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TagBatch : List<Tag> { }
 
-    [Route("/tag/{Id}/workflow/version", "GET, POST")]
     [Route("/tag/{Id}/workflow", "GET, POST, DELETE")]
-    public class TagJunction : TagSearchBase {}
+    public class TagJunction : Search<Tag>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public TagJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/tag/{Id}/workflow/version", "GET")]
+    public class TagJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/tag/ids", "GET, POST")]
     public class TagIds
     {

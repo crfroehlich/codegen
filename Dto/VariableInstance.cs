@@ -129,9 +129,10 @@ namespace Services.Dto
     
     [Route("/VariableInstance/{Id}/copy", "POST")]
     public partial class VariableInstanceCopy : VariableInstance {}
-    public partial class VariableInstanceSearchBase : Search<VariableInstance>
+    [Route("/variableinstance", "GET")]
+    [Route("/variableinstance/search", "GET, POST, DELETE")]
+    public partial class VariableInstanceSearch : Search<VariableInstance>
     {
-        public int? Id { get; set; }
         public string Data { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
@@ -139,17 +140,9 @@ namespace Services.Dto
         public List<int> RuleIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/variableinstance", "GET")]
-    [Route("/variableinstance/version", "GET, POST")]
-    [Route("/variableinstance/search", "GET, POST, DELETE")]
-    public partial class VariableInstanceSearch : VariableInstanceSearchBase
-    {
-    }
-
+    
     public class VariableInstanceFullTextSearch
     {
-        public VariableInstanceFullTextSearch() {}
         private VariableInstanceSearch _request;
         public VariableInstanceFullTextSearch(VariableInstanceSearch request) => _request = request;
         
@@ -167,14 +160,43 @@ namespace Services.Dto
         public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableInstance.Workflows))); }
     }
 
+    [Route("/variableinstance/version", "GET, POST")]
+    public partial class VariableInstanceVersion : VariableInstanceSearch {}
+
     [Route("/variableinstance/batch", "DELETE, PATCH, POST, PUT")]
     public partial class VariableInstanceBatch : List<VariableInstance> { }
 
-    [Route("/variableinstance/{Id}/workflow/version", "GET, POST")]
     [Route("/variableinstance/{Id}/workflow", "GET, POST, DELETE")]
-    public class VariableInstanceJunction : VariableInstanceSearchBase {}
+    public class VariableInstanceJunction : Search<VariableInstance>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public VariableInstanceJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/variableinstance/{Id}/workflow/version", "GET")]
+    public class VariableInstanceJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/variableinstance/ids", "GET, POST")]
     public class VariableInstanceIds
     {

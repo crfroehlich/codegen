@@ -372,7 +372,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TagMapper : DocMapperBase
+    public partial class TagMapper : Profile
     {
         private IMappingExpression<DocEntityTag,Tag> _EntityToDto;
         private IMappingExpression<Tag,DocEntityTag> _DtoToEntity;

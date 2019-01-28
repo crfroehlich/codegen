@@ -125,9 +125,10 @@ namespace Services.Dto
     
     [Route("/ForeignKey/{Id}/copy", "POST")]
     public partial class ForeignKeyCopy : ForeignKey {}
-    public partial class ForeignKeySearchBase : Search<ForeignKey>
+    [Route("/foreignkey", "GET")]
+    [Route("/foreignkey/search", "GET, POST, DELETE")]
+    public partial class ForeignKeySearch : Search<ForeignKey>
     {
-        public int? Id { get; set; }
         public Reference IntegrationName { get; set; }
         public List<int> IntegrationNameIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Salesforce"})]
@@ -139,17 +140,9 @@ namespace Services.Dto
         public string KeyId { get; set; }
         public string KeyName { get; set; }
     }
-
-    [Route("/foreignkey", "GET")]
-    [Route("/foreignkey/version", "GET, POST")]
-    [Route("/foreignkey/search", "GET, POST, DELETE")]
-    public partial class ForeignKeySearch : ForeignKeySearchBase
-    {
-    }
-
+    
     public class ForeignKeyFullTextSearch
     {
-        public ForeignKeyFullTextSearch() {}
         private ForeignKeySearch _request;
         public ForeignKeyFullTextSearch(ForeignKeySearch request) => _request = request;
         
@@ -166,6 +159,9 @@ namespace Services.Dto
         public bool doKeyId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ForeignKey.KeyId))); }
         public bool doKeyName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ForeignKey.KeyName))); }
     }
+
+    [Route("/foreignkey/version", "GET, POST")]
+    public partial class ForeignKeyVersion : ForeignKeySearch {}
 
     [Route("/foreignkey/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ForeignKeyBatch : List<ForeignKey> { }

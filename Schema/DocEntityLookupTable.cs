@@ -452,7 +452,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class LookupTableMapper : DocMapperBase
+    public partial class LookupTableMapper : Profile
     {
         private IMappingExpression<DocEntityLookupTable,LookupTable> _EntityToDto;
         private IMappingExpression<LookupTable,DocEntityLookupTable> _DtoToEntity;

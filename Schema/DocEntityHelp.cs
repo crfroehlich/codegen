@@ -413,7 +413,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class HelpMapper : DocMapperBase
+    public partial class HelpMapper : Profile
     {
         private IMappingExpression<DocEntityHelp,Help> _EntityToDto;
         private IMappingExpression<Help,DocEntityHelp> _DtoToEntity;

@@ -195,9 +195,10 @@ namespace Services.Dto
     
     [Route("/Scope/{Id}/copy", "POST")]
     public partial class ScopeCopy : Scope {}
-    public partial class ScopeSearchBase : Search<Scope>
+    [Route("/scope", "GET")]
+    [Route("/scope/search", "GET, POST, DELETE")]
+    public partial class ScopeSearch : Search<Scope>
     {
-        public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public bool? Archived { get; set; }
@@ -224,17 +225,9 @@ namespace Services.Dto
         public bool? View { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/scope", "GET")]
-    [Route("/scope/version", "GET, POST")]
-    [Route("/scope/search", "GET, POST, DELETE")]
-    public partial class ScopeSearch : ScopeSearchBase
-    {
-    }
-
+    
     public class ScopeFullTextSearch
     {
-        public ScopeFullTextSearch() {}
         private ScopeSearch _request;
         public ScopeFullTextSearch(ScopeSearch request) => _request = request;
         
@@ -265,24 +258,53 @@ namespace Services.Dto
         public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Workflows))); }
     }
 
+    [Route("/scope/version", "GET, POST")]
+    public partial class ScopeVersion : ScopeSearch {}
+
     [Route("/scope/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ScopeBatch : List<Scope> { }
 
-    [Route("/scope/{Id}/lookuptablebinding/version", "GET, POST")]
     [Route("/scope/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/broadcast/version", "GET, POST")]
     [Route("/scope/{Id}/broadcast", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/help/version", "GET, POST")]
     [Route("/scope/{Id}/help", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/termsynonym/version", "GET, POST")]
     [Route("/scope/{Id}/termsynonym", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/variablerule/version", "GET, POST")]
     [Route("/scope/{Id}/variablerule", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/workflow/version", "GET, POST")]
     [Route("/scope/{Id}/workflow", "GET, POST, DELETE")]
-    public class ScopeJunction : ScopeSearchBase {}
+    public class ScopeJunction : Search<Scope>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public ScopeJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/scope/{Id}/lookuptablebinding/version", "GET")]
+    [Route("/scope/{Id}/broadcast/version", "GET")]
+    [Route("/scope/{Id}/help/version", "GET")]
+    [Route("/scope/{Id}/termsynonym/version", "GET")]
+    [Route("/scope/{Id}/variablerule/version", "GET")]
+    [Route("/scope/{Id}/workflow/version", "GET")]
+    public class ScopeJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/scope/ids", "GET, POST")]
     public class ScopeIds
     {

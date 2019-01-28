@@ -447,7 +447,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class UnitOfMeasureMapper : DocMapperBase
+    public partial class UnitOfMeasureMapper : Profile
     {
         private IMappingExpression<DocEntityUnitOfMeasure,UnitOfMeasure> _EntityToDto;
         private IMappingExpression<UnitOfMeasure,DocEntityUnitOfMeasure> _DtoToEntity;

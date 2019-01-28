@@ -401,7 +401,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class UserTypeMapper : DocMapperBase
+    public partial class UserTypeMapper : Profile
     {
         private IMappingExpression<DocEntityUserType,UserType> _EntityToDto;
         private IMappingExpression<UserType,DocEntityUserType> _DtoToEntity;

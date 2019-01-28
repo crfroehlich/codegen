@@ -145,9 +145,10 @@ namespace Services.Dto
     
     [Route("/MeanRangeValue/{Id}/copy", "POST")]
     public partial class MeanRangeValueCopy : MeanRangeValue {}
-    public partial class MeanRangeValueSearchBase : Search<MeanRangeValue>
+    [Route("/meanrangevalue", "GET")]
+    [Route("/meanrangevalue/search", "GET, POST, DELETE")]
+    public partial class MeanRangeValueSearch : Search<MeanRangeValue>
     {
-        public int? Id { get; set; }
         public Reference MeanVarianceType { get; set; }
         public List<int> MeanVarianceTypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"SD",@"SE",@"Unknown",@"Semi IQR",@"IQR Difference",@"CV"})]
@@ -163,17 +164,9 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"CI",@"Total",@"IQR",@"Percentile",@"Variance CI",@"Variance Total",@"Variance IQR",@"Variance Percentile"})]
         public List<string> TypeNames { get; set; }
     }
-
-    [Route("/meanrangevalue", "GET")]
-    [Route("/meanrangevalue/version", "GET, POST")]
-    [Route("/meanrangevalue/search", "GET, POST, DELETE")]
-    public partial class MeanRangeValueSearch : MeanRangeValueSearchBase
-    {
-    }
-
+    
     public class MeanRangeValueFullTextSearch
     {
-        public MeanRangeValueFullTextSearch() {}
         private MeanRangeValueSearch _request;
         public MeanRangeValueFullTextSearch(MeanRangeValueSearch request) => _request = request;
         
@@ -195,14 +188,43 @@ namespace Services.Dto
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanRangeValue.Type))); }
     }
 
+    [Route("/meanrangevalue/version", "GET, POST")]
+    public partial class MeanRangeValueVersion : MeanRangeValueSearch {}
+
     [Route("/meanrangevalue/batch", "DELETE, PATCH, POST, PUT")]
     public partial class MeanRangeValueBatch : List<MeanRangeValue> { }
 
-    [Route("/meanrangevalue/{Id}/meanranges/version", "GET, POST")]
     [Route("/meanrangevalue/{Id}/meanranges", "GET, POST, DELETE")]
-    public class MeanRangeValueJunction : MeanRangeValueSearchBase {}
+    public class MeanRangeValueJunction : Search<MeanRangeValue>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public MeanRangeValueJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/meanrangevalue/{Id}/meanranges/version", "GET")]
+    public class MeanRangeValueJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/meanrangevalue/ids", "GET, POST")]
     public class MeanRangeValueIds
     {

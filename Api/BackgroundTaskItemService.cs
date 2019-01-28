@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityBackgroundTaskItem> _ExecSearch(BackgroundTaskItemSearch request)
         {
-            request = InitSearch<BackgroundTaskItem, BackgroundTaskItemSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityBackgroundTaskItem> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskItemFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityBackgroundTaskItem,BackgroundTaskItemFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -129,7 +129,7 @@ namespace Services.API
                             entities = entities.Where(en => en.TaskHistory.Any(r => r.Id.In(request.TaskHistoryIds)));
                         }
 
-                entities = ApplyFilters<DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -146,6 +146,18 @@ namespace Services.API
         public List<BackgroundTaskItem> Post(BackgroundTaskItemSearch request) => Get(request);
 
         public List<BackgroundTaskItem> Get(BackgroundTaskItemSearch request) => GetSearchResult<BackgroundTaskItem,DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(DocConstantModelName.BACKGROUNDTASKITEM, request, _ExecSearch);
+
+        public object Post(BackgroundTaskItemVersion request) => Get(request);
+
+        public object Get(BackgroundTaskItemVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
 
         public BackgroundTaskItem Get(BackgroundTaskItem request) => GetEntity<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, request, GetBackgroundTaskItem);
 
@@ -166,19 +178,40 @@ namespace Services.API
                 switch(method)
                 {
                 case "backgroundtaskhistory":
-                    ret = GetJunctionSearchResult<BackgroundTaskItem, DocEntityBackgroundTaskItem, DocEntityBackgroundTaskHistory, BackgroundTaskHistory, BackgroundTaskHistorySearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKHISTORY, "TaskHistory", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<BackgroundTaskHistoryService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetBackgroundTaskItemBackgroundTaskHistory(request, skip, take);
                     break;
                 }
             });
             return ret;
         }
+        
+        public object Get(BackgroundTaskItemJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+        
 
-
+        private object _GetBackgroundTaskItemBackgroundTaskHistory(BackgroundTaskItemJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<BackgroundTaskHistory>(Dto.BackgroundTaskHistory.Fields, request.VisibleFields);
+             var en = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASKITEM, columnName: "TaskHistory", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTaskItem and BackgroundTaskHistory");
+             return en?.TaskHistory.Take(take).Skip(skip).ConvertFromEntityList<DocEntityBackgroundTaskHistory,BackgroundTaskHistory>(new List<BackgroundTaskHistory>());
+        }
+        
         public object Post(BackgroundTaskItemJunction request)
         {
             if (request == null)

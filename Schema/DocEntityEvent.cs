@@ -402,7 +402,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class EventMapper : DocMapperBase
+    public partial class EventMapper : Profile
     {
         private IMappingExpression<DocEntityEvent,Event> _EntityToDto;
         private IMappingExpression<Event,DocEntityEvent> _DtoToEntity;

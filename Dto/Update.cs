@@ -158,9 +158,10 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class UpdateSearchBase : Search<Update>
+    [Route("/update", "GET")]
+    [Route("/update/search", "GET, POST, DELETE")]
+    public partial class UpdateSearch : Search<Update>
     {
-        public int? Id { get; set; }
         public string Body { get; set; }
         public string DeliveryStatus { get; set; }
         public int? EmailAttempts { get; set; }
@@ -182,17 +183,9 @@ namespace Services.Dto
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
     }
-
-    [Route("/update", "GET")]
-    [Route("/update/version", "GET, POST")]
-    [Route("/update/search", "GET, POST, DELETE")]
-    public partial class UpdateSearch : UpdateSearchBase
-    {
-    }
-
+    
     public class UpdateFullTextSearch
     {
-        public UpdateFullTextSearch() {}
         private UpdateSearch _request;
         public UpdateFullTextSearch(UpdateSearch request) => _request = request;
         
@@ -218,14 +211,43 @@ namespace Services.Dto
         public bool doUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.User))); }
     }
 
+    [Route("/update/version", "GET, POST")]
+    public partial class UpdateVersion : UpdateSearch {}
+
     [Route("/update/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UpdateBatch : List<Update> { }
 
-    [Route("/update/{Id}/event/version", "GET, POST")]
     [Route("/update/{Id}/event", "GET, POST, DELETE")]
-    public class UpdateJunction : UpdateSearchBase {}
+    public class UpdateJunction : Search<Update>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public UpdateJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/update/{Id}/event/version", "GET")]
+    public class UpdateJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/update/ids", "GET, POST")]
     public class UpdateIds
     {

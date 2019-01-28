@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityForeignKey> _ExecSearch(ForeignKeySearch request)
         {
-            request = InitSearch<ForeignKey, ForeignKeySearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityForeignKey> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ForeignKeyFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityForeignKey,ForeignKeyFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -121,7 +121,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.KeyName))
                     entities = entities.Where(en => en.KeyName.Contains(request.KeyName));
 
-                entities = ApplyFilters<DocEntityForeignKey,ForeignKeySearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -139,6 +139,18 @@ namespace Services.API
 
         public List<ForeignKey> Get(ForeignKeySearch request) => GetSearchResult<ForeignKey,DocEntityForeignKey,ForeignKeySearch>(DocConstantModelName.FOREIGNKEY, request, _ExecSearch);
 
+        public object Post(ForeignKeyVersion request) => Get(request);
+
+        public object Get(ForeignKeyVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public ForeignKey Get(ForeignKey request) => GetEntity<ForeignKey>(DocConstantModelName.FOREIGNKEY, request, GetForeignKey);
         private ForeignKey _AssignValues(ForeignKey request, DocConstantPermission permission, Session session)
         {
@@ -151,7 +163,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             ForeignKey ret = null;
-            request = _InitAssignValues<ForeignKey>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

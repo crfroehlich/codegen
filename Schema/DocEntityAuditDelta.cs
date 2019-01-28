@@ -371,7 +371,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class AuditDeltaMapper : DocMapperBase
+    public partial class AuditDeltaMapper : Profile
     {
         private IMappingExpression<DocEntityAuditDelta,AuditDelta> _EntityToDto;
         private IMappingExpression<AuditDelta,DocEntityAuditDelta> _DtoToEntity;

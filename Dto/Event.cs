@@ -138,9 +138,10 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class EventSearchBase : Search<Event>
+    [Route("/event", "GET")]
+    [Route("/event/search", "GET, POST, DELETE")]
+    public partial class EventSearch : Search<Event>
     {
-        public int? Id { get; set; }
         public Reference AuditRecord { get; set; }
         public List<int> AuditRecordIds { get; set; }
         public string Description { get; set; }
@@ -152,17 +153,9 @@ namespace Services.Dto
         public List<int> UpdatesIds { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/event", "GET")]
-    [Route("/event/version", "GET, POST")]
-    [Route("/event/search", "GET, POST, DELETE")]
-    public partial class EventSearch : EventSearchBase
-    {
-    }
-
+    
     public class EventFullTextSearch
     {
-        public EventFullTextSearch() {}
         private EventSearch _request;
         public EventFullTextSearch(EventSearch request) => _request = request;
         
@@ -183,18 +176,47 @@ namespace Services.Dto
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Users))); }
     }
 
+    [Route("/event/version", "GET, POST")]
+    public partial class EventVersion : EventSearch {}
+
     [Route("/event/batch", "DELETE, PATCH, POST, PUT")]
     public partial class EventBatch : List<Event> { }
 
-    [Route("/event/{Id}/team/version", "GET, POST")]
     [Route("/event/{Id}/team", "GET, POST, DELETE")]
-    [Route("/event/{Id}/update/version", "GET, POST")]
     [Route("/event/{Id}/update", "GET, POST, DELETE")]
-    [Route("/event/{Id}/user/version", "GET, POST")]
     [Route("/event/{Id}/user", "GET, POST, DELETE")]
-    public class EventJunction : EventSearchBase {}
+    public class EventJunction : Search<Event>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public EventJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/event/{Id}/team/version", "GET")]
+    [Route("/event/{Id}/update/version", "GET")]
+    [Route("/event/{Id}/user/version", "GET")]
+    public class EventJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/event/ids", "GET, POST")]
     public class EventIds
     {

@@ -448,7 +448,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ClientMapper : DocMapperBase
+    public partial class ClientMapper : Profile
     {
         private IMappingExpression<DocEntityClient,Client> _EntityToDto;
         private IMappingExpression<Client,DocEntityClient> _DtoToEntity;

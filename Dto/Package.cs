@@ -195,9 +195,10 @@ namespace Services.Dto
     
     [Route("/Package/{Id}/copy", "POST")]
     public partial class PackageCopy : Package {}
-    public partial class PackageSearchBase : Search<Package>
+    [Route("/package", "GET")]
+    [Route("/package/search", "GET, POST, DELETE")]
+    public partial class PackageSearch : Search<Package>
     {
-        public int? Id { get; set; }
         public bool? Archived { get; set; }
         public List<int> ChildrenIds { get; set; }
         public Reference Client { get; set; }
@@ -229,17 +230,9 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         public List<string> StatusNames { get; set; }
     }
-
-    [Route("/package", "GET")]
-    [Route("/package/version", "GET, POST")]
-    [Route("/package/search", "GET, POST, DELETE")]
-    public partial class PackageSearch : PackageSearchBase
-    {
-    }
-
+    
     public class PackageFullTextSearch
     {
-        public PackageFullTextSearch() {}
         private PackageSearch _request;
         public PackageFullTextSearch(PackageSearch request) => _request = request;
         
@@ -271,16 +264,45 @@ namespace Services.Dto
         public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Package.Status))); }
     }
 
+    [Route("/package/version", "GET, POST")]
+    public partial class PackageVersion : PackageSearch {}
+
     [Route("/package/batch", "DELETE, PATCH, POST, PUT")]
     public partial class PackageBatch : List<Package> { }
 
-    [Route("/package/{Id}/package/version", "GET, POST")]
     [Route("/package/{Id}/package", "GET, POST, DELETE")]
-    [Route("/package/{Id}/timecard/version", "GET, POST")]
     [Route("/package/{Id}/timecard", "GET, POST, DELETE")]
-    public class PackageJunction : PackageSearchBase {}
+    public class PackageJunction : Search<Package>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public PackageJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/package/{Id}/package/version", "GET")]
+    [Route("/package/{Id}/timecard/version", "GET")]
+    public class PackageJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/package/ids", "GET, POST")]
     public class PackageIds
     {

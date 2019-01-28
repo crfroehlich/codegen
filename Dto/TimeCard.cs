@@ -156,9 +156,10 @@ namespace Services.Dto
     
     [Route("/TimeCard/{Id}/copy", "POST")]
     public partial class TimeCardCopy : TimeCard {}
-    public partial class TimeCardSearchBase : Search<TimeCard>
+    [Route("/timecard", "GET")]
+    [Route("/timecard/search", "GET, POST, DELETE")]
+    public partial class TimeCardSearch : Search<TimeCard>
     {
-        public int? Id { get; set; }
         public string Description { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
@@ -183,17 +184,9 @@ namespace Services.Dto
         public List<int> WorkTypeIds { get; set; }
         public List<string> WorkTypeNames { get; set; }
     }
-
-    [Route("/timecard", "GET")]
-    [Route("/timecard/version", "GET, POST")]
-    [Route("/timecard/search", "GET, POST, DELETE")]
-    public partial class TimeCardSearch : TimeCardSearchBase
-    {
-    }
-
+    
     public class TimeCardFullTextSearch
     {
-        public TimeCardFullTextSearch() {}
         private TimeCardSearch _request;
         public TimeCardFullTextSearch(TimeCardSearch request) => _request = request;
         
@@ -216,6 +209,9 @@ namespace Services.Dto
         public bool doUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.User))); }
         public bool doWorkType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.WorkType))); }
     }
+
+    [Route("/timecard/version", "GET, POST")]
+    public partial class TimeCardVersion : TimeCardSearch {}
 
     [Route("/timecard/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TimeCardBatch : List<TimeCard> { }
