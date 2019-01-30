@@ -441,7 +441,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TermMasterMapper : Profile
+    public partial class TermMasterMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityTermMaster,TermMaster> _EntityToDto;
         private IMappingExpression<TermMaster,DocEntityTermMaster> _DtoToEntity;

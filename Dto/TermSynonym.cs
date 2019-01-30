@@ -137,10 +137,9 @@ namespace Services.Dto
     
     [Route("/TermSynonym/{Id}/copy", "POST")]
     public partial class TermSynonymCopy : TermSynonym {}
-    [Route("/termsynonym", "GET")]
-    [Route("/termsynonym/search", "GET, POST, DELETE")]
-    public partial class TermSynonymSearch : Search<TermSynonym>
+    public partial class TermSynonymSearchBase : Search<TermSynonym>
     {
+        public int? Id { get; set; }
         public bool? Approved { get; set; }
         public List<int> BindingsIds { get; set; }
         public Reference Master { get; set; }
@@ -150,9 +149,17 @@ namespace Services.Dto
         public List<int> ScopeIds { get; set; }
         public string Synonym { get; set; }
     }
-    
+
+    [Route("/termsynonym", "GET")]
+    [Route("/termsynonym/version", "GET, POST")]
+    [Route("/termsynonym/search", "GET, POST, DELETE")]
+    public partial class TermSynonymSearch : TermSynonymSearchBase
+    {
+    }
+
     public class TermSynonymFullTextSearch
     {
+        public TermSynonymFullTextSearch() {}
         private TermSynonymSearch _request;
         public TermSynonymFullTextSearch(TermSynonymSearch request) => _request = request;
         
@@ -172,43 +179,14 @@ namespace Services.Dto
         public bool doSynonym { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermSynonym.Synonym))); }
     }
 
-    [Route("/termsynonym/version", "GET, POST")]
-    public partial class TermSynonymVersion : TermSynonymSearch {}
-
     [Route("/termsynonym/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TermSynonymBatch : List<TermSynonym> { }
 
+    [Route("/termsynonym/{Id}/lookuptablebinding/version", "GET, POST")]
     [Route("/termsynonym/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    public class TermSynonymJunction : Search<TermSynonym>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    public class TermSynonymJunction : TermSynonymSearchBase {}
 
 
-        public TermSynonymJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/termsynonym/{Id}/lookuptablebinding/version", "GET")]
-    public class TermSynonymJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/termsynonym/ids", "GET, POST")]
     public class TermSynonymIds
     {

@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUpdate> _ExecSearch(UpdateSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Update, UpdateSearch>(request);
             IQueryable<DocEntityUpdate> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UpdateFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityUpdate,UpdateFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -135,7 +135,7 @@ namespace Services.API
                     entities = entities.Where(en => en.User.Id.In(request.UserIds));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityUpdate,UpdateSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -153,18 +153,6 @@ namespace Services.API
 
         public List<Update> Get(UpdateSearch request) => GetSearchResult<Update,DocEntityUpdate,UpdateSearch>(DocConstantModelName.UPDATE, request, _ExecSearch);
 
-        public object Post(UpdateVersion request) => Get(request);
-
-        public object Get(UpdateVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public Update Get(Update request) => GetEntity<Update>(DocConstantModelName.UPDATE, request, GetUpdate);
         private Update _AssignValues(Update request, DocConstantPermission permission, Session session)
         {
@@ -177,7 +165,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Update ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Update>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -469,40 +457,19 @@ namespace Services.API
                 switch(method)
                 {
                 case "event":
-                    ret = _GetUpdateEvent(request, skip, take);
+                    ret = GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request,
+                        (ss) =>
+                        { 
+                            var service = HostContext.ResolveService<EventService>(Request);
+                            return service.Get(ss);
+                        });
                     break;
                 }
             });
             return ret;
         }
-        
-        public object Get(UpdateJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetUpdateEvent(UpdateJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request.VisibleFields);
-             var en = DocEntityUpdate.GetUpdate(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.UPDATE, columnName: "Events", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Update and Event");
-             return en?.Events.Take(take).Skip(skip).ConvertFromEntityList<DocEntityEvent,Event>(new List<Event>());
-        }
-        
+
         public object Post(UpdateJunction request)
         {
             if (request == null)

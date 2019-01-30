@@ -163,10 +163,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/statsstudyset", "GET")]
-    [Route("/statsstudyset/search", "GET, POST, DELETE")]
-    public partial class StatsStudySetSearch : Search<StatsStudySet>
+    public partial class StatsStudySetSearchBase : Search<StatsStudySet>
     {
+        public int? Id { get; set; }
         public int? BoundTerms { get; set; }
         public int? Characteristics { get; set; }
         public int? DataPoints { get; set; }
@@ -184,9 +183,17 @@ namespace Services.Dto
         public string TypeList { get; set; }
         public int? UnboundTerms { get; set; }
     }
-    
+
+    [Route("/statsstudyset", "GET")]
+    [Route("/statsstudyset/version", "GET, POST")]
+    [Route("/statsstudyset/search", "GET, POST, DELETE")]
+    public partial class StatsStudySetSearch : StatsStudySetSearchBase
+    {
+    }
+
     public class StatsStudySetFullTextSearch
     {
+        public StatsStudySetFullTextSearch() {}
         private StatsStudySetSearch _request;
         public StatsStudySetFullTextSearch(StatsStudySetSearch request) => _request = request;
         
@@ -215,41 +222,12 @@ namespace Services.Dto
         public bool doUnboundTerms { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsStudySet.UnboundTerms))); }
     }
 
-    [Route("/statsstudyset/version", "GET, POST")]
-    public partial class StatsStudySetVersion : StatsStudySetSearch {}
-
     [Route("/statsstudyset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsStudySetBatch : List<StatsStudySet> { }
 
-    public class StatsStudySetJunction : Search<StatsStudySet>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    public class StatsStudySetJunction : StatsStudySetSearchBase {}
 
 
-        public StatsStudySetJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    public class StatsStudySetJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/statsstudyset/ids", "GET, POST")]
     public class StatsStudySetIds
     {

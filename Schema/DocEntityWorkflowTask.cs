@@ -429,7 +429,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class WorkflowTaskMapper : Profile
+    public partial class WorkflowTaskMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityWorkflowTask,WorkflowTask> _EntityToDto;
         private IMappingExpression<WorkflowTask,DocEntityWorkflowTask> _DtoToEntity;

@@ -126,10 +126,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/stats", "GET")]
-    [Route("/stats/search", "GET, POST, DELETE")]
-    public partial class StatsSearch : Search<Stats>
+    public partial class StatsSearchBase : Search<Stats>
     {
+        public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public int? ExternalId { get; set; }
@@ -139,9 +138,17 @@ namespace Services.Dto
         public Reference StudySetStats { get; set; }
         public List<int> StudySetStatsIds { get; set; }
     }
-    
+
+    [Route("/stats", "GET")]
+    [Route("/stats/version", "GET, POST")]
+    [Route("/stats/search", "GET, POST, DELETE")]
+    public partial class StatsSearch : StatsSearchBase
+    {
+    }
+
     public class StatsFullTextSearch
     {
+        public StatsFullTextSearch() {}
         private StatsSearch _request;
         public StatsFullTextSearch(StatsSearch request) => _request = request;
         
@@ -160,9 +167,6 @@ namespace Services.Dto
         public bool doObjectType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.ObjectType))); }
         public bool doStudySetStats { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.StudySetStats))); }
     }
-
-    [Route("/stats/version", "GET, POST")]
-    public partial class StatsVersion : StatsSearch {}
 
     [Route("/stats/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsBatch : List<Stats> { }

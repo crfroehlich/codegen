@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTimePoint> _ExecSearch(TimePointSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<TimePoint, TimePointSearch>(request);
             IQueryable<DocEntityTimePoint> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimePointFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityTimePoint,TimePointFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -103,7 +103,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityTimePoint,TimePointSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -120,18 +120,6 @@ namespace Services.API
         public List<TimePoint> Post(TimePointSearch request) => Get(request);
 
         public List<TimePoint> Get(TimePointSearch request) => GetSearchResult<TimePoint,DocEntityTimePoint,TimePointSearch>(DocConstantModelName.TIMEPOINT, request, _ExecSearch);
-
-        public object Post(TimePointVersion request) => Get(request);
-
-        public object Get(TimePointVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
 
         public TimePoint Get(TimePoint request) => GetEntity<TimePoint>(DocConstantModelName.TIMEPOINT, request, GetTimePoint);
 

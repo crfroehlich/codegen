@@ -143,10 +143,9 @@ namespace Services.Dto
     
     [Route("/UnitConversionRules/{Id}/copy", "POST")]
     public partial class UnitConversionRulesCopy : UnitConversionRules {}
-    [Route("/unitconversionrules", "GET")]
-    [Route("/unitconversionrules/search", "GET, POST, DELETE")]
-    public partial class UnitConversionRulesSearch : Search<UnitConversionRules>
+    public partial class UnitConversionRulesSearchBase : Search<UnitConversionRules>
     {
+        public int? Id { get; set; }
         public Reference DestinationUnit { get; set; }
         public List<int> DestinationUnitIds { get; set; }
         public bool? IsDefault { get; set; }
@@ -162,9 +161,17 @@ namespace Services.Dto
         public Reference SourceUnit { get; set; }
         public List<int> SourceUnitIds { get; set; }
     }
-    
+
+    [Route("/unitconversionrules", "GET")]
+    [Route("/unitconversionrules/version", "GET, POST")]
+    [Route("/unitconversionrules/search", "GET, POST, DELETE")]
+    public partial class UnitConversionRulesSearch : UnitConversionRulesSearchBase
+    {
+    }
+
     public class UnitConversionRulesFullTextSearch
     {
+        public UnitConversionRulesFullTextSearch() {}
         private UnitConversionRulesSearch _request;
         public UnitConversionRulesFullTextSearch(UnitConversionRulesSearch request) => _request = request;
         
@@ -185,9 +192,6 @@ namespace Services.Dto
         public bool doRootTerm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitConversionRules.RootTerm))); }
         public bool doSourceUnit { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitConversionRules.SourceUnit))); }
     }
-
-    [Route("/unitconversionrules/version", "GET, POST")]
-    public partial class UnitConversionRulesVersion : UnitConversionRulesSearch {}
 
     [Route("/unitconversionrules/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitConversionRulesBatch : List<UnitConversionRules> { }

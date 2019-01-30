@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityImportData> _ExecSearch(ImportDataSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<ImportData, ImportDataSearch>(request);
             IQueryable<DocEntityImportData> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ImportDataFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityImportData,ImportDataFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -175,7 +175,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityImportData,ImportDataSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -193,18 +193,6 @@ namespace Services.API
 
         public List<ImportData> Get(ImportDataSearch request) => GetSearchResult<ImportData,DocEntityImportData,ImportDataSearch>(DocConstantModelName.IMPORTDATA, request, _ExecSearch);
 
-        public object Post(ImportDataVersion request) => Get(request);
-
-        public object Get(ImportDataVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public ImportData Get(ImportData request) => GetEntity<ImportData>(DocConstantModelName.IMPORTDATA, request, GetImportData);
         private ImportData _AssignValues(ImportData request, DocConstantPermission permission, Session session)
         {
@@ -217,7 +205,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             ImportData ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<ImportData>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -772,56 +760,19 @@ namespace Services.API
                 switch(method)
                 {
                 case "documentset":
-                    ret = _GetImportDataDocumentSet(request, skip, take);
+                    ret = GetJunctionSearchResult<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request,
+                        (ss) =>
+                        { 
+                            var service = HostContext.ResolveService<DocumentSetService>(Request);
+                            return service.Get(ss);
+                        });
                     break;
                 }
             });
             return ret;
         }
-        
-        public object Get(ImportDataJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "documentset":
-                    ret = GetImportDataDocumentSetVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetImportDataDocumentSet(ImportDataJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
-             var en = DocEntityImportData.GetImportData(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.IMPORTDATA, columnName: "DocumentSets", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between ImportData and DocumentSet");
-             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
-        }
 
-        private List<Version> GetImportDataDocumentSetVersion(ImportDataJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityImportData.GetImportData(request.Id);
-                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(ImportDataJunction request)
         {
             if (request == null)

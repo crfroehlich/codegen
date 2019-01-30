@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityCharacteristic> _ExecSearch(CharacteristicSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Characteristic, CharacteristicSearch>(request);
             IQueryable<DocEntityCharacteristic> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new CharacteristicFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityCharacteristic,CharacteristicFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -93,7 +93,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.URI))
                     entities = entities.Where(en => en.URI.Contains(request.URI));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityCharacteristic,CharacteristicSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -111,18 +111,6 @@ namespace Services.API
 
         public List<Characteristic> Get(CharacteristicSearch request) => GetSearchResult<Characteristic,DocEntityCharacteristic,CharacteristicSearch>(DocConstantModelName.CHARACTERISTIC, request, _ExecSearch);
 
-        public object Post(CharacteristicVersion request) => Get(request);
-
-        public object Get(CharacteristicVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public Characteristic Get(Characteristic request) => GetEntity<Characteristic>(DocConstantModelName.CHARACTERISTIC, request, GetCharacteristic);
         private Characteristic _AssignValues(Characteristic request, DocConstantPermission permission, Session session)
         {
@@ -135,7 +123,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Characteristic ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Characteristic>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -506,56 +494,19 @@ namespace Services.API
                 switch(method)
                 {
                 case "documentset":
-                    ret = _GetCharacteristicDocumentSet(request, skip, take);
+                    ret = GetJunctionSearchResult<Characteristic, DocEntityCharacteristic, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request,
+                        (ss) =>
+                        { 
+                            var service = HostContext.ResolveService<DocumentSetService>(Request);
+                            return service.Get(ss);
+                        });
                     break;
                 }
             });
             return ret;
         }
-        
-        public object Get(CharacteristicJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "documentset":
-                    ret = GetCharacteristicDocumentSetVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetCharacteristicDocumentSet(CharacteristicJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
-             var en = DocEntityCharacteristic.GetCharacteristic(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CHARACTERISTIC, columnName: "DocumentSets", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Characteristic and DocumentSet");
-             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
-        }
 
-        private List<Version> GetCharacteristicDocumentSetVersion(CharacteristicJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityCharacteristic.GetCharacteristic(request.Id);
-                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(CharacteristicJunction request)
         {
             if (request == null)

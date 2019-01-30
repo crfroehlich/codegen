@@ -127,10 +127,9 @@ namespace Services.Dto
     
     [Route("/Default/{Id}/copy", "POST")]
     public partial class DefaultCopy : Default {}
-    [Route("/default", "GET")]
-    [Route("/default/search", "GET, POST, DELETE")]
-    public partial class DefaultSearch : Search<Default>
+    public partial class DefaultSearchBase : Search<Default>
     {
+        public int? Id { get; set; }
         public Reference DiseaseState { get; set; }
         public List<int> DiseaseStateIds { get; set; }
         public Reference Role { get; set; }
@@ -140,9 +139,17 @@ namespace Services.Dto
         public Reference TherapeuticArea { get; set; }
         public List<int> TherapeuticAreaIds { get; set; }
     }
-    
+
+    [Route("/default", "GET")]
+    [Route("/default/version", "GET, POST")]
+    [Route("/default/search", "GET, POST, DELETE")]
+    public partial class DefaultSearch : DefaultSearchBase
+    {
+    }
+
     public class DefaultFullTextSearch
     {
+        public DefaultFullTextSearch() {}
         private DefaultSearch _request;
         public DefaultFullTextSearch(DefaultSearch request) => _request = request;
         
@@ -159,9 +166,6 @@ namespace Services.Dto
         public bool doScope { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Default.Scope))); }
         public bool doTherapeuticArea { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Default.TherapeuticArea))); }
     }
-
-    [Route("/default/version", "GET, POST")]
-    public partial class DefaultVersion : DefaultSearch {}
 
     [Route("/default/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DefaultBatch : List<Default> { }
