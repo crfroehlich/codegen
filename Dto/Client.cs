@@ -51,12 +51,6 @@ namespace Services.Dto
 
         public ClientBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(Account), Description = "ForeignKey", IsRequired = false)]
-        public Reference Account { get; set; }
-        [ApiMember(Name = nameof(AccountId), Description = "Primary Key of ForeignKey", IsRequired = false)]
-        public int? AccountId { get; set; }
-
-
         [ApiMember(Name = nameof(DefaultLocale), Description = "Locale", IsRequired = false)]
         public Reference DefaultLocale { get; set; }
         [ApiMember(Name = nameof(DefaultLocaleId), Description = "Primary Key of Locale", IsRequired = false)]
@@ -128,7 +122,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Account),nameof(AccountId),nameof(Created),nameof(CreatorId),nameof(DefaultLocale),nameof(DefaultLocaleId),nameof(Divisions),nameof(DivisionsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Projects),nameof(ProjectsCount),nameof(Role),nameof(RoleId),nameof(SalesforceAccountId),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(DefaultLocale),nameof(DefaultLocaleId),nameof(Divisions),nameof(DivisionsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Projects),nameof(ProjectsCount),nameof(Role),nameof(RoleId),nameof(SalesforceAccountId),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -162,8 +156,6 @@ namespace Services.Dto
     [Route("/client/search", "GET, POST, DELETE")]
     public partial class ClientSearch : Search<Client>
     {
-        public Reference Account { get; set; }
-        public List<int> AccountIds { get; set; }
         public Reference DefaultLocale { get; set; }
         public List<int> DefaultLocaleIds { get; set; }
         public List<int> DivisionsIds { get; set; }
@@ -190,7 +182,6 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Updated))); }
         
-        public bool doAccount { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Account))); }
         public bool doDefaultLocale { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.DefaultLocale))); }
         public bool doDivisions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Divisions))); }
         public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.DocumentSets))); }

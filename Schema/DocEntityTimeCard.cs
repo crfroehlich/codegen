@@ -125,12 +125,6 @@ namespace Services.Schema
 
 
         [Field()]
-        [FieldMapping(nameof(PICO))]
-        public DocEntityPackage PICO { get; set; }
-        public int? PICOId { get { return PICO?.Id; } private set { var noid = value; } }
-
-
-        [Field()]
         [FieldMapping(nameof(Project))]
         public DocEntityProject Project { get; set; }
         public int? ProjectId { get { return Project?.Id; } private set { var noid = value; } }
@@ -455,8 +449,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Document, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Document))))
                 .ForMember(dest => dest.DocumentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.DocumentId))))
                 .ForMember(dest => dest.End, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.End))))
-                .ForMember(dest => dest.PICO, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICO))))
-                .ForMember(dest => dest.PICOId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICOId))))
                 .ForMember(dest => dest.Project, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Project))))
                 .ForMember(dest => dest.ProjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ProjectId))))
                 .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ReferenceId))))

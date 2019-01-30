@@ -1884,9 +1884,6 @@ namespace Services.API
                 case "outcome":
                     ret = _GetDocumentSetOutcome(request, skip, take);
                     break;
-                case "package":
-                    ret = _GetDocumentSetPackage(request, skip, take);
-                    break;
                 case "projectlink":
                     ret = _GetDocumentSetProjectLink(request, skip, take);
                     break;
@@ -2194,22 +2191,13 @@ namespace Services.API
             return ret;
         }
 
-        private object _GetDocumentSetPackage(DocumentSetJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request.VisibleFields);
-             var en = DocEntityDocumentSet.GetDocumentSet(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENTSET, columnName: "Packages", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and Package");
-             return en?.Packages.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPackage,Package>(new List<Package>());
-        }
-
         private object _GetDocumentSetProjectLink(DocumentSetJunction request, int skip, int take)
         {
-             request.VisibleFields = InitVisibleFields<Package>(Dto.Package.Fields, request.VisibleFields);
+             request.VisibleFields = InitVisibleFields<Project>(Dto.Project.Fields, request.VisibleFields);
              var en = DocEntityDocumentSet.GetDocumentSet(request.Id);
              if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENTSET, columnName: "ProjectLinks", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and Package");
-             return en?.ProjectLinks.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPackage,Package>(new List<Package>());
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between DocumentSet and Project");
+             return en?.ProjectLinks.Take(take).Skip(skip).ConvertFromEntityList<DocEntityProject,Project>(new List<Project>());
         }
 
         private object _GetDocumentSetProject(DocumentSetJunction request, int skip, int take)
