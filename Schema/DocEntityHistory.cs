@@ -403,7 +403,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class HistoryMapper : DocMapperBase
+    public partial class HistoryMapper : Profile
     {
         private IMappingExpression<DocEntityHistory,History> _EntityToDto;
         private IMappingExpression<History,DocEntityHistory> _DtoToEntity;

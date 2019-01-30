@@ -415,7 +415,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class QueueChannelMapper : DocMapperBase
+    public partial class QueueChannelMapper : Profile
     {
         private IMappingExpression<DocEntityQueueChannel,QueueChannel> _EntityToDto;
         private IMappingExpression<QueueChannel,DocEntityQueueChannel> _DtoToEntity;

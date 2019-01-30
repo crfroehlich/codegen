@@ -404,7 +404,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class PageMapper : DocMapperBase
+    public partial class PageMapper : Profile
     {
         private IMappingExpression<DocEntityPage,Page> _EntityToDto;
         private IMappingExpression<Page,DocEntityPage> _DtoToEntity;

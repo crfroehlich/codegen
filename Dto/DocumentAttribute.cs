@@ -113,25 +113,18 @@ namespace Services.Dto
     
     [Route("/DocumentAttribute/{Id}/copy", "POST")]
     public partial class DocumentAttributeCopy : DocumentAttribute {}
-    public partial class DocumentAttributeSearchBase : Search<DocumentAttribute>
+    [Route("/documentattribute", "GET")]
+    [Route("/documentattribute/search", "GET, POST, DELETE")]
+    public partial class DocumentAttributeSearch : Search<DocumentAttribute>
     {
-        public int? Id { get; set; }
         public Reference Attribute { get; set; }
         public List<int> AttributeIds { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
     }
-
-    [Route("/documentattribute", "GET")]
-    [Route("/documentattribute/version", "GET, POST")]
-    [Route("/documentattribute/search", "GET, POST, DELETE")]
-    public partial class DocumentAttributeSearch : DocumentAttributeSearchBase
-    {
-    }
-
+    
     public class DocumentAttributeFullTextSearch
     {
-        public DocumentAttributeFullTextSearch() {}
         private DocumentAttributeSearch _request;
         public DocumentAttributeFullTextSearch(DocumentAttributeSearch request) => _request = request;
         
@@ -146,6 +139,9 @@ namespace Services.Dto
         public bool doAttribute { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentAttribute.Attribute))); }
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentAttribute.Document))); }
     }
+
+    [Route("/documentattribute/version", "GET, POST")]
+    public partial class DocumentAttributeVersion : DocumentAttributeSearch {}
 
     [Route("/documentattribute/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentAttributeBatch : List<DocumentAttribute> { }

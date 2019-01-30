@@ -399,7 +399,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class StatsMapper : DocMapperBase
+    public partial class StatsMapper : Profile
     {
         private IMappingExpression<DocEntityStats,Stats> _EntityToDto;
         private IMappingExpression<Stats,DocEntityStats> _DtoToEntity;

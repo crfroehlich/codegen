@@ -421,7 +421,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class DivisionMapper : DocMapperBase
+    public partial class DivisionMapper : Profile
     {
         private IMappingExpression<DocEntityDivision,Division> _EntityToDto;
         private IMappingExpression<Division,DocEntityDivision> _DtoToEntity;

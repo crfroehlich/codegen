@@ -375,7 +375,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ComparatorMapper : DocMapperBase
+    public partial class ComparatorMapper : Profile
     {
         private IMappingExpression<DocEntityComparator,Comparator> _EntityToDto;
         private IMappingExpression<Comparator,DocEntityComparator> _DtoToEntity;

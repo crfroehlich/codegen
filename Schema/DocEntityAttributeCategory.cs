@@ -383,7 +383,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class AttributeCategoryMapper : DocMapperBase
+    public partial class AttributeCategoryMapper : Profile
     {
         private IMappingExpression<DocEntityAttributeCategory,AttributeCategory> _EntityToDto;
         private IMappingExpression<AttributeCategory,DocEntityAttributeCategory> _DtoToEntity;

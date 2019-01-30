@@ -121,9 +121,10 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    public partial class TimePointSearchBase : Search<TimePoint>
+    [Route("/timepoint", "GET")]
+    [Route("/timepoint/search", "GET, POST, DELETE")]
+    public partial class TimePointSearch : Search<TimePoint>
     {
-        public int? Id { get; set; }
         public bool? IsAbsolute { get; set; }
         public TypeMeanBase MeanValue { get; set; }
         public TypeUnitValue SingleValue { get; set; }
@@ -133,17 +134,9 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Duration",@"Maximum",@"Average",@"Mean",@"Median",@"Total",@"Max Range",@"Time Zero",@"Not Reported",@"N/A",@"None",@"Varies",@"Before",@"During",@"After"})]
         public List<string> TypeNames { get; set; }
     }
-
-    [Route("/timepoint", "GET")]
-    [Route("/timepoint/version", "GET, POST")]
-    [Route("/timepoint/search", "GET, POST, DELETE")]
-    public partial class TimePointSearch : TimePointSearchBase
-    {
-    }
-
+    
     public class TimePointFullTextSearch
     {
-        public TimePointFullTextSearch() {}
         private TimePointSearch _request;
         public TimePointFullTextSearch(TimePointSearch request) => _request = request;
         
@@ -161,6 +154,9 @@ namespace Services.Dto
         public bool doTotalValue { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimePoint.TotalValue))); }
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimePoint.Type))); }
     }
+
+    [Route("/timepoint/version", "GET, POST")]
+    public partial class TimePointVersion : TimePointSearch {}
 
     [Route("/timepoint/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TimePointBatch : List<TimePoint> { }

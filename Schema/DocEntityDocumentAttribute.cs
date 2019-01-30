@@ -372,7 +372,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class DocumentAttributeMapper : DocMapperBase
+    public partial class DocumentAttributeMapper : Profile
     {
         private IMappingExpression<DocEntityDocumentAttribute,DocumentAttribute> _EntityToDto;
         private IMappingExpression<DocumentAttribute,DocEntityDocumentAttribute> _DtoToEntity;

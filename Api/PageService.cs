@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityPage> _ExecSearch(PageSearch request)
         {
-            request = InitSearch<Page, PageSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityPage> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new PageFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityPage,PageFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -105,7 +105,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Roles.Any(r => r.Id.In(request.RolesIds)));
                         }
 
-                entities = ApplyFilters<DocEntityPage,PageSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -123,6 +123,18 @@ namespace Services.API
 
         public object Get(PageSearch request) => GetSearchResultWithCache<Page,DocEntityPage,PageSearch>(DocConstantModelName.PAGE, request, _ExecSearch);
 
+        public object Post(PageVersion request) => Get(request);
+
+        public object Get(PageVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Page request) => GetEntityWithCache<Page>(DocConstantModelName.PAGE, request, GetPage);
         private Page _AssignValues(Page request, DocConstantPermission permission, Session session)
         {
@@ -135,7 +147,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Page ret = null;
-            request = _InitAssignValues<Page>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -659,43 +671,140 @@ namespace Services.API
                 switch(method)
                 {
                 case "app":
-                    ret = GetJunctionSearchResult<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<AppService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetPageApp(request, skip, take);
                     break;
                 case "glossary":
-                    ret = GetJunctionSearchResult<Page, DocEntityPage, DocEntityGlossary, Glossary, GlossarySearch>((int)request.Id, DocConstantModelName.GLOSSARY, "Glossary", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<GlossaryService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetPageGlossary(request, skip, take);
                     break;
                 case "help":
-                    ret = GetJunctionSearchResult<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<HelpService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetPageHelp(request, skip, take);
                     break;
                 case "role":
-                    ret = GetJunctionSearchResult<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<RoleService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetPageRole(request, skip, take);
                     break;
                 }
             });
             return ret;
         }
+        
+        public object Get(PageJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "app":
+                    ret = GetPageAppVersion(request);
+                    break;
+                case "glossary":
+                    ret = GetPageGlossaryVersion(request);
+                    break;
+                case "help":
+                    ret = GetPageHelpVersion(request);
+                    break;
+                case "role":
+                    ret = GetPageRoleVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetPageApp(PageJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<App>(Dto.App.Fields, request.VisibleFields);
+             var en = DocEntityPage.GetPage(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Apps", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and App");
+             return en?.Apps.Take(take).Skip(skip).ConvertFromEntityList<DocEntityApp,App>(new List<App>());
+        }
 
+        private List<Version> GetPageAppVersion(PageJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityPage.GetPage(request.Id);
+                ret = en?.Apps.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetPageGlossary(PageJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Glossary>(Dto.Glossary.Fields, request.VisibleFields);
+             var en = DocEntityPage.GetPage(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Glossary", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Glossary");
+             return en?.Glossary.Take(take).Skip(skip).ConvertFromEntityList<DocEntityGlossary,Glossary>(new List<Glossary>());
+        }
+
+        private List<Version> GetPageGlossaryVersion(PageJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityPage.GetPage(request.Id);
+                ret = en?.Glossary.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetPageHelp(PageJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request.VisibleFields);
+             var en = DocEntityPage.GetPage(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Help", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Help");
+             return en?.Help.Take(take).Skip(skip).ConvertFromEntityList<DocEntityHelp,Help>(new List<Help>());
+        }
+
+        private List<Version> GetPageHelpVersion(PageJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityPage.GetPage(request.Id);
+                ret = en?.Help.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetPageRole(PageJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             var en = DocEntityPage.GetPage(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Roles", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Role");
+             return en?.Roles.Take(take).Skip(skip).ConvertFromEntityList<DocEntityRole,Role>(new List<Role>());
+        }
+
+        private List<Version> GetPageRoleVersion(PageJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityPage.GetPage(request.Id);
+                ret = en?.Roles.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
         public object Post(PageJunction request)
         {
             if (request == null)

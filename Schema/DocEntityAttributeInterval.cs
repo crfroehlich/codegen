@@ -396,7 +396,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class AttributeIntervalMapper : DocMapperBase
+    public partial class AttributeIntervalMapper : Profile
     {
         private IMappingExpression<DocEntityAttributeInterval,AttributeInterval> _EntityToDto;
         private IMappingExpression<AttributeInterval,DocEntityAttributeInterval> _DtoToEntity;

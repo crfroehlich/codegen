@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityGlossary> _ExecSearch(GlossarySearch request)
         {
-            request = InitSearch<Glossary, GlossarySearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityGlossary> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new GlossaryFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityGlossary,GlossaryFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -113,7 +113,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Term.Id.In(request.TermIds));
                 }
 
-                entities = ApplyFilters<DocEntityGlossary,GlossarySearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -131,6 +131,18 @@ namespace Services.API
 
         public object Get(GlossarySearch request) => GetSearchResultWithCache<Glossary,DocEntityGlossary,GlossarySearch>(DocConstantModelName.GLOSSARY, request, _ExecSearch);
 
+        public object Post(GlossaryVersion request) => Get(request);
+
+        public object Get(GlossaryVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Glossary request) => GetEntityWithCache<Glossary>(DocConstantModelName.GLOSSARY, request, GetGlossary);
         private Glossary _AssignValues(Glossary request, DocConstantPermission permission, Session session)
         {
@@ -143,7 +155,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Glossary ret = null;
-            request = _InitAssignValues<Glossary>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

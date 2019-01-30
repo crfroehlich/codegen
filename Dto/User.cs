@@ -252,9 +252,10 @@ namespace Services.Dto
     
     [Route("/User/{Id}/copy", "POST")]
     public partial class UserCopy : User {}
-    public partial class UserSearchBase : Search<User>
+    [Route("/user", "GET")]
+    [Route("/user/search", "GET, POST, DELETE")]
+    public partial class UserSearch : Search<User>
     {
-        public int? Id { get; set; }
         public string ClientDepartment { get; set; }
         public Reference Division { get; set; }
         public List<int> DivisionIds { get; set; }
@@ -299,17 +300,9 @@ namespace Services.Dto
         public List<int> UserTypeIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-
-    [Route("/user", "GET")]
-    [Route("/user/version", "GET, POST")]
-    [Route("/user/search", "GET, POST, DELETE")]
-    public partial class UserSearch : UserSearchBase
-    {
-    }
-
+    
     public class UserFullTextSearch
     {
-        public UserFullTextSearch() {}
         private UserSearch _request;
         public UserFullTextSearch(UserSearch request) => _request = request;
         
@@ -354,38 +347,67 @@ namespace Services.Dto
         public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Workflows))); }
     }
 
+    [Route("/user/version", "GET, POST")]
+    public partial class UserVersion : UserSearch {}
+
     [Route("/user/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserBatch : List<User> { }
 
-    [Route("/user/{Id}/auditrecord/version", "GET, POST")]
     [Route("/user/{Id}/auditrecord", "GET, POST, DELETE")]
-    [Route("/user/{Id}/lookuptablebinding/version", "GET, POST")]
     [Route("/user/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/user/{Id}/documentset/version", "GET, POST")]
     [Route("/user/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/user/{Id}/history/version", "GET, POST")]
     [Route("/user/{Id}/history", "GET, POST, DELETE")]
-    [Route("/user/{Id}/impersonateduser/version", "GET, POST")]
     [Route("/user/{Id}/impersonateduser", "GET, POST, DELETE")]
-    [Route("/user/{Id}/impersonatinguser/version", "GET, POST")]
     [Route("/user/{Id}/impersonatinguser", "GET, POST, DELETE")]
-    [Route("/user/{Id}/role/version", "GET, POST")]
     [Route("/user/{Id}/role", "GET, POST, DELETE")]
-    [Route("/user/{Id}/scope/version", "GET, POST")]
     [Route("/user/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/user/{Id}/session/version", "GET, POST")]
     [Route("/user/{Id}/session", "GET, POST, DELETE")]
-    [Route("/user/{Id}/team/version", "GET, POST")]
     [Route("/user/{Id}/team", "GET, POST, DELETE")]
-    [Route("/user/{Id}/timecard/version", "GET, POST")]
     [Route("/user/{Id}/timecard", "GET, POST, DELETE")]
-    [Route("/user/{Id}/update/version", "GET, POST")]
     [Route("/user/{Id}/update", "GET, POST, DELETE")]
-    [Route("/user/{Id}/workflow/version", "GET, POST")]
     [Route("/user/{Id}/workflow", "GET, POST, DELETE")]
-    public class UserJunction : UserSearchBase {}
+    public class UserJunction : Search<User>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public UserJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/user/{Id}/auditrecord/version", "GET")]
+    [Route("/user/{Id}/lookuptablebinding/version", "GET")]
+    [Route("/user/{Id}/documentset/version", "GET")]
+    [Route("/user/{Id}/history/version", "GET")]
+    [Route("/user/{Id}/impersonateduser/version", "GET")]
+    [Route("/user/{Id}/impersonatinguser/version", "GET")]
+    [Route("/user/{Id}/role/version", "GET")]
+    [Route("/user/{Id}/scope/version", "GET")]
+    [Route("/user/{Id}/session/version", "GET")]
+    [Route("/user/{Id}/team/version", "GET")]
+    [Route("/user/{Id}/timecard/version", "GET")]
+    [Route("/user/{Id}/update/version", "GET")]
+    [Route("/user/{Id}/workflow/version", "GET")]
+    public class UserJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
     [Route("/admin/user/ids", "GET, POST")]
     public class UserIds
     {

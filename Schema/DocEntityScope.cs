@@ -479,7 +479,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ScopeMapper : DocMapperBase
+    public partial class ScopeMapper : Profile
     {
         private IMappingExpression<DocEntityScope,Scope> _EntityToDto;
         private IMappingExpression<Scope,DocEntityScope> _DtoToEntity;

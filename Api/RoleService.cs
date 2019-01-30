@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityRole> _ExecSearch(RoleSearch request)
         {
-            request = InitSearch<Role, RoleSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityRole> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new RoleFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityRole,RoleFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -117,7 +117,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
                         }
 
-                entities = ApplyFilters<DocEntityRole,RoleSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -135,6 +135,18 @@ namespace Services.API
 
         public object Get(RoleSearch request) => GetSearchResultWithCache<Role,DocEntityRole,RoleSearch>(DocConstantModelName.ROLE, request, _ExecSearch);
 
+        public object Post(RoleVersion request) => Get(request);
+
+        public object Get(RoleVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Role request) => GetEntityWithCache<Role>(DocConstantModelName.ROLE, request, GetRole);
         private Role _AssignValues(Role request, DocConstantPermission permission, Session session)
         {
@@ -147,7 +159,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Role ret = null;
-            request = _InitAssignValues<Role>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -721,43 +733,140 @@ namespace Services.API
                 switch(method)
                 {
                 case "app":
-                    ret = GetJunctionSearchResult<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<AppService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetRoleApp(request, skip, take);
                     break;
                 case "featureset":
-                    ret = GetJunctionSearchResult<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<FeatureSetService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetRoleFeatureSet(request, skip, take);
                     break;
                 case "page":
-                    ret = GetJunctionSearchResult<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<PageService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetRolePage(request, skip, take);
                     break;
                 case "user":
-                    ret = GetJunctionSearchResult<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<UserService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetRoleUser(request, skip, take);
                     break;
                 }
             });
             return ret;
         }
+        
+        public object Get(RoleJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "app":
+                    ret = GetRoleAppVersion(request);
+                    break;
+                case "featureset":
+                    ret = GetRoleFeatureSetVersion(request);
+                    break;
+                case "page":
+                    ret = GetRolePageVersion(request);
+                    break;
+                case "user":
+                    ret = GetRoleUserVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetRoleApp(RoleJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<App>(Dto.App.Fields, request.VisibleFields);
+             var en = DocEntityRole.GetRole(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Apps", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and App");
+             return en?.Apps.Take(take).Skip(skip).ConvertFromEntityList<DocEntityApp,App>(new List<App>());
+        }
 
+        private List<Version> GetRoleAppVersion(RoleJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityRole.GetRole(request.Id);
+                ret = en?.Apps.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetRoleFeatureSet(RoleJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<FeatureSet>(Dto.FeatureSet.Fields, request.VisibleFields);
+             var en = DocEntityRole.GetRole(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "FeatureSets", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and FeatureSet");
+             return en?.FeatureSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityFeatureSet,FeatureSet>(new List<FeatureSet>());
+        }
+
+        private List<Version> GetRoleFeatureSetVersion(RoleJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityRole.GetRole(request.Id);
+                ret = en?.FeatureSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetRolePage(RoleJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request.VisibleFields);
+             var en = DocEntityRole.GetRole(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Pages", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and Page");
+             return en?.Pages.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPage,Page>(new List<Page>());
+        }
+
+        private List<Version> GetRolePageVersion(RoleJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityRole.GetRole(request.Id);
+                ret = en?.Pages.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetRoleUser(RoleJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             var en = DocEntityRole.GetRole(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Users", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and User");
+             return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
+        }
+
+        private List<Version> GetRoleUserVersion(RoleJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityRole.GetRole(request.Id);
+                ret = en?.Users.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
         public object Post(RoleJunction request)
         {
             if (request == null)

@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityScope> _ExecSearch(ScopeSearch request)
         {
-            request = InitSearch<Scope, ScopeSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityScope> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ScopeFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityScope,ScopeFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -175,7 +175,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Workflows.Any(r => r.Id.In(request.WorkflowsIds)));
                         }
 
-                entities = ApplyFilters<DocEntityScope,ScopeSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -193,6 +193,18 @@ namespace Services.API
 
         public object Get(ScopeSearch request) => GetSearchResultWithCache<Scope,DocEntityScope,ScopeSearch>(DocConstantModelName.SCOPE, request, _ExecSearch);
 
+        public object Post(ScopeVersion request) => Get(request);
+
+        public object Get(ScopeVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Scope request) => GetEntityWithCache<Scope>(DocConstantModelName.SCOPE, request, GetScope);
         private Scope _AssignValues(Scope request, DocConstantPermission permission, Session session)
         {
@@ -205,7 +217,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Scope ret = null;
-            request = _InitAssignValues<Scope>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -935,59 +947,196 @@ namespace Services.API
                 switch(method)
                 {
                 case "lookuptablebinding":
-                    ret = GetJunctionSearchResult<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<LookupTableBindingService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetScopeLookupTableBinding(request, skip, take);
                     break;
                 case "broadcast":
-                    ret = GetJunctionSearchResult<Scope, DocEntityScope, DocEntityBroadcast, Broadcast, BroadcastSearch>((int)request.Id, DocConstantModelName.BROADCAST, "Broadcasts", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<BroadcastService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetScopeBroadcast(request, skip, take);
                     break;
                 case "help":
-                    ret = GetJunctionSearchResult<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<HelpService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetScopeHelp(request, skip, take);
                     break;
                 case "termsynonym":
-                    ret = GetJunctionSearchResult<Scope, DocEntityScope, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<TermSynonymService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetScopeTermSynonym(request, skip, take);
                     break;
                 case "variablerule":
-                    ret = GetJunctionSearchResult<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<VariableRuleService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetScopeVariableRule(request, skip, take);
                     break;
                 case "workflow":
-                    ret = GetJunctionSearchResult<Scope, DocEntityScope, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<WorkflowService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetScopeWorkflow(request, skip, take);
                     break;
                 }
             });
             return ret;
         }
+        
+        public object Get(ScopeJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "lookuptablebinding":
+                    ret = GetScopeLookupTableBindingVersion(request);
+                    break;
+                case "broadcast":
+                    ret = GetScopeBroadcastVersion(request);
+                    break;
+                case "help":
+                    ret = GetScopeHelpVersion(request);
+                    break;
+                case "termsynonym":
+                    ret = GetScopeTermSynonymVersion(request);
+                    break;
+                case "variablerule":
+                    ret = GetScopeVariableRuleVersion(request);
+                    break;
+                case "workflow":
+                    ret = GetScopeWorkflowVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetScopeLookupTableBinding(ScopeJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
+             var en = DocEntityScope.GetScope(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Bindings", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and LookupTableBinding");
+             return en?.Bindings.Take(take).Skip(skip).ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(new List<LookupTableBinding>());
+        }
 
+        private List<Version> GetScopeLookupTableBindingVersion(ScopeJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityScope.GetScope(request.Id);
+                ret = en?.Bindings.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetScopeBroadcast(ScopeJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Broadcast>(Dto.Broadcast.Fields, request.VisibleFields);
+             var en = DocEntityScope.GetScope(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Broadcasts", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Broadcast");
+             return en?.Broadcasts.Take(take).Skip(skip).ConvertFromEntityList<DocEntityBroadcast,Broadcast>(new List<Broadcast>());
+        }
+
+        private List<Version> GetScopeBroadcastVersion(ScopeJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityScope.GetScope(request.Id);
+                ret = en?.Broadcasts.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetScopeHelp(ScopeJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request.VisibleFields);
+             var en = DocEntityScope.GetScope(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Help", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Help");
+             return en?.Help.Take(take).Skip(skip).ConvertFromEntityList<DocEntityHelp,Help>(new List<Help>());
+        }
+
+        private List<Version> GetScopeHelpVersion(ScopeJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityScope.GetScope(request.Id);
+                ret = en?.Help.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetScopeTermSynonym(ScopeJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request.VisibleFields);
+             var en = DocEntityScope.GetScope(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Synonyms", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and TermSynonym");
+             return en?.Synonyms.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(new List<TermSynonym>());
+        }
+
+        private List<Version> GetScopeTermSynonymVersion(ScopeJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityScope.GetScope(request.Id);
+                ret = en?.Synonyms.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetScopeVariableRule(ScopeJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request.VisibleFields);
+             var en = DocEntityScope.GetScope(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "VariableRules", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and VariableRule");
+             return en?.VariableRules.Take(take).Skip(skip).ConvertFromEntityList<DocEntityVariableRule,VariableRule>(new List<VariableRule>());
+        }
+
+        private List<Version> GetScopeVariableRuleVersion(ScopeJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityScope.GetScope(request.Id);
+                ret = en?.VariableRules.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetScopeWorkflow(ScopeJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             var en = DocEntityScope.GetScope(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.SCOPE, columnName: "Workflows", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Scope and Workflow");
+             return en?.Workflows.Take(take).Skip(skip).ConvertFromEntityList<DocEntityWorkflow,Workflow>(new List<Workflow>());
+        }
+
+        private List<Version> GetScopeWorkflowVersion(ScopeJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityScope.GetScope(request.Id);
+                ret = en?.Workflows.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
         public object Post(ScopeJunction request)
         {
             if (request == null)

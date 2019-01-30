@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUserType> _ExecSearch(UserTypeSearch request)
         {
-            request = InitSearch<UserType, UserTypeSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityUserType> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserTypeFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityUserType,UserTypeFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -137,7 +137,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
                         }
 
-                entities = ApplyFilters<DocEntityUserType,UserTypeSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -155,6 +155,18 @@ namespace Services.API
 
         public object Get(UserTypeSearch request) => GetSearchResultWithCache<UserType,DocEntityUserType,UserTypeSearch>(DocConstantModelName.USERTYPE, request, _ExecSearch);
 
+        public object Post(UserTypeVersion request) => Get(request);
+
+        public object Get(UserTypeVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(UserType request) => GetEntityWithCache<UserType>(DocConstantModelName.USERTYPE, request, GetUserType);
         private UserType _AssignValues(UserType request, DocConstantPermission permission, Session session)
         {
@@ -167,7 +179,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             UserType ret = null;
-            request = _InitAssignValues<UserType>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -545,19 +557,56 @@ namespace Services.API
                 switch(method)
                 {
                 case "user":
-                    ret = GetJunctionSearchResult<UserType, DocEntityUserType, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request,
-                        (ss) =>
-                        { 
-                            var service = HostContext.ResolveService<UserService>(Request);
-                            return service.Get(ss);
-                        });
+                    ret = _GetUserTypeUser(request, skip, take);
                     break;
                 }
             });
             return ret;
         }
+        
+        public object Get(UserTypeJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "user":
+                    ret = GetUserTypeUserVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetUserTypeUser(UserTypeJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             var en = DocEntityUserType.GetUserType(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERTYPE, columnName: "Users", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserType and User");
+             return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
+        }
 
+        private List<Version> GetUserTypeUserVersion(UserTypeJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityUserType.GetUserType(request.Id);
+                ret = en?.Users.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
         public object Post(UserTypeJunction request)
         {
             if (request == null)
