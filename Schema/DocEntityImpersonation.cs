@@ -378,7 +378,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ImpersonationMapper : Profile
+    public partial class ImpersonationMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityImpersonation,Impersonation> _EntityToDto;
         private IMappingExpression<Impersonation,DocEntityImpersonation> _DtoToEntity;

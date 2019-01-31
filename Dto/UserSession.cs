@@ -146,10 +146,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/usersession", "GET")]
-    [Route("/usersession/search", "GET, POST, DELETE")]
-    public partial class UserSessionSearch : Search<UserSession>
+    public partial class UserSessionSearchBase : Search<UserSession>
     {
+        public int? Id { get; set; }
         public string ClientId { get; set; }
         public int? Hits { get; set; }
         public List<int> ImpersonationsIds { get; set; }
@@ -161,9 +160,17 @@ namespace Services.Dto
         public List<int> UserIds { get; set; }
         public List<int> UserHistoryIds { get; set; }
     }
-    
+
+    [Route("/usersession", "GET")]
+    [Route("/usersession/version", "GET, POST")]
+    [Route("/usersession/search", "GET, POST, DELETE")]
+    public partial class UserSessionSearch : UserSessionSearchBase
+    {
+    }
+
     public class UserSessionFullTextSearch
     {
+        public UserSessionFullTextSearch() {}
         private UserSessionSearch _request;
         public UserSessionFullTextSearch(UserSessionSearch request) => _request = request;
         
@@ -186,47 +193,14 @@ namespace Services.Dto
         public bool doUserHistory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.UserHistory))); }
     }
 
-    [Route("/usersession/version", "GET, POST")]
-    public partial class UserSessionVersion : UserSessionSearch {}
-
     [Route("/usersession/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserSessionBatch : List<UserSession> { }
 
-    [Route("/usersession/{Id}/impersonation", "GET, POST, DELETE")]
-    [Route("/usersession/{Id}/request", "GET, POST, DELETE")]
-    [Route("/usersession/{Id}/history", "GET, POST, DELETE")]
-    public class UserSessionJunction : Search<UserSession>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/usersession/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/usersession/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class UserSessionJunction : UserSessionSearchBase {}
 
 
-        public UserSessionJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/usersession/{Id}/impersonation/version", "GET")]
-    [Route("/usersession/{Id}/request/version", "GET")]
-    [Route("/usersession/{Id}/history/version", "GET")]
-    public class UserSessionJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/usersession/ids", "GET, POST")]
     public class UserSessionIds
     {

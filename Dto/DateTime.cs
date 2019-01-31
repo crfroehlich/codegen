@@ -117,10 +117,9 @@ namespace Services.Dto
     
     [Route("/DateTime/{Id}/copy", "POST")]
     public partial class DateTimeDtoCopy : DateTimeDto {}
-    [Route("/datetime", "GET")]
-    [Route("/datetime/search", "GET, POST, DELETE")]
-    public partial class DateTimeSearch : Search<DateTimeDto>
+    public partial class DateTimeSearchBase : Search<DateTimeDto>
     {
+        public int? Id { get; set; }
         public int? DateDay { get; set; }
         public int? DateMonth { get; set; }
         public DateTime? DateTime { get; set; }
@@ -128,9 +127,17 @@ namespace Services.Dto
         public DateTime? DateTimeBefore { get; set; }
         public int? DateYear { get; set; }
     }
-    
+
+    [Route("/datetime", "GET")]
+    [Route("/datetime/version", "GET, POST")]
+    [Route("/datetime/search", "GET, POST, DELETE")]
+    public partial class DateTimeSearch : DateTimeSearchBase
+    {
+    }
+
     public class DateTimeFullTextSearch
     {
+        public DateTimeFullTextSearch() {}
         private DateTimeSearch _request;
         public DateTimeFullTextSearch(DateTimeSearch request) => _request = request;
         
@@ -147,9 +154,6 @@ namespace Services.Dto
         public bool doDateTime { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DateTimeDto.DateTime))); }
         public bool doDateYear { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DateTimeDto.DateYear))); }
     }
-
-    [Route("/datetime/version", "GET, POST")]
-    public partial class DateTimeVersion : DateTimeSearch {}
 
     [Route("/datetime/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DateTimeBatch : List<DateTimeDto> { }

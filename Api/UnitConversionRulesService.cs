@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUnitConversionRules> _ExecSearch(UnitConversionRulesSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<UnitConversionRules, UnitConversionRulesSearch>(request);
             IQueryable<DocEntityUnitConversionRules> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UnitConversionRulesFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityUnitConversionRules,UnitConversionRulesFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -139,7 +139,7 @@ namespace Services.API
                     entities = entities.Where(en => en.SourceUnit.Id.In(request.SourceUnitIds));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityUnitConversionRules,UnitConversionRulesSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -157,18 +157,6 @@ namespace Services.API
 
         public object Get(UnitConversionRulesSearch request) => GetSearchResultWithCache<UnitConversionRules,DocEntityUnitConversionRules,UnitConversionRulesSearch>(DocConstantModelName.UNITCONVERSIONRULES, request, _ExecSearch);
 
-        public object Post(UnitConversionRulesVersion request) => Get(request);
-
-        public object Get(UnitConversionRulesVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(UnitConversionRules request) => GetEntityWithCache<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, request, GetUnitConversionRules);
         private UnitConversionRules _AssignValues(UnitConversionRules request, DocConstantPermission permission, Session session)
         {
@@ -181,7 +169,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             UnitConversionRules ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<UnitConversionRules>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             

@@ -395,7 +395,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class MeanRangesMapper : Profile
+    public partial class MeanRangesMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityMeanRanges,MeanRanges> _EntityToDto;
         private IMappingExpression<MeanRanges,DocEntityMeanRanges> _DtoToEntity;

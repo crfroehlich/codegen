@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityLookupTable> _ExecSearch(LookupTableSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<LookupTable, LookupTableSearch>(request);
             IQueryable<DocEntityLookupTable> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityLookupTable,LookupTableFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -107,7 +107,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityLookupTable,LookupTableSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -125,18 +125,6 @@ namespace Services.API
 
         public object Get(LookupTableSearch request) => GetSearchResultWithCache<LookupTable,DocEntityLookupTable,LookupTableSearch>(DocConstantModelName.LOOKUPTABLE, request, _ExecSearch);
 
-        public object Post(LookupTableVersion request) => Get(request);
-
-        public object Get(LookupTableVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(LookupTable request) => GetEntityWithCache<LookupTable>(DocConstantModelName.LOOKUPTABLE, request, GetLookupTable);
         private LookupTable _AssignValues(LookupTable request, DocConstantPermission permission, Session session)
         {
@@ -149,7 +137,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LookupTable ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<LookupTable>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -611,122 +599,42 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction)
                 {
                 case "lookuptablebinding":
-                    ret = _GetLookupTableLookupTableBinding(request, skip, take);
+                    ret =     GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<LookupTableBindingService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
                 case "lookupcategory":
-                    ret = _GetLookupTableLookupCategory(request, skip, take);
+                    ret =     GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityLookupCategory, LookupCategory, LookupCategorySearch>((int)request.Id, DocConstantModelName.LOOKUPCATEGORY, "Categories", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<LookupCategoryService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
                 case "document":
-                    ret = _GetLookupTableDocument(request, skip, take);
+                    ret =     GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<DocumentService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptable/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
-        
-        public object Get(LookupTableJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "lookuptablebinding":
-                    ret = GetLookupTableLookupTableBindingVersion(request);
-                    break;
-                case "lookupcategory":
-                    ret = GetLookupTableLookupCategoryVersion(request);
-                    break;
-                case "document":
-                    ret = GetLookupTableDocumentVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetLookupTableLookupTableBinding(LookupTableJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
-             var en = DocEntityLookupTable.GetLookupTable(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "Bindings", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTable and LookupTableBinding");
-             return en?.Bindings.Take(take).Skip(skip).ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(new List<LookupTableBinding>());
-        }
 
-        private List<Version> GetLookupTableLookupTableBindingVersion(LookupTableJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityLookupTable.GetLookupTable(request.Id);
-                ret = en?.Bindings.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetLookupTableLookupCategory(LookupTableJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<LookupCategory>(Dto.LookupCategory.Fields, request.VisibleFields);
-             var en = DocEntityLookupTable.GetLookupTable(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "Categories", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTable and LookupCategory");
-             return en?.Categories.Take(take).Skip(skip).ConvertFromEntityList<DocEntityLookupCategory,LookupCategory>(new List<LookupCategory>());
-        }
-
-        private List<Version> GetLookupTableLookupCategoryVersion(LookupTableJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityLookupTable.GetLookupTable(request.Id);
-                ret = en?.Categories.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetLookupTableDocument(LookupTableJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Document>(Dto.Document.Fields, request.VisibleFields);
-             var en = DocEntityLookupTable.GetLookupTable(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "Documents", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTable and Document");
-             return en?.Documents.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocument,Document>(new List<Document>());
-        }
-
-        private List<Version> GetLookupTableDocumentVersion(LookupTableJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityLookupTable.GetLookupTable(request.Id);
-                ret = en?.Documents.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(LookupTableJunction request)
         {
             if (request == null)
@@ -740,9 +648,7 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "lookuptablebinding":
                     ret = _PostLookupTableLookupTableBinding(request);
@@ -753,6 +659,8 @@ namespace Services.API
                 case "document":
                     ret = _PostLookupTableDocument(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptable/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -835,9 +743,7 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "lookuptablebinding":
                     ret = _DeleteLookupTableLookupTableBinding(request);
@@ -848,6 +754,8 @@ namespace Services.API
                 case "document":
                     ret = _DeleteLookupTableDocument(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptable/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;

@@ -375,7 +375,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class InterventionMapper : Profile
+    public partial class InterventionMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityIntervention,Intervention> _EntityToDto;
         private IMappingExpression<Intervention,DocEntityIntervention> _DtoToEntity;

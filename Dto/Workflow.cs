@@ -190,10 +190,9 @@ namespace Services.Dto
     
     [Route("/Workflow/{Id}/copy", "POST")]
     public partial class WorkflowCopy : Workflow {}
-    [Route("/workflow", "GET")]
-    [Route("/workflow/search", "GET, POST, DELETE")]
-    public partial class WorkflowSearch : Search<Workflow>
+    public partial class WorkflowSearchBase : Search<Workflow>
     {
+        public int? Id { get; set; }
         public bool? Archived { get; set; }
         public List<int> BindingsIds { get; set; }
         public List<int> CommentsIds { get; set; }
@@ -219,9 +218,17 @@ namespace Services.Dto
         public List<int> VariablesIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-    
+
+    [Route("/workflow", "GET")]
+    [Route("/workflow/version", "GET, POST")]
+    [Route("/workflow/search", "GET, POST, DELETE")]
+    public partial class WorkflowSearch : WorkflowSearchBase
+    {
+    }
+
     public class WorkflowFullTextSearch
     {
+        public WorkflowFullTextSearch() {}
         private WorkflowSearch _request;
         public WorkflowFullTextSearch(WorkflowSearch request) => _request = request;
         
@@ -251,57 +258,14 @@ namespace Services.Dto
         public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Workflows))); }
     }
 
-    [Route("/workflow/version", "GET, POST")]
-    public partial class WorkflowVersion : WorkflowSearch {}
-
     [Route("/workflow/batch", "DELETE, PATCH, POST, PUT")]
     public partial class WorkflowBatch : List<Workflow> { }
 
-    [Route("/workflow/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/workflowcomment", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/document", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/tag", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/workflowtask", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/variableinstance", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/workflow", "GET, POST, DELETE")]
-    public class WorkflowJunction : Search<Workflow>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/workflow/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/workflow/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class WorkflowJunction : WorkflowSearchBase {}
 
 
-        public WorkflowJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/workflow/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/workflow/{Id}/workflowcomment/version", "GET")]
-    [Route("/workflow/{Id}/document/version", "GET")]
-    [Route("/workflow/{Id}/scope/version", "GET")]
-    [Route("/workflow/{Id}/tag/version", "GET")]
-    [Route("/workflow/{Id}/workflowtask/version", "GET")]
-    [Route("/workflow/{Id}/variableinstance/version", "GET")]
-    [Route("/workflow/{Id}/workflow/version", "GET")]
-    public class WorkflowJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/workflow/ids", "GET, POST")]
     public class WorkflowIds
     {

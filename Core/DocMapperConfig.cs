@@ -261,7 +261,6 @@ namespace Services.Core
             cfg.AddProfile<DocumentSetHistoryMapper>();
             cfg.AddProfile<EventMapper>();
             cfg.AddProfile<FeatureSetMapper>();
-            cfg.AddProfile<ForeignKeyMapper>();
             cfg.AddProfile<GlossaryMapper>();
             cfg.AddProfile<HelpMapper>();
             cfg.AddProfile<HistoryMapper>();
@@ -282,7 +281,6 @@ namespace Services.Core
             cfg.AddProfile<MeanVariancesMapper>();
             cfg.AddProfile<MeanVarianceValueMapper>();
             cfg.AddProfile<OutcomeMapper>();
-            cfg.AddProfile<PackageMapper>();
             cfg.AddProfile<PageMapper>();
             cfg.AddProfile<ProjectMapper>();
             cfg.AddProfile<QueueChannelMapper>();

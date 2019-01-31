@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityJunction> _ExecSearch(JunctionSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Junction, JunctionSearch>(request);
             IQueryable<DocEntityJunction> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new JunctionFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityJunction,JunctionFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -129,7 +129,7 @@ namespace Services.API
                     entities = entities.Where(en => en.User.Id.In(request.UserIds));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityJunction,JunctionSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -147,18 +147,6 @@ namespace Services.API
 
         public List<Junction> Get(JunctionSearch request) => GetSearchResult<Junction,DocEntityJunction,JunctionSearch>(DocConstantModelName.JUNCTION, request, _ExecSearch);
 
-        public object Post(JunctionVersion request) => Get(request);
-
-        public object Get(JunctionVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public Junction Get(Junction request) => GetEntity<Junction>(DocConstantModelName.JUNCTION, request, GetJunction);
         private Junction _AssignValues(Junction request, DocConstantPermission permission, Session session)
         {
@@ -171,7 +159,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Junction ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Junction>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -610,66 +598,26 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction)
                 {
                 case "junction":
-                    ret = _GetJunctionJunction(request, skip, take);
+                    ret =     GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<JunctionService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
-        
-        public object Get(JunctionJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "junction":
-                    ret = GetJunctionJunctionVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetJunctionJunction(JunctionJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Junction>(Dto.Junction.Fields, request.VisibleFields);
-             var en = DocEntityJunction.GetJunction(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.JUNCTION, columnName: "Children", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Junction and Junction");
-             return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityJunction,Junction>(new List<Junction>());
-        }
 
-        private List<Version> GetJunctionJunctionVersion(JunctionJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityJunction.GetJunction(request.Id);
-                ret = en?.Children.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(JunctionJunction request)
         {
             if (request == null)
@@ -683,13 +631,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "junction":
                     ret = _PostJunctionJunction(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -730,13 +678,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "junction":
                     ret = _DeleteJunctionJunction(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;

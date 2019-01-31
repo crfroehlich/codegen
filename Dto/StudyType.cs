@@ -105,18 +105,25 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/studytype", "GET")]
-    [Route("/studytype/search", "GET, POST, DELETE")]
-    public partial class StudyTypeSearch : Search<StudyType>
+    public partial class StudyTypeSearchBase : Search<StudyType>
     {
+        public int? Id { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Causation/Etiology",@"Diagnosis",@"Harm",@"Modeling",@"Other",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Therapy"})]
         public List<string> TypeNames { get; set; }
     }
-    
+
+    [Route("/studytype", "GET")]
+    [Route("/studytype/version", "GET, POST")]
+    [Route("/studytype/search", "GET, POST, DELETE")]
+    public partial class StudyTypeSearch : StudyTypeSearchBase
+    {
+    }
+
     public class StudyTypeFullTextSearch
     {
+        public StudyTypeFullTextSearch() {}
         private StudyTypeSearch _request;
         public StudyTypeFullTextSearch(StudyTypeSearch request) => _request = request;
         
@@ -130,9 +137,6 @@ namespace Services.Dto
         
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyType.Type))); }
     }
-
-    [Route("/studytype/version", "GET, POST")]
-    public partial class StudyTypeVersion : StudyTypeSearch {}
 
     [Route("/studytype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StudyTypeBatch : List<StudyType> { }

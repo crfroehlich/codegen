@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityStatsStudySet> _ExecSearch(StatsStudySetSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<StatsStudySet, StatsStudySetSearch>(request);
             IQueryable<DocEntityStatsStudySet> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new StatsStudySetFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityStatsStudySet,StatsStudySetFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -129,7 +129,7 @@ namespace Services.API
                 if(request.UnboundTerms.HasValue)
                     entities = entities.Where(en => request.UnboundTerms.Value == en.UnboundTerms);
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityStatsStudySet,StatsStudySetSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -147,18 +147,6 @@ namespace Services.API
 
         public List<StatsStudySet> Get(StatsStudySetSearch request) => GetSearchResult<StatsStudySet,DocEntityStatsStudySet,StatsStudySetSearch>(DocConstantModelName.STATSSTUDYSET, request, _ExecSearch);
 
-        public object Post(StatsStudySetVersion request) => Get(request);
-
-        public object Get(StatsStudySetVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public StatsStudySet Get(StatsStudySet request) => GetEntity<StatsStudySet>(DocConstantModelName.STATSSTUDYSET, request, GetStatsStudySet);
 
 
@@ -168,50 +156,26 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction)
                 {
                 case "statsrecord":
-                    ret = _GetStatsStudySetStatsRecord(request, skip, take);
+                    ret =     GetJunctionSearchResult<StatsStudySet, DocEntityStatsStudySet, DocEntityStatsRecord, StatsRecord, StatsRecordSearch>((int)request.Id, DocConstantModelName.STATSRECORD, "Records", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<StatsRecordService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for statsstudyset/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
-        
-        public object Get(StatsStudySetJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetStatsStudySetStatsRecord(StatsStudySetJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<StatsRecord>(Dto.StatsRecord.Fields, request.VisibleFields);
-             var en = DocEntityStatsStudySet.GetStatsStudySet(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.STATSSTUDYSET, columnName: "Records", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between StatsStudySet and StatsRecord");
-             return en?.Records.Take(take).Skip(skip).ConvertFromEntityList<DocEntityStatsRecord,StatsRecord>(new List<StatsRecord>());
-        }
-        
+
         public object Post(StatsStudySetJunction request)
         {
             if (request == null)
@@ -225,10 +189,10 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for statsstudyset/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -248,10 +212,10 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for statsstudyset/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;

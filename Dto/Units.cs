@@ -108,15 +108,22 @@ namespace Services.Dto
     
     [Route("/Units/{Id}/copy", "POST")]
     public partial class UnitsDtoCopy : UnitsDto {}
-    [Route("/units", "GET")]
-    [Route("/units/search", "GET, POST, DELETE")]
-    public partial class UnitsSearch : Search<UnitsDto>
+    public partial class UnitsSearchBase : Search<UnitsDto>
     {
+        public int? Id { get; set; }
         public List<int> UnitsIds { get; set; }
     }
-    
+
+    [Route("/units", "GET")]
+    [Route("/units/version", "GET, POST")]
+    [Route("/units/search", "GET, POST, DELETE")]
+    public partial class UnitsSearch : UnitsSearchBase
+    {
+    }
+
     public class UnitsFullTextSearch
     {
+        public UnitsFullTextSearch() {}
         private UnitsSearch _request;
         public UnitsFullTextSearch(UnitsSearch request) => _request = request;
         
@@ -131,43 +138,14 @@ namespace Services.Dto
         public bool doUnits { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitsDto.Units))); }
     }
 
-    [Route("/units/version", "GET, POST")]
-    public partial class UnitsVersion : UnitsSearch {}
-
     [Route("/units/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitsBatch : List<UnitsDto> { }
 
-    [Route("/units/{Id}/unitvalue", "GET, POST, DELETE")]
-    public class UnitsJunction : Search<UnitsDto>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/units/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/units/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class UnitsJunction : UnitsSearchBase {}
 
 
-        public UnitsJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/units/{Id}/unitvalue/version", "GET")]
-    public class UnitsJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/units/ids", "GET, POST")]
     public class UnitsIds
     {

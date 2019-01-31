@@ -386,7 +386,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TermCategoryMapper : Profile
+    public partial class TermCategoryMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityTermCategory,TermCategory> _EntityToDto;
         private IMappingExpression<TermCategory,DocEntityTermCategory> _DtoToEntity;

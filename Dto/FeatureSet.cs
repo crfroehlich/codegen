@@ -122,18 +122,25 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/featureset", "GET")]
-    [Route("/featureset/search", "GET, POST, DELETE")]
-    public partial class FeatureSetSearch : Search<FeatureSet>
+    public partial class FeatureSetSearchBase : Search<FeatureSet>
     {
+        public int? Id { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
         public string PermissionTemplate { get; set; }
         public List<int> RolesIds { get; set; }
     }
-    
+
+    [Route("/featureset", "GET")]
+    [Route("/featureset/version", "GET, POST")]
+    [Route("/featureset/search", "GET, POST, DELETE")]
+    public partial class FeatureSetSearch : FeatureSetSearchBase
+    {
+    }
+
     public class FeatureSetFullTextSearch
     {
+        public FeatureSetFullTextSearch() {}
         private FeatureSetSearch _request;
         public FeatureSetFullTextSearch(FeatureSetSearch request) => _request = request;
         
@@ -151,43 +158,14 @@ namespace Services.Dto
         public bool doRoles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Roles))); }
     }
 
-    [Route("/featureset/version", "GET, POST")]
-    public partial class FeatureSetVersion : FeatureSetSearch {}
-
     [Route("/featureset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class FeatureSetBatch : List<FeatureSet> { }
 
-    [Route("/featureset/{Id}/role", "GET, POST, DELETE")]
-    public class FeatureSetJunction : Search<FeatureSet>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/featureset/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/featureset/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class FeatureSetJunction : FeatureSetSearchBase {}
 
 
-        public FeatureSetJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/featureset/{Id}/role/version", "GET")]
-    public class FeatureSetJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
     [Route("/admin/featureset/ids", "GET, POST")]
     public class FeatureSetIds
     {
