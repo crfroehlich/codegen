@@ -778,6 +778,7 @@
     "SERVICES_AUDIT_FAILURES": "services_audit_failures",
     "SERVICES_DOCUMENT_IMPORT": "services_document_import",
     "SERVICES_DOCUMENT_UPDATE": "services_document_update",
+    "SERVICES_ERRORS": "services_errors",
     "SERVICES_EXTRACT_NOTIFICATION": "services_extract_notification",
     "SERVICES_HEARTBEAT": "services_heartbeat",
     "SERVICES_LOGS": "services_logs",
