@@ -184,9 +184,4 @@ namespace Services.Dto
     public class PageJunction : PageSearchBase {}
 
 
-    [Route("/admin/page/ids", "GET, POST")]
-    public class PageIds
-    {
-        public bool All { get; set; }
-    }
 }

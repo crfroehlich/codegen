@@ -186,9 +186,4 @@ namespace Services.Dto
     public class AppJunction : AppSearchBase {}
 
 
-    [Route("/admin/app/ids", "GET, POST")]
-    public class AppIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -162,9 +162,4 @@ namespace Services.Dto
     [Route("/attributecategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeCategoryBatch : List<AttributeCategory> { }
 
-    [Route("/admin/attributecategory/ids", "GET, POST")]
-    public class AttributeCategoryIds
-    {
-        public bool All { get; set; }
-    }
 }

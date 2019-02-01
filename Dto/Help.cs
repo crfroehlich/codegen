@@ -200,9 +200,4 @@ namespace Services.Dto
     public class HelpJunction : HelpSearchBase {}
 
 
-    [Route("/admin/help/ids", "GET, POST")]
-    public class HelpIds
-    {
-        public bool All { get; set; }
-    }
 }

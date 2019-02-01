@@ -203,9 +203,4 @@ namespace Services.Dto
     public class MeanRangeValueJunction : MeanRangeValueSearchBase {}
 
 
-    [Route("/admin/meanrangevalue/ids", "GET, POST")]
-    public class MeanRangeValueIds
-    {
-        public bool All { get; set; }
-    }
 }

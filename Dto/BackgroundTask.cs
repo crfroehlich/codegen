@@ -239,9 +239,4 @@ namespace Services.Dto
     public class BackgroundTaskJunction : BackgroundTaskSearchBase {}
 
 
-    [Route("/admin/backgroundtask/ids", "GET, POST")]
-    public class BackgroundTaskIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -285,9 +285,4 @@ namespace Services.Dto
     public class ProjectJunction : ProjectSearchBase {}
 
 
-    [Route("/admin/project/ids", "GET, POST")]
-    public class ProjectIds
-    {
-        public bool All { get; set; }
-    }
 }

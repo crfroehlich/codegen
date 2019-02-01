@@ -210,9 +210,4 @@ namespace Services.Dto
     public class VariableRuleJunction : VariableRuleSearchBase {}
 
 
-    [Route("/admin/variablerule/ids", "GET, POST")]
-    public class VariableRuleIds
-    {
-        public bool All { get; set; }
-    }
 }

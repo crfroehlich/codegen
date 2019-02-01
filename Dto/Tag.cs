@@ -157,9 +157,4 @@ namespace Services.Dto
     public class TagJunction : TagSearchBase {}
 
 
-    [Route("/admin/tag/ids", "GET, POST")]
-    public class TagIds
-    {
-        public bool All { get; set; }
-    }
 }

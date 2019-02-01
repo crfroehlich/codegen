@@ -273,9 +273,4 @@ namespace Services.Dto
     public class ScopeJunction : ScopeSearchBase {}
 
 
-    [Route("/admin/scope/ids", "GET, POST")]
-    public class ScopeIds
-    {
-        public bool All { get; set; }
-    }
 }

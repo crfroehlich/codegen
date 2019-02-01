@@ -159,9 +159,4 @@ namespace Services.Dto
     public class TermCategoryJunction : TermCategorySearchBase {}
 
 
-    [Route("/admin/termcategory/ids", "GET, POST")]
-    public class TermCategoryIds
-    {
-        public bool All { get; set; }
-    }
 }

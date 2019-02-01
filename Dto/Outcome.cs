@@ -163,9 +163,4 @@ namespace Services.Dto
     public class OutcomeJunction : OutcomeSearchBase {}
 
 
-    [Route("/admin/outcome/ids", "GET, POST")]
-    public class OutcomeIds
-    {
-        public bool All { get; set; }
-    }
 }

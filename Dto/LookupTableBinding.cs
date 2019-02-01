@@ -189,9 +189,4 @@ namespace Services.Dto
     public class LookupTableBindingJunction : LookupTableBindingSearchBase {}
 
 
-    [Route("/admin/lookuptablebinding/ids", "GET, POST")]
-    public class LookupTableBindingIds
-    {
-        public bool All { get; set; }
-    }
 }

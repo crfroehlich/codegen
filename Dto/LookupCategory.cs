@@ -164,9 +164,4 @@ namespace Services.Dto
     public class LookupCategoryJunction : LookupCategorySearchBase {}
 
 
-    [Route("/admin/lookupcategory/ids", "GET, POST")]
-    public class LookupCategoryIds
-    {
-        public bool All { get; set; }
-    }
 }

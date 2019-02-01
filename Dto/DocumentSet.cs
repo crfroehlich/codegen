@@ -471,9 +471,4 @@ namespace Services.Dto
     public class DocumentSetJunction : DocumentSetSearchBase {}
 
 
-    [Route("/admin/documentset/ids", "GET, POST")]
-    public class DocumentSetIds
-    {
-        public bool All { get; set; }
-    }
 }

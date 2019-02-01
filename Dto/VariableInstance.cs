@@ -175,9 +175,4 @@ namespace Services.Dto
     public class VariableInstanceJunction : VariableInstanceSearchBase {}
 
 
-    [Route("/admin/variableinstance/ids", "GET, POST")]
-    public class VariableInstanceIds
-    {
-        public bool All { get; set; }
-    }
 }

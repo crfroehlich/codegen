@@ -211,9 +211,4 @@ namespace Services.Dto
     public class JunctionJunction : JunctionSearchBase {}
 
 
-    [Route("/admin/junction/ids", "GET, POST")]
-    public class JunctionIds
-    {
-        public bool All { get; set; }
-    }
 }

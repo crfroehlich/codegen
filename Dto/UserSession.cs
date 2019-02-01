@@ -201,9 +201,4 @@ namespace Services.Dto
     public class UserSessionJunction : UserSessionSearchBase {}
 
 
-    [Route("/admin/usersession/ids", "GET, POST")]
-    public class UserSessionIds
-    {
-        public bool All { get; set; }
-    }
 }

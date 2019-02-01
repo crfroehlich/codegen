@@ -150,9 +150,4 @@ namespace Services.Dto
     [Route("/lookuptableenum/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupTableEnumBatch : List<LookupTableEnum> { }
 
-    [Route("/admin/lookuptableenum/ids", "GET, POST")]
-    public class LookupTableEnumIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -362,9 +362,4 @@ namespace Services.Dto
     public class UserJunction : UserSearchBase {}
 
 
-    [Route("/admin/user/ids", "GET, POST")]
-    public class UserIds
-    {
-        public bool All { get; set; }
-    }
 }

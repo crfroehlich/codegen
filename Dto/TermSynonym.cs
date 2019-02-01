@@ -187,9 +187,4 @@ namespace Services.Dto
     public class TermSynonymJunction : TermSynonymSearchBase {}
 
 
-    [Route("/admin/termsynonym/ids", "GET, POST")]
-    public class TermSynonymIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -178,9 +178,4 @@ namespace Services.Dto
     public class LookupTableJunction : LookupTableSearchBase {}
 
 
-    [Route("/admin/lookuptable/ids", "GET, POST")]
-    public class LookupTableIds
-    {
-        public bool All { get; set; }
-    }
 }

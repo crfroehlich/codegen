@@ -187,9 +187,4 @@ namespace Services.Dto
     public class UserTypeJunction : UserTypeSearchBase {}
 
 
-    [Route("/admin/usertype/ids", "GET, POST")]
-    public class UserTypeIds
-    {
-        public bool All { get; set; }
-    }
 }

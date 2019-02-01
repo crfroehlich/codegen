@@ -203,9 +203,4 @@ namespace Services.Dto
     [Route("/history/batch", "DELETE, PATCH, POST, PUT")]
     public partial class HistoryBatch : List<History> { }
 
-    [Route("/admin/history/ids", "GET, POST")]
-    public class HistoryIds
-    {
-        public bool All { get; set; }
-    }
 }

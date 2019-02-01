@@ -217,9 +217,4 @@ namespace Services.Dto
     public class RoleJunction : RoleSearchBase {}
 
 
-    [Route("/admin/role/ids", "GET, POST")]
-    public class RoleIds
-    {
-        public bool All { get; set; }
-    }
 }

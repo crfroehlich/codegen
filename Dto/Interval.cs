@@ -174,9 +174,4 @@ namespace Services.Dto
     [Route("/interval/batch", "DELETE, PATCH, POST, PUT")]
     public partial class IntervalBatch : List<Interval> { }
 
-    [Route("/admin/interval/ids", "GET, POST")]
-    public class IntervalIds
-    {
-        public bool All { get; set; }
-    }
 }

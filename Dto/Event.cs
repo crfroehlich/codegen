@@ -191,9 +191,4 @@ namespace Services.Dto
     public class EventJunction : EventSearchBase {}
 
 
-    [Route("/admin/event/ids", "GET, POST")]
-    public class EventIds
-    {
-        public bool All { get; set; }
-    }
 }

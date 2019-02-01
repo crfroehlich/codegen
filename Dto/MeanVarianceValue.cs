@@ -179,9 +179,4 @@ namespace Services.Dto
     public class MeanVarianceValueJunction : MeanVarianceValueSearchBase {}
 
 
-    [Route("/admin/meanvariancevalue/ids", "GET, POST")]
-    public class MeanVarianceValueIds
-    {
-        public bool All { get; set; }
-    }
 }

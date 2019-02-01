@@ -176,9 +176,4 @@ namespace Services.Dto
     [Route("/userrequest/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserRequestBatch : List<UserRequest> { }
 
-    [Route("/admin/userrequest/ids", "GET, POST")]
-    public class UserRequestIds
-    {
-        public bool All { get; set; }
-    }
 }

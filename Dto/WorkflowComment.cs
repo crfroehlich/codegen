@@ -184,9 +184,4 @@ namespace Services.Dto
     public class WorkflowCommentJunction : WorkflowCommentSearchBase {}
 
 
-    [Route("/admin/workflowcomment/ids", "GET, POST")]
-    public class WorkflowCommentIds
-    {
-        public bool All { get; set; }
-    }
 }

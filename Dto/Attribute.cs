@@ -188,9 +188,4 @@ namespace Services.Dto
     [Route("/attribute/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeBatch : List<Attribute> { }
 
-    [Route("/admin/attribute/ids", "GET, POST")]
-    public class AttributeIds
-    {
-        public bool All { get; set; }
-    }
 }

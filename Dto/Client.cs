@@ -208,9 +208,4 @@ namespace Services.Dto
     public class ClientJunction : ClientSearchBase {}
 
 
-    [Route("/admin/client/ids", "GET, POST")]
-    public class ClientIds
-    {
-        public bool All { get; set; }
-    }
 }

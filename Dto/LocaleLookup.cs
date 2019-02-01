@@ -155,9 +155,4 @@ namespace Services.Dto
     [Route("/localelookup/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LocaleLookupBatch : List<LocaleLookup> { }
 
-    [Route("/admin/localelookup/ids", "GET, POST")]
-    public class LocaleLookupIds
-    {
-        public bool All { get; set; }
-    }
 }

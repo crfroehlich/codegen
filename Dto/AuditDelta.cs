@@ -149,9 +149,4 @@ namespace Services.Dto
     [Route("/auditdelta/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AuditDeltaBatch : List<AuditDelta> { }
 
-    [Route("/admin/auditdelta/ids", "GET, POST")]
-    public class AuditDeltaIds
-    {
-        public bool All { get; set; }
-    }
 }

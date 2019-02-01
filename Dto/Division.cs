@@ -197,9 +197,4 @@ namespace Services.Dto
     public class DivisionJunction : DivisionSearchBase {}
 
 
-    [Route("/admin/division/ids", "GET, POST")]
-    public class DivisionIds
-    {
-        public bool All { get; set; }
-    }
 }

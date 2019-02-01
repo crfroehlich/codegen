@@ -163,9 +163,4 @@ namespace Services.Dto
     public class InterventionJunction : InterventionSearchBase {}
 
 
-    [Route("/admin/intervention/ids", "GET, POST")]
-    public class InterventionIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -163,9 +163,4 @@ namespace Services.Dto
     public class ComparatorJunction : ComparatorSearchBase {}
 
 
-    [Route("/admin/comparator/ids", "GET, POST")]
-    public class ComparatorIds
-    {
-        public bool All { get; set; }
-    }
 }

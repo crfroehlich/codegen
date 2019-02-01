@@ -158,9 +158,4 @@ namespace Services.Dto
     [Route("/impersonation/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ImpersonationBatch : List<Impersonation> { }
 
-    [Route("/admin/impersonation/ids", "GET, POST")]
-    public class ImpersonationIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -138,9 +138,4 @@ namespace Services.Dto
     [Route("/attributeinterval/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeIntervalBatch : List<AttributeInterval> { }
 
-    [Route("/admin/attributeinterval/ids", "GET, POST")]
-    public class AttributeIntervalIds
-    {
-        public bool All { get; set; }
-    }
 }

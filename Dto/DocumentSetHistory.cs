@@ -164,9 +164,4 @@ namespace Services.Dto
     [Route("/documentsethistory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentSetHistoryBatch : List<DocumentSetHistory> { }
 
-    [Route("/admin/documentsethistory/ids", "GET, POST")]
-    public class DocumentSetHistoryIds
-    {
-        public bool All { get; set; }
-    }
 }

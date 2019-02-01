@@ -275,9 +275,4 @@ namespace Services.Dto
     public class ImportDataJunction : ImportDataSearchBase {}
 
 
-    [Route("/admin/importdata/ids", "GET, POST")]
-    public class ImportDataIds
-    {
-        public bool All { get; set; }
-    }
 }

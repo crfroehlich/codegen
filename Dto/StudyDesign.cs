@@ -141,9 +141,4 @@ namespace Services.Dto
     [Route("/studydesign/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StudyDesignBatch : List<StudyDesign> { }
 
-    [Route("/admin/studydesign/ids", "GET, POST")]
-    public class StudyDesignIds
-    {
-        public bool All { get; set; }
-    }
 }

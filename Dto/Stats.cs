@@ -171,9 +171,4 @@ namespace Services.Dto
     [Route("/stats/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsBatch : List<Stats> { }
 
-    [Route("/admin/stats/ids", "GET, POST")]
-    public class StatsIds
-    {
-        public bool All { get; set; }
-    }
 }

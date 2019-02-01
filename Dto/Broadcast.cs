@@ -210,9 +210,4 @@ namespace Services.Dto
     public class BroadcastJunction : BroadcastSearchBase {}
 
 
-    [Route("/admin/broadcast/ids", "GET, POST")]
-    public class BroadcastIds
-    {
-        public bool All { get; set; }
-    }
 }

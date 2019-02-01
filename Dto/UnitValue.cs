@@ -182,9 +182,4 @@ namespace Services.Dto
     public class UnitValueJunction : UnitValueSearchBase {}
 
 
-    [Route("/admin/unitvalue/ids", "GET, POST")]
-    public class UnitValueIds
-    {
-        public bool All { get; set; }
-    }
 }

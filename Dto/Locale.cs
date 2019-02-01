@@ -152,9 +152,4 @@ namespace Services.Dto
     [Route("/locale/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LocaleBatch : List<Locale> { }
 
-    [Route("/admin/locale/ids", "GET, POST")]
-    public class LocaleIds
-    {
-        public bool All { get; set; }
-    }
 }

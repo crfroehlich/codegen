@@ -226,9 +226,4 @@ namespace Services.Dto
     public class UpdateJunction : UpdateSearchBase {}
 
 
-    [Route("/admin/update/ids", "GET, POST")]
-    public class UpdateIds
-    {
-        public bool All { get; set; }
-    }
 }

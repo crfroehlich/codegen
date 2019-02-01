@@ -266,9 +266,4 @@ namespace Services.Dto
     public class WorkflowJunction : WorkflowSearchBase {}
 
 
-    [Route("/admin/workflow/ids", "GET, POST")]
-    public class WorkflowIds
-    {
-        public bool All { get; set; }
-    }
 }

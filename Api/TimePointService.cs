@@ -148,20 +148,5 @@ namespace Services.API
             ret = entity?.ToDto();
             return ret;
         }
-
-        public List<int> Any(TimePointIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityTimePoint>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
-            return ret;
-        }
     }
 }

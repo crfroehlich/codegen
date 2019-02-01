@@ -246,9 +246,4 @@ namespace Services.Dto
     public class AuditRecordJunction : AuditRecordSearchBase {}
 
 
-    [Route("/admin/auditrecord/ids", "GET, POST")]
-    public class AuditRecordIds
-    {
-        public bool All { get; set; }
-    }
 }

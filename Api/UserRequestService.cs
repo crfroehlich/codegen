@@ -160,20 +160,5 @@ namespace Services.API
             ret = entity?.ToDto();
             return ret;
         }
-
-        public List<int> Any(UserRequestIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityUserRequest>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
-            return ret;
-        }
     }
 }

@@ -163,9 +163,4 @@ namespace Services.Dto
     public class CharacteristicJunction : CharacteristicSearchBase {}
 
 
-    [Route("/admin/characteristic/ids", "GET, POST")]
-    public class CharacteristicIds
-    {
-        public bool All { get; set; }
-    }
 }

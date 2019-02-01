@@ -155,9 +155,4 @@ namespace Services.Dto
     [Route("/databaseversion/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DatabaseVersionBatch : List<DatabaseVersion> { }
 
-    [Route("/admin/databaseversion/ids", "GET, POST")]
-    public class DatabaseVersionIds
-    {
-        public bool All { get; set; }
-    }
 }

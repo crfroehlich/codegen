@@ -217,9 +217,4 @@ namespace Services.Dto
     public class TeamJunction : TeamSearchBase {}
 
 
-    [Route("/admin/team/ids", "GET, POST")]
-    public class TeamIds
-    {
-        public bool All { get; set; }
-    }
 }

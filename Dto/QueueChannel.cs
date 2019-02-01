@@ -179,9 +179,4 @@ namespace Services.Dto
     [Route("/queuechannel/batch", "DELETE, PATCH, POST, PUT")]
     public partial class QueueChannelBatch : List<QueueChannel> { }
 
-    [Route("/admin/queuechannel/ids", "GET, POST")]
-    public class QueueChannelIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -170,9 +170,4 @@ namespace Services.Dto
     [Route("/default/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DefaultBatch : List<Default> { }
 
-    [Route("/admin/default/ids", "GET, POST")]
-    public class DefaultIds
-    {
-        public bool All { get; set; }
-    }
 }
