@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityBackgroundTask> _ExecSearch(BackgroundTaskSearch request)
         {
-            request = InitSearch<BackgroundTask, BackgroundTaskSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityBackgroundTask> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityBackgroundTask,BackgroundTaskFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -131,7 +131,7 @@ namespace Services.API
                             entities = entities.Where(en => en.TaskHistory.Any(r => r.Id.In(request.TaskHistoryIds)));
                         }
 
-                entities = ApplyFilters<DocEntityBackgroundTask,BackgroundTaskSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -149,6 +149,18 @@ namespace Services.API
 
         public List<BackgroundTask> Get(BackgroundTaskSearch request) => GetSearchResult<BackgroundTask,DocEntityBackgroundTask,BackgroundTaskSearch>(DocConstantModelName.BACKGROUNDTASK, request, _ExecSearch);
 
+        public object Post(BackgroundTaskVersion request) => Get(request);
+
+        public object Get(BackgroundTaskVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public BackgroundTask Get(BackgroundTask request) => GetEntity<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, request, GetBackgroundTask);
         private BackgroundTask _AssignValues(BackgroundTask request, DocConstantPermission permission, Session session)
         {
@@ -161,7 +173,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             BackgroundTask ret = null;
-            request = _InitAssignValues<BackgroundTask>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -501,34 +513,62 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "backgroundtaskitem":
-                    ret =     GetJunctionSearchResult<BackgroundTask, DocEntityBackgroundTask, DocEntityBackgroundTaskItem, BackgroundTaskItem, BackgroundTaskItemSearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKITEM, "Items", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<BackgroundTaskItemService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetBackgroundTaskBackgroundTaskItem(request, skip, take);
                     break;
                 case "backgroundtaskhistory":
-                    ret =     GetJunctionSearchResult<BackgroundTask, DocEntityBackgroundTask, DocEntityBackgroundTaskHistory, BackgroundTaskHistory, BackgroundTaskHistorySearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKHISTORY, "TaskHistory", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<BackgroundTaskHistoryService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetBackgroundTaskBackgroundTaskHistory(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtask/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(BackgroundTaskJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetBackgroundTaskBackgroundTaskItem(BackgroundTaskJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<BackgroundTaskItem>(Dto.BackgroundTaskItem.Fields, request.VisibleFields);
+             var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "Items", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskItem");
+             return en?.Items.Take(take).Skip(skip).ConvertFromEntityList<DocEntityBackgroundTaskItem,BackgroundTaskItem>(new List<BackgroundTaskItem>());
+        }
 
+        private object _GetBackgroundTaskBackgroundTaskHistory(BackgroundTaskJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<BackgroundTaskHistory>(Dto.BackgroundTaskHistory.Fields, request.VisibleFields);
+             var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "TaskHistory", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskHistory");
+             return en?.TaskHistory.Take(take).Skip(skip).ConvertFromEntityList<DocEntityBackgroundTaskHistory,BackgroundTaskHistory>(new List<BackgroundTaskHistory>());
+        }
+        
         public object Post(BackgroundTaskJunction request)
         {
             if (request == null)
@@ -542,10 +582,10 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtask/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -565,10 +605,10 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtask/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -595,6 +635,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(BackgroundTaskIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityBackgroundTask>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

@@ -151,9 +151,10 @@ namespace Services.Dto
     
     [Route("/VariableRule/{Id}/copy", "POST")]
     public partial class VariableRuleCopy : VariableRule {}
-    public partial class VariableRuleSearchBase : Search<VariableRule>
+    [Route("/variablerule", "GET")]
+    [Route("/variablerule/search", "GET, POST, DELETE")]
+    public partial class VariableRuleSearch : Search<VariableRule>
     {
-        public int? Id { get; set; }
         public List<int> ChildrenIds { get; set; }
         public string Definition { get; set; }
         public List<int> InstancesIds { get; set; }
@@ -170,17 +171,9 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Template",@"Applied",@"Override"})]
         public List<string> TypeNames { get; set; }
     }
-
-    [Route("/variablerule", "GET")]
-    [Route("/variablerule/version", "GET, POST")]
-    [Route("/variablerule/search", "GET, POST, DELETE")]
-    public partial class VariableRuleSearch : VariableRuleSearchBase
-    {
-    }
-
+    
     public class VariableRuleFullTextSearch
     {
-        public VariableRuleFullTextSearch() {}
         private VariableRuleSearch _request;
         public VariableRuleFullTextSearch(VariableRuleSearch request) => _request = request;
         
@@ -202,12 +195,50 @@ namespace Services.Dto
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableRule.Type))); }
     }
 
+    [Route("/variablerule/version", "GET, POST")]
+    public partial class VariableRuleVersion : VariableRuleSearch {}
+
     [Route("/variablerule/batch", "DELETE, PATCH, POST, PUT")]
     public partial class VariableRuleBatch : List<VariableRule> { }
 
-    [Route("/variablerule/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/variablerule/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class VariableRuleJunction : VariableRuleSearchBase {}
+    [Route("/variablerule/{Id}/variablerule", "GET, POST, DELETE")]
+    [Route("/variablerule/{Id}/variableinstance", "GET, POST, DELETE")]
+    [Route("/variablerule/{Id}/scope", "GET, POST, DELETE")]
+    public class VariableRuleJunction : Search<VariableRule>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public VariableRuleJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/variablerule/{Id}/variablerule/version", "GET")]
+    [Route("/variablerule/{Id}/variableinstance/version", "GET")]
+    [Route("/variablerule/{Id}/scope/version", "GET")]
+    public class VariableRuleJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/variablerule/ids", "GET, POST")]
+    public class VariableRuleIds
+    {
+        public bool All { get; set; }
+    }
 }

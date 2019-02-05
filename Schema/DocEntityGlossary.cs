@@ -391,7 +391,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class GlossaryMapper : DocMapperBase
+    public partial class GlossaryMapper : Profile
     {
         private IMappingExpression<DocEntityGlossary,Glossary> _EntityToDto;
         private IMappingExpression<Glossary,DocEntityGlossary> _DtoToEntity;

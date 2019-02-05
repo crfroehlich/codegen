@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTeam> _ExecSearch(TeamSearch request)
         {
-            request = InitSearch<Team, TeamSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTeam> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TeamFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTeam,TeamFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -119,7 +119,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
                         }
 
-                entities = ApplyFilters<DocEntityTeam,TeamSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -137,6 +137,18 @@ namespace Services.API
 
         public object Get(TeamSearch request) => GetSearchResultWithCache<Team,DocEntityTeam,TeamSearch>(DocConstantModelName.TEAM, request, _ExecSearch);
 
+        public object Post(TeamVersion request) => Get(request);
+
+        public object Get(TeamVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Team request) => GetEntityWithCache<Team>(DocConstantModelName.TEAM, request, GetTeam);
         private Team _AssignValues(Team request, DocConstantPermission permission, Session session)
         {
@@ -149,7 +161,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Team ret = null;
-            request = _InitAssignValues<Team>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -726,50 +738,150 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "role":
-                    ret =     GetJunctionSearchResult<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<RoleService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetTeamRole(request, skip, take);
                     break;
                 case "scope":
-                    ret =     GetJunctionSearchResult<Team, DocEntityTeam, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ScopeService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetTeamScope(request, skip, take);
                     break;
                 case "update":
-                    ret =     GetJunctionSearchResult<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UpdateService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetTeamUpdate(request, skip, take);
                     break;
                 case "user":
-                    ret =     GetJunctionSearchResult<Team, DocEntityTeam, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetTeamUser(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(TeamJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "role":
+                    ret = GetTeamRoleVersion(request);
+                    break;
+                case "scope":
+                    ret = GetTeamScopeVersion(request);
+                    break;
+                case "update":
+                    ret = GetTeamUpdateVersion(request);
+                    break;
+                case "user":
+                    ret = GetTeamUserVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetTeamRole(TeamJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             var en = DocEntityTeam.GetTeam(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "AdminRoles", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Role");
+             return en?.AdminRoles.Take(take).Skip(skip).ConvertFromEntityList<DocEntityRole,Role>(new List<Role>());
+        }
 
+        private List<Version> GetTeamRoleVersion(TeamJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTeam.GetTeam(request.Id);
+                ret = en?.AdminRoles.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetTeamScope(TeamJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             var en = DocEntityTeam.GetTeam(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Scopes", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Scope");
+             return en?.Scopes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityScope,Scope>(new List<Scope>());
+        }
+
+        private List<Version> GetTeamScopeVersion(TeamJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTeam.GetTeam(request.Id);
+                ret = en?.Scopes.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetTeamUpdate(TeamJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
+             var en = DocEntityTeam.GetTeam(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Updates", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Update");
+             return en?.Updates.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUpdate,Update>(new List<Update>());
+        }
+
+        private List<Version> GetTeamUpdateVersion(TeamJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTeam.GetTeam(request.Id);
+                ret = en?.Updates.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetTeamUser(TeamJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             var en = DocEntityTeam.GetTeam(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Users", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and User");
+             return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
+        }
+
+        private List<Version> GetTeamUserVersion(TeamJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTeam.GetTeam(request.Id);
+                ret = en?.Users.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
         public object Post(TeamJunction request)
         {
             if (request == null)
@@ -783,7 +895,9 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "role":
                     ret = _PostTeamRole(request);
@@ -797,8 +911,6 @@ namespace Services.API
                 case "user":
                     ret = _PostTeamUser(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -902,7 +1014,9 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "role":
                     ret = _DeleteTeamRole(request);
@@ -916,8 +1030,6 @@ namespace Services.API
                 case "user":
                     ret = _DeleteTeamUser(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -1020,6 +1132,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(TeamIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityTeam>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUser> _ExecSearch(UserSearch request)
         {
-            request = InitSearch<User, UserSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityUser> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityUser,UserFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -211,7 +211,7 @@ namespace Services.API
                             entities = entities.Where(en => en.Workflows.Any(r => r.Id.In(request.WorkflowsIds)));
                         }
 
-                entities = ApplyFilters<DocEntityUser,UserSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -229,6 +229,18 @@ namespace Services.API
 
         public object Get(UserSearch request) => GetSearchResultWithCache<User,DocEntityUser,UserSearch>(DocConstantModelName.USER, request, _ExecSearch);
 
+        public object Post(UserVersion request) => Get(request);
+
+        public object Get(UserVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(User request) => GetEntityWithCache<User>(DocConstantModelName.USER, request, GetUser);
         private User _AssignValues(User request, DocConstantPermission permission, Session session)
         {
@@ -241,7 +253,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             User ret = null;
-            request = _InitAssignValues<User>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -1259,122 +1271,258 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "auditrecord":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityAuditRecord, AuditRecord, AuditRecordSearch>((int)request.Id, DocConstantModelName.AUDITRECORD, "Audits", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<AuditRecordService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserAuditRecord(request, skip, take);
                     break;
                 case "lookuptablebinding":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableBindingService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserLookupTableBinding(request, skip, take);
                     break;
                 case "documentset":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserDocumentSet(request, skip, take);
                     break;
                 case "history":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "History", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<HistoryService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserHistory(request, skip, take);
                     break;
                 case "impersonateduser":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonated", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ImpersonationService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserImpersonatedUser(request, skip, take);
                     break;
                 case "impersonatinguser":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonating", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ImpersonationService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserImpersonatingUser(request, skip, take);
                     break;
                 case "role":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<RoleService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserRole(request, skip, take);
                     break;
                 case "scope":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ScopeService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserScope(request, skip, take);
                     break;
                 case "session":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityUserSession, UserSession, UserSessionSearch>((int)request.Id, DocConstantModelName.USERSESSION, "Sessions", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserSessionService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserSession(request, skip, take);
                     break;
                 case "team":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TeamService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserTeam(request, skip, take);
                     break;
                 case "timecard":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TimeCardService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserTimeCard(request, skip, take);
                     break;
                 case "update":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UpdateService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserUpdate(request, skip, take);
                     break;
                 case "workflow":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<WorkflowService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserWorkflow(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(UserJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "documentset":
+                    ret = GetUserDocumentSetVersion(request);
+                    break;
+                case "role":
+                    ret = GetUserRoleVersion(request);
+                    break;
+                case "scope":
+                    ret = GetUserScopeVersion(request);
+                    break;
+                case "update":
+                    ret = GetUserUpdateVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetUserAuditRecord(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<AuditRecord>(Dto.AuditRecord.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Audits", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and AuditRecord");
+             return en?.Audits.Take(take).Skip(skip).ConvertFromEntityList<DocEntityAuditRecord,AuditRecord>(new List<AuditRecord>());
+        }
 
+        private object _GetUserLookupTableBinding(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Bindings", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and LookupTableBinding");
+             return en?.Bindings.Take(take).Skip(skip).ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(new List<LookupTableBinding>());
+        }
+
+        private object _GetUserDocumentSet(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "DocumentSets", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and DocumentSet");
+             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
+        }
+
+        private List<Version> GetUserDocumentSetVersion(UserJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityUser.GetUser(request.Id);
+                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetUserHistory(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "History", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and History");
+             return en?.History.Take(take).Skip(skip).ConvertFromEntityList<DocEntityHistory,History>(new List<History>());
+        }
+
+        private object _GetUserImpersonatedUser(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Impersonated", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Impersonation");
+             return en?.Impersonated.Take(take).Skip(skip).ConvertFromEntityList<DocEntityImpersonation,Impersonation>(new List<Impersonation>());
+        }
+
+        private object _GetUserImpersonatingUser(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Impersonating", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Impersonation");
+             return en?.Impersonating.Take(take).Skip(skip).ConvertFromEntityList<DocEntityImpersonation,Impersonation>(new List<Impersonation>());
+        }
+
+        private object _GetUserRole(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Roles", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Role");
+             return en?.Roles.Take(take).Skip(skip).ConvertFromEntityList<DocEntityRole,Role>(new List<Role>());
+        }
+
+        private List<Version> GetUserRoleVersion(UserJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityUser.GetUser(request.Id);
+                ret = en?.Roles.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetUserScope(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Scopes", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Scope");
+             return en?.Scopes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityScope,Scope>(new List<Scope>());
+        }
+
+        private List<Version> GetUserScopeVersion(UserJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityUser.GetUser(request.Id);
+                ret = en?.Scopes.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetUserSession(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<UserSession>(Dto.UserSession.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Sessions", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and UserSession");
+             return en?.Sessions.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUserSession,UserSession>(new List<UserSession>());
+        }
+
+        private object _GetUserTeam(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Teams", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Team");
+             return en?.Teams.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTeam,Team>(new List<Team>());
+        }
+
+        private object _GetUserTimeCard(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "TimeCards", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and TimeCard");
+             return en?.TimeCards.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTimeCard,TimeCard>(new List<TimeCard>());
+        }
+
+        private object _GetUserUpdate(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Updates", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Update");
+             return en?.Updates.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUpdate,Update>(new List<Update>());
+        }
+
+        private List<Version> GetUserUpdateVersion(UserJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityUser.GetUser(request.Id);
+                ret = en?.Updates.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetUserWorkflow(UserJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             var en = DocEntityUser.GetUser(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USER, columnName: "Workflows", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between User and Workflow");
+             return en?.Workflows.Take(take).Skip(skip).ConvertFromEntityList<DocEntityWorkflow,Workflow>(new List<Workflow>());
+        }
+        
         public object Post(UserJunction request)
         {
             if (request == null)
@@ -1388,7 +1536,9 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "documentset":
                     ret = _PostUserDocumentSet(request);
@@ -1402,8 +1552,6 @@ namespace Services.API
                 case "update":
                     ret = _PostUserUpdate(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -1507,7 +1655,9 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "documentset":
                     ret = _DeleteUserDocumentSet(request);
@@ -1521,8 +1671,6 @@ namespace Services.API
                 case "update":
                     ret = _DeleteUserUpdate(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -1625,6 +1773,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(UserIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityUser>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

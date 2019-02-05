@@ -199,9 +199,10 @@ namespace Services.Dto
     
     [Route("/Project/{Id}/copy", "POST")]
     public partial class ProjectCopy : Project {}
-    public partial class ProjectSearchBase : Search<Project>
+    [Route("/project", "GET")]
+    [Route("/project/search", "GET, POST, DELETE")]
+    public partial class ProjectSearch : Search<Project>
     {
-        public int? Id { get; set; }
         public List<int> ChildrenIds { get; set; }
         public Reference Client { get; set; }
         public List<int> ClientIds { get; set; }
@@ -233,17 +234,9 @@ namespace Services.Dto
         public List<string> StatusNames { get; set; }
         public List<int> TimeCardsIds { get; set; }
     }
-
-    [Route("/project", "GET")]
-    [Route("/project/version", "GET, POST")]
-    [Route("/project/search", "GET, POST, DELETE")]
-    public partial class ProjectSearch : ProjectSearchBase
-    {
-    }
-
+    
     public class ProjectFullTextSearch
     {
-        public ProjectFullTextSearch() {}
         private ProjectSearch _request;
         public ProjectFullTextSearch(ProjectSearch request) => _request = request;
         
@@ -277,12 +270,48 @@ namespace Services.Dto
         public bool doTimeCards { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Project.TimeCards))); }
     }
 
+    [Route("/project/version", "GET, POST")]
+    public partial class ProjectVersion : ProjectSearch {}
+
     [Route("/project/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ProjectBatch : List<Project> { }
 
-    [Route("/project/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/project/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class ProjectJunction : ProjectSearchBase {}
+    [Route("/project/{Id}/project", "GET, POST, DELETE")]
+    [Route("/project/{Id}/timecard", "GET, POST, DELETE")]
+    public class ProjectJunction : Search<Project>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public ProjectJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/project/{Id}/project/version", "GET")]
+    [Route("/project/{Id}/timecard/version", "GET")]
+    public class ProjectJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/project/ids", "GET, POST")]
+    public class ProjectIds
+    {
+        public bool All { get; set; }
+    }
 }

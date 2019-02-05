@@ -415,7 +415,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class AppMapper : DocMapperBase
+    public partial class AppMapper : Profile
     {
         private IMappingExpression<DocEntityApp,App> _EntityToDto;
         private IMappingExpression<App,DocEntityApp> _DtoToEntity;

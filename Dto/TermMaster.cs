@@ -156,9 +156,10 @@ namespace Services.Dto
     
     [Route("/TermMaster/{Id}/copy", "POST")]
     public partial class TermMasterCopy : TermMaster {}
-    public partial class TermMasterSearchBase : Search<TermMaster>
+    [Route("/termmaster", "GET")]
+    [Route("/termmaster/search", "GET, POST, DELETE")]
+    public partial class TermMasterSearch : Search<TermMaster>
     {
-        public int? Id { get; set; }
         public string BioPortal { get; set; }
         public List<int> CategoriesIds { get; set; }
         public string CUI { get; set; }
@@ -172,17 +173,9 @@ namespace Services.Dto
         public string TUI { get; set; }
         public string URI { get; set; }
     }
-
-    [Route("/termmaster", "GET")]
-    [Route("/termmaster/version", "GET, POST")]
-    [Route("/termmaster/search", "GET, POST, DELETE")]
-    public partial class TermMasterSearch : TermMasterSearchBase
-    {
-    }
-
+    
     public class TermMasterFullTextSearch
     {
-        public TermMasterFullTextSearch() {}
         private TermMasterSearch _request;
         public TermMasterFullTextSearch(TermMasterSearch request) => _request = request;
         
@@ -207,12 +200,48 @@ namespace Services.Dto
         public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.URI))); }
     }
 
+    [Route("/termmaster/version", "GET, POST")]
+    public partial class TermMasterVersion : TermMasterSearch {}
+
     [Route("/termmaster/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TermMasterBatch : List<TermMaster> { }
 
-    [Route("/termmaster/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/termmaster/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class TermMasterJunction : TermMasterSearchBase {}
+    [Route("/termmaster/{Id}/termcategory", "GET, POST, DELETE")]
+    [Route("/termmaster/{Id}/termsynonym", "GET, POST, DELETE")]
+    public class TermMasterJunction : Search<TermMaster>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public TermMasterJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/termmaster/{Id}/termcategory/version", "GET")]
+    [Route("/termmaster/{Id}/termsynonym/version", "GET")]
+    public class TermMasterJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/termmaster/ids", "GET, POST")]
+    public class TermMasterIds
+    {
+        public bool All { get; set; }
+    }
 }

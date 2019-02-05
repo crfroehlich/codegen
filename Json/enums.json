@@ -511,6 +511,7 @@
     "REPRESENTATIVESAMPLE": "RepresentativeSample",
     "RESPONSESCOLLECTEDBY": "ResponsesCollectedBy",
     "RESULTSCATEGORY": "ResultsCategory",
+    "RISKOFBIASASSESSMENT": "RiskOfBiasAssessment",
     "SCOPE": "Scope",
     "SETTINGTYPE": "SettingType",
     "STATISTICALSIGNIFICANCE": "StatisticalSignificance",
@@ -633,6 +634,7 @@
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
     "EVENT": "Event",
     "FEATURESET": "FeatureSet",
+    "FOREIGNKEY": "ForeignKey",
     "GLOSSARY": "Glossary",
     "HELP": "Help",
     "HISTORY": "History",
@@ -653,6 +655,7 @@
     "MEANVARIANCES": "MeanVariances",
     "MEANVARIANCEVALUE": "MeanVarianceValue",
     "OUTCOME": "Outcome",
+    "PACKAGE": "Package",
     "PAGE": "Page",
     "PROJECT": "Project",
     "QUEUECHANNEL": "QueueChannel",
@@ -881,6 +884,11 @@
     "SOCIAL_HISTORY": "Social History",
     "THERAPIES": "Therapies",
     "WITHDRAWAL_DRUG_DISCONTINUATION": "Withdrawal/Drug Discontinuation"
+  },
+  "RiskOfBiasAssessment": {
+    "YES": "Yes",
+    "NO": "No",
+    "UNCLEAR": "Unclear"
   },
   "Scope": {
     "DOCUMENTSET": "DocumentSet",

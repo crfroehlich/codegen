@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTimePoint> _ExecSearch(TimePointSearch request)
         {
-            request = InitSearch<TimePoint, TimePointSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTimePoint> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimePointFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTimePoint,TimePointFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -103,7 +103,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
                 }
 
-                entities = ApplyFilters<DocEntityTimePoint,TimePointSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -120,6 +120,18 @@ namespace Services.API
         public List<TimePoint> Post(TimePointSearch request) => Get(request);
 
         public List<TimePoint> Get(TimePointSearch request) => GetSearchResult<TimePoint,DocEntityTimePoint,TimePointSearch>(DocConstantModelName.TIMEPOINT, request, _ExecSearch);
+
+        public object Post(TimePointVersion request) => Get(request);
+
+        public object Get(TimePointVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
 
         public TimePoint Get(TimePoint request) => GetEntity<TimePoint>(DocConstantModelName.TIMEPOINT, request, GetTimePoint);
 
@@ -146,6 +158,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(TimePointIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityTimePoint>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

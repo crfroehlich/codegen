@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityQueueChannel> _ExecSearch(QueueChannelSearch request)
         {
-            request = InitSearch<QueueChannel, QueueChannelSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityQueueChannel> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new QueueChannelFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityQueueChannel,QueueChannelFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -105,7 +105,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
 
-                entities = ApplyFilters<DocEntityQueueChannel,QueueChannelSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -123,6 +123,18 @@ namespace Services.API
 
         public object Get(QueueChannelSearch request) => GetSearchResultWithCache<QueueChannel,DocEntityQueueChannel,QueueChannelSearch>(DocConstantModelName.QUEUECHANNEL, request, _ExecSearch);
 
+        public object Post(QueueChannelVersion request) => Get(request);
+
+        public object Get(QueueChannelVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(QueueChannel request) => GetEntityWithCache<QueueChannel>(DocConstantModelName.QUEUECHANNEL, request, GetQueueChannel);
         private QueueChannel _AssignValues(QueueChannel request, DocConstantPermission permission, Session session)
         {
@@ -135,7 +147,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             QueueChannel ret = null;
-            request = _InitAssignValues<QueueChannel>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -522,6 +534,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(QueueChannelIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityQueueChannel>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

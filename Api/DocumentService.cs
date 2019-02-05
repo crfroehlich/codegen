@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityDocument> _ExecSearch(DocumentSearch request)
         {
-            request = InitSearch<Document, DocumentSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityDocument> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityDocument,DocumentFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -219,7 +219,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Volume))
                     entities = entities.Where(en => en.Volume.Contains(request.Volume));
 
-                entities = ApplyFilters<DocEntityDocument,DocumentSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -237,6 +237,18 @@ namespace Services.API
 
         public object Get(DocumentSearch request) => GetSearchResultWithCache<Document,DocEntityDocument,DocumentSearch>(DocConstantModelName.DOCUMENT, request, _ExecSearch);
 
+        public object Post(DocumentVersion request) => Get(request);
+
+        public object Get(DocumentVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Document request) => GetEntityWithCache<Document>(DocConstantModelName.DOCUMENT, request, GetDocument);
         private Document _AssignValues(Document request, DocConstantPermission permission, Session session)
         {
@@ -249,7 +261,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Document ret = null;
-            request = _InitAssignValues<Document>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -1278,50 +1290,150 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "documentset":
-                    ret =     GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetDocumentDocumentSet(request, skip, take);
                     break;
                 case "lookuptable":
-                    ret =     GetJunctionSearchResult<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetDocumentLookupTable(request, skip, take);
                     break;
                 case "nondigitizeddocumentset":
-                    ret =     GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "NonDigitizedDocumentSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetDocumentNonDigitizedDocumentSet(request, skip, take);
                     break;
                 case "variableinstance":
-                    ret =     GetJunctionSearchResult<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<VariableInstanceService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetDocumentVariableInstance(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for document/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(DocumentJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "documentset":
+                    ret = GetDocumentDocumentSetVersion(request);
+                    break;
+                case "lookuptable":
+                    ret = GetDocumentLookupTableVersion(request);
+                    break;
+                case "nondigitizeddocumentset":
+                    ret = GetDocumentNonDigitizedDocumentSetVersion(request);
+                    break;
+                case "variableinstance":
+                    ret = GetDocumentVariableInstanceVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetDocumentDocumentSet(DocumentJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             var en = DocEntityDocument.GetDocument(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENT, columnName: "DocumentSets", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Document and DocumentSet");
+             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
+        }
 
+        private List<Version> GetDocumentDocumentSetVersion(DocumentJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityDocument.GetDocument(request.Id);
+                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetDocumentLookupTable(DocumentJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<LookupTable>(Dto.LookupTable.Fields, request.VisibleFields);
+             var en = DocEntityDocument.GetDocument(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENT, columnName: "LookupTables", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Document and LookupTable");
+             return en?.LookupTables.Take(take).Skip(skip).ConvertFromEntityList<DocEntityLookupTable,LookupTable>(new List<LookupTable>());
+        }
+
+        private List<Version> GetDocumentLookupTableVersion(DocumentJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityDocument.GetDocument(request.Id);
+                ret = en?.LookupTables.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetDocumentNonDigitizedDocumentSet(DocumentJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             var en = DocEntityDocument.GetDocument(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENT, columnName: "NonDigitizedDocumentSets", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Document and DocumentSet");
+             return en?.NonDigitizedDocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
+        }
+
+        private List<Version> GetDocumentNonDigitizedDocumentSetVersion(DocumentJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityDocument.GetDocument(request.Id);
+                ret = en?.NonDigitizedDocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetDocumentVariableInstance(DocumentJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<VariableInstance>(Dto.VariableInstance.Fields, request.VisibleFields);
+             var en = DocEntityDocument.GetDocument(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DOCUMENT, columnName: "VariableData", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Document and VariableInstance");
+             return en?.VariableData.Take(take).Skip(skip).ConvertFromEntityList<DocEntityVariableInstance,VariableInstance>(new List<VariableInstance>());
+        }
+
+        private List<Version> GetDocumentVariableInstanceVersion(DocumentJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityDocument.GetDocument(request.Id);
+                ret = en?.VariableData.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
         public object Post(DocumentJunction request)
         {
             if (request == null)
@@ -1335,7 +1447,9 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "documentset":
                     ret = _PostDocumentDocumentSet(request);
@@ -1349,8 +1463,6 @@ namespace Services.API
                 case "variableinstance":
                     ret = _PostDocumentVariableInstance(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for document/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -1454,7 +1566,9 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "documentset":
                     ret = _DeleteDocumentDocumentSet(request);
@@ -1468,8 +1582,6 @@ namespace Services.API
                 case "variableinstance":
                     ret = _DeleteDocumentVariableInstance(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for document/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -1572,6 +1684,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(DocumentIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityDocument>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

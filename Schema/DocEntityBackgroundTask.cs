@@ -485,7 +485,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class BackgroundTaskMapper : DocMapperBase
+    public partial class BackgroundTaskMapper : Profile
     {
         private IMappingExpression<DocEntityBackgroundTask,BackgroundTask> _EntityToDto;
         private IMappingExpression<BackgroundTask,DocEntityBackgroundTask> _DtoToEntity;

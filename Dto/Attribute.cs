@@ -136,9 +136,10 @@ namespace Services.Dto
     
     [Route("/Attribute/{Id}/copy", "POST")]
     public partial class AttributeCopy : Attribute {}
-    public partial class AttributeSearchBase : Search<Attribute>
+    [Route("/attribute", "GET")]
+    [Route("/attribute/search", "GET, POST, DELETE")]
+    public partial class AttributeSearch : Search<Attribute>
     {
-        public int? Id { get; set; }
         public Reference AttributeName { get; set; }
         public List<int> AttributeNameIds { get; set; }
         public List<string> AttributeNameNames { get; set; }
@@ -153,17 +154,9 @@ namespace Services.Dto
         public bool? IsPositive { get; set; }
         public string UniqueKey { get; set; }
     }
-
-    [Route("/attribute", "GET")]
-    [Route("/attribute/version", "GET, POST")]
-    [Route("/attribute/search", "GET, POST, DELETE")]
-    public partial class AttributeSearch : AttributeSearchBase
-    {
-    }
-
+    
     public class AttributeFullTextSearch
     {
-        public AttributeFullTextSearch() {}
         private AttributeSearch _request;
         public AttributeFullTextSearch(AttributeSearch request) => _request = request;
         
@@ -185,7 +178,15 @@ namespace Services.Dto
         public bool doValueType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Attribute.ValueType))); }
     }
 
+    [Route("/attribute/version", "GET, POST")]
+    public partial class AttributeVersion : AttributeSearch {}
+
     [Route("/attribute/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeBatch : List<Attribute> { }
 
+    [Route("/admin/attribute/ids", "GET, POST")]
+    public class AttributeIds
+    {
+        public bool All { get; set; }
+    }
 }

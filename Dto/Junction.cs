@@ -152,9 +152,10 @@ namespace Services.Dto
     
     [Route("/Junction/{Id}/copy", "POST")]
     public partial class JunctionCopy : Junction {}
-    public partial class JunctionSearchBase : Search<Junction>
+    [Route("/junction", "GET")]
+    [Route("/junction/search", "GET, POST, DELETE")]
+    public partial class JunctionSearch : Search<Junction>
     {
-        public int? Id { get; set; }
         public List<int> ChildrenIds { get; set; }
         public string Data { get; set; }
         public int? OwnerId { get; set; }
@@ -170,17 +171,9 @@ namespace Services.Dto
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
     }
-
-    [Route("/junction", "GET")]
-    [Route("/junction/version", "GET, POST")]
-    [Route("/junction/search", "GET, POST, DELETE")]
-    public partial class JunctionSearch : JunctionSearchBase
-    {
-    }
-
+    
     public class JunctionFullTextSearch
     {
-        public JunctionFullTextSearch() {}
         private JunctionSearch _request;
         public JunctionFullTextSearch(JunctionSearch request) => _request = request;
         
@@ -203,12 +196,46 @@ namespace Services.Dto
         public bool doUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.User))); }
     }
 
+    [Route("/junction/version", "GET, POST")]
+    public partial class JunctionVersion : JunctionSearch {}
+
     [Route("/junction/batch", "DELETE, PATCH, POST, PUT")]
     public partial class JunctionBatch : List<Junction> { }
 
-    [Route("/junction/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/junction/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class JunctionJunction : JunctionSearchBase {}
+    [Route("/junction/{Id}/junction", "GET, POST, DELETE")]
+    public class JunctionJunction : Search<Junction>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public JunctionJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/junction/{Id}/junction/version", "GET")]
+    public class JunctionJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/junction/ids", "GET, POST")]
+    public class JunctionIds
+    {
+        public bool All { get; set; }
+    }
 }

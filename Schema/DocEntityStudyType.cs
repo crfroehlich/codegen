@@ -371,7 +371,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class StudyTypeMapper : DocMapperBase
+    public partial class StudyTypeMapper : Profile
     {
         private IMappingExpression<DocEntityStudyType,StudyType> _EntityToDto;
         private IMappingExpression<StudyType,DocEntityStudyType> _DtoToEntity;
