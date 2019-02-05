@@ -398,7 +398,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TermSynonymMapper : Profile
+    public partial class TermSynonymMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityTermSynonym,TermSynonym> _EntityToDto;
         private IMappingExpression<TermSynonym,DocEntityTermSynonym> _DtoToEntity;

@@ -135,10 +135,9 @@ namespace Services.Dto
     
     [Route("/WorkflowComment/{Id}/copy", "POST")]
     public partial class WorkflowCommentCopy : WorkflowComment {}
-    [Route("/workflowcomment", "GET")]
-    [Route("/workflowcomment/search", "GET, POST, DELETE")]
-    public partial class WorkflowCommentSearch : Search<WorkflowComment>
+    public partial class WorkflowCommentSearchBase : Search<WorkflowComment>
     {
+        public int? Id { get; set; }
         public List<int> ChildrenIds { get; set; }
         public Reference Parent { get; set; }
         public List<int> ParentIds { get; set; }
@@ -148,9 +147,17 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-    
+
+    [Route("/workflowcomment", "GET")]
+    [Route("/workflowcomment/version", "GET, POST")]
+    [Route("/workflowcomment/search", "GET, POST, DELETE")]
+    public partial class WorkflowCommentSearch : WorkflowCommentSearchBase
+    {
+    }
+
     public class WorkflowCommentFullTextSearch
     {
+        public WorkflowCommentFullTextSearch() {}
         private WorkflowCommentSearch _request;
         public WorkflowCommentFullTextSearch(WorkflowCommentSearch request) => _request = request;
         
@@ -169,46 +176,12 @@ namespace Services.Dto
         public bool doWorkflow { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowComment.Workflow))); }
     }
 
-    [Route("/workflowcomment/version", "GET, POST")]
-    public partial class WorkflowCommentVersion : WorkflowCommentSearch {}
-
     [Route("/workflowcomment/batch", "DELETE, PATCH, POST, PUT")]
     public partial class WorkflowCommentBatch : List<WorkflowComment> { }
 
-    [Route("/workflowcomment/{Id}/workflowcomment", "GET, POST, DELETE")]
-    public class WorkflowCommentJunction : Search<WorkflowComment>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/workflowcomment/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/workflowcomment/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class WorkflowCommentJunction : WorkflowCommentSearchBase {}
 
 
-        public WorkflowCommentJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/workflowcomment/{Id}/workflowcomment/version", "GET")]
-    public class WorkflowCommentJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/workflowcomment/ids", "GET, POST")]
-    public class WorkflowCommentIds
-    {
-        public bool All { get; set; }
-    }
 }

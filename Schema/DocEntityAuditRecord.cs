@@ -442,7 +442,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class AuditRecordMapper : Profile
+    public partial class AuditRecordMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityAuditRecord,AuditRecord> _EntityToDto;
         private IMappingExpression<AuditRecord,DocEntityAuditRecord> _DtoToEntity;

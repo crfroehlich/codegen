@@ -189,10 +189,9 @@ namespace Services.Dto
     
     [Route("/ImportData/{Id}/copy", "POST")]
     public partial class ImportDataCopy : ImportData {}
-    [Route("/importdata", "GET")]
-    [Route("/importdata/search", "GET, POST, DELETE")]
-    public partial class ImportDataSearch : Search<ImportData>
+    public partial class ImportDataSearchBase : Search<ImportData>
     {
+        public int? Id { get; set; }
         public DateTime? CompletedOn { get; set; }
         public DateTime? CompletedOnAfter { get; set; }
         public DateTime? CompletedOnBefore { get; set; }
@@ -201,16 +200,22 @@ namespace Services.Dto
         public List<int> DocumentSetsIds { get; set; }
         public string ErrorData { get; set; }
         public string ExtractUrl { get; set; }
-        public bool? HighPriority { get; set; }
-        public bool? ImportFr { get; set; }
-        public bool? ImportNewName { get; set; }
-        public bool? ImportTable { get; set; }
-        public bool? ImportText { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> HighPriority { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> ImportFr { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> ImportNewName { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> ImportTable { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> ImportText { get; set; }
         public Reference ImportType { get; set; }
         public List<int> ImportTypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
         public List<string> ImportTypeNames { get; set; }
-        public bool? IsLegacy { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsLegacy { get; set; }
         public int? Order { get; set; }
         public int? ReferenceId { get; set; }
         public Reference RequestedBy { get; set; }
@@ -226,9 +231,17 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Queued",@"Processing",@"Succeeded",@"Already Imported",@"Failed",@"No JSON Found",@"Cancelled"})]
         public List<string> StatusNames { get; set; }
     }
-    
+
+    [Route("/importdata", "GET")]
+    [Route("/importdata/version", "GET, POST")]
+    [Route("/importdata/search", "GET, POST, DELETE")]
+    public partial class ImportDataSearch : ImportDataSearchBase
+    {
+    }
+
     public class ImportDataFullTextSearch
     {
+        public ImportDataFullTextSearch() {}
         private ImportDataSearch _request;
         public ImportDataFullTextSearch(ImportDataSearch request) => _request = request;
         
@@ -260,46 +273,12 @@ namespace Services.Dto
         public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Status))); }
     }
 
-    [Route("/importdata/version", "GET, POST")]
-    public partial class ImportDataVersion : ImportDataSearch {}
-
     [Route("/importdata/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ImportDataBatch : List<ImportData> { }
 
-    [Route("/importdata/{Id}/documentset", "GET, POST, DELETE")]
-    public class ImportDataJunction : Search<ImportData>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/importdata/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/importdata/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class ImportDataJunction : ImportDataSearchBase {}
 
 
-        public ImportDataJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/importdata/{Id}/documentset/version", "GET")]
-    public class ImportDataJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/importdata/ids", "GET, POST")]
-    public class ImportDataIds
-    {
-        public bool All { get; set; }
-    }
 }

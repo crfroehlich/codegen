@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityBroadcast> _ExecSearch(BroadcastSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Broadcast, BroadcastSearch>(request);
             IQueryable<DocEntityBroadcast> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BroadcastFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityBroadcast,BroadcastFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -96,18 +96,21 @@ namespace Services.API
                     entities = entities.Where(en => en.ConfluenceId.Contains(request.ConfluenceId));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(request.Reprocess.HasValue)
-                    entities = entities.Where(en => request.Reprocess.Value == en.Reprocess);
+                if(true == request.Reprocess?.Any())
+                {
+                    if(request.Reprocess.Any(v => v == null)) entities = entities.Where(en => en.Reprocess.In(request.Reprocess) || en.Reprocess == null );
+                    else entities = entities.Where(en => en.Reprocess.In(request.Reprocess));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Reprocessed))
                     entities = entities.Where(en => null != en.Reprocessed && request.Reprocessed.Value.Date == en.Reprocessed.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.ReprocessedBefore))
                     entities = entities.Where(en => en.Reprocessed <= request.ReprocessedBefore);
                 if(!DocTools.IsNullOrEmpty(request.ReprocessedAfter))
                     entities = entities.Where(en => en.Reprocessed >= request.ReprocessedAfter);
-                        if(true == request.ScopesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
-                        }
+                if(true == request.ScopesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Id))
                 {
                     entities = entities.Where(en => en.Status.Id == request.Status.Id );
@@ -141,7 +144,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityBroadcast,BroadcastSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -159,18 +162,6 @@ namespace Services.API
 
         public object Get(BroadcastSearch request) => GetSearchResultWithCache<Broadcast,DocEntityBroadcast,BroadcastSearch>(DocConstantModelName.BROADCAST, request, _ExecSearch);
 
-        public object Post(BroadcastVersion request) => Get(request);
-
-        public object Get(BroadcastVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(Broadcast request) => GetEntityWithCache<Broadcast>(DocConstantModelName.BROADCAST, request, GetBroadcast);
         private Broadcast _AssignValues(Broadcast request, DocConstantPermission permission, Session session)
         {
@@ -183,7 +174,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Broadcast ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Broadcast>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -604,66 +595,26 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction)
                 {
                 case "scope":
-                    ret = _GetBroadcastScope(request, skip, take);
+                    ret =     GetJunctionSearchResult<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<ScopeService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
-        
-        public object Get(BroadcastJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "scope":
-                    ret = GetBroadcastScopeVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetBroadcastScope(BroadcastJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
-             var en = DocEntityBroadcast.GetBroadcast(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BROADCAST, columnName: "Scopes", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Broadcast and Scope");
-             return en?.Scopes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityScope,Scope>(new List<Scope>());
-        }
 
-        private List<Version> GetBroadcastScopeVersion(BroadcastJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityBroadcast.GetBroadcast(request.Id);
-                ret = en?.Scopes.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(BroadcastJunction request)
         {
             if (request == null)
@@ -677,13 +628,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "scope":
                     ret = _PostBroadcastScope(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -724,13 +675,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "scope":
                     ret = _DeleteBroadcastScope(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -776,21 +727,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(BroadcastIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityBroadcast>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityLookupTableBinding> _ExecSearch(LookupTableBindingSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<LookupTableBinding, LookupTableBindingSearch>(request);
             IQueryable<DocEntityLookupTableBinding> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableBindingFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityLookupTableBinding,LookupTableBindingFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -110,16 +110,16 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Scope.Id.In(request.ScopeIds));
                 }
-                        if(true == request.SynonymsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Synonyms.Any(r => r.Id.In(request.SynonymsIds)));
-                        }
-                        if(true == request.WorkflowsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Workflows.Any(r => r.Id.In(request.WorkflowsIds)));
-                        }
+                if(true == request.SynonymsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Synonyms.Any(r => r.Id.In(request.SynonymsIds)));
+                }
+                if(true == request.WorkflowsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Workflows.Any(r => r.Id.In(request.WorkflowsIds)));
+                }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityLookupTableBinding,LookupTableBindingSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -137,18 +137,6 @@ namespace Services.API
 
         public object Get(LookupTableBindingSearch request) => GetSearchResultWithCache<LookupTableBinding,DocEntityLookupTableBinding,LookupTableBindingSearch>(DocConstantModelName.LOOKUPTABLEBINDING, request, _ExecSearch);
 
-        public object Post(LookupTableBindingVersion request) => Get(request);
-
-        public object Get(LookupTableBindingVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(LookupTableBinding request) => GetEntityWithCache<LookupTableBinding>(DocConstantModelName.LOOKUPTABLEBINDING, request, GetLookupTableBinding);
         private LookupTableBinding _AssignValues(LookupTableBinding request, DocConstantPermission permission, Session session)
         {
@@ -161,7 +149,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LookupTableBinding ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<LookupTableBinding>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -597,94 +585,34 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction)
                 {
                 case "termsynonym":
-                    ret = _GetLookupTableBindingTermSynonym(request, skip, take);
+                    ret =     GetJunctionSearchResult<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<TermSynonymService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
                 case "workflow":
-                    ret = _GetLookupTableBindingWorkflow(request, skip, take);
+                    ret =     GetJunctionSearchResult<LookupTableBinding, DocEntityLookupTableBinding, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<WorkflowService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptablebinding/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
-        
-        public object Get(LookupTableBindingJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "termsynonym":
-                    ret = GetLookupTableBindingTermSynonymVersion(request);
-                    break;
-                case "workflow":
-                    ret = GetLookupTableBindingWorkflowVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetLookupTableBindingTermSynonym(LookupTableBindingJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<TermSynonym>(Dto.TermSynonym.Fields, request.VisibleFields);
-             var en = DocEntityLookupTableBinding.GetLookupTableBinding(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Synonyms", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTableBinding and TermSynonym");
-             return en?.Synonyms.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTermSynonym,TermSynonym>(new List<TermSynonym>());
-        }
 
-        private List<Version> GetLookupTableBindingTermSynonymVersion(LookupTableBindingJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityLookupTableBinding.GetLookupTableBinding(request.Id);
-                ret = en?.Synonyms.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetLookupTableBindingWorkflow(LookupTableBindingJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
-             var en = DocEntityLookupTableBinding.GetLookupTableBinding(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Workflows", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between LookupTableBinding and Workflow");
-             return en?.Workflows.Take(take).Skip(skip).ConvertFromEntityList<DocEntityWorkflow,Workflow>(new List<Workflow>());
-        }
-
-        private List<Version> GetLookupTableBindingWorkflowVersion(LookupTableBindingJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityLookupTableBinding.GetLookupTableBinding(request.Id);
-                ret = en?.Workflows.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(LookupTableBindingJunction request)
         {
             if (request == null)
@@ -698,9 +626,7 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "termsynonym":
                     ret = _PostLookupTableBindingTermSynonym(request);
@@ -708,6 +634,8 @@ namespace Services.API
                 case "workflow":
                     ret = _PostLookupTableBindingWorkflow(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptablebinding/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -769,9 +697,7 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "termsynonym":
                     ret = _DeleteLookupTableBindingTermSynonym(request);
@@ -779,6 +705,8 @@ namespace Services.API
                 case "workflow":
                     ret = _DeleteLookupTableBindingWorkflow(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptablebinding/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -843,21 +771,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(LookupTableBindingIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityLookupTableBinding>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }
