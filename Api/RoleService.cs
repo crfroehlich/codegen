@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -104,12 +105,12 @@ namespace Services.API
                 }
                 if(true == request.IsInternal?.Any())
                 {
-                    if(request.IsInternal.Any(v => v == null)) entities = entities.Where(en => en.IsInternal.In(request.IsInternal) || en.IsInternal == null );
+                    if(request.IsInternal.Any(v => v == null)) entities = entities.Where(en => en.IsInternal.In(request.IsInternal) || en.IsInternal == null);
                     else entities = entities.Where(en => en.IsInternal.In(request.IsInternal));
                 }
                 if(true == request.IsSuperAdmin?.Any())
                 {
-                    if(request.IsSuperAdmin.Any(v => v == null)) entities = entities.Where(en => en.IsSuperAdmin.In(request.IsSuperAdmin) || en.IsSuperAdmin == null );
+                    if(request.IsSuperAdmin.Any(v => v == null)) entities = entities.Where(en => en.IsSuperAdmin.In(request.IsSuperAdmin) || en.IsSuperAdmin == null);
                     else entities = entities.Where(en => en.IsSuperAdmin.In(request.IsSuperAdmin));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))

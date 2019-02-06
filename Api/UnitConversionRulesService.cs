@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -94,12 +95,12 @@ namespace Services.API
                 }
                 if(true == request.IsDefault?.Any())
                 {
-                    if(request.IsDefault.Any(v => v == null)) entities = entities.Where(en => en.IsDefault.In(request.IsDefault) || en.IsDefault == null );
+                    if(request.IsDefault.Any(v => v == null)) entities = entities.Where(en => en.IsDefault.In(request.IsDefault) || en.IsDefault == null);
                     else entities = entities.Where(en => en.IsDefault.In(request.IsDefault));
                 }
                 if(true == request.IsDestinationSi?.Any())
                 {
-                    if(request.IsDestinationSi.Any(v => v == null)) entities = entities.Where(en => en.IsDestinationSi.In(request.IsDestinationSi) || en.IsDestinationSi == null );
+                    if(request.IsDestinationSi.Any(v => v == null)) entities = entities.Where(en => en.IsDestinationSi.In(request.IsDestinationSi) || en.IsDestinationSi == null);
                     else entities = entities.Where(en => en.IsDestinationSi.In(request.IsDestinationSi));
                 }
                 if(!DocTools.IsNullOrEmpty(request.ModifierTerm) && !DocTools.IsNullOrEmpty(request.ModifierTerm.Id))

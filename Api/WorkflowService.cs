@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -86,7 +87,7 @@ namespace Services.API
 
                 if(true == request.Archived?.Any())
                 {
-                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null );
+                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null);
                     else entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
                 if(true == request.BindingsIds?.Any())

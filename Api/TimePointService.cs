@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -86,7 +87,7 @@ namespace Services.API
 
                 if(true == request.IsAbsolute?.Any())
                 {
-                    if(request.IsAbsolute.Any(v => v == null)) entities = entities.Where(en => en.IsAbsolute.In(request.IsAbsolute) || en.IsAbsolute == null );
+                    if(request.IsAbsolute.Any(v => v == null)) entities = entities.Where(en => en.IsAbsolute.In(request.IsAbsolute) || en.IsAbsolute == null);
                     else entities = entities.Where(en => en.IsAbsolute.In(request.IsAbsolute));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Type) && !DocTools.IsNullOrEmpty(request.Type.Id))

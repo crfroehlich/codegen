@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -88,7 +89,7 @@ namespace Services.API
                     entities = entities.Where(en => en.AdditionalCriteria.Contains(request.AdditionalCriteria));
                 if(true == request.Archived?.Any())
                 {
-                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null );
+                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null);
                     else entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
                 if(true == request.CategoriesIds?.Any())
@@ -109,7 +110,7 @@ namespace Services.API
                 }
                 if(true == request.Confidential?.Any())
                 {
-                    if(request.Confidential.Any(v => v == null)) entities = entities.Where(en => en.Confidential.In(request.Confidential) || en.Confidential == null );
+                    if(request.Confidential.Any(v => v == null)) entities = entities.Where(en => en.Confidential.In(request.Confidential) || en.Confidential == null);
                     else entities = entities.Where(en => en.Confidential.In(request.Confidential));
                 }
                 if(!DocTools.IsNullOrEmpty(request.DataCollection))

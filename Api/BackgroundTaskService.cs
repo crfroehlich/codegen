@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -104,7 +105,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(true == request.Enabled?.Any())
                 {
-                    if(request.Enabled.Any(v => v == null)) entities = entities.Where(en => en.Enabled.In(request.Enabled) || en.Enabled == null );
+                    if(request.Enabled.Any(v => v == null)) entities = entities.Where(en => en.Enabled.In(request.Enabled) || en.Enabled == null);
                     else entities = entities.Where(en => en.Enabled.In(request.Enabled));
                 }
                 if(request.Frequency.HasValue)
@@ -119,12 +120,12 @@ namespace Services.API
                     entities = entities.Where(en => en.LastRunVersion.Contains(request.LastRunVersion));
                 if(true == request.LogError?.Any())
                 {
-                    if(request.LogError.Any(v => v == null)) entities = entities.Where(en => en.LogError.In(request.LogError) || en.LogError == null );
+                    if(request.LogError.Any(v => v == null)) entities = entities.Where(en => en.LogError.In(request.LogError) || en.LogError == null);
                     else entities = entities.Where(en => en.LogError.In(request.LogError));
                 }
                 if(true == request.LogInfo?.Any())
                 {
-                    if(request.LogInfo.Any(v => v == null)) entities = entities.Where(en => en.LogInfo.In(request.LogInfo) || en.LogInfo == null );
+                    if(request.LogInfo.Any(v => v == null)) entities = entities.Where(en => en.LogInfo.In(request.LogInfo) || en.LogInfo == null);
                     else entities = entities.Where(en => en.LogInfo.In(request.LogInfo));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
@@ -133,7 +134,7 @@ namespace Services.API
                     entities = entities.Where(en => request.RowsToProcessPerIteration.Value == en.RowsToProcessPerIteration);
                 if(true == request.RunNow?.Any())
                 {
-                    if(request.RunNow.Any(v => v == null)) entities = entities.Where(en => en.RunNow.In(request.RunNow) || en.RunNow == null );
+                    if(request.RunNow.Any(v => v == null)) entities = entities.Where(en => en.RunNow.In(request.RunNow) || en.RunNow == null);
                     else entities = entities.Where(en => en.RunNow.In(request.RunNow));
                 }
                 if(!DocTools.IsNullOrEmpty(request.StartAt))

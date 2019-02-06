@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -86,7 +87,7 @@ namespace Services.API
 
                 if(true == request.IsSI?.Any())
                 {
-                    if(request.IsSI.Any(v => v == null)) entities = entities.Where(en => en.IsSI.In(request.IsSI) || en.IsSI == null );
+                    if(request.IsSI.Any(v => v == null)) entities = entities.Where(en => en.IsSI.In(request.IsSI) || en.IsSI == null);
                     else entities = entities.Where(en => en.IsSI.In(request.IsSI));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name) && !DocTools.IsNullOrEmpty(request.Name.Id))

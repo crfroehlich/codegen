@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -126,7 +127,7 @@ namespace Services.API
                 }
                 if(true == request.IsSystemUser?.Any())
                 {
-                    if(request.IsSystemUser.Any(v => v == null)) entities = entities.Where(en => en.IsSystemUser.In(request.IsSystemUser) || en.IsSystemUser == null );
+                    if(request.IsSystemUser.Any(v => v == null)) entities = entities.Where(en => en.IsSystemUser.In(request.IsSystemUser) || en.IsSystemUser == null);
                     else entities = entities.Where(en => en.IsSystemUser.In(request.IsSystemUser));
                 }
                 if(!DocTools.IsNullOrEmpty(request.JobTitle))

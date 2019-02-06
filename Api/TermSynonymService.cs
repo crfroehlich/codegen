@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -86,7 +87,7 @@ namespace Services.API
 
                 if(true == request.Approved?.Any())
                 {
-                    if(request.Approved.Any(v => v == null)) entities = entities.Where(en => en.Approved.In(request.Approved) || en.Approved == null );
+                    if(request.Approved.Any(v => v == null)) entities = entities.Where(en => en.Approved.In(request.Approved) || en.Approved == null);
                     else entities = entities.Where(en => en.Approved.In(request.Approved));
                 }
                 if(true == request.BindingsIds?.Any())
@@ -103,7 +104,7 @@ namespace Services.API
                 }
                 if(true == request.Preferred?.Any())
                 {
-                    if(request.Preferred.Any(v => v == null)) entities = entities.Where(en => en.Preferred.In(request.Preferred) || en.Preferred == null );
+                    if(request.Preferred.Any(v => v == null)) entities = entities.Where(en => en.Preferred.In(request.Preferred) || en.Preferred == null);
                     else entities = entities.Where(en => en.Preferred.In(request.Preferred));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Scope) && !DocTools.IsNullOrEmpty(request.Scope.Id))

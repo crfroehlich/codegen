@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -86,7 +87,7 @@ namespace Services.API
 
                 if(true == request.AutoDelete?.Any())
                 {
-                    if(request.AutoDelete.Any(v => v == null)) entities = entities.Where(en => en.AutoDelete.In(request.AutoDelete) || en.AutoDelete == null );
+                    if(request.AutoDelete.Any(v => v == null)) entities = entities.Where(en => en.AutoDelete.In(request.AutoDelete) || en.AutoDelete == null);
                     else entities = entities.Where(en => en.AutoDelete.In(request.AutoDelete));
                 }
                 if(!DocTools.IsNullOrEmpty(request.BackgroundTask) && !DocTools.IsNullOrEmpty(request.BackgroundTask.Id))
@@ -101,17 +102,17 @@ namespace Services.API
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(true == request.Durable?.Any())
                 {
-                    if(request.Durable.Any(v => v == null)) entities = entities.Where(en => en.Durable.In(request.Durable) || en.Durable == null );
+                    if(request.Durable.Any(v => v == null)) entities = entities.Where(en => en.Durable.In(request.Durable) || en.Durable == null);
                     else entities = entities.Where(en => en.Durable.In(request.Durable));
                 }
                 if(true == request.Enabled?.Any())
                 {
-                    if(request.Enabled.Any(v => v == null)) entities = entities.Where(en => en.Enabled.In(request.Enabled) || en.Enabled == null );
+                    if(request.Enabled.Any(v => v == null)) entities = entities.Where(en => en.Enabled.In(request.Enabled) || en.Enabled == null);
                     else entities = entities.Where(en => en.Enabled.In(request.Enabled));
                 }
                 if(true == request.Exclusive?.Any())
                 {
-                    if(request.Exclusive.Any(v => v == null)) entities = entities.Where(en => en.Exclusive.In(request.Exclusive) || en.Exclusive == null );
+                    if(request.Exclusive.Any(v => v == null)) entities = entities.Where(en => en.Exclusive.In(request.Exclusive) || en.Exclusive == null);
                     else entities = entities.Where(en => en.Exclusive.In(request.Exclusive));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))

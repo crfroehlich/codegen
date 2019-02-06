@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -126,17 +127,17 @@ namespace Services.API
                 }
                 if(true == request.IsCharacteristic?.Any())
                 {
-                    if(request.IsCharacteristic.Any(v => v == null)) entities = entities.Where(en => en.IsCharacteristic.In(request.IsCharacteristic) || en.IsCharacteristic == null );
+                    if(request.IsCharacteristic.Any(v => v == null)) entities = entities.Where(en => en.IsCharacteristic.In(request.IsCharacteristic) || en.IsCharacteristic == null);
                     else entities = entities.Where(en => en.IsCharacteristic.In(request.IsCharacteristic));
                 }
                 if(true == request.IsOutcome?.Any())
                 {
-                    if(request.IsOutcome.Any(v => v == null)) entities = entities.Where(en => en.IsOutcome.In(request.IsOutcome) || en.IsOutcome == null );
+                    if(request.IsOutcome.Any(v => v == null)) entities = entities.Where(en => en.IsOutcome.In(request.IsOutcome) || en.IsOutcome == null);
                     else entities = entities.Where(en => en.IsOutcome.In(request.IsOutcome));
                 }
                 if(true == request.IsPositive?.Any())
                 {
-                    if(request.IsPositive.Any(v => v == null)) entities = entities.Where(en => en.IsPositive.In(request.IsPositive) || en.IsPositive == null );
+                    if(request.IsPositive.Any(v => v == null)) entities = entities.Where(en => en.IsPositive.In(request.IsPositive) || en.IsPositive == null);
                     else entities = entities.Where(en => en.IsPositive.In(request.IsPositive));
                 }
                 if(!DocTools.IsNullOrEmpty(request.UniqueKey))

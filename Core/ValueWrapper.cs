@@ -12,6 +12,7 @@
 using AutoMapper;
 
 using Services.Core;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 

@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -94,7 +95,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Email.Contains(request.Email));
                 if(true == request.IsInternal?.Any())
                 {
-                    if(request.IsInternal.Any(v => v == null)) entities = entities.Where(en => en.IsInternal.In(request.IsInternal) || en.IsInternal == null );
+                    if(request.IsInternal.Any(v => v == null)) entities = entities.Where(en => en.IsInternal.In(request.IsInternal) || en.IsInternal == null);
                     else entities = entities.Where(en => en.IsInternal.In(request.IsInternal));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))

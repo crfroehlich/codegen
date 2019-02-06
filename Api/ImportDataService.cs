@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -108,27 +109,27 @@ namespace Services.API
                     entities = entities.Where(en => en.ExtractUrl.Contains(request.ExtractUrl));
                 if(true == request.HighPriority?.Any())
                 {
-                    if(request.HighPriority.Any(v => v == null)) entities = entities.Where(en => en.HighPriority.In(request.HighPriority) || en.HighPriority == null );
+                    if(request.HighPriority.Any(v => v == null)) entities = entities.Where(en => en.HighPriority.In(request.HighPriority) || en.HighPriority == null);
                     else entities = entities.Where(en => en.HighPriority.In(request.HighPriority));
                 }
                 if(true == request.ImportFr?.Any())
                 {
-                    if(request.ImportFr.Any(v => v == null)) entities = entities.Where(en => en.ImportFr.In(request.ImportFr) || en.ImportFr == null );
+                    if(request.ImportFr.Any(v => v == null)) entities = entities.Where(en => en.ImportFr.In(request.ImportFr) || en.ImportFr == null);
                     else entities = entities.Where(en => en.ImportFr.In(request.ImportFr));
                 }
                 if(true == request.ImportNewName?.Any())
                 {
-                    if(request.ImportNewName.Any(v => v == null)) entities = entities.Where(en => en.ImportNewName.In(request.ImportNewName) || en.ImportNewName == null );
+                    if(request.ImportNewName.Any(v => v == null)) entities = entities.Where(en => en.ImportNewName.In(request.ImportNewName) || en.ImportNewName == null);
                     else entities = entities.Where(en => en.ImportNewName.In(request.ImportNewName));
                 }
                 if(true == request.ImportTable?.Any())
                 {
-                    if(request.ImportTable.Any(v => v == null)) entities = entities.Where(en => en.ImportTable.In(request.ImportTable) || en.ImportTable == null );
+                    if(request.ImportTable.Any(v => v == null)) entities = entities.Where(en => en.ImportTable.In(request.ImportTable) || en.ImportTable == null);
                     else entities = entities.Where(en => en.ImportTable.In(request.ImportTable));
                 }
                 if(true == request.ImportText?.Any())
                 {
-                    if(request.ImportText.Any(v => v == null)) entities = entities.Where(en => en.ImportText.In(request.ImportText) || en.ImportText == null );
+                    if(request.ImportText.Any(v => v == null)) entities = entities.Where(en => en.ImportText.In(request.ImportText) || en.ImportText == null);
                     else entities = entities.Where(en => en.ImportText.In(request.ImportText));
                 }
                 if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Id))
@@ -149,7 +150,7 @@ namespace Services.API
                 }
                 if(true == request.IsLegacy?.Any())
                 {
-                    if(request.IsLegacy.Any(v => v == null)) entities = entities.Where(en => en.IsLegacy.In(request.IsLegacy) || en.IsLegacy == null );
+                    if(request.IsLegacy.Any(v => v == null)) entities = entities.Where(en => en.IsLegacy.In(request.IsLegacy) || en.IsLegacy == null);
                     else entities = entities.Where(en => en.IsLegacy.In(request.IsLegacy));
                 }
                 if(request.Order.HasValue)

@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -94,7 +95,7 @@ namespace Services.API
                 }
                 if(true == request.Archived?.Any())
                 {
-                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null );
+                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null);
                     else entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
                 if(true == request.BindingsIds?.Any())
@@ -115,7 +116,7 @@ namespace Services.API
                 }
                 if(true == request.Delete?.Any())
                 {
-                    if(request.Delete.Any(v => v == null)) entities = entities.Where(en => en.Delete.In(request.Delete) || en.Delete == null );
+                    if(request.Delete.Any(v => v == null)) entities = entities.Where(en => en.Delete.In(request.Delete) || en.Delete == null);
                     else entities = entities.Where(en => en.Delete.In(request.Delete));
                 }
                 if(!DocTools.IsNullOrEmpty(request.DocumentSet) && !DocTools.IsNullOrEmpty(request.DocumentSet.Id))
@@ -128,7 +129,7 @@ namespace Services.API
                 }
                 if(true == request.Edit?.Any())
                 {
-                    if(request.Edit.Any(v => v == null)) entities = entities.Where(en => en.Edit.In(request.Edit) || en.Edit == null );
+                    if(request.Edit.Any(v => v == null)) entities = entities.Where(en => en.Edit.In(request.Edit) || en.Edit == null);
                     else entities = entities.Where(en => en.Edit.In(request.Edit));
                 }
                 if(true == request.HelpIds?.Any())
@@ -137,7 +138,7 @@ namespace Services.API
                 }
                 if(true == request.IsGlobal?.Any())
                 {
-                    if(request.IsGlobal.Any(v => v == null)) entities = entities.Where(en => en.IsGlobal.In(request.IsGlobal) || en.IsGlobal == null );
+                    if(request.IsGlobal.Any(v => v == null)) entities = entities.Where(en => en.IsGlobal.In(request.IsGlobal) || en.IsGlobal == null);
                     else entities = entities.Where(en => en.IsGlobal.In(request.IsGlobal));
                 }
                 if(true == request.SynonymsIds?.Any())
@@ -182,7 +183,7 @@ namespace Services.API
                 }
                 if(true == request.View?.Any())
                 {
-                    if(request.View.Any(v => v == null)) entities = entities.Where(en => en.View.In(request.View) || en.View == null );
+                    if(request.View.Any(v => v == null)) entities = entities.Where(en => en.View.In(request.View) || en.View == null);
                     else entities = entities.Where(en => en.View.In(request.View));
                 }
                 if(true == request.WorkflowsIds?.Any())

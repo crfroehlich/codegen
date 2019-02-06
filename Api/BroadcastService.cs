@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -98,7 +99,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(true == request.Reprocess?.Any())
                 {
-                    if(request.Reprocess.Any(v => v == null)) entities = entities.Where(en => en.Reprocess.In(request.Reprocess) || en.Reprocess == null );
+                    if(request.Reprocess.Any(v => v == null)) entities = entities.Where(en => en.Reprocess.In(request.Reprocess) || en.Reprocess == null);
                     else entities = entities.Where(en => en.Reprocess.In(request.Reprocess));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Reprocessed))

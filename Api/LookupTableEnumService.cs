@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -86,12 +87,12 @@ namespace Services.API
 
                 if(true == request.IsBindable?.Any())
                 {
-                    if(request.IsBindable.Any(v => v == null)) entities = entities.Where(en => en.IsBindable.In(request.IsBindable) || en.IsBindable == null );
+                    if(request.IsBindable.Any(v => v == null)) entities = entities.Where(en => en.IsBindable.In(request.IsBindable) || en.IsBindable == null);
                     else entities = entities.Where(en => en.IsBindable.In(request.IsBindable));
                 }
                 if(true == request.IsGlobal?.Any())
                 {
-                    if(request.IsGlobal.Any(v => v == null)) entities = entities.Where(en => en.IsGlobal.In(request.IsGlobal) || en.IsGlobal == null );
+                    if(request.IsGlobal.Any(v => v == null)) entities = entities.Where(en => en.IsGlobal.In(request.IsGlobal) || en.IsGlobal == null);
                     else entities = entities.Where(en => en.IsGlobal.In(request.IsGlobal));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
