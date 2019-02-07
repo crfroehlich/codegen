@@ -1495,8 +1495,10 @@
     "VIEW": "View"
   },
   "WorkflowStatus": {
-    "REQUESTED": "Requested",
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected",
     "COLLECTED": "Collected",
+    "REQUESTED": "Requested",
     "UNAVAILABLE": "Unavailable"
   },
   "WorkflowTaskType": {
