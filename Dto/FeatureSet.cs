@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -52,6 +51,10 @@ namespace Services.Dto
 
         public FeatureSetBase(int? id) : this(DocConvert.ToInt(id)) {}
     
+        [ApiMember(Name = nameof(Archived), Description = "bool?", IsRequired = false)]
+        public bool? Archived { get; set; }
+
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -95,7 +98,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(PermissionTemplate),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Archived),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(PermissionTemplate),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -123,25 +126,19 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class FeatureSetSearchBase : Search<FeatureSet>
+    [Route("/featureset", "GET")]
+    [Route("/featureset/search", "GET, POST, DELETE")]
+    public partial class FeatureSetSearch : Search<FeatureSet>
     {
-        public int? Id { get; set; }
+        public bool? Archived { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
         public string PermissionTemplate { get; set; }
         public List<int> RolesIds { get; set; }
     }
-
-    [Route("/featureset", "GET")]
-    [Route("/featureset/version", "GET, POST")]
-    [Route("/featureset/search", "GET, POST, DELETE")]
-    public partial class FeatureSetSearch : FeatureSetSearchBase
-    {
-    }
-
+    
     public class FeatureSetFullTextSearch
     {
-        public FeatureSetFullTextSearch() {}
         private FeatureSetSearch _request;
         public FeatureSetFullTextSearch(FeatureSetSearch request) => _request = request;
         
@@ -153,18 +150,53 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Updated))); }
         
+        public bool doArchived { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Archived))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Description))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Name))); }
         public bool doPermissionTemplate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.PermissionTemplate))); }
         public bool doRoles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Roles))); }
     }
 
+    [Route("/featureset/version", "GET, POST")]
+    public partial class FeatureSetVersion : FeatureSetSearch {}
+
     [Route("/featureset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class FeatureSetBatch : List<FeatureSet> { }
 
-    [Route("/featureset/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/featureset/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class FeatureSetJunction : FeatureSetSearchBase {}
+    [Route("/featureset/{Id}/role", "GET, POST, DELETE")]
+    public class FeatureSetJunction : Search<FeatureSet>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public FeatureSetJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/featureset/{Id}/role/version", "GET")]
+    public class FeatureSetJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/featureset/ids", "GET, POST")]
+    public class FeatureSetIds
+    {
+        public bool All { get; set; }
+    }
 }

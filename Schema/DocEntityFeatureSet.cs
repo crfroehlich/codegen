@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -109,6 +108,11 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
+        public bool? Archived { get; set; }
+
+
         [Field()]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
@@ -383,7 +387,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class FeatureSetMapper : DocMapperBase
+    public partial class FeatureSetMapper : Profile
     {
         private IMappingExpression<DocEntityFeatureSet,FeatureSet> _EntityToDto;
         private IMappingExpression<FeatureSet,DocEntityFeatureSet> _DtoToEntity;
@@ -400,6 +404,7 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityFeatureSet,FeatureSet>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Updated")))
+                .ForMember(dest => dest.Archived, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Archived))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Description))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Name))))
                 .ForMember(dest => dest.PermissionTemplate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.PermissionTemplate))))

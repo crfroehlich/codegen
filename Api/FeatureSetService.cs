@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityFeatureSet> _ExecSearch(FeatureSetSearch request)
         {
-            request = InitSearch<FeatureSet, FeatureSetSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityFeatureSet> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new FeatureSetFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityFeatureSet,FeatureSetFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -85,16 +84,18 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
+                if(request.Archived.HasValue)
+                    entities = entities.Where(en => request.Archived.Value == en.Archived);
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(true == request.RolesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Roles.Any(r => r.Id.In(request.RolesIds)));
-                }
+                        if(true == request.RolesIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Roles.Any(r => r.Id.In(request.RolesIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityFeatureSet,FeatureSetSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -112,6 +113,18 @@ namespace Services.API
 
         public object Get(FeatureSetSearch request) => GetSearchResultWithCache<FeatureSet,DocEntityFeatureSet,FeatureSetSearch>(DocConstantModelName.FEATURESET, request, _ExecSearch);
 
+        public object Post(FeatureSetVersion request) => Get(request);
+
+        public object Get(FeatureSetVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(FeatureSet request) => GetEntityWithCache<FeatureSet>(DocConstantModelName.FEATURESET, request, GetFeatureSet);
         private FeatureSet _AssignValues(FeatureSet request, DocConstantPermission permission, Session session)
         {
@@ -124,13 +137,14 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             FeatureSet ret = null;
-            request = _InitAssignValues<FeatureSet>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
             var cacheKey = GetApiCacheKey<FeatureSet>(DocConstantModelName.FEATURESET, nameof(FeatureSet), request);
             
             //First, assign all the variables, do database lookups and conversions
+            var pArchived = request.Archived;
             var pDescription = request.Description;
             var pName = request.Name;
             var pPermissionTemplate = request.PermissionTemplate;
@@ -153,6 +167,16 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
+            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pArchived, permission, DocConstantModelName.FEATURESET, nameof(request.Archived)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
+                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
+                    entity.Archived = pArchived;
+                if(DocPermissionFactory.IsRequested<bool?>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Archived));
+                }
+            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.FEATURESET, nameof(request.Description)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
@@ -315,26 +339,66 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "role":
-                    ret =     GetJunctionSearchResult<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<RoleService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetFeatureSetRole(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(FeatureSetJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "role":
+                    ret = GetFeatureSetRoleVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetFeatureSetRole(FeatureSetJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             var en = DocEntityFeatureSet.GetFeatureSet(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.FEATURESET, columnName: "Roles", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between FeatureSet and Role");
+             return en?.Roles.Take(take).Skip(skip).ConvertFromEntityList<DocEntityRole,Role>(new List<Role>());
+        }
 
+        private List<Version> GetFeatureSetRoleVersion(FeatureSetJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityFeatureSet.GetFeatureSet(request.Id);
+                ret = en?.Roles.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
         public object Post(FeatureSetJunction request)
         {
             if (request == null)
@@ -348,13 +412,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "role":
                     ret = _PostFeatureSetRole(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -395,13 +459,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "role":
                     ret = _DeleteFeatureSetRole(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -447,6 +511,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(FeatureSetIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityFeatureSet>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

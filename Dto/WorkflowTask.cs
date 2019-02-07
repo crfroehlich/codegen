@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -148,9 +147,10 @@ namespace Services.Dto
     
     [Route("/WorkflowTask/{Id}/copy", "POST")]
     public partial class WorkflowTaskCopy : WorkflowTask {}
-    public partial class WorkflowTaskSearchBase : Search<WorkflowTask>
+    [Route("/workflowtask", "GET")]
+    [Route("/workflowtask/search", "GET, POST, DELETE")]
+    public partial class WorkflowTaskSearch : Search<WorkflowTask>
     {
-        public int? Id { get; set; }
         public Reference Assignee { get; set; }
         public List<int> AssigneeIds { get; set; }
         public string Data { get; set; }
@@ -171,17 +171,9 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-
-    [Route("/workflowtask", "GET")]
-    [Route("/workflowtask/version", "GET, POST")]
-    [Route("/workflowtask/search", "GET, POST, DELETE")]
-    public partial class WorkflowTaskSearch : WorkflowTaskSearchBase
-    {
-    }
-
+    
     public class WorkflowTaskFullTextSearch
     {
-        public WorkflowTaskFullTextSearch() {}
         private WorkflowTaskSearch _request;
         public WorkflowTaskFullTextSearch(WorkflowTaskSearch request) => _request = request;
         
@@ -203,7 +195,15 @@ namespace Services.Dto
         public bool doWorkflow { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Workflow))); }
     }
 
+    [Route("/workflowtask/version", "GET, POST")]
+    public partial class WorkflowTaskVersion : WorkflowTaskSearch {}
+
     [Route("/workflowtask/batch", "DELETE, PATCH, POST, PUT")]
     public partial class WorkflowTaskBatch : List<WorkflowTask> { }
 
+    [Route("/admin/workflowtask/ids", "GET, POST")]
+    public class WorkflowTaskIds
+    {
+        public bool All { get; set; }
+    }
 }

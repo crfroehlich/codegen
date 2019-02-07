@@ -25,8 +25,6 @@ namespace Services.Enums
         ACCESS_BACKEND,
         [EnumMember(Value = DocConstantFeature.ALL_ENTITIES)]
         ALL_ENTITIES,
-        [EnumMember(Value = DocConstantFeature.ALL_FEATURES)]
-        ALL_FEATURES,
         [EnumMember(Value = DocConstantFeature.ALL_PAGES)]
         ALL_PAGES,
         [EnumMember(Value = DocConstantFeature.ALL_STUDY_SETS)]
@@ -85,7 +83,6 @@ namespace Services.Enums
     {
         public const string ACCESS_BACKEND = "Access Doc Data Backend";
         public const string ALL_ENTITIES = "All Entities";
-        public const string ALL_FEATURES = "All Features";
         public const string ALL_PAGES = "All Pages";
         public const string ALL_STUDY_SETS = "All Study Sets";
         public const string ALPHA_TESTING = "Alpha Testing";

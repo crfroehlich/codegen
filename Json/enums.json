@@ -224,7 +224,6 @@
   "Feature": {
     "ACCESS_BACKEND": "Access Doc Data Backend",
     "ALL_ENTITIES": "All Entities",
-    "ALL_FEATURES": "All Features",
     "ALL_PAGES": "All Pages",
     "ALL_STUDY_SETS": "All Study Sets",
     "ALPHA_TESTING": "Alpha Testing",
@@ -634,6 +633,7 @@
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
     "EVENT": "Event",
     "FEATURESET": "FeatureSet",
+    "FOREIGNKEY": "ForeignKey",
     "GLOSSARY": "Glossary",
     "HELP": "Help",
     "HISTORY": "History",
@@ -654,6 +654,7 @@
     "MEANVARIANCES": "MeanVariances",
     "MEANVARIANCEVALUE": "MeanVarianceValue",
     "OUTCOME": "Outcome",
+    "PACKAGE": "Package",
     "PAGE": "Page",
     "PROJECT": "Project",
     "QUEUECHANNEL": "QueueChannel",

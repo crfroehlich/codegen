@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityEvent> _ExecSearch(EventSearch request)
         {
-            request = InitSearch<Event, EventSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityEvent> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new EventFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityEvent,EventFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -103,20 +102,20 @@ namespace Services.API
                     entities = entities.Where(en => en.Processed >= request.ProcessedAfter);
                 if(!DocTools.IsNullOrEmpty(request.Status))
                     entities = entities.Where(en => en.Status.Contains(request.Status));
-                if(true == request.TeamsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Teams.Any(r => r.Id.In(request.TeamsIds)));
-                }
-                if(true == request.UpdatesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Updates.Any(r => r.Id.In(request.UpdatesIds)));
-                }
-                if(true == request.UsersIds?.Any())
-                {
-                    entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
-                }
+                        if(true == request.TeamsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Teams.Any(r => r.Id.In(request.TeamsIds)));
+                        }
+                        if(true == request.UpdatesIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Updates.Any(r => r.Id.In(request.UpdatesIds)));
+                        }
+                        if(true == request.UsersIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityEvent,EventSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -134,6 +133,18 @@ namespace Services.API
 
         public List<Event> Get(EventSearch request) => GetSearchResult<Event,DocEntityEvent,EventSearch>(DocConstantModelName.EVENT, request, _ExecSearch);
 
+        public object Post(EventVersion request) => Get(request);
+
+        public object Get(EventVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public Event Get(Event request) => GetEntity<Event>(DocConstantModelName.EVENT, request, GetEvent);
 
 
@@ -143,42 +154,74 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "team":
-                    ret =     GetJunctionSearchResult<Event, DocEntityEvent, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TeamService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetEventTeam(request, skip, take);
                     break;
                 case "update":
-                    ret =     GetJunctionSearchResult<Event, DocEntityEvent, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UpdateService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetEventUpdate(request, skip, take);
                     break;
                 case "user":
-                    ret =     GetJunctionSearchResult<Event, DocEntityEvent, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetEventUser(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(EventJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetEventTeam(EventJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Team>(Dto.Team.Fields, request.VisibleFields);
+             var en = DocEntityEvent.GetEvent(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Teams", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and Team");
+             return en?.Teams.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTeam,Team>(new List<Team>());
+        }
 
+        private object _GetEventUpdate(EventJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
+             var en = DocEntityEvent.GetEvent(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Updates", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and Update");
+             return en?.Updates.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUpdate,Update>(new List<Update>());
+        }
+
+        private object _GetEventUser(EventJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             var en = DocEntityEvent.GetEvent(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.EVENT, columnName: "Users", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Event and User");
+             return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
+        }
+        
         public object Post(EventJunction request)
         {
             if (request == null)
@@ -192,10 +235,10 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -215,10 +258,10 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -245,6 +288,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(EventIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityEvent>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

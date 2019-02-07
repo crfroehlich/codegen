@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -122,24 +121,17 @@ namespace Services.Dto
     
     [Route("/Comparator/{Id}/copy", "POST")]
     public partial class ComparatorCopy : Comparator {}
-    public partial class ComparatorSearchBase : Search<Comparator>
+    [Route("/comparator", "GET")]
+    [Route("/comparator/search", "GET, POST, DELETE")]
+    public partial class ComparatorSearch : Search<Comparator>
     {
-        public int? Id { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-
-    [Route("/comparator", "GET")]
-    [Route("/comparator/version", "GET, POST")]
-    [Route("/comparator/search", "GET, POST, DELETE")]
-    public partial class ComparatorSearch : ComparatorSearchBase
-    {
-    }
-
+    
     public class ComparatorFullTextSearch
     {
-        public ComparatorFullTextSearch() {}
         private ComparatorSearch _request;
         public ComparatorFullTextSearch(ComparatorSearch request) => _request = request;
         
@@ -156,12 +148,46 @@ namespace Services.Dto
         public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comparator.URI))); }
     }
 
+    [Route("/comparator/version", "GET, POST")]
+    public partial class ComparatorVersion : ComparatorSearch {}
+
     [Route("/comparator/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ComparatorBatch : List<Comparator> { }
 
-    [Route("/comparator/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/comparator/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class ComparatorJunction : ComparatorSearchBase {}
+    [Route("/comparator/{Id}/documentset", "GET, POST, DELETE")]
+    public class ComparatorJunction : Search<Comparator>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public ComparatorJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/comparator/{Id}/documentset/version", "GET")]
+    public class ComparatorJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/comparator/ids", "GET, POST")]
+    public class ComparatorIds
+    {
+        public bool All { get; set; }
+    }
 }
