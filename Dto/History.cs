@@ -149,9 +149,10 @@ namespace Services.Dto
     
     [Route("/History/{Id}/copy", "POST")]
     public partial class HistoryCopy : History {}
-    public partial class HistorySearchBase : Search<History>
+    [Route("/history", "GET")]
+    [Route("/history/search", "GET, POST, DELETE")]
+    public partial class HistorySearch : Search<History>
     {
-        public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public Reference DocumentSet { get; set; }
@@ -168,17 +169,9 @@ namespace Services.Dto
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }
-
-    [Route("/history", "GET")]
-    [Route("/history/version", "GET, POST")]
-    [Route("/history/search", "GET, POST, DELETE")]
-    public partial class HistorySearch : HistorySearchBase
-    {
-    }
-
+    
     public class HistoryFullTextSearch
     {
-        public HistoryFullTextSearch() {}
         private HistorySearch _request;
         public HistoryFullTextSearch(HistorySearch request) => _request = request;
         
@@ -200,7 +193,15 @@ namespace Services.Dto
         public bool doWorkflow { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Workflow))); }
     }
 
+    [Route("/history/version", "GET, POST")]
+    public partial class HistoryVersion : HistorySearch {}
+
     [Route("/history/batch", "DELETE, PATCH, POST, PUT")]
     public partial class HistoryBatch : List<History> { }
 
+    [Route("/admin/history/ids", "GET, POST")]
+    public class HistoryIds
+    {
+        public bool All { get; set; }
+    }
 }

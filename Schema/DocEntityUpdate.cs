@@ -418,7 +418,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class UpdateMapper : DocMapperBase
+    public partial class UpdateMapper : Profile
     {
         private IMappingExpression<DocEntityUpdate,Update> _EntityToDto;
         private IMappingExpression<Update,DocEntityUpdate> _DtoToEntity;

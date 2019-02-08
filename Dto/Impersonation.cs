@@ -118,9 +118,10 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    public partial class ImpersonationSearchBase : Search<Impersonation>
+    [Route("/impersonation", "GET")]
+    [Route("/impersonation/search", "GET, POST, DELETE")]
+    public partial class ImpersonationSearch : Search<Impersonation>
     {
-        public int? Id { get; set; }
         public Reference AuthenticatedUser { get; set; }
         public List<int> AuthenticatedUserIds { get; set; }
         public Reference ImpersonatedUser { get; set; }
@@ -128,17 +129,9 @@ namespace Services.Dto
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }
-
-    [Route("/impersonation", "GET")]
-    [Route("/impersonation/version", "GET, POST")]
-    [Route("/impersonation/search", "GET, POST, DELETE")]
-    public partial class ImpersonationSearch : ImpersonationSearchBase
-    {
-    }
-
+    
     public class ImpersonationFullTextSearch
     {
-        public ImpersonationFullTextSearch() {}
         private ImpersonationSearch _request;
         public ImpersonationFullTextSearch(ImpersonationSearch request) => _request = request;
         
@@ -155,7 +148,15 @@ namespace Services.Dto
         public bool doUserSession { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Impersonation.UserSession))); }
     }
 
+    [Route("/impersonation/version", "GET, POST")]
+    public partial class ImpersonationVersion : ImpersonationSearch {}
+
     [Route("/impersonation/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ImpersonationBatch : List<Impersonation> { }
 
+    [Route("/admin/impersonation/ids", "GET, POST")]
+    public class ImpersonationIds
+    {
+        public bool All { get; set; }
+    }
 }

@@ -383,7 +383,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class LookupCategoryMapper : DocMapperBase
+    public partial class LookupCategoryMapper : Profile
     {
         private IMappingExpression<DocEntityLookupCategory,LookupCategory> _EntityToDto;
         private IMappingExpression<LookupCategory,DocEntityLookupCategory> _DtoToEntity;

@@ -133,33 +133,22 @@ namespace Services.Dto
     
     [Route("/QueueChannel/{Id}/copy", "POST")]
     public partial class QueueChannelCopy : QueueChannel {}
-    public partial class QueueChannelSearchBase : Search<QueueChannel>
+    [Route("/queuechannel", "GET")]
+    [Route("/queuechannel/search", "GET, POST, DELETE")]
+    public partial class QueueChannelSearch : Search<QueueChannel>
     {
-        public int? Id { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> AutoDelete { get; set; }
+        public bool? AutoDelete { get; set; }
         public Reference BackgroundTask { get; set; }
         public List<int> BackgroundTaskIds { get; set; }
         public string Description { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> Durable { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> Enabled { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> Exclusive { get; set; }
+        public bool? Durable { get; set; }
+        public bool? Enabled { get; set; }
+        public bool? Exclusive { get; set; }
         public string Name { get; set; }
     }
-
-    [Route("/queuechannel", "GET")]
-    [Route("/queuechannel/version", "GET, POST")]
-    [Route("/queuechannel/search", "GET, POST, DELETE")]
-    public partial class QueueChannelSearch : QueueChannelSearchBase
-    {
-    }
-
+    
     public class QueueChannelFullTextSearch
     {
-        public QueueChannelFullTextSearch() {}
         private QueueChannelSearch _request;
         public QueueChannelFullTextSearch(QueueChannelSearch request) => _request = request;
         
@@ -180,7 +169,15 @@ namespace Services.Dto
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(QueueChannel.Name))); }
     }
 
+    [Route("/queuechannel/version", "GET, POST")]
+    public partial class QueueChannelVersion : QueueChannelSearch {}
+
     [Route("/queuechannel/batch", "DELETE, PATCH, POST, PUT")]
     public partial class QueueChannelBatch : List<QueueChannel> { }
 
+    [Route("/admin/queuechannel/ids", "GET, POST")]
+    public class QueueChannelIds
+    {
+        public bool All { get; set; }
+    }
 }

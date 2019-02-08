@@ -387,7 +387,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class FeatureSetMapper : DocMapperBase
+    public partial class FeatureSetMapper : Profile
     {
         private IMappingExpression<DocEntityFeatureSet,FeatureSet> _EntityToDto;
         private IMappingExpression<FeatureSet,DocEntityFeatureSet> _DtoToEntity;

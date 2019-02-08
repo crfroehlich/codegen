@@ -417,7 +417,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class UnitConversionRulesMapper : DocMapperBase
+    public partial class UnitConversionRulesMapper : Profile
     {
         private IMappingExpression<DocEntityUnitConversionRules,UnitConversionRules> _EntityToDto;
         private IMappingExpression<UnitConversionRules,DocEntityUnitConversionRules> _DtoToEntity;

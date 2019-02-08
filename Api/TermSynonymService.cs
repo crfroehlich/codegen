@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTermSynonym> _ExecSearch(TermSynonymSearch request)
         {
-            request = InitSearch<TermSynonym, TermSynonymSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTermSynonym> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermSynonymFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTermSynonym,TermSynonymFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,15 +84,12 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(true == request.Approved?.Any())
-                {
-                    if(request.Approved.Any(v => v == null)) entities = entities.Where(en => en.Approved.In(request.Approved) || en.Approved == null);
-                    else entities = entities.Where(en => en.Approved.In(request.Approved));
-                }
-                if(true == request.BindingsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Bindings.Any(r => r.Id.In(request.BindingsIds)));
-                }
+                if(request.Approved.HasValue)
+                    entities = entities.Where(en => request.Approved.Value == en.Approved);
+                        if(true == request.BindingsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Bindings.Any(r => r.Id.In(request.BindingsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Master) && !DocTools.IsNullOrEmpty(request.Master.Id))
                 {
                     entities = entities.Where(en => en.Master.Id == request.Master.Id );
@@ -101,11 +98,8 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Master.Id.In(request.MasterIds));
                 }
-                if(true == request.Preferred?.Any())
-                {
-                    if(request.Preferred.Any(v => v == null)) entities = entities.Where(en => en.Preferred.In(request.Preferred) || en.Preferred == null);
-                    else entities = entities.Where(en => en.Preferred.In(request.Preferred));
-                }
+                if(request.Preferred.HasValue)
+                    entities = entities.Where(en => request.Preferred.Value == en.Preferred);
                 if(!DocTools.IsNullOrEmpty(request.Scope) && !DocTools.IsNullOrEmpty(request.Scope.Id))
                 {
                     entities = entities.Where(en => en.Scope.Id == request.Scope.Id );
@@ -117,7 +111,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Synonym))
                     entities = entities.Where(en => en.Synonym.Contains(request.Synonym));
 
-                entities = ApplyFilters<DocEntityTermSynonym,TermSynonymSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -135,6 +129,18 @@ namespace Services.API
 
         public object Get(TermSynonymSearch request) => GetSearchResultWithCache<TermSynonym,DocEntityTermSynonym,TermSynonymSearch>(DocConstantModelName.TERMSYNONYM, request, _ExecSearch);
 
+        public object Post(TermSynonymVersion request) => Get(request);
+
+        public object Get(TermSynonymVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(TermSynonym request) => GetEntityWithCache<TermSynonym>(DocConstantModelName.TERMSYNONYM, request, GetTermSynonym);
         private TermSynonym _AssignValues(TermSynonym request, DocConstantPermission permission, Session session)
         {
@@ -147,7 +153,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermSynonym ret = null;
-            request = _InitAssignValues<TermSynonym>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -542,26 +548,66 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "lookuptablebinding":
-                    ret =     GetJunctionSearchResult<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableBindingService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetTermSynonymLookupTableBinding(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(TermSynonymJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "lookuptablebinding":
+                    ret = GetTermSynonymLookupTableBindingVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetTermSynonymLookupTableBinding(TermSynonymJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
+             var en = DocEntityTermSynonym.GetTermSynonym(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMSYNONYM, columnName: "Bindings", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermSynonym and LookupTableBinding");
+             return en?.Bindings.Take(take).Skip(skip).ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(new List<LookupTableBinding>());
+        }
 
+        private List<Version> GetTermSynonymLookupTableBindingVersion(TermSynonymJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTermSynonym.GetTermSynonym(request.Id);
+                ret = en?.Bindings.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
         public object Post(TermSynonymJunction request)
         {
             if (request == null)
@@ -575,13 +621,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "lookuptablebinding":
                     ret = _PostTermSynonymLookupTableBinding(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -622,13 +668,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "lookuptablebinding":
                     ret = _DeleteTermSynonymLookupTableBinding(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -674,6 +720,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(TermSynonymIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityTermSynonym>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

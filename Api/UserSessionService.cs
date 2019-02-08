@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUserSession> _ExecSearch(UserSessionSearch request)
         {
-            request = InitSearch<UserSession, UserSessionSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityUserSession> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserSessionFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityUserSession,UserSessionFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -88,16 +88,16 @@ namespace Services.API
                     entities = entities.Where(en => en.ClientId.Contains(request.ClientId));
                 if(request.Hits.HasValue)
                     entities = entities.Where(en => request.Hits.Value == en.Hits);
-                if(true == request.ImpersonationsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Impersonations.Any(r => r.Id.In(request.ImpersonationsIds)));
-                }
+                        if(true == request.ImpersonationsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Impersonations.Any(r => r.Id.In(request.ImpersonationsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.IpAddress))
                     entities = entities.Where(en => en.IpAddress.Contains(request.IpAddress));
-                if(true == request.RequestsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Requests.Any(r => r.Id.In(request.RequestsIds)));
-                }
+                        if(true == request.RequestsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Requests.Any(r => r.Id.In(request.RequestsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.SessionId))
                     entities = entities.Where(en => en.SessionId.Contains(request.SessionId));
                 if(!DocTools.IsNullOrEmpty(request.TemporarySessionId))
@@ -110,12 +110,12 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.User.Id.In(request.UserIds));
                 }
-                if(true == request.UserHistoryIds?.Any())
-                {
-                    entities = entities.Where(en => en.UserHistory.Any(r => r.Id.In(request.UserHistoryIds)));
-                }
+                        if(true == request.UserHistoryIds?.Any())
+                        {
+                            entities = entities.Where(en => en.UserHistory.Any(r => r.Id.In(request.UserHistoryIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityUserSession,UserSessionSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -133,6 +133,18 @@ namespace Services.API
 
         public object Get(UserSessionSearch request) => GetSearchResultWithCache<UserSession,DocEntityUserSession,UserSessionSearch>(DocConstantModelName.USERSESSION, request, _ExecSearch);
 
+        public object Post(UserSessionVersion request) => Get(request);
+
+        public object Get(UserSessionVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(UserSession request) => GetEntityWithCache<UserSession>(DocConstantModelName.USERSESSION, request, GetUserSession);
 
 
@@ -142,42 +154,90 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "impersonation":
-                    ret =     GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ImpersonationService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserSessionImpersonation(request, skip, take);
                     break;
                 case "request":
-                    ret =     GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityUserRequest, UserRequest, UserRequestSearch>((int)request.Id, DocConstantModelName.USERREQUEST, "Requests", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserRequestService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserSessionRequest(request, skip, take);
                     break;
                 case "history":
-                    ret =     GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "UserHistory", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<HistoryService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetUserSessionHistory(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(UserSessionJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                case "impersonation":
+                    ret = GetUserSessionImpersonationVersion(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetUserSessionImpersonation(UserSessionJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Impersonation>(Dto.Impersonation.Fields, request.VisibleFields);
+             var en = DocEntityUserSession.GetUserSession(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "Impersonations", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and Impersonation");
+             return en?.Impersonations.Take(take).Skip(skip).ConvertFromEntityList<DocEntityImpersonation,Impersonation>(new List<Impersonation>());
+        }
 
+        private List<Version> GetUserSessionImpersonationVersion(UserSessionJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityUserSession.GetUserSession(request.Id);
+                ret = en?.Impersonations.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetUserSessionRequest(UserSessionJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<UserRequest>(Dto.UserRequest.Fields, request.VisibleFields);
+             var en = DocEntityUserSession.GetUserSession(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "Requests", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and UserRequest");
+             return en?.Requests.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUserRequest,UserRequest>(new List<UserRequest>());
+        }
+
+        private object _GetUserSessionHistory(UserSessionJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<History>(Dto.History.Fields, request.VisibleFields);
+             var en = DocEntityUserSession.GetUserSession(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.USERSESSION, columnName: "UserHistory", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between UserSession and History");
+             return en?.UserHistory.Take(take).Skip(skip).ConvertFromEntityList<DocEntityHistory,History>(new List<History>());
+        }
+        
         public object Post(UserSessionJunction request)
         {
             if (request == null)
@@ -191,13 +251,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "impersonation":
                     ret = _PostUserSessionImpersonation(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -238,13 +298,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "impersonation":
                     ret = _DeleteUserSessionImpersonation(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -290,6 +350,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(UserSessionIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityUserSession>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

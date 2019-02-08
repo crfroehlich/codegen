@@ -134,9 +134,10 @@ namespace Services.Dto
     
     [Route("/UserType/{Id}/copy", "POST")]
     public partial class UserTypeCopy : UserType {}
-    public partial class UserTypeSearchBase : Search<UserType>
+    [Route("/usertype", "GET")]
+    [Route("/usertype/search", "GET, POST, DELETE")]
+    public partial class UserTypeSearch : Search<UserType>
     {
-        public int? Id { get; set; }
         public Reference PayrollStatus { get; set; }
         public List<int> PayrollStatusIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Full-Time",@"Part-Time",@"Contract"})]
@@ -151,17 +152,9 @@ namespace Services.Dto
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/usertype", "GET")]
-    [Route("/usertype/version", "GET, POST")]
-    [Route("/usertype/search", "GET, POST, DELETE")]
-    public partial class UserTypeSearch : UserTypeSearchBase
-    {
-    }
-
+    
     public class UserTypeFullTextSearch
     {
-        public UserTypeFullTextSearch() {}
         private UserTypeSearch _request;
         public UserTypeFullTextSearch(UserTypeSearch request) => _request = request;
         
@@ -179,12 +172,46 @@ namespace Services.Dto
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.Users))); }
     }
 
+    [Route("/usertype/version", "GET, POST")]
+    public partial class UserTypeVersion : UserTypeSearch {}
+
     [Route("/usertype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserTypeBatch : List<UserType> { }
 
-    [Route("/usertype/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/usertype/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class UserTypeJunction : UserTypeSearchBase {}
+    [Route("/usertype/{Id}/user", "GET, POST, DELETE")]
+    public class UserTypeJunction : Search<UserType>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public UserTypeJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/usertype/{Id}/user/version", "GET")]
+    public class UserTypeJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/usertype/ids", "GET, POST")]
+    public class UserTypeIds
+    {
+        public bool All { get; set; }
+    }
 }

@@ -466,7 +466,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TeamMapper : DocMapperBase
+    public partial class TeamMapper : Profile
     {
         private IMappingExpression<DocEntityTeam,Team> _EntityToDto;
         private IMappingExpression<Team,DocEntityTeam> _DtoToEntity;

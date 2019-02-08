@@ -328,18 +328,17 @@ namespace Services.Dto
     
     [Route("/DocumentSet/{Id}/copy", "POST")]
     public partial class DocumentSetCopy : DocumentSet {}
-    public partial class DocumentSetSearchBase : Search<DocumentSet>
+    [Route("/documentset", "GET")]
+    [Route("/documentset/search", "GET, POST, DELETE")]
+    public partial class DocumentSetSearch : Search<DocumentSet>
     {
-        public int? Id { get; set; }
         public string AdditionalCriteria { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
-        public List<bool?> Archived { get; set; }
+        public bool? Archived { get; set; }
         public List<int> CategoriesIds { get; set; }
         public List<int> CharacteristicsIds { get; set; }
         public List<int> ClientsIds { get; set; }
         public List<int> ComparatorsIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> Confidential { get; set; }
+        public bool? Confidential { get; set; }
         public string DataCollection { get; set; }
         public List<int> DivisionsIds { get; set; }
         public List<int> DocumentsIds { get; set; }
@@ -392,17 +391,9 @@ namespace Services.Dto
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/documentset", "GET")]
-    [Route("/documentset/version", "GET, POST")]
-    [Route("/documentset/search", "GET, POST, DELETE")]
-    public partial class DocumentSetSearch : DocumentSetSearchBase
-    {
-    }
-
+    
     public class DocumentSetFullTextSearch
     {
-        public DocumentSetFullTextSearch() {}
         private DocumentSetSearch _request;
         public DocumentSetFullTextSearch(DocumentSetSearch request) => _request = request;
         
@@ -465,12 +456,88 @@ namespace Services.Dto
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Users))); }
     }
 
+    [Route("/documentset/version", "GET, POST")]
+    public partial class DocumentSetVersion : DocumentSetSearch {}
+
     [Route("/documentset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentSetBatch : List<DocumentSet> { }
 
-    [Route("/documentset/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/documentset/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class DocumentSetJunction : DocumentSetSearchBase {}
+    [Route("/documentset/{Id}/allusers", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/lookuptablebinding", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/jctattributecategoryattributedocumentset", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/characteristic", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/client", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/comparator", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/division", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/document", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/documentset", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/documentsethistory", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/importdata", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/intervention", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/nondigitizeddocument", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/outcome", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/package", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/projectlink", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/project", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/scope", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/statsstudyset", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/studydesign", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/user", "GET, POST, DELETE")]
+    [Route("/documentset/{Id}/workflow", "GET, POST, DELETE")]
+    public class DocumentSetJunction : Search<DocumentSet>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public DocumentSetJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/documentset/{Id}/allusers/version", "GET")]
+    [Route("/documentset/{Id}/lookuptablebinding/version", "GET")]
+    [Route("/documentset/{Id}/jctattributecategoryattributedocumentset/version", "GET")]
+    [Route("/documentset/{Id}/characteristic/version", "GET")]
+    [Route("/documentset/{Id}/client/version", "GET")]
+    [Route("/documentset/{Id}/comparator/version", "GET")]
+    [Route("/documentset/{Id}/division/version", "GET")]
+    [Route("/documentset/{Id}/document/version", "GET")]
+    [Route("/documentset/{Id}/documentset/version", "GET")]
+    [Route("/documentset/{Id}/documentsethistory/version", "GET")]
+    [Route("/documentset/{Id}/importdata/version", "GET")]
+    [Route("/documentset/{Id}/intervention/version", "GET")]
+    [Route("/documentset/{Id}/nondigitizeddocument/version", "GET")]
+    [Route("/documentset/{Id}/outcome/version", "GET")]
+    [Route("/documentset/{Id}/package/version", "GET")]
+    [Route("/documentset/{Id}/projectlink/version", "GET")]
+    [Route("/documentset/{Id}/project/version", "GET")]
+    [Route("/documentset/{Id}/scope/version", "GET")]
+    [Route("/documentset/{Id}/statsstudyset/version", "GET")]
+    [Route("/documentset/{Id}/studydesign/version", "GET")]
+    [Route("/documentset/{Id}/user/version", "GET")]
+    [Route("/documentset/{Id}/workflow/version", "GET")]
+    public class DocumentSetJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/documentset/ids", "GET, POST")]
+    public class DocumentSetIds
+    {
+        public bool All { get; set; }
+    }
 }

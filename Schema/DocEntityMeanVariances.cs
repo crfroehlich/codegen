@@ -395,7 +395,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class MeanVariancesMapper : DocMapperBase
+    public partial class MeanVariancesMapper : Profile
     {
         private IMappingExpression<DocEntityMeanVariances,MeanVariances> _EntityToDto;
         private IMappingExpression<MeanVariances,DocEntityMeanVariances> _DtoToEntity;

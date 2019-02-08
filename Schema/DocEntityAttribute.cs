@@ -525,7 +525,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class AttributeMapper : DocMapperBase
+    public partial class AttributeMapper : Profile
     {
         private IMappingExpression<DocEntityAttribute,Attribute> _EntityToDto;
         private IMappingExpression<Attribute,DocEntityAttribute> _DtoToEntity;
