@@ -400,7 +400,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class StatsRecordMapper : Profile
+    public partial class StatsRecordMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityStatsRecord,StatsRecord> _EntityToDto;
         private IMappingExpression<StatsRecord,DocEntityStatsRecord> _DtoToEntity;

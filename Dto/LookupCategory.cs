@@ -121,18 +121,25 @@ namespace Services.Dto
     
     [Route("/LookupCategory/{Id}/copy", "POST")]
     public partial class LookupCategoryCopy : LookupCategory {}
-    [Route("/lookupcategory", "GET")]
-    [Route("/lookupcategory/search", "GET, POST, DELETE")]
-    public partial class LookupCategorySearch : Search<LookupCategory>
+    public partial class LookupCategorySearchBase : Search<LookupCategory>
     {
+        public int? Id { get; set; }
         public string Category { get; set; }
         public Reference Enum { get; set; }
         public List<int> EnumIds { get; set; }
         public List<int> LookupsIds { get; set; }
     }
-    
+
+    [Route("/lookupcategory", "GET")]
+    [Route("/lookupcategory/version", "GET, POST")]
+    [Route("/lookupcategory/search", "GET, POST, DELETE")]
+    public partial class LookupCategorySearch : LookupCategorySearchBase
+    {
+    }
+
     public class LookupCategoryFullTextSearch
     {
+        public LookupCategoryFullTextSearch() {}
         private LookupCategorySearch _request;
         public LookupCategoryFullTextSearch(LookupCategorySearch request) => _request = request;
         
@@ -149,46 +156,12 @@ namespace Services.Dto
         public bool doLookups { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Lookups))); }
     }
 
-    [Route("/lookupcategory/version", "GET, POST")]
-    public partial class LookupCategoryVersion : LookupCategorySearch {}
-
     [Route("/lookupcategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupCategoryBatch : List<LookupCategory> { }
 
-    [Route("/lookupcategory/{Id}/lookuptable", "GET, POST, DELETE")]
-    public class LookupCategoryJunction : Search<LookupCategory>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/lookupcategory/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/lookupcategory/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class LookupCategoryJunction : LookupCategorySearchBase {}
 
 
-        public LookupCategoryJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/lookupcategory/{Id}/lookuptable/version", "GET")]
-    public class LookupCategoryJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/lookupcategory/ids", "GET, POST")]
-    public class LookupCategoryIds
-    {
-        public bool All { get; set; }
-    }
 }

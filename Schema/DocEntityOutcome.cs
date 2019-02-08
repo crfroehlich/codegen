@@ -375,7 +375,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class OutcomeMapper : Profile
+    public partial class OutcomeMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityOutcome,Outcome> _EntityToDto;
         private IMappingExpression<Outcome,DocEntityOutcome> _DtoToEntity;

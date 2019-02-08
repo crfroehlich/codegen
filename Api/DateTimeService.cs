@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityDateTime> _ExecSearch(DateTimeSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<DateTimeDto, DateTimeSearch>(request);
             IQueryable<DocEntityDateTime> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DateTimeFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityDateTime,DateTimeFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -97,7 +97,7 @@ namespace Services.API
                 if(request.DateYear.HasValue)
                     entities = entities.Where(en => request.DateYear.Value == en.DateYear);
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityDateTime,DateTimeSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -115,18 +115,6 @@ namespace Services.API
 
         public List<DateTimeDto> Get(DateTimeSearch request) => GetSearchResult<DateTimeDto,DocEntityDateTime,DateTimeSearch>(DocConstantModelName.DATETIME, request, _ExecSearch);
 
-        public object Post(DateTimeVersion request) => Get(request);
-
-        public object Get(DateTimeVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public DateTimeDto Get(DateTimeDto request) => GetEntity<DateTimeDto>(DocConstantModelName.DATETIME, request, GetDateTime);
         private DateTimeDto _AssignValues(DateTimeDto request, DocConstantPermission permission, Session session)
         {
@@ -139,7 +127,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             DateTimeDto ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<DateTimeDto>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -484,21 +472,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(DateTimeIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityDateTime>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

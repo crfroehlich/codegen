@@ -487,7 +487,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class StatsStudySetMapper : Profile
+    public partial class StatsStudySetMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityStatsStudySet,StatsStudySet> _EntityToDto;
         private IMappingExpression<StatsStudySet,DocEntityStatsStudySet> _DtoToEntity;

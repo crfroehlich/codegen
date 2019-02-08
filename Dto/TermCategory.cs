@@ -117,17 +117,24 @@ namespace Services.Dto
     
     [Route("/TermCategory/{Id}/copy", "POST")]
     public partial class TermCategoryCopy : TermCategory {}
-    [Route("/termcategory", "GET")]
-    [Route("/termcategory/search", "GET, POST, DELETE")]
-    public partial class TermCategorySearch : Search<TermCategory>
+    public partial class TermCategorySearchBase : Search<TermCategory>
     {
+        public int? Id { get; set; }
         public Reference ParentCategory { get; set; }
         public List<int> ParentCategoryIds { get; set; }
         public List<int> TermsIds { get; set; }
     }
-    
+
+    [Route("/termcategory", "GET")]
+    [Route("/termcategory/version", "GET, POST")]
+    [Route("/termcategory/search", "GET, POST, DELETE")]
+    public partial class TermCategorySearch : TermCategorySearchBase
+    {
+    }
+
     public class TermCategoryFullTextSearch
     {
+        public TermCategoryFullTextSearch() {}
         private TermCategorySearch _request;
         public TermCategoryFullTextSearch(TermCategorySearch request) => _request = request;
         
@@ -144,46 +151,12 @@ namespace Services.Dto
         public bool doTerms { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Terms))); }
     }
 
-    [Route("/termcategory/version", "GET, POST")]
-    public partial class TermCategoryVersion : TermCategorySearch {}
-
     [Route("/termcategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TermCategoryBatch : List<TermCategory> { }
 
-    [Route("/termcategory/{Id}/termmaster", "GET, POST, DELETE")]
-    public class TermCategoryJunction : Search<TermCategory>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/termcategory/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/termcategory/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class TermCategoryJunction : TermCategorySearchBase {}
 
 
-        public TermCategoryJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/termcategory/{Id}/termmaster/version", "GET")]
-    public class TermCategoryJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/termcategory/ids", "GET, POST")]
-    public class TermCategoryIds
-    {
-        public bool All { get; set; }
-    }
 }
