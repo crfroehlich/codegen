@@ -450,7 +450,7 @@
         "Type": "int?"
       },
       "IsCharacteristic": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsCharacteristic",
         "DisplayName": "IsCharacteristic",
         "IsAudited": false,
@@ -468,7 +468,7 @@
         "UIType": ""
       },
       "IsOutcome": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsOutcome",
         "DisplayName": "IsOutcome",
         "IsAudited": false,
@@ -486,7 +486,7 @@
         "UIType": ""
       },
       "IsPositive": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsPositive",
         "DisplayName": "IsPositive",
         "IsAudited": false,
@@ -1806,7 +1806,7 @@
         "UIType": ""
       },
       "LogInfo": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If enabled, this task will log information about each execution",
         "DisplayName": "Log Info",
         "IsAudited": false,
@@ -1861,7 +1861,7 @@
         "UIType": ""
       },
       "RunNow": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If set to true, this task will execute immediately",
         "DisplayName": "Run Now",
         "IsAudited": true,
@@ -2547,7 +2547,7 @@
         "UIType": ""
       },
       "Succeeded": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the item succeeded",
         "DisplayName": "Succeeded",
         "IsAudited": false,
@@ -5927,7 +5927,7 @@
         "UIType": ""
       },
       "Archived": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, this document set will not appear by default",
         "DisplayName": "Archived",
         "IsAudited": true,
@@ -9118,7 +9118,7 @@
         "Type": "string"
       },
       "HighPriority": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, treat as highest priority",
         "DisplayName": "HighPriority",
         "IsAudited": true,
@@ -9178,7 +9178,7 @@
         "UIType": ""
       },
       "ImportNewName": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of ImportNewName",
         "DisplayName": "ImportNewName",
         "IsAudited": true,
@@ -9196,7 +9196,7 @@
         "UIType": ""
       },
       "ImportTable": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, import the Table data",
         "DisplayName": "ImportTable",
         "IsAudited": true,
@@ -9263,7 +9263,7 @@
         "Type": "int?"
       },
       "IsLegacy": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsLegacy",
         "DisplayName": "IsLegacy",
         "IsAudited": true,
@@ -13561,7 +13561,7 @@
     "Model": {},
     "Properties": {
       "AutoDelete": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, messages in this channel will automatically be deleted on delivery",
         "DisplayName": "Auto Delete",
         "IsAudited": true,
@@ -14188,7 +14188,7 @@
         "Type": "int"
       },
       "IsInternal": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the role is internal to Doctor Evidence.",
         "DisplayName": "IsInternal",
         "IsAudited": true,
@@ -14207,7 +14207,7 @@
         "UIType": ""
       },
       "IsSuperAdmin": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the role has permission to all functionality. There can be only one role with this set to true.",
         "DisplayName": "IsSuperAdmin",
         "IsAudited": true,
@@ -14419,7 +14419,7 @@
         "Type": "int?"
       },
       "Archived": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, this scope set will not appear by default",
         "DisplayName": "Archived",
         "IsAudited": true,
@@ -14556,7 +14556,7 @@
         "Type": "bool"
       },
       "Delete": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the user has permission to delete",
         "DisplayName": "Delete",
         "IsAudited": true,
@@ -14604,7 +14604,7 @@
         "Type": "int?"
       },
       "Edit": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the user has permission to edit",
         "DisplayName": "Edit",
         "IsAudited": true,
@@ -16387,7 +16387,7 @@
         "Type": "int"
       },
       "IsInternal": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the Team is a DrE internal team",
         "DisplayName": "Is Internal",
         "IsAudited": true,
@@ -18077,7 +18077,7 @@
         "Type": "int"
       },
       "IsDefault": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsDefault",
         "DisplayName": "IsDefault",
         "IsAudited": true,
@@ -18095,7 +18095,7 @@
         "UIType": ""
       },
       "IsDestinationSi": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsDestinationSi",
         "DisplayName": "IsDestinationSi",
         "IsAudited": true,
@@ -18364,7 +18364,7 @@
         "Type": "int"
       },
       "IsSI": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsSI",
         "DisplayName": "IsSI",
         "IsAudited": true,
@@ -21815,7 +21815,7 @@
     "Model": {},
     "Properties": {
       "Archived": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, this document set will not appear by default",
         "DisplayName": "Archived",
         "IsAudited": true,
