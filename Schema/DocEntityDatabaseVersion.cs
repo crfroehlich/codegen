@@ -378,7 +378,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class DatabaseVersionMapper : Profile
+    public partial class DatabaseVersionMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityDatabaseVersion,DatabaseVersion> _EntityToDto;
         private IMappingExpression<DatabaseVersion,DocEntityDatabaseVersion> _DtoToEntity;

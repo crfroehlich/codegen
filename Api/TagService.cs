@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTag> _ExecSearch(TagSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Tag, TagSearch>(request);
             IQueryable<DocEntityTag> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TagFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityTag,TagFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -86,12 +86,12 @@ namespace Services.API
 
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                        if(true == request.WorkflowsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Workflows.Any(r => r.Id.In(request.WorkflowsIds)));
-                        }
+                if(true == request.WorkflowsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Workflows.Any(r => r.Id.In(request.WorkflowsIds)));
+                }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityTag,TagSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -109,18 +109,6 @@ namespace Services.API
 
         public object Get(TagSearch request) => GetSearchResultWithCache<Tag,DocEntityTag,TagSearch>(DocConstantModelName.TAG, request, _ExecSearch);
 
-        public object Post(TagVersion request) => Get(request);
-
-        public object Get(TagVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(Tag request) => GetEntityWithCache<Tag>(DocConstantModelName.TAG, request, GetTag);
         private Tag _AssignValues(Tag request, DocConstantPermission permission, Session session)
         {
@@ -133,7 +121,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Tag ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Tag>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -410,66 +398,26 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction)
                 {
                 case "workflow":
-                    ret = _GetTagWorkflow(request, skip, take);
+                    ret =     GetJunctionSearchResult<Tag, DocEntityTag, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<WorkflowService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
-        
-        public object Get(TagJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "workflow":
-                    ret = GetTagWorkflowVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetTagWorkflow(TagJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
-             var en = DocEntityTag.GetTag(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TAG, columnName: "Workflows", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Tag and Workflow");
-             return en?.Workflows.Take(take).Skip(skip).ConvertFromEntityList<DocEntityWorkflow,Workflow>(new List<Workflow>());
-        }
 
-        private List<Version> GetTagWorkflowVersion(TagJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityTag.GetTag(request.Id);
-                ret = en?.Workflows.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(TagJunction request)
         {
             if (request == null)
@@ -483,13 +431,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "workflow":
                     ret = _PostTagWorkflow(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -530,13 +478,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "workflow":
                     ret = _DeleteTagWorkflow(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -582,21 +530,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(TagIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityTag>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

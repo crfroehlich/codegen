@@ -171,31 +171,42 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/backgroundtask", "GET")]
-    [Route("/backgroundtask/search", "GET, POST, DELETE")]
-    public partial class BackgroundTaskSearch : Search<BackgroundTask>
+    public partial class BackgroundTaskSearchBase : Search<BackgroundTask>
     {
+        public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public Reference Channel { get; set; }
         public List<int> ChannelIds { get; set; }
         public string Description { get; set; }
-        public bool? Enabled { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> Enabled { get; set; }
         public int? Frequency { get; set; }
         public int? HistoryRetention { get; set; }
         public List<int> ItemsIds { get; set; }
         public string LastRunVersion { get; set; }
-        public bool? LogError { get; set; }
-        public bool? LogInfo { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> LogError { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> LogInfo { get; set; }
         public string Name { get; set; }
         public int? RowsToProcessPerIteration { get; set; }
-        public bool? RunNow { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> RunNow { get; set; }
         public string StartAt { get; set; }
         public List<int> TaskHistoryIds { get; set; }
     }
-    
+
+    [Route("/backgroundtask", "GET")]
+    [Route("/backgroundtask/version", "GET, POST")]
+    [Route("/backgroundtask/search", "GET, POST, DELETE")]
+    public partial class BackgroundTaskSearch : BackgroundTaskSearchBase
+    {
+    }
+
     public class BackgroundTaskFullTextSearch
     {
+        public BackgroundTaskFullTextSearch() {}
         private BackgroundTaskSearch _request;
         public BackgroundTaskFullTextSearch(BackgroundTaskSearch request) => _request = request;
         
@@ -224,48 +235,12 @@ namespace Services.Dto
         public bool doTaskHistory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.TaskHistory))); }
     }
 
-    [Route("/backgroundtask/version", "GET, POST")]
-    public partial class BackgroundTaskVersion : BackgroundTaskSearch {}
-
     [Route("/backgroundtask/batch", "DELETE, PATCH, POST, PUT")]
     public partial class BackgroundTaskBatch : List<BackgroundTask> { }
 
-    [Route("/backgroundtask/{Id}/backgroundtaskitem", "GET, POST, DELETE")]
-    [Route("/backgroundtask/{Id}/backgroundtaskhistory", "GET, POST, DELETE")]
-    public class BackgroundTaskJunction : Search<BackgroundTask>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/backgroundtask/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/backgroundtask/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class BackgroundTaskJunction : BackgroundTaskSearchBase {}
 
 
-        public BackgroundTaskJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/backgroundtask/{Id}/backgroundtaskitem/version", "GET")]
-    [Route("/backgroundtask/{Id}/backgroundtaskhistory/version", "GET")]
-    public class BackgroundTaskJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/backgroundtask/ids", "GET, POST")]
-    public class BackgroundTaskIds
-    {
-        public bool All { get; set; }
-    }
 }

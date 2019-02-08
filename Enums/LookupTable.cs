@@ -201,6 +201,8 @@ namespace Services.Enums
         STUDYFUNDING,
         [EnumMember(Value = DocConstantLookupTable.STUDYGROUPTYPE)]
         STUDYGROUPTYPE,
+        [EnumMember(Value = DocConstantLookupTable.STUDYIMPORTLOCATION)]
+        STUDYIMPORTLOCATION,
         [EnumMember(Value = DocConstantLookupTable.STUDYIMPORTTYPE)]
         STUDYIMPORTTYPE,
         [EnumMember(Value = DocConstantLookupTable.STUDYNGA)]
@@ -351,6 +353,7 @@ namespace Services.Enums
         public const string STUDYDOCUMENTTYPE = "StudyDocumentType";
         public const string STUDYFUNDING = "StudyFunding";
         public const string STUDYGROUPTYPE = "StudyGroupType";
+        public const string STUDYIMPORTLOCATION = "StudyImportLocation";
         public const string STUDYIMPORTTYPE = "StudyImportType";
         public const string STUDYNGA = "StudyNGA";
         public const string STUDYOBJECTIVE = "StudyObjective";

@@ -430,7 +430,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class JunctionMapper : Profile
+    public partial class JunctionMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityJunction,Junction> _EntityToDto;
         private IMappingExpression<Junction,DocEntityJunction> _DtoToEntity;

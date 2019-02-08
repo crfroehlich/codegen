@@ -105,18 +105,25 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/studydesign", "GET")]
-    [Route("/studydesign/search", "GET, POST, DELETE")]
-    public partial class StudyDesignSearch : Search<StudyDesign>
+    public partial class StudyDesignSearchBase : Search<StudyDesign>
     {
+        public int? Id { get; set; }
         public Reference Design { get; set; }
         public List<int> DesignIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Before and After Trial",@"Case Control",@"Case Report",@"Case Series",@"Cluster RCT",@"Cohort Study",@"Controlled Before and After Trial",@"Cross Sectional Study",@"Expanded Access Program",@"Follow-up/Extension",@"Literature Review",@"Non-Comparative\, Other",@"Non-Controlled Clinical Trial",@"Non-Randomized Controlled Trial",@"Non-Randomized Crossover",@"Observational Non-Comparative Study",@"Pooled Analysis",@"Posthoc Analysis",@"Prospective Cohort Study",@"Qualitative Research",@"Randomized Controlled Trial",@"Randomized Crossover",@"Randomized Non-Controlled Trial",@"Retrospective Cohort Study",@"Sub-Group Analysis"})]
         public List<string> DesignNames { get; set; }
     }
-    
+
+    [Route("/studydesign", "GET")]
+    [Route("/studydesign/version", "GET, POST")]
+    [Route("/studydesign/search", "GET, POST, DELETE")]
+    public partial class StudyDesignSearch : StudyDesignSearchBase
+    {
+    }
+
     public class StudyDesignFullTextSearch
     {
+        public StudyDesignFullTextSearch() {}
         private StudyDesignSearch _request;
         public StudyDesignFullTextSearch(StudyDesignSearch request) => _request = request;
         
@@ -131,15 +138,7 @@ namespace Services.Dto
         public bool doDesign { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyDesign.Design))); }
     }
 
-    [Route("/studydesign/version", "GET, POST")]
-    public partial class StudyDesignVersion : StudyDesignSearch {}
-
     [Route("/studydesign/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StudyDesignBatch : List<StudyDesign> { }
 
-    [Route("/admin/studydesign/ids", "GET, POST")]
-    public class StudyDesignIds
-    {
-        public bool All { get; set; }
-    }
 }

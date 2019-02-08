@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityWorkflowComment> _ExecSearch(WorkflowCommentSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<WorkflowComment, WorkflowCommentSearch>(request);
             IQueryable<DocEntityWorkflowComment> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowCommentFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityWorkflowComment,WorkflowCommentFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,10 +84,10 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                        if(true == request.ChildrenIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
-                        }
+                if(true == request.ChildrenIds?.Any())
+                {
+                    entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Parent) && !DocTools.IsNullOrEmpty(request.Parent.Id))
                 {
                     entities = entities.Where(en => en.Parent.Id == request.Parent.Id );
@@ -115,7 +115,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Workflow.Id.In(request.WorkflowIds));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityWorkflowComment,WorkflowCommentSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -133,18 +133,6 @@ namespace Services.API
 
         public List<WorkflowComment> Get(WorkflowCommentSearch request) => GetSearchResult<WorkflowComment,DocEntityWorkflowComment,WorkflowCommentSearch>(DocConstantModelName.WORKFLOWCOMMENT, request, _ExecSearch);
 
-        public object Post(WorkflowCommentVersion request) => Get(request);
-
-        public object Get(WorkflowCommentVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public WorkflowComment Get(WorkflowComment request) => GetEntity<WorkflowComment>(DocConstantModelName.WORKFLOWCOMMENT, request, GetWorkflowComment);
         private WorkflowComment _AssignValues(WorkflowComment request, DocConstantPermission permission, Session session)
         {
@@ -157,7 +145,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             WorkflowComment ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<WorkflowComment>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -538,66 +526,26 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction)
                 {
                 case "workflowcomment":
-                    ret = _GetWorkflowCommentWorkflowComment(request, skip, take);
+                    ret =     GetJunctionSearchResult<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<WorkflowCommentService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
-        
-        public object Get(WorkflowCommentJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "workflowcomment":
-                    ret = GetWorkflowCommentWorkflowCommentVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetWorkflowCommentWorkflowComment(WorkflowCommentJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request.VisibleFields);
-             var en = DocEntityWorkflowComment.GetWorkflowComment(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOWCOMMENT, columnName: "Children", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between WorkflowComment and WorkflowComment");
-             return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityWorkflowComment,WorkflowComment>(new List<WorkflowComment>());
-        }
 
-        private List<Version> GetWorkflowCommentWorkflowCommentVersion(WorkflowCommentJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityWorkflowComment.GetWorkflowComment(request.Id);
-                ret = en?.Children.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(WorkflowCommentJunction request)
         {
             if (request == null)
@@ -611,13 +559,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "workflowcomment":
                     ret = _PostWorkflowCommentWorkflowComment(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -658,13 +606,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "workflowcomment":
                     ret = _DeleteWorkflowCommentWorkflowComment(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -710,21 +658,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(WorkflowCommentIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityWorkflowComment>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

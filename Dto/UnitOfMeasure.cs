@@ -124,11 +124,11 @@ namespace Services.Dto
     
     [Route("/UnitOfMeasure/{Id}/copy", "POST")]
     public partial class UnitOfMeasureCopy : UnitOfMeasure {}
-    [Route("/unitofmeasure", "GET")]
-    [Route("/unitofmeasure/search", "GET, POST, DELETE")]
-    public partial class UnitOfMeasureSearch : Search<UnitOfMeasure>
+    public partial class UnitOfMeasureSearchBase : Search<UnitOfMeasure>
     {
-        public bool? IsSI { get; set; }
+        public int? Id { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsSI { get; set; }
         public Reference Name { get; set; }
         public List<int> NameIds { get; set; }
         public List<string> NameNames { get; set; }
@@ -140,9 +140,17 @@ namespace Services.Dto
         public List<int> UnitIds { get; set; }
         public List<string> UnitNames { get; set; }
     }
-    
+
+    [Route("/unitofmeasure", "GET")]
+    [Route("/unitofmeasure/version", "GET, POST")]
+    [Route("/unitofmeasure/search", "GET, POST, DELETE")]
+    public partial class UnitOfMeasureSearch : UnitOfMeasureSearchBase
+    {
+    }
+
     public class UnitOfMeasureFullTextSearch
     {
+        public UnitOfMeasureFullTextSearch() {}
         private UnitOfMeasureSearch _request;
         public UnitOfMeasureFullTextSearch(UnitOfMeasureSearch request) => _request = request;
         
@@ -160,15 +168,7 @@ namespace Services.Dto
         public bool doUnit { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitOfMeasure.Unit))); }
     }
 
-    [Route("/unitofmeasure/version", "GET, POST")]
-    public partial class UnitOfMeasureVersion : UnitOfMeasureSearch {}
-
     [Route("/unitofmeasure/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitOfMeasureBatch : List<UnitOfMeasure> { }
 
-    [Route("/admin/unitofmeasure/ids", "GET, POST")]
-    public class UnitOfMeasureIds
-    {
-        public bool All { get; set; }
-    }
 }

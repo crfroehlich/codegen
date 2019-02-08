@@ -526,6 +526,7 @@
     "STUDYDOCUMENTTYPE": "StudyDocumentType",
     "STUDYFUNDING": "StudyFunding",
     "STUDYGROUPTYPE": "StudyGroupType",
+    "STUDYIMPORTLOCATION": "StudyImportLocation",
     "STUDYIMPORTTYPE": "StudyImportType",
     "STUDYNGA": "StudyNGA",
     "STUDYOBJECTIVE": "StudyObjective",
@@ -633,7 +634,6 @@
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
     "EVENT": "Event",
     "FEATURESET": "FeatureSet",
-    "FOREIGNKEY": "ForeignKey",
     "GLOSSARY": "Glossary",
     "HELP": "Help",
     "HISTORY": "History",
@@ -654,7 +654,6 @@
     "MEANVARIANCES": "MeanVariances",
     "MEANVARIANCEVALUE": "MeanVarianceValue",
     "OUTCOME": "Outcome",
-    "PACKAGE": "Package",
     "PAGE": "Page",
     "PROJECT": "Project",
     "QUEUECHANNEL": "QueueChannel",
@@ -1090,6 +1089,12 @@
     "ARM": "Arm",
     "AUTHOR_CALCULATED": "Author Calculated"
   },
+  "StudyImportLocation": {
+    "DEFAULT": "Default",
+    "DOCDATA": "DocData",
+    "EXTRACT": "Extract",
+    "IMPORT_DATA": "Import Data"
+  },
   "StudyImportType": {
     "LEGACY": "Legacy",
     "EXTRACT": "Extract",
@@ -1495,10 +1500,8 @@
     "VIEW": "View"
   },
   "WorkflowStatus": {
-    "ACCEPTED": "Accepted",
-    "REJECTED": "Rejected",
-    "COLLECTED": "Collected",
     "REQUESTED": "Requested",
+    "COLLECTED": "Collected",
     "UNAVAILABLE": "Unavailable"
   },
   "WorkflowTaskType": {

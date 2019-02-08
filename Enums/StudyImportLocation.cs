@@ -19,27 +19,30 @@ using Newtonsoft.Json.Converters;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum WorkflowStatusEnm
+    public enum StudyImportLocationEnm
     {
-        [EnumMember(Value = DocConstantWorkflowStatus.COLLECTED)]
-        COLLECTED,
-        [EnumMember(Value = DocConstantWorkflowStatus.REQUESTED)]
-        REQUESTED,
-        [EnumMember(Value = DocConstantWorkflowStatus.UNAVAILABLE)]
-        UNAVAILABLE
+        [EnumMember(Value = DocConstantStudyImportLocation.DEFAULT)]
+        DEFAULT,
+        [EnumMember(Value = DocConstantStudyImportLocation.DOCDATA)]
+        DOCDATA,
+        [EnumMember(Value = DocConstantStudyImportLocation.EXTRACT)]
+        EXTRACT,
+        [EnumMember(Value = DocConstantStudyImportLocation.IMPORT_DATA)]
+        IMPORT_DATA
     }
     
-    public sealed partial class DocConstantWorkflowStatus
+    public sealed partial class DocConstantStudyImportLocation
     {
-        public const string COLLECTED = "Collected";
-        public const string REQUESTED = "Requested";
-        public const string UNAVAILABLE = "Unavailable";
+        public const string DEFAULT = "Default";
+        public const string DOCDATA = "DocData";
+        public const string EXTRACT = "Extract";
+        public const string IMPORT_DATA = "Import Data";
         
         #region Internals
         
         private static List<string> _all;
         
-        public static List<string> All => _all ?? (_all = typeof(DocConstantWorkflowStatus).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
+        public static List<string> All => _all ?? (_all = typeof(DocConstantStudyImportLocation).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
         /// <summary>
         ///    The string value of the current instance
@@ -50,7 +53,7 @@ namespace Services.Enums
         ///    The enum constructor
         /// </summary>
         /// <param name="ItemName">Name of the item.</param>
-        private DocConstantWorkflowStatus(string ItemName = null)
+        private DocConstantStudyImportLocation(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
@@ -68,9 +71,9 @@ namespace Services.Enums
         /// </summary>
         /// <param name="Val">The value.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantWorkflowStatus(string Val)
+        public static implicit operator DocConstantStudyImportLocation(string Val)
         {
-            return new DocConstantWorkflowStatus(Val);
+            return new DocConstantStudyImportLocation(Val);
         }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace Services.Enums
         /// </summary>
         /// <param name="item">The item.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantWorkflowStatus item)
+        public static implicit operator string(DocConstantStudyImportLocation item)
         {
             return item?.Value ?? string.Empty;
         }
@@ -94,14 +97,14 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantWorkflowStatus)
+        #region IEquatable (DocConstantStudyImportLocation)
 
         /// <summary>
         ///    Equals
         /// </summary>
         /// <param name="obj">The object.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantWorkflowStatus obj)
+        public bool Equals(DocConstantStudyImportLocation obj)
         {
             return this == obj;
         }
@@ -112,7 +115,7 @@ namespace Services.Enums
         /// <param name="ft1">The FT1.</param>
         /// <param name="ft2">The FT2.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantWorkflowStatus ft1, DocConstantWorkflowStatus ft2)
+        public static bool operator ==(DocConstantStudyImportLocation ft1, DocConstantStudyImportLocation ft2)
         {
             //do a string comparison on the fieldtypes
             return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
@@ -124,7 +127,7 @@ namespace Services.Enums
         /// <param name="ft1">The FT1.</param>
         /// <param name="ft2">The FT2.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantWorkflowStatus ft1, DocConstantWorkflowStatus ft2)
+        public static bool operator !=(DocConstantStudyImportLocation ft1, DocConstantStudyImportLocation ft2)
         {
             return !(ft1 == ft2);
         }
@@ -137,13 +140,13 @@ namespace Services.Enums
         public override bool Equals(object obj)
         {
             var ret = false;
-            if(!(obj is DocConstantWorkflowStatus))
+            if(!(obj is DocConstantStudyImportLocation))
             {
                 ret = false;
             }
             else
             {
-                ret = this == (DocConstantWorkflowStatus) obj;
+                ret = this == (DocConstantStudyImportLocation) obj;
             }
             return ret;
         }
@@ -161,6 +164,6 @@ namespace Services.Enums
             return ret;
         }
 
-        #endregion IEquatable (DocConstantWorkflowStatus)
+        #endregion IEquatable (DocConstantStudyImportLocation)
     }
 }

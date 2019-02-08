@@ -383,7 +383,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class LocaleMapper : Profile
+    public partial class LocaleMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityLocale,Locale> _EntityToDto;
         private IMappingExpression<Locale,DocEntityLocale> _DtoToEntity;

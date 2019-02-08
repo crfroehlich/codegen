@@ -121,17 +121,24 @@ namespace Services.Dto
     
     [Route("/Characteristic/{Id}/copy", "POST")]
     public partial class CharacteristicCopy : Characteristic {}
-    [Route("/characteristic", "GET")]
-    [Route("/characteristic/search", "GET, POST, DELETE")]
-    public partial class CharacteristicSearch : Search<Characteristic>
+    public partial class CharacteristicSearchBase : Search<Characteristic>
     {
+        public int? Id { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-    
+
+    [Route("/characteristic", "GET")]
+    [Route("/characteristic/version", "GET, POST")]
+    [Route("/characteristic/search", "GET, POST, DELETE")]
+    public partial class CharacteristicSearch : CharacteristicSearchBase
+    {
+    }
+
     public class CharacteristicFullTextSearch
     {
+        public CharacteristicFullTextSearch() {}
         private CharacteristicSearch _request;
         public CharacteristicFullTextSearch(CharacteristicSearch request) => _request = request;
         
@@ -148,46 +155,12 @@ namespace Services.Dto
         public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Characteristic.URI))); }
     }
 
-    [Route("/characteristic/version", "GET, POST")]
-    public partial class CharacteristicVersion : CharacteristicSearch {}
-
     [Route("/characteristic/batch", "DELETE, PATCH, POST, PUT")]
     public partial class CharacteristicBatch : List<Characteristic> { }
 
-    [Route("/characteristic/{Id}/documentset", "GET, POST, DELETE")]
-    public class CharacteristicJunction : Search<Characteristic>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/characteristic/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/characteristic/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class CharacteristicJunction : CharacteristicSearchBase {}
 
 
-        public CharacteristicJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/characteristic/{Id}/documentset/version", "GET")]
-    public class CharacteristicJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/characteristic/ids", "GET, POST")]
-    public class CharacteristicIds
-    {
-        public bool All { get; set; }
-    }
 }
