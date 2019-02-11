@@ -9,15 +9,14 @@
 //    the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using Services.Dto;
-using Services.Enums;
-using Services.Schema;
-
-using ServiceStack;
-
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+
+using Services.Dto;
+using Services.Dto.internals;
+using Services.Enums;
+
+using ServiceStack;
 
 using Attribute = Services.Dto.Attribute;
 using ValueType = Services.Dto.ValueType;

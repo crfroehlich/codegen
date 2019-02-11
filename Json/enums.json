@@ -526,7 +526,6 @@
     "STUDYDOCUMENTTYPE": "StudyDocumentType",
     "STUDYFUNDING": "StudyFunding",
     "STUDYGROUPTYPE": "StudyGroupType",
-    "STUDYIMPORTLOCATION": "StudyImportLocation",
     "STUDYIMPORTTYPE": "StudyImportType",
     "STUDYNGA": "StudyNGA",
     "STUDYOBJECTIVE": "StudyObjective",
@@ -1088,12 +1087,6 @@
   "StudyGroupType": {
     "ARM": "Arm",
     "AUTHOR_CALCULATED": "Author Calculated"
-  },
-  "StudyImportLocation": {
-    "DEFAULT": "Default",
-    "DOCDATA": "DocData",
-    "EXTRACT": "Extract",
-    "IMPORT_DATA": "Import Data"
   },
   "StudyImportType": {
     "LEGACY": "Legacy",

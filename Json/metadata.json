@@ -5839,21 +5839,6 @@
       "PUT": true
     },
     "Extension": {
-      "AllUsers": {
-        "Description": "A list of all users that inherit this Document Set",
-        "DisplayName": "All Users",
-        "IsAllowAddInForm": false,
-        "IsAllowRemoveInForm": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "Name": "AllUsers",
-        "Order": 39,
-        "Tab": "Users",
-        "TabOrder": 100,
-        "Target": "User",
-        "TargetAlias": "AllUsers",
-        "Type": "relationships"
-      },
       "Bindings": {
         "IsAllowAddInForm": false,
         "IsAllowRemoveInForm": false,
@@ -9176,37 +9161,6 @@
         "TabOrder": 0,
         "Type": "bool",
         "UIType": ""
-      },
-      "ImportLocation": {
-        "Description": "Description of ImportLocation",
-        "DisplayName": "ImportLocation",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": true,
-        "IsRelationship": true,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "LookupTableEnum": "StudyImportLocation",
-        "ModelType": "LookupTable",
-        "Name": "ImportLocation",
-        "Order": 111,
-        "SetDefaultValue": "Extract",
-        "Tab": "ImportData",
-        "TabOrder": 0,
-        "Type": "LookupTable",
-        "UIType": ""
-      },
-      "ImportLocationId": {
-        "DisplayName": "ImportLocation Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "ImportLocationId",
-        "Order": 112,
-        "Tab": "ImportData",
-        "Type": "int?"
       },
       "ImportNewName": {
         "DefaultValue": false,

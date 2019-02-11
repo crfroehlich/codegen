@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -115,22 +116,6 @@ namespace Services.API
                 {
                     if(request.ImportFr.Any(v => v == null)) entities = entities.Where(en => en.ImportFr.In(request.ImportFr) || en.ImportFr == null);
                     else entities = entities.Where(en => en.ImportFr.In(request.ImportFr));
-                }
-                if(!DocTools.IsNullOrEmpty(request.ImportLocation) && !DocTools.IsNullOrEmpty(request.ImportLocation.Id))
-                {
-                    entities = entities.Where(en => en.ImportLocation.Id == request.ImportLocation.Id );
-                }
-                if(true == request.ImportLocationIds?.Any())
-                {
-                    entities = entities.Where(en => en.ImportLocation.Id.In(request.ImportLocationIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.ImportLocation) && !DocTools.IsNullOrEmpty(request.ImportLocation.Name))
-                {
-                    entities = entities.Where(en => en.ImportLocation.Name == request.ImportLocation.Name );
-                }
-                if(true == request.ImportLocationNames?.Any())
-                {
-                    entities = entities.Where(en => en.ImportLocation.Name.In(request.ImportLocationNames));
                 }
                 if(true == request.ImportNewName?.Any())
                 {
@@ -253,7 +238,6 @@ namespace Services.API
             var pExtractUrl = request.ExtractUrl;
             var pHighPriority = request.HighPriority;
             var pImportFr = request.ImportFr;
-            DocEntityLookupTable pImportLocation = GetLookup(DocConstantLookupTable.STUDYIMPORTLOCATION, request.ImportLocation?.Name, request.ImportLocation?.Id);
             var pImportNewName = request.ImportNewName;
             var pImportTable = request.ImportTable;
             var pImportText = request.ImportText;
@@ -337,15 +321,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pImportFr, nameof(request.ImportFr)) && !request.VisibleFields.Matches(nameof(request.ImportFr), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.ImportFr));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pImportLocation, permission, DocConstantModelName.IMPORTDATA, nameof(request.ImportLocation)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pImportLocation, entity.ImportLocation, nameof(request.ImportLocation)))
-                    entity.ImportLocation = pImportLocation;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pImportLocation, nameof(request.ImportLocation)) && !request.VisibleFields.Matches(nameof(request.ImportLocation), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.ImportLocation));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pImportNewName, permission, DocConstantModelName.IMPORTDATA, nameof(request.ImportNewName)))
@@ -593,7 +568,6 @@ namespace Services.API
                         pExtractUrl += " (Copy)";
                     var pHighPriority = entity.HighPriority;
                     var pImportFr = entity.ImportFr;
-                    var pImportLocation = entity.ImportLocation;
                     var pImportNewName = entity.ImportNewName;
                     var pImportTable = entity.ImportTable;
                     var pImportText = entity.ImportText;
@@ -616,7 +590,6 @@ namespace Services.API
                                 , ExtractUrl = pExtractUrl
                                 , HighPriority = pHighPriority
                                 , ImportFr = pImportFr
-                                , ImportLocation = pImportLocation
                                 , ImportNewName = pImportNewName
                                 , ImportTable = pImportTable
                                 , ImportText = pImportText

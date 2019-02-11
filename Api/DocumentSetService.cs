@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -1831,14 +1832,6 @@ namespace Services.API
             {
                 switch(request.Junction)
                 {
-                case "allusers":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "AllUsers", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
                 case "lookuptablebinding":
                     ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
                             (ss) =>
