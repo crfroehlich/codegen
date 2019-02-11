@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -392,7 +391,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class GlossaryMapper : DocMapperBase
+    public partial class GlossaryMapper : Profile
     {
         private IMappingExpression<DocEntityGlossary,Glossary> _EntityToDto;
         private IMappingExpression<Glossary,DocEntityGlossary> _DtoToEntity;

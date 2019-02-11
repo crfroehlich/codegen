@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -387,7 +386,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class VariableInstanceMapper : DocMapperBase
+    public partial class VariableInstanceMapper : Profile
     {
         private IMappingExpression<DocEntityVariableInstance,VariableInstance> _EntityToDto;
         private IMappingExpression<VariableInstance,DocEntityVariableInstance> _DtoToEntity;

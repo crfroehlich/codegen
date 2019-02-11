@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityProject> _ExecSearch(ProjectSearch request)
         {
-            request = InitSearch<Project, ProjectSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityProject> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ProjectFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityProject,ProjectFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -85,10 +84,10 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(true == request.ChildrenIds?.Any())
-                {
-                    entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
-                }
+                        if(true == request.ChildrenIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Client) && !DocTools.IsNullOrEmpty(request.Client.Id))
                 {
                     entities = entities.Where(en => en.Client.Id == request.Client.Id );
@@ -165,12 +164,12 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
                 }
-                if(true == request.TimeCardsIds?.Any())
-                {
-                    entities = entities.Where(en => en.TimeCards.Any(r => r.Id.In(request.TimeCardsIds)));
-                }
+                        if(true == request.TimeCardsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.TimeCards.Any(r => r.Id.In(request.TimeCardsIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityProject,ProjectSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -188,6 +187,18 @@ namespace Services.API
 
         public object Get(ProjectSearch request) => GetSearchResultWithCache<Project,DocEntityProject,ProjectSearch>(DocConstantModelName.PROJECT, request, _ExecSearch);
 
+        public object Post(ProjectVersion request) => Get(request);
+
+        public object Get(ProjectVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Project request) => GetEntityWithCache<Project>(DocConstantModelName.PROJECT, request, GetProject);
         private Project _AssignValues(Project request, DocConstantPermission permission, Session session)
         {
@@ -200,7 +211,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Project ret = null;
-            request = _InitAssignValues<Project>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -818,34 +829,62 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(method)
                 {
                 case "project":
-                    ret =     GetJunctionSearchResult<Project, DocEntityProject, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Children", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ProjectService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetProjectProject(request, skip, take);
                     break;
                 case "timecard":
-                    ret =     GetJunctionSearchResult<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TimeCardService>(Request);
-                                return service.Get(ss);
-                            });
+                    ret = _GetProjectTimeCard(request, skip, take);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
+        
+        public object Get(ProjectJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+        
 
+        private object _GetProjectProject(ProjectJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Project>(Dto.Project.Fields, request.VisibleFields);
+             var en = DocEntityProject.GetProject(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PROJECT, columnName: "Children", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Project and Project");
+             return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityProject,Project>(new List<Project>());
+        }
 
+        private object _GetProjectTimeCard(ProjectJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request.VisibleFields);
+             var en = DocEntityProject.GetProject(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PROJECT, columnName: "TimeCards", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Project and TimeCard");
+             return en?.TimeCards.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTimeCard,TimeCard>(new List<TimeCard>());
+        }
+        
         public object Post(ProjectJunction request)
         {
             if (request == null)
@@ -859,13 +898,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "timecard":
                     ret = _PostProjectTimeCard(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -906,13 +945,13 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
                 case "timecard":
                     ret = _DeleteProjectTimeCard(request);
                     break;
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -958,6 +997,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(ProjectIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityProject>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

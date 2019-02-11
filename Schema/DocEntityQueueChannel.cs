@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -416,7 +415,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class QueueChannelMapper : DocMapperBase
+    public partial class QueueChannelMapper : Profile
     {
         private IMappingExpression<DocEntityQueueChannel,QueueChannel> _EntityToDto;
         private IMappingExpression<QueueChannel,DocEntityQueueChannel> _DtoToEntity;

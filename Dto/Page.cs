@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -137,9 +136,10 @@ namespace Services.Dto
     
     [Route("/Page/{Id}/copy", "POST")]
     public partial class PageCopy : Page {}
-    public partial class PageSearchBase : Search<Page>
+    [Route("/page", "GET")]
+    [Route("/page/search", "GET, POST, DELETE")]
+    public partial class PageSearch : Search<Page>
     {
-        public int? Id { get; set; }
         public List<int> AppsIds { get; set; }
         public string Description { get; set; }
         public List<int> GlossaryIds { get; set; }
@@ -147,17 +147,9 @@ namespace Services.Dto
         public string Name { get; set; }
         public List<int> RolesIds { get; set; }
     }
-
-    [Route("/page", "GET")]
-    [Route("/page/version", "GET, POST")]
-    [Route("/page/search", "GET, POST, DELETE")]
-    public partial class PageSearch : PageSearchBase
-    {
-    }
-
+    
     public class PageFullTextSearch
     {
-        public PageFullTextSearch() {}
         private PageSearch _request;
         public PageFullTextSearch(PageSearch request) => _request = request;
         
@@ -177,12 +169,52 @@ namespace Services.Dto
         public bool doRoles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Roles))); }
     }
 
+    [Route("/page/version", "GET, POST")]
+    public partial class PageVersion : PageSearch {}
+
     [Route("/page/batch", "DELETE, PATCH, POST, PUT")]
     public partial class PageBatch : List<Page> { }
 
-    [Route("/page/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/page/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class PageJunction : PageSearchBase {}
+    [Route("/page/{Id}/app", "GET, POST, DELETE")]
+    [Route("/page/{Id}/glossary", "GET, POST, DELETE")]
+    [Route("/page/{Id}/help", "GET, POST, DELETE")]
+    [Route("/page/{Id}/role", "GET, POST, DELETE")]
+    public class PageJunction : Search<Page>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public PageJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/page/{Id}/app/version", "GET")]
+    [Route("/page/{Id}/glossary/version", "GET")]
+    [Route("/page/{Id}/help/version", "GET")]
+    [Route("/page/{Id}/role/version", "GET")]
+    public class PageJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/page/ids", "GET, POST")]
+    public class PageIds
+    {
+        public bool All { get; set; }
+    }
 }

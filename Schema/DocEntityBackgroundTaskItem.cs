@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -424,7 +423,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class BackgroundTaskItemMapper : DocMapperBase
+    public partial class BackgroundTaskItemMapper : Profile
     {
         private IMappingExpression<DocEntityBackgroundTaskItem,BackgroundTaskItem> _EntityToDto;
         private IMappingExpression<BackgroundTaskItem,DocEntityBackgroundTaskItem> _DtoToEntity;

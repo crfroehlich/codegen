@@ -141,6 +141,10 @@ namespace Services.API
                         var enFeatureSet = DocEntityFactory.GetEntity<DocEntityFeatureSet>( en.Id );
                         ret = enFeatureSet.ToDto();
                         break;
+                    case DocConstantModelName.FOREIGNKEY:
+                        var enForeignKey = DocEntityFactory.GetEntity<DocEntityForeignKey>( en.Id );
+                        ret = enForeignKey.ToDto();
+                        break;
                     case DocConstantModelName.GLOSSARY:
                         var enGlossary = DocEntityFactory.GetEntity<DocEntityGlossary>( en.Id );
                         ret = enGlossary.ToDto();
@@ -220,6 +224,10 @@ namespace Services.API
                     case DocConstantModelName.OUTCOME:
                         var enOutcome = DocEntityFactory.GetEntity<DocEntityOutcome>( en.Id );
                         ret = enOutcome.ToDto();
+                        break;
+                    case DocConstantModelName.PACKAGE:
+                        var enPackage = DocEntityFactory.GetEntity<DocEntityPackage>( en.Id );
+                        ret = enPackage.ToDto();
                         break;
                     case DocConstantModelName.PAGE:
                         var enPage = DocEntityFactory.GetEntity<DocEntityPage>( en.Id );

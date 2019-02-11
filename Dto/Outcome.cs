@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -122,24 +121,17 @@ namespace Services.Dto
     
     [Route("/Outcome/{Id}/copy", "POST")]
     public partial class OutcomeCopy : Outcome {}
-    public partial class OutcomeSearchBase : Search<Outcome>
+    [Route("/outcome", "GET")]
+    [Route("/outcome/search", "GET, POST, DELETE")]
+    public partial class OutcomeSearch : Search<Outcome>
     {
-        public int? Id { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-
-    [Route("/outcome", "GET")]
-    [Route("/outcome/version", "GET, POST")]
-    [Route("/outcome/search", "GET, POST, DELETE")]
-    public partial class OutcomeSearch : OutcomeSearchBase
-    {
-    }
-
+    
     public class OutcomeFullTextSearch
     {
-        public OutcomeFullTextSearch() {}
         private OutcomeSearch _request;
         public OutcomeFullTextSearch(OutcomeSearch request) => _request = request;
         
@@ -156,12 +148,46 @@ namespace Services.Dto
         public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Outcome.URI))); }
     }
 
+    [Route("/outcome/version", "GET, POST")]
+    public partial class OutcomeVersion : OutcomeSearch {}
+
     [Route("/outcome/batch", "DELETE, PATCH, POST, PUT")]
     public partial class OutcomeBatch : List<Outcome> { }
 
-    [Route("/outcome/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/outcome/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class OutcomeJunction : OutcomeSearchBase {}
+    [Route("/outcome/{Id}/documentset", "GET, POST, DELETE")]
+    public class OutcomeJunction : Search<Outcome>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public OutcomeJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/outcome/{Id}/documentset/version", "GET")]
+    public class OutcomeJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/outcome/ids", "GET, POST")]
+    public class OutcomeIds
+    {
+        public bool All { get; set; }
+    }
 }
