@@ -117,18 +117,25 @@ namespace Services.Dto
     
     [Route("/LocaleLookup/{Id}/copy", "POST")]
     public partial class LocaleLookupCopy : LocaleLookup {}
-    [Route("/localelookup", "GET")]
-    [Route("/localelookup/search", "GET, POST, DELETE")]
-    public partial class LocaleLookupSearch : Search<LocaleLookup>
+    public partial class LocaleLookupSearchBase : Search<LocaleLookup>
     {
+        public int? Id { get; set; }
         public string Data { get; set; }
         public string IpAddress { get; set; }
         public Reference Locale { get; set; }
         public List<int> LocaleIds { get; set; }
     }
-    
+
+    [Route("/localelookup", "GET")]
+    [Route("/localelookup/version", "GET, POST")]
+    [Route("/localelookup/search", "GET, POST, DELETE")]
+    public partial class LocaleLookupSearch : LocaleLookupSearchBase
+    {
+    }
+
     public class LocaleLookupFullTextSearch
     {
+        public LocaleLookupFullTextSearch() {}
         private LocaleLookupSearch _request;
         public LocaleLookupFullTextSearch(LocaleLookupSearch request) => _request = request;
         
@@ -145,15 +152,7 @@ namespace Services.Dto
         public bool doLocale { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LocaleLookup.Locale))); }
     }
 
-    [Route("/localelookup/version", "GET, POST")]
-    public partial class LocaleLookupVersion : LocaleLookupSearch {}
-
     [Route("/localelookup/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LocaleLookupBatch : List<LocaleLookup> { }
 
-    [Route("/admin/localelookup/ids", "GET, POST")]
-    public class LocaleLookupIds
-    {
-        public bool All { get; set; }
-    }
 }

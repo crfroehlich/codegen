@@ -424,7 +424,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class UserSessionMapper : Profile
+    public partial class UserSessionMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityUserSession,UserSession> _EntityToDto;
         private IMappingExpression<UserSession,DocEntityUserSession> _DtoToEntity;

@@ -129,10 +129,9 @@ namespace Services.Dto
     
     [Route("/Interval/{Id}/copy", "POST")]
     public partial class IntervalCopy : Interval {}
-    [Route("/interval", "GET")]
-    [Route("/interval/search", "GET, POST, DELETE")]
-    public partial class IntervalSearch : Search<Interval>
+    public partial class IntervalSearchBase : Search<Interval>
     {
+        public int? Id { get; set; }
         public Reference CalendarDateEnd { get; set; }
         public List<int> CalendarDateEndIds { get; set; }
         public Reference CalendarDateStart { get; set; }
@@ -143,9 +142,17 @@ namespace Services.Dto
         public Reference TimeOfDay { get; set; }
         public List<int> TimeOfDayIds { get; set; }
     }
-    
+
+    [Route("/interval", "GET")]
+    [Route("/interval/version", "GET, POST")]
+    [Route("/interval/search", "GET, POST, DELETE")]
+    public partial class IntervalSearch : IntervalSearchBase
+    {
+    }
+
     public class IntervalFullTextSearch
     {
+        public IntervalFullTextSearch() {}
         private IntervalSearch _request;
         public IntervalFullTextSearch(IntervalSearch request) => _request = request;
         
@@ -164,15 +171,7 @@ namespace Services.Dto
         public bool doTimeOfDay { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Interval.TimeOfDay))); }
     }
 
-    [Route("/interval/version", "GET, POST")]
-    public partial class IntervalVersion : IntervalSearch {}
-
     [Route("/interval/batch", "DELETE, PATCH, POST, PUT")]
     public partial class IntervalBatch : List<Interval> { }
 
-    [Route("/admin/interval/ids", "GET, POST")]
-    public class IntervalIds
-    {
-        public bool All { get; set; }
-    }
 }

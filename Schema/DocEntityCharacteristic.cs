@@ -375,7 +375,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class CharacteristicMapper : Profile
+    public partial class CharacteristicMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityCharacteristic,Characteristic> _EntityToDto;
         private IMappingExpression<Characteristic,DocEntityCharacteristic> _DtoToEntity;

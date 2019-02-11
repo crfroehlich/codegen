@@ -123,19 +123,26 @@ namespace Services.Dto
     
     [Route("/ReleaseStatus/{Id}/copy", "POST")]
     public partial class ReleaseStatusCopy : ReleaseStatus {}
-    [Route("/releasestatus", "GET")]
-    [Route("/releasestatus/search", "GET, POST, DELETE")]
-    public partial class ReleaseStatusSearch : Search<ReleaseStatus>
+    public partial class ReleaseStatusSearchBase : Search<ReleaseStatus>
     {
+        public int? Id { get; set; }
         public string Branch { get; set; }
         public string Release { get; set; }
         public string Server { get; set; }
         public string URL { get; set; }
         public string Version { get; set; }
     }
-    
+
+    [Route("/releasestatus", "GET")]
+    [Route("/releasestatus/version", "GET, POST")]
+    [Route("/releasestatus/search", "GET, POST, DELETE")]
+    public partial class ReleaseStatusSearch : ReleaseStatusSearchBase
+    {
+    }
+
     public class ReleaseStatusFullTextSearch
     {
+        public ReleaseStatusFullTextSearch() {}
         private ReleaseStatusSearch _request;
         public ReleaseStatusFullTextSearch(ReleaseStatusSearch request) => _request = request;
         
@@ -154,15 +161,7 @@ namespace Services.Dto
         public bool doVersion { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ReleaseStatus.Version))); }
     }
 
-    [Route("/releasestatus/version", "GET, POST")]
-    public partial class ReleaseStatusVersion : ReleaseStatusSearch {}
-
     [Route("/releasestatus/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ReleaseStatusBatch : List<ReleaseStatus> { }
 
-    [Route("/admin/releasestatus/ids", "GET, POST")]
-    public class ReleaseStatusIds
-    {
-        public bool All { get; set; }
-    }
 }

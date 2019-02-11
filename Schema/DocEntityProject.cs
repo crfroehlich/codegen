@@ -486,7 +486,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ProjectMapper : Profile
+    public partial class ProjectMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityProject,Project> _EntityToDto;
         private IMappingExpression<Project,DocEntityProject> _DtoToEntity;

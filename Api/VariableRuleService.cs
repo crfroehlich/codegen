@@ -45,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityVariableRule> _ExecSearch(VariableRuleSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<VariableRule, VariableRuleSearch>(request);
             IQueryable<DocEntityVariableRule> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableRuleFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityVariableRule,VariableRuleFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,14 +84,14 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                        if(true == request.ChildrenIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
-                        }
-                        if(true == request.InstancesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Instances.Any(r => r.Id.In(request.InstancesIds)));
-                        }
+                if(true == request.ChildrenIds?.Any())
+                {
+                    entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
+                }
+                if(true == request.InstancesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Instances.Any(r => r.Id.In(request.InstancesIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
@@ -118,10 +118,10 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Rule.Name.In(request.RuleNames));
                 }
-                        if(true == request.ScopesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
-                        }
+                if(true == request.ScopesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Type) && !DocTools.IsNullOrEmpty(request.Type.Id))
                 {
                     entities = entities.Where(en => en.Type.Id == request.Type.Id );
@@ -139,7 +139,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityVariableRule,VariableRuleSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -157,18 +157,6 @@ namespace Services.API
 
         public List<VariableRule> Get(VariableRuleSearch request) => GetSearchResult<VariableRule,DocEntityVariableRule,VariableRuleSearch>(DocConstantModelName.VARIABLERULE, request, _ExecSearch);
 
-        public object Post(VariableRuleVersion request) => Get(request);
-
-        public object Get(VariableRuleVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public VariableRule Get(VariableRule request) => GetEntity<VariableRule>(DocConstantModelName.VARIABLERULE, request, GetVariableRule);
         private VariableRule _AssignValues(VariableRule request, DocConstantPermission permission, Session session)
         {
@@ -181,7 +169,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             VariableRule ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<VariableRule>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -679,125 +667,42 @@ namespace Services.API
             if(!(request.Id > 0))
                 throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
             object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction)
                 {
                 case "variablerule":
-                    ret = _GetVariableRuleVariableRule(request, skip, take);
+                    ret =     GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<VariableRuleService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
                 case "variableinstance":
-                    ret = _GetVariableRuleVariableInstance(request, skip, take);
+                    ret =     GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<VariableInstanceService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
                 case "scope":
-                    ret = _GetVariableRuleScope(request, skip, take);
+                    ret =     GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request,
+                            (ss) =>
+                            { 
+                                var service = HostContext.ResolveService<ScopeService>(Request);
+                                return service.Get(ss);
+                            });
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
         }
-        
-        public object Get(VariableRuleJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                case "variablerule":
-                    ret = GetVariableRuleVariableRuleVersion(request);
-                    break;
-                case "variableinstance":
-                    ret = GetVariableRuleVariableInstanceVersion(request);
-                    break;
-                case "scope":
-                    ret = GetVariableRuleScopeVersion(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-        
 
-        private object _GetVariableRuleVariableRule(VariableRuleJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<VariableRule>(Dto.VariableRule.Fields, request.VisibleFields);
-             var en = DocEntityVariableRule.GetVariableRule(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.VARIABLERULE, columnName: "Children", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between VariableRule and VariableRule");
-             return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityVariableRule,VariableRule>(new List<VariableRule>());
-        }
 
-        private List<Version> GetVariableRuleVariableRuleVersion(VariableRuleJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-             var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityVariableRule.GetVariableRule(request.Id);
-                throw new HttpError(HttpStatusCode.NotFound, "No VariableRule found for Id {request.Id}");
-                ret = en?.Children.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetVariableRuleVariableInstance(VariableRuleJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<VariableInstance>(Dto.VariableInstance.Fields, request.VisibleFields);
-             var en = DocEntityVariableRule.GetVariableRule(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.VARIABLERULE, columnName: "Instances", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between VariableRule and VariableInstance");
-             return en?.Instances.Take(take).Skip(skip).ConvertFromEntityList<DocEntityVariableInstance,VariableInstance>(new List<VariableInstance>());
-        }
-
-        private List<Version> GetVariableRuleVariableInstanceVersion(VariableRuleJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-             var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityVariableRule.GetVariableRule(request.Id);
-                throw new HttpError(HttpStatusCode.NotFound, "No VariableRule found for Id {request.Id}");
-                ret = en?.Instances.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetVariableRuleScope(VariableRuleJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
-             var en = DocEntityVariableRule.GetVariableRule(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.VARIABLERULE, columnName: "Scopes", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between VariableRule and Scope");
-             return en?.Scopes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityScope,Scope>(new List<Scope>());
-        }
-
-        private List<Version> GetVariableRuleScopeVersion(VariableRuleJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-             var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityVariableRule.GetVariableRule(request.Id);
-                throw new HttpError(HttpStatusCode.NotFound, "No VariableRule found for Id {request.Id}");
-                ret = en?.Scopes.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
         public object Post(VariableRuleJunction request)
         {
             if (request == null)
@@ -811,9 +716,7 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "variablerule":
                     ret = _PostVariableRuleVariableRule(request);
@@ -824,6 +727,8 @@ namespace Services.API
                 case "scope":
                     ret = _PostVariableRuleScope(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -906,9 +811,7 @@ namespace Services.API
 
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction)
                 {
                 case "variablerule":
                     ret = _DeleteVariableRuleVariableRule(request);
@@ -919,6 +822,8 @@ namespace Services.API
                 case "scope":
                     ret = _DeleteVariableRuleScope(request);
                     break;
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
                 }
             });
             return ret;
@@ -1002,21 +907,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(VariableRuleIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityVariableRule>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

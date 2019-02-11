@@ -419,7 +419,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class LookupTableEnumMapper : Profile
+    public partial class LookupTableEnumMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityLookupTableEnum,LookupTableEnum> _EntityToDto;
         private IMappingExpression<LookupTableEnum,DocEntityLookupTableEnum> _DtoToEntity;
