@@ -5839,21 +5839,6 @@
       "PUT": true
     },
     "Extension": {
-      "AllUsers": {
-        "Description": "A list of all users that inherit this Document Set",
-        "DisplayName": "All Users",
-        "IsAllowAddInForm": false,
-        "IsAllowRemoveInForm": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "Name": "AllUsers",
-        "Order": 39,
-        "Tab": "Users",
-        "TabOrder": 100,
-        "Target": "User",
-        "TargetAlias": "AllUsers",
-        "Type": "relationships"
-      },
       "Bindings": {
         "IsAllowAddInForm": false,
         "IsAllowRemoveInForm": false,
