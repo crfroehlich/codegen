@@ -480,122 +480,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(OutcomeJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(OutcomeJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "documentset":
-                    ret =     GetJunctionSearchResult<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "documentset":
+                        return GetJunctionSearchResult<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for outcome/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(OutcomeJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(OutcomeJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "documentset":
-                    ret = _PostOutcomeDocumentSet(request);
-                    break;
+                    case "documentset":
+                        return AddJunction<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for outcome/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostOutcomeDocumentSet(OutcomeJunction request)
-        {
-            var entity = DocEntityOutcome.GetOutcome(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Outcome found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Outcome");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Outcome with objects that do not exist. No matching DocumentSet could be found for {id}.");
-                entity.DocumentSets.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(OutcomeJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(OutcomeJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "documentset":
-                    ret = _DeleteOutcomeDocumentSet(request);
-                    break;
+                    case "documentset":
+                        return RemoveJunction<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for outcome/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteOutcomeDocumentSet(OutcomeJunction request)
-        {
-            var entity = DocEntityOutcome.GetOutcome(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Outcome found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Outcome");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Outcome and DocumentSet");
-                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Outcome GetOutcome(Outcome request)
         {

@@ -1823,726 +1823,116 @@ namespace Services.API
                 });
             });
         }
-        public object Get(DocumentSetJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(DocumentSetJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableBindingService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "jctattributecategoryattributedocumentset":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityJctAttributeCategoryAttributeDocumentSet, JctAttributeCategoryAttributeDocumentSet, JctAttributeCategoryAttributeDocumentSetSearch>((int)request.Id, DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, "Categories", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<JctAttributeCategoryAttributeDocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "characteristic":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<CharacteristicService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "client":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ClientService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "comparator":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ComparatorService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "division":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DivisionService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "document":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "documentset":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "documentsethistory":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocumentSetHistory, DocumentSetHistory, DocumentSetHistorySearch>((int)request.Id, DocConstantModelName.DOCUMENTSETHISTORY, "Histories", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetHistoryService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "importdata":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityImportData, ImportData, ImportDataSearch>((int)request.Id, DocConstantModelName.IMPORTDATA, "Imports", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ImportDataService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "intervention":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<InterventionService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "nondigitizeddocument":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "NonDigitizedDocuments", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "outcome":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<OutcomeService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "projectlink":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "ProjectLinks", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ProjectService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "project":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Projects", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ProjectService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "scope":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ScopeService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "statsstudyset":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityStatsStudySet, StatsStudySet, StatsStudySetSearch>((int)request.Id, DocConstantModelName.STATSSTUDYSET, "Stats", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<StatsStudySetService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "user":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "workflow":
-                    ret =     GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<WorkflowService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "lookuptablebinding":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
+                    case "jctattributecategoryattributedocumentset":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityJctAttributeCategoryAttributeDocumentSet, JctAttributeCategoryAttributeDocumentSet, JctAttributeCategoryAttributeDocumentSetSearch>((int)request.Id, DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, "Categories", request, (ss) => HostContext.ResolveService<JctAttributeCategoryAttributeDocumentSetService>(Request)?.Get(ss));
+                    case "characteristic":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request, (ss) => HostContext.ResolveService<CharacteristicService>(Request)?.Get(ss));
+                    case "client":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request, (ss) => HostContext.ResolveService<ClientService>(Request)?.Get(ss));
+                    case "comparator":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request, (ss) => HostContext.ResolveService<ComparatorService>(Request)?.Get(ss));
+                    case "division":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request, (ss) => HostContext.ResolveService<DivisionService>(Request)?.Get(ss));
+                    case "document":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
+                    case "documentset":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "documentsethistory":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocumentSetHistory, DocumentSetHistory, DocumentSetHistorySearch>((int)request.Id, DocConstantModelName.DOCUMENTSETHISTORY, "Histories", request, (ss) => HostContext.ResolveService<DocumentSetHistoryService>(Request)?.Get(ss));
+                    case "importdata":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityImportData, ImportData, ImportDataSearch>((int)request.Id, DocConstantModelName.IMPORTDATA, "Imports", request, (ss) => HostContext.ResolveService<ImportDataService>(Request)?.Get(ss));
+                    case "intervention":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request, (ss) => HostContext.ResolveService<InterventionService>(Request)?.Get(ss));
+                    case "nondigitizeddocument":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "NonDigitizedDocuments", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
+                    case "outcome":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request, (ss) => HostContext.ResolveService<OutcomeService>(Request)?.Get(ss));
+                    case "projectlink":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "ProjectLinks", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
+                    case "project":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Projects", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "statsstudyset":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityStatsStudySet, StatsStudySet, StatsStudySetSearch>((int)request.Id, DocConstantModelName.STATSSTUDYSET, "Stats", request, (ss) => HostContext.ResolveService<StatsStudySetService>(Request)?.Get(ss));
+                    case "user":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
+                    case "workflow":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(DocumentSetJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(DocumentSetJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "characteristic":
-                    ret = _PostDocumentSetCharacteristic(request);
-                    break;
-                case "client":
-                    ret = _PostDocumentSetClient(request);
-                    break;
-                case "comparator":
-                    ret = _PostDocumentSetComparator(request);
-                    break;
-                case "division":
-                    ret = _PostDocumentSetDivision(request);
-                    break;
-                case "document":
-                    ret = _PostDocumentSetDocument(request);
-                    break;
-                case "intervention":
-                    ret = _PostDocumentSetIntervention(request);
-                    break;
-                case "nondigitizeddocument":
-                    ret = _PostDocumentSetNonDigitizedDocument(request);
-                    break;
-                case "outcome":
-                    ret = _PostDocumentSetOutcome(request);
-                    break;
-                case "scope":
-                    ret = _PostDocumentSetScope(request);
-                    break;
-                case "studydesign":
-                    ret = _PostDocumentSetStudyDesign(request);
-                    break;
-                case "user":
-                    ret = _PostDocumentSetUser(request);
-                    break;
+                    case "characteristic":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
+                    case "client":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
+                    case "comparator":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request);
+                    case "division":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
+                    case "document":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "intervention":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request);
+                    case "nondigitizeddocument":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "NonDigitizedDocuments", request);
+                    case "outcome":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request);
+                    case "scope":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "studydesign":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
+                    case "user":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostDocumentSetCharacteristic(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityCharacteristic.GetCharacteristic(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.CHARACTERISTIC, columnName: "Characteristics")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Characteristics property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Characteristic could be found for {id}.");
-                entity.Characteristics.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetClient(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityClient.GetClient(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.CLIENT, columnName: "Clients")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Clients property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Client could be found for {id}.");
-                entity.Clients.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetComparator(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityComparator.GetComparator(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.COMPARATOR, columnName: "Comparators")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Comparators property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Comparator could be found for {id}.");
-                entity.Comparators.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetDivision(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDivision.GetDivision(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DIVISION, columnName: "Divisions")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Divisions property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Division could be found for {id}.");
-                entity.Divisions.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetDocument(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocument.GetDocument(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENT, columnName: "Documents")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Documents property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Document could be found for {id}.");
-                entity.Documents.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetIntervention(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityIntervention.GetIntervention(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.INTERVENTION, columnName: "Interventions")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Interventions property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Intervention could be found for {id}.");
-                entity.Interventions.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetNonDigitizedDocument(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocument.GetDocument(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENT, columnName: "NonDigitizedDocuments")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the NonDigitizedDocuments property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Document could be found for {id}.");
-                entity.NonDigitizedDocuments.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetOutcome(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityOutcome.GetOutcome(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.OUTCOME, columnName: "Outcomes")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Outcomes property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Outcome could be found for {id}.");
-                entity.Outcomes.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetScope(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Scopes property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching Scope could be found for {id}.");
-                entity.Scopes.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetStudyDesign(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityStudyDesign.GetStudyDesign(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.STUDYDESIGN, columnName: "StudyDesigns")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the StudyDesigns property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching StudyDesign could be found for {id}.");
-                entity.StudyDesigns.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentSetUser(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityUser.GetUser(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Users property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of DocumentSet with objects that do not exist. No matching User could be found for {id}.");
-                entity.Users.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(DocumentSetJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(DocumentSetJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "characteristic":
-                    ret = _DeleteDocumentSetCharacteristic(request);
-                    break;
-                case "client":
-                    ret = _DeleteDocumentSetClient(request);
-                    break;
-                case "comparator":
-                    ret = _DeleteDocumentSetComparator(request);
-                    break;
-                case "division":
-                    ret = _DeleteDocumentSetDivision(request);
-                    break;
-                case "document":
-                    ret = _DeleteDocumentSetDocument(request);
-                    break;
-                case "intervention":
-                    ret = _DeleteDocumentSetIntervention(request);
-                    break;
-                case "nondigitizeddocument":
-                    ret = _DeleteDocumentSetNonDigitizedDocument(request);
-                    break;
-                case "outcome":
-                    ret = _DeleteDocumentSetOutcome(request);
-                    break;
-                case "scope":
-                    ret = _DeleteDocumentSetScope(request);
-                    break;
-                case "studydesign":
-                    ret = _DeleteDocumentSetStudyDesign(request);
-                    break;
-                case "user":
-                    ret = _DeleteDocumentSetUser(request);
-                    break;
+                    case "characteristic":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
+                    case "client":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
+                    case "comparator":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request);
+                    case "division":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
+                    case "document":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "intervention":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request);
+                    case "nondigitizeddocument":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "NonDigitizedDocuments", request);
+                    case "outcome":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request);
+                    case "scope":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "studydesign":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
+                    case "user":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteDocumentSetCharacteristic(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityCharacteristic.GetCharacteristic(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.CHARACTERISTIC, columnName: "Characteristics"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Characteristic");
-                if(null != relationship && false == relationship.IsRemoved) entity.Characteristics.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetClient(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityClient.GetClient(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.CLIENT, columnName: "Clients"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Client");
-                if(null != relationship && false == relationship.IsRemoved) entity.Clients.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetComparator(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityComparator.GetComparator(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.COMPARATOR, columnName: "Comparators"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Comparator");
-                if(null != relationship && false == relationship.IsRemoved) entity.Comparators.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetDivision(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDivision.GetDivision(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DIVISION, columnName: "Divisions"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Division");
-                if(null != relationship && false == relationship.IsRemoved) entity.Divisions.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetDocument(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocument.GetDocument(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENT, columnName: "Documents"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Document");
-                if(null != relationship && false == relationship.IsRemoved) entity.Documents.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetIntervention(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityIntervention.GetIntervention(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.INTERVENTION, columnName: "Interventions"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Intervention");
-                if(null != relationship && false == relationship.IsRemoved) entity.Interventions.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetNonDigitizedDocument(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocument.GetDocument(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENT, columnName: "NonDigitizedDocuments"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Document");
-                if(null != relationship && false == relationship.IsRemoved) entity.NonDigitizedDocuments.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetOutcome(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityOutcome.GetOutcome(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.OUTCOME, columnName: "Outcomes"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Outcome");
-                if(null != relationship && false == relationship.IsRemoved) entity.Outcomes.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetScope(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and Scope");
-                if(null != relationship && false == relationship.IsRemoved) entity.Scopes.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetStudyDesign(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityStudyDesign.GetStudyDesign(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.STUDYDESIGN, columnName: "StudyDesigns"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and StudyDesign");
-                if(null != relationship && false == relationship.IsRemoved) entity.StudyDesigns.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentSetUser(DocumentSetJunction request)
-        {
-            var entity = DocEntityDocumentSet.GetDocumentSet(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to DocumentSet");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityUser.GetUser(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between DocumentSet and User");
-                if(null != relationship && false == relationship.IsRemoved) entity.Users.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private DocumentSet GetDocumentSet(DocumentSet request)
         {

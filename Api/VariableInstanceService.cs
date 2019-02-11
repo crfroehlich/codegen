@@ -500,122 +500,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(VariableInstanceJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(VariableInstanceJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "workflow":
-                    ret =     GetJunctionSearchResult<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<WorkflowService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "workflow":
+                        return GetJunctionSearchResult<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(VariableInstanceJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(VariableInstanceJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "workflow":
-                    ret = _PostVariableInstanceWorkflow(request);
-                    break;
+                    case "workflow":
+                        return AddJunction<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostVariableInstanceWorkflow(VariableInstanceJunction request)
-        {
-            var entity = DocEntityVariableInstance.GetVariableInstance(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No VariableInstance found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to VariableInstance");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflow.GetWorkflow(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOW, columnName: "Workflows")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Workflows property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of VariableInstance with objects that do not exist. No matching Workflow could be found for {id}.");
-                entity.Workflows.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(VariableInstanceJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(VariableInstanceJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "workflow":
-                    ret = _DeleteVariableInstanceWorkflow(request);
-                    break;
+                    case "workflow":
+                        return RemoveJunction<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteVariableInstanceWorkflow(VariableInstanceJunction request)
-        {
-            var entity = DocEntityVariableInstance.GetVariableInstance(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No VariableInstance found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to VariableInstance");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflow.GetWorkflow(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOW, columnName: "Workflows"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between VariableInstance and Workflow");
-                if(null != relationship && false == relationship.IsRemoved) entity.Workflows.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private VariableInstance GetVariableInstance(VariableInstance request)
         {

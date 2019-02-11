@@ -1274,284 +1274,58 @@ namespace Services.API
                 });
             });
         }
-        public object Get(DocumentJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(DocumentJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "documentset":
-                    ret =     GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "lookuptable":
-                    ret =     GetJunctionSearchResult<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "nondigitizeddocumentset":
-                    ret =     GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "NonDigitizedDocumentSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "variableinstance":
-                    ret =     GetJunctionSearchResult<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<VariableInstanceService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "documentset":
+                        return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "lookuptable":
+                        return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
+                    case "nondigitizeddocumentset":
+                        return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "NonDigitizedDocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "variableinstance":
+                        return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for document/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(DocumentJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(DocumentJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "documentset":
-                    ret = _PostDocumentDocumentSet(request);
-                    break;
-                case "lookuptable":
-                    ret = _PostDocumentLookupTable(request);
-                    break;
-                case "nondigitizeddocumentset":
-                    ret = _PostDocumentNonDigitizedDocumentSet(request);
-                    break;
-                case "variableinstance":
-                    ret = _PostDocumentVariableInstance(request);
-                    break;
+                    case "documentset":
+                        return AddJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "lookuptable":
+                        return AddJunction<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request);
+                    case "nondigitizeddocumentset":
+                        return AddJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "NonDigitizedDocumentSets", request);
+                    case "variableinstance":
+                        return AddJunction<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for document/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostDocumentDocumentSet(DocumentJunction request)
-        {
-            var entity = DocEntityDocument.GetDocument(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Document found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Document");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Document with objects that do not exist. No matching DocumentSet could be found for {id}.");
-                entity.DocumentSets.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentLookupTable(DocumentJunction request)
-        {
-            var entity = DocEntityDocument.GetDocument(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Document found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Document");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTable.GetLookupTable(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "LookupTables")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the LookupTables property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Document with objects that do not exist. No matching LookupTable could be found for {id}.");
-                entity.LookupTables.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentNonDigitizedDocumentSet(DocumentJunction request)
-        {
-            var entity = DocEntityDocument.GetDocument(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Document found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Document");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "NonDigitizedDocumentSets")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the NonDigitizedDocumentSets property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Document with objects that do not exist. No matching DocumentSet could be found for {id}.");
-                entity.NonDigitizedDocumentSets.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostDocumentVariableInstance(DocumentJunction request)
-        {
-            var entity = DocEntityDocument.GetDocument(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Document found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Document");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableInstance.GetVariableInstance(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.VARIABLEINSTANCE, columnName: "VariableData")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the VariableData property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Document with objects that do not exist. No matching VariableInstance could be found for {id}.");
-                entity.VariableData.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(DocumentJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(DocumentJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "documentset":
-                    ret = _DeleteDocumentDocumentSet(request);
-                    break;
-                case "lookuptable":
-                    ret = _DeleteDocumentLookupTable(request);
-                    break;
-                case "nondigitizeddocumentset":
-                    ret = _DeleteDocumentNonDigitizedDocumentSet(request);
-                    break;
-                case "variableinstance":
-                    ret = _DeleteDocumentVariableInstance(request);
-                    break;
+                    case "documentset":
+                        return RemoveJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "lookuptable":
+                        return RemoveJunction<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request);
+                    case "nondigitizeddocumentset":
+                        return RemoveJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "NonDigitizedDocumentSets", request);
+                    case "variableinstance":
+                        return RemoveJunction<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for document/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteDocumentDocumentSet(DocumentJunction request)
-        {
-            var entity = DocEntityDocument.GetDocument(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Document found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Document");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Document and DocumentSet");
-                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentLookupTable(DocumentJunction request)
-        {
-            var entity = DocEntityDocument.GetDocument(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Document found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Document");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTable.GetLookupTable(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "LookupTables"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Document and LookupTable");
-                if(null != relationship && false == relationship.IsRemoved) entity.LookupTables.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentNonDigitizedDocumentSet(DocumentJunction request)
-        {
-            var entity = DocEntityDocument.GetDocument(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Document found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Document");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "NonDigitizedDocumentSets"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Document and DocumentSet");
-                if(null != relationship && false == relationship.IsRemoved) entity.NonDigitizedDocumentSets.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteDocumentVariableInstance(DocumentJunction request)
-        {
-            var entity = DocEntityDocument.GetDocument(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Document found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Document");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableInstance.GetVariableInstance(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.VARIABLEINSTANCE, columnName: "VariableData"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Document and VariableInstance");
-                if(null != relationship && false == relationship.IsRemoved) entity.VariableData.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Document GetDocument(Document request)
         {

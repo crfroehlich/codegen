@@ -1258,356 +1258,76 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(UserJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(UserJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "auditrecord":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityAuditRecord, AuditRecord, AuditRecordSearch>((int)request.Id, DocConstantModelName.AUDITRECORD, "Audits", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<AuditRecordService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "lookuptablebinding":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableBindingService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "documentset":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentSetService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "history":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "History", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<HistoryService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "impersonateduser":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonated", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ImpersonationService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "impersonatinguser":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonating", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ImpersonationService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "role":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<RoleService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "scope":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ScopeService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "session":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityUserSession, UserSession, UserSessionSearch>((int)request.Id, DocConstantModelName.USERSESSION, "Sessions", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserSessionService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "team":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TeamService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "timecard":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TimeCardService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "update":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UpdateService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "workflow":
-                    ret =     GetJunctionSearchResult<User, DocEntityUser, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<WorkflowService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "auditrecord":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityAuditRecord, AuditRecord, AuditRecordSearch>((int)request.Id, DocConstantModelName.AUDITRECORD, "Audits", request, (ss) => HostContext.ResolveService<AuditRecordService>(Request)?.Get(ss));
+                    case "lookuptablebinding":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
+                    case "documentset":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "history":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "History", request, (ss) => HostContext.ResolveService<HistoryService>(Request)?.Get(ss));
+                    case "impersonateduser":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonated", request, (ss) => HostContext.ResolveService<ImpersonationService>(Request)?.Get(ss));
+                    case "impersonatinguser":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonating", request, (ss) => HostContext.ResolveService<ImpersonationService>(Request)?.Get(ss));
+                    case "role":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "session":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityUserSession, UserSession, UserSessionSearch>((int)request.Id, DocConstantModelName.USERSESSION, "Sessions", request, (ss) => HostContext.ResolveService<UserSessionService>(Request)?.Get(ss));
+                    case "team":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request, (ss) => HostContext.ResolveService<TeamService>(Request)?.Get(ss));
+                    case "timecard":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request, (ss) => HostContext.ResolveService<TimeCardService>(Request)?.Get(ss));
+                    case "update":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request, (ss) => HostContext.ResolveService<UpdateService>(Request)?.Get(ss));
+                    case "workflow":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(UserJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(UserJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "documentset":
-                    ret = _PostUserDocumentSet(request);
-                    break;
-                case "role":
-                    ret = _PostUserRole(request);
-                    break;
-                case "scope":
-                    ret = _PostUserScope(request);
-                    break;
-                case "update":
-                    ret = _PostUserUpdate(request);
-                    break;
+                    case "documentset":
+                        return AddJunction<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "role":
+                        return AddJunction<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
+                    case "scope":
+                        return AddJunction<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "update":
+                        return AddJunction<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostUserDocumentSet(UserJunction request)
-        {
-            var entity = DocEntityUser.GetUser(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to User");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of User with objects that do not exist. No matching DocumentSet could be found for {id}.");
-                entity.DocumentSets.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostUserRole(UserJunction request)
-        {
-            var entity = DocEntityUser.GetUser(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to User");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityRole.GetRole(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "Roles")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Roles property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of User with objects that do not exist. No matching Role could be found for {id}.");
-                entity.Roles.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostUserScope(UserJunction request)
-        {
-            var entity = DocEntityUser.GetUser(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to User");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Scopes property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of User with objects that do not exist. No matching Scope could be found for {id}.");
-                entity.Scopes.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostUserUpdate(UserJunction request)
-        {
-            var entity = DocEntityUser.GetUser(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to User");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityUpdate.GetUpdate(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.UPDATE, columnName: "Updates")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Updates property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of User with objects that do not exist. No matching Update could be found for {id}.");
-                entity.Updates.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(UserJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(UserJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "documentset":
-                    ret = _DeleteUserDocumentSet(request);
-                    break;
-                case "role":
-                    ret = _DeleteUserRole(request);
-                    break;
-                case "scope":
-                    ret = _DeleteUserScope(request);
-                    break;
-                case "update":
-                    ret = _DeleteUserUpdate(request);
-                    break;
+                    case "documentset":
+                        return RemoveJunction<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "role":
+                        return RemoveJunction<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
+                    case "scope":
+                        return RemoveJunction<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "update":
+                        return RemoveJunction<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteUserDocumentSet(UserJunction request)
-        {
-            var entity = DocEntityUser.GetUser(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to User");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between User and DocumentSet");
-                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteUserRole(UserJunction request)
-        {
-            var entity = DocEntityUser.GetUser(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to User");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityRole.GetRole(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "Roles"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between User and Role");
-                if(null != relationship && false == relationship.IsRemoved) entity.Roles.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteUserScope(UserJunction request)
-        {
-            var entity = DocEntityUser.GetUser(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to User");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between User and Scope");
-                if(null != relationship && false == relationship.IsRemoved) entity.Scopes.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteUserUpdate(UserJunction request)
-        {
-            var entity = DocEntityUser.GetUser(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to User");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityUpdate.GetUpdate(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.UPDATE, columnName: "Updates"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between User and Update");
-                if(null != relationship && false == relationship.IsRemoved) entity.Updates.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private User GetUser(User request)
         {

@@ -713,284 +713,58 @@ namespace Services.API
                 });
             });
         }
-        public object Get(RoleJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(RoleJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "app":
-                    ret =     GetJunctionSearchResult<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<AppService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "featureset":
-                    ret =     GetJunctionSearchResult<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<FeatureSetService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "page":
-                    ret =     GetJunctionSearchResult<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<PageService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "user":
-                    ret =     GetJunctionSearchResult<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "app":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request, (ss) => HostContext.ResolveService<AppService>(Request)?.Get(ss));
+                    case "featureset":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request, (ss) => HostContext.ResolveService<FeatureSetService>(Request)?.Get(ss));
+                    case "page":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
+                    case "user":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(RoleJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(RoleJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "app":
-                    ret = _PostRoleApp(request);
-                    break;
-                case "featureset":
-                    ret = _PostRoleFeatureSet(request);
-                    break;
-                case "page":
-                    ret = _PostRolePage(request);
-                    break;
-                case "user":
-                    ret = _PostRoleUser(request);
-                    break;
+                    case "app":
+                        return AddJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
+                    case "featureset":
+                        return AddJunction<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request);
+                    case "page":
+                        return AddJunction<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
+                    case "user":
+                        return AddJunction<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostRoleApp(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityApp.GetApp(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.APP, columnName: "Apps")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Apps property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Role with objects that do not exist. No matching App could be found for {id}.");
-                entity.Apps.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostRoleFeatureSet(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityFeatureSet.GetFeatureSet(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.FEATURESET, columnName: "FeatureSets")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the FeatureSets property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Role with objects that do not exist. No matching FeatureSet could be found for {id}.");
-                entity.FeatureSets.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostRolePage(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityPage.GetPage(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.PAGE, columnName: "Pages")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Pages property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Role with objects that do not exist. No matching Page could be found for {id}.");
-                entity.Pages.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostRoleUser(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityUser.GetUser(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Users property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Role with objects that do not exist. No matching User could be found for {id}.");
-                entity.Users.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(RoleJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(RoleJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "app":
-                    ret = _DeleteRoleApp(request);
-                    break;
-                case "featureset":
-                    ret = _DeleteRoleFeatureSet(request);
-                    break;
-                case "page":
-                    ret = _DeleteRolePage(request);
-                    break;
-                case "user":
-                    ret = _DeleteRoleUser(request);
-                    break;
+                    case "app":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
+                    case "featureset":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request);
+                    case "page":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
+                    case "user":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteRoleApp(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityApp.GetApp(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.APP, columnName: "Apps"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Role and App");
-                if(null != relationship && false == relationship.IsRemoved) entity.Apps.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteRoleFeatureSet(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityFeatureSet.GetFeatureSet(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.FEATURESET, columnName: "FeatureSets"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Role and FeatureSet");
-                if(null != relationship && false == relationship.IsRemoved) entity.FeatureSets.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteRolePage(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityPage.GetPage(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.PAGE, columnName: "Pages"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Role and Page");
-                if(null != relationship && false == relationship.IsRemoved) entity.Pages.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteRoleUser(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityUser.GetUser(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Role and User");
-                if(null != relationship && false == relationship.IsRemoved) entity.Users.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Role GetRole(Role request)
         {

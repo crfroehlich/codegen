@@ -538,122 +538,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(TermSynonymJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(TermSynonymJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret =     GetJunctionSearchResult<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableBindingService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "lookuptablebinding":
+                        return GetJunctionSearchResult<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(TermSynonymJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(TermSynonymJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret = _PostTermSynonymLookupTableBinding(request);
-                    break;
+                    case "lookuptablebinding":
+                        return AddJunction<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostTermSynonymLookupTableBinding(TermSynonymJunction request)
-        {
-            var entity = DocEntityTermSynonym.GetTermSynonym(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No TermSynonym found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to TermSynonym");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Bindings")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Bindings property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of TermSynonym with objects that do not exist. No matching LookupTableBinding could be found for {id}.");
-                entity.Bindings.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(TermSynonymJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(TermSynonymJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret = _DeleteTermSynonymLookupTableBinding(request);
-                    break;
+                    case "lookuptablebinding":
+                        return RemoveJunction<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteTermSynonymLookupTableBinding(TermSynonymJunction request)
-        {
-            var entity = DocEntityTermSynonym.GetTermSynonym(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No TermSynonym found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to TermSynonym");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Bindings"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between TermSynonym and LookupTableBinding");
-                if(null != relationship && false == relationship.IsRemoved) entity.Bindings.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private TermSynonym GetTermSynonym(TermSynonym request)
         {

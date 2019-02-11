@@ -663,230 +663,52 @@ namespace Services.API
                 });
             });
         }
-        public object Get(VariableRuleJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(VariableRuleJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "variablerule":
-                    ret =     GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<VariableRuleService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "variableinstance":
-                    ret =     GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<VariableInstanceService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "scope":
-                    ret =     GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ScopeService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "variablerule":
+                        return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request, (ss) => HostContext.ResolveService<VariableRuleService>(Request)?.Get(ss));
+                    case "variableinstance":
+                        return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(VariableRuleJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(VariableRuleJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "variablerule":
-                    ret = _PostVariableRuleVariableRule(request);
-                    break;
-                case "variableinstance":
-                    ret = _PostVariableRuleVariableInstance(request);
-                    break;
-                case "scope":
-                    ret = _PostVariableRuleScope(request);
-                    break;
+                    case "variablerule":
+                        return AddJunction<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request);
+                    case "variableinstance":
+                        return AddJunction<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request);
+                    case "scope":
+                        return AddJunction<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostVariableRuleVariableRule(VariableRuleJunction request)
-        {
-            var entity = DocEntityVariableRule.GetVariableRule(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to VariableRule");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableRule.GetVariableRule(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.VARIABLERULE, columnName: "Children")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Children property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of VariableRule with objects that do not exist. No matching VariableRule could be found for {id}.");
-                entity.Children.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostVariableRuleVariableInstance(VariableRuleJunction request)
-        {
-            var entity = DocEntityVariableRule.GetVariableRule(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to VariableRule");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableInstance.GetVariableInstance(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.VARIABLEINSTANCE, columnName: "Instances")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Instances property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of VariableRule with objects that do not exist. No matching VariableInstance could be found for {id}.");
-                entity.Instances.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostVariableRuleScope(VariableRuleJunction request)
-        {
-            var entity = DocEntityVariableRule.GetVariableRule(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to VariableRule");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Scopes property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of VariableRule with objects that do not exist. No matching Scope could be found for {id}.");
-                entity.Scopes.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(VariableRuleJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(VariableRuleJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "variablerule":
-                    ret = _DeleteVariableRuleVariableRule(request);
-                    break;
-                case "variableinstance":
-                    ret = _DeleteVariableRuleVariableInstance(request);
-                    break;
-                case "scope":
-                    ret = _DeleteVariableRuleScope(request);
-                    break;
+                    case "variablerule":
+                        return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request);
+                    case "variableinstance":
+                        return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request);
+                    case "scope":
+                        return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteVariableRuleVariableRule(VariableRuleJunction request)
-        {
-            var entity = DocEntityVariableRule.GetVariableRule(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to VariableRule");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableRule.GetVariableRule(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.VARIABLERULE, columnName: "Children"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between VariableRule and VariableRule");
-                if(null != relationship && false == relationship.IsRemoved) entity.Children.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteVariableRuleVariableInstance(VariableRuleJunction request)
-        {
-            var entity = DocEntityVariableRule.GetVariableRule(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to VariableRule");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableInstance.GetVariableInstance(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.VARIABLEINSTANCE, columnName: "Instances"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between VariableRule and VariableInstance");
-                if(null != relationship && false == relationship.IsRemoved) entity.Instances.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteVariableRuleScope(VariableRuleJunction request)
-        {
-            var entity = DocEntityVariableRule.GetVariableRule(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to VariableRule");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between VariableRule and Scope");
-                if(null != relationship && false == relationship.IsRemoved) entity.Scopes.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private VariableRule GetVariableRule(VariableRule request)
         {

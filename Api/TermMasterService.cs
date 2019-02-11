@@ -650,176 +650,46 @@ namespace Services.API
                 });
             });
         }
-        public object Get(TermMasterJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(TermMasterJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "termcategory":
-                    ret =     GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TermCategoryService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "termsynonym":
-                    ret =     GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TermSynonymService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "termcategory":
+                        return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request, (ss) => HostContext.ResolveService<TermCategoryService>(Request)?.Get(ss));
+                    case "termsynonym":
+                        return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request, (ss) => HostContext.ResolveService<TermSynonymService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(TermMasterJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(TermMasterJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "termcategory":
-                    ret = _PostTermMasterTermCategory(request);
-                    break;
-                case "termsynonym":
-                    ret = _PostTermMasterTermSynonym(request);
-                    break;
+                    case "termcategory":
+                        return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
+                    case "termsynonym":
+                        return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostTermMasterTermCategory(TermMasterJunction request)
-        {
-            var entity = DocEntityTermMaster.GetTermMaster(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No TermMaster found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to TermMaster");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTermCategory.GetTermCategory(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.TERMCATEGORY, columnName: "Categories")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Categories property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of TermMaster with objects that do not exist. No matching TermCategory could be found for {id}.");
-                entity.Categories.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostTermMasterTermSynonym(TermMasterJunction request)
-        {
-            var entity = DocEntityTermMaster.GetTermMaster(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No TermMaster found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to TermMaster");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTermSynonym.GetTermSynonym(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.TERMSYNONYM, columnName: "Synonyms")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Synonyms property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of TermMaster with objects that do not exist. No matching TermSynonym could be found for {id}.");
-                entity.Synonyms.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(TermMasterJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(TermMasterJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "termcategory":
-                    ret = _DeleteTermMasterTermCategory(request);
-                    break;
-                case "termsynonym":
-                    ret = _DeleteTermMasterTermSynonym(request);
-                    break;
+                    case "termcategory":
+                        return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
+                    case "termsynonym":
+                        return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteTermMasterTermCategory(TermMasterJunction request)
-        {
-            var entity = DocEntityTermMaster.GetTermMaster(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No TermMaster found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to TermMaster");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTermCategory.GetTermCategory(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.TERMCATEGORY, columnName: "Categories"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between TermMaster and TermCategory");
-                if(null != relationship && false == relationship.IsRemoved) entity.Categories.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteTermMasterTermSynonym(TermMasterJunction request)
-        {
-            var entity = DocEntityTermMaster.GetTermMaster(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No TermMaster found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to TermMaster");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTermSynonym.GetTermSynonym(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.TERMSYNONYM, columnName: "Synonyms"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between TermMaster and TermSynonym");
-                if(null != relationship && false == relationship.IsRemoved) entity.Synonyms.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private TermMaster GetTermMaster(TermMaster request)
         {

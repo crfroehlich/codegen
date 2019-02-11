@@ -913,500 +913,82 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(WorkflowJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(WorkflowJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret =     GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableBindingService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "workflowcomment":
-                    ret =     GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<WorkflowCommentService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "document":
-                    ret =     GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<DocumentService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "scope":
-                    ret =     GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ScopeService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "tag":
-                    ret =     GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TagService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "workflowtask":
-                    ret =     GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflowTask, WorkflowTask, WorkflowTaskSearch>((int)request.Id, DocConstantModelName.WORKFLOWTASK, "Tasks", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<WorkflowTaskService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "variableinstance":
-                    ret =     GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<VariableInstanceService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "workflow":
-                    ret =     GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<WorkflowService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "lookuptablebinding":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
+                    case "workflowcomment":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request, (ss) => HostContext.ResolveService<WorkflowCommentService>(Request)?.Get(ss));
+                    case "document":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                    case "workflowtask":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflowTask, WorkflowTask, WorkflowTaskSearch>((int)request.Id, DocConstantModelName.WORKFLOWTASK, "Tasks", request, (ss) => HostContext.ResolveService<WorkflowTaskService>(Request)?.Get(ss));
+                    case "variableinstance":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
+                    case "workflow":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(WorkflowJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(WorkflowJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret = _PostWorkflowLookupTableBinding(request);
-                    break;
-                case "workflowcomment":
-                    ret = _PostWorkflowWorkflowComment(request);
-                    break;
-                case "document":
-                    ret = _PostWorkflowDocument(request);
-                    break;
-                case "scope":
-                    ret = _PostWorkflowScope(request);
-                    break;
-                case "tag":
-                    ret = _PostWorkflowTag(request);
-                    break;
-                case "workflowtask":
-                    ret = _PostWorkflowWorkflowTask(request);
-                    break;
-                case "variableinstance":
-                    ret = _PostWorkflowVariableInstance(request);
-                    break;
-                case "workflow":
-                    ret = _PostWorkflowWorkflow(request);
-                    break;
+                    case "lookuptablebinding":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
+                    case "workflowcomment":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request);
+                    case "document":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "scope":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "workflowtask":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowTask, WorkflowTask, WorkflowTaskSearch>((int)request.Id, DocConstantModelName.WORKFLOWTASK, "Tasks", request);
+                    case "variableinstance":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request);
+                    case "workflow":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostWorkflowLookupTableBinding(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Bindings")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Bindings property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Workflow with objects that do not exist. No matching LookupTableBinding could be found for {id}.");
-                entity.Bindings.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostWorkflowWorkflowComment(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflowComment.GetWorkflowComment(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOWCOMMENT, columnName: "Comments")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Comments property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Workflow with objects that do not exist. No matching WorkflowComment could be found for {id}.");
-                entity.Comments.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostWorkflowDocument(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocument.GetDocument(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENT, columnName: "Documents")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Documents property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Workflow with objects that do not exist. No matching Document could be found for {id}.");
-                entity.Documents.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostWorkflowScope(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Scopes property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Workflow with objects that do not exist. No matching Scope could be found for {id}.");
-                entity.Scopes.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostWorkflowTag(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTag.GetTag(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.TAG, columnName: "Tags")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Tags property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Workflow with objects that do not exist. No matching Tag could be found for {id}.");
-                entity.Tags.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostWorkflowWorkflowTask(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflowTask.GetWorkflowTask(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOWTASK, columnName: "Tasks")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Tasks property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Workflow with objects that do not exist. No matching WorkflowTask could be found for {id}.");
-                entity.Tasks.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostWorkflowVariableInstance(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableInstance.GetVariableInstance(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.VARIABLEINSTANCE, columnName: "Variables")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Variables property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Workflow with objects that do not exist. No matching VariableInstance could be found for {id}.");
-                entity.Variables.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostWorkflowWorkflow(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflow.GetWorkflow(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOW, columnName: "Workflows")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Workflows property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Workflow with objects that do not exist. No matching Workflow could be found for {id}.");
-                entity.Workflows.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(WorkflowJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(WorkflowJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret = _DeleteWorkflowLookupTableBinding(request);
-                    break;
-                case "workflowcomment":
-                    ret = _DeleteWorkflowWorkflowComment(request);
-                    break;
-                case "document":
-                    ret = _DeleteWorkflowDocument(request);
-                    break;
-                case "scope":
-                    ret = _DeleteWorkflowScope(request);
-                    break;
-                case "tag":
-                    ret = _DeleteWorkflowTag(request);
-                    break;
-                case "workflowtask":
-                    ret = _DeleteWorkflowWorkflowTask(request);
-                    break;
-                case "variableinstance":
-                    ret = _DeleteWorkflowVariableInstance(request);
-                    break;
-                case "workflow":
-                    ret = _DeleteWorkflowWorkflow(request);
-                    break;
+                    case "lookuptablebinding":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
+                    case "workflowcomment":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request);
+                    case "document":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "scope":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "workflowtask":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowTask, WorkflowTask, WorkflowTaskSearch>((int)request.Id, DocConstantModelName.WORKFLOWTASK, "Tasks", request);
+                    case "variableinstance":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request);
+                    case "workflow":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteWorkflowLookupTableBinding(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Bindings"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Workflow and LookupTableBinding");
-                if(null != relationship && false == relationship.IsRemoved) entity.Bindings.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteWorkflowWorkflowComment(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflowComment.GetWorkflowComment(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOWCOMMENT, columnName: "Comments"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Workflow and WorkflowComment");
-                if(null != relationship && false == relationship.IsRemoved) entity.Comments.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteWorkflowDocument(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocument.GetDocument(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENT, columnName: "Documents"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Workflow and Document");
-                if(null != relationship && false == relationship.IsRemoved) entity.Documents.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteWorkflowScope(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Workflow and Scope");
-                if(null != relationship && false == relationship.IsRemoved) entity.Scopes.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteWorkflowTag(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTag.GetTag(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.TAG, columnName: "Tags"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Workflow and Tag");
-                if(null != relationship && false == relationship.IsRemoved) entity.Tags.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteWorkflowWorkflowTask(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflowTask.GetWorkflowTask(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOWTASK, columnName: "Tasks"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Workflow and WorkflowTask");
-                if(null != relationship && false == relationship.IsRemoved) entity.Tasks.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteWorkflowVariableInstance(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableInstance.GetVariableInstance(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.VARIABLEINSTANCE, columnName: "Variables"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Workflow and VariableInstance");
-                if(null != relationship && false == relationship.IsRemoved) entity.Variables.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteWorkflowWorkflow(WorkflowJunction request)
-        {
-            var entity = DocEntityWorkflow.GetWorkflow(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Workflow found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Workflow");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflow.GetWorkflow(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOW, columnName: "Workflows"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Workflow and Workflow");
-                if(null != relationship && false == relationship.IsRemoved) entity.Workflows.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Workflow GetWorkflow(Workflow request)
         {

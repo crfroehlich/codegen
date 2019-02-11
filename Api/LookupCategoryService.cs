@@ -485,122 +485,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(LookupCategoryJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(LookupCategoryJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "lookuptable":
-                    ret =     GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "lookuptable":
+                        return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(LookupCategoryJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(LookupCategoryJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "lookuptable":
-                    ret = _PostLookupCategoryLookupTable(request);
-                    break;
+                    case "lookuptable":
+                        return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostLookupCategoryLookupTable(LookupCategoryJunction request)
-        {
-            var entity = DocEntityLookupCategory.GetLookupCategory(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No LookupCategory found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to LookupCategory");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTable.GetLookupTable(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "Lookups")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Lookups property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of LookupCategory with objects that do not exist. No matching LookupTable could be found for {id}.");
-                entity.Lookups.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(LookupCategoryJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(LookupCategoryJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "lookuptable":
-                    ret = _DeleteLookupCategoryLookupTable(request);
-                    break;
+                    case "lookuptable":
+                        return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteLookupCategoryLookupTable(LookupCategoryJunction request)
-        {
-            var entity = DocEntityLookupCategory.GetLookupCategory(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No LookupCategory found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to LookupCategory");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTable.GetLookupTable(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLE, columnName: "Lookups"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between LookupCategory and LookupTable");
-                if(null != relationship && false == relationship.IsRemoved) entity.Lookups.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private LookupCategory GetLookupCategory(LookupCategory request)
         {

@@ -138,138 +138,44 @@ namespace Services.API
 
 
 
-        public object Get(UserSessionJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(UserSessionJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "impersonation":
-                    ret =     GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<ImpersonationService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "request":
-                    ret =     GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityUserRequest, UserRequest, UserRequestSearch>((int)request.Id, DocConstantModelName.USERREQUEST, "Requests", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserRequestService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "history":
-                    ret =     GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "UserHistory", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<HistoryService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "impersonation":
+                        return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request, (ss) => HostContext.ResolveService<ImpersonationService>(Request)?.Get(ss));
+                    case "request":
+                        return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityUserRequest, UserRequest, UserRequestSearch>((int)request.Id, DocConstantModelName.USERREQUEST, "Requests", request, (ss) => HostContext.ResolveService<UserRequestService>(Request)?.Get(ss));
+                    case "history":
+                        return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "UserHistory", request, (ss) => HostContext.ResolveService<HistoryService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(UserSessionJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(UserSessionJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "impersonation":
-                    ret = _PostUserSessionImpersonation(request);
-                    break;
+                    case "impersonation":
+                        return AddJunction<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostUserSessionImpersonation(UserSessionJunction request)
-        {
-            var entity = DocEntityUserSession.GetUserSession(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No UserSession found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to UserSession");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityImpersonation.GetImpersonation(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.IMPERSONATION, columnName: "Impersonations")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Impersonations property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of UserSession with objects that do not exist. No matching Impersonation could be found for {id}.");
-                entity.Impersonations.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(UserSessionJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(UserSessionJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "impersonation":
-                    ret = _DeleteUserSessionImpersonation(request);
-                    break;
+                    case "impersonation":
+                        return RemoveJunction<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteUserSessionImpersonation(UserSessionJunction request)
-        {
-            var entity = DocEntityUserSession.GetUserSession(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No UserSession found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to UserSession");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityImpersonation.GetImpersonation(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.IMPERSONATION, columnName: "Impersonations"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between UserSession and Impersonation");
-                if(null != relationship && false == relationship.IsRemoved) entity.Impersonations.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private UserSession GetUserSession(UserSession request)
         {

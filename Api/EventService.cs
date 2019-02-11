@@ -138,92 +138,21 @@ namespace Services.API
 
 
 
-        public object Get(EventJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(EventJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "team":
-                    ret =     GetJunctionSearchResult<Event, DocEntityEvent, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TeamService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "update":
-                    ret =     GetJunctionSearchResult<Event, DocEntityEvent, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UpdateService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "user":
-                    ret =     GetJunctionSearchResult<Event, DocEntityEvent, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<UserService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "team":
+                        return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request, (ss) => HostContext.ResolveService<TeamService>(Request)?.Get(ss));
+                    case "update":
+                        return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request, (ss) => HostContext.ResolveService<UpdateService>(Request)?.Get(ss));
+                    case "user":
+                        return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(EventJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction)
-                {
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
-                }
-            });
-            return ret;
-        }
-
-
-        public object Delete(EventJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction)
-                {
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
-                }
-            });
-            return ret;
-        }
-
 
         private Event GetEvent(Event request)
         {

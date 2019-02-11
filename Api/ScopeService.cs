@@ -936,392 +936,70 @@ namespace Services.API
                 });
             });
         }
-        public object Get(ScopeJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(ScopeJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret =     GetJunctionSearchResult<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<LookupTableBindingService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "broadcast":
-                    ret =     GetJunctionSearchResult<Scope, DocEntityScope, DocEntityBroadcast, Broadcast, BroadcastSearch>((int)request.Id, DocConstantModelName.BROADCAST, "Broadcasts", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<BroadcastService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "help":
-                    ret =     GetJunctionSearchResult<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<HelpService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "termsynonym":
-                    ret =     GetJunctionSearchResult<Scope, DocEntityScope, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<TermSynonymService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "variablerule":
-                    ret =     GetJunctionSearchResult<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<VariableRuleService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
-                case "workflow":
-                    ret =     GetJunctionSearchResult<Scope, DocEntityScope, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<WorkflowService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "lookuptablebinding":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
+                    case "broadcast":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityBroadcast, Broadcast, BroadcastSearch>((int)request.Id, DocConstantModelName.BROADCAST, "Broadcasts", request, (ss) => HostContext.ResolveService<BroadcastService>(Request)?.Get(ss));
+                    case "help":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request, (ss) => HostContext.ResolveService<HelpService>(Request)?.Get(ss));
+                    case "termsynonym":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request, (ss) => HostContext.ResolveService<TermSynonymService>(Request)?.Get(ss));
+                    case "variablerule":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request, (ss) => HostContext.ResolveService<VariableRuleService>(Request)?.Get(ss));
+                    case "workflow":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(ScopeJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(ScopeJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret = _PostScopeLookupTableBinding(request);
-                    break;
-                case "broadcast":
-                    ret = _PostScopeBroadcast(request);
-                    break;
-                case "help":
-                    ret = _PostScopeHelp(request);
-                    break;
-                case "termsynonym":
-                    ret = _PostScopeTermSynonym(request);
-                    break;
-                case "variablerule":
-                    ret = _PostScopeVariableRule(request);
-                    break;
-                case "workflow":
-                    ret = _PostScopeWorkflow(request);
-                    break;
+                    case "lookuptablebinding":
+                        return AddJunction<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
+                    case "broadcast":
+                        return AddJunction<Scope, DocEntityScope, DocEntityBroadcast, Broadcast, BroadcastSearch>((int)request.Id, DocConstantModelName.BROADCAST, "Broadcasts", request);
+                    case "help":
+                        return AddJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
+                    case "termsynonym":
+                        return AddJunction<Scope, DocEntityScope, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
+                    case "variablerule":
+                        return AddJunction<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request);
+                    case "workflow":
+                        return AddJunction<Scope, DocEntityScope, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostScopeLookupTableBinding(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Bindings")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Bindings property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Scope with objects that do not exist. No matching LookupTableBinding could be found for {id}.");
-                entity.Bindings.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostScopeBroadcast(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityBroadcast.GetBroadcast(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.BROADCAST, columnName: "Broadcasts")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Broadcasts property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Scope with objects that do not exist. No matching Broadcast could be found for {id}.");
-                entity.Broadcasts.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostScopeHelp(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityHelp.GetHelp(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.HELP, columnName: "Help")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Help property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Scope with objects that do not exist. No matching Help could be found for {id}.");
-                entity.Help.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostScopeTermSynonym(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTermSynonym.GetTermSynonym(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.TERMSYNONYM, columnName: "Synonyms")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Synonyms property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Scope with objects that do not exist. No matching TermSynonym could be found for {id}.");
-                entity.Synonyms.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostScopeVariableRule(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableRule.GetVariableRule(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.VARIABLERULE, columnName: "VariableRules")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the VariableRules property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Scope with objects that do not exist. No matching VariableRule could be found for {id}.");
-                entity.VariableRules.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostScopeWorkflow(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflow.GetWorkflow(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOW, columnName: "Workflows")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Workflows property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Scope with objects that do not exist. No matching Workflow could be found for {id}.");
-                entity.Workflows.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(ScopeJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(ScopeJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "lookuptablebinding":
-                    ret = _DeleteScopeLookupTableBinding(request);
-                    break;
-                case "broadcast":
-                    ret = _DeleteScopeBroadcast(request);
-                    break;
-                case "help":
-                    ret = _DeleteScopeHelp(request);
-                    break;
-                case "termsynonym":
-                    ret = _DeleteScopeTermSynonym(request);
-                    break;
-                case "variablerule":
-                    ret = _DeleteScopeVariableRule(request);
-                    break;
-                case "workflow":
-                    ret = _DeleteScopeWorkflow(request);
-                    break;
+                    case "lookuptablebinding":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
+                    case "broadcast":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityBroadcast, Broadcast, BroadcastSearch>((int)request.Id, DocConstantModelName.BROADCAST, "Broadcasts", request);
+                    case "help":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
+                    case "termsynonym":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
+                    case "variablerule":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request);
+                    case "workflow":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteScopeLookupTableBinding(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityLookupTableBinding.GetLookupTableBinding(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.LOOKUPTABLEBINDING, columnName: "Bindings"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Scope and LookupTableBinding");
-                if(null != relationship && false == relationship.IsRemoved) entity.Bindings.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteScopeBroadcast(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityBroadcast.GetBroadcast(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.BROADCAST, columnName: "Broadcasts"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Scope and Broadcast");
-                if(null != relationship && false == relationship.IsRemoved) entity.Broadcasts.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteScopeHelp(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityHelp.GetHelp(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.HELP, columnName: "Help"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Scope and Help");
-                if(null != relationship && false == relationship.IsRemoved) entity.Help.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteScopeTermSynonym(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTermSynonym.GetTermSynonym(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.TERMSYNONYM, columnName: "Synonyms"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Scope and TermSynonym");
-                if(null != relationship && false == relationship.IsRemoved) entity.Synonyms.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteScopeVariableRule(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityVariableRule.GetVariableRule(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.VARIABLERULE, columnName: "VariableRules"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Scope and VariableRule");
-                if(null != relationship && false == relationship.IsRemoved) entity.VariableRules.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteScopeWorkflow(ScopeJunction request)
-        {
-            var entity = DocEntityScope.GetScope(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Scope found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Scope");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflow.GetWorkflow(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOW, columnName: "Workflows"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Scope and Workflow");
-                if(null != relationship && false == relationship.IsRemoved) entity.Workflows.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Scope GetScope(Scope request)
         {

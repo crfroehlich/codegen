@@ -594,122 +594,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(JunctionJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
+        public object Get(JunctionJunction request) =>
             Execute.Run( s => 
             {
                 switch(request.Junction)
                 {
-                case "junction":
-                    ret =     GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request,
-                            (ss) =>
-                            { 
-                                var service = HostContext.ResolveService<JunctionService>(Request);
-                                return service.Get(ss);
-                            });
-                    break;
+                    case "junction":
+                        return GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request, (ss) => HostContext.ResolveService<JunctionService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        public object Post(JunctionJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Post(JunctionJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "junction":
-                    ret = _PostJunctionJunction(request);
-                    break;
+                    case "junction":
+                        return AddJunction<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
 
-
-        private object _PostJunctionJunction(JunctionJunction request)
-        {
-            var entity = DocEntityJunction.GetJunction(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Junction found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Junction");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityJunction.GetJunction(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.JUNCTION, columnName: "Children")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Children property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Junction with objects that do not exist. No matching Junction could be found for {id}.");
-                entity.Children.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(JunctionJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(JunctionJunction request) =>
             Execute.Run( ssn =>
             {
                 switch(request.Junction)
                 {
-                case "junction":
-                    ret = _DeleteJunctionJunction(request);
-                    break;
+                    case "junction":
+                        return RemoveJunction<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request);
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _DeleteJunctionJunction(JunctionJunction request)
-        {
-            var entity = DocEntityJunction.GetJunction(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Junction found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Junction");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityJunction.GetJunction(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.JUNCTION, columnName: "Children"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Junction and Junction");
-                if(null != relationship && false == relationship.IsRemoved) entity.Children.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Junction GetJunction(Junction request)
         {
