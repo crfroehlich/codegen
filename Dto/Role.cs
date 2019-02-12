@@ -93,8 +93,8 @@ namespace Services.Dto
         public int? PagesCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Permissions), Description = "Permissions", IsRequired = false)]
-        public Permissions Permissions { get; set; }
+        [ApiMember(Name = nameof(Permissions), Description = "string", IsRequired = false)]
+        public string Permissions { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]

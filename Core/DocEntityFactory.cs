@@ -354,7 +354,6 @@ namespace Services.Schema
             {
                 //Cannot directly instance these types
                 case DocConstantModelName.ENTITY:
-                case DocConstantModelName.ENTITYAUDITRECORD:
                     ret = null;
                     break;
                 case DocConstantModelName.APP:

@@ -14281,7 +14281,6 @@
         "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
-        "JsonType": "Permissions",
         "Length": "int.MaxValue",
         "Name": "Permissions",
         "Order": 998,

@@ -235,11 +235,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<Permissions>(currentUser, request, pPermissions, permission, DocConstantModelName.ROLE, nameof(request.Permissions)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pPermissions, permission, DocConstantModelName.ROLE, nameof(request.Permissions)))
             {
                 if(DocPermissionFactory.IsRequested(request, pPermissions, entity.Permissions, nameof(request.Permissions)))
-                    entity.Permissions = DocSerialize<Permissions>.ToString(pPermissions);
-                if(DocPermissionFactory.IsRequested<Permissions>(request, pPermissions, nameof(request.Permissions)) && !request.VisibleFields.Matches(nameof(request.Permissions), ignoreSpaces: true))
+                    entity.Permissions = pPermissions;
+                if(DocPermissionFactory.IsRequested<string>(request, pPermissions, nameof(request.Permissions)) && !request.VisibleFields.Matches(nameof(request.Permissions), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Permissions));
                 }

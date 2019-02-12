@@ -609,7 +609,6 @@
   },
   "ModelName": {
     "ENTITY": "Entities",
-    "ENTITYAUDITRECORD": "EntityAuditRecords",
     "APP": "App",
     "ATTRIBUTE": "Attribute",
     "ATTRIBUTECATEGORY": "AttributeCategory",

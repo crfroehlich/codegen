@@ -65,8 +65,6 @@ namespace Services.Enums
         DOCUMENTSETHISTORY,
         [EnumMember(Value = DocConstantModelName.ENTITY)]
         ENTITY,
-        [EnumMember(Value = DocConstantModelName.ENTITYAUDITRECORD)]
-        ENTITYAUDITRECORD,
         [EnumMember(Value = DocConstantModelName.EVENT)]
         EVENT,
         [EnumMember(Value = DocConstantModelName.FEATURESET)]
@@ -203,7 +201,6 @@ namespace Services.Enums
         public const string DOCUMENTSET = "DocumentSet";
         public const string DOCUMENTSETHISTORY = "DocumentSetHistory";
         public const string ENTITY = "Entities";
-        public const string ENTITYAUDITRECORD = "EntityAuditRecords";
         public const string EVENT = "Event";
         public const string FEATURESET = "FeatureSet";
         public const string GLOSSARY = "Glossary";
