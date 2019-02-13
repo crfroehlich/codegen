@@ -594,7 +594,7 @@ namespace Services.API
         public object Get(BroadcastJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "scope":
                         return GetJunctionSearchResult<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
@@ -605,7 +605,7 @@ namespace Services.API
         public object Post(BroadcastJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "scope":
                         return AddJunction<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
@@ -617,7 +617,7 @@ namespace Services.API
         public object Delete(BroadcastJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "scope":
                         return RemoveJunction<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);

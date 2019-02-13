@@ -446,7 +446,7 @@ namespace Services.API
         public object Get(UpdateJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "event":
                         return GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request, (ss) => HostContext.ResolveService<EventService>(Request)?.Get(ss));

@@ -1826,7 +1826,7 @@ namespace Services.API
         public object Get(DocumentSetJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
@@ -1873,7 +1873,7 @@ namespace Services.API
         public object Post(DocumentSetJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "characteristic":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
@@ -1905,7 +1905,7 @@ namespace Services.API
         public object Delete(DocumentSetJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "characteristic":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);

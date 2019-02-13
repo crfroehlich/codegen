@@ -767,7 +767,7 @@ namespace Services.API
         public object Get(ImportDataJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "documentset":
                         return GetJunctionSearchResult<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
@@ -778,7 +778,7 @@ namespace Services.API
         public object Post(ImportDataJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "documentset":
                         return AddJunction<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
@@ -790,7 +790,7 @@ namespace Services.API
         public object Delete(ImportDataJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "documentset":
                         return RemoveJunction<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);

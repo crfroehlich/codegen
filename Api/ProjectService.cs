@@ -816,7 +816,7 @@ namespace Services.API
         public object Get(ProjectJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "project":
                         return GetJunctionSearchResult<Project, DocEntityProject, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Children", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
@@ -829,7 +829,7 @@ namespace Services.API
         public object Post(ProjectJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "timecard":
                         return AddJunction<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request);
@@ -841,7 +841,7 @@ namespace Services.API
         public object Delete(ProjectJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "timecard":
                         return RemoveJunction<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request);

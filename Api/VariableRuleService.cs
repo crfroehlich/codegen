@@ -666,7 +666,7 @@ namespace Services.API
         public object Get(VariableRuleJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "variablerule":
                         return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request, (ss) => HostContext.ResolveService<VariableRuleService>(Request)?.Get(ss));
@@ -681,7 +681,7 @@ namespace Services.API
         public object Post(VariableRuleJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "variablerule":
                         return AddJunction<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request);
@@ -697,7 +697,7 @@ namespace Services.API
         public object Delete(VariableRuleJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "variablerule":
                         return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request);

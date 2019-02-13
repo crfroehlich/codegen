@@ -138,7 +138,7 @@ namespace Services.API
         public object Get(BackgroundTaskHistoryJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "backgroundtaskitem":
                         return GetJunctionSearchResult<BackgroundTaskHistory, DocEntityBackgroundTaskHistory, DocEntityBackgroundTaskItem, BackgroundTaskItem, BackgroundTaskItemSearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKITEM, "Items", request, (ss) => HostContext.ResolveService<BackgroundTaskItemService>(Request)?.Get(ss));

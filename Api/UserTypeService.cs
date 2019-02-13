@@ -534,7 +534,7 @@ namespace Services.API
         public object Get(UserTypeJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "user":
                         return GetJunctionSearchResult<UserType, DocEntityUserType, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
@@ -545,7 +545,7 @@ namespace Services.API
         public object Post(UserTypeJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "user":
                         return AddJunction<UserType, DocEntityUserType, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
@@ -557,7 +557,7 @@ namespace Services.API
         public object Delete(UserTypeJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "user":
                         return RemoveJunction<UserType, DocEntityUserType, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);

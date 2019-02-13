@@ -916,7 +916,7 @@ namespace Services.API
         public object Get(WorkflowJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
@@ -941,7 +941,7 @@ namespace Services.API
         public object Post(WorkflowJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "lookuptablebinding":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
@@ -967,7 +967,7 @@ namespace Services.API
         public object Delete(WorkflowJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "lookuptablebinding":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);

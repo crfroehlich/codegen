@@ -329,7 +329,7 @@ namespace Services.API
         public object Get(FeatureSetJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "role":
                         return GetJunctionSearchResult<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
@@ -340,7 +340,7 @@ namespace Services.API
         public object Post(FeatureSetJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "role":
                         return AddJunction<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
@@ -352,7 +352,7 @@ namespace Services.API
         public object Delete(FeatureSetJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "role":
                         return RemoveJunction<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);

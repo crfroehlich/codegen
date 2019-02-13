@@ -611,7 +611,7 @@ namespace Services.API
         public object Get(HelpJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "page":
                         return GetJunctionSearchResult<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
@@ -624,7 +624,7 @@ namespace Services.API
         public object Post(HelpJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "page":
                         return AddJunction<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
@@ -638,7 +638,7 @@ namespace Services.API
         public object Delete(HelpJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "page":
                         return RemoveJunction<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);

@@ -653,7 +653,7 @@ namespace Services.API
         public object Get(TermMasterJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "termcategory":
                         return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request, (ss) => HostContext.ResolveService<TermCategoryService>(Request)?.Get(ss));
@@ -666,7 +666,7 @@ namespace Services.API
         public object Post(TermMasterJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "termcategory":
                         return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
@@ -680,7 +680,7 @@ namespace Services.API
         public object Delete(TermMasterJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "termcategory":
                         return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);

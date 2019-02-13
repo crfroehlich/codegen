@@ -716,7 +716,7 @@ namespace Services.API
         public object Get(RoleJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "app":
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request, (ss) => HostContext.ResolveService<AppService>(Request)?.Get(ss));
@@ -733,7 +733,7 @@ namespace Services.API
         public object Post(RoleJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "app":
                         return AddJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
@@ -751,7 +751,7 @@ namespace Services.API
         public object Delete(RoleJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "app":
                         return RemoveJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);

@@ -488,7 +488,7 @@ namespace Services.API
         public object Get(LookupCategoryJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "lookuptable":
                         return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
@@ -499,7 +499,7 @@ namespace Services.API
         public object Post(LookupCategoryJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "lookuptable":
                         return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
@@ -511,7 +511,7 @@ namespace Services.API
         public object Delete(LookupCategoryJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "lookuptable":
                         return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);

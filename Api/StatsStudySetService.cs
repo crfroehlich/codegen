@@ -155,7 +155,7 @@ namespace Services.API
         public object Get(StatsStudySetJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "statsrecord":
                         return GetJunctionSearchResult<StatsStudySet, DocEntityStatsStudySet, DocEntityStatsRecord, StatsRecord, StatsRecordSearch>((int)request.Id, DocConstantModelName.STATSRECORD, "Records", request, (ss) => HostContext.ResolveService<StatsRecordService>(Request)?.Get(ss));

@@ -525,7 +525,7 @@ namespace Services.API
         public object Get(WorkflowCommentJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "workflowcomment":
                         return GetJunctionSearchResult<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request, (ss) => HostContext.ResolveService<WorkflowCommentService>(Request)?.Get(ss));
@@ -536,7 +536,7 @@ namespace Services.API
         public object Post(WorkflowCommentJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "workflowcomment":
                         return AddJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request);
@@ -548,7 +548,7 @@ namespace Services.API
         public object Delete(WorkflowCommentJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "workflowcomment":
                         return RemoveJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request);

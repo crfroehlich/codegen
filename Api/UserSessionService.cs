@@ -141,7 +141,7 @@ namespace Services.API
         public object Get(UserSessionJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "impersonation":
                         return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request, (ss) => HostContext.ResolveService<ImpersonationService>(Request)?.Get(ss));
@@ -156,7 +156,7 @@ namespace Services.API
         public object Post(UserSessionJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "impersonation":
                         return AddJunction<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request);
@@ -168,7 +168,7 @@ namespace Services.API
         public object Delete(UserSessionJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "impersonation":
                         return RemoveJunction<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request);

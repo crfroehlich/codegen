@@ -503,7 +503,7 @@ namespace Services.API
         public object Get(VariableInstanceJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "workflow":
                         return GetJunctionSearchResult<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
@@ -514,7 +514,7 @@ namespace Services.API
         public object Post(VariableInstanceJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "workflow":
                         return AddJunction<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
@@ -526,7 +526,7 @@ namespace Services.API
         public object Delete(VariableInstanceJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "workflow":
                         return RemoveJunction<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);

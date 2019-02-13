@@ -141,7 +141,7 @@ namespace Services.API
         public object Get(EventJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "team":
                         return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request, (ss) => HostContext.ResolveService<TeamService>(Request)?.Get(ss));

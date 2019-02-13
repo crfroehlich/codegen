@@ -584,7 +584,7 @@ namespace Services.API
         public object Get(LookupTableBindingJunction request) =>
             Execute.Run( s => 
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "termsynonym":
                         return GetJunctionSearchResult<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request, (ss) => HostContext.ResolveService<TermSynonymService>(Request)?.Get(ss));
@@ -597,7 +597,7 @@ namespace Services.API
         public object Post(LookupTableBindingJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "termsynonym":
                         return AddJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
@@ -611,7 +611,7 @@ namespace Services.API
         public object Delete(LookupTableBindingJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(request.Junction)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
                     case "termsynonym":
                         return RemoveJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
