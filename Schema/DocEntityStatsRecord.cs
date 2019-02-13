@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -401,7 +400,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class StatsRecordMapper : DocMapperBase
+    public partial class StatsRecordMapper : Profile
     {
         private IMappingExpression<DocEntityStatsRecord,StatsRecord> _EntityToDto;
         private IMappingExpression<StatsRecord,DocEntityStatsRecord> _DtoToEntity;

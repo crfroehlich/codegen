@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -425,7 +424,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class UserSessionMapper : DocMapperBase
+    public partial class UserSessionMapper : Profile
     {
         private IMappingExpression<DocEntityUserSession,UserSession> _EntityToDto;
         private IMappingExpression<UserSession,DocEntityUserSession> _DtoToEntity;

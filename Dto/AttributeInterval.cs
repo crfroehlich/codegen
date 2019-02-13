@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -106,22 +105,15 @@ namespace Services.Dto
     
     [Route("/AttributeInterval/{Id}/copy", "POST")]
     public partial class AttributeIntervalCopy : AttributeInterval {}
-    public partial class AttributeIntervalSearchBase : Search<AttributeInterval>
+    [Route("/attributeinterval", "GET")]
+    [Route("/attributeinterval/search", "GET, POST, DELETE")]
+    public partial class AttributeIntervalSearch : Search<AttributeInterval>
     {
-        public int? Id { get; set; }
         public TypeInterval Interval { get; set; }
     }
-
-    [Route("/attributeinterval", "GET")]
-    [Route("/attributeinterval/version", "GET, POST")]
-    [Route("/attributeinterval/search", "GET, POST, DELETE")]
-    public partial class AttributeIntervalSearch : AttributeIntervalSearchBase
-    {
-    }
-
+    
     public class AttributeIntervalFullTextSearch
     {
-        public AttributeIntervalFullTextSearch() {}
         private AttributeIntervalSearch _request;
         public AttributeIntervalFullTextSearch(AttributeIntervalSearch request) => _request = request;
         
@@ -136,7 +128,15 @@ namespace Services.Dto
         public bool doInterval { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AttributeInterval.Interval))); }
     }
 
+    [Route("/attributeinterval/version", "GET, POST")]
+    public partial class AttributeIntervalVersion : AttributeIntervalSearch {}
+
     [Route("/attributeinterval/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeIntervalBatch : List<AttributeInterval> { }
 
+    [Route("/admin/attributeinterval/ids", "GET, POST")]
+    public class AttributeIntervalIds
+    {
+        public bool All { get; set; }
+    }
 }

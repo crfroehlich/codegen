@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -443,7 +442,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class AuditRecordMapper : DocMapperBase
+    public partial class AuditRecordMapper : Profile
     {
         private IMappingExpression<DocEntityAuditRecord,AuditRecord> _EntityToDto;
         private IMappingExpression<AuditRecord,DocEntityAuditRecord> _DtoToEntity;

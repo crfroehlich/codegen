@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -67,6 +66,12 @@ namespace Services.Dto
         public int? LookupsCount { get; set; }
 
 
+        [ApiMember(Name = nameof(ParentCategory), Description = "LookupCategory", IsRequired = false)]
+        public Reference ParentCategory { get; set; }
+        [ApiMember(Name = nameof(ParentCategoryId), Description = "Primary Key of LookupCategory", IsRequired = false)]
+        public int? ParentCategoryId { get; set; }
+
+
     }
 
     [Route("/lookupcategory", "POST")]
@@ -94,7 +99,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Category),nameof(Created),nameof(CreatorId),nameof(Enum),nameof(EnumId),nameof(Gestalt),nameof(Locked),nameof(Lookups),nameof(LookupsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Category),nameof(Created),nameof(CreatorId),nameof(Enum),nameof(EnumId),nameof(Gestalt),nameof(Locked),nameof(Lookups),nameof(LookupsCount),nameof(ParentCategory),nameof(ParentCategoryId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -122,25 +127,20 @@ namespace Services.Dto
     
     [Route("/LookupCategory/{Id}/copy", "POST")]
     public partial class LookupCategoryCopy : LookupCategory {}
-    public partial class LookupCategorySearchBase : Search<LookupCategory>
+    [Route("/lookupcategory", "GET")]
+    [Route("/lookupcategory/search", "GET, POST, DELETE")]
+    public partial class LookupCategorySearch : Search<LookupCategory>
     {
-        public int? Id { get; set; }
         public string Category { get; set; }
         public Reference Enum { get; set; }
         public List<int> EnumIds { get; set; }
         public List<int> LookupsIds { get; set; }
+        public Reference ParentCategory { get; set; }
+        public List<int> ParentCategoryIds { get; set; }
     }
-
-    [Route("/lookupcategory", "GET")]
-    [Route("/lookupcategory/version", "GET, POST")]
-    [Route("/lookupcategory/search", "GET, POST, DELETE")]
-    public partial class LookupCategorySearch : LookupCategorySearchBase
-    {
-    }
-
+    
     public class LookupCategoryFullTextSearch
     {
-        public LookupCategoryFullTextSearch() {}
         private LookupCategorySearch _request;
         public LookupCategoryFullTextSearch(LookupCategorySearch request) => _request = request;
         
@@ -155,14 +155,49 @@ namespace Services.Dto
         public bool doCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Category))); }
         public bool doEnum { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Enum))); }
         public bool doLookups { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Lookups))); }
+        public bool doParentCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.ParentCategory))); }
     }
+
+    [Route("/lookupcategory/version", "GET, POST")]
+    public partial class LookupCategoryVersion : LookupCategorySearch {}
 
     [Route("/lookupcategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupCategoryBatch : List<LookupCategory> { }
 
-    [Route("/lookupcategory/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/lookupcategory/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class LookupCategoryJunction : LookupCategorySearchBase {}
+    [Route("/lookupcategory/{Id}/lookuptable", "GET, POST, DELETE")]
+    public class LookupCategoryJunction : Search<LookupCategory>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public LookupCategoryJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/lookupcategory/{Id}/lookuptable/version", "GET")]
+    public class LookupCategoryJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/lookupcategory/ids", "GET, POST")]
+    public class LookupCategoryIds
+    {
+        public bool All { get; set; }
+    }
 }

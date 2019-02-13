@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -93,8 +92,8 @@ namespace Services.Dto
         public int? PagesCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Permissions), Description = "string", IsRequired = false)]
-        public string Permissions { get; set; }
+        [ApiMember(Name = nameof(Permissions), Description = "Permissions", IsRequired = false)]
+        public Permissions Permissions { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
@@ -159,35 +158,26 @@ namespace Services.Dto
     
     [Route("/Role/{Id}/copy", "POST")]
     public partial class RoleCopy : Role {}
-    public partial class RoleSearchBase : Search<Role>
+    [Route("/role", "GET")]
+    [Route("/role/search", "GET, POST, DELETE")]
+    public partial class RoleSearch : Search<Role>
     {
-        public int? Id { get; set; }
         public Reference AdminTeam { get; set; }
         public List<int> AdminTeamIds { get; set; }
         public List<int> AppsIds { get; set; }
         public string Description { get; set; }
         public string Features { get; set; }
         public List<int> FeatureSetsIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> IsInternal { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> IsSuperAdmin { get; set; }
+        public bool? IsInternal { get; set; }
+        public bool? IsSuperAdmin { get; private set; }
         public string Name { get; set; }
         public List<int> PagesIds { get; set; }
         public string Permissions { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/role", "GET")]
-    [Route("/role/version", "GET, POST")]
-    [Route("/role/search", "GET, POST, DELETE")]
-    public partial class RoleSearch : RoleSearchBase
-    {
-    }
-
+    
     public class RoleFullTextSearch
     {
-        public RoleFullTextSearch() {}
         private RoleSearch _request;
         public RoleFullTextSearch(RoleSearch request) => _request = request;
         
@@ -212,12 +202,52 @@ namespace Services.Dto
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Users))); }
     }
 
+    [Route("/role/version", "GET, POST")]
+    public partial class RoleVersion : RoleSearch {}
+
     [Route("/role/batch", "DELETE, PATCH, POST, PUT")]
     public partial class RoleBatch : List<Role> { }
 
-    [Route("/role/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/role/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class RoleJunction : RoleSearchBase {}
+    [Route("/role/{Id}/app", "GET, POST, DELETE")]
+    [Route("/role/{Id}/featureset", "GET, POST, DELETE")]
+    [Route("/role/{Id}/page", "GET, POST, DELETE")]
+    [Route("/role/{Id}/user", "GET, POST, DELETE")]
+    public class RoleJunction : Search<Role>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public RoleJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/role/{Id}/app/version", "GET")]
+    [Route("/role/{Id}/featureset/version", "GET")]
+    [Route("/role/{Id}/page/version", "GET")]
+    [Route("/role/{Id}/user/version", "GET")]
+    public class RoleJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/role/ids", "GET, POST")]
+    public class RoleIds
+    {
+        public bool All { get; set; }
+    }
 }

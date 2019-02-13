@@ -65,10 +65,14 @@ namespace Services.Enums
         DOCUMENTSETHISTORY,
         [EnumMember(Value = DocConstantModelName.ENTITY)]
         ENTITY,
+        [EnumMember(Value = DocConstantModelName.ENTITYAUDITRECORD)]
+        ENTITYAUDITRECORD,
         [EnumMember(Value = DocConstantModelName.EVENT)]
         EVENT,
         [EnumMember(Value = DocConstantModelName.FEATURESET)]
         FEATURESET,
+        [EnumMember(Value = DocConstantModelName.FOREIGNKEY)]
+        FOREIGNKEY,
         [EnumMember(Value = DocConstantModelName.GLOSSARY)]
         GLOSSARY,
         [EnumMember(Value = DocConstantModelName.HELP)]
@@ -109,6 +113,8 @@ namespace Services.Enums
         MEANVARIANCEVALUE,
         [EnumMember(Value = DocConstantModelName.OUTCOME)]
         OUTCOME,
+        [EnumMember(Value = DocConstantModelName.PACKAGE)]
+        PACKAGE,
         [EnumMember(Value = DocConstantModelName.PAGE)]
         PAGE,
         [EnumMember(Value = DocConstantModelName.PROJECT)]
@@ -201,8 +207,10 @@ namespace Services.Enums
         public const string DOCUMENTSET = "DocumentSet";
         public const string DOCUMENTSETHISTORY = "DocumentSetHistory";
         public const string ENTITY = "Entities";
+        public const string ENTITYAUDITRECORD = "EntityAuditRecords";
         public const string EVENT = "Event";
         public const string FEATURESET = "FeatureSet";
+        public const string FOREIGNKEY = "ForeignKey";
         public const string GLOSSARY = "Glossary";
         public const string HELP = "Help";
         public const string HISTORY = "History";
@@ -223,6 +231,7 @@ namespace Services.Enums
         public const string MEANVARIANCES = "MeanVariances";
         public const string MEANVARIANCEVALUE = "MeanVarianceValue";
         public const string OUTCOME = "Outcome";
+        public const string PACKAGE = "Package";
         public const string PAGE = "Page";
         public const string PROJECT = "Project";
         public const string QUEUECHANNEL = "QueueChannel";

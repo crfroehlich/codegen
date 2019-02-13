@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -405,7 +404,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class PageMapper : DocMapperBase
+    public partial class PageMapper : Profile
     {
         private IMappingExpression<DocEntityPage,Page> _EntityToDto;
         private IMappingExpression<Page,DocEntityPage> _DtoToEntity;

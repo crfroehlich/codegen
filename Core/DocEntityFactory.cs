@@ -121,6 +121,10 @@ namespace Services.Schema
                 {
                     ret = DocConstantModelName.FEATURESET;
                 }
+                else if(typeof(T) == typeof(DocEntityForeignKey))
+                {
+                    ret = DocConstantModelName.FOREIGNKEY;
+                }
                 else if(typeof(T) == typeof(DocEntityGlossary))
                 {
                     ret = DocConstantModelName.GLOSSARY;
@@ -200,6 +204,10 @@ namespace Services.Schema
                 else if(typeof(T) == typeof(DocEntityOutcome))
                 {
                     ret = DocConstantModelName.OUTCOME;
+                }
+                else if(typeof(T) == typeof(DocEntityPackage))
+                {
+                    ret = DocConstantModelName.PACKAGE;
                 }
                 else if(typeof(T) == typeof(DocEntityPage))
                 {
@@ -354,6 +362,7 @@ namespace Services.Schema
             {
                 //Cannot directly instance these types
                 case DocConstantModelName.ENTITY:
+                case DocConstantModelName.ENTITYAUDITRECORD:
                     ret = null;
                     break;
                 case DocConstantModelName.APP:
@@ -425,6 +434,9 @@ namespace Services.Schema
                 case DocConstantModelName.FEATURESET:
                     ret = new DocEntityFeatureSet(session);
                     break;
+                case DocConstantModelName.FOREIGNKEY:
+                    ret = new DocEntityForeignKey(session);
+                    break;
                 case DocConstantModelName.GLOSSARY:
                     ret = new DocEntityGlossary(session);
                     break;
@@ -484,6 +496,9 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.OUTCOME:
                     ret = new DocEntityOutcome(session);
+                    break;
+                case DocConstantModelName.PACKAGE:
+                    ret = new DocEntityPackage(session);
                     break;
                 case DocConstantModelName.PAGE:
                     ret = new DocEntityPage(session);
@@ -675,6 +690,9 @@ namespace Services.Schema
                 case DocConstantModelName.FEATURESET:
                     ret = DocEntityFeatureSet.GetFeatureSet(id);
                     break;
+                case DocConstantModelName.FOREIGNKEY:
+                    ret = DocEntityForeignKey.GetForeignKey(id);
+                    break;
                 case DocConstantModelName.GLOSSARY:
                     ret = DocEntityGlossary.GetGlossary(id);
                     break;
@@ -734,6 +752,9 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.OUTCOME:
                     ret = DocEntityOutcome.GetOutcome(id);
+                    break;
+                case DocConstantModelName.PACKAGE:
+                    ret = DocEntityPackage.GetPackage(id);
                     break;
                 case DocConstantModelName.PAGE:
                     ret = DocEntityPage.GetPage(id);
@@ -963,6 +984,11 @@ namespace Services.Schema
                        ret = entities.Cast<DocEntityFeatureSet>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
                     }
                     break;
+                case DocConstantModelName.FOREIGNKEY:
+                    {
+                       ret = entities.Cast<DocEntityForeignKey>().Select(e => new Reference() { Id = e.Id, Name = e.KeyName, Gestalt = e.Gestalt }).ToList();
+                    }
+                    break;
                 case DocConstantModelName.GLOSSARY:
                     {
                        ret = entities.Cast<DocEntityGlossary>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
@@ -1061,6 +1087,11 @@ namespace Services.Schema
                 case DocConstantModelName.OUTCOME:
                     {
                        ret = entities.Cast<DocEntityOutcome>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
+                    }
+                    break;
+                case DocConstantModelName.PACKAGE:
+                    {
+                       ret = entities.Cast<DocEntityPackage>().Select(e => new Reference() { Id = e.Id, Name = e.Gestalt, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.PAGE:

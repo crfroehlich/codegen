@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -58,6 +57,12 @@ namespace Services.Dto
         public int? ParentCategoryId { get; set; }
 
 
+        [ApiMember(Name = nameof(Scope), Description = "Scope", IsRequired = false)]
+        public Reference Scope { get; set; }
+        [ApiMember(Name = nameof(ScopeId), Description = "Primary Key of Scope", IsRequired = false)]
+        public int? ScopeId { get; set; }
+
+
         [ApiMember(Name = nameof(Terms), Description = "TermMaster", IsRequired = false)]
         public List<Reference> Terms { get; set; }
         public int? TermsCount { get; set; }
@@ -90,7 +95,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(ParentCategory),nameof(ParentCategoryId),nameof(Terms),nameof(TermsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(ParentCategory),nameof(ParentCategoryId),nameof(Scope),nameof(ScopeId),nameof(Terms),nameof(TermsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -118,24 +123,19 @@ namespace Services.Dto
     
     [Route("/TermCategory/{Id}/copy", "POST")]
     public partial class TermCategoryCopy : TermCategory {}
-    public partial class TermCategorySearchBase : Search<TermCategory>
+    [Route("/termcategory", "GET")]
+    [Route("/termcategory/search", "GET, POST, DELETE")]
+    public partial class TermCategorySearch : Search<TermCategory>
     {
-        public int? Id { get; set; }
         public Reference ParentCategory { get; set; }
         public List<int> ParentCategoryIds { get; set; }
+        public Reference Scope { get; set; }
+        public List<int> ScopeIds { get; set; }
         public List<int> TermsIds { get; set; }
     }
-
-    [Route("/termcategory", "GET")]
-    [Route("/termcategory/version", "GET, POST")]
-    [Route("/termcategory/search", "GET, POST, DELETE")]
-    public partial class TermCategorySearch : TermCategorySearchBase
-    {
-    }
-
+    
     public class TermCategoryFullTextSearch
     {
-        public TermCategoryFullTextSearch() {}
         private TermCategorySearch _request;
         public TermCategoryFullTextSearch(TermCategorySearch request) => _request = request;
         
@@ -149,15 +149,50 @@ namespace Services.Dto
         
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Name))); }
         public bool doParentCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.ParentCategory))); }
+        public bool doScope { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Scope))); }
         public bool doTerms { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Terms))); }
     }
+
+    [Route("/termcategory/version", "GET, POST")]
+    public partial class TermCategoryVersion : TermCategorySearch {}
 
     [Route("/termcategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TermCategoryBatch : List<TermCategory> { }
 
-    [Route("/termcategory/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/termcategory/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class TermCategoryJunction : TermCategorySearchBase {}
+    [Route("/termcategory/{Id}/termmaster", "GET, POST, DELETE")]
+    public class TermCategoryJunction : Search<TermCategory>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public TermCategoryJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/termcategory/{Id}/termmaster/version", "GET")]
+    public class TermCategoryJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/termcategory/ids", "GET, POST")]
+    public class TermCategoryIds
+    {
+        public bool All { get; set; }
+    }
 }

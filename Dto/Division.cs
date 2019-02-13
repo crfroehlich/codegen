@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -145,9 +144,10 @@ namespace Services.Dto
     
     [Route("/Division/{Id}/copy", "POST")]
     public partial class DivisionCopy : Division {}
-    public partial class DivisionSearchBase : Search<Division>
+    [Route("/division", "GET")]
+    [Route("/division/search", "GET, POST, DELETE")]
+    public partial class DivisionSearch : Search<Division>
     {
-        public int? Id { get; set; }
         public Reference Client { get; set; }
         public List<int> ClientIds { get; set; }
         public Reference DefaultLocale { get; set; }
@@ -159,17 +159,9 @@ namespace Services.Dto
         public string Settings { get; set; }
         public List<int> UsersIds { get; set; }
     }
-
-    [Route("/division", "GET")]
-    [Route("/division/version", "GET, POST")]
-    [Route("/division/search", "GET, POST, DELETE")]
-    public partial class DivisionSearch : DivisionSearchBase
-    {
-    }
-
+    
     public class DivisionFullTextSearch
     {
-        public DivisionFullTextSearch() {}
         private DivisionSearch _request;
         public DivisionFullTextSearch(DivisionSearch request) => _request = request;
         
@@ -190,12 +182,48 @@ namespace Services.Dto
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Division.Users))); }
     }
 
+    [Route("/division/version", "GET, POST")]
+    public partial class DivisionVersion : DivisionSearch {}
+
     [Route("/division/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DivisionBatch : List<Division> { }
 
-    [Route("/division/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/division/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class DivisionJunction : DivisionSearchBase {}
+    [Route("/division/{Id}/documentset", "GET, POST, DELETE")]
+    [Route("/division/{Id}/user", "GET, POST, DELETE")]
+    public class DivisionJunction : Search<Division>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public DivisionJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/division/{Id}/documentset/version", "GET")]
+    [Route("/division/{Id}/user/version", "GET")]
+    public class DivisionJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/division/ids", "GET, POST")]
+    public class DivisionIds
+    {
+        public bool All { get; set; }
+    }
 }

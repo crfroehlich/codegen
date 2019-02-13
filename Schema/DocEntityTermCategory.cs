@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -119,6 +118,12 @@ namespace Services.Schema
         [FieldMapping(nameof(ParentCategory))]
         public DocEntityTermCategory ParentCategory { get; set; }
         public int? ParentCategoryId { get { return ParentCategory?.Id; } private set { var noid = value; } }
+
+
+        [Field(NullableOnUpgrade = true)]
+        [FieldMapping(nameof(Scope))]
+        public DocEntityScope Scope { get; set; }
+        public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
 
 
         [Field()]
@@ -387,7 +392,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TermCategoryMapper : DocMapperBase
+    public partial class TermCategoryMapper : Profile
     {
         private IMappingExpression<DocEntityTermCategory,TermCategory> _EntityToDto;
         private IMappingExpression<TermCategory,DocEntityTermCategory> _DtoToEntity;
@@ -408,6 +413,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.NameId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.NameId))))
                 .ForMember(dest => dest.ParentCategory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ParentCategory))))
                 .ForMember(dest => dest.ParentCategoryId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ParentCategoryId))))
+                .ForMember(dest => dest.Scope, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.Scope))))
+                .ForMember(dest => dest.ScopeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ScopeId))))
                 .ForMember(dest => dest.Terms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.Terms))))
                 .ForMember(dest => dest.TermsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.TermsCount))))
                 .MaxDepth(2);

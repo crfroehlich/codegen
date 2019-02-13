@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -403,7 +402,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class EventMapper : DocMapperBase
+    public partial class EventMapper : Profile
     {
         private IMappingExpression<DocEntityEvent,Event> _EntityToDto;
         private IMappingExpression<Event,DocEntityEvent> _DtoToEntity;

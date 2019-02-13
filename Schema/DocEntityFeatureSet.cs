@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -388,7 +387,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class FeatureSetMapper : DocMapperBase
+    public partial class FeatureSetMapper : Profile
     {
         private IMappingExpression<DocEntityFeatureSet,FeatureSet> _EntityToDto;
         private IMappingExpression<FeatureSet,DocEntityFeatureSet> _DtoToEntity;
