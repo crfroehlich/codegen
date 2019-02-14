@@ -66,7 +66,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Interval), Description = "AttributeInterval", IsRequired = true)]
-        public Reference Interval { get; set; }
+        public AttributeInterval Interval { get; set; }
         [ApiMember(Name = nameof(IntervalId), Description = "Primary Key of AttributeInterval", IsRequired = false)]
         public int? IntervalId { get; set; }
 
@@ -122,15 +122,13 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
                 }
                 return _VisibleFields;
             }
             set
             {
-                var requested = value ?? new List<string>();
-                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Attribute>("Attribute",exists);
+                _VisibleFields = Fields;
             }
         }
 

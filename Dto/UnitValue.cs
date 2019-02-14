@@ -72,7 +72,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Unit), Description = "UnitOfMeasure", IsRequired = true)]
-        public Reference Unit { get; set; }
+        public UnitOfMeasure Unit { get; set; }
         [ApiMember(Name = nameof(UnitId), Description = "Primary Key of UnitOfMeasure", IsRequired = false)]
         public int? UnitId { get; set; }
 
@@ -112,15 +112,13 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
                 }
                 return _VisibleFields;
             }
             set
             {
-                var requested = value ?? new List<string>();
-                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<UnitValue>("UnitValue",exists);
+                _VisibleFields = Fields;
             }
         }
 

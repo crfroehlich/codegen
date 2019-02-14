@@ -318,8 +318,8 @@ namespace Services.Core
                 #region Type Mapping 
             cfg.CreateMap<DocTypeAssociationMeasure, TypeAssociationMeasure>()
                 .ConstructUsing(new Func<DocTypeAssociationMeasure, TypeAssociationMeasure>(c => new TypeAssociationMeasure() ) )
-                .ForMember(dest => dest.AdjustedDescription, opt => opt.MapFrom(src => (null == src || null == src.AdjustedDescription ) ? null : src.AdjustedDescription.ToReference() ) )
                 .ForMember(dest => dest.AM, opt => opt.MapFrom(src => (null == src || null == src.AM ) ? null : src.AM.ToReference() ) )
+                .ForMember(dest => dest.AdjustedDescription, opt => opt.MapFrom(src => (null == src || null == src.AdjustedDescription ) ? null : src.AdjustedDescription.ToReference() ) )
                 .ForMember(dest => dest.PersonCount, opt => opt.MapFrom(src => (null == src || null == src.PersonCount ) ? null : src.PersonCount.ToReference() ) )
                 .ForMember(dest => dest.VarianceType, opt => opt.MapFrom(src => (null == src || null == src.VarianceType ) ? null : src.VarianceType.ToReference() ) )
 ;            cfg.CreateMap<DocStructureAssociationMeasure, TypeAssociationMeasure>()
@@ -339,12 +339,10 @@ namespace Services.Core
                 .ForMember(dest => dest.Execute, opt => opt.Ignore() )
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
-                .ForMember(dest => dest.AdjustedDescription, opt => opt.MapFrom(src => (null == src || null == src.AdjustedDescription || string.IsNullOrEmpty(src.AdjustedDescription.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("AdjustedDescription", src.AdjustedDescription.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.AM, opt => opt.MapFrom(src => (null == src || null == src.AM || string.IsNullOrEmpty(src.AM.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("AssociationMeasure", src.AM.Name ).ToLookupTable() ) )
-                .ForMember(dest => dest.AmValueUnits, opt => opt.MapFrom(src => null == src.AmValueUnits ? null : DocEntityUnits.GetUnits(src.AmValueUnits.Id ).ToUnits() ) )
-                .ForMember(dest => dest.PersonCount, opt => opt.MapFrom(src => (null == src || null == src.PersonCount || string.IsNullOrEmpty(src.PersonCount.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("AmPersonCount", src.PersonCount.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.AdjustedDescription, opt => opt.MapFrom(src => (null == src || null == src.AdjustedDescription || string.IsNullOrEmpty(src.AdjustedDescription.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("AdjustedDescription", src.AdjustedDescription.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.PValue, opt => opt.MapFrom(src => (null == src || null == src.PValue ) ? new DocTypePValue() : Mapper.Map(src.PValue, new DocTypePValue() ) ) )
-                .ForMember(dest => dest.Ranges, opt => opt.MapFrom(src => null == src.Ranges ? null : DocEntityMeanRanges.GetMeanRanges(src.Ranges.Id ).ToMeanRanges() ) )
+                .ForMember(dest => dest.PersonCount, opt => opt.MapFrom(src => (null == src || null == src.PersonCount || string.IsNullOrEmpty(src.PersonCount.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("AmPersonCount", src.PersonCount.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.VarianceType, opt => opt.MapFrom(src => (null == src || null == src.VarianceType || string.IsNullOrEmpty(src.VarianceType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVarianceType", src.VarianceType.Name ).ToLookupTable() ) )
 ;
 
@@ -565,16 +563,16 @@ namespace Services.Core
                 .ForMember(dest => dest.Execute, opt => opt.Ignore() )
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
-                .ForMember(dest => dest.Events, opt => opt.MapFrom(src => (null == src || null == src.Events ) ? new DocTypeInteger() : Mapper.Map(src.Events, new DocTypeInteger() ) ) )
                 .ForMember(dest => dest.SubjectsAffected, opt => opt.MapFrom(src => (null == src || null == src.SubjectsAffected ) ? new DocTypeInteger() : Mapper.Map(src.SubjectsAffected, new DocTypeInteger() ) ) )
                 .ForMember(dest => dest.SubjectsAtRisk, opt => opt.MapFrom(src => (null == src || null == src.SubjectsAtRisk ) ? new DocTypeInteger() : Mapper.Map(src.SubjectsAtRisk, new DocTypeInteger() ) ) )
+                .ForMember(dest => dest.Events, opt => opt.MapFrom(src => (null == src || null == src.Events ) ? new DocTypeInteger() : Mapper.Map(src.Events, new DocTypeInteger() ) ) )
 ;
 
             cfg.CreateMap<DocTypeFacility, TypeFacility>()
                 .ConstructUsing(new Func<DocTypeFacility, TypeFacility>(c => new TypeFacility() ) )
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => (null == src || null == src.City ) ? null : src.City.ToReference() ) )
-                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => (null == src || null == src.Country ) ? null : src.Country.ToReference() ) )
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => (null == src || null == src.State ) ? null : src.State.ToReference() ) )
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => (null == src || null == src.Country ) ? null : src.Country.ToReference() ) )
 ;            cfg.CreateMap<DocStructureFacility, TypeFacility>()
                 .ConstructUsing(new Func<DocStructureFacility, TypeFacility>(c => new TypeFacility() ) );
             cfg.CreateMap<DocTypeFacility, Reference>()
@@ -593,8 +591,8 @@ namespace Services.Core
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => (null == src || null == src.City || string.IsNullOrEmpty(src.City.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SettingLocationName", src.City.Name ).ToLookupTable() ) )
-                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => (null == src || null == src.Country || string.IsNullOrEmpty(src.Country.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SettingLocationName", src.Country.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => (null == src || null == src.State || string.IsNullOrEmpty(src.State.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SettingLocationName", src.State.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => (null == src || null == src.Country || string.IsNullOrEmpty(src.Country.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SettingLocationName", src.Country.Name ).ToLookupTable() ) )
 ;
 
             cfg.CreateMap<DocTypeFixedDoseIntervention, TypeFixedDoseIntervention>()
@@ -787,13 +785,10 @@ namespace Services.Core
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
                 .ForMember(dest => dest.MeanCalculationType, opt => opt.MapFrom(src => (null == src || null == src.MeanCalculationType || string.IsNullOrEmpty(src.MeanCalculationType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanCalculationType", src.MeanCalculationType.Name ).ToLookupTable() ) )
-                .ForMember(dest => dest.MeanVariable, opt => opt.MapFrom(src => null == src.MeanVariable ? null : DocEntityUnits.GetUnits(src.MeanVariable.Id ).ToUnits() ) )
                 .ForMember(dest => dest.MeanVariableType, opt => opt.MapFrom(src => (null == src || null == src.MeanVariableType || string.IsNullOrEmpty(src.MeanVariableType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVariableType", src.MeanVariableType.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.MeanVariableValueRange, opt => opt.MapFrom(src => (null == src || null == src.MeanVariableValueRange ) ? new DocTypeUnitsRange() : Mapper.Map(src.MeanVariableValueRange, new DocTypeUnitsRange() ) ) )
                 .ForMember(dest => dest.MeanVarianceType, opt => opt.MapFrom(src => (null == src || null == src.MeanVarianceType || string.IsNullOrEmpty(src.MeanVarianceType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVarianceType", src.MeanVarianceType.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.MeanVarianceValueRange, opt => opt.MapFrom(src => (null == src || null == src.MeanVarianceValueRange ) ? new DocTypeDecimalRange() : Mapper.Map(src.MeanVarianceValueRange, new DocTypeDecimalRange() ) ) )
-                .ForMember(dest => dest.Ranges, opt => opt.MapFrom(src => null == src.Ranges ? null : DocEntityMeanRanges.GetMeanRanges(src.Ranges.Id ).ToMeanRanges() ) )
-                .ForMember(dest => dest.Variances, opt => opt.MapFrom(src => null == src.Variances ? null : DocEntityMeanVariances.GetMeanVariances(src.Variances.Id ).ToMeanVariances() ) )
                 .AfterMap((s, d) => AfterDocTypeMeanBaseConvert(s, d));
 
 
@@ -844,9 +839,7 @@ namespace Services.Core
                 .ForMember(dest => dest.NumberEvents, opt => opt.MapFrom(src => (null == src || null == src.NumberEvents ) ? new DocTypeInteger() : Mapper.Map(src.NumberEvents, new DocTypeInteger() ) ) )
                 .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => (null == src || null == src.Participants ) ? new DocTypeParticipant() : Mapper.Map(src.Participants, new DocTypeParticipant() ) ) )
                 .ForMember(dest => dest.PrevalenceType, opt => opt.MapFrom(src => (null == src || null == src.PrevalenceType || string.IsNullOrEmpty(src.PrevalenceType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("PrevalenceType", src.PrevalenceType.Name ).ToLookupTable() ) )
-                .ForMember(dest => dest.Ranges, opt => opt.MapFrom(src => null == src.Ranges ? null : DocEntityMeanRanges.GetMeanRanges(src.Ranges.Id ).ToMeanRanges() ) )
                 .ForMember(dest => dest.Rate, opt => opt.MapFrom(src => (null == src || null == src.Rate ) ? new DocTypeUnitValue() : Mapper.Map(src.Rate, new DocTypeUnitValue() ) ) )
-                .ForMember(dest => dest.Variances, opt => opt.MapFrom(src => null == src.Variances ? null : DocEntityMeanVariances.GetMeanVariances(src.Variances.Id ).ToMeanVariances() ) )
 ;
 
             cfg.CreateMap<DocTypeParticipant, TypeParticipant>()
@@ -870,7 +863,6 @@ namespace Services.Core
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
                 .ForMember(dest => dest.Number, opt => opt.MapFrom(src => (null == src || null == src.Number ) ? new DocTypeInteger() : Mapper.Map(src.Number, new DocTypeInteger() ) ) )
                 .ForMember(dest => dest.Percent, opt => opt.MapFrom(src => (null == src || null == src.Percent ) ? new DocTypeDecimal() : Mapper.Map(src.Percent, new DocTypeDecimal() ) ) )
-                .ForMember(dest => dest.Ranges, opt => opt.MapFrom(src => null == src.Ranges ? null : DocEntityMeanRanges.GetMeanRanges(src.Ranges.Id ).ToMeanRanges() ) )
 ;
 
             cfg.CreateMap<DocTypeParticipants, TypeParticipants>()
@@ -918,9 +910,9 @@ namespace Services.Core
                 .ForMember(dest => dest.Execute, opt => opt.Ignore() )
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
-                .ForMember(dest => dest.N, opt => opt.MapFrom(src => (null == src || null == src.N ) ? new DocTypeInteger() : Mapper.Map(src.N, new DocTypeInteger() ) ) )
                 .ForMember(dest => dest.Scope, opt => opt.MapFrom(src => (null == src || null == src.Scope || string.IsNullOrEmpty(src.Scope.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("ArmPopulationN", src.Scope.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.Units, opt => opt.MapFrom(src => (null == src || null == src.Units || string.IsNullOrEmpty(src.Units.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("PopulationType", src.Units.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.N, opt => opt.MapFrom(src => (null == src || null == src.N ) ? new DocTypeInteger() : Mapper.Map(src.N, new DocTypeInteger() ) ) )
 ;
 
             cfg.CreateMap<DocTypePValue, TypePValue>()
@@ -950,12 +942,12 @@ namespace Services.Core
 
             cfg.CreateMap<DocTypeRate, TypeRate>()
                 .ConstructUsing(new Func<DocTypeRate, TypeRate>(c => new TypeRate() ) )
-                .ForMember(dest => dest.CumulativeIncidenceRateField, opt => opt.MapFrom(src => (null == src || null == src.CumulativeIncidenceRateField ) ? null : src.CumulativeIncidenceRateField.ToReference() ) )
                 .ForMember(dest => dest.CumulativeIncidenceRateType, opt => opt.MapFrom(src => (null == src || null == src.CumulativeIncidenceRateType ) ? null : src.CumulativeIncidenceRateType.ToReference() ) )
                 .ForMember(dest => dest.CumulativeMeanVarianceType, opt => opt.MapFrom(src => (null == src || null == src.CumulativeMeanVarianceType ) ? null : src.CumulativeMeanVarianceType.ToReference() ) )
-                .ForMember(dest => dest.IncidenceRateField, opt => opt.MapFrom(src => (null == src || null == src.IncidenceRateField ) ? null : src.IncidenceRateField.ToReference() ) )
                 .ForMember(dest => dest.IncidenceRateType, opt => opt.MapFrom(src => (null == src || null == src.IncidenceRateType ) ? null : src.IncidenceRateType.ToReference() ) )
                 .ForMember(dest => dest.MeanVarianceType, opt => opt.MapFrom(src => (null == src || null == src.MeanVarianceType ) ? null : src.MeanVarianceType.ToReference() ) )
+                .ForMember(dest => dest.IncidenceRateField, opt => opt.MapFrom(src => (null == src || null == src.IncidenceRateField ) ? null : src.IncidenceRateField.ToReference() ) )
+                .ForMember(dest => dest.CumulativeIncidenceRateField, opt => opt.MapFrom(src => (null == src || null == src.CumulativeIncidenceRateField ) ? null : src.CumulativeIncidenceRateField.ToReference() ) )
 ;            cfg.CreateMap<DocStructureRate, TypeRate>()
                 .ConstructUsing(new Func<DocStructureRate, TypeRate>(c => new TypeRate() ) );
             cfg.CreateMap<DocTypeRate, Reference>()
@@ -974,25 +966,21 @@ namespace Services.Core
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
                 .ForMember(dest => dest.CountAlternate, opt => opt.MapFrom(src => (null == src || null == src.CountAlternate ) ? new DocTypeDecimal() : Mapper.Map(src.CountAlternate, new DocTypeDecimal() ) ) )
-                .ForMember(dest => dest.CumulativeIncidenceRateField, opt => opt.MapFrom(src => (null == src || null == src.CumulativeIncidenceRateField || string.IsNullOrEmpty(src.CumulativeIncidenceRateField.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVariableType", src.CumulativeIncidenceRateField.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.CumulativeIncidenceRateType, opt => opt.MapFrom(src => (null == src || null == src.CumulativeIncidenceRateType || string.IsNullOrEmpty(src.CumulativeIncidenceRateType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("IncidenceRateType", src.CumulativeIncidenceRateType.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.CumulativeMeanVarianceType, opt => opt.MapFrom(src => (null == src || null == src.CumulativeMeanVarianceType || string.IsNullOrEmpty(src.CumulativeMeanVarianceType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVarianceType", src.CumulativeMeanVarianceType.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.CumulativeMeanVarianceValueRange, opt => opt.MapFrom(src => (null == src || null == src.CumulativeMeanVarianceValueRange ) ? new DocTypeDecimalRange() : Mapper.Map(src.CumulativeMeanVarianceValueRange, new DocTypeDecimalRange() ) ) )
-                .ForMember(dest => dest.CumulativeRanges, opt => opt.MapFrom(src => null == src.CumulativeRanges ? null : DocEntityMeanRanges.GetMeanRanges(src.CumulativeRanges.Id ).ToMeanRanges() ) )
                 .ForMember(dest => dest.CumulativeRate, opt => opt.MapFrom(src => (null == src || null == src.CumulativeRate ) ? new DocTypeUnitValue() : Mapper.Map(src.CumulativeRate, new DocTypeUnitValue() ) ) )
-                .ForMember(dest => dest.CumulativeVariances, opt => opt.MapFrom(src => null == src.CumulativeVariances ? null : DocEntityMeanVariances.GetMeanVariances(src.CumulativeVariances.Id ).ToMeanVariances() ) )
-                .ForMember(dest => dest.IncidenceRateField, opt => opt.MapFrom(src => (null == src || null == src.IncidenceRateField || string.IsNullOrEmpty(src.IncidenceRateField.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVariableType", src.IncidenceRateField.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.IncidenceRateType, opt => opt.MapFrom(src => (null == src || null == src.IncidenceRateType || string.IsNullOrEmpty(src.IncidenceRateType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("IncidenceRateType", src.IncidenceRateType.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.MeanVarianceType, opt => opt.MapFrom(src => (null == src || null == src.MeanVarianceType || string.IsNullOrEmpty(src.MeanVarianceType.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVarianceType", src.MeanVarianceType.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.MeanVarianceValueRange, opt => opt.MapFrom(src => (null == src || null == src.MeanVarianceValueRange ) ? new DocTypeDecimalRange() : Mapper.Map(src.MeanVarianceValueRange, new DocTypeDecimalRange() ) ) )
                 .ForMember(dest => dest.NumberAlternate, opt => opt.MapFrom(src => (null == src || null == src.NumberAlternate ) ? new DocTypeDecimal() : Mapper.Map(src.NumberAlternate, new DocTypeDecimal() ) ) )
                 .ForMember(dest => dest.NumberEvents, opt => opt.MapFrom(src => (null == src || null == src.NumberEvents ) ? new DocTypeInteger() : Mapper.Map(src.NumberEvents, new DocTypeInteger() ) ) )
                 .ForMember(dest => dest.Participants, opt => opt.MapFrom(src => (null == src || null == src.Participants ) ? new DocTypeParticipant() : Mapper.Map(src.Participants, new DocTypeParticipant() ) ) )
-                .ForMember(dest => dest.Ranges, opt => opt.MapFrom(src => null == src.Ranges ? null : DocEntityMeanRanges.GetMeanRanges(src.Ranges.Id ).ToMeanRanges() ) )
                 .ForMember(dest => dest.Rate, opt => opt.MapFrom(src => (null == src || null == src.Rate ) ? new DocTypeUnitValue() : Mapper.Map(src.Rate, new DocTypeUnitValue() ) ) )
                 .ForMember(dest => dest.TotalPersonTime, opt => opt.MapFrom(src => (null == src || null == src.TotalPersonTime ) ? new DocTypeDecimal() : Mapper.Map(src.TotalPersonTime, new DocTypeDecimal() ) ) )
                 .ForMember(dest => dest.TotalPersonTimeValue, opt => opt.MapFrom(src => (null == src || null == src.TotalPersonTimeValue ) ? new DocTypeUnitValue() : Mapper.Map(src.TotalPersonTimeValue, new DocTypeUnitValue() ) ) )
-                .ForMember(dest => dest.Variances, opt => opt.MapFrom(src => null == src.Variances ? null : DocEntityMeanVariances.GetMeanVariances(src.Variances.Id ).ToMeanVariances() ) )
+                .ForMember(dest => dest.IncidenceRateField, opt => opt.MapFrom(src => (null == src || null == src.IncidenceRateField || string.IsNullOrEmpty(src.IncidenceRateField.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVariableType", src.IncidenceRateField.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.CumulativeIncidenceRateField, opt => opt.MapFrom(src => (null == src || null == src.CumulativeIncidenceRateField || string.IsNullOrEmpty(src.CumulativeIncidenceRateField.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("MeanVariableType", src.CumulativeIncidenceRateField.Name ).ToLookupTable() ) )
 ;
 
             cfg.CreateMap<DocTypeSettingLocation, TypeSettingLocation>()
@@ -1113,8 +1101,8 @@ namespace Services.Core
 
             cfg.CreateMap<DocTypeSubgroupDescriptor, TypeSubgroupDescriptor>()
                 .ConstructUsing(new Func<DocTypeSubgroupDescriptor, TypeSubgroupDescriptor>(c => new TypeSubgroupDescriptor() ) )
-                .ForMember(dest => dest.SubgroupCategoryName, opt => opt.MapFrom(src => (null == src || null == src.SubgroupCategoryName ) ? null : src.SubgroupCategoryName.ToReference() ) )
                 .ForMember(dest => dest.SubgroupName, opt => opt.MapFrom(src => (null == src || null == src.SubgroupName ) ? null : src.SubgroupName.ToReference() ) )
+                .ForMember(dest => dest.SubgroupCategoryName, opt => opt.MapFrom(src => (null == src || null == src.SubgroupCategoryName ) ? null : src.SubgroupCategoryName.ToReference() ) )
 ;            cfg.CreateMap<DocStructureSubgroupDescriptor, TypeSubgroupDescriptor>()
                 .ConstructUsing(new Func<DocStructureSubgroupDescriptor, TypeSubgroupDescriptor>(c => new TypeSubgroupDescriptor() ) );
             cfg.CreateMap<DocTypeSubgroupDescriptor, Reference>()
@@ -1132,9 +1120,8 @@ namespace Services.Core
                 .ForMember(dest => dest.Execute, opt => opt.Ignore() )
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
-                .ForMember(dest => dest.Attribute, opt => opt.MapFrom(src => null == src.Attribute ? null : DocEntityAttribute.GetAttribute(src.Attribute.Id ).ToAttribute() ) )
-                .ForMember(dest => dest.SubgroupCategoryName, opt => opt.MapFrom(src => (null == src || null == src.SubgroupCategoryName || string.IsNullOrEmpty(src.SubgroupCategoryName.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SubgroupCategoryName", src.SubgroupCategoryName.Name ).ToLookupTable() ) )
                 .ForMember(dest => dest.SubgroupName, opt => opt.MapFrom(src => (null == src || null == src.SubgroupName || string.IsNullOrEmpty(src.SubgroupName.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SubgroupName", src.SubgroupName.Name ).ToLookupTable() ) )
+                .ForMember(dest => dest.SubgroupCategoryName, opt => opt.MapFrom(src => (null == src || null == src.SubgroupCategoryName || string.IsNullOrEmpty(src.SubgroupCategoryName.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("SubgroupCategoryName", src.SubgroupCategoryName.Name ).ToLookupTable() ) )
                 .AfterMap((s, d) => AfterSubgroupDescriptor(s, d));
 
 
@@ -1255,7 +1242,6 @@ namespace Services.Core
                 .ForMember(dest => dest.Execute, opt => opt.Ignore() )
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
-                .ForMember(dest => dest.Units, opt => opt.MapFrom(src => null == src.Units ? null : DocEntityUnits.GetUnits(src.Units.Id ).ToUnits() ) )
                 .AfterMap((s, d) => AfterDocTypeUnitsConvert(s, d));
 
 
@@ -1278,8 +1264,6 @@ namespace Services.Core
                 .ForMember(dest => dest.Execute, opt => opt.Ignore() )
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
-                .ForMember(dest => dest.High, opt => opt.MapFrom(src => null == src.High ? null : DocEntityUnits.GetUnits(src.High.Id ).ToUnits() ) )
-                .ForMember(dest => dest.Low, opt => opt.MapFrom(src => null == src.Low ? null : DocEntityUnits.GetUnits(src.Low.Id ).ToUnits() ) )
                 .AfterMap((s, d) => AfterDocTypeUnitsRangeConvert(s, d));
 
 
@@ -1304,7 +1288,6 @@ namespace Services.Core
                 .ForMember(dest => dest.Gestalt, opt => opt.Ignore() )
                 .ForMember(dest => dest.Hash, opt => opt.Ignore() )
                 .ForMember(dest => dest.EqualityOperator, opt => opt.MapFrom(src => (null == src || null == src.EqualityOperator || string.IsNullOrEmpty(src.EqualityOperator.Name ) ) ? null : DocEntityLookupTable.GetOrInsertLookupTable("EqualityOperator", src.EqualityOperator.Name ).ToLookupTable() ) )
-                .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => null == src.Unit ? null : DocEntityUnitOfMeasure.GetUnitOfMeasure(src.Unit.Id ).ToUnitOfMeasure() ) )
                 .AfterMap((s, d) => AfterDocTypeUnitValueConvert(s, d));
 
 

@@ -100,15 +100,13 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
                 }
                 return _VisibleFields;
             }
             set
             {
-                var requested = value ?? new List<string>();
-                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<ValueType>("ValueType",exists);
+                _VisibleFields = Fields;
             }
         }
 
