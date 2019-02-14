@@ -241,7 +241,6 @@ namespace Services.Core
                 #region Model Mapping 
             cfg.AddProfile<AppMapper>();
             cfg.AddProfile<AttributeMapper>();
-            cfg.AddProfile<AttributeCategoryMapper>();
             cfg.AddProfile<AttributeIntervalMapper>();
             cfg.AddProfile<AuditDeltaMapper>();
             cfg.AddProfile<AuditRecordMapper>();
@@ -256,7 +255,6 @@ namespace Services.Core
             cfg.AddProfile<DefaultMapper>();
             cfg.AddProfile<DivisionMapper>();
             cfg.AddProfile<DocumentMapper>();
-            cfg.AddProfile<DocumentAttributeMapper>();
             cfg.AddProfile<DocumentSetMapper>();
             cfg.AddProfile<DocumentSetHistoryMapper>();
             cfg.AddProfile<EventMapper>();
@@ -268,7 +266,6 @@ namespace Services.Core
             cfg.AddProfile<ImportDataMapper>();
             cfg.AddProfile<IntervalMapper>();
             cfg.AddProfile<InterventionMapper>();
-            cfg.AddProfile<JctAttributeCategoryAttributeDocumentSetMapper>();
             cfg.AddProfile<JunctionMapper>();
             cfg.AddProfile<LocaleMapper>();
             cfg.AddProfile<LocaleLookupMapper>();

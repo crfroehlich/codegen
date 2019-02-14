@@ -37,20 +37,14 @@ namespace Services.Core
             {
                 case "attribute":
                   return requestedFields.Any() ? Attribute.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : Attribute.Fields;
-                case "attributecategory":
-                  return requestedFields.Any() ? AttributeCategory.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : AttributeCategory.Fields;
                 case "attributeinterval":
                   return requestedFields.Any() ? AttributeInterval.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : AttributeInterval.Fields;
                 case "datetimedto":
                   return requestedFields.Any() ? DateTimeDto.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : DateTimeDto.Fields;
-                case "documentattribute":
-                  return requestedFields.Any() ? DocumentAttribute.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : DocumentAttribute.Fields;
                 case "importdata":
                   return requestedFields.Any() ? ImportData.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : ImportData.Fields;
                 case "interval":
                   return requestedFields.Any() ? Interval.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : Interval.Fields;
-                case "jctattributecategoryattributedocumentset":
-                  return requestedFields.Any() ? JctAttributeCategoryAttributeDocumentSet.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : JctAttributeCategoryAttributeDocumentSet.Fields;
                 case "lookupcategory":
                   return requestedFields.Any() ? LookupCategory.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : LookupCategory.Fields;
                 case "lookuptable":

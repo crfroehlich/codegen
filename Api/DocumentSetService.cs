@@ -92,10 +92,6 @@ namespace Services.API
                     if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null);
                     else entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
-                if(true == request.CategoriesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Categories.Any(r => r.Id.In(request.CategoriesIds)));
-                }
                 if(true == request.CharacteristicsIds?.Any())
                 {
                     entities = entities.Where(en => en.Characteristics.Any(r => r.Id.In(request.CharacteristicsIds)));
@@ -293,7 +289,6 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pAdditionalCriteria = request.AdditionalCriteria;
             var pArchived = request.Archived;
-            var pCategories = request.Categories?.ToList();
             var pCharacteristics = request.Characteristics?.ToList();
             var pClients = request.Clients?.ToList();
             var pComparators = request.Comparators?.ToList();
@@ -655,50 +650,6 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pCategories, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Categories)))
-            {
-                if (true == pCategories?.Any() )
-                {
-                    var requestedCategories = pCategories.Select(p => p.Id).Distinct().ToList();
-                    var existsCategories = Execute.SelectAll<DocEntityJctAttributeCategoryAttributeDocumentSet>().Where(e => e.Id.In(requestedCategories)).Select( e => e.Id ).ToList();
-                    if (existsCategories.Count != requestedCategories.Count)
-                    {
-                        var nonExists = requestedCategories.Where(id => existsCategories.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Categories with objects that do not exist. No matching Categories(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedCategories.Where(id => entity.Categories.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityJctAttributeCategoryAttributeDocumentSet.GetJctAttributeCategoryAttributeDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Categories)} to {nameof(DocumentSet)}");
-                        entity.Categories.Add(target);
-                    });
-                    var toRemove = entity.Categories.Where(e => requestedCategories.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityJctAttributeCategoryAttributeDocumentSet.GetJctAttributeCategoryAttributeDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(DocumentSet)}");
-                        entity.Categories.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Categories.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityJctAttributeCategoryAttributeDocumentSet.GetJctAttributeCategoryAttributeDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(DocumentSet)}");
-                        entity.Categories.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pCategories, nameof(request.Categories)) && !request.VisibleFields.Matches(nameof(request.Categories), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Categories));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pCharacteristics, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Characteristics)))
             {
                 if (true == pCharacteristics?.Any() )
@@ -1488,7 +1439,6 @@ namespace Services.API
                 
                     var pAdditionalCriteria = entity.AdditionalCriteria;
                     var pArchived = entity.Archived;
-                    var pCategories = entity.Categories.ToList();
                     var pCharacteristics = entity.Characteristics.ToList();
                     var pClients = entity.Clients.ToList();
                     var pComparators = entity.Comparators.ToList();
@@ -1581,11 +1531,6 @@ namespace Services.API
                                 , Settings = pSettings
                                 , Type = pType
                 };
-                            foreach(var item in pCategories)
-                            {
-                                entity.Categories.Add(item);
-                            }
-
                             foreach(var item in pCharacteristics)
                             {
                                 entity.Characteristics.Add(item);
@@ -1830,8 +1775,6 @@ namespace Services.API
                 {
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
-                    case "jctattributecategoryattributedocumentset":
-                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityJctAttributeCategoryAttributeDocumentSet, JctAttributeCategoryAttributeDocumentSet, JctAttributeCategoryAttributeDocumentSetSearch>((int)request.Id, DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, "Categories", request, (ss) => HostContext.ResolveService<JctAttributeCategoryAttributeDocumentSetService>(Request)?.Get(ss));
                     case "characteristic":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request, (ss) => HostContext.ResolveService<CharacteristicService>(Request)?.Get(ss));
                     case "client":
