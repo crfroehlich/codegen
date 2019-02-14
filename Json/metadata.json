@@ -1,21 +1,17 @@
 {
   "App": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "App",
-      "TypeId": 14173
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "App",
       "PATCH": true,
       "POST": false,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 14173
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -285,13 +281,6 @@
   },
   "Attribute": {
     "Attributes": {
-      "IsInModel": true,
-      "IsInsertOnly": true,
-      "Name": "Attribute",
-      "TypeId": 102
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "FlattenReferences": false,
@@ -299,11 +288,14 @@
       "IgnoreProps": "ValueType",
       "ImplementService": true,
       "Inherits": "ValueWrapper",
+      "IsInModel": true,
+      "IsInsertOnly": true,
+      "Name": "Attribute",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 102
     },
-    "Model": {},
     "Properties": {
       "AttributeName": {
         "Description": "Description of AttributeName",
@@ -583,27 +575,18 @@
   },
   "AttributeCategory": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "JsonIgnore": "Attributes",
-      "Name": "AttributeCategory",
-      "TypeId": 13222
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "JsonIgnore": "Attributes",
+      "Name": "AttributeCategory",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 13222
     },
     "Properties": {
       "Created": {
@@ -783,26 +766,17 @@
   },
   "AttributeInterval": {
     "Attributes": {
-      "IsInModel": true,
-      "IsInsertOnly": true,
-      "Name": "AttributeInterval",
-      "TypeId": 104
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": true,
+      "IsInsertOnly": true,
+      "Name": "AttributeInterval",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 104
     },
     "Properties": {
       "Created": {
@@ -914,22 +888,18 @@
   },
   "AuditDelta": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "AuditDelta",
-      "TypeId": 19019
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "AuditDelta",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19019
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Audit": {
         "Description": "Audit Record associated with this delta",
@@ -1069,22 +1039,18 @@
   },
   "AuditRecord": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "AuditRecord",
-      "TypeId": 108
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "AuditRecord",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 108
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Action": {
         "Description": "Description of Action",
@@ -1522,21 +1488,17 @@
   },
   "BackgroundTask": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "BackgroundTask",
-      "TypeId": 14375
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "BackgroundTask",
       "PATCH": true,
       "POST": false,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 14375
     },
-    "Model": {},
     "Properties": {
       "App": {
         "Description": "App to scope for task",
@@ -1957,21 +1919,17 @@
   },
   "BackgroundTaskHistory": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "BackgroundTaskHistory",
-      "TypeId": 18919
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "BackgroundTaskHistory",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18919
     },
-    "Model": {},
     "Properties": {
       "Completed": {
         "DefaultValue": 0,
@@ -2284,21 +2242,17 @@
   },
   "BackgroundTaskItem": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "BackgroundTaskItem",
-      "TypeId": 19935
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "BackgroundTaskItem",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19935
     },
-    "Model": {},
     "Properties": {
       "Attempts": {
         "DefaultValue": 0,
@@ -2651,21 +2605,17 @@
   },
   "Broadcast": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Broadcast",
-      "TypeId": 13962
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Broadcast",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 13962
     },
-    "Model": {},
     "Properties": {
       "App": {
         "Description": "Description of App",
@@ -2950,20 +2900,15 @@
   },
   "Characteristic": {
     "Attributes": {
-      "Name": "Characteristic",
-      "TypeId": 14475
-    },
-    "Domain": {},
-    "Dto": {
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "Name": "Characteristic",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 14475
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -3121,19 +3066,16 @@
   },
   "Client": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Client",
-      "TypeId": 111
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Client",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 111
     },
     "Extension": {
       "Bindings": {
@@ -3173,7 +3115,6 @@
         "Type": "relationships"
       }
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -3522,20 +3463,15 @@
   },
   "Comparator": {
     "Attributes": {
-      "Name": "Comparator",
-      "TypeId": 20035
-    },
-    "Domain": {},
-    "Dto": {
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "Name": "Comparator",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 20035
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -3692,21 +3628,17 @@
   },
   "DatabaseVersion": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "DatabaseVersion",
-      "TypeId": 18819
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "DatabaseVersion",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18819
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -3873,14 +3805,6 @@
   },
   "DateTime": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "DateTime",
-      "TypeId": 15278
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "DontFlattenProperties": "",
@@ -3888,13 +3812,12 @@
       "FlattenReferences": false,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": true,
+      "Name": "DateTime",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 15278
     },
     "Properties": {
       "Created": {
@@ -4053,21 +3976,17 @@
   },
   "Default": {
     "Attributes": {
-      "Name": "Default",
-      "TypeId": 19435
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Default",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 19435
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -4286,22 +4205,18 @@
   },
   "Division": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Division",
-      "TypeId": 112
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Division",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 112
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Client": {
         "AutoCreateMissing": false,
@@ -4585,16 +4500,6 @@
   },
   "Document": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": true,
-      "JsonIgnore": "Properties",
-      "Name": "Document",
-      "TypeId": 136
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "CustomCollections": "Attributes,Characteristics,Outcomes,Groups,Phases,Sources,DocumentSets,Designs,FramedQuestions,Types,AttributeLabels",
       "DELETE": true,
@@ -4603,10 +4508,14 @@
       "IgnoreInSearch": "DocumentSets,NonDigitizedDocumentSets",
       "IgnoreProps": "Properties",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": true,
+      "JsonIgnore": "Properties",
+      "Name": "Document",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 136
     },
     "Extension": {
       "FirstAuthor": {
@@ -4631,9 +4540,6 @@
         "TabOrder": 0,
         "Type": "LookupTable"
       }
-    },
-    "Model": {
-      "Interfaces": ""
     },
     "Properties": {
       "Abstract": {
@@ -5653,27 +5559,18 @@
   },
   "DocumentAttribute": {
     "Attributes": {
-      "IsInModel": false,
-      "Name": "DocumentAttribute",
-      "TypeId": 6355
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "DontFlattenProperties": "Attribute",
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": false,
+      "Name": "DocumentAttribute",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 6355
     },
     "Properties": {
       "Attribute": {
@@ -5824,19 +5721,16 @@
   },
   "DocumentSet": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "DocumentSet",
-      "TypeId": 142
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "DocumentSet",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 142
     },
     "Extension": {
       "Bindings": {
@@ -5891,7 +5785,6 @@
         "Type": "relationships"
       }
     },
-    "Model": {},
     "Properties": {
       "AdditionalCriteria": {
         "Description": "Additional Criteria",
@@ -7177,21 +7070,17 @@
   },
   "DocumentSetHistory": {
     "Attributes": {
-      "Name": "DocumentSetHistory",
-      "TypeId": 13320
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "DocumentSetHistory",
       "PATCH": false,
       "POST": false,
       "PUT": false,
-      "SuperAdminOnly": true
+      "SuperAdminOnly": true,
+      "TypeId": 13320
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -7380,20 +7269,16 @@
   },
   "Event": {
     "Attributes": {
-      "Name": "Event",
-      "TypeId": 19219
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Event",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19219
     },
-    "Model": {},
     "Properties": {
       "AuditRecord": {
         "AutoCreateMissing": false,
@@ -7555,6 +7440,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": true,
         "IsUniqueConstraint": false,
         "Name": "Teams",
@@ -7598,6 +7484,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Updates",
@@ -7630,6 +7517,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Users",
@@ -7667,21 +7555,17 @@
   },
   "FeatureSet": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "FeatureSet",
-      "TypeId": 116
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "FeatureSet",
       "PATCH": true,
       "POST": false,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 116
     },
-    "Model": {},
     "Properties": {
       "Archived": {
         "DefaultValue": false,
@@ -7691,6 +7575,7 @@
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Archived",
@@ -7873,28 +7758,19 @@
   },
   "Glossary": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "JsonIgnore": "",
-      "Name": "Glossary",
-      "TypeId": 14977
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "JsonIgnore": "",
+      "Name": "Glossary",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 14977
     },
     "Properties": {
       "Created": {
@@ -8113,21 +7989,17 @@
   },
   "Help": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Help",
-      "TypeId": 14978
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Help",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 14978
     },
-    "Model": {},
     "Properties": {
       "ConfluenceId": {
         "Description": "Confluence Id of the shared document",
@@ -8397,21 +8269,17 @@
   },
   "History": {
     "Attributes": {
-      "ExcludeFromModel": true,
-      "Name": "History",
-      "TypeId": 15885
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
+      "ExcludeFromModel": true,
       "GET": true,
       "ImplementService": true,
+      "Name": "History",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 15885
     },
-    "Model": {},
     "Properties": {
       "App": {
         "AutoCreateMissing": false,
@@ -8740,21 +8608,17 @@
   },
   "Impersonation": {
     "Attributes": {
-      "Name": "Impersonation",
-      "TypeId": 19319
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Impersonation",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19319
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "AuthenticatedUser": {
         "Description": "User who is currently authenticated",
@@ -8936,28 +8800,19 @@
   "ImportData": {
     "Attributes": {
       "AllowDelete": false,
-      "IsInModel": true,
-      "Name": "ImportData",
-      "TypeId": 12600
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "",
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": true,
+      "Name": "ImportData",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 12600
     },
     "Extension": {},
-    "Model": {
-      "Interfaces": ""
-    },
     "Properties": {
       "CompletedOn": {
         "Description": "Date/Time Completed",
@@ -9433,27 +9288,18 @@
   },
   "Interval": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "Interval",
-      "TypeId": 15178
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "DontFlattenProperties": "FollowUp,TimeOfDay,CalendarDateStart,CalendarDateEnd",
       "FlattenReferences": false,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": true,
+      "Name": "Interval",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 15178
     },
     "Properties": {
       "CalendarDateEnd": {
@@ -9677,20 +9523,15 @@
   },
   "Intervention": {
     "Attributes": {
-      "Name": "Intervention",
-      "TypeId": 13420
-    },
-    "Domain": {},
-    "Dto": {
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "Name": "Intervention",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 13420
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -9848,26 +9689,17 @@
   },
   "JctAttributeCategoryAttributeDocumentSet": {
     "Attributes": {
-      "IsInModel": false,
-      "Name": "JctAttributeCategoryAttributeDocumentSet",
-      "TypeId": 13223
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": false,
+      "Name": "JctAttributeCategoryAttributeDocumentSet",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 13223
     },
     "Properties": {
       "Attribute": {
@@ -10045,26 +9877,17 @@
   },
   "Junction": {
     "Attributes": {
-      "IsInModel": false,
-      "Name": "Junction",
-      "TypeId": 17619
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "HasDto": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": false,
+      "Name": "Junction",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 17619
     },
     "Properties": {
       "Children": {
@@ -10378,21 +10201,17 @@
   },
   "Locale": {
     "Attributes": {
-      "Name": "Locale",
-      "TypeId": 19335
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Locale",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19335
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Country": {
         "Description": "Country",
@@ -10536,21 +10355,17 @@
   },
   "LocaleLookup": {
     "Attributes": {
-      "Name": "LocaleLookup",
-      "TypeId": 19325
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "LocaleLookup",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19325
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -10709,28 +10524,19 @@
   },
   "LookupCategory": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "LookupCategory",
-      "TypeId": 17419
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "DontFlattenProperties": "",
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "LookupCategory",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 17419
     },
     "Properties": {
       "Category": {
@@ -10905,22 +10711,18 @@
   },
   "LookupTable": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": true,
-      "Name": "LookupTable",
-      "TypeId": 127
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "IsInModel": true,
+      "Name": "LookupTable",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 127
     },
-    "Model": {},
     "Properties": {
       "Bindings": {
         "Association": {
@@ -11160,22 +10962,18 @@
   },
   "LookupTableBinding": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "LookupTableBinding",
-      "TypeId": 15380
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "FlattenReferences": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "LookupTableBinding",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 15380
     },
-    "Model": {},
     "Properties": {
       "Binding": {
         "DefaultValue": "{}",
@@ -11435,28 +11233,19 @@
   },
   "LookupTableEnum": {
     "Attributes": {
+      "AllVisibleFieldsByDefault": true,
+      "DELETE": true,
       "Enum": "DocConstantLookupTable",
+      "GET": true,
+      "ImplementService": true,
       "IsCached": true,
       "IsInModel": true,
       "IsReadOnly": true,
       "Name": "LookupTableEnum",
-      "TypeId": 128
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
-      "AllVisibleFieldsByDefault": true,
-      "DELETE": true,
-      "GET": true,
-      "ImplementService": true,
-      "Interfaces": "",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 128
     },
     "Properties": {
       "Created": {
@@ -11603,12 +11392,6 @@
   },
   "MeanRanges": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "MeanRanges",
-      "TypeId": 130
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Ranges",
       "DELETE": true,
@@ -11616,11 +11399,13 @@
       "GET": true,
       "IgnoreProps": "Owner",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "MeanRanges",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 130
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -11745,23 +11530,19 @@
   },
   "MeanRangeValue": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "MeanRangeValue",
-      "TypeId": 129
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "FlattenReferences": false,
       "GET": true,
       "IgnoreProps": "Owner",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "MeanRangeValue",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 129
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12033,12 +11814,6 @@
   },
   "MeanVariances": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "MeanVariances",
-      "TypeId": 18219
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Variances",
       "DELETE": true,
@@ -12046,11 +11821,13 @@
       "GET": true,
       "IgnoreProps": "Owner",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "MeanVariances",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18219
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12175,23 +11952,19 @@
   },
   "MeanVarianceValue": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "MeanVarianceValue",
-      "TypeId": 18119
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "FlattenReferences": false,
       "GET": true,
       "IgnoreProps": "Owner",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "MeanVarianceValue",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18119
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12395,20 +12168,15 @@
   },
   "Outcome": {
     "Attributes": {
-      "Name": "Outcome",
-      "TypeId": 13662
-    },
-    "Domain": {},
-    "Dto": {
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "Name": "Outcome",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 13662
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12566,20 +12334,17 @@
   },
   "Page": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "Page",
-      "TypeId": 180
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "Page",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 180
     },
     "Extension": {
       "Category": {
@@ -12686,7 +12451,6 @@
         "UIType": ""
       }
     },
-    "Model": {},
     "Properties": {
       "Apps": {
         "Description": "DOC Apps to which this page may belong",
@@ -12952,21 +12716,17 @@
   },
   "Project": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Project",
-      "TypeId": 20135
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Project",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 20135
     },
-    "Model": {},
     "Properties": {
       "Children": {
         "Association": {
@@ -13529,21 +13289,17 @@
   },
   "QueueChannel": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "QueueChannel",
-      "TypeId": 18519
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "QueueChannel",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18519
     },
-    "Model": {},
     "Properties": {
       "AutoDelete": {
         "DefaultValue": false,
@@ -13771,21 +13527,17 @@
   },
   "ReleaseStatus": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "ReleaseStatus",
-      "TypeId": 19835
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "ReleaseStatus",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 19835
     },
-    "Model": {},
     "Properties": {
       "Branch": {
         "Description": "Release branch name",
@@ -13970,22 +13722,18 @@
   },
   "Role": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Role",
-      "TypeId": 133
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Role",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 133
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "AdminTeam": {
         "AutoCreateMissing": false,
@@ -14349,29 +14097,20 @@
   },
   "Scope": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "Scope",
-      "TypeId": 15379
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "Scope",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 15379
     },
     "Extension": {},
-    "Model": {
-      "Interfaces": ""
-    },
     "Properties": {
       "App": {
         "Description": "DOC platform app to include in Scope",
@@ -14936,20 +14675,16 @@
   },
   "Stats": {
     "Attributes": {
-      "Name": "Stats",
-      "TypeId": 14273
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Stats",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 14273
     },
-    "Model": {},
     "Properties": {
       "App": {
         "AutoCreateMissing": false,
@@ -15175,21 +14910,17 @@
   },
   "StatsRecord": {
     "Attributes": {
-      "IsInsertOnly": true,
-      "Name": "StatsRecord",
-      "TypeId": 14275
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsInsertOnly": true,
+      "Name": "StatsRecord",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 14275
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -15364,24 +15095,20 @@
   },
   "StatsStudySet": {
     "Attributes": {
-      "IsInsertOnly": true,
-      "JsonIgnore": "Records",
-      "Name": "StatsStudySet",
-      "TypeId": 14274
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Records",
       "DELETE": false,
       "GET": true,
       "IgnoreProps": "Records",
       "ImplementService": true,
+      "IsInsertOnly": true,
+      "JsonIgnore": "Records",
+      "Name": "StatsStudySet",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 14274
     },
-    "Model": {},
     "Properties": {
       "BoundTerms": {
         "DefaultValue": 0,
@@ -15790,23 +15517,18 @@
   },
   "StudyDesign": {
     "Attributes": {
-      "Enum": "DocConstantStudyDesign",
-      "Name": "StudyDesign",
-      "TypeId": 137
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
+      "Enum": "DocConstantStudyDesign",
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": false,
-      "Interfaces": "",
+      "Name": "StudyDesign",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 137
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -15929,22 +15651,18 @@
   },
   "StudyType": {
     "Attributes": {
-      "Enum": "DocConstantStudyType",
-      "IsCached": true,
-      "Name": "StudyType",
-      "TypeId": 143
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
+      "Enum": "DocConstantStudyType",
       "GET": true,
       "ImplementService": false,
+      "IsCached": true,
+      "Name": "StudyType",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 143
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -16066,21 +15784,17 @@
   },
   "Tag": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Tag",
-      "TypeId": 18019
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Tag",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18019
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -16224,26 +15938,17 @@
   },
   "Team": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Team",
-      "TypeId": 15881
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "CustomAuthorization": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "Name": "Team",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 15881
     },
     "Properties": {
       "AdminRoles": {
@@ -16609,23 +16314,18 @@
   },
   "TermCategory": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "TermCategory",
-      "TypeId": 146
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "IgnoreProps": "Name",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "Name": "TermCategory",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 146
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -16811,27 +16511,18 @@
   },
   "TermMaster": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "TermMaster",
-      "TypeId": 147
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "DontFlattenProperties": "Categories",
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "TermMaster",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 147
     },
     "Properties": {
       "BioPortal": {
@@ -17162,27 +16853,18 @@
   },
   "TermSynonym": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "TermSynonym",
-      "TypeId": 148
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "DontFlattenProperties": "",
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "TermSynonym",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 148
     },
     "Properties": {
       "Approved": {
@@ -17415,21 +17097,17 @@
   },
   "TimeCard": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "TimeCard",
-      "TypeId": 17319
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "TimeCard",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 17319
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -17744,23 +17422,19 @@
   },
   "TimePoint": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "TimePoint",
-      "TypeId": 15078
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
       "DontFlattenProperties": "MeanValue,SingleValue,TotalValue",
       "FlattenReferences": false,
       "GET": true,
       "ImplementService": true,
+      "IsInModel": true,
+      "Name": "TimePoint",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 15078
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -17953,26 +17627,17 @@
   },
   "UnitConversionRules": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "UnitConversionRules",
-      "TypeId": 149
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "UnitConversionRules",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 149
     },
     "Properties": {
       "Created": {
@@ -18271,26 +17936,17 @@
   },
   "UnitOfMeasure": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": true,
-      "Name": "UnitOfMeasure",
-      "TypeId": 150
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": true,
+      "Name": "UnitOfMeasure",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 150
     },
     "Properties": {
       "Created": {
@@ -18496,13 +18152,6 @@
   },
   "Units": {
     "Attributes": {
-      "IsInModel": true,
-      "IsInsertOnly": true,
-      "Name": "Units",
-      "TypeId": 152
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Units",
       "DELETE": true,
@@ -18510,11 +18159,14 @@
       "FlattenReferences": false,
       "GET": true,
       "ImplementService": false,
+      "IsInModel": true,
+      "IsInsertOnly": true,
+      "Name": "Units",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 152
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -18639,12 +18291,6 @@
   },
   "UnitValue": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "UnitValue",
-      "TypeId": 151
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Owners",
       "DELETE": true,
@@ -18652,11 +18298,13 @@
       "GET": true,
       "IgnoreProps": "Owners",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "UnitValue",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 151
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -18890,20 +18538,16 @@
   },
   "Update": {
     "Attributes": {
-      "Name": "Update",
-      "TypeId": 19119
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Update",
       "PATCH": true,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19119
     },
-    "Model": {},
     "Properties": {
       "Body": {
         "Description": "Body of the Message",
@@ -19015,6 +18659,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Events",
@@ -19260,12 +18905,6 @@
   "User": {
     "Attributes": {
       "AllowDelete": false,
-      "IsCached": true,
-      "Name": "User",
-      "TypeId": 153
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "CustomAuthorization": true,
       "DELETE": false,
@@ -19273,9 +18912,12 @@
       "GET": true,
       "ImplementService": true,
       "IsBaseClass": true,
+      "IsCached": true,
+      "Name": "User",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 153
     },
     "Extension": {
       "Audits": {
@@ -19365,7 +19007,6 @@
         "UIType": "permissions"
       }
     },
-    "Model": {},
     "Properties": {
       "ClientDepartment": {
         "Description": "Description of ClientDepartment",
@@ -20235,21 +19876,17 @@
   },
   "UserRequest": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "UserRequest",
-      "TypeId": 18619
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "UserRequest",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18619
     },
-    "Model": {},
     "Properties": {
       "App": {
         "Description": "App to which this API call belongs",
@@ -20487,21 +20124,17 @@
   },
   "UserSession": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "UserSession",
-      "TypeId": 18419
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "UserSession",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18419
     },
-    "Model": {},
     "Properties": {
       "ClientId": {
         "Description": "Browser Id of the session",
@@ -20826,22 +20459,18 @@
   },
   "UserType": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "UserType",
-      "TypeId": 17919
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "UserType",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 17919
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -21055,23 +20684,19 @@
   },
   "ValueType": {
     "Attributes": {
+      "AllVisibleFieldsByDefault": true,
+      "DELETE": false,
       "Enum": "DocConstantValueType",
+      "GET": true,
+      "ImplementService": true,
       "IsInModel": true,
       "IsReadOnly": true,
       "Name": "ValueType",
-      "TypeId": 171
-    },
-    "Domain": {},
-    "Dto": {
-      "AllVisibleFieldsByDefault": true,
-      "DELETE": false,
-      "GET": true,
-      "ImplementService": true,
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 171
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -21224,25 +20849,16 @@
   },
   "VariableInstance": {
     "Attributes": {
-      "IsInModel": false,
-      "Name": "VariableInstance",
-      "TypeId": 15781
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": false,
+      "Name": "VariableInstance",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 15781
     },
     "Properties": {
       "Created": {
@@ -21447,20 +21063,16 @@
   },
   "VariableRule": {
     "Attributes": {
-      "Name": "VariableRule",
-      "TypeId": 15680
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "Name": "VariableRule",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 15680
     },
-    "Model": {},
     "Properties": {
       "Children": {
         "Association": {
@@ -21780,23 +21392,19 @@
   },
   "Workflow": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Workflow",
-      "TypeId": 15378
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "CustomAuthorization": true,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Workflow",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 15378
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Archived": {
         "DefaultValue": false,
@@ -21805,6 +21413,7 @@
         "IsAudited": true,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Archived",
@@ -22346,21 +21955,17 @@
   },
   "WorkflowComment": {
     "Attributes": {
-      "Name": "WorkflowComment",
-      "TypeId": 18319
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "HasDto": true,
       "ImplementService": true,
+      "Name": "WorkflowComment",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18319
     },
-    "Model": {},
     "Properties": {
       "Children": {
         "Association": {
@@ -22594,21 +22199,17 @@
   },
   "WorkflowTask": {
     "Attributes": {
-      "Name": "WorkflowTask",
-      "TypeId": 18719
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "HasDto": true,
       "ImplementService": true,
+      "Name": "WorkflowTask",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18719
     },
-    "Model": {},
     "Properties": {
       "Assignee": {
         "AutoCreateMissing": false,
