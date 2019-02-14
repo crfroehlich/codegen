@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -41,19 +42,19 @@ using Version = Services.Dto.Version;
 
 namespace Services.API
 {
-    public partial class ForeignKeyService : DocServiceBase
+    public partial class UnitValueService : DocServiceBase
     {
-        private IQueryable<DocEntityForeignKey> _ExecSearch(ForeignKeySearch request)
+        private IQueryable<DocEntityUnitValue> _ExecSearch(UnitValueSearch request)
         {
-            request = InitSearch(request);
-            IQueryable<DocEntityForeignKey> entities = null;
+            request = InitSearch<UnitValue, UnitValueSearch>(request);
+            IQueryable<DocEntityUnitValue> entities = null;
             Execute.Run( session => 
             {
-                entities = Execute.SelectAll<DocEntityForeignKey>();
+                entities = Execute.SelectAll<DocEntityUnitValue>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
-                    var fts = new ForeignKeyFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    var fts = new UnitValueFullTextSearch(request);
+                    entities = GetFullTextSearch<DocEntityUnitValue,UnitValueFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,44 +85,42 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.IntegrationName) && !DocTools.IsNullOrEmpty(request.IntegrationName.Id))
+                if(!DocTools.IsNullOrEmpty(request.EqualityOperator) && !DocTools.IsNullOrEmpty(request.EqualityOperator.Id))
                 {
-                    entities = entities.Where(en => en.IntegrationName.Id == request.IntegrationName.Id );
+                    entities = entities.Where(en => en.EqualityOperator.Id == request.EqualityOperator.Id );
                 }
-                if(true == request.IntegrationNameIds?.Any())
+                if(true == request.EqualityOperatorIds?.Any())
                 {
-                    entities = entities.Where(en => en.IntegrationName.Id.In(request.IntegrationNameIds));
+                    entities = entities.Where(en => en.EqualityOperator.Id.In(request.EqualityOperatorIds));
                 }
-                else if(!DocTools.IsNullOrEmpty(request.IntegrationName) && !DocTools.IsNullOrEmpty(request.IntegrationName.Name))
+                else if(!DocTools.IsNullOrEmpty(request.EqualityOperator) && !DocTools.IsNullOrEmpty(request.EqualityOperator.Name))
                 {
-                    entities = entities.Where(en => en.IntegrationName.Name == request.IntegrationName.Name );
+                    entities = entities.Where(en => en.EqualityOperator.Name == request.EqualityOperator.Name );
                 }
-                if(true == request.IntegrationNameNames?.Any())
+                if(true == request.EqualityOperatorNames?.Any())
                 {
-                    entities = entities.Where(en => en.IntegrationName.Name.In(request.IntegrationNameNames));
+                    entities = entities.Where(en => en.EqualityOperator.Name.In(request.EqualityOperatorNames));
                 }
-                if(!DocTools.IsNullOrEmpty(request.IntegrationPropertyName) && !DocTools.IsNullOrEmpty(request.IntegrationPropertyName.Id))
+                if(request.Multiplier.HasValue)
+                    entities = entities.Where(en => request.Multiplier.Value == en.Multiplier);
+                if(request.Number.HasValue)
+                    entities = entities.Where(en => request.Number.Value == en.Number);
+                if(request.Order.HasValue)
+                    entities = entities.Where(en => request.Order.Value == en.Order);
+                if(true == request.OwnersIds?.Any())
                 {
-                    entities = entities.Where(en => en.IntegrationPropertyName.Id == request.IntegrationPropertyName.Id );
+                    entities = entities.Where(en => en.Owners.Any(r => r.Id.In(request.OwnersIds)));
                 }
-                if(true == request.IntegrationPropertyNameIds?.Any())
+                if(!DocTools.IsNullOrEmpty(request.Unit) && !DocTools.IsNullOrEmpty(request.Unit.Id))
                 {
-                    entities = entities.Where(en => en.IntegrationPropertyName.Id.In(request.IntegrationPropertyNameIds));
+                    entities = entities.Where(en => en.Unit.Id == request.Unit.Id );
                 }
-                else if(!DocTools.IsNullOrEmpty(request.IntegrationPropertyName) && !DocTools.IsNullOrEmpty(request.IntegrationPropertyName.Name))
+                if(true == request.UnitIds?.Any())
                 {
-                    entities = entities.Where(en => en.IntegrationPropertyName.Name == request.IntegrationPropertyName.Name );
+                    entities = entities.Where(en => en.Unit.Id.In(request.UnitIds));
                 }
-                if(true == request.IntegrationPropertyNameNames?.Any())
-                {
-                    entities = entities.Where(en => en.IntegrationPropertyName.Name.In(request.IntegrationPropertyNameNames));
-                }
-                if(!DocTools.IsNullOrEmpty(request.KeyId))
-                    entities = entities.Where(en => en.KeyId.Contains(request.KeyId));
-                if(!DocTools.IsNullOrEmpty(request.KeyName))
-                    entities = entities.Where(en => en.KeyName.Contains(request.KeyName));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityUnitValue,UnitValueSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -135,51 +134,41 @@ namespace Services.API
             return entities;
         }
 
-        public List<ForeignKey> Post(ForeignKeySearch request) => Get(request);
+        public List<UnitValue> Post(UnitValueSearch request) => Get(request);
 
-        public List<ForeignKey> Get(ForeignKeySearch request) => GetSearchResult<ForeignKey,DocEntityForeignKey,ForeignKeySearch>(DocConstantModelName.FOREIGNKEY, request, _ExecSearch);
+        public List<UnitValue> Get(UnitValueSearch request) => GetSearchResult<UnitValue,DocEntityUnitValue,UnitValueSearch>(DocConstantModelName.UNITVALUE, request, _ExecSearch);
 
-        public object Post(ForeignKeyVersion request) => Get(request);
-
-        public object Get(ForeignKeyVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
-        public ForeignKey Get(ForeignKey request) => GetEntity<ForeignKey>(DocConstantModelName.FOREIGNKEY, request, GetForeignKey);
-        private ForeignKey _AssignValues(ForeignKey request, DocConstantPermission permission, Session session)
+        public UnitValue Get(UnitValue request) => GetEntity<UnitValue>(DocConstantModelName.UNITVALUE, request, GetUnitValue);
+        private UnitValue _AssignValues(UnitValue request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
-            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "ForeignKey"))
+            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "UnitValue"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            ForeignKey ret = null;
-            request = _InitAssignValues(request, permission, session);
+            UnitValue ret = null;
+            request = _InitAssignValues<UnitValue>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
-            var cacheKey = GetApiCacheKey<ForeignKey>(DocConstantModelName.FOREIGNKEY, nameof(ForeignKey), request);
+            var cacheKey = GetApiCacheKey<UnitValue>(DocConstantModelName.UNITVALUE, nameof(UnitValue), request);
             
             //First, assign all the variables, do database lookups and conversions
-            DocEntityLookupTable pIntegrationName = GetLookup(DocConstantLookupTable.INTEGRATIONNAME, request.IntegrationName?.Name, request.IntegrationName?.Id);
-            DocEntityLookupTable pIntegrationPropertyName = GetLookup(DocConstantLookupTable.INTEGRATIONPROPERTYNAME, request.IntegrationPropertyName?.Name, request.IntegrationPropertyName?.Id);
-            var pKeyId = request.KeyId;
-            var pKeyName = request.KeyName;
+            DocEntityLookupTable pEqualityOperator = GetLookup(DocConstantLookupTable.EQUALITYOPERATOR, request.EqualityOperator?.Name, request.EqualityOperator?.Id);
+            var pMultiplier = request.Multiplier;
+            var pNumber = request.Number;
+            var pOrder = request.Order;
+            var pOwners = request.Owners?.ToList();
+            var pUnit = (request.Unit?.Id > 0) ? DocEntityUnitOfMeasure.GetUnitOfMeasure(request.Unit.Id) : null;
 
-            DocEntityForeignKey entity = null;
+            DocEntityUnitValue entity = null;
             if(permission == DocConstantPermission.ADD)
             {
                 var now = DateTime.UtcNow;
-                entity = new DocEntityForeignKey(session)
+                entity = new DocEntityUnitValue(session)
                 {
                     Created = now,
                     Updated = now
@@ -187,49 +176,56 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityForeignKey.GetForeignKey(request.Id);
+                entity = DocEntityUnitValue.GetUnitValue(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pIntegrationName, permission, DocConstantModelName.FOREIGNKEY, nameof(request.IntegrationName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pEqualityOperator, permission, DocConstantModelName.UNITVALUE, nameof(request.EqualityOperator)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIntegrationName, entity.IntegrationName, nameof(request.IntegrationName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IntegrationName)} cannot be modified once set.");
-                    entity.IntegrationName = pIntegrationName;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pIntegrationName, nameof(request.IntegrationName)) && !request.VisibleFields.Matches(nameof(request.IntegrationName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pEqualityOperator, entity.EqualityOperator, nameof(request.EqualityOperator)))
+                    entity.EqualityOperator = pEqualityOperator;
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pEqualityOperator, nameof(request.EqualityOperator)) && !request.VisibleFields.Matches(nameof(request.EqualityOperator), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IntegrationName));
+                    request.VisibleFields.Add(nameof(request.EqualityOperator));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pIntegrationPropertyName, permission, DocConstantModelName.FOREIGNKEY, nameof(request.IntegrationPropertyName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pMultiplier, permission, DocConstantModelName.UNITVALUE, nameof(request.Multiplier)))
             {
-                if(DocPermissionFactory.IsRequested(request, pIntegrationPropertyName, entity.IntegrationPropertyName, nameof(request.IntegrationPropertyName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IntegrationPropertyName)} cannot be modified once set.");
-                    entity.IntegrationPropertyName = pIntegrationPropertyName;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pIntegrationPropertyName, nameof(request.IntegrationPropertyName)) && !request.VisibleFields.Matches(nameof(request.IntegrationPropertyName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pMultiplier, entity.Multiplier, nameof(request.Multiplier)))
+                    if(null != pMultiplier)
+                        entity.Multiplier = (int) pMultiplier;
+                if(DocPermissionFactory.IsRequested<int?>(request, pMultiplier, nameof(request.Multiplier)) && !request.VisibleFields.Matches(nameof(request.Multiplier), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IntegrationPropertyName));
+                    request.VisibleFields.Add(nameof(request.Multiplier));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pKeyId, permission, DocConstantModelName.FOREIGNKEY, nameof(request.KeyId)))
+            if (DocPermissionFactory.IsRequestedHasPermission<decimal?>(currentUser, request, pNumber, permission, DocConstantModelName.UNITVALUE, nameof(request.Number)))
             {
-                if(DocPermissionFactory.IsRequested(request, pKeyId, entity.KeyId, nameof(request.KeyId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.KeyId)} cannot be modified once set.");
-                    entity.KeyId = pKeyId;
-                if(DocPermissionFactory.IsRequested<string>(request, pKeyId, nameof(request.KeyId)) && !request.VisibleFields.Matches(nameof(request.KeyId), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pNumber, entity.Number, nameof(request.Number)))
+                    entity.Number = pNumber;
+                if(DocPermissionFactory.IsRequested<decimal?>(request, pNumber, nameof(request.Number)) && !request.VisibleFields.Matches(nameof(request.Number), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.KeyId));
+                    request.VisibleFields.Add(nameof(request.Number));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pKeyName, permission, DocConstantModelName.FOREIGNKEY, nameof(request.KeyName)))
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pOrder, permission, DocConstantModelName.UNITVALUE, nameof(request.Order)))
             {
-                if(DocPermissionFactory.IsRequested(request, pKeyName, entity.KeyName, nameof(request.KeyName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.KeyName)} cannot be modified once set.");
-                    entity.KeyName = pKeyName;
-                if(DocPermissionFactory.IsRequested<string>(request, pKeyName, nameof(request.KeyName)) && !request.VisibleFields.Matches(nameof(request.KeyName), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, pOrder, entity.Order, nameof(request.Order)))
+                    if(null != pOrder)
+                        entity.Order = (int) pOrder;
+                if(DocPermissionFactory.IsRequested<int?>(request, pOrder, nameof(request.Order)) && !request.VisibleFields.Matches(nameof(request.Order), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.KeyName));
+                    request.VisibleFields.Add(nameof(request.Order));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUnitOfMeasure>(currentUser, request, pUnit, permission, DocConstantModelName.UNITVALUE, nameof(request.Unit)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pUnit, entity.Unit, nameof(request.Unit)))
+                    entity.Unit = pUnit;
+                if(DocPermissionFactory.IsRequested<DocEntityUnitOfMeasure>(request, pUnit, nameof(request.Unit)) && !request.VisibleFields.Matches(nameof(request.Unit), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Unit));
                 }
             }
             
@@ -237,24 +233,24 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, nameof(ForeignKey), request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<UnitValue>(currentUser, nameof(UnitValue), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FOREIGNKEY);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITVALUE);
 
             return ret;
         }
-        public ForeignKey Post(ForeignKey request)
+        public UnitValue Post(UnitValue request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            ForeignKey ret = null;
+            UnitValue ret = null;
 
             Execute.Run(ssn =>
             {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "ForeignKey")) 
+                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UnitValue")) 
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                 ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
@@ -263,11 +259,11 @@ namespace Services.API
             return ret;
         }
    
-        public List<ForeignKey> Post(ForeignKeyBatch request)
+        public List<UnitValue> Post(UnitValueBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<ForeignKey>();
+            var ret = new List<UnitValue>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -275,7 +271,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as ForeignKey;
+                    var obj = Post(dto) as UnitValue;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -310,36 +306,40 @@ namespace Services.API
             return ret;
         }
 
-        public ForeignKey Post(ForeignKeyCopy request)
+        public UnitValue Post(UnitValueCopy request)
         {
-            ForeignKey ret = null;
+            UnitValue ret = null;
             Execute.Run(ssn =>
             {
-                var entity = DocEntityForeignKey.GetForeignKey(request?.Id);
+                var entity = DocEntityUnitValue.GetUnitValue(request?.Id);
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pIntegrationName = entity.IntegrationName;
-                    var pIntegrationPropertyName = entity.IntegrationPropertyName;
-                    var pKeyId = entity.KeyId;
-                    if(!DocTools.IsNullOrEmpty(pKeyId))
-                        pKeyId += " (Copy)";
-                    var pKeyName = entity.KeyName;
-                    if(!DocTools.IsNullOrEmpty(pKeyName))
-                        pKeyName += " (Copy)";
-                #region Custom Before copyForeignKey
-                #endregion Custom Before copyForeignKey
-                var copy = new DocEntityForeignKey(ssn)
+                    var pEqualityOperator = entity.EqualityOperator;
+                    var pMultiplier = entity.Multiplier;
+                    var pNumber = entity.Number;
+                    var pOrder = entity.Order;
+                    var pOwners = entity.Owners.ToList();
+                    var pUnit = entity.Unit;
+                #region Custom Before copyUnitValue
+                #endregion Custom Before copyUnitValue
+                var copy = new DocEntityUnitValue(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , IntegrationName = pIntegrationName
-                                , IntegrationPropertyName = pIntegrationPropertyName
-                                , KeyId = pKeyId
-                                , KeyName = pKeyName
+                                , EqualityOperator = pEqualityOperator
+                                , Multiplier = pMultiplier
+                                , Number = pNumber
+                                , Order = pOrder
+                                , Unit = pUnit
                 };
-                #region Custom After copyForeignKey
-                #endregion Custom After copyForeignKey
+                            foreach(var item in pOwners)
+                            {
+                                entity.Owners.Add(item);
+                            }
+
+                #region Custom After copyUnitValue
+                #endregion Custom After copyUnitValue
                 copy.SaveChanges(DocConstantPermission.ADD);
                 ret = copy.ToDto();
             });
@@ -347,21 +347,21 @@ namespace Services.API
         }
 
 
-        public List<ForeignKey> Put(ForeignKeyBatch request)
+        public List<UnitValue> Put(UnitValueBatch request)
         {
             return Patch(request);
         }
 
-        public ForeignKey Put(ForeignKey request)
+        public UnitValue Put(UnitValue request)
         {
             return Patch(request);
         }
 
-        public List<ForeignKey> Patch(ForeignKeyBatch request)
+        public List<UnitValue> Patch(UnitValueBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<ForeignKey>();
+            var ret = new List<UnitValue>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -369,7 +369,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as ForeignKey;
+                    var obj = Patch(dto) as UnitValue;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -404,13 +404,13 @@ namespace Services.API
             return ret;
         }
 
-        public ForeignKey Patch(ForeignKey request)
+        public UnitValue Patch(UnitValue request)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the ForeignKey to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the UnitValue to patch.");
             
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
-            ForeignKey ret = null;
+            UnitValue ret = null;
             Execute.Run(ssn =>
             {
                 ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
@@ -418,7 +418,7 @@ namespace Services.API
             return ret;
         }
 
-        public void Delete(ForeignKeyBatch request)
+        public void Delete(UnitValueBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
@@ -462,17 +462,17 @@ namespace Services.API
             }
         }
 
-        public void Delete(ForeignKey request)
+        public void Delete(UnitValue request)
         {
             Execute.Run(ssn =>
             {
                 if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.FOREIGNKEY);
+                DocCacheClient.RemoveSearch(DocConstantModelName.UNITVALUE);
                 DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityForeignKey.GetForeignKey(request?.Id);
+                var en = DocEntityUnitValue.GetUnitValue(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No ForeignKey could be found for Id {request?.Id}.");
+                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UnitValue could be found for Id {request?.Id}.");
                 if(en.IsRemoved) return;
                 
                 if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
@@ -482,9 +482,9 @@ namespace Services.API
             });
         }
 
-        public void Delete(ForeignKeySearch request)
+        public void Delete(UnitValueSearch request)
         {
-            var matches = Get(request) as List<ForeignKey>;
+            var matches = Get(request) as List<UnitValue>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
 
             Execute.Run(ssn =>
@@ -495,42 +495,61 @@ namespace Services.API
                 });
             });
         }
+        public object Get(UnitValueJunction request) =>
+            Execute.Run( s => 
+            {
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                {
+                    case "units":
+                        return GetJunctionSearchResult<UnitValue, DocEntityUnitValue, DocEntityUnits, Units, UnitsSearch>((int)request.Id, DocConstantModelName.UNITS, "Owners", request, (ss) => HostContext.ResolveService<UnitsService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for unitvalue/{request.Id}/{request.Junction} was not found");
+                }
+            });
+        public object Post(UnitValueJunction request) =>
+            Execute.Run( ssn =>
+            {
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                {
+                    case "units":
+                        return AddJunction<UnitValue, DocEntityUnitValue, DocEntityUnits, Units, UnitsSearch>((int)request.Id, DocConstantModelName.UNITS, "Owners", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for unitvalue/{request.Id}/{request.Junction} was not found");
+                }
+            });
 
-        private ForeignKey GetForeignKey(ForeignKey request)
+        public object Delete(UnitValueJunction request) =>
+            Execute.Run( ssn =>
+            {
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                {
+                    case "units":
+                        return RemoveJunction<UnitValue, DocEntityUnitValue, DocEntityUnits, Units, UnitsSearch>((int)request.Id, DocConstantModelName.UNITS, "Owners", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for unitvalue/{request.Id}/{request.Junction} was not found");
+                }
+            });
+
+        private UnitValue GetUnitValue(UnitValue request)
         {
             var id = request?.Id;
-            ForeignKey ret = null;
+            UnitValue ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<ForeignKey>(currentUser, "ForeignKey", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<UnitValue>(currentUser, "UnitValue", request.VisibleFields);
 
-            DocEntityForeignKey entity = null;
+            DocEntityUnitValue entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityForeignKey.GetForeignKey(id.Value);
+                entity = DocEntityUnitValue.GetUnitValue(id.Value);
             }
             if(null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No ForeignKey found for Id {id.Value}");
+                throw new HttpError(HttpStatusCode.NotFound, $"No UnitValue found for Id {id.Value}");
 
             if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.VIEW))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(ForeignKeyIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityForeignKey>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

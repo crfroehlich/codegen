@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -122,10 +123,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/documentsethistory", "GET")]
-    [Route("/documentsethistory/search", "GET, POST, DELETE")]
-    public partial class DocumentSetHistorySearch : Search<DocumentSetHistory>
+    public partial class DocumentSetHistorySearchBase : Search<DocumentSetHistory>
     {
+        public int? Id { get; set; }
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
         public int? EvidencePortalID { get; set; }
@@ -133,9 +133,17 @@ namespace Services.Dto
         public int? StudyCount { get; set; }
         public int? StudyCountFQ { get; set; }
     }
-    
+
+    [Route("/documentsethistory", "GET")]
+    [Route("/documentsethistory/version", "GET, POST")]
+    [Route("/documentsethistory/search", "GET, POST, DELETE")]
+    public partial class DocumentSetHistorySearch : DocumentSetHistorySearchBase
+    {
+    }
+
     public class DocumentSetHistoryFullTextSearch
     {
+        public DocumentSetHistoryFullTextSearch() {}
         private DocumentSetHistorySearch _request;
         public DocumentSetHistoryFullTextSearch(DocumentSetHistorySearch request) => _request = request;
         
@@ -154,15 +162,7 @@ namespace Services.Dto
         public bool doStudyCountFQ { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSetHistory.StudyCountFQ))); }
     }
 
-    [Route("/documentsethistory/version", "GET, POST")]
-    public partial class DocumentSetHistoryVersion : DocumentSetHistorySearch {}
-
     [Route("/documentsethistory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentSetHistoryBatch : List<DocumentSetHistory> { }
 
-    [Route("/admin/documentsethistory/ids", "GET, POST")]
-    public class DocumentSetHistoryIds
-    {
-        public bool All { get; set; }
-    }
 }

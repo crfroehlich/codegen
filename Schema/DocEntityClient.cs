@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -108,12 +109,6 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Account))]
-        public DocEntityForeignKey Account { get; set; }
-        public int? AccountId { get { return Account?.Id; } private set { var noid = value; } }
-
-
         [Field()]
         [FieldMapping(nameof(DefaultLocale))]
         public DocEntityLocale DefaultLocale { get; set; }
@@ -448,7 +443,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class ClientMapper : Profile
+    public partial class ClientMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityClient,Client> _EntityToDto;
         private IMappingExpression<Client,DocEntityClient> _DtoToEntity;
@@ -465,8 +460,6 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityClient,Client>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, "Updated")))
-                .ForMember(dest => dest.Account, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Account))))
-                .ForMember(dest => dest.AccountId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.AccountId))))
                 .ForMember(dest => dest.DefaultLocale, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DefaultLocale))))
                 .ForMember(dest => dest.DefaultLocaleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DefaultLocaleId))))
                 .ForMember(dest => dest.Divisions, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Divisions))))

@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -128,13 +129,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<UnitConversionRules>("UnitConversionRules",exists);
             }
         }
 
@@ -143,14 +146,15 @@ namespace Services.Dto
     
     [Route("/UnitConversionRules/{Id}/copy", "POST")]
     public partial class UnitConversionRulesCopy : UnitConversionRules {}
-    [Route("/unitconversionrules", "GET")]
-    [Route("/unitconversionrules/search", "GET, POST, DELETE")]
-    public partial class UnitConversionRulesSearch : Search<UnitConversionRules>
+    public partial class UnitConversionRulesSearchBase : Search<UnitConversionRules>
     {
+        public int? Id { get; set; }
         public Reference DestinationUnit { get; set; }
         public List<int> DestinationUnitIds { get; set; }
-        public bool? IsDefault { get; set; }
-        public bool? IsDestinationSi { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsDefault { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsDestinationSi { get; set; }
         public Reference ModifierTerm { get; set; }
         public List<int> ModifierTermIds { get; set; }
         public decimal? Multiplier { get; set; }
@@ -162,9 +166,17 @@ namespace Services.Dto
         public Reference SourceUnit { get; set; }
         public List<int> SourceUnitIds { get; set; }
     }
-    
+
+    [Route("/unitconversionrules", "GET")]
+    [Route("/unitconversionrules/version", "GET, POST")]
+    [Route("/unitconversionrules/search", "GET, POST, DELETE")]
+    public partial class UnitConversionRulesSearch : UnitConversionRulesSearchBase
+    {
+    }
+
     public class UnitConversionRulesFullTextSearch
     {
+        public UnitConversionRulesFullTextSearch() {}
         private UnitConversionRulesSearch _request;
         public UnitConversionRulesFullTextSearch(UnitConversionRulesSearch request) => _request = request;
         
@@ -186,15 +198,7 @@ namespace Services.Dto
         public bool doSourceUnit { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitConversionRules.SourceUnit))); }
     }
 
-    [Route("/unitconversionrules/version", "GET, POST")]
-    public partial class UnitConversionRulesVersion : UnitConversionRulesSearch {}
-
     [Route("/unitconversionrules/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitConversionRulesBatch : List<UnitConversionRules> { }
 
-    [Route("/admin/unitconversionrules/ids", "GET, POST")]
-    public class UnitConversionRulesIds
-    {
-        public bool All { get; set; }
-    }
 }

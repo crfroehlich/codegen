@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -105,13 +106,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<AttributeCategory>("AttributeCategory",exists);
             }
         }
 
@@ -120,10 +123,9 @@ namespace Services.Dto
     
     [Route("/AttributeCategory/{Id}/copy", "POST")]
     public partial class AttributeCategoryCopy : AttributeCategory {}
-    [Route("/attributecategory", "GET")]
-    [Route("/attributecategory/search", "GET, POST, DELETE")]
-    public partial class AttributeCategorySearch : Search<AttributeCategory>
+    public partial class AttributeCategorySearchBase : Search<AttributeCategory>
     {
+        public int? Id { get; set; }
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
         public Reference Name { get; set; }
@@ -133,9 +135,17 @@ namespace Services.Dto
         public Reference ParentAttributeCategory { get; set; }
         public List<int> ParentAttributeCategoryIds { get; set; }
     }
-    
+
+    [Route("/attributecategory", "GET")]
+    [Route("/attributecategory/version", "GET, POST")]
+    [Route("/attributecategory/search", "GET, POST, DELETE")]
+    public partial class AttributeCategorySearch : AttributeCategorySearchBase
+    {
+    }
+
     public class AttributeCategoryFullTextSearch
     {
+        public AttributeCategoryFullTextSearch() {}
         private AttributeCategorySearch _request;
         public AttributeCategoryFullTextSearch(AttributeCategorySearch request) => _request = request;
         
@@ -152,15 +162,7 @@ namespace Services.Dto
         public bool doParentAttributeCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AttributeCategory.ParentAttributeCategory))); }
     }
 
-    [Route("/attributecategory/version", "GET, POST")]
-    public partial class AttributeCategoryVersion : AttributeCategorySearch {}
-
     [Route("/attributecategory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeCategoryBatch : List<AttributeCategory> { }
 
-    [Route("/admin/attributecategory/ids", "GET, POST")]
-    public class AttributeCategoryIds
-    {
-        public bool All { get; set; }
-    }
 }

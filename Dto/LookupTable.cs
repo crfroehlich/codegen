@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -111,13 +112,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<LookupTable>("LookupTable",exists);
             }
         }
 
@@ -131,10 +134,9 @@ namespace Services.Dto
     
     [Route("/LookupTable/{Id}/copy", "POST")]
     public partial class LookupTableCopy : LookupTable {}
-    [Route("/lookuptable", "GET")]
-    [Route("/lookuptable/search", "GET, POST, DELETE")]
-    public partial class LookupTableSearch : Search<LookupTable>
+    public partial class LookupTableSearchBase : Search<LookupTable>
     {
+        public int? Id { get; set; }
         public List<int> BindingsIds { get; set; }
         public List<int> CategoriesIds { get; set; }
         public List<int> DocumentsIds { get; set; }
@@ -142,9 +144,17 @@ namespace Services.Dto
         public List<int> EnumIds { get; set; }
         public string Name { get; set; }
     }
-    
+
+    [Route("/lookuptable", "GET")]
+    [Route("/lookuptable/version", "GET, POST")]
+    [Route("/lookuptable/search", "GET, POST, DELETE")]
+    public partial class LookupTableSearch : LookupTableSearchBase
+    {
+    }
+
     public class LookupTableFullTextSearch
     {
+        public LookupTableFullTextSearch() {}
         private LookupTableSearch _request;
         public LookupTableFullTextSearch(LookupTableSearch request) => _request = request;
         
@@ -163,50 +173,12 @@ namespace Services.Dto
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupTable.Name))); }
     }
 
-    [Route("/lookuptable/version", "GET, POST")]
-    public partial class LookupTableVersion : LookupTableSearch {}
-
     [Route("/lookuptable/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupTableBatch : List<LookupTable> { }
 
-    [Route("/lookuptable/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/lookuptable/{Id}/lookupcategory", "GET, POST, DELETE")]
-    [Route("/lookuptable/{Id}/document", "GET, POST, DELETE")]
-    public class LookupTableJunction : Search<LookupTable>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/lookuptable/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/lookuptable/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class LookupTableJunction : LookupTableSearchBase {}
 
 
-        public LookupTableJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/lookuptable/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/lookuptable/{Id}/lookupcategory/version", "GET")]
-    [Route("/lookuptable/{Id}/document/version", "GET")]
-    public class LookupTableJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/lookuptable/ids", "GET, POST")]
-    public class LookupTableIds
-    {
-        public bool All { get; set; }
-    }
 }

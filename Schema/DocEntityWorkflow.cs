@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -510,7 +511,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class WorkflowMapper : Profile
+    public partial class WorkflowMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityWorkflow,Workflow> _EntityToDto;
         private IMappingExpression<Workflow,DocEntityWorkflow> _DtoToEntity;

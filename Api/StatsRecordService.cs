@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityStatsRecord> _ExecSearch(StatsRecordSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<StatsRecord, StatsRecordSearch>(request);
             IQueryable<DocEntityStatsRecord> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new StatsRecordFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityStatsRecord,StatsRecordFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -107,7 +108,7 @@ namespace Services.API
                 if(request.Value.HasValue)
                     entities = entities.Where(en => request.Value.Value == en.Value);
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityStatsRecord,StatsRecordSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -124,18 +125,6 @@ namespace Services.API
         public List<StatsRecord> Post(StatsRecordSearch request) => Get(request);
 
         public List<StatsRecord> Get(StatsRecordSearch request) => GetSearchResult<StatsRecord,DocEntityStatsRecord,StatsRecordSearch>(DocConstantModelName.STATSRECORD, request, _ExecSearch);
-
-        public object Post(StatsRecordVersion request) => Get(request);
-
-        public object Get(StatsRecordVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
 
         public StatsRecord Get(StatsRecord request) => GetEntity<StatsRecord>(DocConstantModelName.STATSRECORD, request, GetStatsRecord);
 
@@ -162,21 +151,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(StatsRecordIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityStatsRecord>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

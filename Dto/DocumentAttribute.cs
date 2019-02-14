@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -98,13 +99,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<DocumentAttribute>("DocumentAttribute",exists);
             }
         }
 
@@ -113,18 +116,25 @@ namespace Services.Dto
     
     [Route("/DocumentAttribute/{Id}/copy", "POST")]
     public partial class DocumentAttributeCopy : DocumentAttribute {}
-    [Route("/documentattribute", "GET")]
-    [Route("/documentattribute/search", "GET, POST, DELETE")]
-    public partial class DocumentAttributeSearch : Search<DocumentAttribute>
+    public partial class DocumentAttributeSearchBase : Search<DocumentAttribute>
     {
+        public int? Id { get; set; }
         public Reference Attribute { get; set; }
         public List<int> AttributeIds { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
     }
-    
+
+    [Route("/documentattribute", "GET")]
+    [Route("/documentattribute/version", "GET, POST")]
+    [Route("/documentattribute/search", "GET, POST, DELETE")]
+    public partial class DocumentAttributeSearch : DocumentAttributeSearchBase
+    {
+    }
+
     public class DocumentAttributeFullTextSearch
     {
+        public DocumentAttributeFullTextSearch() {}
         private DocumentAttributeSearch _request;
         public DocumentAttributeFullTextSearch(DocumentAttributeSearch request) => _request = request;
         
@@ -140,15 +150,7 @@ namespace Services.Dto
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentAttribute.Document))); }
     }
 
-    [Route("/documentattribute/version", "GET, POST")]
-    public partial class DocumentAttributeVersion : DocumentAttributeSearch {}
-
     [Route("/documentattribute/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentAttributeBatch : List<DocumentAttribute> { }
 
-    [Route("/admin/documentattribute/ids", "GET, POST")]
-    public class DocumentAttributeIds
-    {
-        public bool All { get; set; }
-    }
 }

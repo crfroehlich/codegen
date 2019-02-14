@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -122,12 +123,6 @@ namespace Services.Schema
         [Field(Nullable = false)]
         [FieldMapping(nameof(End))]
         public DateTime End { get; set; }
-
-
-        [Field()]
-        [FieldMapping(nameof(PICO))]
-        public DocEntityPackage PICO { get; set; }
-        public int? PICOId { get { return PICO?.Id; } private set { var noid = value; } }
 
 
         [Field()]
@@ -434,7 +429,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TimeCardMapper : Profile
+    public partial class TimeCardMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityTimeCard,TimeCard> _EntityToDto;
         private IMappingExpression<TimeCard,DocEntityTimeCard> _DtoToEntity;
@@ -455,8 +450,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Document, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Document))))
                 .ForMember(dest => dest.DocumentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.DocumentId))))
                 .ForMember(dest => dest.End, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.End))))
-                .ForMember(dest => dest.PICO, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICO))))
-                .ForMember(dest => dest.PICOId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.PICOId))))
                 .ForMember(dest => dest.Project, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Project))))
                 .ForMember(dest => dest.ProjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ProjectId))))
                 .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ReferenceId))))

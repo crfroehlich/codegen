@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -452,7 +453,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class LookupTableMapper : Profile
+    public partial class LookupTableMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityLookupTable,LookupTable> _EntityToDto;
         private IMappingExpression<LookupTable,DocEntityLookupTable> _DtoToEntity;

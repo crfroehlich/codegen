@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityDocumentSetHistory> _ExecSearch(DocumentSetHistorySearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<DocumentSetHistory, DocumentSetHistorySearch>(request);
             IQueryable<DocEntityDocumentSetHistory> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentSetHistoryFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityDocumentSetHistory,DocumentSetHistoryFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -101,7 +102,7 @@ namespace Services.API
                 if(request.StudyCountFQ.HasValue)
                     entities = entities.Where(en => request.StudyCountFQ.Value == en.StudyCountFQ);
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityDocumentSetHistory,DocumentSetHistorySearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -118,18 +119,6 @@ namespace Services.API
         public List<DocumentSetHistory> Post(DocumentSetHistorySearch request) => Get(request);
 
         public List<DocumentSetHistory> Get(DocumentSetHistorySearch request) => GetSearchResult<DocumentSetHistory,DocEntityDocumentSetHistory,DocumentSetHistorySearch>(DocConstantModelName.DOCUMENTSETHISTORY, request, _ExecSearch);
-
-        public object Post(DocumentSetHistoryVersion request) => Get(request);
-
-        public object Get(DocumentSetHistoryVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
 
         public DocumentSetHistory Get(DocumentSetHistory request) => GetEntity<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, request, GetDocumentSetHistory);
 
@@ -156,21 +145,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(DocumentSetHistoryIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityDocumentSetHistory>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

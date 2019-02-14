@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -403,7 +404,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class HistoryMapper : Profile
+    public partial class HistoryMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityHistory,History> _EntityToDto;
         private IMappingExpression<History,DocEntityHistory> _DtoToEntity;

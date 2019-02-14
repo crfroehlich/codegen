@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -449,7 +450,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TimePointMapper : Profile
+    public partial class TimePointMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityTimePoint,TimePoint> _EntityToDto;
         private IMappingExpression<TimePoint,DocEntityTimePoint> _DtoToEntity;

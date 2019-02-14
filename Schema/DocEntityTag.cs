@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -372,7 +373,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class TagMapper : Profile
+    public partial class TagMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityTag,Tag> _EntityToDto;
         private IMappingExpression<Tag,DocEntityTag> _DtoToEntity;

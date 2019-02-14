@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -371,7 +372,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class StudyTypeMapper : Profile
+    public partial class StudyTypeMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityStudyType,StudyType> _EntityToDto;
         private IMappingExpression<StudyType,DocEntityStudyType> _DtoToEntity;

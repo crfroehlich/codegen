@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -130,10 +131,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/userrequest", "GET")]
-    [Route("/userrequest/search", "GET, POST, DELETE")]
-    public partial class UserRequestSearch : Search<UserRequest>
+    public partial class UserRequestSearchBase : Search<UserRequest>
     {
+        public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public string Method { get; set; }
@@ -144,9 +144,17 @@ namespace Services.Dto
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }
-    
+
+    [Route("/userrequest", "GET")]
+    [Route("/userrequest/version", "GET, POST")]
+    [Route("/userrequest/search", "GET, POST, DELETE")]
+    public partial class UserRequestSearch : UserRequestSearchBase
+    {
+    }
+
     public class UserRequestFullTextSearch
     {
+        public UserRequestFullTextSearch() {}
         private UserRequestSearch _request;
         public UserRequestFullTextSearch(UserRequestSearch request) => _request = request;
         
@@ -166,15 +174,7 @@ namespace Services.Dto
         public bool doUserSession { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.UserSession))); }
     }
 
-    [Route("/userrequest/version", "GET, POST")]
-    public partial class UserRequestVersion : UserRequestSearch {}
-
     [Route("/userrequest/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserRequestBatch : List<UserRequest> { }
 
-    [Route("/admin/userrequest/ids", "GET, POST")]
-    public class UserRequestIds
-    {
-        public bool All { get; set; }
-    }
 }

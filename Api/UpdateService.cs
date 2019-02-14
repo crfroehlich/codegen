@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUpdate> _ExecSearch(UpdateSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Update, UpdateSearch>(request);
             IQueryable<DocEntityUpdate> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UpdateFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityUpdate,UpdateFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -96,10 +97,10 @@ namespace Services.API
                     entities = entities.Where(en => en.EmailSent <= request.EmailSentBefore);
                 if(!DocTools.IsNullOrEmpty(request.EmailSentAfter))
                     entities = entities.Where(en => en.EmailSent >= request.EmailSentAfter);
-                        if(true == request.EventsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Events.Any(r => r.Id.In(request.EventsIds)));
-                        }
+                if(true == request.EventsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Events.Any(r => r.Id.In(request.EventsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Link))
                     entities = entities.Where(en => en.Link.Contains(request.Link));
                 if(request.Priority.HasValue)
@@ -135,7 +136,7 @@ namespace Services.API
                     entities = entities.Where(en => en.User.Id.In(request.UserIds));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityUpdate,UpdateSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -153,18 +154,6 @@ namespace Services.API
 
         public List<Update> Get(UpdateSearch request) => GetSearchResult<Update,DocEntityUpdate,UpdateSearch>(DocConstantModelName.UPDATE, request, _ExecSearch);
 
-        public object Post(UpdateVersion request) => Get(request);
-
-        public object Get(UpdateVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public Update Get(Update request) => GetEntity<Update>(DocConstantModelName.UPDATE, request, GetUpdate);
         private Update _AssignValues(Update request, DocConstantPermission permission, Session session)
         {
@@ -177,7 +166,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Update ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Update>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -454,100 +443,17 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(UpdateJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
+        public object Get(UpdateJunction request) =>
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "event":
-                    ret = _GetUpdateEvent(request, skip, take);
-                    break;
+                    case "event":
+                        return GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request, (ss) => HostContext.ResolveService<EventService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for update/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
-        public object Get(UpdateJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
-            Execute.Run( ssn =>
-            {
-                switch(method)
-                {
-                }
-            });
-            return ret;
-        }
-        
-
-        private object _GetUpdateEvent(UpdateJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request.VisibleFields);
-             var en = DocEntityUpdate.GetUpdate(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.UPDATE, columnName: "Events", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Update and Event");
-             return en?.Events.Take(take).Skip(skip).ConvertFromEntityList<DocEntityEvent,Event>(new List<Event>());
-        }
-        
-        public object Post(UpdateJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                }
-            });
-            return ret;
-        }
-
-
-        public object Delete(UpdateJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                }
-            });
-            return ret;
-        }
-
 
         private Update GetUpdate(Update request)
         {
@@ -569,21 +475,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(UpdateIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityUpdate>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

@@ -609,7 +609,6 @@
   },
   "ModelName": {
     "ENTITY": "Entities",
-    "ENTITYAUDITRECORD": "EntityAuditRecords",
     "APP": "App",
     "ATTRIBUTE": "Attribute",
     "ATTRIBUTECATEGORY": "AttributeCategory",
@@ -633,7 +632,6 @@
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
     "EVENT": "Event",
     "FEATURESET": "FeatureSet",
-    "FOREIGNKEY": "ForeignKey",
     "GLOSSARY": "Glossary",
     "HELP": "Help",
     "HISTORY": "History",
@@ -654,7 +652,6 @@
     "MEANVARIANCES": "MeanVariances",
     "MEANVARIANCEVALUE": "MeanVarianceValue",
     "OUTCOME": "Outcome",
-    "PACKAGE": "Package",
     "PAGE": "Page",
     "PROJECT": "Project",
     "QUEUECHANNEL": "QueueChannel",

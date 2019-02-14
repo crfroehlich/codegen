@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -98,13 +99,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<LookupTableEnum>("LookupTableEnum",exists);
             }
         }
 
@@ -113,17 +116,26 @@ namespace Services.Dto
     
     [Route("/LookupTableEnum/{Id}/copy", "POST")]
     public partial class LookupTableEnumCopy : LookupTableEnum {}
-    [Route("/lookuptableenum", "GET")]
-    [Route("/lookuptableenum/search", "GET, POST, DELETE")]
-    public partial class LookupTableEnumSearch : Search<LookupTableEnum>
+    public partial class LookupTableEnumSearchBase : Search<LookupTableEnum>
     {
-        public bool? IsBindable { get; set; }
-        public bool? IsGlobal { get; set; }
+        public int? Id { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsBindable { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsGlobal { get; set; }
         public string Name { get; set; }
     }
-    
+
+    [Route("/lookuptableenum", "GET")]
+    [Route("/lookuptableenum/version", "GET, POST")]
+    [Route("/lookuptableenum/search", "GET, POST, DELETE")]
+    public partial class LookupTableEnumSearch : LookupTableEnumSearchBase
+    {
+    }
+
     public class LookupTableEnumFullTextSearch
     {
+        public LookupTableEnumFullTextSearch() {}
         private LookupTableEnumSearch _request;
         public LookupTableEnumFullTextSearch(LookupTableEnumSearch request) => _request = request;
         
@@ -140,15 +152,7 @@ namespace Services.Dto
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupTableEnum.Name))); }
     }
 
-    [Route("/lookuptableenum/version", "GET, POST")]
-    public partial class LookupTableEnumVersion : LookupTableEnumSearch {}
-
     [Route("/lookuptableenum/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LookupTableEnumBatch : List<LookupTableEnum> { }
 
-    [Route("/admin/lookuptableenum/ids", "GET, POST")]
-    public class LookupTableEnumIds
-    {
-        public bool All { get; set; }
-    }
 }

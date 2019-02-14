@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -126,12 +127,6 @@ namespace Services.Schema
 
 
         public int? LookupsCount { get { return Lookups.Count(); } private set { var noid = value; } }
-
-
-        [Field()]
-        [FieldMapping(nameof(ParentCategory))]
-        public DocEntityLookupCategory ParentCategory { get; set; }
-        public int? ParentCategoryId { get { return ParentCategory?.Id; } private set { var noid = value; } }
 
 
 
@@ -389,7 +384,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class LookupCategoryMapper : Profile
+    public partial class LookupCategoryMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityLookupCategory,LookupCategory> _EntityToDto;
         private IMappingExpression<LookupCategory,DocEntityLookupCategory> _DtoToEntity;
@@ -411,8 +406,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.EnumId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.EnumId))))
                 .ForMember(dest => dest.Lookups, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.Lookups))))
                 .ForMember(dest => dest.LookupsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.LookupsCount))))
-                .ForMember(dest => dest.ParentCategory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.ParentCategory))))
-                .ForMember(dest => dest.ParentCategoryId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupCategory>(c, nameof(DocEntityLookupCategory.ParentCategoryId))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<LookupCategory,DocEntityLookupCategory>()
                 .MaxDepth(2);

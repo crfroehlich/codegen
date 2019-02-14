@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -113,23 +114,24 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Stats>("Stats",exists);
             }
         }
 
         #endregion Fields
     }
     
-    [Route("/stats", "GET")]
-    [Route("/stats/search", "GET, POST, DELETE")]
-    public partial class StatsSearch : Search<Stats>
+    public partial class StatsSearchBase : Search<Stats>
     {
+        public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public int? ExternalId { get; set; }
@@ -139,9 +141,17 @@ namespace Services.Dto
         public Reference StudySetStats { get; set; }
         public List<int> StudySetStatsIds { get; set; }
     }
-    
+
+    [Route("/stats", "GET")]
+    [Route("/stats/version", "GET, POST")]
+    [Route("/stats/search", "GET, POST, DELETE")]
+    public partial class StatsSearch : StatsSearchBase
+    {
+    }
+
     public class StatsFullTextSearch
     {
+        public StatsFullTextSearch() {}
         private StatsSearch _request;
         public StatsFullTextSearch(StatsSearch request) => _request = request;
         
@@ -161,15 +171,7 @@ namespace Services.Dto
         public bool doStudySetStats { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.StudySetStats))); }
     }
 
-    [Route("/stats/version", "GET, POST")]
-    public partial class StatsVersion : StatsSearch {}
-
     [Route("/stats/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsBatch : List<Stats> { }
 
-    [Route("/admin/stats/ids", "GET, POST")]
-    public class StatsIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -104,13 +105,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<JctAttributeCategoryAttributeDocumentSet>("JctAttributeCategoryAttributeDocumentSet",exists);
             }
         }
 
@@ -119,10 +122,9 @@ namespace Services.Dto
     
     [Route("/JctAttributeCategoryAttributeDocumentSet/{Id}/copy", "POST")]
     public partial class JctAttributeCategoryAttributeDocumentSetCopy : JctAttributeCategoryAttributeDocumentSet {}
-    [Route("/jctattributecategoryattributedocumentset", "GET")]
-    [Route("/jctattributecategoryattributedocumentset/search", "GET, POST, DELETE")]
-    public partial class JctAttributeCategoryAttributeDocumentSetSearch : Search<JctAttributeCategoryAttributeDocumentSet>
+    public partial class JctAttributeCategoryAttributeDocumentSetSearchBase : Search<JctAttributeCategoryAttributeDocumentSet>
     {
+        public int? Id { get; set; }
         public Reference Attribute { get; set; }
         public List<int> AttributeIds { get; set; }
         public Reference AttributeCategory { get; set; }
@@ -130,9 +132,17 @@ namespace Services.Dto
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
     }
-    
+
+    [Route("/jctattributecategoryattributedocumentset", "GET")]
+    [Route("/jctattributecategoryattributedocumentset/version", "GET, POST")]
+    [Route("/jctattributecategoryattributedocumentset/search", "GET, POST, DELETE")]
+    public partial class JctAttributeCategoryAttributeDocumentSetSearch : JctAttributeCategoryAttributeDocumentSetSearchBase
+    {
+    }
+
     public class JctAttributeCategoryAttributeDocumentSetFullTextSearch
     {
+        public JctAttributeCategoryAttributeDocumentSetFullTextSearch() {}
         private JctAttributeCategoryAttributeDocumentSetSearch _request;
         public JctAttributeCategoryAttributeDocumentSetFullTextSearch(JctAttributeCategoryAttributeDocumentSetSearch request) => _request = request;
         
@@ -149,15 +159,7 @@ namespace Services.Dto
         public bool doDocumentSet { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(JctAttributeCategoryAttributeDocumentSet.DocumentSet))); }
     }
 
-    [Route("/jctattributecategoryattributedocumentset/version", "GET, POST")]
-    public partial class JctAttributeCategoryAttributeDocumentSetVersion : JctAttributeCategoryAttributeDocumentSetSearch {}
-
     [Route("/jctattributecategoryattributedocumentset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class JctAttributeCategoryAttributeDocumentSetBatch : List<JctAttributeCategoryAttributeDocumentSet> { }
 
-    [Route("/admin/jctattributecategoryattributedocumentset/ids", "GET, POST")]
-    public class JctAttributeCategoryAttributeDocumentSetIds
-    {
-        public bool All { get; set; }
-    }
 }
