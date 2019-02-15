@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityDivision> _ExecSearch(DivisionSearch request)
         {
-            request = InitSearch<Division, DivisionSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityDivision> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DivisionFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityDivision,DivisionFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -101,10 +100,10 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.DefaultLocale.Id.In(request.DefaultLocaleIds));
                 }
-                if(true == request.DocumentSetsIds?.Any())
-                {
-                    entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
-                }
+                        if(true == request.DocumentSetsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(!DocTools.IsNullOrEmpty(request.Role) && !DocTools.IsNullOrEmpty(request.Role.Id))
@@ -115,12 +114,12 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Role.Id.In(request.RoleIds));
                 }
-                if(true == request.UsersIds?.Any())
-                {
-                    entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
-                }
+                        if(true == request.UsersIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityDivision,DivisionSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -138,6 +137,18 @@ namespace Services.API
 
         public object Get(DivisionSearch request) => GetSearchResultWithCache<Division,DocEntityDivision,DivisionSearch>(DocConstantModelName.DIVISION, request, _ExecSearch);
 
+        public object Post(DivisionVersion request) => Get(request);
+
+        public object Get(DivisionVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Division request) => GetEntityWithCache<Division>(DocConstantModelName.DIVISION, request, GetDivision);
         private Division _AssignValues(Division request, DocConstantPermission permission, Session session)
         {
@@ -150,7 +161,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Division ret = null;
-            request = _InitAssignValues<Division>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -590,46 +601,236 @@ namespace Services.API
                 });
             });
         }
-        public object Get(DivisionJunction request) =>
+        public object Get(DivisionJunction request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "documentset":
-                        return GetJunctionSearchResult<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
-                    case "user":
-                        return GetJunctionSearchResult<Division, DocEntityDivision, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for division/{request.Id}/{request.Junction} was not found");
+                case "documentset":
+                    ret = _GetDivisionDocumentSet(request, skip, take);
+                    break;
+                case "user":
+                    ret = _GetDivisionUser(request, skip, take);
+                    break;
                 }
             });
-        public object Post(DivisionJunction request) =>
+            return ret;
+        }
+        
+        public object Get(DivisionJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
             Execute.Run( ssn =>
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "documentset":
-                        return AddJunction<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
-                    case "user":
-                        return AddJunction<Division, DocEntityDivision, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for division/{request.Id}/{request.Junction} was not found");
+                case "documentset":
+                    ret = GetDivisionDocumentSetVersion(request);
+                    break;
+                case "user":
+                    ret = GetDivisionUserVersion(request);
+                    break;
                 }
             });
+            return ret;
+        }
+        
 
-        public object Delete(DivisionJunction request) =>
+        private object _GetDivisionDocumentSet(DivisionJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             var en = DocEntityDivision.GetDivision(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DIVISION, columnName: "DocumentSets", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Division and DocumentSet");
+             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
+        }
+
+        private List<Version> GetDivisionDocumentSetVersion(DivisionJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityDivision.GetDivision(request.Id);
+                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetDivisionUser(DivisionJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             var en = DocEntityDivision.GetDivision(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.DIVISION, columnName: "Users", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Division and User");
+             return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
+        }
+
+        private List<Version> GetDivisionUserVersion(DivisionJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityDivision.GetDivision(request.Id);
+                ret = en?.Users.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
+        public object Post(DivisionJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
             Execute.Run( ssn =>
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
-                    case "documentset":
-                        return RemoveJunction<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
-                    case "user":
-                        return RemoveJunction<Division, DocEntityDivision, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for division/{request.Id}/{request.Junction} was not found");
+                case "documentset":
+                    ret = _PostDivisionDocumentSet(request);
+                    break;
+                case "user":
+                    ret = _PostDivisionUser(request);
+                    break;
                 }
             });
+            return ret;
+        }
+
+
+        private object _PostDivisionDocumentSet(DivisionJunction request)
+        {
+            var entity = DocEntityDivision.GetDivision(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Division found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Division");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Division with objects that do not exist. No matching DocumentSet could be found for {id}.");
+                entity.DocumentSets.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostDivisionUser(DivisionJunction request)
+        {
+            var entity = DocEntityDivision.GetDivision(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Division found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Division");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUser.GetUser(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Users property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Division with objects that do not exist. No matching User could be found for {id}.");
+                entity.Users.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        public object Delete(DivisionJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                case "documentset":
+                    ret = _DeleteDivisionDocumentSet(request);
+                    break;
+                case "user":
+                    ret = _DeleteDivisionUser(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+
+
+        private object _DeleteDivisionDocumentSet(DivisionJunction request)
+        {
+            var entity = DocEntityDivision.GetDivision(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Division found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Division");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Division and DocumentSet");
+                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeleteDivisionUser(DivisionJunction request)
+        {
+            var entity = DocEntityDivision.GetDivision(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Division found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Division");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUser.GetUser(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Division and User");
+                if(null != relationship && false == relationship.IsRemoved) entity.Users.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         private Division GetDivision(Division request)
         {
@@ -651,6 +852,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(DivisionIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityDivision>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

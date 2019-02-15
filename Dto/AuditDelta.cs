@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -114,24 +113,17 @@ namespace Services.Dto
     
     [Route("/AuditDelta/{Id}/copy", "POST")]
     public partial class AuditDeltaCopy : AuditDelta {}
-    public partial class AuditDeltaSearchBase : Search<AuditDelta>
+    [Route("/auditdelta", "GET")]
+    [Route("/auditdelta/search", "GET, POST, DELETE")]
+    public partial class AuditDeltaSearch : Search<AuditDelta>
     {
-        public int? Id { get; set; }
         public Reference Audit { get; set; }
         public List<int> AuditIds { get; set; }
         public string Delta { get; set; }
     }
-
-    [Route("/auditdelta", "GET")]
-    [Route("/auditdelta/version", "GET, POST")]
-    [Route("/auditdelta/search", "GET, POST, DELETE")]
-    public partial class AuditDeltaSearch : AuditDeltaSearchBase
-    {
-    }
-
+    
     public class AuditDeltaFullTextSearch
     {
-        public AuditDeltaFullTextSearch() {}
         private AuditDeltaSearch _request;
         public AuditDeltaFullTextSearch(AuditDeltaSearch request) => _request = request;
         
@@ -147,7 +139,15 @@ namespace Services.Dto
         public bool doDelta { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditDelta.Delta))); }
     }
 
+    [Route("/auditdelta/version", "GET, POST")]
+    public partial class AuditDeltaVersion : AuditDeltaSearch {}
+
     [Route("/auditdelta/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AuditDeltaBatch : List<AuditDelta> { }
 
+    [Route("/admin/auditdelta/ids", "GET, POST")]
+    public class AuditDeltaIds
+    {
+        public bool All { get; set; }
+    }
 }
