@@ -71,8 +71,6 @@ namespace Services.Enums
         EVENT,
         [EnumMember(Value = DocConstantModelName.FEATURESET)]
         FEATURESET,
-        [EnumMember(Value = DocConstantModelName.FOREIGNKEY)]
-        FOREIGNKEY,
         [EnumMember(Value = DocConstantModelName.GLOSSARY)]
         GLOSSARY,
         [EnumMember(Value = DocConstantModelName.HELP)]
@@ -208,7 +206,6 @@ namespace Services.Enums
         public const string ENTITYAUDITRECORD = "EntityAuditRecords";
         public const string EVENT = "Event";
         public const string FEATURESET = "FeatureSet";
-        public const string FOREIGNKEY = "ForeignKey";
         public const string GLOSSARY = "Glossary";
         public const string HELP = "Help";
         public const string HISTORY = "History";

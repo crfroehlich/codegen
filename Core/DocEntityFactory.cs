@@ -121,10 +121,6 @@ namespace Services.Schema
                 {
                     ret = DocConstantModelName.FEATURESET;
                 }
-                else if(typeof(T) == typeof(DocEntityForeignKey))
-                {
-                    ret = DocConstantModelName.FOREIGNKEY;
-                }
                 else if(typeof(T) == typeof(DocEntityGlossary))
                 {
                     ret = DocConstantModelName.GLOSSARY;
@@ -430,9 +426,6 @@ namespace Services.Schema
                 case DocConstantModelName.FEATURESET:
                     ret = new DocEntityFeatureSet(session);
                     break;
-                case DocConstantModelName.FOREIGNKEY:
-                    ret = new DocEntityForeignKey(session);
-                    break;
                 case DocConstantModelName.GLOSSARY:
                     ret = new DocEntityGlossary(session);
                     break;
@@ -682,9 +675,6 @@ namespace Services.Schema
                     break;
                 case DocConstantModelName.FEATURESET:
                     ret = DocEntityFeatureSet.GetFeatureSet(id);
-                    break;
-                case DocConstantModelName.FOREIGNKEY:
-                    ret = DocEntityForeignKey.GetForeignKey(id);
                     break;
                 case DocConstantModelName.GLOSSARY:
                     ret = DocEntityGlossary.GetGlossary(id);
@@ -972,11 +962,6 @@ namespace Services.Schema
                 case DocConstantModelName.FEATURESET:
                     {
                        ret = entities.Cast<DocEntityFeatureSet>().Select(e => new Reference() { Id = e.Id, Name = $"{e.Name}", Gestalt = e.Gestalt }).ToList();
-                    }
-                    break;
-                case DocConstantModelName.FOREIGNKEY:
-                    {
-                       ret = entities.Cast<DocEntityForeignKey>().Select(e => new Reference() { Id = e.Id, Name = e.KeyName, Gestalt = e.Gestalt }).ToList();
                     }
                     break;
                 case DocConstantModelName.GLOSSARY:

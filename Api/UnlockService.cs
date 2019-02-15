@@ -141,10 +141,6 @@ namespace Services.API
                         var enFeatureSet = DocEntityFactory.GetEntity<DocEntityFeatureSet>( en.Id );
                         ret = enFeatureSet.ToDto();
                         break;
-                    case DocConstantModelName.FOREIGNKEY:
-                        var enForeignKey = DocEntityFactory.GetEntity<DocEntityForeignKey>( en.Id );
-                        ret = enForeignKey.ToDto();
-                        break;
                     case DocConstantModelName.GLOSSARY:
                         var enGlossary = DocEntityFactory.GetEntity<DocEntityGlossary>( en.Id );
                         ret = enGlossary.ToDto();

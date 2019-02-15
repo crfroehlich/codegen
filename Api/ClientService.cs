@@ -84,14 +84,6 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(!DocTools.IsNullOrEmpty(request.Account) && !DocTools.IsNullOrEmpty(request.Account.Id))
-                {
-                    entities = entities.Where(en => en.Account.Id == request.Account.Id );
-                }
-                if(true == request.AccountIds?.Any())
-                {
-                    entities = entities.Where(en => en.Account.Id.In(request.AccountIds));
-                }
                 if(!DocTools.IsNullOrEmpty(request.DefaultLocale) && !DocTools.IsNullOrEmpty(request.DefaultLocale.Id))
                 {
                     entities = entities.Where(en => en.DefaultLocale.Id == request.DefaultLocale.Id );
@@ -178,7 +170,6 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Client>(DocConstantModelName.CLIENT, nameof(Client), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pAccount = (request.Account?.Id > 0) ? DocEntityForeignKey.GetForeignKey(request.Account.Id) : null;
             var pDefaultLocale = (request.DefaultLocale?.Id > 0) ? DocEntityLocale.GetLocale(request.DefaultLocale.Id) : null;
             var pDivisions = request.Divisions?.ToList();
             var pDocumentSets = request.DocumentSets?.ToList();
@@ -206,15 +197,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityForeignKey>(currentUser, request, pAccount, permission, DocConstantModelName.CLIENT, nameof(request.Account)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pAccount, entity.Account, nameof(request.Account)))
-                    entity.Account = pAccount;
-                if(DocPermissionFactory.IsRequested<DocEntityForeignKey>(request, pAccount, nameof(request.Account)) && !request.VisibleFields.Matches(nameof(request.Account), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Account));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, request, pDefaultLocale, permission, DocConstantModelName.CLIENT, nameof(request.DefaultLocale)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDefaultLocale, entity.DefaultLocale, nameof(request.DefaultLocale)))
@@ -524,7 +506,6 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pAccount = entity.Account;
                     var pDefaultLocale = entity.DefaultLocale;
                     var pDivisions = entity.Divisions.ToList();
                     var pDocumentSets = entity.DocumentSets.ToList();
@@ -543,7 +524,6 @@ namespace Services.API
                 var copy = new DocEntityClient(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Account = pAccount
                                 , DefaultLocale = pDefaultLocale
                                 , Name = pName
                                 , Role = pRole

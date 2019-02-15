@@ -44,7 +44,6 @@ namespace Services.Schema
             new TypeMap() { SchemaName = typeof(DocEntityMeanVarianceValue).FullName, TypeId = 18119, TableName = DocConstantModelName.MEANVARIANCEVALUE, ClassName = "MeanVarianceValue", DtoName = nameof(MeanVarianceValue) },
             new TypeMap() { SchemaName = typeof(DocEntityTag).FullName, TypeId = 18019, TableName = DocConstantModelName.TAG, ClassName = "Tag", DtoName = nameof(Tag) },
             new TypeMap() { SchemaName = typeof(DocEntityUserType).FullName, TypeId = 17919, TableName = DocConstantModelName.USERTYPE, ClassName = "UserType", DtoName = nameof(UserType) },
-            new TypeMap() { SchemaName = typeof(DocEntityForeignKey).FullName, TypeId = 17719, TableName = DocConstantModelName.FOREIGNKEY, ClassName = "ForeignKey", DtoName = nameof(ForeignKey) },
             new TypeMap() { SchemaName = typeof(DocEntityJunction).FullName, TypeId = 17619, TableName = DocConstantModelName.JUNCTION, ClassName = "Junction", DtoName = nameof(Junction) },
             new TypeMap() { SchemaName = typeof(DocEntityLookupCategory).FullName, TypeId = 17419, TableName = DocConstantModelName.LOOKUPCATEGORY, ClassName = "LookupCategory", DtoName = nameof(LookupCategory) },
             new TypeMap() { SchemaName = typeof(DocEntityTimeCard).FullName, TypeId = 17319, TableName = DocConstantModelName.TIMECARD, ClassName = "TimeCard", DtoName = nameof(TimeCard) },
