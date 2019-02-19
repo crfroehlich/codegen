@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -149,15 +150,15 @@ namespace Services.Dto
     
     [Route("/Broadcast/{Id}/copy", "POST")]
     public partial class BroadcastCopy : Broadcast {}
-    [Route("/broadcast", "GET")]
-    [Route("/broadcast/search", "GET, POST, DELETE")]
-    public partial class BroadcastSearch : Search<Broadcast>
+    public partial class BroadcastSearchBase : Search<Broadcast>
     {
+        public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
         public string ConfluenceId { get; set; }
         public string Name { get; set; }
-        public bool? Reprocess { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> Reprocess { get; set; }
         public DateTime? Reprocessed { get; set; }
         public DateTime? ReprocessedAfter { get; set; }
         public DateTime? ReprocessedBefore { get; set; }
@@ -171,9 +172,17 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"System Alert",@"Terms of Service",@"Scope Specific"})]
         public List<string> TypeNames { get; set; }
     }
-    
+
+    [Route("/broadcast", "GET")]
+    [Route("/broadcast/version", "GET, POST")]
+    [Route("/broadcast/search", "GET, POST, DELETE")]
+    public partial class BroadcastSearch : BroadcastSearchBase
+    {
+    }
+
     public class BroadcastFullTextSearch
     {
+        public BroadcastFullTextSearch() {}
         private BroadcastSearch _request;
         public BroadcastFullTextSearch(BroadcastSearch request) => _request = request;
         
@@ -195,46 +204,12 @@ namespace Services.Dto
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Broadcast.Type))); }
     }
 
-    [Route("/broadcast/version", "GET, POST")]
-    public partial class BroadcastVersion : BroadcastSearch {}
-
     [Route("/broadcast/batch", "DELETE, PATCH, POST, PUT")]
     public partial class BroadcastBatch : List<Broadcast> { }
 
-    [Route("/broadcast/{Id}/scope", "GET, POST, DELETE")]
-    public class BroadcastJunction : Search<Broadcast>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/broadcast/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/broadcast/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class BroadcastJunction : BroadcastSearchBase {}
 
 
-        public BroadcastJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/broadcast/{Id}/scope/version", "GET")]
-    public class BroadcastJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/broadcast/ids", "GET, POST")]
-    public class BroadcastIds
-    {
-        public bool All { get; set; }
-    }
 }

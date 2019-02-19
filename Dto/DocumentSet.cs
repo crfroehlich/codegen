@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -57,11 +58,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Archived), Description = "bool?", IsRequired = false)]
         public bool? Archived { get; set; }
-
-
-        [ApiMember(Name = nameof(Categories), Description = "JctAttributeCategoryAttributeDocumentSet", IsRequired = false)]
-        public List<Reference> Categories { get; set; }
-        public int? CategoriesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Characteristics), Description = "Characteristic", IsRequired = false)]
@@ -298,7 +294,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Archived),nameof(Categories),nameof(CategoriesCount),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(NonDigitizedDocuments),nameof(NonDigitizedDocumentsCount),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Participants),nameof(PRISMA),nameof(Projects),nameof(ProjectsCount),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SelectionCriteria),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Archived),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(NonDigitizedDocuments),nameof(NonDigitizedDocumentsCount),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Participants),nameof(PRISMA),nameof(Projects),nameof(ProjectsCount),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SelectionCriteria),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -321,24 +317,24 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Categories), nameof(CategoriesCount), nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(NonDigitizedDocuments), nameof(NonDigitizedDocumentsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Projects), nameof(ProjectsCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
+            nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(NonDigitizedDocuments), nameof(NonDigitizedDocumentsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Projects), nameof(ProjectsCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
     }
     
     [Route("/DocumentSet/{Id}/copy", "POST")]
     public partial class DocumentSetCopy : DocumentSet {}
-    [Route("/documentset", "GET")]
-    [Route("/documentset/search", "GET, POST, DELETE")]
-    public partial class DocumentSetSearch : Search<DocumentSet>
+    public partial class DocumentSetSearchBase : Search<DocumentSet>
     {
+        public int? Id { get; set; }
         public string AdditionalCriteria { get; set; }
-        public bool? Archived { get; set; }
-        public List<int> CategoriesIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
+        public List<bool?> Archived { get; set; }
         public List<int> CharacteristicsIds { get; set; }
         public List<int> ClientsIds { get; set; }
         public List<int> ComparatorsIds { get; set; }
-        public bool? Confidential { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> Confidential { get; set; }
         public string DataCollection { get; set; }
         public List<int> DivisionsIds { get; set; }
         public List<int> DocumentsIds { get; set; }
@@ -391,9 +387,17 @@ namespace Services.Dto
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }
-    
+
+    [Route("/documentset", "GET")]
+    [Route("/documentset/version", "GET, POST")]
+    [Route("/documentset/search", "GET, POST, DELETE")]
+    public partial class DocumentSetSearch : DocumentSetSearchBase
+    {
+    }
+
     public class DocumentSetFullTextSearch
     {
+        public DocumentSetFullTextSearch() {}
         private DocumentSetSearch _request;
         public DocumentSetFullTextSearch(DocumentSetSearch request) => _request = request;
         
@@ -407,7 +411,6 @@ namespace Services.Dto
         
         public bool doAdditionalCriteria { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.AdditionalCriteria))); }
         public bool doArchived { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Archived))); }
-        public bool doCategories { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Categories))); }
         public bool doCharacteristics { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Characteristics))); }
         public bool doClients { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Clients))); }
         public bool doComparators { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Comparators))); }
@@ -456,86 +459,12 @@ namespace Services.Dto
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Users))); }
     }
 
-    [Route("/documentset/version", "GET, POST")]
-    public partial class DocumentSetVersion : DocumentSetSearch {}
-
     [Route("/documentset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentSetBatch : List<DocumentSet> { }
 
-    [Route("/documentset/{Id}/allusers", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/jctattributecategoryattributedocumentset", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/characteristic", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/client", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/comparator", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/division", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/document", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/documentset", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/documentsethistory", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/importdata", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/intervention", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/nondigitizeddocument", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/outcome", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/projectlink", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/project", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/statsstudyset", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/studydesign", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/user", "GET, POST, DELETE")]
-    [Route("/documentset/{Id}/workflow", "GET, POST, DELETE")]
-    public class DocumentSetJunction : Search<DocumentSet>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/documentset/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/documentset/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class DocumentSetJunction : DocumentSetSearchBase {}
 
 
-        public DocumentSetJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/documentset/{Id}/allusers/version", "GET")]
-    [Route("/documentset/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/documentset/{Id}/jctattributecategoryattributedocumentset/version", "GET")]
-    [Route("/documentset/{Id}/characteristic/version", "GET")]
-    [Route("/documentset/{Id}/client/version", "GET")]
-    [Route("/documentset/{Id}/comparator/version", "GET")]
-    [Route("/documentset/{Id}/division/version", "GET")]
-    [Route("/documentset/{Id}/document/version", "GET")]
-    [Route("/documentset/{Id}/documentset/version", "GET")]
-    [Route("/documentset/{Id}/documentsethistory/version", "GET")]
-    [Route("/documentset/{Id}/importdata/version", "GET")]
-    [Route("/documentset/{Id}/intervention/version", "GET")]
-    [Route("/documentset/{Id}/nondigitizeddocument/version", "GET")]
-    [Route("/documentset/{Id}/outcome/version", "GET")]
-    [Route("/documentset/{Id}/projectlink/version", "GET")]
-    [Route("/documentset/{Id}/project/version", "GET")]
-    [Route("/documentset/{Id}/scope/version", "GET")]
-    [Route("/documentset/{Id}/statsstudyset/version", "GET")]
-    [Route("/documentset/{Id}/studydesign/version", "GET")]
-    [Route("/documentset/{Id}/user/version", "GET")]
-    [Route("/documentset/{Id}/workflow/version", "GET")]
-    public class DocumentSetJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/documentset/ids", "GET, POST")]
-    public class DocumentSetIds
-    {
-        public bool All { get; set; }
-    }
 }

@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -116,18 +117,25 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/databaseversion", "GET")]
-    [Route("/databaseversion/search", "GET, POST, DELETE")]
-    public partial class DatabaseVersionSearch : Search<DatabaseVersion>
+    public partial class DatabaseVersionSearchBase : Search<DatabaseVersion>
     {
+        public int? Id { get; set; }
         public string DatabaseState { get; set; }
         public string Description { get; set; }
         public string Release { get; set; }
         public string VersionName { get; set; }
     }
-    
+
+    [Route("/databaseversion", "GET")]
+    [Route("/databaseversion/version", "GET, POST")]
+    [Route("/databaseversion/search", "GET, POST, DELETE")]
+    public partial class DatabaseVersionSearch : DatabaseVersionSearchBase
+    {
+    }
+
     public class DatabaseVersionFullTextSearch
     {
+        public DatabaseVersionFullTextSearch() {}
         private DatabaseVersionSearch _request;
         public DatabaseVersionFullTextSearch(DatabaseVersionSearch request) => _request = request;
         
@@ -145,15 +153,7 @@ namespace Services.Dto
         public bool doVersionName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DatabaseVersion.VersionName))); }
     }
 
-    [Route("/databaseversion/version", "GET, POST")]
-    public partial class DatabaseVersionVersion : DatabaseVersionSearch {}
-
     [Route("/databaseversion/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DatabaseVersionBatch : List<DatabaseVersion> { }
 
-    [Route("/admin/databaseversion/ids", "GET, POST")]
-    public class DatabaseVersionIds
-    {
-        public bool All { get; set; }
-    }
 }

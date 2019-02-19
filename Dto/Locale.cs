@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -115,17 +116,24 @@ namespace Services.Dto
     
     [Route("/Locale/{Id}/copy", "POST")]
     public partial class LocaleCopy : Locale {}
-    [Route("/locale", "GET")]
-    [Route("/locale/search", "GET, POST, DELETE")]
-    public partial class LocaleSearch : Search<Locale>
+    public partial class LocaleSearchBase : Search<Locale>
     {
+        public int? Id { get; set; }
         public string Country { get; set; }
         public string Language { get; set; }
         public string TimeZone { get; set; }
     }
-    
+
+    [Route("/locale", "GET")]
+    [Route("/locale/version", "GET, POST")]
+    [Route("/locale/search", "GET, POST, DELETE")]
+    public partial class LocaleSearch : LocaleSearchBase
+    {
+    }
+
     public class LocaleFullTextSearch
     {
+        public LocaleFullTextSearch() {}
         private LocaleSearch _request;
         public LocaleFullTextSearch(LocaleSearch request) => _request = request;
         
@@ -142,15 +150,7 @@ namespace Services.Dto
         public bool doTimeZone { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Locale.TimeZone))); }
     }
 
-    [Route("/locale/version", "GET, POST")]
-    public partial class LocaleVersion : LocaleSearch {}
-
     [Route("/locale/batch", "DELETE, PATCH, POST, PUT")]
     public partial class LocaleBatch : List<Locale> { }
 
-    [Route("/admin/locale/ids", "GET, POST")]
-    public class LocaleIds
-    {
-        public bool All { get; set; }
-    }
 }

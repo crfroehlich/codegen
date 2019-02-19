@@ -1,21 +1,17 @@
 {
   "App": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "App",
-      "TypeId": 14173
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "App",
       "PATCH": true,
       "POST": false,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 14173
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -66,8 +62,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -137,11 +133,6 @@
         "UIType": ""
       },
       "Pages": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Page.Apps"
-        },
         "Description": "Description of Pages",
         "DisplayName": "Pages",
         "IsAllowCreateInForm": false,
@@ -153,6 +144,9 @@
         "IsUniqueConstraint": false,
         "Name": "Pages",
         "Order": 40,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Apps",
         "SetDefaultValue": "",
         "Tab": "Pages",
         "TabOrder": 10,
@@ -173,11 +167,6 @@
         "Type": "int?"
       },
       "Roles": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Role.Apps"
-        },
         "Description": "Roles that have this app",
         "DisplayName": "Roles",
         "IsAudited": true,
@@ -188,6 +177,9 @@
         "IsUniqueConstraint": false,
         "Name": "Roles",
         "Order": 31,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Apps",
         "SetDefaultValue": "",
         "Tab": "Roles",
         "TabOrder": 1,
@@ -208,11 +200,6 @@
         "Type": "int?"
       },
       "Scopes": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Scope.App"
-        },
         "Description": "Scopes associated with this app",
         "DisplayName": "Scopes",
         "IsAudited": true,
@@ -223,6 +210,9 @@
         "IsUniqueConstraint": false,
         "Name": "Scopes",
         "Order": 41,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "App",
         "SetDefaultValue": "",
         "Tab": "Scopes",
         "TabOrder": 10,
@@ -285,13 +275,6 @@
   },
   "Attribute": {
     "Attributes": {
-      "IsInModel": true,
-      "IsInsertOnly": true,
-      "Name": "Attribute",
-      "TypeId": 102
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "FlattenReferences": false,
@@ -299,11 +282,14 @@
       "IgnoreProps": "ValueType",
       "ImplementService": true,
       "Inherits": "ValueWrapper",
+      "IsInModel": true,
+      "IsInsertOnly": true,
+      "Name": "Attribute",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 102
     },
-    "Model": {},
     "Properties": {
       "AttributeName": {
         "Description": "Description of AttributeName",
@@ -398,8 +384,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -450,7 +436,7 @@
         "Type": "int?"
       },
       "IsCharacteristic": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsCharacteristic",
         "DisplayName": "IsCharacteristic",
         "IsAudited": false,
@@ -468,7 +454,7 @@
         "UIType": ""
       },
       "IsOutcome": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsOutcome",
         "DisplayName": "IsOutcome",
         "IsAudited": false,
@@ -486,7 +472,7 @@
         "UIType": ""
       },
       "IsPositive": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsPositive",
         "DisplayName": "IsPositive",
         "IsAudited": false,
@@ -581,228 +567,19 @@
       }
     }
   },
-  "AttributeCategory": {
+  "AttributeInterval": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "JsonIgnore": "Attributes",
-      "Name": "AttributeCategory",
-      "TypeId": 13222
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
-      "PATCH": true,
-      "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
-    },
-    "Properties": {
-      "Created": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Created",
-        "Order": -1,
-        "Tab": "History",
-        "Type": "DateTime?"
-      },
-      "CreatorId": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "CreatorId",
-        "Order": -4,
-        "Tab": "History",
-        "Type": "bool"
-      },
-      "DocumentSet": {
-        "Description": "Description of DocumentSet",
-        "DisplayName": "DocumentSet",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRelationship": true,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": true,
-        "Name": "DocumentSet",
-        "Order": 20,
-        "SetDefaultValue": "",
-        "Tab": "AttributeCategory",
-        "TabOrder": 0,
-        "Type": "DocumentSet",
-        "UIType": ""
-      },
-      "DocumentSetId": {
-        "DisplayName": "DocumentSet Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "DocumentSetId",
-        "Order": 21,
-        "Tab": "AttributeCategory",
-        "Type": "int?"
-      },
-      "Gestalt": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Gestalt",
-        "Order": -10,
-        "Tab": "AttributeCategory",
-        "Type": "string"
-      },
-      "History": {
-        "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "History",
-        "Order": 99999999,
-        "Tab": "History",
-        "Target": "AuditRecord",
-        "Type": "relationships"
-      },
-      "Id": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Id",
-        "Order": -9,
-        "Tab": "AttributeCategory",
-        "Type": "int"
-      },
-      "Locked": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Locked",
-        "Order": -3,
-        "Tab": "History",
-        "Type": "bool"
-      },
-      "Name": {
-        "Description": "Description of Name",
-        "DisplayName": "Name",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUniqueConstraint": true,
-        "LookupTableEnum": "AttributeCategory",
-        "ModelType": "LookupTable",
-        "Name": "Name",
-        "Order": 0,
-        "SetDefaultValue": "",
-        "Tab": "AttributeCategory",
-        "TabOrder": 0,
-        "Type": "LookupTable",
-        "UIType": ""
-      },
-      "NameId": {
-        "DisplayName": "Name Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "NameId",
-        "Order": 1,
-        "Tab": "AttributeCategory",
-        "Type": "int?"
-      },
-      "ParentAttributeCategory": {
-        "Description": "Description of ParentAttributeCategory",
-        "DisplayName": "ParentAttributeCategory",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRelationship": true,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": true,
-        "Name": "ParentAttributeCategory",
-        "Order": 10,
-        "SetDefaultValue": "",
-        "Tab": "AttributeCategory",
-        "TabOrder": 0,
-        "Type": "AttributeCategory",
-        "UIType": ""
-      },
-      "ParentAttributeCategoryId": {
-        "DisplayName": "ParentAttributeCategory Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "ParentAttributeCategoryId",
-        "Order": 11,
-        "Tab": "AttributeCategory",
-        "Type": "int?"
-      },
-      "Updated": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Updated",
-        "Order": -2,
-        "Tab": "History",
-        "Type": "DateTime?"
-      },
-      "VersionNo": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "VersionNo",
-        "Order": 9999999,
-        "Tab": "AttributeCategory",
-        "Type": "int"
-      }
-    }
-  },
-  "AttributeInterval": {
-    "Attributes": {
       "IsInModel": true,
       "IsInsertOnly": true,
       "Name": "AttributeInterval",
-      "TypeId": 104
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
-      "AllVisibleFieldsByDefault": true,
-      "DELETE": true,
-      "GET": true,
-      "ImplementService": true,
-      "Interfaces": "",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 104
     },
     "Properties": {
       "Created": {
@@ -837,8 +614,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -914,22 +691,18 @@
   },
   "AuditDelta": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "AuditDelta",
-      "TypeId": 19019
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "AuditDelta",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19019
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Audit": {
         "Description": "Audit Record associated with this delta",
@@ -1013,8 +786,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -1069,22 +842,18 @@
   },
   "AuditRecord": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "AuditRecord",
-      "TypeId": 108
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "AuditRecord",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 108
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Action": {
         "Description": "Description of Action",
@@ -1214,11 +983,6 @@
         "UIType": ""
       },
       "Deltas": {
-        "Association": {
-          "OnOwnerRemove": "Deny",
-          "OnTargetRemove": "Deny",
-          "PairTo": "AuditDelta.Audit"
-        },
         "Description": "Deltas associated with this audit record",
         "DisplayName": "Deltas",
         "IsAllowAddInForm": false,
@@ -1231,6 +995,9 @@
         "IsUniqueConstraint": false,
         "Name": "Deltas",
         "Order": 100,
+        "RelationshipOnOwnerRemove": "Deny",
+        "RelationshipOnTargetRemove": "Deny",
+        "RelationshipPairTo": "Audit",
         "SetDefaultValue": "",
         "Tab": "Deltas",
         "TabOrder": 10,
@@ -1319,8 +1086,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -1522,21 +1289,17 @@
   },
   "BackgroundTask": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "BackgroundTask",
-      "TypeId": 14375
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "BackgroundTask",
       "PATCH": true,
       "POST": false,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 14375
     },
-    "Model": {},
     "Properties": {
       "App": {
         "Description": "App to scope for task",
@@ -1682,8 +1445,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -1723,11 +1486,6 @@
         "Type": "int"
       },
       "Items": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "BackgroundTaskItem.Task"
-        },
         "Description": "Items this task must process",
         "DisplayName": "Task Items",
         "IsAllowAddInForm": false,
@@ -1740,6 +1498,9 @@
         "IsUniqueConstraint": false,
         "Name": "Items",
         "Order": 120,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Task",
         "SetDefaultValue": "",
         "Tab": "Items",
         "TabOrder": 10,
@@ -1806,7 +1567,7 @@
         "UIType": ""
       },
       "LogInfo": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If enabled, this task will log information about each execution",
         "DisplayName": "Log Info",
         "IsAudited": false,
@@ -1861,7 +1622,7 @@
         "UIType": ""
       },
       "RunNow": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If set to true, this task will execute immediately",
         "DisplayName": "Run Now",
         "IsAudited": true,
@@ -1897,11 +1658,6 @@
         "UIType": ""
       },
       "TaskHistory": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "BackgroundTaskHistory.Task"
-        },
         "Description": "History of the execution of this task",
         "DisplayName": "Task History",
         "IsAllowAddInForm": false,
@@ -1914,6 +1670,9 @@
         "IsUniqueConstraint": false,
         "Name": "TaskHistory",
         "Order": 110,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Task",
         "SetDefaultValue": "",
         "Tab": "TaskHistory",
         "TabOrder": 10,
@@ -1957,21 +1716,17 @@
   },
   "BackgroundTaskHistory": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "BackgroundTaskHistory",
-      "TypeId": 18919
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "BackgroundTaskHistory",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18919
     },
-    "Model": {},
     "Properties": {
       "Completed": {
         "DefaultValue": 0,
@@ -2101,8 +1856,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -2124,11 +1879,6 @@
         "Type": "int"
       },
       "Items": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "BackgroundTaskItem.TaskHistory"
-        },
         "Description": "Items this task must process",
         "DisplayName": "Task Items",
         "IsAllowAddInForm": false,
@@ -2141,6 +1891,9 @@
         "IsUniqueConstraint": false,
         "Name": "Items",
         "Order": 90,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "TaskHistory",
         "SetDefaultValue": "",
         "Tab": "Items",
         "TabOrder": 10,
@@ -2284,21 +2037,17 @@
   },
   "BackgroundTaskItem": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "BackgroundTaskItem",
-      "TypeId": 19935
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "BackgroundTaskItem",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19935
     },
-    "Model": {},
     "Properties": {
       "Attempts": {
         "DefaultValue": 0,
@@ -2478,8 +2227,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -2547,7 +2296,7 @@
         "UIType": ""
       },
       "Succeeded": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the item succeeded",
         "DisplayName": "Succeeded",
         "IsAudited": false,
@@ -2651,21 +2400,17 @@
   },
   "Broadcast": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Broadcast",
-      "TypeId": 13962
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Broadcast",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 13962
     },
-    "Model": {},
     "Properties": {
       "App": {
         "Description": "Description of App",
@@ -2748,8 +2493,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -2950,20 +2695,15 @@
   },
   "Characteristic": {
     "Attributes": {
-      "Name": "Characteristic",
-      "TypeId": 14475
-    },
-    "Domain": {},
-    "Dto": {
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "Name": "Characteristic",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 14475
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -3027,8 +2767,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -3121,19 +2861,16 @@
   },
   "Client": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Client",
-      "TypeId": 111
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Client",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 111
     },
     "Extension": {
       "Bindings": {
@@ -3173,7 +2910,6 @@
         "Type": "relationships"
       }
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -3226,11 +2962,6 @@
         "Type": "int?"
       },
       "Divisions": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Division.Client"
-        },
         "Description": "All departments/divisions of this client",
         "DisplayName": "Divisions",
         "IsAudited": true,
@@ -3241,6 +2972,9 @@
         "IsUniqueConstraint": false,
         "Name": "Divisions",
         "Order": 30,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Client",
         "SetDefaultValue": "",
         "Tab": "Divisions",
         "TabOrder": 10,
@@ -3302,8 +3036,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -3355,11 +3089,6 @@
         "UIType": ""
       },
       "Projects": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Project.Client"
-        },
         "Description": "All Salesforce Projects assigned to this client",
         "DisplayName": "Salesforce Projects",
         "IsAllowAddInForm": false,
@@ -3374,6 +3103,9 @@
         "IsUniqueConstraint": false,
         "Name": "Projects",
         "Order": 31,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Client",
         "SetDefaultValue": "",
         "Tab": "Projects",
         "TabOrder": 11,
@@ -3444,11 +3176,6 @@
         "UIType": ""
       },
       "Scopes": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Scope.Client"
-        },
         "Description": "All scopes which include this client as a target",
         "DisplayName": "Scopes",
         "IsAudited": true,
@@ -3459,6 +3186,9 @@
         "IsUniqueConstraint": false,
         "Name": "Scopes",
         "Order": 60,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Client",
         "SetDefaultValue": "",
         "Tab": "Scopes",
         "TabOrder": 30,
@@ -3522,20 +3252,15 @@
   },
   "Comparator": {
     "Attributes": {
-      "Name": "Comparator",
-      "TypeId": 20035
-    },
-    "Domain": {},
-    "Dto": {
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "Name": "Comparator",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 20035
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -3599,8 +3324,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -3692,21 +3417,17 @@
   },
   "DatabaseVersion": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "DatabaseVersion",
-      "TypeId": 18819
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "DatabaseVersion",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18819
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -3778,8 +3499,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -3873,14 +3594,6 @@
   },
   "DateTime": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "DateTime",
-      "TypeId": 15278
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "DontFlattenProperties": "",
@@ -3888,13 +3601,12 @@
       "FlattenReferences": false,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": true,
+      "Name": "DateTime",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 15278
     },
     "Properties": {
       "Created": {
@@ -3997,8 +3709,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -4053,21 +3765,17 @@
   },
   "Default": {
     "Attributes": {
-      "Name": "Default",
-      "TypeId": 19435
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Default",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 19435
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -4133,8 +3841,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -4286,22 +3994,18 @@
   },
   "Division": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Division",
-      "TypeId": 112
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Division",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 112
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Client": {
         "AutoCreateMissing": false,
@@ -4425,8 +4129,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -4537,11 +4241,6 @@
         "Type": "DateTime?"
       },
       "Users": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "User.Division"
-        },
         "Description": "Description of Users",
         "DisplayName": "Users",
         "IsAudited": true,
@@ -4552,6 +4251,9 @@
         "IsUniqueConstraint": false,
         "Name": "Users",
         "Order": 4,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Division",
         "SetDefaultValue": "",
         "Tab": "Users",
         "TabOrder": 20,
@@ -4585,16 +4287,6 @@
   },
   "Document": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": true,
-      "JsonIgnore": "Properties",
-      "Name": "Document",
-      "TypeId": 136
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "CustomCollections": "Attributes,Characteristics,Outcomes,Groups,Phases,Sources,DocumentSets,Designs,FramedQuestions,Types,AttributeLabels",
       "DELETE": true,
@@ -4603,10 +4295,14 @@
       "IgnoreInSearch": "DocumentSets,NonDigitizedDocumentSets",
       "IgnoreProps": "Properties",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": true,
+      "JsonIgnore": "Properties",
+      "Name": "Document",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 136
     },
     "Extension": {
       "FirstAuthor": {
@@ -4631,9 +4327,6 @@
         "TabOrder": 0,
         "Type": "LookupTable"
       }
-    },
-    "Model": {
-      "Interfaces": ""
     },
     "Properties": {
       "Abstract": {
@@ -5017,8 +4710,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -5587,11 +5280,6 @@
         "Type": "DateTime?"
       },
       "VariableData": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "VariableInstance.Document"
-        },
         "Description": "Variable instance data associated with this document",
         "DisplayName": "Variable Data",
         "IsAudited": false,
@@ -5602,6 +5290,9 @@
         "IsUniqueConstraint": false,
         "Name": "VariableData",
         "Order": 370,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Document",
         "SetDefaultValue": "",
         "Tab": "Document",
         "TabOrder": 100,
@@ -5651,209 +5342,20 @@
       }
     }
   },
-  "DocumentAttribute": {
-    "Attributes": {
-      "IsInModel": false,
-      "Name": "DocumentAttribute",
-      "TypeId": 6355
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
-      "AllVisibleFieldsByDefault": true,
-      "DELETE": true,
-      "DontFlattenProperties": "Attribute",
-      "GET": true,
-      "IgnoreProps": "",
-      "ImplementService": true,
-      "Interfaces": "",
-      "PATCH": true,
-      "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
-    },
-    "Properties": {
-      "Attribute": {
-        "Description": "Description of Attribute",
-        "DisplayName": "Attribute",
-        "IsAudited": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsIndexed": true,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUniqueConstraint": true,
-        "Name": "Attribute",
-        "Order": 0,
-        "SetDefaultValue": "",
-        "Tab": "DocumentAttribute",
-        "TabOrder": 0,
-        "Type": "Attribute",
-        "UIType": ""
-      },
-      "AttributeId": {
-        "DisplayName": "Attribute Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "AttributeId",
-        "Order": 1,
-        "Tab": "DocumentAttribute",
-        "Type": "int?"
-      },
-      "Created": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Created",
-        "Order": -1,
-        "Tab": "History",
-        "Type": "DateTime?"
-      },
-      "CreatorId": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "CreatorId",
-        "Order": -4,
-        "Tab": "History",
-        "Type": "bool"
-      },
-      "Document": {
-        "Description": "Description of Document",
-        "DisplayName": "Document",
-        "IsAudited": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsIndexed": true,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUniqueConstraint": true,
-        "Name": "Document",
-        "Order": 10,
-        "SetDefaultValue": "",
-        "Tab": "DocumentAttribute",
-        "TabOrder": 0,
-        "Type": "Document",
-        "UIType": ""
-      },
-      "DocumentId": {
-        "DisplayName": "Document Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "DocumentId",
-        "Order": 11,
-        "Tab": "DocumentAttribute",
-        "Type": "int?"
-      },
-      "Gestalt": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Gestalt",
-        "Order": -10,
-        "Tab": "DocumentAttribute",
-        "Type": "string"
-      },
-      "History": {
-        "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "History",
-        "Order": 99999999,
-        "Tab": "History",
-        "Target": "AuditRecord",
-        "Type": "relationships"
-      },
-      "Id": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Id",
-        "Order": -9,
-        "Tab": "DocumentAttribute",
-        "Type": "int"
-      },
-      "Locked": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Locked",
-        "Order": -3,
-        "Tab": "History",
-        "Type": "bool"
-      },
-      "Updated": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Updated",
-        "Order": -2,
-        "Tab": "History",
-        "Type": "DateTime?"
-      },
-      "VersionNo": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "VersionNo",
-        "Order": 9999999,
-        "Tab": "DocumentAttribute",
-        "Type": "int"
-      }
-    }
-  },
   "DocumentSet": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "DocumentSet",
-      "TypeId": 142
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "DocumentSet",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 142
     },
     "Extension": {
-      "AllUsers": {
-        "Description": "A list of all users that inherit this Document Set",
-        "DisplayName": "All Users",
-        "IsAllowAddInForm": false,
-        "IsAllowRemoveInForm": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "Name": "AllUsers",
-        "Order": 39,
-        "Tab": "Users",
-        "TabOrder": 100,
-        "Target": "User",
-        "TargetAlias": "AllUsers",
-        "Type": "relationships"
-      },
       "Bindings": {
         "IsAllowAddInForm": false,
         "IsAllowRemoveInForm": false,
@@ -5906,7 +5408,6 @@
         "Type": "relationships"
       }
     },
-    "Model": {},
     "Properties": {
       "AdditionalCriteria": {
         "Description": "Additional Criteria",
@@ -5927,7 +5428,7 @@
         "UIType": ""
       },
       "Archived": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, this document set will not appear by default",
         "DisplayName": "Archived",
         "IsAudited": true,
@@ -5943,43 +5444,6 @@
         "TabOrder": 0,
         "Type": "bool?",
         "UIType": ""
-      },
-      "Categories": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "JctAttributeCategoryAttributeDocumentSet.DocumentSet"
-        },
-        "Description": "Categories associated with this Document Set",
-        "DisplayName": "Categories",
-        "IsAllowAddInForm": false,
-        "IsAllowRemoveInForm": false,
-        "IsAudited": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "Name": "Categories",
-        "Order": 64,
-        "SetDefaultValue": "",
-        "Tab": "Categories",
-        "TabOrder": 70,
-        "Target": "JctAttributeCategoryAttributeDocumentSet",
-        "Type": "relationships",
-        "UIType": ""
-      },
-      "CategoriesCount": {
-        "DisplayName": "Categories Count",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "IsRelationshipCount": true,
-        "Name": "CategoriesCount",
-        "Order": 65,
-        "Tab": "Categories",
-        "Type": "int?"
       },
       "Characteristics": {
         "Description": "Characteristics",
@@ -6012,11 +5476,6 @@
         "Type": "int?"
       },
       "Clients": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Client.DocumentSets"
-        },
         "Description": "All clients on this study set",
         "DisplayName": "Clients",
         "IsAudited": true,
@@ -6027,6 +5486,9 @@
         "IsUniqueConstraint": false,
         "Name": "Clients",
         "Order": 42,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "DocumentSets",
         "SetDefaultValue": "",
         "Tab": "Clients",
         "TabOrder": 31,
@@ -6133,11 +5595,6 @@
         "UIType": ""
       },
       "Divisions": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Division.DocumentSets"
-        },
         "Description": "All the divisions on this study set",
         "DisplayName": "Divisions",
         "IsAudited": true,
@@ -6148,6 +5605,9 @@
         "IsUniqueConstraint": false,
         "Name": "Divisions",
         "Order": 43,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "DocumentSets",
         "SetDefaultValue": "",
         "Tab": "Divisions",
         "TabOrder": 32,
@@ -6168,11 +5628,6 @@
         "Type": "int?"
       },
       "Documents": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Document.DocumentSets"
-        },
         "Description": "All the digitized documents in this data set",
         "DisplayName": "Digitized Documents",
         "IsAudited": true,
@@ -6183,6 +5638,9 @@
         "IsUniqueConstraint": false,
         "Name": "Documents",
         "Order": 13,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "DocumentSets",
         "SetDefaultValue": "",
         "Tab": "Documents",
         "TabOrder": 10,
@@ -6203,11 +5661,6 @@
         "Type": "int?"
       },
       "DocumentSets": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "DocumentSet.Owner"
-        },
         "Description": "TADI Hierarchy",
         "DisplayName": "DocumentSets",
         "IsAllowAddInForm": false,
@@ -6220,6 +5673,9 @@
         "IsUniqueConstraint": false,
         "Name": "DocumentSets",
         "Order": 41,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Owner",
         "SetDefaultValue": "",
         "Tab": "DocumentSets",
         "TabOrder": 30,
@@ -6342,11 +5798,6 @@
         "Type": "string"
       },
       "Histories": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "DocumentSetHistory.DocumentSet"
-        },
         "Description": "Histories associated with this Document Set",
         "DisplayName": "Histories",
         "IsAllowAddInForm": false,
@@ -6360,6 +5811,9 @@
         "IsUniqueConstraint": false,
         "Name": "Histories",
         "Order": 65,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "DocumentSet",
         "SetDefaultValue": "",
         "Tab": "Histories",
         "TabOrder": 80,
@@ -6381,8 +5835,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -6423,11 +5877,6 @@
         "UIType": ""
       },
       "Imports": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "ImportData.DocumentSets"
-        },
         "Description": "All the imports on this study set",
         "DisplayName": "Imports",
         "IsAllowAddInForm": false,
@@ -6440,6 +5889,9 @@
         "IsUniqueConstraint": false,
         "Name": "Imports",
         "Order": 15,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "DocumentSets",
         "SetDefaultValue": "",
         "Tab": "Imports",
         "TabOrder": 11,
@@ -6554,11 +6006,6 @@
         "UIType": ""
       },
       "NonDigitizedDocuments": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Document.NonDigitizedDocumentSets"
-        },
         "Description": "Library documents on this document set",
         "DisplayName": "Library Documents",
         "IsAudited": true,
@@ -6569,6 +6016,9 @@
         "IsUniqueConstraint": false,
         "Name": "NonDigitizedDocuments",
         "Order": 14,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "NonDigitizedDocumentSets",
         "SetDefaultValue": "",
         "Tab": "Documents",
         "TabOrder": 11,
@@ -6809,11 +6259,6 @@
         "UIType": ""
       },
       "Projects": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Project.Dataset"
-        },
         "Description": "All the Salesforce Projects on this data set",
         "DisplayName": "Salesforce Projects",
         "IsAllowAddInForm": false,
@@ -6828,6 +6273,9 @@
         "IsUniqueConstraint": false,
         "Name": "Projects",
         "Order": 45,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Dataset",
         "SetDefaultValue": "",
         "Tab": "Salesforce Projects",
         "TabOrder": 34,
@@ -6912,11 +6360,6 @@
         "UIType": ""
       },
       "Scopes": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Scope.DocumentSet"
-        },
         "Description": "Scopes associated with this document set",
         "DisplayName": "Scopes",
         "IsAudited": false,
@@ -6927,6 +6370,9 @@
         "IsUniqueConstraint": false,
         "Name": "Scopes",
         "Order": 15,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "DocumentSet",
         "SetDefaultValue": "",
         "Tab": "Scopes",
         "TabOrder": 10,
@@ -7036,11 +6482,6 @@
         "UIType": ""
       },
       "Stats": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "StatsStudySet.DocumentSet"
-        },
         "Description": "Statistics associated with this Document Set",
         "DisplayName": "Stats",
         "IsAllowAddInForm": false,
@@ -7053,6 +6494,9 @@
         "IsUniqueConstraint": false,
         "Name": "Stats",
         "Order": 63,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "DocumentSet",
         "SetDefaultValue": "",
         "Tab": "Stats",
         "TabOrder": 60,
@@ -7144,11 +6588,6 @@
         "Type": "DateTime?"
       },
       "Users": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "User.DocumentSets"
-        },
         "Description": "All the users on this study set",
         "DisplayName": "Users",
         "IsAudited": true,
@@ -7159,6 +6598,9 @@
         "IsUniqueConstraint": false,
         "Name": "Users",
         "Order": 44,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "DocumentSets",
         "SetDefaultValue": "",
         "Tab": "Users",
         "TabOrder": 33,
@@ -7192,21 +6634,17 @@
   },
   "DocumentSetHistory": {
     "Attributes": {
-      "Name": "DocumentSetHistory",
-      "TypeId": 13320
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "DocumentSetHistory",
       "PATCH": false,
       "POST": false,
       "PUT": false,
-      "SuperAdminOnly": true
+      "SuperAdminOnly": true,
+      "TypeId": 13320
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -7305,8 +6743,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -7395,20 +6833,16 @@
   },
   "Event": {
     "Attributes": {
-      "Name": "Event",
-      "TypeId": 19219
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Event",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19219
     },
-    "Model": {},
     "Properties": {
       "AuditRecord": {
         "AutoCreateMissing": false,
@@ -7492,8 +6926,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -7570,6 +7004,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": true,
         "IsUniqueConstraint": false,
         "Name": "Teams",
@@ -7613,6 +7048,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Updates",
@@ -7645,6 +7081,7 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Users",
@@ -7682,21 +7119,17 @@
   },
   "FeatureSet": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "FeatureSet",
-      "TypeId": 116
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "FeatureSet",
       "PATCH": true,
       "POST": false,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 116
     },
-    "Model": {},
     "Properties": {
       "Archived": {
         "DefaultValue": false,
@@ -7706,6 +7139,7 @@
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Archived",
@@ -7765,8 +7199,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -7888,28 +7322,19 @@
   },
   "Glossary": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "JsonIgnore": "",
-      "Name": "Glossary",
-      "TypeId": 14977
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "JsonIgnore": "",
+      "Name": "Glossary",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 14977
     },
     "Properties": {
       "Created": {
@@ -7992,8 +7417,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -8128,21 +7553,17 @@
   },
   "Help": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Help",
-      "TypeId": 14978
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Help",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 14978
     },
-    "Model": {},
     "Properties": {
       "ConfluenceId": {
         "Description": "Confluence Id of the shared document",
@@ -8212,8 +7633,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -8412,21 +7833,17 @@
   },
   "History": {
     "Attributes": {
-      "ExcludeFromModel": true,
-      "Name": "History",
-      "TypeId": 15885
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
+      "ExcludeFromModel": true,
       "GET": true,
       "ImplementService": true,
+      "Name": "History",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 15885
     },
-    "Model": {},
     "Properties": {
       "App": {
         "AutoCreateMissing": false,
@@ -8524,8 +7941,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -8755,21 +8172,17 @@
   },
   "Impersonation": {
     "Attributes": {
-      "Name": "Impersonation",
-      "TypeId": 19319
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Impersonation",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19319
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "AuthenticatedUser": {
         "Description": "User who is currently authenticated",
@@ -8834,8 +8247,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -8951,28 +8364,19 @@
   "ImportData": {
     "Attributes": {
       "AllowDelete": false,
-      "IsInModel": true,
-      "Name": "ImportData",
-      "TypeId": 12600
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "",
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": true,
+      "Name": "ImportData",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 12600
     },
     "Extension": {},
-    "Model": {
-      "Interfaces": ""
-    },
     "Properties": {
       "CompletedOn": {
         "Description": "Date/Time Completed",
@@ -9118,7 +8522,7 @@
         "Type": "string"
       },
       "HighPriority": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, treat as highest priority",
         "DisplayName": "HighPriority",
         "IsAudited": true,
@@ -9137,8 +8541,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -9178,7 +8582,7 @@
         "UIType": ""
       },
       "ImportNewName": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of ImportNewName",
         "DisplayName": "ImportNewName",
         "IsAudited": true,
@@ -9196,7 +8600,7 @@
         "UIType": ""
       },
       "ImportTable": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, import the Table data",
         "DisplayName": "ImportTable",
         "IsAudited": true,
@@ -9263,7 +8667,7 @@
         "Type": "int?"
       },
       "IsLegacy": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsLegacy",
         "DisplayName": "IsLegacy",
         "IsAudited": true,
@@ -9448,27 +8852,18 @@
   },
   "Interval": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "Interval",
-      "TypeId": 15178
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "DontFlattenProperties": "FollowUp,TimeOfDay,CalendarDateStart,CalendarDateEnd",
       "FlattenReferences": false,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": true,
+      "Name": "Interval",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 15178
     },
     "Properties": {
       "CalendarDateEnd": {
@@ -9607,8 +9002,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -9692,20 +9087,15 @@
   },
   "Intervention": {
     "Attributes": {
-      "Name": "Intervention",
-      "TypeId": 13420
-    },
-    "Domain": {},
-    "Dto": {
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "Name": "Intervention",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 13420
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -9769,8 +9159,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -9861,233 +9251,22 @@
       }
     }
   },
-  "JctAttributeCategoryAttributeDocumentSet": {
-    "Attributes": {
-      "IsInModel": false,
-      "Name": "JctAttributeCategoryAttributeDocumentSet",
-      "TypeId": 13223
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
-      "AllVisibleFieldsByDefault": true,
-      "DELETE": true,
-      "GET": true,
-      "IgnoreProps": "",
-      "ImplementService": true,
-      "Interfaces": "",
-      "PATCH": true,
-      "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
-    },
-    "Properties": {
-      "Attribute": {
-        "Description": "Description of Attribute",
-        "DisplayName": "Attribute",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUniqueConstraint": true,
-        "Name": "Attribute",
-        "Order": 10,
-        "SetDefaultValue": "",
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "TabOrder": 0,
-        "Type": "Attribute",
-        "UIType": ""
-      },
-      "AttributeCategory": {
-        "Description": "Description of AttributeCategory",
-        "DisplayName": "AttributeCategory",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUniqueConstraint": true,
-        "Name": "AttributeCategory",
-        "Order": 0,
-        "SetDefaultValue": "",
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "TabOrder": 0,
-        "Type": "AttributeCategory",
-        "UIType": ""
-      },
-      "AttributeCategoryId": {
-        "DisplayName": "AttributeCategory Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "AttributeCategoryId",
-        "Order": 1,
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "Type": "int?"
-      },
-      "AttributeId": {
-        "DisplayName": "Attribute Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "AttributeId",
-        "Order": 11,
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "Type": "int?"
-      },
-      "Created": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Created",
-        "Order": -1,
-        "Tab": "History",
-        "Type": "DateTime?"
-      },
-      "CreatorId": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "CreatorId",
-        "Order": -4,
-        "Tab": "History",
-        "Type": "bool"
-      },
-      "DocumentSet": {
-        "Description": "Description of DocumentSet",
-        "DisplayName": "DocumentSet",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRelationship": true,
-        "IsRequired": true,
-        "IsRequiredInForm": true,
-        "IsUniqueConstraint": true,
-        "Name": "DocumentSet",
-        "Order": 20,
-        "SetDefaultValue": "",
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "TabOrder": 0,
-        "Type": "DocumentSet",
-        "UIType": ""
-      },
-      "DocumentSetId": {
-        "DisplayName": "DocumentSet Id",
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "DocumentSetId",
-        "Order": 21,
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "Type": "int?"
-      },
-      "Gestalt": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Gestalt",
-        "Order": -10,
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "Type": "string"
-      },
-      "History": {
-        "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "History",
-        "Order": 99999999,
-        "Tab": "History",
-        "Target": "AuditRecord",
-        "Type": "relationships"
-      },
-      "Id": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Id",
-        "Order": -9,
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "Type": "int"
-      },
-      "Locked": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Locked",
-        "Order": -3,
-        "Tab": "History",
-        "Type": "bool"
-      },
-      "Updated": {
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "Updated",
-        "Order": -2,
-        "Tab": "History",
-        "Type": "DateTime?"
-      },
-      "VersionNo": {
-        "IsDisplayInForm": false,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsReadOnly": true,
-        "Name": "VersionNo",
-        "Order": 9999999,
-        "Tab": "JctAttributeCategoryAttributeDocumentSet",
-        "Type": "int"
-      }
-    }
-  },
   "Junction": {
     "Attributes": {
-      "IsInModel": false,
-      "Name": "Junction",
-      "TypeId": 17619
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "HasDto": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": false,
+      "Name": "Junction",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 17619
     },
     "Properties": {
       "Children": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Junction.Parent"
-        },
         "Description": "Descendent junction records",
         "DisplayName": "Children",
         "IsAudited": true,
@@ -10098,6 +9277,9 @@
         "IsUniqueConstraint": false,
         "Name": "Children",
         "Order": 70,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Parent",
         "SetDefaultValue": "",
         "Tab": "Children",
         "TabOrder": 20,
@@ -10169,8 +9351,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -10393,21 +9575,17 @@
   },
   "Locale": {
     "Attributes": {
-      "Name": "Locale",
-      "TypeId": 19335
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Locale",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19335
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Country": {
         "Description": "Country",
@@ -10459,8 +9637,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -10551,21 +9729,17 @@
   },
   "LocaleLookup": {
     "Attributes": {
-      "Name": "LocaleLookup",
-      "TypeId": 19325
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "LocaleLookup",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19325
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -10620,8 +9794,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -10724,28 +9898,19 @@
   },
   "LookupCategory": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "LookupCategory",
-      "TypeId": 17419
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "DontFlattenProperties": "",
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "LookupCategory",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 17419
     },
     "Properties": {
       "Category": {
@@ -10829,8 +9994,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -10862,11 +10027,6 @@
         "Type": "bool"
       },
       "Lookups": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "LookupTable.Categories"
-        },
         "Description": "All lookups associated with this category",
         "DisplayName": "Lookups",
         "IsAudited": true,
@@ -10877,6 +10037,9 @@
         "IsUniqueConstraint": false,
         "Name": "Lookups",
         "Order": 20,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Categories",
         "SetDefaultValue": "",
         "Tab": "Lookups",
         "TabOrder": 10,
@@ -10920,29 +10083,20 @@
   },
   "LookupTable": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": true,
-      "Name": "LookupTable",
-      "TypeId": 127
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "IsInModel": true,
+      "Name": "LookupTable",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 127
     },
-    "Model": {},
     "Properties": {
       "Bindings": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "LookupTableBinding.LookupTable"
-        },
         "Description": "All bindings on this lookup",
         "DisplayName": "Bindings",
         "IsAudited": true,
@@ -10953,6 +10107,9 @@
         "IsUniqueConstraint": false,
         "Name": "Bindings",
         "Order": 30,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "LookupTable",
         "SetDefaultValue": "",
         "Tab": "Bindings",
         "TabOrder": 10,
@@ -11023,11 +10180,6 @@
         "Type": "bool"
       },
       "Documents": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Document.LookupTables"
-        },
         "Description": "Documents which reference this Lookup",
         "DisplayName": "Documents",
         "IsAudited": true,
@@ -11038,6 +10190,9 @@
         "IsUniqueConstraint": false,
         "Name": "Documents",
         "Order": 50,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "LookupTables",
         "SetDefaultValue": "",
         "Tab": "Documents",
         "TabOrder": 30,
@@ -11100,8 +10255,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -11175,22 +10330,18 @@
   },
   "LookupTableBinding": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "LookupTableBinding",
-      "TypeId": 15380
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "FlattenReferences": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "LookupTableBinding",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 15380
     },
-    "Model": {},
     "Properties": {
       "Binding": {
         "DefaultValue": "{}",
@@ -11263,8 +10414,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -11357,11 +10508,6 @@
         "Type": "int?"
       },
       "Synonyms": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "TermSynonym.Bindings"
-        },
         "Description": "Description of Terms",
         "DisplayName": "Synonyms",
         "IsAudited": true,
@@ -11372,6 +10518,9 @@
         "IsUniqueConstraint": false,
         "Name": "Synonyms",
         "Order": 50,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Bindings",
         "SetDefaultValue": "",
         "Tab": "Synonyms",
         "TabOrder": 10,
@@ -11412,11 +10561,6 @@
         "Type": "int"
       },
       "Workflows": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Workflow.Bindings"
-        },
         "Description": "Workflows that reference this binding",
         "DisplayName": "Workflows",
         "IsAudited": true,
@@ -11427,6 +10571,9 @@
         "IsUniqueConstraint": false,
         "Name": "Workflows",
         "Order": 60,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Bindings",
         "SetDefaultValue": "",
         "Tab": "Workflows",
         "TabOrder": 20,
@@ -11450,28 +10597,19 @@
   },
   "LookupTableEnum": {
     "Attributes": {
+      "AllVisibleFieldsByDefault": true,
+      "DELETE": true,
       "Enum": "DocConstantLookupTable",
+      "GET": true,
+      "ImplementService": true,
       "IsCached": true,
       "IsInModel": true,
       "IsReadOnly": true,
       "Name": "LookupTableEnum",
-      "TypeId": 128
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
-      "AllVisibleFieldsByDefault": true,
-      "DELETE": true,
-      "GET": true,
-      "ImplementService": true,
-      "Interfaces": "",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 128
     },
     "Properties": {
       "Created": {
@@ -11506,8 +10644,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -11618,12 +10756,6 @@
   },
   "MeanRanges": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "MeanRanges",
-      "TypeId": 130
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Ranges",
       "DELETE": true,
@@ -11631,11 +10763,13 @@
       "GET": true,
       "IgnoreProps": "Owner",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "MeanRanges",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 130
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -11669,8 +10803,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -11702,11 +10836,6 @@
         "Type": "bool"
       },
       "Ranges": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "MeanRangeValue.Owners"
-        },
         "Description": "Description of Ranges",
         "DisplayName": "Ranges",
         "IsAudited": false,
@@ -11717,6 +10846,9 @@
         "IsUniqueConstraint": true,
         "Name": "Ranges",
         "Order": 0,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Owners",
         "SetDefaultValue": "",
         "Tab": "Ranges",
         "TabOrder": 10,
@@ -11760,23 +10892,19 @@
   },
   "MeanRangeValue": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "MeanRangeValue",
-      "TypeId": 129
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "FlattenReferences": false,
       "GET": true,
       "IgnoreProps": "Owner",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "MeanRangeValue",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 129
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -11810,8 +10938,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -12048,12 +11176,6 @@
   },
   "MeanVariances": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "MeanVariances",
-      "TypeId": 18219
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Variances",
       "DELETE": true,
@@ -12061,11 +11183,13 @@
       "GET": true,
       "IgnoreProps": "Owner",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "MeanVariances",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18219
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12099,8 +11223,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -12142,11 +11266,6 @@
         "Type": "DateTime?"
       },
       "Variances": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "MeanVarianceValue.Owners"
-        },
         "Description": "Description of Variances",
         "DisplayName": "Variances",
         "IsAudited": false,
@@ -12157,6 +11276,9 @@
         "IsUniqueConstraint": true,
         "Name": "Variances",
         "Order": 0,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Owners",
         "SetDefaultValue": "",
         "Tab": "Variances",
         "TabOrder": 10,
@@ -12190,23 +11312,19 @@
   },
   "MeanVarianceValue": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "MeanVarianceValue",
-      "TypeId": 18119
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "FlattenReferences": false,
       "GET": true,
       "IgnoreProps": "Owner",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "MeanVarianceValue",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18119
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12240,8 +11358,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -12410,20 +11528,15 @@
   },
   "Outcome": {
     "Attributes": {
-      "Name": "Outcome",
-      "TypeId": 13662
-    },
-    "Domain": {},
-    "Dto": {
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "Name": "Outcome",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 13662
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -12487,8 +11600,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -12581,20 +11694,17 @@
   },
   "Page": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "Page",
-      "TypeId": 180
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "Page",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 180
     },
     "Extension": {
       "Category": {
@@ -12701,7 +11811,6 @@
         "UIType": ""
       }
     },
-    "Model": {},
     "Properties": {
       "Apps": {
         "Description": "DOC Apps to which this page may belong",
@@ -12782,11 +11891,6 @@
         "Type": "string"
       },
       "Glossary": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Dto.Glossary.Page"
-        },
         "Description": "Glossary content for this page",
         "DisplayName": "Glossary",
         "IsAudited": true,
@@ -12798,6 +11902,9 @@
         "IsUniqueConstraint": false,
         "Name": "Glossary",
         "Order": 102,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Page",
         "SetDefaultValue": "",
         "Tab": "Help",
         "TabOrder": 40,
@@ -12818,11 +11925,6 @@
         "Type": "int?"
       },
       "Help": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Dto.Help.Pages"
-        },
         "Description": "Help content for this page",
         "DisplayName": "Help",
         "IsAudited": true,
@@ -12834,6 +11936,9 @@
         "IsUniqueConstraint": false,
         "Name": "Help",
         "Order": 101,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Pages",
         "SetDefaultValue": "",
         "Tab": "Help",
         "TabOrder": 40,
@@ -12855,8 +11960,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -12909,11 +12014,6 @@
         "UIType": ""
       },
       "Roles": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Role.Pages"
-        },
         "Description": "Description of Roles",
         "DisplayName": "Roles",
         "IsAudited": true,
@@ -12924,6 +12024,9 @@
         "IsUniqueConstraint": false,
         "Name": "Roles",
         "Order": 70,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Pages",
         "SetDefaultValue": "",
         "Tab": "Roles",
         "TabOrder": 20,
@@ -12967,28 +12070,19 @@
   },
   "Project": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Project",
-      "TypeId": 20135
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Project",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 20135
     },
-    "Model": {},
     "Properties": {
       "Children": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": " Project.Parent"
-        },
         "Description": "Children of the parent Project",
         "DisplayName": "Children",
         "IsAllowAddInForm": false,
@@ -13003,6 +12097,9 @@
         "IsUniqueConstraint": false,
         "Name": "Children",
         "Order": 110,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Parent",
         "SetDefaultValue": "",
         "Tab": "Children",
         "TabOrder": 20,
@@ -13192,8 +12289,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -13482,11 +12579,6 @@
         "Type": "int?"
       },
       "TimeCards": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "TimeCard.Project"
-        },
         "Description": "Time Cards associated with this Project",
         "DisplayName": "Time Cards",
         "IsAllowAddInForm": true,
@@ -13501,6 +12593,9 @@
         "IsUniqueConstraint": false,
         "Name": "TimeCards",
         "Order": 111,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Project",
         "SetDefaultValue": "",
         "Tab": "Time Cards",
         "TabOrder": 30,
@@ -13544,24 +12639,20 @@
   },
   "QueueChannel": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "QueueChannel",
-      "TypeId": 18519
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "QueueChannel",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18519
     },
-    "Model": {},
     "Properties": {
       "AutoDelete": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, messages in this channel will automatically be deleted on delivery",
         "DisplayName": "Auto Delete",
         "IsAudited": true,
@@ -13710,8 +12801,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -13786,21 +12877,17 @@
   },
   "ReleaseStatus": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "ReleaseStatus",
-      "TypeId": 19835
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "ReleaseStatus",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 19835
     },
-    "Model": {},
     "Properties": {
       "Branch": {
         "Description": "Release branch name",
@@ -13853,8 +12940,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -13985,22 +13072,18 @@
   },
   "Role": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Role",
-      "TypeId": 133
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Role",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 133
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "AdminTeam": {
         "AutoCreateMissing": false,
@@ -14119,11 +13202,6 @@
         "UIType": ""
       },
       "FeatureSets": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "FeatureSet.Roles"
-        },
         "Description": "All features assigned to this role.",
         "DisplayName": "Features",
         "IsAudited": true,
@@ -14134,6 +13212,9 @@
         "IsUniqueConstraint": false,
         "Name": "FeatureSets",
         "Order": 40,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Roles",
         "SetDefaultValue": "",
         "Tab": "FeatureSets",
         "TabOrder": 10,
@@ -14165,8 +13246,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -14188,7 +13269,7 @@
         "Type": "int"
       },
       "IsInternal": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the role is internal to Doctor Evidence.",
         "DisplayName": "IsInternal",
         "IsAudited": true,
@@ -14207,7 +13288,7 @@
         "UIType": ""
       },
       "IsSuperAdmin": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the role has permission to all functionality. There can be only one role with this set to true.",
         "DisplayName": "IsSuperAdmin",
         "IsAudited": true,
@@ -14296,7 +13377,6 @@
         "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
-        "JsonType": "Permissions",
         "Length": "int.MaxValue",
         "Name": "Permissions",
         "Order": 998,
@@ -14317,11 +13397,6 @@
         "Type": "DateTime?"
       },
       "Users": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "User.Roles"
-        },
         "Description": "Users assigned to this role",
         "DisplayName": "Users",
         "IsAudited": true,
@@ -14332,6 +13407,9 @@
         "IsUniqueConstraint": false,
         "Name": "Users",
         "Order": 80,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Roles",
         "SetDefaultValue": "",
         "Tab": "Users",
         "TabOrder": 40,
@@ -14365,29 +13443,20 @@
   },
   "Scope": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "Scope",
-      "TypeId": 15379
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "Scope",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 15379
     },
     "Extension": {},
-    "Model": {
-      "Interfaces": ""
-    },
     "Properties": {
       "App": {
         "Description": "DOC platform app to include in Scope",
@@ -14419,7 +13488,7 @@
         "Type": "int?"
       },
       "Archived": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, this scope set will not appear by default",
         "DisplayName": "Archived",
         "IsAudited": true,
@@ -14437,11 +13506,6 @@
         "UIType": ""
       },
       "Bindings": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "LookupTableBinding.Scope"
-        },
         "Description": "Collection of bindings on this scope",
         "DisplayName": "Bindings",
         "IsAudited": true,
@@ -14452,6 +13516,9 @@
         "IsUniqueConstraint": false,
         "Name": "Bindings",
         "Order": 50,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Scope",
         "SetDefaultValue": "",
         "Tab": "Bindings",
         "TabOrder": 20,
@@ -14472,11 +13539,6 @@
         "Type": "int?"
       },
       "Broadcasts": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Broadcast.Scopes"
-        },
         "Description": "Collection of broadcasts on this scope",
         "DisplayName": "Broadcasts",
         "IsAudited": true,
@@ -14487,6 +13549,9 @@
         "IsUniqueConstraint": false,
         "Name": "Broadcasts",
         "Order": 60,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Scopes",
         "SetDefaultValue": "",
         "Tab": "Broadcasts",
         "TabOrder": 30,
@@ -14556,7 +13621,7 @@
         "Type": "bool"
       },
       "Delete": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the user has permission to delete",
         "DisplayName": "Delete",
         "IsAudited": true,
@@ -14604,7 +13669,7 @@
         "Type": "int?"
       },
       "Edit": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the user has permission to edit",
         "DisplayName": "Edit",
         "IsAudited": true,
@@ -14633,11 +13698,6 @@
         "Type": "string"
       },
       "Help": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Dto.Help.Scopes"
-        },
         "Description": "Collection of help on this scope",
         "DisplayName": "Help",
         "IsAudited": true,
@@ -14648,6 +13708,9 @@
         "IsUniqueConstraint": false,
         "Name": "Help",
         "Order": 70,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Scopes",
         "SetDefaultValue": "",
         "Tab": "Help",
         "TabOrder": 40,
@@ -14669,8 +13732,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -14721,11 +13784,6 @@
         "Type": "bool"
       },
       "Synonyms": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "TermSynonym.Scope"
-        },
         "Description": "Collection of synonyms on this scope",
         "DisplayName": "Synonyms",
         "IsAudited": true,
@@ -14736,6 +13794,9 @@
         "IsUniqueConstraint": false,
         "Name": "Synonyms",
         "Order": 40,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Scope",
         "SetDefaultValue": "",
         "Tab": "Synonyms",
         "TabOrder": 10,
@@ -14855,11 +13916,6 @@
         "Type": "int?"
       },
       "VariableRules": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "VariableRule.Scopes"
-        },
         "Description": "Collection of bindings on this scope",
         "DisplayName": "VariableRules",
         "IsAudited": true,
@@ -14870,6 +13926,9 @@
         "IsUniqueConstraint": false,
         "Name": "VariableRules",
         "Order": 60,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Scopes",
         "SetDefaultValue": "",
         "Tab": "VariableRules",
         "TabOrder": 30,
@@ -14952,20 +14011,16 @@
   },
   "Stats": {
     "Attributes": {
-      "Name": "Stats",
-      "TypeId": 14273
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Stats",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 14273
     },
-    "Model": {},
     "Properties": {
       "App": {
         "AutoCreateMissing": false,
@@ -15066,8 +14121,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -15191,21 +14246,17 @@
   },
   "StatsRecord": {
     "Attributes": {
-      "IsInsertOnly": true,
-      "Name": "StatsRecord",
-      "TypeId": 14275
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsInsertOnly": true,
+      "Name": "StatsRecord",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 14275
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -15239,8 +14290,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -15380,24 +14431,20 @@
   },
   "StatsStudySet": {
     "Attributes": {
-      "IsInsertOnly": true,
-      "JsonIgnore": "Records",
-      "Name": "StatsStudySet",
-      "TypeId": 14274
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Records",
       "DELETE": false,
       "GET": true,
       "IgnoreProps": "Records",
       "ImplementService": true,
+      "IsInsertOnly": true,
+      "JsonIgnore": "Records",
+      "Name": "StatsStudySet",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 14274
     },
-    "Model": {},
     "Properties": {
       "BoundTerms": {
         "DefaultValue": 0,
@@ -15556,8 +14603,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -15806,23 +14853,18 @@
   },
   "StudyDesign": {
     "Attributes": {
-      "Enum": "DocConstantStudyDesign",
-      "Name": "StudyDesign",
-      "TypeId": 137
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
+      "Enum": "DocConstantStudyDesign",
       "GET": true,
       "IgnoreProps": "",
       "ImplementService": false,
-      "Interfaces": "",
+      "Name": "StudyDesign",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 137
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -15889,8 +14931,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -15945,22 +14987,18 @@
   },
   "StudyType": {
     "Attributes": {
-      "Enum": "DocConstantStudyType",
-      "IsCached": true,
-      "Name": "StudyType",
-      "TypeId": 143
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
+      "Enum": "DocConstantStudyType",
       "GET": true,
       "ImplementService": false,
+      "IsCached": true,
+      "Name": "StudyType",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 143
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -15994,8 +15032,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -16082,21 +15120,17 @@
   },
   "Tag": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Tag",
-      "TypeId": 18019
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Tag",
       "PATCH": false,
       "POST": true,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18019
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -16130,8 +15164,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -16202,11 +15236,6 @@
         "Type": "int"
       },
       "Workflows": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Workflow.Tags"
-        },
         "Description": "Workflows that use this tag",
         "DisplayName": "Workflows",
         "IsAudited": true,
@@ -16217,6 +15246,9 @@
         "IsUniqueConstraint": false,
         "Name": "Workflows",
         "Order": 10,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Tags",
         "SetDefaultValue": "",
         "Tab": "Workflows",
         "TabOrder": 10,
@@ -16240,34 +15272,20 @@
   },
   "Team": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Team",
-      "TypeId": 15881
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "CustomAuthorization": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "Name": "Team",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 15881
     },
     "Properties": {
       "AdminRoles": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Role.AdminTeam"
-        },
         "Description": "Roles to which this team is assigned as an admin",
         "DisplayName": "Admin Roles",
         "IsAudited": true,
@@ -16278,6 +15296,9 @@
         "IsUniqueConstraint": false,
         "Name": "AdminRoles",
         "Order": 70,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "AdminTeam",
         "SetDefaultValue": "",
         "Tab": "Admin Roles",
         "TabOrder": 40,
@@ -16364,8 +15385,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -16387,7 +15408,7 @@
         "Type": "int"
       },
       "IsInternal": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "True if the Team is a DrE internal team",
         "DisplayName": "Is Internal",
         "IsAudited": true,
@@ -16465,11 +15486,6 @@
         "Type": "int?"
       },
       "Scopes": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Scope.Team"
-        },
         "Description": "Scopes associated with this team",
         "DisplayName": "Scopes",
         "IsAudited": true,
@@ -16480,6 +15496,9 @@
         "IsUniqueConstraint": false,
         "Name": "Scopes",
         "Order": 50,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Team",
         "SetDefaultValue": "",
         "Tab": "Scopes",
         "TabOrder": 20,
@@ -16547,11 +15566,6 @@
         "Type": "DateTime?"
       },
       "Updates": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Update.Team"
-        },
         "Description": "Updates associated with this team",
         "DisplayName": "Updates",
         "IsAudited": false,
@@ -16562,6 +15576,9 @@
         "IsUniqueConstraint": false,
         "Name": "Updates",
         "Order": 60,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Team",
         "SetDefaultValue": "",
         "Tab": "Updates",
         "TabOrder": 30,
@@ -16625,23 +15642,18 @@
   },
   "TermCategory": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "TermCategory",
-      "TypeId": 146
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "IgnoreProps": "Name",
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "Name": "TermCategory",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 146
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -16675,8 +15687,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -16769,11 +15781,6 @@
         "Type": "int?"
       },
       "Terms": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "TermMaster.Categories"
-        },
         "Description": "Description of Terms",
         "DisplayName": "Terms",
         "IsAudited": true,
@@ -16784,6 +15791,9 @@
         "IsUniqueConstraint": false,
         "Name": "Terms",
         "Order": 20,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Categories",
         "SetDefaultValue": "",
         "Tab": "Terms",
         "TabOrder": 10,
@@ -16827,27 +15837,18 @@
   },
   "TermMaster": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "TermMaster",
-      "TypeId": 147
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "DontFlattenProperties": "Categories",
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "TermMaster",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 147
     },
     "Properties": {
       "BioPortal": {
@@ -16978,8 +15979,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -17086,11 +16087,6 @@
         "UIType": ""
       },
       "Synonyms": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "TermSynonym.Master"
-        },
         "Description": "All Synonyms on this master term",
         "DisplayName": "Synonyms",
         "IsAudited": true,
@@ -17101,6 +16097,9 @@
         "IsUniqueConstraint": true,
         "Name": "Synonyms",
         "Order": 100,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Master",
         "SetDefaultValue": "",
         "Tab": "Synonyms",
         "TabOrder": 10,
@@ -17178,27 +16177,18 @@
   },
   "TermSynonym": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "TermSynonym",
-      "TypeId": 148
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "DontFlattenProperties": "",
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "TermSynonym",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 148
     },
     "Properties": {
       "Approved": {
@@ -17280,8 +16270,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -17431,21 +16421,17 @@
   },
   "TimeCard": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "TimeCard",
-      "TypeId": 17319
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "TimeCard",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 17319
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -17545,8 +16531,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -17760,23 +16746,19 @@
   },
   "TimePoint": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "TimePoint",
-      "TypeId": 15078
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
       "DontFlattenProperties": "MeanValue,SingleValue,TotalValue",
       "FlattenReferences": false,
       "GET": true,
       "ImplementService": true,
+      "IsInModel": true,
+      "Name": "TimePoint",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 15078
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -17810,8 +16792,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -17969,26 +16951,17 @@
   },
   "UnitConversionRules": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": false,
-      "Name": "UnitConversionRules",
-      "TypeId": 149
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": false,
+      "Name": "UnitConversionRules",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 149
     },
     "Properties": {
       "Created": {
@@ -18054,8 +17027,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -18077,7 +17050,7 @@
         "Type": "int"
       },
       "IsDefault": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsDefault",
         "DisplayName": "IsDefault",
         "IsAudited": true,
@@ -18095,7 +17068,7 @@
         "UIType": ""
       },
       "IsDestinationSi": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsDestinationSi",
         "DisplayName": "IsDestinationSi",
         "IsAudited": true,
@@ -18287,26 +17260,17 @@
   },
   "UnitOfMeasure": {
     "Attributes": {
-      "IsCached": true,
-      "IsInModel": true,
-      "Name": "UnitOfMeasure",
-      "TypeId": 150
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsCached": true,
+      "IsInModel": true,
+      "Name": "UnitOfMeasure",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 150
     },
     "Properties": {
       "Created": {
@@ -18341,8 +17305,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -18364,7 +17328,7 @@
         "Type": "int"
       },
       "IsSI": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "Description of IsSI",
         "DisplayName": "IsSI",
         "IsAudited": true,
@@ -18512,13 +17476,6 @@
   },
   "Units": {
     "Attributes": {
-      "IsInModel": true,
-      "IsInsertOnly": true,
-      "Name": "Units",
-      "TypeId": 152
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Units",
       "DELETE": true,
@@ -18526,11 +17483,14 @@
       "FlattenReferences": false,
       "GET": true,
       "ImplementService": false,
+      "IsInModel": true,
+      "IsInsertOnly": true,
+      "Name": "Units",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 152
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -18564,8 +17524,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -18597,11 +17557,6 @@
         "Type": "bool"
       },
       "Units": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "UnitValue.Owners"
-        },
         "Description": "Description of Units",
         "DisplayName": "Units",
         "IsAudited": false,
@@ -18612,6 +17567,9 @@
         "IsUniqueConstraint": true,
         "Name": "Units",
         "Order": 0,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Owners",
         "SetDefaultValue": "",
         "Tab": "Units",
         "TabOrder": 10,
@@ -18655,12 +17613,6 @@
   },
   "UnitValue": {
     "Attributes": {
-      "IsInModel": true,
-      "Name": "UnitValue",
-      "TypeId": 151
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": true,
       "CustomCollections": "Owners",
       "DELETE": true,
@@ -18668,11 +17620,13 @@
       "GET": true,
       "IgnoreProps": "Owners",
       "ImplementService": false,
+      "IsInModel": true,
+      "Name": "UnitValue",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 151
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -18736,8 +17690,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -18906,20 +17860,16 @@
   },
   "Update": {
     "Attributes": {
-      "Name": "Update",
-      "TypeId": 19119
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "Name": "Update",
       "PATCH": true,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 19119
     },
-    "Model": {},
     "Properties": {
       "Body": {
         "Description": "Body of the Message",
@@ -19017,11 +17967,6 @@
         "UIType": ""
       },
       "Events": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Event.Updates"
-        },
         "AutoCreateMissing": false,
         "Description": "Events that are part of this notification",
         "DisplayName": "Events",
@@ -19031,10 +17976,14 @@
         "IsAudited": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Events",
         "Order": 80,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Updates",
         "SetDefaultValue": "",
         "Tab": "Events",
         "TabOrder": 0,
@@ -19066,8 +18015,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -19276,12 +18225,6 @@
   "User": {
     "Attributes": {
       "AllowDelete": false,
-      "IsCached": true,
-      "Name": "User",
-      "TypeId": 153
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "CustomAuthorization": true,
       "DELETE": false,
@@ -19289,9 +18232,12 @@
       "GET": true,
       "ImplementService": true,
       "IsBaseClass": true,
+      "IsCached": true,
+      "Name": "User",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 153
     },
     "Extension": {
       "Audits": {
@@ -19381,7 +18327,6 @@
         "UIType": "permissions"
       }
     },
-    "Model": {},
     "Properties": {
       "ClientDepartment": {
         "Description": "Description of ClientDepartment",
@@ -19581,8 +18526,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -19616,11 +18561,6 @@
         "Type": "int"
       },
       "Impersonated": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Impersonation.ImpersonatedUser"
-        },
         "Description": "Impersonation records of this user initiated by another user",
         "DisplayName": "Impersonated",
         "IsAllowAddInForm": false,
@@ -19634,6 +18574,9 @@
         "IsUniqueConstraint": false,
         "Name": "Impersonated",
         "Order": 132,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "ImpersonatedUser",
         "SetDefaultValue": "",
         "Tab": "Impersonation",
         "TabOrder": 43,
@@ -19655,11 +18598,6 @@
         "Type": "int?"
       },
       "Impersonating": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Impersonation.AuthenticatedUser"
-        },
         "Description": "Impersonation records initiated by this user",
         "DisplayName": "Impersonating",
         "IsAllowAddInForm": false,
@@ -19673,6 +18611,9 @@
         "IsUniqueConstraint": false,
         "Name": "Impersonating",
         "Order": 132,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "AuthenticatedUser",
         "SetDefaultValue": "",
         "Tab": "Impersonation",
         "TabOrder": 42,
@@ -19893,11 +18834,6 @@
         "Type": "int?"
       },
       "Scopes": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Scope.User"
-        },
         "Description": "Scopes associated with this user",
         "DisplayName": "Scopes",
         "IsAudited": false,
@@ -19908,6 +18844,9 @@
         "IsUniqueConstraint": false,
         "Name": "Scopes",
         "Order": 101,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "User",
         "SetDefaultValue": "",
         "Tab": "Scopes",
         "TabOrder": 10,
@@ -19928,11 +18867,6 @@
         "Type": "int?"
       },
       "Sessions": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "UserSession.User"
-        },
         "Description": "Sessions associated with this user logging in",
         "DisplayName": "Sessions",
         "IsAllowAddInForm": false,
@@ -19946,6 +18880,9 @@
         "IsUniqueConstraint": false,
         "Name": "Sessions",
         "Order": 131,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "User",
         "SetDefaultValue": "",
         "Tab": "Sessions",
         "TabOrder": 41,
@@ -20052,11 +18989,6 @@
         "Type": "int?"
       },
       "Teams": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Team.Owner"
-        },
         "Description": "Teams this user owns",
         "DisplayName": "Teams",
         "IsAllowAddInForm": false,
@@ -20069,6 +19001,9 @@
         "IsUniqueConstraint": false,
         "Name": "Teams",
         "Order": 130,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Owner",
         "SetDefaultValue": "",
         "Tab": "Teams",
         "TabOrder": 40,
@@ -20089,11 +19024,6 @@
         "Type": "int?"
       },
       "TimeCards": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "TimeCard.User"
-        },
         "Description": "Time cards that this user has created.",
         "DisplayName": "Time Cards",
         "IsAllowAddInForm": false,
@@ -20106,6 +19036,9 @@
         "IsUniqueConstraint": false,
         "Name": "TimeCards",
         "Order": 111,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "User",
         "SetDefaultValue": "",
         "Tab": "Time Cards",
         "TabOrder": 11,
@@ -20136,11 +19069,6 @@
         "Type": "DateTime?"
       },
       "Updates": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Update.User"
-        },
         "Description": "Updates associated with this user",
         "DisplayName": "Updates",
         "IsAudited": false,
@@ -20151,6 +19079,9 @@
         "IsUniqueConstraint": false,
         "Name": "Updates",
         "Order": 1007,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "User",
         "SetDefaultValue": "",
         "Tab": "Updates",
         "TabOrder": 10,
@@ -20211,11 +19142,6 @@
         "Type": "int"
       },
       "Workflows": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Workflow.User"
-        },
         "Description": "Description of Workflows",
         "DisplayName": "Workflows",
         "IsAllowAddInForm": false,
@@ -20228,6 +19154,9 @@
         "IsUniqueConstraint": false,
         "Name": "Workflows",
         "Order": 111,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "User",
         "SetDefaultValue": "",
         "Tab": "Workflows",
         "TabOrder": 11,
@@ -20251,21 +19180,17 @@
   },
   "UserRequest": {
     "Attributes": {
-      "IsCached": false,
-      "Name": "UserRequest",
-      "TypeId": 18619
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": false,
+      "Name": "UserRequest",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18619
     },
-    "Model": {},
     "Properties": {
       "App": {
         "Description": "App to which this API call belongs",
@@ -20330,8 +19255,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -20503,21 +19428,17 @@
   },
   "UserSession": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "UserSession",
-      "TypeId": 18419
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "UserSession",
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 18419
     },
-    "Model": {},
     "Properties": {
       "ClientId": {
         "Description": "Browser Id of the session",
@@ -20569,8 +19490,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -20611,11 +19532,6 @@
         "Type": "int"
       },
       "Impersonations": {
-        "Association": {
-          "OnOwnerRemove": "Deny",
-          "OnTargetRemove": "Deny",
-          "PairTo": "Impersonation.UserSession"
-        },
         "Description": "Any Impersonation records if this session has impersonation",
         "DisplayName": "Impersonations",
         "IsAudited": false,
@@ -20626,6 +19542,9 @@
         "IsUniqueConstraint": false,
         "Name": "Impersonations",
         "Order": 80,
+        "RelationshipOnOwnerRemove": "Deny",
+        "RelationshipOnTargetRemove": "Deny",
+        "RelationshipPairTo": "UserSession",
         "SetDefaultValue": "",
         "Tab": "Session",
         "TabOrder": 0,
@@ -20674,11 +19593,6 @@
         "Type": "bool"
       },
       "Requests": {
-        "Association": {
-          "OnOwnerRemove": "Deny",
-          "OnTargetRemove": "Deny",
-          "PairTo": "UserRequest.UserSession"
-        },
         "Description": "All requests associated with this session",
         "DisplayName": "Requests",
         "IsAllowAddInForm": false,
@@ -20692,6 +19606,9 @@
         "IsUniqueConstraint": false,
         "Name": "Requests",
         "Order": 50,
+        "RelationshipOnOwnerRemove": "Deny",
+        "RelationshipOnTargetRemove": "Deny",
+        "RelationshipPairTo": "UserSession",
         "SetDefaultValue": "",
         "Tab": "Requests",
         "TabOrder": 10,
@@ -20780,11 +19697,6 @@
         "UIType": ""
       },
       "UserHistory": {
-        "Association": {
-          "OnOwnerRemove": "Deny",
-          "OnTargetRemove": "Deny",
-          "PairTo": "History.UserSession"
-        },
         "Description": "All user history associated with this session",
         "DisplayName": "User History",
         "IsAllowAddInForm": false,
@@ -20798,6 +19710,9 @@
         "IsUniqueConstraint": false,
         "Name": "UserHistory",
         "Order": 60,
+        "RelationshipOnOwnerRemove": "Deny",
+        "RelationshipOnTargetRemove": "Deny",
+        "RelationshipPairTo": "UserSession",
         "SetDefaultValue": "",
         "Tab": "User History",
         "TabOrder": 20,
@@ -20842,22 +19757,18 @@
   },
   "UserType": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "UserType",
-      "TypeId": 17919
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "UserType",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 17919
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -20891,8 +19802,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -21071,23 +19982,19 @@
   },
   "ValueType": {
     "Attributes": {
+      "AllVisibleFieldsByDefault": true,
+      "DELETE": false,
       "Enum": "DocConstantValueType",
+      "GET": true,
+      "ImplementService": true,
       "IsInModel": true,
       "IsReadOnly": true,
       "Name": "ValueType",
-      "TypeId": 171
-    },
-    "Domain": {},
-    "Dto": {
-      "AllVisibleFieldsByDefault": true,
-      "DELETE": false,
-      "GET": true,
-      "ImplementService": true,
       "PATCH": false,
       "POST": false,
-      "PUT": false
+      "PUT": false,
+      "TypeId": 171
     },
-    "Model": {},
     "Properties": {
       "Created": {
         "IsDisplayInForm": true,
@@ -21152,8 +20059,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -21240,25 +20147,16 @@
   },
   "VariableInstance": {
     "Attributes": {
-      "IsInModel": false,
-      "Name": "VariableInstance",
-      "TypeId": 15781
-    },
-    "Domain": {
-      "Interfaces": ""
-    },
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
-      "Interfaces": "",
+      "IsInModel": false,
+      "Name": "VariableInstance",
       "PATCH": true,
       "POST": true,
-      "PUT": true
-    },
-    "Model": {
-      "Interfaces": ""
+      "PUT": true,
+      "TypeId": 15781
     },
     "Properties": {
       "Created": {
@@ -21342,8 +20240,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -21425,11 +20323,6 @@
         "Type": "int"
       },
       "Workflows": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Workflow.Variables"
-        },
         "Description": "Workflows that are associated with this variable",
         "DisplayName": "Workflows",
         "IsAudited": true,
@@ -21440,6 +20333,9 @@
         "IsUniqueConstraint": false,
         "Name": "Workflows",
         "Order": 30,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Variables",
         "SetDefaultValue": "",
         "Tab": "Workflows",
         "TabOrder": 10,
@@ -21463,27 +20359,18 @@
   },
   "VariableRule": {
     "Attributes": {
-      "Name": "VariableRule",
-      "TypeId": 15680
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "ImplementService": true,
+      "Name": "VariableRule",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 15680
     },
-    "Model": {},
     "Properties": {
       "Children": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "VariableRule.Owner"
-        },
         "Description": "Rules that inherit from this rule",
         "DisplayName": "Children",
         "IsAudited": true,
@@ -21494,6 +20381,9 @@
         "IsUniqueConstraint": false,
         "Name": "Children",
         "Order": 21,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Owner",
         "SetDefaultValue": "",
         "Tab": "Children",
         "TabOrder": 10,
@@ -21564,8 +20454,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -21587,11 +20477,6 @@
         "Type": "int"
       },
       "Instances": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "VariableInstance.Rule"
-        },
         "Description": "Data generated from this rule",
         "DisplayName": "Instances",
         "IsAudited": true,
@@ -21602,6 +20487,9 @@
         "IsUniqueConstraint": false,
         "Name": "Instances",
         "Order": 50,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Rule",
         "SetDefaultValue": "",
         "Tab": "Instances",
         "TabOrder": 20,
@@ -21796,31 +20684,28 @@
   },
   "Workflow": {
     "Attributes": {
-      "IsCached": true,
-      "Name": "Workflow",
-      "TypeId": 15378
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "CustomAuthorization": true,
       "DELETE": false,
       "GET": true,
       "ImplementService": true,
+      "IsCached": true,
+      "Name": "Workflow",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 15378
     },
     "Extension": {},
-    "Model": {},
     "Properties": {
       "Archived": {
-        "DefaultValue": "false",
+        "DefaultValue": false,
         "Description": "If true, this document set will not appear by default",
         "DisplayName": "Archived",
         "IsAudited": true,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
+        "IsRequired": false,
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Archived",
@@ -21862,11 +20747,6 @@
         "Type": "int?"
       },
       "Comments": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "WorkflowComment.Workflow"
-        },
         "Description": "Comments on this workflow",
         "DisplayName": "Comments",
         "IsAudited": true,
@@ -21877,6 +20757,9 @@
         "IsUniqueConstraint": false,
         "Name": "Comments",
         "Order": 90,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Workflow",
         "SetDefaultValue": "",
         "Tab": "Comments",
         "TabOrder": 40,
@@ -21997,8 +20880,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -22078,11 +20961,6 @@
         "Type": "int?"
       },
       "Scopes": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Scope.Workflows"
-        },
         "Description": "Scopes whom this is shared",
         "DisplayName": "Scopes",
         "IsAudited": true,
@@ -22093,6 +20971,9 @@
         "IsUniqueConstraint": false,
         "Name": "Scopes",
         "Order": 70,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Workflows",
         "SetDefaultValue": "",
         "Tab": "Scopes",
         "TabOrder": 20,
@@ -22174,11 +21055,6 @@
         "Type": "int?"
       },
       "Tasks": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "WorkflowTask.Workflow"
-        },
         "Description": "Tasks on this workflow",
         "DisplayName": "Tasks",
         "IsAudited": true,
@@ -22189,6 +21065,9 @@
         "IsUniqueConstraint": false,
         "Name": "Tasks",
         "Order": 100,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Workflow",
         "SetDefaultValue": "",
         "Tab": "Tasks",
         "TabOrder": 50,
@@ -22324,11 +21203,6 @@
         "Type": "int"
       },
       "Workflows": {
-        "Association": {
-          "OnOwnerRemove": "Clear",
-          "OnTargetRemove": "Clear",
-          "PairTo": "Workflow.Owner"
-        },
         "Description": "Workflows that are part of this workflow",
         "DisplayName": "Workflows",
         "IsAudited": true,
@@ -22339,6 +21213,9 @@
         "IsUniqueConstraint": false,
         "Name": "Workflows",
         "Order": 72,
+        "RelationshipOnOwnerRemove": "Clear",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Owner",
         "SetDefaultValue": "",
         "Tab": "Workflows",
         "TabOrder": 20,
@@ -22362,28 +21239,19 @@
   },
   "WorkflowComment": {
     "Attributes": {
-      "Name": "WorkflowComment",
-      "TypeId": 18319
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "HasDto": true,
       "ImplementService": true,
+      "Name": "WorkflowComment",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18319
     },
-    "Model": {},
     "Properties": {
       "Children": {
-        "Association": {
-          "OnOwnerRemove": "Cascade",
-          "OnTargetRemove": "Clear",
-          "PairTo": "WorkflowComment.Parent"
-        },
         "Description": "Child comments of this comment",
         "DisplayName": "Children",
         "IsAudited": true,
@@ -22394,6 +21262,9 @@
         "IsUniqueConstraint": false,
         "Name": "Children",
         "Order": 40,
+        "RelationshipOnOwnerRemove": "Cascade",
+        "RelationshipOnTargetRemove": "Clear",
+        "RelationshipPairTo": "Parent",
         "SetDefaultValue": "",
         "Tab": "Children",
         "TabOrder": 20,
@@ -22445,8 +21316,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,
@@ -22610,21 +21481,17 @@
   },
   "WorkflowTask": {
     "Attributes": {
-      "Name": "WorkflowTask",
-      "TypeId": 18719
-    },
-    "Domain": {},
-    "Dto": {
       "AllVisibleFieldsByDefault": false,
       "DELETE": true,
       "GET": true,
       "HasDto": true,
       "ImplementService": true,
+      "Name": "WorkflowTask",
       "PATCH": true,
       "POST": true,
-      "PUT": true
+      "PUT": true,
+      "TypeId": 18719
     },
-    "Model": {},
     "Properties": {
       "Assignee": {
         "AutoCreateMissing": false,
@@ -22746,8 +21613,8 @@
       },
       "History": {
         "IsAllowAddInForm": false,
-        "IsAllowCreateInForm ": false,
-        "IsAllowRemoveInForm ": false,
+        "IsAllowCreateInForm": false,
+        "IsAllowRemoveInForm": false,
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
         "IsInsertOnly": true,

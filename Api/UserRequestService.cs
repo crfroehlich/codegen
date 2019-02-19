@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityUserRequest> _ExecSearch(UserRequestSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<UserRequest, UserRequestSearch>(request);
             IQueryable<DocEntityUserRequest> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserRequestFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityUserRequest,UserRequestFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -115,7 +116,7 @@ namespace Services.API
                     entities = entities.Where(en => en.UserSession.Id.In(request.UserSessionIds));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityUserRequest,UserRequestSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -132,18 +133,6 @@ namespace Services.API
         public List<UserRequest> Post(UserRequestSearch request) => Get(request);
 
         public List<UserRequest> Get(UserRequestSearch request) => GetSearchResult<UserRequest,DocEntityUserRequest,UserRequestSearch>(DocConstantModelName.USERREQUEST, request, _ExecSearch);
-
-        public object Post(UserRequestVersion request) => Get(request);
-
-        public object Get(UserRequestVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
 
         public UserRequest Get(UserRequest request) => GetEntity<UserRequest>(DocConstantModelName.USERREQUEST, request, GetUserRequest);
 
@@ -170,21 +159,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(UserRequestIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityUserRequest>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

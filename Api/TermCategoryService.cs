@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTermCategory> _ExecSearch(TermCategorySearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<TermCategory, TermCategorySearch>(request);
             IQueryable<DocEntityTermCategory> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermCategoryFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityTermCategory,TermCategoryFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -108,12 +109,12 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.ParentCategory.Id.In(request.ParentCategoryIds));
                 }
-                        if(true == request.TermsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Terms.Any(r => r.Id.In(request.TermsIds)));
-                        }
+                if(true == request.TermsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Terms.Any(r => r.Id.In(request.TermsIds)));
+                }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityTermCategory,TermCategorySearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -131,18 +132,6 @@ namespace Services.API
 
         public object Get(TermCategorySearch request) => GetSearchResultWithCache<TermCategory,DocEntityTermCategory,TermCategorySearch>(DocConstantModelName.TERMCATEGORY, request, _ExecSearch);
 
-        public object Post(TermCategoryVersion request) => Get(request);
-
-        public object Get(TermCategoryVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(TermCategory request) => GetEntityWithCache<TermCategory>(DocConstantModelName.TERMCATEGORY, request, GetTermCategory);
         private TermCategory _AssignValues(TermCategory request, DocConstantPermission permission, Session session)
         {
@@ -155,7 +144,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             TermCategory ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<TermCategory>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -506,162 +495,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(TermCategoryJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
+        public object Get(TermCategoryJunction request) =>
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "termmaster":
-                    ret = _GetTermCategoryTermMaster(request, skip, take);
-                    break;
+                    case "termmaster":
+                        return GetJunctionSearchResult<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request, (ss) => HostContext.ResolveService<TermMasterService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
-        public object Get(TermCategoryJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
+        public object Post(TermCategoryJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "termmaster":
-                    ret = GetTermCategoryTermMasterVersion(request);
-                    break;
+                    case "termmaster":
+                        return AddJunction<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
 
-        private object _GetTermCategoryTermMaster(TermCategoryJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<TermMaster>(Dto.TermMaster.Fields, request.VisibleFields);
-             var en = DocEntityTermCategory.GetTermCategory(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TERMCATEGORY, columnName: "Terms", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between TermCategory and TermMaster");
-             return en?.Terms.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTermMaster,TermMaster>(new List<TermMaster>());
-        }
-
-        private List<Version> GetTermCategoryTermMasterVersion(TermCategoryJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityTermCategory.GetTermCategory(request.Id);
-                ret = en?.Terms.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
-        public object Post(TermCategoryJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(TermCategoryJunction request) =>
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "termmaster":
-                    ret = _PostTermCategoryTermMaster(request);
-                    break;
+                    case "termmaster":
+                        return RemoveJunction<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _PostTermCategoryTermMaster(TermCategoryJunction request)
-        {
-            var entity = DocEntityTermCategory.GetTermCategory(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No TermCategory found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to TermCategory");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTermMaster.GetTermMaster(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.TERMMASTER, columnName: "Terms")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Terms property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of TermCategory with objects that do not exist. No matching TermMaster could be found for {id}.");
-                entity.Terms.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(TermCategoryJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                case "termmaster":
-                    ret = _DeleteTermCategoryTermMaster(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-
-
-        private object _DeleteTermCategoryTermMaster(TermCategoryJunction request)
-        {
-            var entity = DocEntityTermCategory.GetTermCategory(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No TermCategory found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to TermCategory");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTermMaster.GetTermMaster(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.TERMMASTER, columnName: "Terms"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between TermCategory and TermMaster");
-                if(null != relationship && false == relationship.IsRemoved) entity.Terms.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private TermCategory GetTermCategory(TermCategory request)
         {
@@ -683,21 +550,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(TermCategoryIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityTermCategory>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

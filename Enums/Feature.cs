@@ -63,8 +63,8 @@ namespace Services.Enums
         PROTOCOL_ADMIN,
         [EnumMember(Value = DocConstantFeature.QC)]
         QC,
-        [EnumMember(Value = DocConstantFeature.RATINGS)]
-        RATINGS,
+        [EnumMember(Value = DocConstantFeature.RELEVANCE_RATING)]
+        RELEVANCE_RATING,
         [EnumMember(Value = DocConstantFeature.RISK_OF_BIAS)]
         RISK_OF_BIAS,
         [EnumMember(Value = DocConstantFeature.SALESFORCE_DATA)]
@@ -102,7 +102,7 @@ namespace Services.Enums
         public const string PRODUCTION_RESET = "Production Reset";
         public const string PROTOCOL_ADMIN = "Protocol Admin";
         public const string QC = "QC";
-        public const string RATINGS = "Ratings";
+        public const string RELEVANCE_RATING = "Relevance Rating";
         public const string RISK_OF_BIAS = "Risk of Bias";
         public const string SALESFORCE_DATA = "Salesforce Data";
         public const string SHARING = "Sharing";

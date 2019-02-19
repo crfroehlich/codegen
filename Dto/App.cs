@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -136,10 +137,9 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/app", "GET")]
-    [Route("/app/search", "GET, POST, DELETE")]
-    public partial class AppSearch : Search<App>
+    public partial class AppSearchBase : Search<App>
     {
+        public int? Id { get; set; }
         public string Description { get; set; }
         public string Icon { get; set; }
         public string Name { get; set; }
@@ -148,9 +148,17 @@ namespace Services.Dto
         public List<int> ScopesIds { get; set; }
         public decimal? Version { get; set; }
     }
-    
+
+    [Route("/app", "GET")]
+    [Route("/app/version", "GET, POST")]
+    [Route("/app/search", "GET, POST, DELETE")]
+    public partial class AppSearch : AppSearchBase
+    {
+    }
+
     public class AppFullTextSearch
     {
+        public AppFullTextSearch() {}
         private AppSearch _request;
         public AppFullTextSearch(AppSearch request) => _request = request;
         
@@ -171,50 +179,12 @@ namespace Services.Dto
         public bool doVersion { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(App.Version))); }
     }
 
-    [Route("/app/version", "GET, POST")]
-    public partial class AppVersion : AppSearch {}
-
     [Route("/app/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AppBatch : List<App> { }
 
-    [Route("/app/{Id}/page", "GET, POST, DELETE")]
-    [Route("/app/{Id}/role", "GET, POST, DELETE")]
-    [Route("/app/{Id}/scope", "GET, POST, DELETE")]
-    public class AppJunction : Search<App>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/app/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/app/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class AppJunction : AppSearchBase {}
 
 
-        public AppJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/app/{Id}/page/version", "GET")]
-    [Route("/app/{Id}/role/version", "GET")]
-    [Route("/app/{Id}/scope/version", "GET")]
-    public class AppJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/app/ids", "GET, POST")]
-    public class AppIds
-    {
-        public bool All { get; set; }
-    }
 }

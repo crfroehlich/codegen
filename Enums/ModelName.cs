@@ -25,8 +25,6 @@ namespace Services.Enums
         APP,
         [EnumMember(Value = DocConstantModelName.ATTRIBUTE)]
         ATTRIBUTE,
-        [EnumMember(Value = DocConstantModelName.ATTRIBUTECATEGORY)]
-        ATTRIBUTECATEGORY,
         [EnumMember(Value = DocConstantModelName.ATTRIBUTEINTERVAL)]
         ATTRIBUTEINTERVAL,
         [EnumMember(Value = DocConstantModelName.AUDITDELTA)]
@@ -57,16 +55,12 @@ namespace Services.Enums
         DIVISION,
         [EnumMember(Value = DocConstantModelName.DOCUMENT)]
         DOCUMENT,
-        [EnumMember(Value = DocConstantModelName.DOCUMENTATTRIBUTE)]
-        DOCUMENTATTRIBUTE,
         [EnumMember(Value = DocConstantModelName.DOCUMENTSET)]
         DOCUMENTSET,
         [EnumMember(Value = DocConstantModelName.DOCUMENTSETHISTORY)]
         DOCUMENTSETHISTORY,
-        [EnumMember(Value = DocConstantModelName.ENTITY)]
-        ENTITY,
-        [EnumMember(Value = DocConstantModelName.ENTITYAUDITRECORD)]
-        ENTITYAUDITRECORD,
+        [EnumMember(Value = DocConstantModelName.ENTITIES)]
+        ENTITIES,
         [EnumMember(Value = DocConstantModelName.EVENT)]
         EVENT,
         [EnumMember(Value = DocConstantModelName.FEATURESET)]
@@ -85,8 +79,6 @@ namespace Services.Enums
         INTERVAL,
         [EnumMember(Value = DocConstantModelName.INTERVENTION)]
         INTERVENTION,
-        [EnumMember(Value = DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET)]
-        JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET,
         [EnumMember(Value = DocConstantModelName.JUNCTION)]
         JUNCTION,
         [EnumMember(Value = DocConstantModelName.LOCALE)]
@@ -183,7 +175,6 @@ namespace Services.Enums
     {
         public const string APP = "App";
         public const string ATTRIBUTE = "Attribute";
-        public const string ATTRIBUTECATEGORY = "AttributeCategory";
         public const string ATTRIBUTEINTERVAL = "AttributeInterval";
         public const string AUDITDELTA = "AuditDelta";
         public const string AUDITRECORD = "AuditRecord";
@@ -199,11 +190,9 @@ namespace Services.Enums
         public const string DEFAULT = "Default";
         public const string DIVISION = "Division";
         public const string DOCUMENT = "Document";
-        public const string DOCUMENTATTRIBUTE = "DocumentAttribute";
         public const string DOCUMENTSET = "DocumentSet";
         public const string DOCUMENTSETHISTORY = "DocumentSetHistory";
-        public const string ENTITY = "Entities";
-        public const string ENTITYAUDITRECORD = "EntityAuditRecords";
+        public const string ENTITIES = "Entities";
         public const string EVENT = "Event";
         public const string FEATURESET = "FeatureSet";
         public const string GLOSSARY = "Glossary";
@@ -213,7 +202,6 @@ namespace Services.Enums
         public const string IMPORTDATA = "ImportData";
         public const string INTERVAL = "Interval";
         public const string INTERVENTION = "Intervention";
-        public const string JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET = "JctAttributeCategoryAttributeDocumentSet";
         public const string JUNCTION = "Junction";
         public const string LOCALE = "Locale";
         public const string LOCALELOOKUP = "LocaleLookup";

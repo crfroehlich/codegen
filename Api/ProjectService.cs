@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityProject> _ExecSearch(ProjectSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Project, ProjectSearch>(request);
             IQueryable<DocEntityProject> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ProjectFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityProject,ProjectFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,10 +85,10 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                        if(true == request.ChildrenIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
-                        }
+                if(true == request.ChildrenIds?.Any())
+                {
+                    entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Client) && !DocTools.IsNullOrEmpty(request.Client.Id))
                 {
                     entities = entities.Where(en => en.Client.Id == request.Client.Id );
@@ -164,12 +165,12 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
                 }
-                        if(true == request.TimeCardsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.TimeCards.Any(r => r.Id.In(request.TimeCardsIds)));
-                        }
+                if(true == request.TimeCardsIds?.Any())
+                {
+                    entities = entities.Where(en => en.TimeCards.Any(r => r.Id.In(request.TimeCardsIds)));
+                }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityProject,ProjectSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -187,18 +188,6 @@ namespace Services.API
 
         public object Get(ProjectSearch request) => GetSearchResultWithCache<Project,DocEntityProject,ProjectSearch>(DocConstantModelName.PROJECT, request, _ExecSearch);
 
-        public object Post(ProjectVersion request) => Get(request);
-
-        public object Get(ProjectVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(Project request) => GetEntityWithCache<Project>(DocConstantModelName.PROJECT, request, GetProject);
         private Project _AssignValues(Project request, DocConstantPermission permission, Session session)
         {
@@ -211,7 +200,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Project ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Project>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -824,158 +813,42 @@ namespace Services.API
                 });
             });
         }
-        public object Get(ProjectJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
+        public object Get(ProjectJunction request) =>
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "project":
-                    ret = _GetProjectProject(request, skip, take);
-                    break;
-                case "timecard":
-                    ret = _GetProjectTimeCard(request, skip, take);
-                    break;
+                    case "project":
+                        return GetJunctionSearchResult<Project, DocEntityProject, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Children", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
+                    case "timecard":
+                        return GetJunctionSearchResult<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request, (ss) => HostContext.ResolveService<TimeCardService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
-        public object Get(ProjectJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
+        public object Post(ProjectJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
+                    case "timecard":
+                        return AddJunction<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
 
-        private object _GetProjectProject(ProjectJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Project>(Dto.Project.Fields, request.VisibleFields);
-             var en = DocEntityProject.GetProject(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PROJECT, columnName: "Children", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Project and Project");
-             return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityProject,Project>(new List<Project>());
-        }
-
-        private object _GetProjectTimeCard(ProjectJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<TimeCard>(Dto.TimeCard.Fields, request.VisibleFields);
-             var en = DocEntityProject.GetProject(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PROJECT, columnName: "TimeCards", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Project and TimeCard");
-             return en?.TimeCards.Take(take).Skip(skip).ConvertFromEntityList<DocEntityTimeCard,TimeCard>(new List<TimeCard>());
-        }
-        
-        public object Post(ProjectJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(ProjectJunction request) =>
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "timecard":
-                    ret = _PostProjectTimeCard(request);
-                    break;
+                    case "timecard":
+                        return RemoveJunction<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _PostProjectTimeCard(ProjectJunction request)
-        {
-            var entity = DocEntityProject.GetProject(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Project found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Project");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTimeCard.GetTimeCard(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.TIMECARD, columnName: "TimeCards")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the TimeCards property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Project with objects that do not exist. No matching TimeCard could be found for {id}.");
-                entity.TimeCards.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(ProjectJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                case "timecard":
-                    ret = _DeleteProjectTimeCard(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-
-
-        private object _DeleteProjectTimeCard(ProjectJunction request)
-        {
-            var entity = DocEntityProject.GetProject(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Project found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Project");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityTimeCard.GetTimeCard(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.TIMECARD, columnName: "TimeCards"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Project and TimeCard");
-                if(null != relationship && false == relationship.IsRemoved) entity.TimeCards.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Project GetProject(Project request)
         {
@@ -997,21 +870,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(ProjectIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityProject>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }
