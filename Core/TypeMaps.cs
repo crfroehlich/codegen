@@ -22,6 +22,9 @@ namespace Services.Schema
     {
         public static List<TypeMap> Maps { get; } = new List<TypeMap>
         {
+            new TypeMap() { SchemaName = typeof(DocEntityDataTab).FullName, TypeId = 20265, TableName = DocConstantModelName.DATATAB, ClassName = "DataTab", DtoName = nameof(DataTab) },
+            new TypeMap() { SchemaName = typeof(DocEntityDataProperty).FullName, TypeId = 20255, TableName = DocConstantModelName.DATAPROPERTY, ClassName = "DataProperty", DtoName = nameof(DataProperty) },
+            new TypeMap() { SchemaName = typeof(DocEntityDataClass).FullName, TypeId = 20235, TableName = DocConstantModelName.DATACLASS, ClassName = "DataClass", DtoName = nameof(DataClass) },
             new TypeMap() { SchemaName = typeof(DocEntityProject).FullName, TypeId = 20135, TableName = DocConstantModelName.PROJECT, ClassName = "Project", DtoName = nameof(Project) },
             new TypeMap() { SchemaName = typeof(DocEntityComparator).FullName, TypeId = 20035, TableName = DocConstantModelName.COMPARATOR, ClassName = "Comparator", DtoName = nameof(Comparator) },
             new TypeMap() { SchemaName = typeof(DocEntityBackgroundTaskItem).FullName, TypeId = 19935, TableName = DocConstantModelName.BACKGROUNDTASKITEM, ClassName = "BackgroundTaskItem", DtoName = nameof(BackgroundTaskItem) },

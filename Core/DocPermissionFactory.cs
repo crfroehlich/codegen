@@ -39,6 +39,12 @@ namespace Services.Core
                   return requestedFields.Any() ? Attribute.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : Attribute.Fields;
                 case "attributeinterval":
                   return requestedFields.Any() ? AttributeInterval.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : AttributeInterval.Fields;
+                case "dataclass":
+                  return requestedFields.Any() ? DataClass.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : DataClass.Fields;
+                case "dataproperty":
+                  return requestedFields.Any() ? DataProperty.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : DataProperty.Fields;
+                case "datatab":
+                  return requestedFields.Any() ? DataTab.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : DataTab.Fields;
                 case "datetimedto":
                   return requestedFields.Any() ? DateTimeDto.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : DateTimeDto.Fields;
                 case "importdata":

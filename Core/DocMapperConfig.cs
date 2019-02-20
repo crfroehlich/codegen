@@ -252,6 +252,9 @@ namespace Services.Core
             cfg.AddProfile<ClientMapper>();
             cfg.AddProfile<ComparatorMapper>();
             cfg.AddProfile<DatabaseVersionMapper>();
+            cfg.AddProfile<DataClassMapper>();
+            cfg.AddProfile<DataPropertyMapper>();
+            cfg.AddProfile<DataTabMapper>();
             cfg.AddProfile<DefaultMapper>();
             cfg.AddProfile<DivisionMapper>();
             cfg.AddProfile<DocumentMapper>();

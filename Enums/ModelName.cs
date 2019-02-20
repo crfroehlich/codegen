@@ -47,6 +47,12 @@ namespace Services.Enums
         COMPARATOR,
         [EnumMember(Value = DocConstantModelName.DATABASEVERSION)]
         DATABASEVERSION,
+        [EnumMember(Value = DocConstantModelName.DATACLASS)]
+        DATACLASS,
+        [EnumMember(Value = DocConstantModelName.DATAPROPERTY)]
+        DATAPROPERTY,
+        [EnumMember(Value = DocConstantModelName.DATATAB)]
+        DATATAB,
         [EnumMember(Value = DocConstantModelName.DATETIME)]
         DATETIME,
         [EnumMember(Value = DocConstantModelName.DEFAULT)]
@@ -186,6 +192,9 @@ namespace Services.Enums
         public const string CLIENT = "Client";
         public const string COMPARATOR = "Comparator";
         public const string DATABASEVERSION = "DatabaseVersion";
+        public const string DATACLASS = "DataClass";
+        public const string DATAPROPERTY = "DataProperty";
+        public const string DATATAB = "DataTab";
         public const string DATETIME = "DateTime";
         public const string DEFAULT = "Default";
         public const string DIVISION = "Division";
