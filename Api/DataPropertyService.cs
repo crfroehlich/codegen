@@ -208,10 +208,10 @@ namespace Services.API
                     entities = entities.Where(en => request.Order.Value == en.Order);
                 if(request.Precision.HasValue)
                     entities = entities.Where(en => request.Precision.Value == en.Precision);
-                if(!DocTools.IsNullOrEmpty(request.RelationshipOnOwnerRemove))
-                    entities = entities.Where(en => request.RelationshipOnOwnerRemove.Equals(en.RelationshipOnOwnerRemove));
-                if(!DocTools.IsNullOrEmpty(request.RelationshipOnTargetRemove))
-                    entities = entities.Where(en => request.RelationshipOnTargetRemove.Equals(en.RelationshipOnTargetRemove));
+                if(request.RelationshipOnOwnerRemove.HasValue)
+                    entities = entities.Where(en => request.RelationshipOnOwnerRemove.Value == en.RelationshipOnOwnerRemove);
+                if(request.RelationshipOnTargetRemove.HasValue)
+                    entities = entities.Where(en => request.RelationshipOnTargetRemove.Value == en.RelationshipOnTargetRemove);
                 if(!DocTools.IsNullOrEmpty(request.RelationshipPairTo) && !DocTools.IsNullOrEmpty(request.RelationshipPairTo.Id))
                 {
                     entities = entities.Where(en => en.RelationshipPairTo.Id == request.RelationshipPairTo.Id );
@@ -242,8 +242,8 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.TargetAlias))
                     entities = entities.Where(en => en.TargetAlias.Contains(request.TargetAlias));
-                if(!DocTools.IsNullOrEmpty(request.Type))
-                    entities = entities.Where(en => request.Type.Equals(en.Type));
+                if(request.Type.HasValue)
+                    entities = entities.Where(en => request.Type.Value == en.Type);
                 if(!DocTools.IsNullOrEmpty(request.UIType))
                     entities = entities.Where(en => en.UIType.Contains(request.UIType));
 
@@ -585,20 +585,20 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Precision));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<OnRemoveAction>(currentUser, request, pRelationshipOnOwnerRemove, permission, DocConstantModelName.DATAPROPERTY, nameof(request.RelationshipOnOwnerRemove)))
+            if (DocPermissionFactory.IsRequestedHasPermission<OnRemoveAction?>(currentUser, request, pRelationshipOnOwnerRemove, permission, DocConstantModelName.DATAPROPERTY, nameof(request.RelationshipOnOwnerRemove)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRelationshipOnOwnerRemove, entity.RelationshipOnOwnerRemove, nameof(request.RelationshipOnOwnerRemove)))
+                if(DocPermissionFactory.IsRequested(request, (int?) pRelationshipOnOwnerRemove, (int?) entity.RelationshipOnOwnerRemove, nameof(request.RelationshipOnOwnerRemove)))
                     entity.RelationshipOnOwnerRemove = pRelationshipOnOwnerRemove;
-                if(DocPermissionFactory.IsRequested<OnRemoveAction>(request, pRelationshipOnOwnerRemove, nameof(request.RelationshipOnOwnerRemove)) && !request.VisibleFields.Matches(nameof(request.RelationshipOnOwnerRemove), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<OnRemoveAction?>(request, pRelationshipOnOwnerRemove, nameof(request.RelationshipOnOwnerRemove)) && !request.VisibleFields.Matches(nameof(request.RelationshipOnOwnerRemove), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.RelationshipOnOwnerRemove));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<OnRemoveAction>(currentUser, request, pRelationshipOnTargetRemove, permission, DocConstantModelName.DATAPROPERTY, nameof(request.RelationshipOnTargetRemove)))
+            if (DocPermissionFactory.IsRequestedHasPermission<OnRemoveAction?>(currentUser, request, pRelationshipOnTargetRemove, permission, DocConstantModelName.DATAPROPERTY, nameof(request.RelationshipOnTargetRemove)))
             {
-                if(DocPermissionFactory.IsRequested(request, pRelationshipOnTargetRemove, entity.RelationshipOnTargetRemove, nameof(request.RelationshipOnTargetRemove)))
+                if(DocPermissionFactory.IsRequested(request, (int?) pRelationshipOnTargetRemove, (int?) entity.RelationshipOnTargetRemove, nameof(request.RelationshipOnTargetRemove)))
                     entity.RelationshipOnTargetRemove = pRelationshipOnTargetRemove;
-                if(DocPermissionFactory.IsRequested<OnRemoveAction>(request, pRelationshipOnTargetRemove, nameof(request.RelationshipOnTargetRemove)) && !request.VisibleFields.Matches(nameof(request.RelationshipOnTargetRemove), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<OnRemoveAction?>(request, pRelationshipOnTargetRemove, nameof(request.RelationshipOnTargetRemove)) && !request.VisibleFields.Matches(nameof(request.RelationshipOnTargetRemove), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.RelationshipOnTargetRemove));
                 }
@@ -657,11 +657,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.TargetAlias));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DataType>(currentUser, request, pType, permission, DocConstantModelName.DATAPROPERTY, nameof(request.Type)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DataType?>(currentUser, request, pType, permission, DocConstantModelName.DATAPROPERTY, nameof(request.Type)))
             {
-                if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
-                    entity.Type = pType;
-                if(DocPermissionFactory.IsRequested<DataType>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, (int?) pType, (int) entity.Type, nameof(request.Type)))
+                    if(null != pType)
+                        entity.Type = pType.Value;
+                if(DocPermissionFactory.IsRequested<DataType?>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Type));
                 }

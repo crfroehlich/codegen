@@ -245,12 +245,12 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(RelationshipOnOwnerRemove))]
-        public OnRemoveAction RelationshipOnOwnerRemove { get; set; }
+        public OnRemoveAction? RelationshipOnOwnerRemove { get; set; }
 
 
         [Field()]
         [FieldMapping(nameof(RelationshipOnTargetRemove))]
-        public OnRemoveAction RelationshipOnTargetRemove { get; set; }
+        public OnRemoveAction? RelationshipOnTargetRemove { get; set; }
 
 
         [Field()]

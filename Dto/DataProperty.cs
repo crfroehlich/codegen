@@ -164,12 +164,12 @@ namespace Services.Dto
         public int? Precision { get; set; }
 
 
-        [ApiMember(Name = nameof(RelationshipOnOwnerRemove), Description = "OnRemoveAction", IsRequired = false)]
-        public OnRemoveAction RelationshipOnOwnerRemove { get; set; }
+        [ApiMember(Name = nameof(RelationshipOnOwnerRemove), Description = "OnRemoveAction?", IsRequired = false)]
+        public OnRemoveAction? RelationshipOnOwnerRemove { get; set; }
 
 
-        [ApiMember(Name = nameof(RelationshipOnTargetRemove), Description = "OnRemoveAction", IsRequired = false)]
-        public OnRemoveAction RelationshipOnTargetRemove { get; set; }
+        [ApiMember(Name = nameof(RelationshipOnTargetRemove), Description = "OnRemoveAction?", IsRequired = false)]
+        public OnRemoveAction? RelationshipOnTargetRemove { get; set; }
 
 
         [ApiMember(Name = nameof(RelationshipPairTo), Description = "DataProperty", IsRequired = false)]
@@ -202,8 +202,8 @@ namespace Services.Dto
         public string TargetAlias { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "DataType", IsRequired = false)]
-        public DataType Type { get; set; }
+        [ApiMember(Name = nameof(Type), Description = "DataType?", IsRequired = false)]
+        public DataType? Type { get; set; }
 
 
         [ApiMember(Name = nameof(UIType), Description = "string", IsRequired = false)]
@@ -308,8 +308,8 @@ namespace Services.Dto
         public string Name { get; set; }
         public int? Order { get; set; }
         public int? Precision { get; set; }
-        public OnRemoveAction RelationshipOnOwnerRemove { get; set; }
-        public OnRemoveAction RelationshipOnTargetRemove { get; set; }
+        public OnRemoveAction? RelationshipOnOwnerRemove { get; set; }
+        public OnRemoveAction? RelationshipOnTargetRemove { get; set; }
         public Reference RelationshipPairTo { get; set; }
         public List<int> RelationshipPairToIds { get; set; }
         public int? Scale { get; set; }
@@ -319,7 +319,7 @@ namespace Services.Dto
         public Reference Target { get; set; }
         public List<int> TargetIds { get; set; }
         public string TargetAlias { get; set; }
-        public DataType Type { get; set; }
+        public DataType? Type { get; set; }
         public string UIType { get; set; }
     }
 
