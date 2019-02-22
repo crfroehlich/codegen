@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -112,10 +113,9 @@ namespace Services.Dto
         #endregion Fields
     }
     
-    [Route("/valuetype", "GET")]
-    [Route("/valuetype/search", "GET, POST, DELETE")]
-    public partial class ValueTypeSearch : Search<ValueType>
+    public partial class ValueTypeSearchBase : Search<ValueType>
     {
+        public int? Id { get; set; }
         public Reference FieldType { get; set; }
         public List<int> FieldTypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Binary",@"Continuous",@"Count",@"Individual",@"Kaplan-Meier",@"Range",@"Rate",@"Yes/No/Na"})]
@@ -125,9 +125,17 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"AssociationMeasure",@"Boolean",@"CalendarDate",@"CalendarDates",@"Contact",@"DateTime",@"DateTimeRange",@"Decimal",@"DecimalRange",@"DesignNestedStudyIdLink",@"EventCounts",@"Facility",@"FixedDoseIntervention",@"Flag",@"Funding",@"Integer",@"Interval",@"Intervals",@"Lookup",@"Memo",@"NPersons",@"Participant",@"Participants",@"PopulationAnalyzed",@"PValue",@"Rate",@"SettingLocation",@"SettingLocationTotal",@"StudyDoc",@"StudyObjective",@"StudyReference",@"SubgroupDescriptor",@"Timepoint",@"Timepoints",@"UncollectedValue",@"UnitRange",@"Units",@"UnitsRange",@"UnitValue",@"YesNoNa"})]
         public List<string> NameNames { get; set; }
     }
-    
+
+    [Route("/valuetype", "GET")]
+    [Route("/valuetype/version", "GET, POST")]
+    [Route("/valuetype/search", "GET, POST, DELETE")]
+    public partial class ValueTypeSearch : ValueTypeSearchBase
+    {
+    }
+
     public class ValueTypeFullTextSearch
     {
+        public ValueTypeFullTextSearch() {}
         private ValueTypeSearch _request;
         public ValueTypeFullTextSearch(ValueTypeSearch request) => _request = request;
         
@@ -143,15 +151,7 @@ namespace Services.Dto
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ValueType.Name))); }
     }
 
-    [Route("/valuetype/version", "GET, POST")]
-    public partial class ValueTypeVersion : ValueTypeSearch {}
-
     [Route("/valuetype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ValueTypeBatch : List<ValueType> { }
 
-    [Route("/admin/valuetype/ids", "GET, POST")]
-    public class ValueTypeIds
-    {
-        public bool All { get; set; }
-    }
 }

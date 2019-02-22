@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityLookupTableEnum> _ExecSearch(LookupTableEnumSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<LookupTableEnum, LookupTableEnumSearch>(request);
             IQueryable<DocEntityLookupTableEnum> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableEnumFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityLookupTableEnum,LookupTableEnumFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,14 +85,20 @@ namespace Services.API
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
 
-                if(request.IsBindable.HasValue)
-                    entities = entities.Where(en => request.IsBindable.Value == en.IsBindable);
-                if(request.IsGlobal.HasValue)
-                    entities = entities.Where(en => request.IsGlobal.Value == en.IsGlobal);
+                if(true == request.IsBindable?.Any())
+                {
+                    if(request.IsBindable.Any(v => v == null)) entities = entities.Where(en => en.IsBindable.In(request.IsBindable) || en.IsBindable == null);
+                    else entities = entities.Where(en => en.IsBindable.In(request.IsBindable));
+                }
+                if(true == request.IsGlobal?.Any())
+                {
+                    if(request.IsGlobal.Any(v => v == null)) entities = entities.Where(en => en.IsGlobal.In(request.IsGlobal) || en.IsGlobal == null);
+                    else entities = entities.Where(en => en.IsGlobal.In(request.IsGlobal));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityLookupTableEnum,LookupTableEnumSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -109,18 +116,6 @@ namespace Services.API
 
         public object Get(LookupTableEnumSearch request) => GetSearchResultWithCache<LookupTableEnum,DocEntityLookupTableEnum,LookupTableEnumSearch>(DocConstantModelName.LOOKUPTABLEENUM, request, _ExecSearch);
 
-        public object Post(LookupTableEnumVersion request) => Get(request);
-
-        public object Get(LookupTableEnumVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(LookupTableEnum request) => GetEntityWithCache<LookupTableEnum>(DocConstantModelName.LOOKUPTABLEENUM, request, GetLookupTableEnum);
         private LookupTableEnum _AssignValues(LookupTableEnum request, DocConstantPermission permission, Session session)
         {
@@ -133,7 +128,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             LookupTableEnum ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<LookupTableEnum>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -441,21 +436,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(LookupTableEnumIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityLookupTableEnum>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

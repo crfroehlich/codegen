@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityReleaseStatus> _ExecSearch(ReleaseStatusSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<ReleaseStatus, ReleaseStatusSearch>(request);
             IQueryable<DocEntityReleaseStatus> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ReleaseStatusFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityReleaseStatus,ReleaseStatusFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -95,7 +96,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.Version))
                     entities = entities.Where(en => en.Version.Contains(request.Version));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityReleaseStatus,ReleaseStatusSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -113,18 +114,6 @@ namespace Services.API
 
         public List<ReleaseStatus> Get(ReleaseStatusSearch request) => GetSearchResult<ReleaseStatus,DocEntityReleaseStatus,ReleaseStatusSearch>(DocConstantModelName.RELEASESTATUS, request, _ExecSearch);
 
-        public object Post(ReleaseStatusVersion request) => Get(request);
-
-        public object Get(ReleaseStatusVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public ReleaseStatus Get(ReleaseStatus request) => GetEntity<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, request, GetReleaseStatus);
         private ReleaseStatus _AssignValues(ReleaseStatus request, DocConstantPermission permission, Session session)
         {
@@ -137,7 +126,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             ReleaseStatus ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<ReleaseStatus>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -509,21 +498,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(ReleaseStatusIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityReleaseStatus>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -145,10 +146,9 @@ namespace Services.Dto
     
     [Route("/Help/{Id}/copy", "POST")]
     public partial class HelpCopy : Help {}
-    [Route("/help", "GET")]
-    [Route("/help/search", "GET, POST, DELETE")]
-    public partial class HelpSearch : Search<Help>
+    public partial class HelpSearchBase : Search<Help>
     {
+        public int? Id { get; set; }
         public string ConfluenceId { get; set; }
         public string Description { get; set; }
         public string Icon { get; set; }
@@ -161,9 +161,17 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Sidebar",@"Dialog",@"Manual",@"Section"})]
         public List<string> TypeNames { get; set; }
     }
-    
+
+    [Route("/help", "GET")]
+    [Route("/help/version", "GET, POST")]
+    [Route("/help/search", "GET, POST, DELETE")]
+    public partial class HelpSearch : HelpSearchBase
+    {
+    }
+
     public class HelpFullTextSearch
     {
+        public HelpFullTextSearch() {}
         private HelpSearch _request;
         public HelpFullTextSearch(HelpSearch request) => _request = request;
         
@@ -185,48 +193,12 @@ namespace Services.Dto
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Type))); }
     }
 
-    [Route("/help/version", "GET, POST")]
-    public partial class HelpVersion : HelpSearch {}
-
     [Route("/help/batch", "DELETE, PATCH, POST, PUT")]
     public partial class HelpBatch : List<Help> { }
 
-    [Route("/help/{Id}/page", "GET, POST, DELETE")]
-    [Route("/help/{Id}/scope", "GET, POST, DELETE")]
-    public class HelpJunction : Search<Help>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/help/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/help/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class HelpJunction : HelpSearchBase {}
 
 
-        public HelpJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/help/{Id}/page/version", "GET")]
-    [Route("/help/{Id}/scope/version", "GET")]
-    public class HelpJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/help/ids", "GET, POST")]
-    public class HelpIds
-    {
-        public bool All { get; set; }
-    }
 }

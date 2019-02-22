@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -131,10 +132,9 @@ namespace Services.Dto
     
     [Route("/UnitValue/{Id}/copy", "POST")]
     public partial class UnitValueCopy : UnitValue {}
-    [Route("/unitvalue", "GET")]
-    [Route("/unitvalue/search", "GET, POST, DELETE")]
-    public partial class UnitValueSearch : Search<UnitValue>
+    public partial class UnitValueSearchBase : Search<UnitValue>
     {
+        public int? Id { get; set; }
         public Reference EqualityOperator { get; set; }
         public List<int> EqualityOperatorIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"~=",@"~>",@"~>=",@"~<",@"~<=",@"=",@">",@">=",@"≥",@"<",@"<=",@"≤",@"!="})]
@@ -145,9 +145,17 @@ namespace Services.Dto
         public Reference Unit { get; set; }
         public List<int> UnitIds { get; set; }
     }
-    
+
+    [Route("/unitvalue", "GET")]
+    [Route("/unitvalue/version", "GET, POST")]
+    [Route("/unitvalue/search", "GET, POST, DELETE")]
+    public partial class UnitValueSearch : UnitValueSearchBase
+    {
+    }
+
     public class UnitValueFullTextSearch
     {
+        public UnitValueFullTextSearch() {}
         private UnitValueSearch _request;
         public UnitValueFullTextSearch(UnitValueSearch request) => _request = request;
         
@@ -167,44 +175,12 @@ namespace Services.Dto
         public bool doUnit { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitValue.Unit))); }
     }
 
-    [Route("/unitvalue/version", "GET, POST")]
-    public partial class UnitValueVersion : UnitValueSearch {}
-
     [Route("/unitvalue/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitValueBatch : List<UnitValue> { }
 
-    public class UnitValueJunction : Search<UnitValue>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/unitvalue/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/unitvalue/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class UnitValueJunction : UnitValueSearchBase {}
 
 
-        public UnitValueJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    public class UnitValueJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/unitvalue/ids", "GET, POST")]
-    public class UnitValueIds
-    {
-        public bool All { get; set; }
-    }
 }

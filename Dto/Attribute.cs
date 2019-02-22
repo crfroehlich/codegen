@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -136,10 +137,9 @@ namespace Services.Dto
     
     [Route("/Attribute/{Id}/copy", "POST")]
     public partial class AttributeCopy : Attribute {}
-    [Route("/attribute", "GET")]
-    [Route("/attribute/search", "GET, POST, DELETE")]
-    public partial class AttributeSearch : Search<Attribute>
+    public partial class AttributeSearchBase : Search<Attribute>
     {
+        public int? Id { get; set; }
         public Reference AttributeName { get; set; }
         public List<int> AttributeNameIds { get; set; }
         public List<string> AttributeNameNames { get; set; }
@@ -149,14 +149,25 @@ namespace Services.Dto
         public List<string> AttributeTypeNames { get; set; }
         public Reference Interval { get; set; }
         public List<int> IntervalIds { get; set; }
-        public bool? IsCharacteristic { get; set; }
-        public bool? IsOutcome { get; set; }
-        public bool? IsPositive { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsCharacteristic { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsOutcome { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
+        public List<bool?> IsPositive { get; set; }
         public string UniqueKey { get; set; }
     }
-    
+
+    [Route("/attribute", "GET")]
+    [Route("/attribute/version", "GET, POST")]
+    [Route("/attribute/search", "GET, POST, DELETE")]
+    public partial class AttributeSearch : AttributeSearchBase
+    {
+    }
+
     public class AttributeFullTextSearch
     {
+        public AttributeFullTextSearch() {}
         private AttributeSearch _request;
         public AttributeFullTextSearch(AttributeSearch request) => _request = request;
         
@@ -178,15 +189,7 @@ namespace Services.Dto
         public bool doValueType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Attribute.ValueType))); }
     }
 
-    [Route("/attribute/version", "GET, POST")]
-    public partial class AttributeVersion : AttributeSearch {}
-
     [Route("/attribute/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AttributeBatch : List<Attribute> { }
 
-    [Route("/admin/attribute/ids", "GET, POST")]
-    public class AttributeIds
-    {
-        public bool All { get; set; }
-    }
 }
