@@ -608,9 +608,11 @@
     "UNCLEAR_DRE_ASSUMPTION": "Unclear/DRE Assumption"
   },
   "ModelName": {
-    "ENTITIES": "Entities",
+    "ENTITY": "Entities",
+    "ENTITYAUDITRECORD": "EntityAuditRecords",
     "APP": "App",
     "ATTRIBUTE": "Attribute",
+    "ATTRIBUTECATEGORY": "AttributeCategory",
     "ATTRIBUTEINTERVAL": "AttributeInterval",
     "AUDITDELTA": "AuditDelta",
     "AUDITRECORD": "AuditRecord",
@@ -622,13 +624,11 @@
     "CLIENT": "Client",
     "COMPARATOR": "Comparator",
     "DATABASEVERSION": "DatabaseVersion",
-    "DATACLASS": "DataClass",
-    "DATAPROPERTY": "DataProperty",
-    "DATATAB": "DataTab",
     "DATETIME": "DateTime",
     "DEFAULT": "Default",
     "DIVISION": "Division",
     "DOCUMENT": "Document",
+    "DOCUMENTATTRIBUTE": "DocumentAttribute",
     "DOCUMENTSET": "DocumentSet",
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
     "EVENT": "Event",
@@ -640,6 +640,7 @@
     "IMPORTDATA": "ImportData",
     "INTERVAL": "Interval",
     "INTERVENTION": "Intervention",
+    "JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET": "JctAttributeCategoryAttributeDocumentSet",
     "JUNCTION": "Junction",
     "LOCALE": "Locale",
     "LOCALELOOKUP": "LocaleLookup",
@@ -1492,8 +1493,10 @@
     "VIEW": "View"
   },
   "WorkflowStatus": {
-    "REQUESTED": "Requested",
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected",
     "COLLECTED": "Collected",
+    "REQUESTED": "Requested",
     "UNAVAILABLE": "Unavailable"
   },
   "WorkflowTaskType": {

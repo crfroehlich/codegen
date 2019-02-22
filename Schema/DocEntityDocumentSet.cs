@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -40,8 +39,7 @@ namespace Services.Schema
     public partial class DocEntityDocumentSet : DocEntityBase
     {
         private const string DOCUMENTSET_CACHE = "DocumentSetCache";
-        public const string TABLE_NAME = DocConstantModelName.DOCUMENTSET;
-        
+
         #region Constructor
         public DocEntityDocumentSet(Session session) : base(session) {}
 
@@ -49,8 +47,8 @@ namespace Services.Schema
         #endregion Constructor
 
         #region VisibleFields
-
-        protected override List<string> _visibleFields
+        private List<string> __vf;
+        private List<string> _visibleFields
         {
             get
             {
@@ -61,7 +59,11 @@ namespace Services.Schema
                 return __vf;
             }
         }
-
+        
+        public bool IsPropertyVisible(string propertyName)
+        {
+            return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
+        }
         #endregion VisibleFields
 
         #region Static Members
@@ -117,6 +119,15 @@ namespace Services.Schema
 
 
         [Field()]
+        [FieldMapping(nameof(Categories))]
+        [Association( PairTo = nameof(JctAttributeCategoryAttributeDocumentSet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
+        public DocEntitySet<DocEntityJctAttributeCategoryAttributeDocumentSet> Categories { get; private set; }
+
+
+        public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
+
+
+        [Field()]
         [FieldMapping(nameof(Characteristics))]
         public DocEntitySet<DocEntityCharacteristic> Characteristics { get; private set; }
 
@@ -126,7 +137,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Clients))]
-        [Association(PairTo = nameof(DocEntityClient.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Client.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityClient> Clients { get; private set; }
 
 
@@ -153,7 +164,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Divisions))]
-        [Association(PairTo = nameof(DocEntityDivision.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Division.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityDivision> Divisions { get; private set; }
 
 
@@ -162,7 +173,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Documents))]
-        [Association(PairTo = nameof(DocEntityDocument.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Document.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
 
 
@@ -171,7 +182,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(DocumentSets))]
-        [Association(PairTo = nameof(DocEntityDocumentSet.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(DocumentSet.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
@@ -205,7 +216,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Histories))]
-        [Association(PairTo = nameof(DocEntityDocumentSetHistory.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(DocumentSetHistory.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityDocumentSetHistory> Histories { get; private set; }
 
 
@@ -219,7 +230,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Imports))]
-        [Association(PairTo = nameof(DocEntityImportData.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(ImportData.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityImportData> Imports { get; private set; }
 
 
@@ -251,7 +262,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(NonDigitizedDocuments))]
-        [Association(PairTo = nameof(DocEntityDocument.NonDigitizedDocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Document.NonDigitizedDocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityDocument> NonDigitizedDocuments { get; private set; }
 
 
@@ -319,7 +330,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Projects))]
-        [Association(PairTo = nameof(DocEntityProject.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Project.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityProject> Projects { get; private set; }
 
 
@@ -344,7 +355,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Scopes))]
-        [Association(PairTo = nameof(DocEntityScope.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(Scope.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
@@ -378,7 +389,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Stats))]
-        [Association(PairTo = nameof(DocEntityStatsStudySet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(StatsStudySet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityStatsStudySet> Stats { get; private set; }
 
 
@@ -401,7 +412,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Users))]
-        [Association(PairTo = nameof(DocEntityUser.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(User.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
 
@@ -411,6 +422,9 @@ namespace Services.Schema
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
+
+        [Field]
+        public override Guid Hash { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
         public override int VersionNo { get; set; }
@@ -423,11 +437,27 @@ namespace Services.Schema
 
         [Field]
         public override bool Locked { get; set; }
+        private bool? _isNewlyLocked;
+        private bool? _isModified;
+        
+        private List<string> __editableFields;
+        private List<string> _editableFields 
+        {
+            get
+            {
+                if (null == __editableFields)
+                {
+                    __editableFields = _GetEditableFields();
+                }
+                return __editableFields;
+            }
+        }
         #endregion Properties
 
         #region Overrides of DocEntity
+        public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.DOCUMENTSET;
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override DocConstantModelName ModelName => MODEL_NAME;
 
         public const string CACHE_KEY_PREFIX = "FindDocumentSets";
 
@@ -437,11 +467,66 @@ namespace Services.Schema
         #endregion Overrides of DocEntity
 
         #region Entity overrides
+        protected override object AdjustFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
+        {
+            if (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name))
+            {
+                return base.AdjustFieldValue(fieldInfo, oldValue, newValue);
+            }
+            else
+            {
+                return oldValue;
+            }
+        }
+
+        ///    Called before field value is about to be changed. This event is raised only on actual change attempt (i.e. when new value differs from the current one).
+        protected override void OnSettingFieldValue(FieldInfo fieldInfo, object value)
+        {
+            if (_OnSettingFieldValue(fieldInfo, value) && (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name)))
+            {
+                base.OnSettingFieldValue(fieldInfo, value);
+            }
+        }
+
+        /// <summary>
+        ///    Called when field value has been changed.
+        /// </summary>
+        protected override void OnSetFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
+        {
+            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue)) 
+            {
+                _isNewlyLocked = true;
+            }
+            if (fieldInfo.Name != nameof(Locked) && fieldInfo.Name != nameof(Hash) && fieldInfo.Name != nameof(Id) && fieldInfo.Name != nameof(VersionNo) && fieldInfo.Name != nameof(Gestalt) && fieldInfo.Name != nameof(Created) && fieldInfo.Name != nameof(Updated))
+            {
+                _isModified = true;
+            }
+            if (_OnSetFieldValue(fieldInfo, oldValue, newValue) && (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name)))
+            {
+                base.OnSetFieldValue(fieldInfo, oldValue, newValue);
+            }
+        }
+
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
         protected override void OnRemoving()
         {
+            if (Locked) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"Locked records cannot be deleted.");
+            if (!DocPermissionFactory.HasPermission(this, null, DocConstantPermission.DELETE))
+            {
+                throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to delete this {ModelName}.");
+            }
+
+            _OnRemoving();
+            try
+            {
+                Categories.Clear(); //foreach thing in Categories en.Remove();
+            }
+            catch(Exception ex)
+            {
+                throw new DocException("Failed to delete DocumentSet in Categories delete", ex);
+            }
             try
             {
                 DocumentSets.Clear(); //foreach thing in DocumentSets en.Remove();
@@ -478,6 +563,18 @@ namespace Services.Schema
         }
 
         /// <summary>
+        ///    Called after entity marked as removed.
+        /// </summary>
+        protected override void OnRemove()
+        {
+            _OnRemove();
+            base.OnRemove();
+            FlushCache();
+        }
+
+        private bool _validated = false;
+
+        /// <summary>
         ///    Called when entity should be validated. Override this method to perform custom object validation.
         /// </summary>
         protected override void OnValidate()
@@ -498,16 +595,66 @@ namespace Services.Schema
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
+            var hash = GetGuid();
+            if(Hash != hash)
+                Hash = hash;
+
             Name = Name?.TrimAndPruneSpaces();
             OriginalDatabase = OriginalDatabase?.TrimAndPruneSpaces();
             PRISMA = PRISMA?.TrimAndPruneSpaces();
             QUOROM = QUOROM?.TrimAndPruneSpaces();
-            return base.SaveChanges(permission);
+
+            if (DocTools.IsNullOrEmpty(Created))
+            {
+                Created = DateTime.UtcNow;
+            }
+            if (DocTools.IsNullOrEmpty(Updated))
+            {
+                Updated = Created;
+            }
+            if (true == _isModified)
+            {
+                Updated = DateTime.UtcNow;
+                VersionNo += 1;
+                _OnIsModified();
+                _isModified = null;
+            }
+
+            _OnSaveChanges(permission);
+
+            if(!_validated)
+                OnValidate();
+
+            _OnSetGestalt();
+
+            //Only do permissions checks AFTER validation has finished to get better errors
+            //The transaction still hasn't completed, so if we throw then the rollback will work as expected
+            permission = permission ?? DocConstantPermission.EDIT;
+            if(!DocPermissionFactory.HasPermission(this, null, permission))
+            {
+                throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to {permission} this {ModelName}.");
+            }
+
+            return this;
         }
 
-        public override void FlushCache()
+        public override bool UnlockRecord()
         {
-            base.FlushCache();
+            var ret = DocPermissionFactory.HasPermission(this, null, DocConstantPermission.UNLOCK);
+            _OnUnlock();
+            if (!ret) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to unlock this {nameof(DocumentSet)}");
+            if (ret)
+            {
+                _isNewlyLocked = true;
+                Locked = false;
+            }
+            return ret;
+        }
+
+        public void FlushCache()
+        {
+            _OnFlushCache();
+            DocCacheClient.RemoveSearch("DocumentSet");
             DocCacheClient.RemoveById(Id);
         }
         #endregion Entity overrides
@@ -542,7 +689,32 @@ namespace Services.Schema
         }
         #endregion Validation
 
+        #region Hash
+        
+        public static Guid GetGuid(DocEntityDocumentSet thing)
+        {
+            if(thing == null) return Guid.Empty;
+            return thing.GetGuid();
+        }
+
+        /// <summary>
+        ///    Get Hash Code
+        /// </summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        public override Guid GetGuid(bool forceRefresh = false)
+        {
+            return GetGuid(this);
+        }
+        #endregion Hash
+
         #region Converters
+        public override string ToString() => _ToString();
+
+        public override Reference ToReference()
+        {
+            var ret = new Reference(Id, Name , Gestalt);
+            return _ToReference(ret);
+        }
 
         public DocumentSet ToDto() => Mapper.Map<DocEntityDocumentSet, DocumentSet>(this);
 
@@ -550,7 +722,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class DocumentSetMapper : DocMapperBase
+    public partial class DocumentSetMapper : Profile
     {
         private IMappingExpression<DocEntityDocumentSet,DocumentSet> _EntityToDto;
         private IMappingExpression<DocumentSet,DocEntityDocumentSet> _DtoToEntity;
@@ -569,6 +741,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, "Updated")))
                 .ForMember(dest => dest.AdditionalCriteria, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.AdditionalCriteria))))
                 .ForMember(dest => dest.Archived, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Archived))))
+                .ForMember(dest => dest.Categories, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Categories))))
+                .ForMember(dest => dest.CategoriesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.CategoriesCount))))
                 .ForMember(dest => dest.Characteristics, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Characteristics))))
                 .ForMember(dest => dest.CharacteristicsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.CharacteristicsCount))))
                 .ForMember(dest => dest.Clients, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Clients))))

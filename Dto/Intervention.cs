@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -122,24 +121,17 @@ namespace Services.Dto
     
     [Route("/Intervention/{Id}/copy", "POST")]
     public partial class InterventionCopy : Intervention {}
-    public partial class InterventionSearchBase : Search<Intervention>
+    [Route("/intervention", "GET")]
+    [Route("/intervention/search", "GET, POST, DELETE")]
+    public partial class InterventionSearch : Search<Intervention>
     {
-        public int? Id { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public string Name { get; set; }
         public string URI { get; set; }
     }
-
-    [Route("/intervention", "GET")]
-    [Route("/intervention/version", "GET, POST")]
-    [Route("/intervention/search", "GET, POST, DELETE")]
-    public partial class InterventionSearch : InterventionSearchBase
-    {
-    }
-
+    
     public class InterventionFullTextSearch
     {
-        public InterventionFullTextSearch() {}
         private InterventionSearch _request;
         public InterventionFullTextSearch(InterventionSearch request) => _request = request;
         
@@ -156,12 +148,46 @@ namespace Services.Dto
         public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Intervention.URI))); }
     }
 
+    [Route("/intervention/version", "GET, POST")]
+    public partial class InterventionVersion : InterventionSearch {}
+
     [Route("/intervention/batch", "DELETE, PATCH, POST, PUT")]
     public partial class InterventionBatch : List<Intervention> { }
 
-    [Route("/intervention/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/intervention/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class InterventionJunction : InterventionSearchBase {}
+    [Route("/intervention/{Id}/documentset", "GET, POST, DELETE")]
+    public class InterventionJunction : Search<Intervention>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public InterventionJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/intervention/{Id}/documentset/version", "GET")]
+    public class InterventionJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/intervention/ids", "GET, POST")]
+    public class InterventionIds
+    {
+        public bool All { get; set; }
+    }
 }

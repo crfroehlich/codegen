@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityClient> _ExecSearch(ClientSearch request)
         {
-            request = InitSearch<Client, ClientSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityClient> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ClientFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityClient,ClientFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -93,20 +92,20 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.DefaultLocale.Id.In(request.DefaultLocaleIds));
                 }
-                if(true == request.DivisionsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Divisions.Any(r => r.Id.In(request.DivisionsIds)));
-                }
-                if(true == request.DocumentSetsIds?.Any())
-                {
-                    entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
-                }
+                        if(true == request.DivisionsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Divisions.Any(r => r.Id.In(request.DivisionsIds)));
+                        }
+                        if(true == request.DocumentSetsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(true == request.ProjectsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Projects.Any(r => r.Id.In(request.ProjectsIds)));
-                }
+                        if(true == request.ProjectsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Projects.Any(r => r.Id.In(request.ProjectsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Role) && !DocTools.IsNullOrEmpty(request.Role.Id))
                 {
                     entities = entities.Where(en => en.Role.Id == request.Role.Id );
@@ -117,12 +116,12 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.SalesforceAccountId))
                     entities = entities.Where(en => en.SalesforceAccountId.Contains(request.SalesforceAccountId));
-                if(true == request.ScopesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
-                }
+                        if(true == request.ScopesIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityClient,ClientSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -140,6 +139,18 @@ namespace Services.API
 
         public object Get(ClientSearch request) => GetSearchResultWithCache<Client,DocEntityClient,ClientSearch>(DocConstantModelName.CLIENT, request, _ExecSearch);
 
+        public object Post(ClientVersion request) => Get(request);
+
+        public object Get(ClientVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Client request) => GetEntityWithCache<Client>(DocConstantModelName.CLIENT, request, GetClient);
         private Client _AssignValues(Client request, DocConstantPermission permission, Session session)
         {
@@ -152,7 +163,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Client ret = null;
-            request = _InitAssignValues<Client>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -696,60 +707,358 @@ namespace Services.API
                 });
             });
         }
-        public object Get(ClientJunction request) =>
+        public object Get(ClientJunction request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "lookuptablebinding":
-                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
-                    case "division":
-                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request, (ss) => HostContext.ResolveService<DivisionService>(Request)?.Get(ss));
-                    case "documentset":
-                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
-                    case "project":
-                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Projects", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
-                    case "scope":
-                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
-                    case "user":
-                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
-                    case "workflow":
-                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for client/{request.Id}/{request.Junction} was not found");
+                case "lookuptablebinding":
+                    ret = _GetClientLookupTableBinding(request, skip, take);
+                    break;
+                case "division":
+                    ret = _GetClientDivision(request, skip, take);
+                    break;
+                case "documentset":
+                    ret = _GetClientDocumentSet(request, skip, take);
+                    break;
+                case "project":
+                    ret = _GetClientProject(request, skip, take);
+                    break;
+                case "scope":
+                    ret = _GetClientScope(request, skip, take);
+                    break;
+                case "user":
+                    ret = _GetClientUser(request, skip, take);
+                    break;
+                case "workflow":
+                    ret = _GetClientWorkflow(request, skip, take);
+                    break;
                 }
             });
-        public object Post(ClientJunction request) =>
+            return ret;
+        }
+        
+        public object Get(ClientJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
             Execute.Run( ssn =>
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "division":
-                        return AddJunction<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
-                    case "documentset":
-                        return AddJunction<Client, DocEntityClient, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
-                    case "scope":
-                        return AddJunction<Client, DocEntityClient, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for client/{request.Id}/{request.Junction} was not found");
+                case "division":
+                    ret = GetClientDivisionVersion(request);
+                    break;
+                case "documentset":
+                    ret = GetClientDocumentSetVersion(request);
+                    break;
+                case "scope":
+                    ret = GetClientScopeVersion(request);
+                    break;
                 }
             });
+            return ret;
+        }
+        
 
-        public object Delete(ClientJunction request) =>
+        private object _GetClientLookupTableBinding(ClientJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<LookupTableBinding>(Dto.LookupTableBinding.Fields, request.VisibleFields);
+             var en = DocEntityClient.GetClient(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Bindings", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and LookupTableBinding");
+             return en?.Bindings.Take(take).Skip(skip).ConvertFromEntityList<DocEntityLookupTableBinding,LookupTableBinding>(new List<LookupTableBinding>());
+        }
+
+        private object _GetClientDivision(ClientJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Division>(Dto.Division.Fields, request.VisibleFields);
+             var en = DocEntityClient.GetClient(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Divisions", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Division");
+             return en?.Divisions.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDivision,Division>(new List<Division>());
+        }
+
+        private List<Version> GetClientDivisionVersion(ClientJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityClient.GetClient(request.Id);
+                ret = en?.Divisions.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetClientDocumentSet(ClientJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
+             var en = DocEntityClient.GetClient(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "DocumentSets", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and DocumentSet");
+             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
+        }
+
+        private List<Version> GetClientDocumentSetVersion(ClientJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityClient.GetClient(request.Id);
+                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetClientProject(ClientJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Project>(Dto.Project.Fields, request.VisibleFields);
+             var en = DocEntityClient.GetClient(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Projects", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Project");
+             return en?.Projects.Take(take).Skip(skip).ConvertFromEntityList<DocEntityProject,Project>(new List<Project>());
+        }
+
+        private object _GetClientScope(ClientJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             var en = DocEntityClient.GetClient(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Scopes", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Scope");
+             return en?.Scopes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityScope,Scope>(new List<Scope>());
+        }
+
+        private List<Version> GetClientScopeVersion(ClientJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityClient.GetClient(request.Id);
+                ret = en?.Scopes.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetClientUser(ClientJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             var en = DocEntityClient.GetClient(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Users", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and User");
+             return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
+        }
+
+        private object _GetClientWorkflow(ClientJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Workflow>(Dto.Workflow.Fields, request.VisibleFields);
+             var en = DocEntityClient.GetClient(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.CLIENT, columnName: "Workflows", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Client and Workflow");
+             return en?.Workflows.Take(take).Skip(skip).ConvertFromEntityList<DocEntityWorkflow,Workflow>(new List<Workflow>());
+        }
+        
+        public object Post(ClientJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
             Execute.Run( ssn =>
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
-                    case "division":
-                        return RemoveJunction<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
-                    case "documentset":
-                        return RemoveJunction<Client, DocEntityClient, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
-                    case "scope":
-                        return RemoveJunction<Client, DocEntityClient, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for client/{request.Id}/{request.Junction} was not found");
+                case "division":
+                    ret = _PostClientDivision(request);
+                    break;
+                case "documentset":
+                    ret = _PostClientDocumentSet(request);
+                    break;
+                case "scope":
+                    ret = _PostClientScope(request);
+                    break;
                 }
             });
+            return ret;
+        }
+
+
+        private object _PostClientDivision(ClientJunction request)
+        {
+            var entity = DocEntityClient.GetClient(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Client found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Client");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDivision.GetDivision(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DIVISION, columnName: "Divisions")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Divisions property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Client with objects that do not exist. No matching Division could be found for {id}.");
+                entity.Divisions.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostClientDocumentSet(ClientJunction request)
+        {
+            var entity = DocEntityClient.GetClient(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Client found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Client");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Client with objects that do not exist. No matching DocumentSet could be found for {id}.");
+                entity.DocumentSets.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostClientScope(ClientJunction request)
+        {
+            var entity = DocEntityClient.GetClient(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Client found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Client");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityScope.GetScope(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Scopes property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Client with objects that do not exist. No matching Scope could be found for {id}.");
+                entity.Scopes.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        public object Delete(ClientJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                case "division":
+                    ret = _DeleteClientDivision(request);
+                    break;
+                case "documentset":
+                    ret = _DeleteClientDocumentSet(request);
+                    break;
+                case "scope":
+                    ret = _DeleteClientScope(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+
+
+        private object _DeleteClientDivision(ClientJunction request)
+        {
+            var entity = DocEntityClient.GetClient(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Client found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Client");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDivision.GetDivision(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DIVISION, columnName: "Divisions"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Client and Division");
+                if(null != relationship && false == relationship.IsRemoved) entity.Divisions.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeleteClientDocumentSet(ClientJunction request)
+        {
+            var entity = DocEntityClient.GetClient(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Client found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Client");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Client and DocumentSet");
+                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeleteClientScope(ClientJunction request)
+        {
+            var entity = DocEntityClient.GetClient(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Client found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Client");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityScope.GetScope(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Client and Scope");
+                if(null != relationship && false == relationship.IsRemoved) entity.Scopes.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         private Client GetClient(Client request)
         {
@@ -771,6 +1080,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(ClientIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityClient>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

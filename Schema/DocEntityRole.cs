@@ -19,7 +19,6 @@ using System.Runtime.Serialization;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -40,8 +39,7 @@ namespace Services.Schema
     public partial class DocEntityRole : DocEntityBase
     {
         private const string ROLE_CACHE = "RoleCache";
-        public const string TABLE_NAME = DocConstantModelName.ROLE;
-        
+
         #region Constructor
         public DocEntityRole(Session session) : base(session) {}
 
@@ -49,8 +47,8 @@ namespace Services.Schema
         #endregion Constructor
 
         #region VisibleFields
-
-        protected override List<string> _visibleFields
+        private List<string> __vf;
+        private List<string> _visibleFields
         {
             get
             {
@@ -61,7 +59,11 @@ namespace Services.Schema
                 return __vf;
             }
         }
-
+        
+        public bool IsPropertyVisible(string propertyName)
+        {
+            return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
+        }
         #endregion VisibleFields
 
         #region Static Members
@@ -132,7 +134,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(FeatureSets))]
-        [Association(PairTo = nameof(DocEntityFeatureSet.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(FeatureSet.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityFeatureSet> FeatureSets { get; private set; }
 
 
@@ -169,7 +171,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Users))]
-        [Association(PairTo = nameof(DocEntityUser.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association( PairTo = nameof(User.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear )]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
 
@@ -179,6 +181,9 @@ namespace Services.Schema
 
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
+
+        [Field]
+        public override Guid Hash { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
         public override int VersionNo { get; set; }
@@ -191,11 +196,27 @@ namespace Services.Schema
 
         [Field]
         public override bool Locked { get; set; }
+        private bool? _isNewlyLocked;
+        private bool? _isModified;
+        
+        private List<string> __editableFields;
+        private List<string> _editableFields 
+        {
+            get
+            {
+                if (null == __editableFields)
+                {
+                    __editableFields = _GetEditableFields();
+                }
+                return __editableFields;
+            }
+        }
         #endregion Properties
 
         #region Overrides of DocEntity
+        public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.ROLE;
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override DocConstantModelName ModelName => MODEL_NAME;
 
         public const string CACHE_KEY_PREFIX = "FindRoles";
 
@@ -205,13 +226,72 @@ namespace Services.Schema
         #endregion Overrides of DocEntity
 
         #region Entity overrides
+        protected override object AdjustFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
+        {
+            if (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name))
+            {
+                return base.AdjustFieldValue(fieldInfo, oldValue, newValue);
+            }
+            else
+            {
+                return oldValue;
+            }
+        }
+
+        ///    Called before field value is about to be changed. This event is raised only on actual change attempt (i.e. when new value differs from the current one).
+        protected override void OnSettingFieldValue(FieldInfo fieldInfo, object value)
+        {
+            if (_OnSettingFieldValue(fieldInfo, value) && (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name)))
+            {
+                base.OnSettingFieldValue(fieldInfo, value);
+            }
+        }
+
+        /// <summary>
+        ///    Called when field value has been changed.
+        /// </summary>
+        protected override void OnSetFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
+        {
+            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue)) 
+            {
+                _isNewlyLocked = true;
+            }
+            if (fieldInfo.Name != nameof(Locked) && fieldInfo.Name != nameof(Hash) && fieldInfo.Name != nameof(Id) && fieldInfo.Name != nameof(VersionNo) && fieldInfo.Name != nameof(Gestalt) && fieldInfo.Name != nameof(Created) && fieldInfo.Name != nameof(Updated))
+            {
+                _isModified = true;
+            }
+            if (_OnSetFieldValue(fieldInfo, oldValue, newValue) && (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name)))
+            {
+                base.OnSetFieldValue(fieldInfo, oldValue, newValue);
+            }
+        }
+
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
         protected override void OnRemoving()
         {
+            if (Locked) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"Locked records cannot be deleted.");
+            if (!DocPermissionFactory.HasPermission(this, null, DocConstantPermission.DELETE))
+            {
+                throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to delete this {ModelName}.");
+            }
+
+            _OnRemoving();
             base.OnRemoving();
         }
+
+        /// <summary>
+        ///    Called after entity marked as removed.
+        /// </summary>
+        protected override void OnRemove()
+        {
+            _OnRemove();
+            base.OnRemove();
+            FlushCache();
+        }
+
+        private bool _validated = false;
 
         /// <summary>
         ///    Called when entity should be validated. Override this method to perform custom object validation.
@@ -234,14 +314,64 @@ namespace Services.Schema
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
+            var hash = GetGuid();
+            if(Hash != hash)
+                Hash = hash;
+
             Description = Description?.TrimAndPruneSpaces();
             Name = Name?.TrimAndPruneSpaces();
-            return base.SaveChanges(permission);
+
+            if (DocTools.IsNullOrEmpty(Created))
+            {
+                Created = DateTime.UtcNow;
+            }
+            if (DocTools.IsNullOrEmpty(Updated))
+            {
+                Updated = Created;
+            }
+            if (true == _isModified)
+            {
+                Updated = DateTime.UtcNow;
+                VersionNo += 1;
+                _OnIsModified();
+                _isModified = null;
+            }
+
+            _OnSaveChanges(permission);
+
+            if(!_validated)
+                OnValidate();
+
+            _OnSetGestalt();
+
+            //Only do permissions checks AFTER validation has finished to get better errors
+            //The transaction still hasn't completed, so if we throw then the rollback will work as expected
+            permission = permission ?? DocConstantPermission.EDIT;
+            if(!DocPermissionFactory.HasPermission(this, null, permission))
+            {
+                throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to {permission} this {ModelName}.");
+            }
+
+            return this;
         }
 
-        public override void FlushCache()
+        public override bool UnlockRecord()
         {
-            base.FlushCache();
+            var ret = DocPermissionFactory.HasPermission(this, null, DocConstantPermission.UNLOCK);
+            _OnUnlock();
+            if (!ret) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to unlock this {nameof(Role)}");
+            if (ret)
+            {
+                _isNewlyLocked = true;
+                Locked = false;
+            }
+            return ret;
+        }
+
+        public void FlushCache()
+        {
+            _OnFlushCache();
+            DocCacheClient.RemoveSearch("Role");
             DocCacheClient.RemoveById(Id);
         }
         #endregion Entity overrides
@@ -276,7 +406,32 @@ namespace Services.Schema
         }
         #endregion Validation
 
+        #region Hash
+        
+        public static Guid GetGuid(DocEntityRole thing)
+        {
+            if(thing == null) return Guid.Empty;
+            return thing.GetGuid();
+        }
+
+        /// <summary>
+        ///    Get Hash Code
+        /// </summary>
+        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
+        public override Guid GetGuid(bool forceRefresh = false)
+        {
+            return GetGuid(this);
+        }
+        #endregion Hash
+
         #region Converters
+        public override string ToString() => _ToString();
+
+        public override Reference ToReference()
+        {
+            var ret = new Reference(Id, Name , Gestalt);
+            return _ToReference(ret);
+        }
 
         public Role ToDto() => Mapper.Map<DocEntityRole, Role>(this);
 
@@ -284,7 +439,7 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class RoleMapper : DocMapperBase
+    public partial class RoleMapper : Profile
     {
         private IMappingExpression<DocEntityRole,Role> _EntityToDto;
         private IMappingExpression<Role,DocEntityRole> _DtoToEntity;
