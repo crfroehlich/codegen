@@ -84,6 +84,18 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.ATTRIBUTEINTERVAL, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
 
                 entities = ApplyFilters<DocEntityAttributeInterval,AttributeIntervalSearch>(request, entities);

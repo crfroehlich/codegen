@@ -84,6 +84,18 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.SCOPE, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
                 if(!DocTools.IsNullOrEmpty(request.App) && !DocTools.IsNullOrEmpty(request.App.Id))
                 {
@@ -92,11 +104,6 @@ namespace Services.API
                 if(true == request.AppIds?.Any())
                 {
                     entities = entities.Where(en => en.App.Id.In(request.AppIds));
-                }
-                if(true == request.Archived?.Any())
-                {
-                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null);
-                    else entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
                 if(true == request.BindingsIds?.Any())
                 {
@@ -229,7 +236,6 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
-            var pArchived = request.Archived;
             var pBindings = request.Bindings?.ToList();
             var pBroadcasts = request.Broadcasts?.ToList();
             var pClient = (request.Client?.Id > 0) ? DocEntityClient.GetClient(request.Client.Id) : null;
@@ -270,15 +276,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityApp>(request, pApp, nameof(request.App)) && !request.VisibleFields.Matches(nameof(request.App), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.App));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pArchived, permission, DocConstantModelName.SCOPE, nameof(request.Archived)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Archived));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityClient>(currentUser, request, pClient, permission, DocConstantModelName.SCOPE, nameof(request.Client)))
@@ -716,7 +713,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
                     var pApp = entity.App;
-                    var pArchived = entity.Archived;
                     var pBindings = entity.Bindings.ToList();
                     var pBroadcasts = entity.Broadcasts.ToList();
                     var pClient = entity.Client;
@@ -738,7 +734,6 @@ namespace Services.API
                 {
                     Hash = Guid.NewGuid()
                                 , App = pApp
-                                , Archived = pArchived
                                 , Client = pClient
                                 , Delete = pDelete
                                 , DocumentSet = pDocumentSet

@@ -84,12 +84,19 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-
-                if(true == request.Archived?.Any())
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.WORKFLOW, nameof(Reference.Archived), DocConstantPermission.VIEW))
                 {
-                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null);
-                    else entities = entities.Where(en => en.Archived.In(request.Archived));
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
+
                 if(true == request.BindingsIds?.Any())
                 {
                     entities = entities.Where(en => en.Bindings.Any(r => r.Id.In(request.BindingsIds)));
@@ -212,7 +219,6 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Workflow>(DocConstantModelName.WORKFLOW, nameof(Workflow), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pArchived = request.Archived;
             var pBindings = request.Bindings?.ToList();
             var pComments = request.Comments?.ToList();
             var pData = request.Data;
@@ -246,15 +252,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pArchived, permission, DocConstantModelName.WORKFLOW, nameof(request.Archived)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Archived));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pData, permission, DocConstantModelName.WORKFLOW, nameof(request.Data)))
             {
                 if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
@@ -759,7 +756,6 @@ namespace Services.API
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
-                    var pArchived = entity.Archived;
                     var pBindings = entity.Bindings.ToList();
                     var pComments = entity.Comments.ToList();
                     var pData = entity.Data;
@@ -784,7 +780,6 @@ namespace Services.API
                 var copy = new DocEntityWorkflow(ssn)
                 {
                     Hash = Guid.NewGuid()
-                                , Archived = pArchived
                                 , Data = pData
                                 , Description = pDescription
                                 , Name = pName

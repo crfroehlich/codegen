@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Serialization;
 
@@ -159,8 +160,13 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
+
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
+        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -256,11 +262,15 @@ namespace Services.Schema
         #endregion Converters
     }
 
+    public static partial class UniqueConstraintFilter
+    {
+        public static Expression<Func<DocEntityLookupTableBinding, bool>> LookupTableBindingIgnoreArchived() => d => d.Archived == false;
+    }
+
     public partial class LookupTableBindingMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityLookupTableBinding,LookupTableBinding> _EntityToDto;
         private IMappingExpression<LookupTableBinding,DocEntityLookupTableBinding> _DtoToEntity;
-
         public LookupTableBindingMapper()
         {
             CreateMap<DocEntitySet<DocEntityLookupTableBinding>,List<Reference>>()

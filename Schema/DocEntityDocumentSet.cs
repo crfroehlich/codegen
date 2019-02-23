@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Serialization;
 
@@ -109,11 +110,6 @@ namespace Services.Schema
         [Field(Length = int.MaxValue)]
         [FieldMapping(nameof(AdditionalCriteria))]
         public string AdditionalCriteria { get; set; }
-
-
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
-        public bool? Archived { get; set; }
 
 
         [Field()]
@@ -421,8 +417,13 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
+
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
+        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -550,11 +551,15 @@ namespace Services.Schema
         #endregion Converters
     }
 
+    public static partial class UniqueConstraintFilter
+    {
+        public static Expression<Func<DocEntityDocumentSet, bool>> DocumentSetIgnoreArchived() => d => d.Archived == false;
+    }
+
     public partial class DocumentSetMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityDocumentSet,DocumentSet> _EntityToDto;
         private IMappingExpression<DocumentSet,DocEntityDocumentSet> _DtoToEntity;
-
         public DocumentSetMapper()
         {
             CreateMap<DocEntitySet<DocEntityDocumentSet>,List<Reference>>()
@@ -568,7 +573,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, "Updated")))
                 .ForMember(dest => dest.AdditionalCriteria, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.AdditionalCriteria))))
-                .ForMember(dest => dest.Archived, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Archived))))
                 .ForMember(dest => dest.Characteristics, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Characteristics))))
                 .ForMember(dest => dest.CharacteristicsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.CharacteristicsCount))))
                 .ForMember(dest => dest.Clients, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Clients))))

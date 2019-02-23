@@ -3573,6 +3573,7 @@
       "AllVisibleFieldsByDefault": true,
       "DELETE": false,
       "Description": "<Insert Description of DataClass>",
+      "DontFlattenProperties": "Properties, Tabs",
       "GET": true,
       "ImplementService": true,
       "IsCached": true,
@@ -5148,7 +5149,7 @@
         "IsRequiredInForm": false,
         "IsUniqueConstraint": false,
         "Name": "Order",
-        "Order": 250,
+        "Order": 30,
         "SetDefaultValue": "",
         "Tab": "Data Property",
         "TabOrder": 0,
@@ -7016,24 +7017,6 @@
         "Type": "string",
         "UIType": ""
       },
-      "Archived": {
-        "DefaultValue": false,
-        "Description": "If true, this document set will not appear by default",
-        "DisplayName": "Archived",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "Name": "Archived",
-        "Order": 250,
-        "SetDefaultValue": "",
-        "Tab": "Document Set",
-        "TabOrder": 0,
-        "Type": "bool?",
-        "UIType": ""
-      },
       "Characteristics": {
         "Description": "Characteristics",
         "DisplayName": "Characteristics",
@@ -8723,25 +8706,6 @@
       "TypeId": 116
     },
     "Properties": {
-      "Archived": {
-        "DefaultValue": false,
-        "Description": "If true, this feature will not be visible in the API/Frontend",
-        "DisplayName": "Archived",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsInsertOnly": true,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "Name": "Archived",
-        "Order": 50,
-        "SetDefaultValue": "",
-        "Tab": "FeatureSet",
-        "TabOrder": 0,
-        "Type": "bool?",
-        "UIType": ""
-      },
       "Created": {
         "IsDisplayInForm": true,
         "IsDisplayInGrid": false,
@@ -15099,24 +15063,6 @@
         "Order": 31,
         "Tab": "Scope",
         "Type": "int?"
-      },
-      "Archived": {
-        "DefaultValue": false,
-        "Description": "If true, this scope set will not appear by default",
-        "DisplayName": "Archived",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "Name": "Archived",
-        "Order": 31,
-        "SetDefaultValue": "",
-        "Tab": "Scope",
-        "TabOrder": 0,
-        "Type": "bool?",
-        "UIType": ""
       },
       "Bindings": {
         "Description": "Collection of bindings on this scope",
@@ -22330,24 +22276,6 @@
     },
     "Extension": {},
     "Properties": {
-      "Archived": {
-        "DefaultValue": false,
-        "Description": "If true, this document set will not appear by default",
-        "DisplayName": "Archived",
-        "IsAudited": true,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "IsRequired": false,
-        "IsRequiredInForm": false,
-        "IsUniqueConstraint": false,
-        "Name": "Archived",
-        "Order": 42,
-        "SetDefaultValue": "",
-        "Tab": "Workflow",
-        "TabOrder": 0,
-        "Type": "bool?",
-        "UIType": ""
-      },
       "Bindings": {
         "Description": "Bindings referenced from this workflow",
         "DisplayName": "Bindings",

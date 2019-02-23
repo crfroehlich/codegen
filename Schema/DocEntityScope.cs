@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Serialization;
 
@@ -110,11 +111,6 @@ namespace Services.Schema
         [FieldMapping(nameof(App))]
         public DocEntityApp App { get; set; }
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
-
-
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
-        public bool? Archived { get; set; }
 
 
         [Field()]
@@ -233,8 +229,13 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
+
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
+        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -324,11 +325,15 @@ namespace Services.Schema
         #endregion Converters
     }
 
+    public static partial class UniqueConstraintFilter
+    {
+        public static Expression<Func<DocEntityScope, bool>> ScopeIgnoreArchived() => d => d.Archived == false;
+    }
+
     public partial class ScopeMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityScope,Scope> _EntityToDto;
         private IMappingExpression<Scope,DocEntityScope> _DtoToEntity;
-
         public ScopeMapper()
         {
             CreateMap<DocEntitySet<DocEntityScope>,List<Reference>>()
@@ -343,7 +348,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, "Updated")))
                 .ForMember(dest => dest.App, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.App))))
                 .ForMember(dest => dest.AppId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.AppId))))
-                .ForMember(dest => dest.Archived, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.Archived))))
                 .ForMember(dest => dest.Bindings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.Bindings))))
                 .ForMember(dest => dest.BindingsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.BindingsCount))))
                 .ForMember(dest => dest.Broadcasts, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.Broadcasts))))

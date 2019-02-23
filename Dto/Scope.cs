@@ -58,10 +58,6 @@ namespace Services.Dto
         public int? AppId { get; set; }
 
 
-        [ApiMember(Name = nameof(Archived), Description = "bool?", IsRequired = false)]
-        public bool? Archived { get; set; }
-
-
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
         public int? BindingsCount { get; set; }
@@ -166,7 +162,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Archived),nameof(Bindings),nameof(BindingsCount),nameof(Broadcasts),nameof(BroadcastsCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(Delete),nameof(DocumentSet),nameof(DocumentSetId),nameof(Edit),nameof(Gestalt),nameof(Help),nameof(HelpCount),nameof(IsGlobal),nameof(Locked),nameof(Synonyms),nameof(SynonymsCount),nameof(Team),nameof(TeamId),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(VariableRules),nameof(VariableRulesCount),nameof(VersionNo),nameof(View),nameof(Workflows),nameof(WorkflowsCount)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Bindings),nameof(BindingsCount),nameof(Broadcasts),nameof(BroadcastsCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(Delete),nameof(DocumentSet),nameof(DocumentSetId),nameof(Edit),nameof(Gestalt),nameof(Help),nameof(HelpCount),nameof(IsGlobal),nameof(Locked),nameof(Synonyms),nameof(SynonymsCount),nameof(Team),nameof(TeamId),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(VariableRules),nameof(VariableRulesCount),nameof(VersionNo),nameof(View),nameof(Workflows),nameof(WorkflowsCount)})]
         public new List<string> VisibleFields
         {
             get
@@ -201,8 +197,6 @@ namespace Services.Dto
         public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
-        public List<bool?> Archived { get; set; }
         public List<int> BindingsIds { get; set; }
         public List<int> BroadcastsIds { get; set; }
         public Reference Client { get; set; }
@@ -253,7 +247,6 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Updated))); }
         
         public bool doApp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.App))); }
-        public bool doArchived { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Archived))); }
         public bool doBindings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Bindings))); }
         public bool doBroadcasts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Broadcasts))); }
         public bool doClient { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Client))); }

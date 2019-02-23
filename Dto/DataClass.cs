@@ -153,7 +153,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Properties), Description = "DataProperty", IsRequired = false)]
-        public List<Reference> Properties { get; set; }
+        public List<DataProperty> Properties { get; set; }
         public int? PropertiesCount { get; set; }
 
 
@@ -166,7 +166,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Tabs), Description = "DataTab", IsRequired = false)]
-        public List<Reference> Tabs { get; set; }
+        public List<DataTab> Tabs { get; set; }
         public int? TabsCount { get; set; }
 
 

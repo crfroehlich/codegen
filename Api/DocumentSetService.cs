@@ -84,14 +84,21 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.DOCUMENTSET, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
                 if(!DocTools.IsNullOrEmpty(request.AdditionalCriteria))
                     entities = entities.Where(en => en.AdditionalCriteria.Contains(request.AdditionalCriteria));
-                if(true == request.Archived?.Any())
-                {
-                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null);
-                    else entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
                 if(true == request.CharacteristicsIds?.Any())
                 {
                     entities = entities.Where(en => en.Characteristics.Any(r => r.Id.In(request.CharacteristicsIds)));
@@ -288,7 +295,6 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAdditionalCriteria = request.AdditionalCriteria;
-            var pArchived = request.Archived;
             var pCharacteristics = request.Characteristics?.ToList();
             var pClients = request.Clients?.ToList();
             var pComparators = request.Comparators?.ToList();
@@ -360,15 +366,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pAdditionalCriteria, nameof(request.AdditionalCriteria)) && !request.VisibleFields.Matches(nameof(request.AdditionalCriteria), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.AdditionalCriteria));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pArchived, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Archived)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Archived));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pConfidential, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Confidential)))
@@ -1438,7 +1435,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
                 
                     var pAdditionalCriteria = entity.AdditionalCriteria;
-                    var pArchived = entity.Archived;
                     var pCharacteristics = entity.Characteristics.ToList();
                     var pClients = entity.Clients.ToList();
                     var pComparators = entity.Comparators.ToList();
@@ -1499,7 +1495,6 @@ namespace Services.API
                 {
                     Hash = Guid.NewGuid()
                                 , AdditionalCriteria = pAdditionalCriteria
-                                , Archived = pArchived
                                 , Confidential = pConfidential
                                 , DataCollection = pDataCollection
                                 , EvidencePortalId = pEvidencePortalId

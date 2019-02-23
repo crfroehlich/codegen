@@ -52,10 +52,6 @@ namespace Services.Dto
 
         public FeatureSetBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(Archived), Description = "bool?", IsRequired = false)]
-        public bool? Archived { get; set; }
-
-
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -99,7 +95,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Archived),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(PermissionTemplate),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(PermissionTemplate),nameof(Roles),nameof(RolesCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -130,8 +126,6 @@ namespace Services.Dto
     public partial class FeatureSetSearchBase : Search<FeatureSet>
     {
         public int? Id { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
-        public List<bool?> Archived { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }
         public string PermissionTemplate { get; set; }
@@ -159,7 +153,6 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Updated))); }
         
-        public bool doArchived { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Archived))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Description))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Name))); }
         public bool doPermissionTemplate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.PermissionTemplate))); }

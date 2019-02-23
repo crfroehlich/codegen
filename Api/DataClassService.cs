@@ -84,6 +84,18 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.DATACLASS, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
                 if(true == request.AllowDelete?.Any())
                 {
@@ -558,7 +570,7 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pProperties, permission, DocConstantModelName.DATACLASS, nameof(request.Properties)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<DataProperty>>(currentUser, request, pProperties, permission, DocConstantModelName.DATACLASS, nameof(request.Properties)))
             {
                 if (true == pProperties?.Any() )
                 {
@@ -597,12 +609,12 @@ namespace Services.API
                         entity.Properties.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pProperties, nameof(request.Properties)) && !request.VisibleFields.Matches(nameof(request.Properties), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<DataProperty>>(request, pProperties, nameof(request.Properties)) && !request.VisibleFields.Matches(nameof(request.Properties), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Properties));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTabs, permission, DocConstantModelName.DATACLASS, nameof(request.Tabs)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<DataTab>>(currentUser, request, pTabs, permission, DocConstantModelName.DATACLASS, nameof(request.Tabs)))
             {
                 if (true == pTabs?.Any() )
                 {
@@ -641,7 +653,7 @@ namespace Services.API
                         entity.Tabs.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pTabs, nameof(request.Tabs)) && !request.VisibleFields.Matches(nameof(request.Tabs), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<DataTab>>(request, pTabs, nameof(request.Tabs)) && !request.VisibleFields.Matches(nameof(request.Tabs), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Tabs));
                 }

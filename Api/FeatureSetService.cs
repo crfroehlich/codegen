@@ -84,12 +84,19 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-
-                if(true == request.Archived?.Any())
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.FEATURESET, nameof(Reference.Archived), DocConstantPermission.VIEW))
                 {
-                    if(request.Archived.Any(v => v == null)) entities = entities.Where(en => en.Archived.In(request.Archived) || en.Archived == null);
-                    else entities = entities.Where(en => en.Archived.In(request.Archived));
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
+
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(!DocTools.IsNullOrEmpty(request.Name))
@@ -136,7 +143,6 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<FeatureSet>(DocConstantModelName.FEATURESET, nameof(FeatureSet), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pArchived = request.Archived;
             var pDescription = request.Description;
             var pName = request.Name;
             var pPermissionTemplate = request.PermissionTemplate;
@@ -159,16 +165,6 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pArchived, permission, DocConstantModelName.FEATURESET, nameof(request.Archived)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Archived));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.FEATURESET, nameof(request.Description)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))

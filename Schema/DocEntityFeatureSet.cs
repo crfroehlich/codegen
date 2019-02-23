@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Serialization;
 
@@ -106,11 +107,6 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
-        public bool? Archived { get; set; }
-
-
         [Field()]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
@@ -147,8 +143,13 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
+
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
+        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -232,11 +233,15 @@ namespace Services.Schema
         #endregion Converters
     }
 
+    public static partial class UniqueConstraintFilter
+    {
+        public static Expression<Func<DocEntityFeatureSet, bool>> FeatureSetIgnoreArchived() => d => d.Archived == false;
+    }
+
     public partial class FeatureSetMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityFeatureSet,FeatureSet> _EntityToDto;
         private IMappingExpression<FeatureSet,DocEntityFeatureSet> _DtoToEntity;
-
         public FeatureSetMapper()
         {
             CreateMap<DocEntitySet<DocEntityFeatureSet>,List<Reference>>()
@@ -249,7 +254,6 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityFeatureSet,FeatureSet>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Updated")))
-                .ForMember(dest => dest.Archived, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Archived))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Description))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Name))))
                 .ForMember(dest => dest.PermissionTemplate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.PermissionTemplate))))

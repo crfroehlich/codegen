@@ -52,10 +52,6 @@ namespace Services.Dto
 
         public WorkflowBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(Archived), Description = "bool?", IsRequired = false)]
-        public bool? Archived { get; set; }
-
-
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
         public int? BindingsCount { get; set; }
@@ -161,7 +157,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Archived),nameof(Bindings),nameof(BindingsCount),nameof(Comments),nameof(CommentsCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Documents),nameof(DocumentsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Status),nameof(StatusId),nameof(Tags),nameof(TagsCount),nameof(Tasks),nameof(TasksCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(Variables),nameof(VariablesCount),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Bindings),nameof(BindingsCount),nameof(Comments),nameof(CommentsCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Documents),nameof(DocumentsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Status),nameof(StatusId),nameof(Tags),nameof(TagsCount),nameof(Tasks),nameof(TasksCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(Variables),nameof(VariablesCount),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
         public new List<string> VisibleFields
         {
             get
@@ -194,8 +190,6 @@ namespace Services.Dto
     public partial class WorkflowSearchBase : Search<Workflow>
     {
         public int? Id { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
-        public List<bool?> Archived { get; set; }
         public List<int> BindingsIds { get; set; }
         public List<int> CommentsIds { get; set; }
         public string Data { get; set; }
@@ -242,7 +236,6 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Updated))); }
         
-        public bool doArchived { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Archived))); }
         public bool doBindings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Bindings))); }
         public bool doComments { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Comments))); }
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Data))); }

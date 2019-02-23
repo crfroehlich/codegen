@@ -84,6 +84,18 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.TAG, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));

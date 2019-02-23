@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Serialization;
 
@@ -106,11 +107,6 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
-        public bool? Archived { get; set; }
-
-
         [Field()]
         [FieldMapping(nameof(Bindings))]
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
@@ -231,8 +227,13 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
+
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
+        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -355,11 +356,15 @@ namespace Services.Schema
         #endregion Converters
     }
 
+    public static partial class UniqueConstraintFilter
+    {
+        public static Expression<Func<DocEntityWorkflow, bool>> WorkflowIgnoreArchived() => d => d.Archived == false;
+    }
+
     public partial class WorkflowMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityWorkflow,Workflow> _EntityToDto;
         private IMappingExpression<Workflow,DocEntityWorkflow> _DtoToEntity;
-
         public WorkflowMapper()
         {
             CreateMap<DocEntitySet<DocEntityWorkflow>,List<Reference>>()
@@ -372,7 +377,6 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityWorkflow,Workflow>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, "Updated")))
-                .ForMember(dest => dest.Archived, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Archived))))
                 .ForMember(dest => dest.Bindings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Bindings))))
                 .ForMember(dest => dest.BindingsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.BindingsCount))))
                 .ForMember(dest => dest.Comments, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Comments))))
