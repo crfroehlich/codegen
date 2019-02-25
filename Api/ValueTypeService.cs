@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityValueType> _ExecSearch(ValueTypeSearch request)
         {
-            request = InitSearch<ValueType, ValueTypeSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityValueType> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ValueTypeFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityValueType,ValueTypeFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -83,18 +82,6 @@ namespace Services.API
                 if( !DocTools.IsNullOrEmpty( request.CreatedAfter ) )
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
-                }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.VALUETYPE, nameof(Reference.Archived), DocConstantPermission.VIEW))
-                {
-                    entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
-                else
-                {
-                    entities = entities.Where(en => !en.Archived);
-                }
-                if(true == request.Locked?.Any())
-                {
-                    entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
 
                 if(!DocTools.IsNullOrEmpty(request.FieldType) && !DocTools.IsNullOrEmpty(request.FieldType.Id))
@@ -130,7 +117,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Name.Name.In(request.NameNames));
                 }
 
-                entities = ApplyFilters<DocEntityValueType,ValueTypeSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -147,6 +134,18 @@ namespace Services.API
         public List<ValueType> Post(ValueTypeSearch request) => Get(request);
 
         public List<ValueType> Get(ValueTypeSearch request) => GetSearchResult<ValueType,DocEntityValueType,ValueTypeSearch>(DocConstantModelName.VALUETYPE, request, _ExecSearch);
+
+        public object Post(ValueTypeVersion request) => Get(request);
+
+        public object Get(ValueTypeVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
 
         public ValueType Get(ValueType request) => GetEntity<ValueType>(DocConstantModelName.VALUETYPE, request, GetValueType);
 
@@ -173,6 +172,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(ValueTypeIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityValueType>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

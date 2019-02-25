@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityPage> _ExecSearch(PageSearch request)
         {
-            request = InitSearch<Page, PageSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityPage> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new PageFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityPage,PageFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,41 +83,29 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.PAGE, nameof(Reference.Archived), DocConstantPermission.VIEW))
-                {
-                    entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
-                else
-                {
-                    entities = entities.Where(en => !en.Archived);
-                }
-                if(true == request.Locked?.Any())
-                {
-                    entities = entities.Where(en => en.Locked.In(request.Locked));
-                }
 
-                if(true == request.AppsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Apps.Any(r => r.Id.In(request.AppsIds)));
-                }
+                        if(true == request.AppsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Apps.Any(r => r.Id.In(request.AppsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
-                if(true == request.GlossaryIds?.Any())
-                {
-                    entities = entities.Where(en => en.Glossary.Any(r => r.Id.In(request.GlossaryIds)));
-                }
-                if(true == request.HelpIds?.Any())
-                {
-                    entities = entities.Where(en => en.Help.Any(r => r.Id.In(request.HelpIds)));
-                }
+                        if(true == request.GlossaryIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Glossary.Any(r => r.Id.In(request.GlossaryIds)));
+                        }
+                        if(true == request.HelpIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Help.Any(r => r.Id.In(request.HelpIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(true == request.RolesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Roles.Any(r => r.Id.In(request.RolesIds)));
-                }
+                        if(true == request.RolesIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Roles.Any(r => r.Id.In(request.RolesIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityPage,PageSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -136,6 +123,18 @@ namespace Services.API
 
         public object Get(PageSearch request) => GetSearchResultWithCache<Page,DocEntityPage,PageSearch>(DocConstantModelName.PAGE, request, _ExecSearch);
 
+        public object Post(PageVersion request) => Get(request);
+
+        public object Get(PageVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Page request) => GetEntityWithCache<Page>(DocConstantModelName.PAGE, request, GetPage);
         private Page _AssignValues(Page request, DocConstantPermission permission, Session session)
         {
@@ -148,7 +147,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Page ret = null;
-            request = _InitAssignValues<Page>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -657,58 +656,384 @@ namespace Services.API
                 });
             });
         }
-        public object Get(PageJunction request) =>
+        public object Get(PageJunction request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "app":
-                        return GetJunctionSearchResult<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request, (ss) => HostContext.ResolveService<AppService>(Request)?.Get(ss));
-                    case "glossary":
-                        return GetJunctionSearchResult<Page, DocEntityPage, DocEntityGlossary, Glossary, GlossarySearch>((int)request.Id, DocConstantModelName.GLOSSARY, "Glossary", request, (ss) => HostContext.ResolveService<GlossaryService>(Request)?.Get(ss));
-                    case "help":
-                        return GetJunctionSearchResult<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request, (ss) => HostContext.ResolveService<HelpService>(Request)?.Get(ss));
-                    case "role":
-                        return GetJunctionSearchResult<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
+                case "app":
+                    ret = _GetPageApp(request, skip, take);
+                    break;
+                case "glossary":
+                    ret = _GetPageGlossary(request, skip, take);
+                    break;
+                case "help":
+                    ret = _GetPageHelp(request, skip, take);
+                    break;
+                case "role":
+                    ret = _GetPageRole(request, skip, take);
+                    break;
                 }
             });
-        public object Post(PageJunction request) =>
+            return ret;
+        }
+        
+        public object Get(PageJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
             Execute.Run( ssn =>
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "app":
-                        return AddJunction<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
-                    case "glossary":
-                        return AddJunction<Page, DocEntityPage, DocEntityGlossary, Glossary, GlossarySearch>((int)request.Id, DocConstantModelName.GLOSSARY, "Glossary", request);
-                    case "help":
-                        return AddJunction<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
-                    case "role":
-                        return AddJunction<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
+                case "app":
+                    ret = GetPageAppVersion(request);
+                    break;
+                case "glossary":
+                    ret = GetPageGlossaryVersion(request);
+                    break;
+                case "help":
+                    ret = GetPageHelpVersion(request);
+                    break;
+                case "role":
+                    ret = GetPageRoleVersion(request);
+                    break;
                 }
             });
+            return ret;
+        }
+        
 
-        public object Delete(PageJunction request) =>
+        private object _GetPageApp(PageJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<App>(Dto.App.Fields, request.VisibleFields);
+             var en = DocEntityPage.GetPage(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Apps", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and App");
+             return en?.Apps.Take(take).Skip(skip).ConvertFromEntityList<DocEntityApp,App>(new List<App>());
+        }
+
+        private List<Version> GetPageAppVersion(PageJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityPage.GetPage(request.Id);
+                ret = en?.Apps.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetPageGlossary(PageJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Glossary>(Dto.Glossary.Fields, request.VisibleFields);
+             var en = DocEntityPage.GetPage(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Glossary", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Glossary");
+             return en?.Glossary.Take(take).Skip(skip).ConvertFromEntityList<DocEntityGlossary,Glossary>(new List<Glossary>());
+        }
+
+        private List<Version> GetPageGlossaryVersion(PageJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityPage.GetPage(request.Id);
+                ret = en?.Glossary.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetPageHelp(PageJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Help>(Dto.Help.Fields, request.VisibleFields);
+             var en = DocEntityPage.GetPage(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Help", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Help");
+             return en?.Help.Take(take).Skip(skip).ConvertFromEntityList<DocEntityHelp,Help>(new List<Help>());
+        }
+
+        private List<Version> GetPageHelpVersion(PageJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityPage.GetPage(request.Id);
+                ret = en?.Help.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetPageRole(PageJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             var en = DocEntityPage.GetPage(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.PAGE, columnName: "Roles", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Page and Role");
+             return en?.Roles.Take(take).Skip(skip).ConvertFromEntityList<DocEntityRole,Role>(new List<Role>());
+        }
+
+        private List<Version> GetPageRoleVersion(PageJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityPage.GetPage(request.Id);
+                ret = en?.Roles.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
+        public object Post(PageJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
             Execute.Run( ssn =>
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
-                    case "app":
-                        return RemoveJunction<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
-                    case "glossary":
-                        return RemoveJunction<Page, DocEntityPage, DocEntityGlossary, Glossary, GlossarySearch>((int)request.Id, DocConstantModelName.GLOSSARY, "Glossary", request);
-                    case "help":
-                        return RemoveJunction<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
-                    case "role":
-                        return RemoveJunction<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
+                case "app":
+                    ret = _PostPageApp(request);
+                    break;
+                case "glossary":
+                    ret = _PostPageGlossary(request);
+                    break;
+                case "help":
+                    ret = _PostPageHelp(request);
+                    break;
+                case "role":
+                    ret = _PostPageRole(request);
+                    break;
                 }
             });
+            return ret;
+        }
+
+
+        private object _PostPageApp(PageJunction request)
+        {
+            var entity = DocEntityPage.GetPage(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Page found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Page");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityApp.GetApp(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.APP, columnName: "Apps")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Apps property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Page with objects that do not exist. No matching App could be found for {id}.");
+                entity.Apps.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostPageGlossary(PageJunction request)
+        {
+            var entity = DocEntityPage.GetPage(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Page found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Page");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityGlossary.GetGlossary(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.GLOSSARY, columnName: "Glossary")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Glossary property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Page with objects that do not exist. No matching Glossary could be found for {id}.");
+                entity.Glossary.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostPageHelp(PageJunction request)
+        {
+            var entity = DocEntityPage.GetPage(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Page found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Page");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityHelp.GetHelp(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.HELP, columnName: "Help")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Help property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Page with objects that do not exist. No matching Help could be found for {id}.");
+                entity.Help.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostPageRole(PageJunction request)
+        {
+            var entity = DocEntityPage.GetPage(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Page found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Page");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityRole.GetRole(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "Roles")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Roles property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Page with objects that do not exist. No matching Role could be found for {id}.");
+                entity.Roles.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        public object Delete(PageJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                case "app":
+                    ret = _DeletePageApp(request);
+                    break;
+                case "glossary":
+                    ret = _DeletePageGlossary(request);
+                    break;
+                case "help":
+                    ret = _DeletePageHelp(request);
+                    break;
+                case "role":
+                    ret = _DeletePageRole(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+
+
+        private object _DeletePageApp(PageJunction request)
+        {
+            var entity = DocEntityPage.GetPage(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Page found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Page");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityApp.GetApp(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.APP, columnName: "Apps"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Page and App");
+                if(null != relationship && false == relationship.IsRemoved) entity.Apps.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeletePageGlossary(PageJunction request)
+        {
+            var entity = DocEntityPage.GetPage(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Page found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Page");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityGlossary.GetGlossary(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.GLOSSARY, columnName: "Glossary"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Page and Glossary");
+                if(null != relationship && false == relationship.IsRemoved) entity.Glossary.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeletePageHelp(PageJunction request)
+        {
+            var entity = DocEntityPage.GetPage(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Page found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Page");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityHelp.GetHelp(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.HELP, columnName: "Help"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Page and Help");
+                if(null != relationship && false == relationship.IsRemoved) entity.Help.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeletePageRole(PageJunction request)
+        {
+            var entity = DocEntityPage.GetPage(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Page found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Page");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityRole.GetRole(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "Roles"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Page and Role");
+                if(null != relationship && false == relationship.IsRemoved) entity.Roles.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         private Page GetPage(Page request)
         {
@@ -730,6 +1055,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(PageIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityPage>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

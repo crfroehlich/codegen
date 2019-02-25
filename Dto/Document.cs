@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -301,9 +300,10 @@ namespace Services.Dto
     
     [Route("/Document/{Id}/copy", "POST")]
     public partial class DocumentCopy : Document {}
-    public partial class DocumentSearchBase : Search<Document>
+    [Route("/document", "GET")]
+    [Route("/document/search", "GET, POST, DELETE")]
+    public partial class DocumentSearch : Search<Document>
     {
-        public int? Id { get; set; }
         public string Abstract { get; set; }
         public string AccessionID { get; set; }
         public string Acronym { get; set; }
@@ -362,17 +362,9 @@ namespace Services.Dto
         public List<int> VariableDataIds { get; set; }
         public string Volume { get; set; }
     }
-
-    [Route("/document", "GET")]
-    [Route("/document/version", "GET, POST")]
-    [Route("/document/search", "GET, POST, DELETE")]
-    public partial class DocumentSearch : DocumentSearchBase
-    {
-    }
-
+    
     public class DocumentFullTextSearch
     {
-        public DocumentFullTextSearch() {}
         private DocumentSearch _request;
         public DocumentFullTextSearch(DocumentSearch request) => _request = request;
         
@@ -431,12 +423,52 @@ namespace Services.Dto
         public bool doVolume { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Volume))); }
     }
 
+    [Route("/document/version", "GET, POST")]
+    public partial class DocumentVersion : DocumentSearch {}
+
     [Route("/document/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentBatch : List<Document> { }
 
-    [Route("/document/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/document/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class DocumentJunction : DocumentSearchBase {}
+    [Route("/document/{Id}/documentset", "GET, POST, DELETE")]
+    [Route("/document/{Id}/lookuptable", "GET, POST, DELETE")]
+    [Route("/document/{Id}/nondigitizeddocumentset", "GET, POST, DELETE")]
+    [Route("/document/{Id}/variableinstance", "GET, POST, DELETE")]
+    public class DocumentJunction : Search<Document>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public DocumentJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/document/{Id}/documentset/version", "GET")]
+    [Route("/document/{Id}/lookuptable/version", "GET")]
+    [Route("/document/{Id}/nondigitizeddocumentset/version", "GET")]
+    [Route("/document/{Id}/variableinstance/version", "GET")]
+    public class DocumentJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/document/ids", "GET, POST")]
+    public class DocumentIds
+    {
+        public bool All { get; set; }
+    }
 }

@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityQueueChannel> _ExecSearch(QueueChannelSearch request)
         {
-            request = InitSearch<QueueChannel, QueueChannelSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityQueueChannel> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new QueueChannelFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityQueueChannel,QueueChannelFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,24 +83,9 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.QUEUECHANNEL, nameof(Reference.Archived), DocConstantPermission.VIEW))
-                {
-                    entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
-                else
-                {
-                    entities = entities.Where(en => !en.Archived);
-                }
-                if(true == request.Locked?.Any())
-                {
-                    entities = entities.Where(en => en.Locked.In(request.Locked));
-                }
 
-                if(true == request.AutoDelete?.Any())
-                {
-                    if(request.AutoDelete.Any(v => v == null)) entities = entities.Where(en => en.AutoDelete.In(request.AutoDelete) || en.AutoDelete == null);
-                    else entities = entities.Where(en => en.AutoDelete.In(request.AutoDelete));
-                }
+                if(request.AutoDelete.HasValue)
+                    entities = entities.Where(en => request.AutoDelete.Value == en.AutoDelete);
                 if(!DocTools.IsNullOrEmpty(request.BackgroundTask) && !DocTools.IsNullOrEmpty(request.BackgroundTask.Id))
                 {
                     entities = entities.Where(en => en.BackgroundTask.Id == request.BackgroundTask.Id );
@@ -112,25 +96,16 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
-                if(true == request.Durable?.Any())
-                {
-                    if(request.Durable.Any(v => v == null)) entities = entities.Where(en => en.Durable.In(request.Durable) || en.Durable == null);
-                    else entities = entities.Where(en => en.Durable.In(request.Durable));
-                }
-                if(true == request.Enabled?.Any())
-                {
-                    if(request.Enabled.Any(v => v == null)) entities = entities.Where(en => en.Enabled.In(request.Enabled) || en.Enabled == null);
-                    else entities = entities.Where(en => en.Enabled.In(request.Enabled));
-                }
-                if(true == request.Exclusive?.Any())
-                {
-                    if(request.Exclusive.Any(v => v == null)) entities = entities.Where(en => en.Exclusive.In(request.Exclusive) || en.Exclusive == null);
-                    else entities = entities.Where(en => en.Exclusive.In(request.Exclusive));
-                }
+                if(request.Durable.HasValue)
+                    entities = entities.Where(en => request.Durable.Value == en.Durable);
+                if(request.Enabled.HasValue)
+                    entities = entities.Where(en => request.Enabled.Value == en.Enabled);
+                if(request.Exclusive.HasValue)
+                    entities = entities.Where(en => request.Exclusive.Value == en.Exclusive);
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
 
-                entities = ApplyFilters<DocEntityQueueChannel,QueueChannelSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -148,6 +123,18 @@ namespace Services.API
 
         public object Get(QueueChannelSearch request) => GetSearchResultWithCache<QueueChannel,DocEntityQueueChannel,QueueChannelSearch>(DocConstantModelName.QUEUECHANNEL, request, _ExecSearch);
 
+        public object Post(QueueChannelVersion request) => Get(request);
+
+        public object Get(QueueChannelVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(QueueChannel request) => GetEntityWithCache<QueueChannel>(DocConstantModelName.QUEUECHANNEL, request, GetQueueChannel);
         private QueueChannel _AssignValues(QueueChannel request, DocConstantPermission permission, Session session)
         {
@@ -160,7 +147,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             QueueChannel ret = null;
-            request = _InitAssignValues<QueueChannel>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -547,6 +534,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(QueueChannelIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityQueueChannel>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

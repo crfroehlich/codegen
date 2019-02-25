@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -91,6 +90,11 @@ namespace Services.Dto
         public int? EntityVersion { get; set; }
 
 
+        [ApiMember(Name = nameof(Events), Description = "Event", IsRequired = false)]
+        public List<Reference> Events { get; set; }
+        public int? EventsCount { get; set; }
+
+
         [ApiMember(Name = nameof(Impersonation), Description = "Impersonation", IsRequired = false)]
         public Reference Impersonation { get; set; }
         [ApiMember(Name = nameof(ImpersonationId), Description = "Primary Key of Impersonation", IsRequired = false)]
@@ -147,7 +151,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Action),nameof(BackgroundTask),nameof(BackgroundTaskId),nameof(ChangedOnDate),nameof(Created),nameof(CreatorId),nameof(Data),nameof(DatabaseSessionId),nameof(Deltas),nameof(DeltasCount),nameof(EntityId),nameof(EntityType),nameof(EntityVersion),nameof(Gestalt),nameof(Impersonation),nameof(ImpersonationId),nameof(Locked),nameof(TargetId),nameof(TargetType),nameof(TargetVersion),nameof(Updated),nameof(User),nameof(UserId),nameof(UserSession),nameof(UserSessionId),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Action),nameof(BackgroundTask),nameof(BackgroundTaskId),nameof(ChangedOnDate),nameof(Created),nameof(CreatorId),nameof(Data),nameof(DatabaseSessionId),nameof(Deltas),nameof(DeltasCount),nameof(EntityId),nameof(EntityType),nameof(EntityVersion),nameof(Events),nameof(EventsCount),nameof(Gestalt),nameof(Impersonation),nameof(ImpersonationId),nameof(Locked),nameof(TargetId),nameof(TargetType),nameof(TargetVersion),nameof(Updated),nameof(User),nameof(UserId),nameof(UserSession),nameof(UserSessionId),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -170,14 +174,15 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Deltas), nameof(DeltasCount)
+            nameof(Deltas), nameof(DeltasCount), nameof(Events), nameof(EventsCount)
         };
         private List<string> collections { get { return _collections; } }
     }
     
-    public partial class AuditRecordSearchBase : Search<AuditRecord>
+    [Route("/auditrecord", "GET")]
+    [Route("/auditrecord/search", "GET, POST, DELETE")]
+    public partial class AuditRecordSearch : Search<AuditRecord>
     {
-        public int? Id { get; set; }
         public string Action { get; set; }
         public Reference BackgroundTask { get; set; }
         public List<int> BackgroundTaskIds { get; set; }
@@ -190,6 +195,7 @@ namespace Services.Dto
         public int? EntityId { get; set; }
         public string EntityType { get; set; }
         public int? EntityVersion { get; set; }
+        public List<int> EventsIds { get; set; }
         public Reference Impersonation { get; set; }
         public List<int> ImpersonationIds { get; set; }
         public int? TargetId { get; set; }
@@ -200,17 +206,9 @@ namespace Services.Dto
         public Reference UserSession { get; set; }
         public List<int> UserSessionIds { get; set; }
     }
-
-    [Route("/auditrecord", "GET")]
-    [Route("/auditrecord/version", "GET, POST")]
-    [Route("/auditrecord/search", "GET, POST, DELETE")]
-    public partial class AuditRecordSearch : AuditRecordSearchBase
-    {
-    }
-
+    
     public class AuditRecordFullTextSearch
     {
-        public AuditRecordFullTextSearch() {}
         private AuditRecordSearch _request;
         public AuditRecordFullTextSearch(AuditRecordSearch request) => _request = request;
         
@@ -231,6 +229,7 @@ namespace Services.Dto
         public bool doEntityId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.EntityId))); }
         public bool doEntityType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.EntityType))); }
         public bool doEntityVersion { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.EntityVersion))); }
+        public bool doEvents { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.Events))); }
         public bool doImpersonation { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.Impersonation))); }
         public bool doTargetId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.TargetId))); }
         public bool doTargetType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.TargetType))); }
@@ -239,12 +238,48 @@ namespace Services.Dto
         public bool doUserSession { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.UserSession))); }
     }
 
+    [Route("/auditrecord/version", "GET, POST")]
+    public partial class AuditRecordVersion : AuditRecordSearch {}
+
     [Route("/auditrecord/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AuditRecordBatch : List<AuditRecord> { }
 
-    [Route("/auditrecord/{Id}/{Junction}/version", "GET, POST")]
-    [Route("/auditrecord/{Id}/{Junction}", "GET, POST, DELETE")]
-    public class AuditRecordJunction : AuditRecordSearchBase {}
+    [Route("/auditrecord/{Id}/auditdelta", "GET, POST, DELETE")]
+    [Route("/auditrecord/{Id}/event", "GET, POST, DELETE")]
+    public class AuditRecordJunction : Search<AuditRecord>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
 
 
+        public AuditRecordJunction(int id, List<int> ids)
+        {
+            this.Id = id;
+            this.Ids = ids;
+        }
+    }
+
+
+    [Route("/auditrecord/{Id}/auditdelta/version", "GET")]
+    [Route("/auditrecord/{Id}/event/version", "GET")]
+    public class AuditRecordJunctionVersion : IReturn<Version>
+    {
+        public int? Id { get; set; }
+        public List<int> Ids { get; set; }
+        public List<string> VisibleFields { get; set; }
+        public bool ShouldSerializeVisibleFields()
+        {
+            { return false; }
+        }
+    }
+    [Route("/admin/auditrecord/ids", "GET, POST")]
+    public class AuditRecordIds
+    {
+        public bool All { get; set; }
+    }
 }

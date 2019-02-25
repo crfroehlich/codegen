@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityTeam> _ExecSearch(TeamSearch request)
         {
-            request = InitSearch<Team, TeamSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityTeam> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TeamFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityTeam,TeamFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,32 +83,17 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.TEAM, nameof(Reference.Archived), DocConstantPermission.VIEW))
-                {
-                    entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
-                else
-                {
-                    entities = entities.Where(en => !en.Archived);
-                }
-                if(true == request.Locked?.Any())
-                {
-                    entities = entities.Where(en => en.Locked.In(request.Locked));
-                }
 
-                if(true == request.AdminRolesIds?.Any())
-                {
-                    entities = entities.Where(en => en.AdminRoles.Any(r => r.Id.In(request.AdminRolesIds)));
-                }
+                        if(true == request.AdminRolesIds?.Any())
+                        {
+                            entities = entities.Where(en => en.AdminRoles.Any(r => r.Id.In(request.AdminRolesIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(!DocTools.IsNullOrEmpty(request.Email))
                     entities = entities.Where(en => en.Email.Contains(request.Email));
-                if(true == request.IsInternal?.Any())
-                {
-                    if(request.IsInternal.Any(v => v == null)) entities = entities.Where(en => en.IsInternal.In(request.IsInternal) || en.IsInternal == null);
-                    else entities = entities.Where(en => en.IsInternal.In(request.IsInternal));
-                }
+                if(request.IsInternal.HasValue)
+                    entities = entities.Where(en => request.IsInternal.Value == en.IsInternal);
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
@@ -120,22 +104,22 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Owner.Id.In(request.OwnerIds));
                 }
-                if(true == request.ScopesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
-                }
+                        if(true == request.ScopesIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Slack))
                     entities = entities.Where(en => en.Slack.Contains(request.Slack));
-                if(true == request.UpdatesIds?.Any())
-                {
-                    entities = entities.Where(en => en.Updates.Any(r => r.Id.In(request.UpdatesIds)));
-                }
-                if(true == request.UsersIds?.Any())
-                {
-                    entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
-                }
+                        if(true == request.UpdatesIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Updates.Any(r => r.Id.In(request.UpdatesIds)));
+                        }
+                        if(true == request.UsersIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityTeam,TeamSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -153,6 +137,18 @@ namespace Services.API
 
         public object Get(TeamSearch request) => GetSearchResultWithCache<Team,DocEntityTeam,TeamSearch>(DocConstantModelName.TEAM, request, _ExecSearch);
 
+        public object Post(TeamVersion request) => Get(request);
+
+        public object Get(TeamVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public object Get(Team request) => GetEntityWithCache<Team>(DocConstantModelName.TEAM, request, GetTeam);
         private Team _AssignValues(Team request, DocConstantPermission permission, Session session)
         {
@@ -165,7 +161,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Team ret = null;
-            request = _InitAssignValues<Team>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -737,58 +733,384 @@ namespace Services.API
                 });
             });
         }
-        public object Get(TeamJunction request) =>
+        public object Get(TeamJunction request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "role":
-                        return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
-                    case "scope":
-                        return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
-                    case "update":
-                        return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request, (ss) => HostContext.ResolveService<UpdateService>(Request)?.Get(ss));
-                    case "user":
-                        return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
+                case "role":
+                    ret = _GetTeamRole(request, skip, take);
+                    break;
+                case "scope":
+                    ret = _GetTeamScope(request, skip, take);
+                    break;
+                case "update":
+                    ret = _GetTeamUpdate(request, skip, take);
+                    break;
+                case "user":
+                    ret = _GetTeamUser(request, skip, take);
+                    break;
                 }
             });
-        public object Post(TeamJunction request) =>
+            return ret;
+        }
+        
+        public object Get(TeamJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
             Execute.Run( ssn =>
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "role":
-                        return AddJunction<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request);
-                    case "scope":
-                        return AddJunction<Team, DocEntityTeam, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                    case "update":
-                        return AddJunction<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
-                    case "user":
-                        return AddJunction<Team, DocEntityTeam, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
+                case "role":
+                    ret = GetTeamRoleVersion(request);
+                    break;
+                case "scope":
+                    ret = GetTeamScopeVersion(request);
+                    break;
+                case "update":
+                    ret = GetTeamUpdateVersion(request);
+                    break;
+                case "user":
+                    ret = GetTeamUserVersion(request);
+                    break;
                 }
             });
+            return ret;
+        }
+        
 
-        public object Delete(TeamJunction request) =>
+        private object _GetTeamRole(TeamJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Role>(Dto.Role.Fields, request.VisibleFields);
+             var en = DocEntityTeam.GetTeam(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "AdminRoles", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Role");
+             return en?.AdminRoles.Take(take).Skip(skip).ConvertFromEntityList<DocEntityRole,Role>(new List<Role>());
+        }
+
+        private List<Version> GetTeamRoleVersion(TeamJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTeam.GetTeam(request.Id);
+                ret = en?.AdminRoles.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetTeamScope(TeamJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
+             var en = DocEntityTeam.GetTeam(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Scopes", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Scope");
+             return en?.Scopes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityScope,Scope>(new List<Scope>());
+        }
+
+        private List<Version> GetTeamScopeVersion(TeamJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTeam.GetTeam(request.Id);
+                ret = en?.Scopes.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetTeamUpdate(TeamJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Update>(Dto.Update.Fields, request.VisibleFields);
+             var en = DocEntityTeam.GetTeam(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Updates", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and Update");
+             return en?.Updates.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUpdate,Update>(new List<Update>());
+        }
+
+        private List<Version> GetTeamUpdateVersion(TeamJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTeam.GetTeam(request.Id);
+                ret = en?.Updates.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+
+        private object _GetTeamUser(TeamJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
+             var en = DocEntityTeam.GetTeam(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.TEAM, columnName: "Users", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Team and User");
+             return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
+        }
+
+        private List<Version> GetTeamUserVersion(TeamJunctionVersion request)
+        { 
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+             Execute.Run((ssn) =>
+             {
+                var en = DocEntityTeam.GetTeam(request.Id);
+                ret = en?.Users.Select(e => new Version(e.Id, e.VersionNo)).ToList();
+             });
+            return ret;
+        }
+        
+        public object Post(TeamJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
             Execute.Run( ssn =>
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
                 {
-                    case "role":
-                        return RemoveJunction<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request);
-                    case "scope":
-                        return RemoveJunction<Team, DocEntityTeam, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                    case "update":
-                        return RemoveJunction<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
-                    case "user":
-                        return RemoveJunction<Team, DocEntityTeam, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
+                case "role":
+                    ret = _PostTeamRole(request);
+                    break;
+                case "scope":
+                    ret = _PostTeamScope(request);
+                    break;
+                case "update":
+                    ret = _PostTeamUpdate(request);
+                    break;
+                case "user":
+                    ret = _PostTeamUser(request);
+                    break;
                 }
             });
+            return ret;
+        }
+
+
+        private object _PostTeamRole(TeamJunction request)
+        {
+            var entity = DocEntityTeam.GetTeam(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityRole.GetRole(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "AdminRoles")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the AdminRoles property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Team with objects that do not exist. No matching Role could be found for {id}.");
+                entity.AdminRoles.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostTeamScope(TeamJunction request)
+        {
+            var entity = DocEntityTeam.GetTeam(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityScope.GetScope(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Scopes property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Team with objects that do not exist. No matching Scope could be found for {id}.");
+                entity.Scopes.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostTeamUpdate(TeamJunction request)
+        {
+            var entity = DocEntityTeam.GetTeam(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUpdate.GetUpdate(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.UPDATE, columnName: "Updates")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Updates property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Team with objects that do not exist. No matching Update could be found for {id}.");
+                entity.Updates.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _PostTeamUser(TeamJunction request)
+        {
+            var entity = DocEntityTeam.GetTeam(request.Id);
+
+            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
+
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
+
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUser.GetUser(id);
+                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Users property.");
+                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Team with objects that do not exist. No matching User could be found for {id}.");
+                entity.Users.Add(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        public object Delete(TeamJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                case "role":
+                    ret = _DeleteTeamRole(request);
+                    break;
+                case "scope":
+                    ret = _DeleteTeamScope(request);
+                    break;
+                case "update":
+                    ret = _DeleteTeamUpdate(request);
+                    break;
+                case "user":
+                    ret = _DeleteTeamUser(request);
+                    break;
+                }
+            });
+            return ret;
+        }
+
+
+        private object _DeleteTeamRole(TeamJunction request)
+        {
+            var entity = DocEntityTeam.GetTeam(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityRole.GetRole(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.ROLE, columnName: "AdminRoles"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Team and Role");
+                if(null != relationship && false == relationship.IsRemoved) entity.AdminRoles.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeleteTeamScope(TeamJunction request)
+        {
+            var entity = DocEntityTeam.GetTeam(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityScope.GetScope(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Team and Scope");
+                if(null != relationship && false == relationship.IsRemoved) entity.Scopes.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeleteTeamUpdate(TeamJunction request)
+        {
+            var entity = DocEntityTeam.GetTeam(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUpdate.GetUpdate(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.UPDATE, columnName: "Updates"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Team and Update");
+                if(null != relationship && false == relationship.IsRemoved) entity.Updates.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
+
+        private object _DeleteTeamUser(TeamJunction request)
+        {
+            var entity = DocEntityTeam.GetTeam(request.Id);
+
+            if (null == entity)
+                throw new HttpError(HttpStatusCode.NotFound, $"No Team found for Id {request.Id}");
+            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
+                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Team");
+            foreach (var id in request.Ids)
+            {
+                var relationship = DocEntityUser.GetUser(id);
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users"))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Team and User");
+                if(null != relationship && false == relationship.IsRemoved) entity.Users.Remove(relationship);
+            }
+            entity.SaveChanges();
+            return entity.ToDto();
+        }
 
         private Team GetTeam(Team request)
         {
@@ -810,6 +1132,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(TeamIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityTeam>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

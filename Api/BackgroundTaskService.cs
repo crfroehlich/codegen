@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityBackgroundTask> _ExecSearch(BackgroundTaskSearch request)
         {
-            request = InitSearch<BackgroundTask, BackgroundTaskSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityBackgroundTask> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityBackgroundTask,BackgroundTaskFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,18 +83,6 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.BACKGROUNDTASK, nameof(Reference.Archived), DocConstantPermission.VIEW))
-                {
-                    entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
-                else
-                {
-                    entities = entities.Where(en => !en.Archived);
-                }
-                if(true == request.Locked?.Any())
-                {
-                    entities = entities.Where(en => en.Locked.In(request.Locked));
-                }
 
                 if(!DocTools.IsNullOrEmpty(request.App) && !DocTools.IsNullOrEmpty(request.App.Id))
                 {
@@ -115,48 +102,36 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
-                if(true == request.Enabled?.Any())
-                {
-                    if(request.Enabled.Any(v => v == null)) entities = entities.Where(en => en.Enabled.In(request.Enabled) || en.Enabled == null);
-                    else entities = entities.Where(en => en.Enabled.In(request.Enabled));
-                }
+                if(request.Enabled.HasValue)
+                    entities = entities.Where(en => request.Enabled.Value == en.Enabled);
                 if(request.Frequency.HasValue)
                     entities = entities.Where(en => request.Frequency.Value == en.Frequency);
                 if(request.HistoryRetention.HasValue)
                     entities = entities.Where(en => request.HistoryRetention.Value == en.HistoryRetention);
-                if(true == request.ItemsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Items.Any(r => r.Id.In(request.ItemsIds)));
-                }
+                        if(true == request.ItemsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Items.Any(r => r.Id.In(request.ItemsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.LastRunVersion))
                     entities = entities.Where(en => en.LastRunVersion.Contains(request.LastRunVersion));
-                if(true == request.LogError?.Any())
-                {
-                    if(request.LogError.Any(v => v == null)) entities = entities.Where(en => en.LogError.In(request.LogError) || en.LogError == null);
-                    else entities = entities.Where(en => en.LogError.In(request.LogError));
-                }
-                if(true == request.LogInfo?.Any())
-                {
-                    if(request.LogInfo.Any(v => v == null)) entities = entities.Where(en => en.LogInfo.In(request.LogInfo) || en.LogInfo == null);
-                    else entities = entities.Where(en => en.LogInfo.In(request.LogInfo));
-                }
+                if(request.LogError.HasValue)
+                    entities = entities.Where(en => request.LogError.Value == en.LogError);
+                if(request.LogInfo.HasValue)
+                    entities = entities.Where(en => request.LogInfo.Value == en.LogInfo);
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(request.RowsToProcessPerIteration.HasValue)
                     entities = entities.Where(en => request.RowsToProcessPerIteration.Value == en.RowsToProcessPerIteration);
-                if(true == request.RunNow?.Any())
-                {
-                    if(request.RunNow.Any(v => v == null)) entities = entities.Where(en => en.RunNow.In(request.RunNow) || en.RunNow == null);
-                    else entities = entities.Where(en => en.RunNow.In(request.RunNow));
-                }
+                if(request.RunNow.HasValue)
+                    entities = entities.Where(en => request.RunNow.Value == en.RunNow);
                 if(!DocTools.IsNullOrEmpty(request.StartAt))
                     entities = entities.Where(en => en.StartAt.Contains(request.StartAt));
-                if(true == request.TaskHistoryIds?.Any())
-                {
-                    entities = entities.Where(en => en.TaskHistory.Any(r => r.Id.In(request.TaskHistoryIds)));
-                }
+                        if(true == request.TaskHistoryIds?.Any())
+                        {
+                            entities = entities.Where(en => en.TaskHistory.Any(r => r.Id.In(request.TaskHistoryIds)));
+                        }
 
-                entities = ApplyFilters<DocEntityBackgroundTask,BackgroundTaskSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -174,6 +149,18 @@ namespace Services.API
 
         public List<BackgroundTask> Get(BackgroundTaskSearch request) => GetSearchResult<BackgroundTask,DocEntityBackgroundTask,BackgroundTaskSearch>(DocConstantModelName.BACKGROUNDTASK, request, _ExecSearch);
 
+        public object Post(BackgroundTaskVersion request) => Get(request);
+
+        public object Get(BackgroundTaskVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public BackgroundTask Get(BackgroundTask request) => GetEntity<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, request, GetBackgroundTask);
         private BackgroundTask _AssignValues(BackgroundTask request, DocConstantPermission permission, Session session)
         {
@@ -186,7 +173,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             BackgroundTask ret = null;
-            request = _InitAssignValues<BackgroundTask>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -521,19 +508,112 @@ namespace Services.API
             return ret;
         }
 
-        public object Get(BackgroundTaskJunction request) =>
+        public object Get(BackgroundTaskJunction request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "backgroundtaskitem":
-                        return GetJunctionSearchResult<BackgroundTask, DocEntityBackgroundTask, DocEntityBackgroundTaskItem, BackgroundTaskItem, BackgroundTaskItemSearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKITEM, "Items", request, (ss) => HostContext.ResolveService<BackgroundTaskItemService>(Request)?.Get(ss));
-                    case "backgroundtaskhistory":
-                        return GetJunctionSearchResult<BackgroundTask, DocEntityBackgroundTask, DocEntityBackgroundTaskHistory, BackgroundTaskHistory, BackgroundTaskHistorySearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKHISTORY, "TaskHistory", request, (ss) => HostContext.ResolveService<BackgroundTaskHistoryService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtask/{request.Id}/{request.Junction} was not found");
+                case "backgroundtaskitem":
+                    ret = _GetBackgroundTaskBackgroundTaskItem(request, skip, take);
+                    break;
+                case "backgroundtaskhistory":
+                    ret = _GetBackgroundTaskBackgroundTaskHistory(request, skip, take);
+                    break;
                 }
             });
+            return ret;
+        }
+        
+        public object Get(BackgroundTaskJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+        
+
+        private object _GetBackgroundTaskBackgroundTaskItem(BackgroundTaskJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<BackgroundTaskItem>(Dto.BackgroundTaskItem.Fields, request.VisibleFields);
+             var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "Items", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskItem");
+             return en?.Items.Take(take).Skip(skip).ConvertFromEntityList<DocEntityBackgroundTaskItem,BackgroundTaskItem>(new List<BackgroundTaskItem>());
+        }
+
+        private object _GetBackgroundTaskBackgroundTaskHistory(BackgroundTaskJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<BackgroundTaskHistory>(Dto.BackgroundTaskHistory.Fields, request.VisibleFields);
+             var en = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.BACKGROUNDTASK, columnName: "TaskHistory", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between BackgroundTask and BackgroundTaskHistory");
+             return en?.TaskHistory.Take(take).Skip(skip).ConvertFromEntityList<DocEntityBackgroundTaskHistory,BackgroundTaskHistory>(new List<BackgroundTaskHistory>());
+        }
+        
+        public object Post(BackgroundTaskJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+
+
+        public object Delete(BackgroundTaskJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+
 
         private BackgroundTask GetBackgroundTask(BackgroundTask request)
         {
@@ -555,6 +635,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(BackgroundTaskIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityBackgroundTask>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityAuditRecord> _ExecSearch(AuditRecordSearch request)
         {
-            request = InitSearch<AuditRecord, AuditRecordSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityAuditRecord> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AuditRecordFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityAuditRecord,AuditRecordFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,18 +83,6 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.AUDITRECORD, nameof(Reference.Archived), DocConstantPermission.VIEW))
-                {
-                    entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
-                else
-                {
-                    entities = entities.Where(en => !en.Archived);
-                }
-                if(true == request.Locked?.Any())
-                {
-                    entities = entities.Where(en => en.Locked.In(request.Locked));
-                }
 
                 if(!DocTools.IsNullOrEmpty(request.Action))
                     entities = entities.Where(en => en.Action.Contains(request.Action));
@@ -115,16 +102,20 @@ namespace Services.API
                     entities = entities.Where(en => en.ChangedOnDate >= request.ChangedOnDateAfter);
                 if(!DocTools.IsNullOrEmpty(request.DatabaseSessionId))
                     entities = entities.Where(en => en.DatabaseSessionId.Contains(request.DatabaseSessionId));
-                if(true == request.DeltasIds?.Any())
-                {
-                    entities = entities.Where(en => en.Deltas.Any(r => r.Id.In(request.DeltasIds)));
-                }
+                        if(true == request.DeltasIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Deltas.Any(r => r.Id.In(request.DeltasIds)));
+                        }
                 if(request.EntityId.HasValue)
                     entities = entities.Where(en => request.EntityId.Value == en.EntityId);
                 if(!DocTools.IsNullOrEmpty(request.EntityType))
                     entities = entities.Where(en => en.EntityType.Contains(request.EntityType));
                 if(request.EntityVersion.HasValue)
                     entities = entities.Where(en => request.EntityVersion.Value == en.EntityVersion);
+                        if(true == request.EventsIds?.Any())
+                        {
+                            entities = entities.Where(en => en.Events.Any(r => r.Id.In(request.EventsIds)));
+                        }
                 if(!DocTools.IsNullOrEmpty(request.Impersonation) && !DocTools.IsNullOrEmpty(request.Impersonation.Id))
                 {
                     entities = entities.Where(en => en.Impersonation.Id == request.Impersonation.Id );
@@ -156,7 +147,7 @@ namespace Services.API
                     entities = entities.Where(en => en.UserSession.Id.In(request.UserSessionIds));
                 }
 
-                entities = ApplyFilters<DocEntityAuditRecord,AuditRecordSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -174,21 +165,128 @@ namespace Services.API
 
         public List<AuditRecord> Get(AuditRecordSearch request) => GetSearchResult<AuditRecord,DocEntityAuditRecord,AuditRecordSearch>(DocConstantModelName.AUDITRECORD, request, _ExecSearch);
 
+        public object Post(AuditRecordVersion request) => Get(request);
+
+        public object Get(AuditRecordVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public AuditRecord Get(AuditRecord request) => GetEntity<AuditRecord>(DocConstantModelName.AUDITRECORD, request, GetAuditRecord);
 
 
 
-        public object Get(AuditRecordJunction request) =>
+        public object Get(AuditRecordJunction request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            object ret = null;
+            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
+            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
+                        
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-1]?.ToLower().Trim();
             Execute.Run( s => 
             {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
+                switch(method)
                 {
-                    case "auditdelta":
-                        return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityAuditDelta, AuditDelta, AuditDeltaSearch>((int)request.Id, DocConstantModelName.AUDITDELTA, "Deltas", request, (ss) => HostContext.ResolveService<AuditDeltaService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for auditrecord/{request.Id}/{request.Junction} was not found");
+                case "auditdelta":
+                    ret = _GetAuditRecordAuditDelta(request, skip, take);
+                    break;
+                case "event":
+                    ret = _GetAuditRecordEvent(request, skip, take);
+                    break;
                 }
             });
+            return ret;
+        }
+        
+        public object Get(AuditRecordJunctionVersion request)
+        {
+            if(!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
+            var ret = new List<Version>();
+            
+            var info = Request.PathInfo.Split('?')[0].Split('/');
+            var method = info[info.Length-2]?.ToLower().Trim();
+            Execute.Run( ssn =>
+            {
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+        
+
+        private object _GetAuditRecordAuditDelta(AuditRecordJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<AuditDelta>(Dto.AuditDelta.Fields, request.VisibleFields);
+             var en = DocEntityAuditRecord.GetAuditRecord(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.AUDITRECORD, columnName: "Deltas", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between AuditRecord and AuditDelta");
+             return en?.Deltas.Take(take).Skip(skip).ConvertFromEntityList<DocEntityAuditDelta,AuditDelta>(new List<AuditDelta>());
+        }
+
+        private object _GetAuditRecordEvent(AuditRecordJunction request, int skip, int take)
+        {
+             request.VisibleFields = InitVisibleFields<Event>(Dto.Event.Fields, request.VisibleFields);
+             var en = DocEntityAuditRecord.GetAuditRecord(request.Id);
+             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.AUDITRECORD, columnName: "Events", targetEntity: null))
+                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between AuditRecord and Event");
+             return en?.Events.Take(take).Skip(skip).ConvertFromEntityList<DocEntityEvent,Event>(new List<Event>());
+        }
+        
+        public object Post(AuditRecordJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+
+
+        public object Delete(AuditRecordJunction request)
+        {
+            if (request == null)
+                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if (!(request.Id > 0))
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
+            if (request.Ids == null || request.Ids.Count < 1)
+                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
+
+            object ret = null;
+
+            Execute.Run( ssn =>
+            {
+                var info = Request.PathInfo.Split('/');
+                var method = info[info.Length-1];
+                switch(method)
+                {
+                }
+            });
+            return ret;
+        }
+
 
         private AuditRecord GetAuditRecord(AuditRecord request)
         {
@@ -210,6 +308,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(AuditRecordIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityAuditRecord>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

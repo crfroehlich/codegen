@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityAttribute> _ExecSearch(AttributeSearch request)
         {
-            request = InitSearch<Attribute, AttributeSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityAttribute> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityAttribute,AttributeFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -83,18 +82,6 @@ namespace Services.API
                 if( !DocTools.IsNullOrEmpty( request.CreatedAfter ) )
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
-                }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.ATTRIBUTE, nameof(Reference.Archived), DocConstantPermission.VIEW))
-                {
-                    entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
-                else
-                {
-                    entities = entities.Where(en => !en.Archived);
-                }
-                if(true == request.Locked?.Any())
-                {
-                    entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
 
                 if(!DocTools.IsNullOrEmpty(request.AttributeName) && !DocTools.IsNullOrEmpty(request.AttributeName.Id))
@@ -137,21 +124,12 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Interval.Id.In(request.IntervalIds));
                 }
-                if(true == request.IsCharacteristic?.Any())
-                {
-                    if(request.IsCharacteristic.Any(v => v == null)) entities = entities.Where(en => en.IsCharacteristic.In(request.IsCharacteristic) || en.IsCharacteristic == null);
-                    else entities = entities.Where(en => en.IsCharacteristic.In(request.IsCharacteristic));
-                }
-                if(true == request.IsOutcome?.Any())
-                {
-                    if(request.IsOutcome.Any(v => v == null)) entities = entities.Where(en => en.IsOutcome.In(request.IsOutcome) || en.IsOutcome == null);
-                    else entities = entities.Where(en => en.IsOutcome.In(request.IsOutcome));
-                }
-                if(true == request.IsPositive?.Any())
-                {
-                    if(request.IsPositive.Any(v => v == null)) entities = entities.Where(en => en.IsPositive.In(request.IsPositive) || en.IsPositive == null);
-                    else entities = entities.Where(en => en.IsPositive.In(request.IsPositive));
-                }
+                if(request.IsCharacteristic.HasValue)
+                    entities = entities.Where(en => request.IsCharacteristic.Value == en.IsCharacteristic);
+                if(request.IsOutcome.HasValue)
+                    entities = entities.Where(en => request.IsOutcome.Value == en.IsOutcome);
+                if(request.IsPositive.HasValue)
+                    entities = entities.Where(en => request.IsPositive.Value == en.IsPositive);
                 if(!DocTools.IsNullOrEmpty(request.UniqueKey))
                     entities = entities.Where(en => en.UniqueKey.Contains(request.UniqueKey));
                 if(!DocTools.IsNullOrEmpty(request.ValueType) && !DocTools.IsNullOrEmpty(request.ValueType.Id))
@@ -163,7 +141,7 @@ namespace Services.API
                     entities = entities.Where(en => en.ValueType.Id.In(request.ValueTypeIds));
                 }
 
-                entities = ApplyFilters<DocEntityAttribute,AttributeSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -181,6 +159,18 @@ namespace Services.API
 
         public List<Attribute> Get(AttributeSearch request) => GetSearchResult<Attribute,DocEntityAttribute,AttributeSearch>(DocConstantModelName.ATTRIBUTE, request, _ExecSearch);
 
+        public object Post(AttributeVersion request) => Get(request);
+
+        public object Get(AttributeVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
+
         public Attribute Get(Attribute request) => GetEntity<Attribute>(DocConstantModelName.ATTRIBUTE, request, GetAttribute);
         private Attribute _AssignValues(Attribute request, DocConstantPermission permission, Session session)
         {
@@ -193,7 +183,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Attribute ret = null;
-            request = _InitAssignValues<Attribute>(request, permission, session);
+            request = _InitAssignValues(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -596,6 +586,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(AttributeIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityAttribute>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }

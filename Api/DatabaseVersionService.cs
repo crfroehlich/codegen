@@ -11,7 +11,6 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
-using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -46,7 +45,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityDatabaseVersion> _ExecSearch(DatabaseVersionSearch request)
         {
-            request = InitSearch<DatabaseVersion, DatabaseVersionSearch>(request);
+            request = InitSearch(request);
             IQueryable<DocEntityDatabaseVersion> entities = null;
             Execute.Run( session => 
             {
@@ -54,7 +53,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DatabaseVersionFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityDatabaseVersion,DatabaseVersionFullTextSearch>(fts, entities);
+                    entities = GetFullTextSearch(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -84,18 +83,6 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.DATABASEVERSION, nameof(Reference.Archived), DocConstantPermission.VIEW))
-                {
-                    entities = entities.Where(en => en.Archived.In(request.Archived));
-                }
-                else
-                {
-                    entities = entities.Where(en => !en.Archived);
-                }
-                if(true == request.Locked?.Any())
-                {
-                    entities = entities.Where(en => en.Locked.In(request.Locked));
-                }
 
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
@@ -104,7 +91,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.VersionName))
                     entities = entities.Where(en => en.VersionName.Contains(request.VersionName));
 
-                entities = ApplyFilters<DocEntityDatabaseVersion,DatabaseVersionSearch>(request, entities);
+                entities = ApplyFilters(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -121,6 +108,18 @@ namespace Services.API
         public List<DatabaseVersion> Post(DatabaseVersionSearch request) => Get(request);
 
         public List<DatabaseVersion> Get(DatabaseVersionSearch request) => GetSearchResult<DatabaseVersion,DocEntityDatabaseVersion,DatabaseVersionSearch>(DocConstantModelName.DATABASEVERSION, request, _ExecSearch);
+
+        public object Post(DatabaseVersionVersion request) => Get(request);
+
+        public object Get(DatabaseVersionVersion request) 
+        {
+            List<Version> ret = null;
+            Execute.Run(s=>
+            {
+                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
+            });
+            return ret;
+        }
 
         public DatabaseVersion Get(DatabaseVersion request) => GetEntity<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, request, GetDatabaseVersion);
 
@@ -147,6 +146,21 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
+            return ret;
+        }
+
+        public List<int> Any(DatabaseVersionIds request)
+        {
+            List<int> ret = null;
+            if (currentUser.IsSuperAdmin)
+            {
+                Execute.Run(s => { ret = Execute.SelectAll<DocEntityDatabaseVersion>().Select(d => d.Id).ToList(); });
+            }
+            else
+            {
+                throw new HttpError(HttpStatusCode.Forbidden);
+            }
+
             return ret;
         }
     }
