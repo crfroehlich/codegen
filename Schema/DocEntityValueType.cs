@@ -147,20 +147,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindValueTypes";
 
-
-        private DocValueType _model = null;
-
-        public DocValueType ToValueType()
-        {
-            if(null == _model)
-            {
-                _model = DocValueType.GetValueType(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToValueType());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

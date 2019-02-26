@@ -179,20 +179,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindAttributes";
 
-
-        private DocAttribute _model = null;
-
-        public DocAttribute ToAttribute()
-        {
-            if(null == _model)
-            {
-                _model = DocAttribute.GetAttribute(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToAttribute());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

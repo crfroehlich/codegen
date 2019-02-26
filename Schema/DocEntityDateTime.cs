@@ -155,20 +155,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindDateTimes";
 
-
-        private DocDateTime _model = null;
-
-        public DocDateTime ToDateTime()
-        {
-            if(null == _model)
-            {
-                _model = DocDateTime.GetDateTime(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToDateTime());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

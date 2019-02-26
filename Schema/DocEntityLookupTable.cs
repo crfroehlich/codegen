@@ -172,20 +172,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindLookupTables";
 
-
-        private DocLookupTable _model = null;
-
-        public DocLookupTable ToLookupTable()
-        {
-            if(null == _model)
-            {
-                _model = DocLookupTable.GetLookupTable(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToLookupTable());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

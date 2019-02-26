@@ -171,9 +171,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindQueueChannels";
 
-
-        public override T ToModel<T>() =>  null;
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

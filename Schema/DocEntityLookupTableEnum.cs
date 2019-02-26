@@ -150,20 +150,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindLookupTableEnums";
 
-
-        private DocLookupTableEnum _model = null;
-
-        public DocLookupTableEnum ToLookupTableEnum()
-        {
-            if(null == _model)
-            {
-                _model = DocLookupTableEnum.GetLookupTableEnum(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToLookupTableEnum());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

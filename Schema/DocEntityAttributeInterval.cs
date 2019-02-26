@@ -140,20 +140,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindAttributeIntervals";
 
-
-        private DocAttributeInterval _model = null;
-
-        public DocAttributeInterval ToAttributeInterval()
-        {
-            if(null == _model)
-            {
-                _model = DocAttributeInterval.GetAttributeInterval(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToAttributeInterval());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

@@ -164,20 +164,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindIntervals";
 
-
-        private DocInterval _model = null;
-
-        public DocInterval ToInterval()
-        {
-            if(null == _model)
-            {
-                _model = DocInterval.GetInterval(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToInterval());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

@@ -144,20 +144,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindMeanVariancess";
 
-
-        private DocMeanVariances _model = null;
-
-        public DocMeanVariances ToMeanVariances()
-        {
-            if(null == _model)
-            {
-                _model = DocMeanVariances.GetMeanVariances(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToMeanVariances());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

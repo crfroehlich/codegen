@@ -144,20 +144,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindUnitss";
 
-
-        private DocUnits _model = null;
-
-        public DocUnits ToUnits()
-        {
-            if(null == _model)
-            {
-                _model = DocUnits.GetUnits(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToUnits());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

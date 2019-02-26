@@ -158,20 +158,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindUnitOfMeasures";
 
-
-        private DocUnitOfMeasure _model = null;
-
-        public DocUnitOfMeasure ToUnitOfMeasure()
-        {
-            if(null == _model)
-            {
-                _model = DocUnitOfMeasure.GetUnitOfMeasure(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToUnitOfMeasure());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

@@ -144,20 +144,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindMeanRangess";
 
-
-        private DocMeanRanges _model = null;
-
-        public DocMeanRanges ToMeanRanges()
-        {
-            if(null == _model)
-            {
-                _model = DocMeanRanges.GetMeanRanges(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToMeanRanges());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

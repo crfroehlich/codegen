@@ -161,20 +161,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindTimePoints";
 
-
-        private DocTimePoint _model = null;
-
-        public DocTimePoint ToTimePoint()
-        {
-            if(null == _model)
-            {
-                _model = DocTimePoint.GetTimePoint(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToTimePoint());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

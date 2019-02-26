@@ -232,20 +232,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindImportDatas";
 
-
-        private DocImportData _model = null;
-
-        public DocImportData ToImportData()
-        {
-            if(null == _model)
-            {
-                _model = DocImportData.GetImportData(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToImportData());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

@@ -377,20 +377,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindDocuments";
 
-
-        private DocDocument _model = null;
-
-        public DocDocument ToDocument()
-        {
-            if(null == _model)
-            {
-                _model = DocDocument.GetDocument(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToDocument());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides

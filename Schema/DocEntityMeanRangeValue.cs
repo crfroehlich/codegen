@@ -180,20 +180,6 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindMeanRangeValues";
 
-
-        private DocMeanRangeValue _model = null;
-
-        public DocMeanRangeValue ToMeanRangeValue()
-        {
-            if(null == _model)
-            {
-                _model = DocMeanRangeValue.GetMeanRangeValue(this);
-            }
-            return _model;
-        }
-
-        public override T ToModel<T>() =>  (T) ((IDocModel) ToMeanRangeValue());
-
         #endregion Overrides of DocEntity
 
         #region Entity overrides
