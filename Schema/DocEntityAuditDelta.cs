@@ -226,8 +226,9 @@ namespace Services.Schema
 
     public partial class AuditDeltaMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityAuditDelta,AuditDelta> _EntityToDto;
-        private IMappingExpression<AuditDelta,DocEntityAuditDelta> _DtoToEntity;
+        protected IMappingExpression<DocEntityAuditDelta,AuditDelta> _EntityToDto;
+        protected IMappingExpression<AuditDelta,DocEntityAuditDelta> _DtoToEntity;
+
         public AuditDeltaMapper()
         {
             CreateMap<DocEntitySet<DocEntityAuditDelta>,List<Reference>>()

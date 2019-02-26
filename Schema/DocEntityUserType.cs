@@ -256,8 +256,9 @@ namespace Services.Schema
 
     public partial class UserTypeMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityUserType,UserType> _EntityToDto;
-        private IMappingExpression<UserType,DocEntityUserType> _DtoToEntity;
+        protected IMappingExpression<DocEntityUserType,UserType> _EntityToDto;
+        protected IMappingExpression<UserType,DocEntityUserType> _DtoToEntity;
+
         public UserTypeMapper()
         {
             CreateMap<DocEntitySet<DocEntityUserType>,List<Reference>>()

@@ -360,8 +360,9 @@ namespace Services.Schema
 
     public partial class WorkflowMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityWorkflow,Workflow> _EntityToDto;
-        private IMappingExpression<Workflow,DocEntityWorkflow> _DtoToEntity;
+        protected IMappingExpression<DocEntityWorkflow,Workflow> _EntityToDto;
+        protected IMappingExpression<Workflow,DocEntityWorkflow> _DtoToEntity;
+
         public WorkflowMapper()
         {
             CreateMap<DocEntitySet<DocEntityWorkflow>,List<Reference>>()

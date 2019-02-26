@@ -254,8 +254,9 @@ namespace Services.Schema
 
     public partial class StatsMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityStats,Stats> _EntityToDto;
-        private IMappingExpression<Stats,DocEntityStats> _DtoToEntity;
+        protected IMappingExpression<DocEntityStats,Stats> _EntityToDto;
+        protected IMappingExpression<Stats,DocEntityStats> _DtoToEntity;
+
         public StatsMapper()
         {
             CreateMap<DocEntitySet<DocEntityStats>,List<Reference>>()

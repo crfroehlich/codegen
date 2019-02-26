@@ -238,8 +238,9 @@ namespace Services.Schema
 
     public partial class LocaleMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityLocale,Locale> _EntityToDto;
-        private IMappingExpression<Locale,DocEntityLocale> _DtoToEntity;
+        protected IMappingExpression<DocEntityLocale,Locale> _EntityToDto;
+        protected IMappingExpression<Locale,DocEntityLocale> _DtoToEntity;
+
         public LocaleMapper()
         {
             CreateMap<DocEntitySet<DocEntityLocale>,List<Reference>>()

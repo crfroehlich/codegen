@@ -307,8 +307,9 @@ namespace Services.Schema
 
     public partial class VariableRuleMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityVariableRule,VariableRule> _EntityToDto;
-        private IMappingExpression<VariableRule,DocEntityVariableRule> _DtoToEntity;
+        protected IMappingExpression<DocEntityVariableRule,VariableRule> _EntityToDto;
+        protected IMappingExpression<VariableRule,DocEntityVariableRule> _DtoToEntity;
+
         public VariableRuleMapper()
         {
             CreateMap<DocEntitySet<DocEntityVariableRule>,List<Reference>>()

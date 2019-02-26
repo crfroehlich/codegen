@@ -236,9 +236,9 @@ namespace Services.Schema
 
     public partial class TimePointMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityTimePoint,TimePoint> _EntityToDto;
-        private IMappingExpression<TimePoint,DocEntityTimePoint> _DtoToEntity;
-        private IMappingExpression<DocTimePoint,TimePoint> _ModelToDto;
+        protected IMappingExpression<DocEntityTimePoint,TimePoint> _EntityToDto;
+        protected IMappingExpression<TimePoint,DocEntityTimePoint> _DtoToEntity;
+
         public TimePointMapper()
         {
             CreateMap<DocEntitySet<DocEntityTimePoint>,List<Reference>>()
@@ -260,17 +260,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<TimePoint,DocEntityTimePoint>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocTimePoint,TimePoint>()
-                .ForMember(dest => dest.IsAbsolute, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.IsAbsolute))))
-                .ForMember(dest => dest.MeanValue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.MeanValue))))
-                .ForMember(dest => dest.SingleValue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.SingleValue))))
-                .ForMember(dest => dest.TotalValue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.TotalValue))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.Type))))
-.MaxDepth(2);
-            CreateMap<DocTimePoint, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocTimePoint>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

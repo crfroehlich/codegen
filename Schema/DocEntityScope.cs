@@ -329,8 +329,9 @@ namespace Services.Schema
 
     public partial class ScopeMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityScope,Scope> _EntityToDto;
-        private IMappingExpression<Scope,DocEntityScope> _DtoToEntity;
+        protected IMappingExpression<DocEntityScope,Scope> _EntityToDto;
+        protected IMappingExpression<Scope,DocEntityScope> _DtoToEntity;
+
         public ScopeMapper()
         {
             CreateMap<DocEntitySet<DocEntityScope>,List<Reference>>()

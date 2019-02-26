@@ -284,8 +284,9 @@ namespace Services.Schema
 
     public partial class WorkflowTaskMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityWorkflowTask,WorkflowTask> _EntityToDto;
-        private IMappingExpression<WorkflowTask,DocEntityWorkflowTask> _DtoToEntity;
+        protected IMappingExpression<DocEntityWorkflowTask,WorkflowTask> _EntityToDto;
+        protected IMappingExpression<WorkflowTask,DocEntityWorkflowTask> _DtoToEntity;
+
         public WorkflowTaskMapper()
         {
             CreateMap<DocEntitySet<DocEntityWorkflowTask>,List<Reference>>()

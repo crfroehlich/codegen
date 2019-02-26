@@ -253,8 +253,9 @@ namespace Services.Schema
 
     public partial class TermSynonymMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityTermSynonym,TermSynonym> _EntityToDto;
-        private IMappingExpression<TermSynonym,DocEntityTermSynonym> _DtoToEntity;
+        protected IMappingExpression<DocEntityTermSynonym,TermSynonym> _EntityToDto;
+        protected IMappingExpression<TermSynonym,DocEntityTermSynonym> _DtoToEntity;
+
         public TermSynonymMapper()
         {
             CreateMap<DocEntitySet<DocEntityTermSynonym>,List<Reference>>()

@@ -259,8 +259,9 @@ namespace Services.Schema
 
     public partial class AppMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityApp,App> _EntityToDto;
-        private IMappingExpression<App,DocEntityApp> _DtoToEntity;
+        protected IMappingExpression<DocEntityApp,App> _EntityToDto;
+        protected IMappingExpression<App,DocEntityApp> _DtoToEntity;
+
         public AppMapper()
         {
             CreateMap<DocEntitySet<DocEntityApp>,List<Reference>>()

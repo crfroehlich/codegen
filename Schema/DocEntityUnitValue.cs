@@ -260,9 +260,9 @@ namespace Services.Schema
 
     public partial class UnitValueMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityUnitValue,UnitValue> _EntityToDto;
-        private IMappingExpression<UnitValue,DocEntityUnitValue> _DtoToEntity;
-        private IMappingExpression<DocUnitValue,UnitValue> _ModelToDto;
+        protected IMappingExpression<DocEntityUnitValue,UnitValue> _EntityToDto;
+        protected IMappingExpression<UnitValue,DocEntityUnitValue> _DtoToEntity;
+
         public UnitValueMapper()
         {
             CreateMap<DocEntitySet<DocEntityUnitValue>,List<Reference>>()
@@ -287,18 +287,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<UnitValue,DocEntityUnitValue>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocUnitValue,UnitValue>()
-                .ForMember(dest => dest.EqualityOperator, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.EqualityOperator))))
-                .ForMember(dest => dest.Multiplier, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Multiplier))))
-                .ForMember(dest => dest.Number, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Number))))
-                .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Order))))
-                .ForMember(dest => dest.Owners, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Owners))))
-                .ForMember(dest => dest.Unit, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Unit))))
-.MaxDepth(2);
-            CreateMap<DocUnitValue, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocUnitValue>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

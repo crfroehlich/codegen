@@ -235,9 +235,9 @@ namespace Services.Schema
 
     public partial class ValueTypeMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityValueType,ValueType> _EntityToDto;
-        private IMappingExpression<ValueType,DocEntityValueType> _DtoToEntity;
-        private IMappingExpression<DocValueType,ValueType> _ModelToDto;
+        protected IMappingExpression<DocEntityValueType,ValueType> _EntityToDto;
+        protected IMappingExpression<ValueType,DocEntityValueType> _DtoToEntity;
+
         public ValueTypeMapper()
         {
             CreateMap<DocEntitySet<DocEntityValueType>,List<Reference>>()
@@ -257,14 +257,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<ValueType,DocEntityValueType>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocValueType,ValueType>()
-                .ForMember(dest => dest.FieldType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ValueType>(c, nameof(DocEntityValueType.FieldType))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ValueType>(c, nameof(DocEntityValueType.Name))))
-.MaxDepth(2);
-            CreateMap<DocValueType, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocValueType>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

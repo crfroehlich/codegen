@@ -288,8 +288,9 @@ namespace Services.Schema
 
     public partial class BroadcastMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityBroadcast,Broadcast> _EntityToDto;
-        private IMappingExpression<Broadcast,DocEntityBroadcast> _DtoToEntity;
+        protected IMappingExpression<DocEntityBroadcast,Broadcast> _EntityToDto;
+        protected IMappingExpression<Broadcast,DocEntityBroadcast> _DtoToEntity;
+
         public BroadcastMapper()
         {
             CreateMap<DocEntitySet<DocEntityBroadcast>,List<Reference>>()

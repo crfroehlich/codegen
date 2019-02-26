@@ -233,8 +233,9 @@ namespace Services.Schema
 
     public partial class ImpersonationMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityImpersonation,Impersonation> _EntityToDto;
-        private IMappingExpression<Impersonation,DocEntityImpersonation> _DtoToEntity;
+        protected IMappingExpression<DocEntityImpersonation,Impersonation> _EntityToDto;
+        protected IMappingExpression<Impersonation,DocEntityImpersonation> _DtoToEntity;
+
         public ImpersonationMapper()
         {
             CreateMap<DocEntitySet<DocEntityImpersonation>,List<Reference>>()

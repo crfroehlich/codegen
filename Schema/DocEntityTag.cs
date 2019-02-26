@@ -227,8 +227,9 @@ namespace Services.Schema
 
     public partial class TagMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityTag,Tag> _EntityToDto;
-        private IMappingExpression<Tag,DocEntityTag> _DtoToEntity;
+        protected IMappingExpression<DocEntityTag,Tag> _EntityToDto;
+        protected IMappingExpression<Tag,DocEntityTag> _DtoToEntity;
+
         public TagMapper()
         {
             CreateMap<DocEntitySet<DocEntityTag>,List<Reference>>()

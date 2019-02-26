@@ -283,8 +283,9 @@ namespace Services.Schema
 
     public partial class TimeCardMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityTimeCard,TimeCard> _EntityToDto;
-        private IMappingExpression<TimeCard,DocEntityTimeCard> _DtoToEntity;
+        protected IMappingExpression<DocEntityTimeCard,TimeCard> _EntityToDto;
+        protected IMappingExpression<TimeCard,DocEntityTimeCard> _DtoToEntity;
+
         public TimeCardMapper()
         {
             CreateMap<DocEntitySet<DocEntityTimeCard>,List<Reference>>()

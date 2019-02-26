@@ -266,8 +266,9 @@ namespace Services.Schema
 
     public partial class LookupTableBindingMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityLookupTableBinding,LookupTableBinding> _EntityToDto;
-        private IMappingExpression<LookupTableBinding,DocEntityLookupTableBinding> _DtoToEntity;
+        protected IMappingExpression<DocEntityLookupTableBinding,LookupTableBinding> _EntityToDto;
+        protected IMappingExpression<LookupTableBinding,DocEntityLookupTableBinding> _DtoToEntity;
+
         public LookupTableBindingMapper()
         {
             CreateMap<DocEntitySet<DocEntityLookupTableBinding>,List<Reference>>()

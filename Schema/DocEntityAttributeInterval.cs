@@ -215,9 +215,9 @@ namespace Services.Schema
 
     public partial class AttributeIntervalMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityAttributeInterval,AttributeInterval> _EntityToDto;
-        private IMappingExpression<AttributeInterval,DocEntityAttributeInterval> _DtoToEntity;
-        private IMappingExpression<DocAttributeInterval,AttributeInterval> _ModelToDto;
+        protected IMappingExpression<DocEntityAttributeInterval,AttributeInterval> _EntityToDto;
+        protected IMappingExpression<AttributeInterval,DocEntityAttributeInterval> _DtoToEntity;
+
         public AttributeIntervalMapper()
         {
             CreateMap<DocEntitySet<DocEntityAttributeInterval>,List<Reference>>()
@@ -234,13 +234,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<AttributeInterval,DocEntityAttributeInterval>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocAttributeInterval,AttributeInterval>()
-                .ForMember(dest => dest.Interval, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AttributeInterval>(c, nameof(DocEntityAttributeInterval.Interval))))
-.MaxDepth(2);
-            CreateMap<DocAttributeInterval, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocAttributeInterval>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

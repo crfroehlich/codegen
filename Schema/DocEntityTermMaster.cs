@@ -296,8 +296,9 @@ namespace Services.Schema
 
     public partial class TermMasterMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityTermMaster,TermMaster> _EntityToDto;
-        private IMappingExpression<TermMaster,DocEntityTermMaster> _DtoToEntity;
+        protected IMappingExpression<DocEntityTermMaster,TermMaster> _EntityToDto;
+        protected IMappingExpression<TermMaster,DocEntityTermMaster> _DtoToEntity;
+
         public TermMasterMapper()
         {
             CreateMap<DocEntitySet<DocEntityTermMaster>,List<Reference>>()

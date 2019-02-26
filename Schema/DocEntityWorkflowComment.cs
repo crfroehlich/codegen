@@ -255,8 +255,9 @@ namespace Services.Schema
 
     public partial class WorkflowCommentMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityWorkflowComment,WorkflowComment> _EntityToDto;
-        private IMappingExpression<WorkflowComment,DocEntityWorkflowComment> _DtoToEntity;
+        protected IMappingExpression<DocEntityWorkflowComment,WorkflowComment> _EntityToDto;
+        protected IMappingExpression<WorkflowComment,DocEntityWorkflowComment> _DtoToEntity;
+
         public WorkflowCommentMapper()
         {
             CreateMap<DocEntitySet<DocEntityWorkflowComment>,List<Reference>>()

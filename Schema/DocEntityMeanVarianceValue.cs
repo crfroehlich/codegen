@@ -252,9 +252,9 @@ namespace Services.Schema
 
     public partial class MeanVarianceValueMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityMeanVarianceValue,MeanVarianceValue> _EntityToDto;
-        private IMappingExpression<MeanVarianceValue,DocEntityMeanVarianceValue> _DtoToEntity;
-        private IMappingExpression<DocMeanVarianceValue,MeanVarianceValue> _ModelToDto;
+        protected IMappingExpression<DocEntityMeanVarianceValue,MeanVarianceValue> _EntityToDto;
+        protected IMappingExpression<MeanVarianceValue,DocEntityMeanVarianceValue> _DtoToEntity;
+
         public MeanVarianceValueMapper()
         {
             CreateMap<DocEntitySet<DocEntityMeanVarianceValue>,List<Reference>>()
@@ -277,17 +277,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<MeanVarianceValue,DocEntityMeanVarianceValue>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocMeanVarianceValue,MeanVarianceValue>()
-                .ForMember(dest => dest.MeanVariance, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.MeanVariance))))
-                .ForMember(dest => dest.MeanVarianceRange, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.MeanVarianceRange))))
-                .ForMember(dest => dest.MeanVarianceType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.MeanVarianceType))))
-                .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.Order))))
-                .ForMember(dest => dest.Owners, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.Owners))))
-.MaxDepth(2);
-            CreateMap<DocMeanVarianceValue, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocMeanVarianceValue>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

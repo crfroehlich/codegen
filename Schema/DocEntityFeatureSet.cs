@@ -237,8 +237,9 @@ namespace Services.Schema
 
     public partial class FeatureSetMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityFeatureSet,FeatureSet> _EntityToDto;
-        private IMappingExpression<FeatureSet,DocEntityFeatureSet> _DtoToEntity;
+        protected IMappingExpression<DocEntityFeatureSet,FeatureSet> _EntityToDto;
+        protected IMappingExpression<FeatureSet,DocEntityFeatureSet> _DtoToEntity;
+
         public FeatureSetMapper()
         {
             CreateMap<DocEntitySet<DocEntityFeatureSet>,List<Reference>>()

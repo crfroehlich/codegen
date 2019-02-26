@@ -241,8 +241,9 @@ namespace Services.Schema
 
     public partial class TermCategoryMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityTermCategory,TermCategory> _EntityToDto;
-        private IMappingExpression<TermCategory,DocEntityTermCategory> _DtoToEntity;
+        protected IMappingExpression<DocEntityTermCategory,TermCategory> _EntityToDto;
+        protected IMappingExpression<TermCategory,DocEntityTermCategory> _DtoToEntity;
+
         public TermCategoryMapper()
         {
             CreateMap<DocEntitySet<DocEntityTermCategory>,List<Reference>>()

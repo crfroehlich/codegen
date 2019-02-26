@@ -241,8 +241,9 @@ namespace Services.Schema
 
     public partial class VariableInstanceMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityVariableInstance,VariableInstance> _EntityToDto;
-        private IMappingExpression<VariableInstance,DocEntityVariableInstance> _DtoToEntity;
+        protected IMappingExpression<DocEntityVariableInstance,VariableInstance> _EntityToDto;
+        protected IMappingExpression<VariableInstance,DocEntityVariableInstance> _DtoToEntity;
+
         public VariableInstanceMapper()
         {
             CreateMap<DocEntitySet<DocEntityVariableInstance>,List<Reference>>()

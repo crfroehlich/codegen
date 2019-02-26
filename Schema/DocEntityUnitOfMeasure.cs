@@ -266,9 +266,9 @@ namespace Services.Schema
 
     public partial class UnitOfMeasureMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityUnitOfMeasure,UnitOfMeasure> _EntityToDto;
-        private IMappingExpression<UnitOfMeasure,DocEntityUnitOfMeasure> _DtoToEntity;
-        private IMappingExpression<DocUnitOfMeasure,UnitOfMeasure> _ModelToDto;
+        protected IMappingExpression<DocEntityUnitOfMeasure,UnitOfMeasure> _EntityToDto;
+        protected IMappingExpression<UnitOfMeasure,DocEntityUnitOfMeasure> _DtoToEntity;
+
         public UnitOfMeasureMapper()
         {
             CreateMap<DocEntitySet<DocEntityUnitOfMeasure>,List<Reference>>()
@@ -291,16 +291,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<UnitOfMeasure,DocEntityUnitOfMeasure>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocUnitOfMeasure,UnitOfMeasure>()
-                .ForMember(dest => dest.IsSI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.IsSI))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.Name))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.Type))))
-                .ForMember(dest => dest.Unit, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.Unit))))
-.MaxDepth(2);
-            CreateMap<DocUnitOfMeasure, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocUnitOfMeasure>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

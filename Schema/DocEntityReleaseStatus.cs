@@ -260,8 +260,9 @@ namespace Services.Schema
 
     public partial class ReleaseStatusMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityReleaseStatus,ReleaseStatus> _EntityToDto;
-        private IMappingExpression<ReleaseStatus,DocEntityReleaseStatus> _DtoToEntity;
+        protected IMappingExpression<DocEntityReleaseStatus,ReleaseStatus> _EntityToDto;
+        protected IMappingExpression<ReleaseStatus,DocEntityReleaseStatus> _DtoToEntity;
+
         public ReleaseStatusMapper()
         {
             CreateMap<DocEntitySet<DocEntityReleaseStatus>,List<Reference>>()

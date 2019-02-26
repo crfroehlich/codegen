@@ -258,8 +258,9 @@ namespace Services.Schema
 
     public partial class HistoryMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityHistory,History> _EntityToDto;
-        private IMappingExpression<History,DocEntityHistory> _DtoToEntity;
+        protected IMappingExpression<DocEntityHistory,History> _EntityToDto;
+        protected IMappingExpression<History,DocEntityHistory> _DtoToEntity;
+
         public HistoryMapper()
         {
             CreateMap<DocEntitySet<DocEntityHistory>,List<Reference>>()

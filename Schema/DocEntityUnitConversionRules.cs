@@ -272,8 +272,9 @@ namespace Services.Schema
 
     public partial class UnitConversionRulesMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityUnitConversionRules,UnitConversionRules> _EntityToDto;
-        private IMappingExpression<UnitConversionRules,DocEntityUnitConversionRules> _DtoToEntity;
+        protected IMappingExpression<DocEntityUnitConversionRules,UnitConversionRules> _EntityToDto;
+        protected IMappingExpression<UnitConversionRules,DocEntityUnitConversionRules> _DtoToEntity;
+
         public UnitConversionRulesMapper()
         {
             CreateMap<DocEntitySet<DocEntityUnitConversionRules>,List<Reference>>()

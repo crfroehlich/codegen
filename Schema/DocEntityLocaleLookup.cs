@@ -232,8 +232,9 @@ namespace Services.Schema
 
     public partial class LocaleLookupMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityLocaleLookup,LocaleLookup> _EntityToDto;
-        private IMappingExpression<LocaleLookup,DocEntityLocaleLookup> _DtoToEntity;
+        protected IMappingExpression<DocEntityLocaleLookup,LocaleLookup> _EntityToDto;
+        protected IMappingExpression<LocaleLookup,DocEntityLocaleLookup> _DtoToEntity;
+
         public LocaleLookupMapper()
         {
             CreateMap<DocEntitySet<DocEntityLocaleLookup>,List<Reference>>()

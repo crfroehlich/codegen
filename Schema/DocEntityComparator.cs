@@ -230,8 +230,9 @@ namespace Services.Schema
 
     public partial class ComparatorMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityComparator,Comparator> _EntityToDto;
-        private IMappingExpression<Comparator,DocEntityComparator> _DtoToEntity;
+        protected IMappingExpression<DocEntityComparator,Comparator> _EntityToDto;
+        protected IMappingExpression<Comparator,DocEntityComparator> _DtoToEntity;
+
         public ComparatorMapper()
         {
             CreateMap<DocEntitySet<DocEntityComparator>,List<Reference>>()

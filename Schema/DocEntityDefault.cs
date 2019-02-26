@@ -244,8 +244,9 @@ namespace Services.Schema
 
     public partial class DefaultMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityDefault,Default> _EntityToDto;
-        private IMappingExpression<Default,DocEntityDefault> _DtoToEntity;
+        protected IMappingExpression<DocEntityDefault,Default> _EntityToDto;
+        protected IMappingExpression<Default,DocEntityDefault> _DtoToEntity;
+
         public DefaultMapper()
         {
             CreateMap<DocEntitySet<DocEntityDefault>,List<Reference>>()

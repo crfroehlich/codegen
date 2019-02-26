@@ -214,9 +214,9 @@ namespace Services.Schema
 
     public partial class MeanVariancesMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityMeanVariances,MeanVariances> _EntityToDto;
-        private IMappingExpression<MeanVariances,DocEntityMeanVariances> _DtoToEntity;
-        private IMappingExpression<DocMeanVariances,MeanVariances> _ModelToDto;
+        protected IMappingExpression<DocEntityMeanVariances,MeanVariances> _EntityToDto;
+        protected IMappingExpression<MeanVariances,DocEntityMeanVariances> _DtoToEntity;
+
         public MeanVariancesMapper()
         {
             CreateMap<DocEntitySet<DocEntityMeanVariances>,List<Reference>>()
@@ -234,13 +234,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<MeanVariances,DocEntityMeanVariances>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocMeanVariances,MeanVariances>()
-                .ForMember(dest => dest.Variances, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVariances>(c, nameof(DocEntityMeanVariances.Variances))))
-.MaxDepth(2);
-            CreateMap<DocMeanVariances, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocMeanVariances>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

@@ -214,9 +214,9 @@ namespace Services.Schema
 
     public partial class MeanRangesMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityMeanRanges,MeanRanges> _EntityToDto;
-        private IMappingExpression<MeanRanges,DocEntityMeanRanges> _DtoToEntity;
-        private IMappingExpression<DocMeanRanges,MeanRanges> _ModelToDto;
+        protected IMappingExpression<DocEntityMeanRanges,MeanRanges> _EntityToDto;
+        protected IMappingExpression<MeanRanges,DocEntityMeanRanges> _DtoToEntity;
+
         public MeanRangesMapper()
         {
             CreateMap<DocEntitySet<DocEntityMeanRanges>,List<Reference>>()
@@ -234,13 +234,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<MeanRanges,DocEntityMeanRanges>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocMeanRanges,MeanRanges>()
-                .ForMember(dest => dest.Ranges, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRanges>(c, nameof(DocEntityMeanRanges.Ranges))))
-.MaxDepth(2);
-            CreateMap<DocMeanRanges, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocMeanRanges>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

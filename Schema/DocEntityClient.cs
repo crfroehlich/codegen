@@ -297,8 +297,9 @@ namespace Services.Schema
 
     public partial class ClientMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityClient,Client> _EntityToDto;
-        private IMappingExpression<Client,DocEntityClient> _DtoToEntity;
+        protected IMappingExpression<DocEntityClient,Client> _EntityToDto;
+        protected IMappingExpression<Client,DocEntityClient> _DtoToEntity;
+
         public ClientMapper()
         {
             CreateMap<DocEntitySet<DocEntityClient>,List<Reference>>()

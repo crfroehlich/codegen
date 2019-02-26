@@ -285,8 +285,9 @@ namespace Services.Schema
 
     public partial class JunctionMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityJunction,Junction> _EntityToDto;
-        private IMappingExpression<Junction,DocEntityJunction> _DtoToEntity;
+        protected IMappingExpression<DocEntityJunction,Junction> _EntityToDto;
+        protected IMappingExpression<Junction,DocEntityJunction> _DtoToEntity;
+
         public JunctionMapper()
         {
             CreateMap<DocEntitySet<DocEntityJunction>,List<Reference>>()

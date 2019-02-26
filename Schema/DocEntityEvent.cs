@@ -257,8 +257,9 @@ namespace Services.Schema
 
     public partial class EventMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityEvent,Event> _EntityToDto;
-        private IMappingExpression<Event,DocEntityEvent> _DtoToEntity;
+        protected IMappingExpression<DocEntityEvent,Event> _EntityToDto;
+        protected IMappingExpression<Event,DocEntityEvent> _DtoToEntity;
+
         public EventMapper()
         {
             CreateMap<DocEntitySet<DocEntityEvent>,List<Reference>>()

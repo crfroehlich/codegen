@@ -233,8 +233,9 @@ namespace Services.Schema
 
     public partial class DatabaseVersionMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityDatabaseVersion,DatabaseVersion> _EntityToDto;
-        private IMappingExpression<DatabaseVersion,DocEntityDatabaseVersion> _DtoToEntity;
+        protected IMappingExpression<DocEntityDatabaseVersion,DatabaseVersion> _EntityToDto;
+        protected IMappingExpression<DatabaseVersion,DocEntityDatabaseVersion> _DtoToEntity;
+
         public DatabaseVersionMapper()
         {
             CreateMap<DocEntitySet<DocEntityDatabaseVersion>,List<Reference>>()

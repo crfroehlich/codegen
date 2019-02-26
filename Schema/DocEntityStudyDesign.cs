@@ -224,8 +224,9 @@ namespace Services.Schema
 
     public partial class StudyDesignMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityStudyDesign,StudyDesign> _EntityToDto;
-        private IMappingExpression<StudyDesign,DocEntityStudyDesign> _DtoToEntity;
+        protected IMappingExpression<DocEntityStudyDesign,StudyDesign> _EntityToDto;
+        protected IMappingExpression<StudyDesign,DocEntityStudyDesign> _DtoToEntity;
+
         public StudyDesignMapper()
         {
             CreateMap<DocEntitySet<DocEntityStudyDesign>,List<Reference>>()

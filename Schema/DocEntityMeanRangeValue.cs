@@ -273,9 +273,9 @@ namespace Services.Schema
 
     public partial class MeanRangeValueMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityMeanRangeValue,MeanRangeValue> _EntityToDto;
-        private IMappingExpression<MeanRangeValue,DocEntityMeanRangeValue> _DtoToEntity;
-        private IMappingExpression<DocMeanRangeValue,MeanRangeValue> _ModelToDto;
+        protected IMappingExpression<DocEntityMeanRangeValue,MeanRangeValue> _EntityToDto;
+        protected IMappingExpression<MeanRangeValue,DocEntityMeanRangeValue> _DtoToEntity;
+
         public MeanRangeValueMapper()
         {
             CreateMap<DocEntitySet<DocEntityMeanRangeValue>,List<Reference>>()
@@ -302,20 +302,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<MeanRangeValue,DocEntityMeanRangeValue>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocMeanRangeValue,MeanRangeValue>()
-                .ForMember(dest => dest.MeanVarianceType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.MeanVarianceType))))
-                .ForMember(dest => dest.MidSpread, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.MidSpread))))
-                .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Order))))
-                .ForMember(dest => dest.Owners, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Owners))))
-                .ForMember(dest => dest.Percent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Percent))))
-                .ForMember(dest => dest.PercentLow, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.PercentLow))))
-                .ForMember(dest => dest.Range, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Range))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Type))))
-.MaxDepth(2);
-            CreateMap<DocMeanRangeValue, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocMeanRangeValue>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

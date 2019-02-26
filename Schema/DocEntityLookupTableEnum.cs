@@ -238,9 +238,9 @@ namespace Services.Schema
 
     public partial class LookupTableEnumMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityLookupTableEnum,LookupTableEnum> _EntityToDto;
-        private IMappingExpression<LookupTableEnum,DocEntityLookupTableEnum> _DtoToEntity;
-        private IMappingExpression<DocLookupTableEnum,LookupTableEnum> _ModelToDto;
+        protected IMappingExpression<DocEntityLookupTableEnum,LookupTableEnum> _EntityToDto;
+        protected IMappingExpression<LookupTableEnum,DocEntityLookupTableEnum> _DtoToEntity;
+
         public LookupTableEnumMapper()
         {
             CreateMap<DocEntitySet<DocEntityLookupTableEnum>,List<Reference>>()
@@ -259,15 +259,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<LookupTableEnum,DocEntityLookupTableEnum>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocLookupTableEnum,LookupTableEnum>()
-                .ForMember(dest => dest.IsBindable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableEnum>(c, nameof(DocEntityLookupTableEnum.IsBindable))))
-                .ForMember(dest => dest.IsGlobal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableEnum>(c, nameof(DocEntityLookupTableEnum.IsGlobal))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableEnum>(c, nameof(DocEntityLookupTableEnum.Name))))
-.MaxDepth(2);
-            CreateMap<DocLookupTableEnum, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocLookupTableEnum>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

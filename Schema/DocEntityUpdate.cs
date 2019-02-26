@@ -273,8 +273,9 @@ namespace Services.Schema
 
     public partial class UpdateMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityUpdate,Update> _EntityToDto;
-        private IMappingExpression<Update,DocEntityUpdate> _DtoToEntity;
+        protected IMappingExpression<DocEntityUpdate,Update> _EntityToDto;
+        protected IMappingExpression<Update,DocEntityUpdate> _DtoToEntity;
+
         public UpdateMapper()
         {
             CreateMap<DocEntitySet<DocEntityUpdate>,List<Reference>>()

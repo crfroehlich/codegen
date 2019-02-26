@@ -230,8 +230,9 @@ namespace Services.Schema
 
     public partial class InterventionMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityIntervention,Intervention> _EntityToDto;
-        private IMappingExpression<Intervention,DocEntityIntervention> _DtoToEntity;
+        protected IMappingExpression<DocEntityIntervention,Intervention> _EntityToDto;
+        protected IMappingExpression<Intervention,DocEntityIntervention> _DtoToEntity;
+
         public InterventionMapper()
         {
             CreateMap<DocEntitySet<DocEntityIntervention>,List<Reference>>()

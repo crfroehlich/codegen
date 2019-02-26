@@ -268,8 +268,9 @@ namespace Services.Schema
 
     public partial class HelpMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityHelp,Help> _EntityToDto;
-        private IMappingExpression<Help,DocEntityHelp> _DtoToEntity;
+        protected IMappingExpression<DocEntityHelp,Help> _EntityToDto;
+        protected IMappingExpression<Help,DocEntityHelp> _DtoToEntity;
+
         public HelpMapper()
         {
             CreateMap<DocEntitySet<DocEntityHelp>,List<Reference>>()

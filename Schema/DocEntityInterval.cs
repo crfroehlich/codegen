@@ -235,9 +235,9 @@ namespace Services.Schema
 
     public partial class IntervalMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityInterval,Interval> _EntityToDto;
-        private IMappingExpression<Interval,DocEntityInterval> _DtoToEntity;
-        private IMappingExpression<DocInterval,Interval> _ModelToDto;
+        protected IMappingExpression<DocEntityInterval,Interval> _EntityToDto;
+        protected IMappingExpression<Interval,DocEntityInterval> _DtoToEntity;
+
         public IntervalMapper()
         {
             CreateMap<DocEntitySet<DocEntityInterval>,List<Reference>>()
@@ -262,17 +262,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Interval,DocEntityInterval>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocInterval,Interval>()
-                .ForMember(dest => dest.CalendarDateEnd, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.CalendarDateEnd))))
-                .ForMember(dest => dest.CalendarDateStart, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.CalendarDateStart))))
-                .ForMember(dest => dest.CalendarType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.CalendarType))))
-                .ForMember(dest => dest.FollowUp, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.FollowUp))))
-                .ForMember(dest => dest.TimeOfDay, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.TimeOfDay))))
-.MaxDepth(2);
-            CreateMap<DocInterval, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocInterval>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

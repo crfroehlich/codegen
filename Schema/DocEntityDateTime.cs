@@ -225,9 +225,9 @@ namespace Services.Schema
 
     public partial class DateTimeDtoMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityDateTime,DateTimeDto> _EntityToDto;
-        private IMappingExpression<DateTimeDto,DocEntityDateTime> _DtoToEntity;
-        private IMappingExpression<DocDateTime,DateTimeDto> _ModelToDto;
+        protected IMappingExpression<DocEntityDateTime,DateTimeDto> _EntityToDto;
+        protected IMappingExpression<DateTimeDto,DocEntityDateTime> _DtoToEntity;
+
         public DateTimeDtoMapper()
         {
             CreateMap<DocEntitySet<DocEntityDateTime>,List<Reference>>()
@@ -247,16 +247,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<DateTimeDto,DocEntityDateTime>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocDateTime,DateTimeDto>()
-                .ForMember(dest => dest.DateDay, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, nameof(DocEntityDateTime.DateDay))))
-                .ForMember(dest => dest.DateMonth, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, nameof(DocEntityDateTime.DateMonth))))
-                .ForMember(dest => dest.DateTime, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, nameof(DocEntityDateTime.DateTime))))
-                .ForMember(dest => dest.DateYear, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, nameof(DocEntityDateTime.DateYear))))
-.MaxDepth(2);
-            CreateMap<DocDateTime, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocDateTime>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

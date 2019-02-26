@@ -341,8 +341,9 @@ namespace Services.Schema
 
     public partial class ProjectMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityProject,Project> _EntityToDto;
-        private IMappingExpression<Project,DocEntityProject> _DtoToEntity;
+        protected IMappingExpression<DocEntityProject,Project> _EntityToDto;
+        protected IMappingExpression<Project,DocEntityProject> _DtoToEntity;
+
         public ProjectMapper()
         {
             CreateMap<DocEntitySet<DocEntityProject>,List<Reference>>()

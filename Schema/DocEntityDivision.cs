@@ -276,8 +276,9 @@ namespace Services.Schema
 
     public partial class DivisionMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityDivision,Division> _EntityToDto;
-        private IMappingExpression<Division,DocEntityDivision> _DtoToEntity;
+        protected IMappingExpression<DocEntityDivision,Division> _EntityToDto;
+        protected IMappingExpression<Division,DocEntityDivision> _DtoToEntity;
+
         public DivisionMapper()
         {
             CreateMap<DocEntitySet<DocEntityDivision>,List<Reference>>()

@@ -259,8 +259,9 @@ namespace Services.Schema
 
     public partial class PageMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityPage,Page> _EntityToDto;
-        private IMappingExpression<Page,DocEntityPage> _DtoToEntity;
+        protected IMappingExpression<DocEntityPage,Page> _EntityToDto;
+        protected IMappingExpression<Page,DocEntityPage> _DtoToEntity;
+
         public PageMapper()
         {
             CreateMap<DocEntitySet<DocEntityPage>,List<Reference>>()

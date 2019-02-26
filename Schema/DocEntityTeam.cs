@@ -321,8 +321,9 @@ namespace Services.Schema
 
     public partial class TeamMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityTeam,Team> _EntityToDto;
-        private IMappingExpression<Team,DocEntityTeam> _DtoToEntity;
+        protected IMappingExpression<DocEntityTeam,Team> _EntityToDto;
+        protected IMappingExpression<Team,DocEntityTeam> _DtoToEntity;
+
         public TeamMapper()
         {
             CreateMap<DocEntitySet<DocEntityTeam>,List<Reference>>()

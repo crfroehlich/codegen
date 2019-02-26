@@ -279,8 +279,9 @@ namespace Services.Schema
 
     public partial class UserSessionMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityUserSession,UserSession> _EntityToDto;
-        private IMappingExpression<UserSession,DocEntityUserSession> _DtoToEntity;
+        protected IMappingExpression<DocEntityUserSession,UserSession> _EntityToDto;
+        protected IMappingExpression<UserSession,DocEntityUserSession> _DtoToEntity;
+
         public UserSessionMapper()
         {
             CreateMap<DocEntitySet<DocEntityUserSession>,List<Reference>>()

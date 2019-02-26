@@ -555,8 +555,9 @@ namespace Services.Schema
 
     public partial class DocumentSetMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityDocumentSet,DocumentSet> _EntityToDto;
-        private IMappingExpression<DocumentSet,DocEntityDocumentSet> _DtoToEntity;
+        protected IMappingExpression<DocEntityDocumentSet,DocumentSet> _EntityToDto;
+        protected IMappingExpression<DocumentSet,DocEntityDocumentSet> _DtoToEntity;
+
         public DocumentSetMapper()
         {
             CreateMap<DocEntitySet<DocEntityDocumentSet>,List<Reference>>()

@@ -238,8 +238,9 @@ namespace Services.Schema
 
     public partial class LookupCategoryMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityLookupCategory,LookupCategory> _EntityToDto;
-        private IMappingExpression<LookupCategory,DocEntityLookupCategory> _DtoToEntity;
+        protected IMappingExpression<DocEntityLookupCategory,LookupCategory> _EntityToDto;
+        protected IMappingExpression<LookupCategory,DocEntityLookupCategory> _DtoToEntity;
+
         public LookupCategoryMapper()
         {
             CreateMap<DocEntitySet<DocEntityLookupCategory>,List<Reference>>()

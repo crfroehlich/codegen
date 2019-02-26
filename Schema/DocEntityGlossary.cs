@@ -246,8 +246,9 @@ namespace Services.Schema
 
     public partial class GlossaryMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityGlossary,Glossary> _EntityToDto;
-        private IMappingExpression<Glossary,DocEntityGlossary> _DtoToEntity;
+        protected IMappingExpression<DocEntityGlossary,Glossary> _EntityToDto;
+        protected IMappingExpression<Glossary,DocEntityGlossary> _DtoToEntity;
+
         public GlossaryMapper()
         {
             CreateMap<DocEntitySet<DocEntityGlossary>,List<Reference>>()

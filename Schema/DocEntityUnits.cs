@@ -214,9 +214,9 @@ namespace Services.Schema
 
     public partial class UnitsDtoMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityUnits,UnitsDto> _EntityToDto;
-        private IMappingExpression<UnitsDto,DocEntityUnits> _DtoToEntity;
-        private IMappingExpression<DocUnits,UnitsDto> _ModelToDto;
+        protected IMappingExpression<DocEntityUnits,UnitsDto> _EntityToDto;
+        protected IMappingExpression<UnitsDto,DocEntityUnits> _DtoToEntity;
+
         public UnitsDtoMapper()
         {
             CreateMap<DocEntitySet<DocEntityUnits>,List<Reference>>()
@@ -234,13 +234,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<UnitsDto,DocEntityUnits>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocUnits,UnitsDto>()
-                .ForMember(dest => dest.Units, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitsDto>(c, nameof(DocEntityUnits.Units))))
-.MaxDepth(2);
-            CreateMap<DocUnits, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocUnits>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

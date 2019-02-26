@@ -230,8 +230,9 @@ namespace Services.Schema
 
     public partial class CharacteristicMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityCharacteristic,Characteristic> _EntityToDto;
-        private IMappingExpression<Characteristic,DocEntityCharacteristic> _DtoToEntity;
+        protected IMappingExpression<DocEntityCharacteristic,Characteristic> _EntityToDto;
+        protected IMappingExpression<Characteristic,DocEntityCharacteristic> _DtoToEntity;
+
         public CharacteristicMapper()
         {
             CreateMap<DocEntitySet<DocEntityCharacteristic>,List<Reference>>()

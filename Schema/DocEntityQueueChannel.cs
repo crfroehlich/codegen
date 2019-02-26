@@ -270,8 +270,9 @@ namespace Services.Schema
 
     public partial class QueueChannelMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityQueueChannel,QueueChannel> _EntityToDto;
-        private IMappingExpression<QueueChannel,DocEntityQueueChannel> _DtoToEntity;
+        protected IMappingExpression<DocEntityQueueChannel,QueueChannel> _EntityToDto;
+        protected IMappingExpression<QueueChannel,DocEntityQueueChannel> _DtoToEntity;
+
         public QueueChannelMapper()
         {
             CreateMap<DocEntitySet<DocEntityQueueChannel>,List<Reference>>()

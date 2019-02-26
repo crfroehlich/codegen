@@ -294,8 +294,9 @@ namespace Services.Schema
 
     public partial class RoleMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityRole,Role> _EntityToDto;
-        private IMappingExpression<Role,DocEntityRole> _DtoToEntity;
+        protected IMappingExpression<DocEntityRole,Role> _EntityToDto;
+        protected IMappingExpression<Role,DocEntityRole> _DtoToEntity;
+
         public RoleMapper()
         {
             CreateMap<DocEntitySet<DocEntityRole>,List<Reference>>()

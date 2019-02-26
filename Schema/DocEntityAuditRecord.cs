@@ -297,8 +297,9 @@ namespace Services.Schema
 
     public partial class AuditRecordMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityAuditRecord,AuditRecord> _EntityToDto;
-        private IMappingExpression<AuditRecord,DocEntityAuditRecord> _DtoToEntity;
+        protected IMappingExpression<DocEntityAuditRecord,AuditRecord> _EntityToDto;
+        protected IMappingExpression<AuditRecord,DocEntityAuditRecord> _DtoToEntity;
+
         public AuditRecordMapper()
         {
             CreateMap<DocEntitySet<DocEntityAuditRecord>,List<Reference>>()

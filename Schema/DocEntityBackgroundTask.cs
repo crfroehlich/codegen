@@ -340,8 +340,9 @@ namespace Services.Schema
 
     public partial class BackgroundTaskMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityBackgroundTask,BackgroundTask> _EntityToDto;
-        private IMappingExpression<BackgroundTask,DocEntityBackgroundTask> _DtoToEntity;
+        protected IMappingExpression<DocEntityBackgroundTask,BackgroundTask> _EntityToDto;
+        protected IMappingExpression<BackgroundTask,DocEntityBackgroundTask> _DtoToEntity;
+
         public BackgroundTaskMapper()
         {
             CreateMap<DocEntitySet<DocEntityBackgroundTask>,List<Reference>>()

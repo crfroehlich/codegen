@@ -331,9 +331,9 @@ namespace Services.Schema
 
     public partial class ImportDataMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityImportData,ImportData> _EntityToDto;
-        private IMappingExpression<ImportData,DocEntityImportData> _DtoToEntity;
-        private IMappingExpression<DocImportData,ImportData> _ModelToDto;
+        protected IMappingExpression<DocEntityImportData,ImportData> _EntityToDto;
+        protected IMappingExpression<ImportData,DocEntityImportData> _DtoToEntity;
+
         public ImportDataMapper()
         {
             CreateMap<DocEntitySet<DocEntityImportData>,List<Reference>>()
@@ -372,30 +372,6 @@ namespace Services.Schema
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<ImportData,DocEntityImportData>()
                 .MaxDepth(2);
-            _ModelToDto = CreateMap<DocImportData,ImportData>()
-                .ForMember(dest => dest.CompletedOn, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.CompletedOn))))
-                .ForMember(dest => dest.Document, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.Document))))
-                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.DocumentSets))))
-                .ForMember(dest => dest.ErrorData, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ErrorData))))
-                .ForMember(dest => dest.ExtractUrl, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ExtractUrl))))
-                .ForMember(dest => dest.HighPriority, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.HighPriority))))
-                .ForMember(dest => dest.ImportFr, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportFr))))
-                .ForMember(dest => dest.ImportNewName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportNewName))))
-                .ForMember(dest => dest.ImportTable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportTable))))
-                .ForMember(dest => dest.ImportText, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportText))))
-                .ForMember(dest => dest.ImportType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportType))))
-                .ForMember(dest => dest.IsLegacy, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.IsLegacy))))
-                .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.Order))))
-                .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ReferenceId))))
-                .ForMember(dest => dest.RequestedBy, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.RequestedBy))))
-                .ForMember(dest => dest.RequestedOn, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.RequestedOn))))
-                .ForMember(dest => dest.StartedOn, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.StartedOn))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.Status))))
-.MaxDepth(2);
-            CreateMap<DocImportData, Reference>()
-                .ForMember(dest => dest.Name, opt => opt.Ignore() );
-            CreateMap<Reference, DocImportData>()
-                .ForAllMembers(opt => opt.Ignore() );
             ApplyCustomMaps();
         }
     }

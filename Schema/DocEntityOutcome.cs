@@ -230,8 +230,9 @@ namespace Services.Schema
 
     public partial class OutcomeMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityOutcome,Outcome> _EntityToDto;
-        private IMappingExpression<Outcome,DocEntityOutcome> _DtoToEntity;
+        protected IMappingExpression<DocEntityOutcome,Outcome> _EntityToDto;
+        protected IMappingExpression<Outcome,DocEntityOutcome> _DtoToEntity;
+
         public OutcomeMapper()
         {
             CreateMap<DocEntitySet<DocEntityOutcome>,List<Reference>>()
