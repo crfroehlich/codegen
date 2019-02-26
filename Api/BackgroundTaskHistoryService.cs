@@ -144,9 +144,6 @@ namespace Services.API
         public List<BackgroundTaskHistory> Get(BackgroundTaskHistorySearch request) => GetSearchResult<BackgroundTaskHistory,DocEntityBackgroundTaskHistory,BackgroundTaskHistorySearch>(DocConstantModelName.BACKGROUNDTASKHISTORY, request, _ExecSearch);
 
         public BackgroundTaskHistory Get(BackgroundTaskHistory request) => GetEntity<BackgroundTaskHistory>(DocConstantModelName.BACKGROUNDTASKHISTORY, request, GetBackgroundTaskHistory);
-
-
-
         public object Get(BackgroundTaskHistoryJunction request) =>
             Execute.Run( s => 
             {
@@ -158,7 +155,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtaskhistory/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private BackgroundTaskHistory GetBackgroundTaskHistory(BackgroundTaskHistory request)
         {
             var id = request?.Id;

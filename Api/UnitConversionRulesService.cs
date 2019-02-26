@@ -415,7 +415,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<UnitConversionRules> Put(UnitConversionRulesBatch request)
         {
             return Patch(request);
@@ -425,7 +424,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<UnitConversionRules> Patch(UnitConversionRulesBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -486,7 +484,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(UnitConversionRulesBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -564,7 +561,6 @@ namespace Services.API
                 });
             });
         }
-
         private UnitConversionRules GetUnitConversionRules(UnitConversionRules request)
         {
             var id = request?.Id;

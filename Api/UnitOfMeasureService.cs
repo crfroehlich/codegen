@@ -358,7 +358,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<UnitOfMeasure> Put(UnitOfMeasureBatch request)
         {
             return Patch(request);
@@ -368,7 +367,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<UnitOfMeasure> Patch(UnitOfMeasureBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -429,7 +427,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(UnitOfMeasureBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -507,7 +504,6 @@ namespace Services.API
                 });
             });
         }
-
         private UnitOfMeasure GetUnitOfMeasure(UnitOfMeasure request)
         {
             var id = request?.Id;

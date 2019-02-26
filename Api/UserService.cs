@@ -1198,7 +1198,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<User> Put(UserBatch request)
         {
             return Patch(request);
@@ -1208,7 +1207,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<User> Patch(UserBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -1269,7 +1267,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public object Get(UserJunction request) =>
             Execute.Run( s => 
             {
@@ -1340,7 +1337,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private User GetUser(User request)
         {
             var id = request?.Id;

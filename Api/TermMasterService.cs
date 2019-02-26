@@ -513,7 +513,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<TermMaster> Put(TermMasterBatch request)
         {
             return Patch(request);
@@ -523,7 +522,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<TermMaster> Patch(TermMasterBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -584,7 +582,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(TermMasterBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -702,7 +699,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private TermMaster GetTermMaster(TermMaster request)
         {
             var id = request?.Id;

@@ -64,10 +64,6 @@ namespace Services.Dto
         public int? ClassId { get; set; }
 
 
-        [ApiMember(Name = nameof(CustomAuthorization), Description = "bool", IsRequired = false)]
-        public bool CustomAuthorization { get; set; }
-
-
         [ApiMember(Name = nameof(CustomCollections), Description = "DataProperty", IsRequired = false)]
         public List<Reference> CustomCollections { get; set; }
         public int? CustomCollectionsCount { get; set; }
@@ -98,37 +94,13 @@ namespace Services.Dto
         public bool GET { get; set; }
 
 
-        [ApiMember(Name = nameof(HasDto), Description = "bool", IsRequired = false)]
-        public bool HasDto { get; set; }
-
-
-        [ApiMember(Name = nameof(IgnoreInSearch), Description = "string", IsRequired = false)]
-        public string IgnoreInSearch { get; set; }
-
-
         [ApiMember(Name = nameof(IgnoreProps), Description = "DataProperty", IsRequired = false)]
         public List<Reference> IgnoreProps { get; set; }
         public int? IgnorePropsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(ImplementService), Description = "bool", IsRequired = false)]
-        public bool ImplementService { get; set; }
-
-
-        [ApiMember(Name = nameof(Inherits), Description = "string", IsRequired = false)]
-        public string Inherits { get; set; }
-
-
-        [ApiMember(Name = nameof(IsBaseClass), Description = "bool", IsRequired = false)]
-        public bool IsBaseClass { get; set; }
-
-
         [ApiMember(Name = nameof(IsCached), Description = "bool", IsRequired = false)]
         public bool IsCached { get; set; }
-
-
-        [ApiMember(Name = nameof(IsInModel), Description = "bool", IsRequired = false)]
-        public bool IsInModel { get; set; }
 
 
         [ApiMember(Name = nameof(IsInsertOnly), Description = "bool", IsRequired = false)]
@@ -165,10 +137,6 @@ namespace Services.Dto
         public bool PUT { get; set; }
 
 
-        [ApiMember(Name = nameof(SuperAdminOnly), Description = "bool", IsRequired = false)]
-        public bool SuperAdminOnly { get; set; }
-
-
         [ApiMember(Name = nameof(Tabs), Description = "DataTab", IsRequired = false)]
         public List<DataTab> Tabs { get; set; }
         public int? TabsCount { get; set; }
@@ -200,7 +168,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllVisibleFieldsByDefault),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomAuthorization),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(HasDto),nameof(IgnoreInSearch),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(ImplementService),nameof(Inherits),nameof(IsBaseClass),nameof(IsCached),nameof(IsInModel),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(JsonIgnore),nameof(JsonIgnoreCount),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(SuperAdminOnly),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllVisibleFieldsByDefault),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(IsCached),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(JsonIgnore),nameof(JsonIgnoreCount),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -234,8 +202,6 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> AllVisibleFieldsByDefault { get; set; }
         public int? ClassId { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> CustomAuthorization { get; set; }
         public List<int> CustomCollectionsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> DELETE { get; set; }
@@ -246,19 +212,9 @@ namespace Services.Dto
         public List<bool> FlattenReferences { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> GET { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> HasDto { get; set; }
-        public string IgnoreInSearch { get; set; }
         public List<int> IgnorePropsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> ImplementService { get; set; }
-        public string Inherits { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> IsBaseClass { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsCached { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> IsInModel { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsInsertOnly { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -272,8 +228,6 @@ namespace Services.Dto
         public List<int> PropertiesIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> PUT { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> SuperAdminOnly { get; set; }
         public List<int> TabsIds { get; set; }
     }
 
@@ -301,7 +255,6 @@ namespace Services.Dto
         public bool doAllowDelete { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.AllowDelete))); }
         public bool doAllVisibleFieldsByDefault { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.AllVisibleFieldsByDefault))); }
         public bool doClassId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.ClassId))); }
-        public bool doCustomAuthorization { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.CustomAuthorization))); }
         public bool doCustomCollections { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.CustomCollections))); }
         public bool doDELETE { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.DELETE))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Description))); }
@@ -309,14 +262,8 @@ namespace Services.Dto
         public bool doDtoSuffix { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.DtoSuffix))); }
         public bool doFlattenReferences { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.FlattenReferences))); }
         public bool doGET { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.GET))); }
-        public bool doHasDto { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.HasDto))); }
-        public bool doIgnoreInSearch { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IgnoreInSearch))); }
         public bool doIgnoreProps { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IgnoreProps))); }
-        public bool doImplementService { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.ImplementService))); }
-        public bool doInherits { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Inherits))); }
-        public bool doIsBaseClass { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsBaseClass))); }
         public bool doIsCached { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsCached))); }
-        public bool doIsInModel { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsInModel))); }
         public bool doIsInsertOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsInsertOnly))); }
         public bool doIsReadOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsReadOnly))); }
         public bool doJsonIgnore { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.JsonIgnore))); }
@@ -325,7 +272,6 @@ namespace Services.Dto
         public bool doPOST { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.POST))); }
         public bool doProperties { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Properties))); }
         public bool doPUT { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.PUT))); }
-        public bool doSuperAdminOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.SuperAdminOnly))); }
         public bool doTabs { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Tabs))); }
     }
 

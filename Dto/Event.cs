@@ -184,7 +184,6 @@ namespace Services.Dto
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Users))); }
     }
 
-    [Route("/event/batch", "DELETE, PATCH, POST, PUT")]
     public partial class EventBatch : List<Event> { }
 
     [Route("/event/{Id}/{Junction}/version", "GET, POST")]

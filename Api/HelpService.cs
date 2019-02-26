@@ -471,7 +471,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Help> Put(HelpBatch request)
         {
             return Patch(request);
@@ -481,7 +480,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Help> Patch(HelpBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -542,7 +540,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(HelpBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -660,7 +657,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Help GetHelp(Help request)
         {
             var id = request?.Id;

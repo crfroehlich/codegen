@@ -363,7 +363,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<VariableInstance> Put(VariableInstanceBatch request)
         {
             return Patch(request);
@@ -373,7 +372,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<VariableInstance> Patch(VariableInstanceBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -434,7 +432,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(VariableInstanceBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -546,7 +543,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private VariableInstance GetVariableInstance(VariableInstance request)
         {
             var id = request?.Id;

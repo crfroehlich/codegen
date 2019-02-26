@@ -457,7 +457,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Junction> Put(JunctionBatch request)
         {
             return Patch(request);
@@ -467,7 +466,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Junction> Patch(JunctionBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -528,7 +526,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(JunctionBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -640,7 +637,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Junction GetJunction(Junction request)
         {
             var id = request?.Id;

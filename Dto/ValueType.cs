@@ -151,7 +151,6 @@ namespace Services.Dto
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ValueType.Name))); }
     }
 
-    [Route("/valuetype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ValueTypeBatch : List<ValueType> { }
 
 }

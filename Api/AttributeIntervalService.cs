@@ -258,7 +258,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<AttributeInterval> Put(AttributeIntervalBatch request)
         {
             return Patch(request);
@@ -268,7 +267,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<AttributeInterval> Patch(AttributeIntervalBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -329,7 +327,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(AttributeIntervalBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -407,7 +404,6 @@ namespace Services.API
                 });
             });
         }
-
         private AttributeInterval GetAttributeInterval(AttributeInterval request)
         {
             var id = request?.Id;

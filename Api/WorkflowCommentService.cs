@@ -385,7 +385,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<WorkflowComment> Put(WorkflowCommentBatch request)
         {
             return Patch(request);
@@ -395,7 +394,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<WorkflowComment> Patch(WorkflowCommentBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -456,7 +454,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(WorkflowCommentBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -568,7 +565,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private WorkflowComment GetWorkflowComment(WorkflowComment request)
         {
             var id = request?.Id;

@@ -326,9 +326,6 @@ namespace Services.API
             });
             return ret;
         }
-
-
-
         public void Delete(TagBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -440,7 +437,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Tag GetTag(Tag request)
         {
             var id = request?.Id;

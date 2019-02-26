@@ -426,7 +426,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Attribute> Put(AttributeBatch request)
         {
             return Patch(request);
@@ -436,7 +435,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Attribute> Patch(AttributeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -497,7 +495,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(AttributeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -575,7 +572,6 @@ namespace Services.API
                 });
             });
         }
-
         private Attribute GetAttribute(Attribute request)
         {
             var id = request?.Id;

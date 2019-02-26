@@ -109,11 +109,6 @@ namespace Services.API
                 }
                 if(request.ClassId.HasValue)
                     entities = entities.Where(en => request.ClassId.Value == en.ClassId);
-                if(true == request.CustomAuthorization?.Any())
-                {
-                    if(request.CustomAuthorization.Any(v => v == null)) entities = entities.Where(en => en.CustomAuthorization.In(request.CustomAuthorization) || en.CustomAuthorization == null);
-                    else entities = entities.Where(en => en.CustomAuthorization.In(request.CustomAuthorization));
-                }
                 if(true == request.CustomCollectionsIds?.Any())
                 {
                     entities = entities.Where(en => en.CustomCollections.Any(r => r.Id.In(request.CustomCollectionsIds)));
@@ -141,38 +136,14 @@ namespace Services.API
                     if(request.GET.Any(v => v == null)) entities = entities.Where(en => en.GET.In(request.GET) || en.GET == null);
                     else entities = entities.Where(en => en.GET.In(request.GET));
                 }
-                if(true == request.HasDto?.Any())
-                {
-                    if(request.HasDto.Any(v => v == null)) entities = entities.Where(en => en.HasDto.In(request.HasDto) || en.HasDto == null);
-                    else entities = entities.Where(en => en.HasDto.In(request.HasDto));
-                }
-                if(!DocTools.IsNullOrEmpty(request.IgnoreInSearch))
-                    entities = entities.Where(en => en.IgnoreInSearch.Contains(request.IgnoreInSearch));
                 if(true == request.IgnorePropsIds?.Any())
                 {
                     entities = entities.Where(en => en.IgnoreProps.Any(r => r.Id.In(request.IgnorePropsIds)));
-                }
-                if(true == request.ImplementService?.Any())
-                {
-                    if(request.ImplementService.Any(v => v == null)) entities = entities.Where(en => en.ImplementService.In(request.ImplementService) || en.ImplementService == null);
-                    else entities = entities.Where(en => en.ImplementService.In(request.ImplementService));
-                }
-                if(!DocTools.IsNullOrEmpty(request.Inherits))
-                    entities = entities.Where(en => en.Inherits.Contains(request.Inherits));
-                if(true == request.IsBaseClass?.Any())
-                {
-                    if(request.IsBaseClass.Any(v => v == null)) entities = entities.Where(en => en.IsBaseClass.In(request.IsBaseClass) || en.IsBaseClass == null);
-                    else entities = entities.Where(en => en.IsBaseClass.In(request.IsBaseClass));
                 }
                 if(true == request.IsCached?.Any())
                 {
                     if(request.IsCached.Any(v => v == null)) entities = entities.Where(en => en.IsCached.In(request.IsCached) || en.IsCached == null);
                     else entities = entities.Where(en => en.IsCached.In(request.IsCached));
-                }
-                if(true == request.IsInModel?.Any())
-                {
-                    if(request.IsInModel.Any(v => v == null)) entities = entities.Where(en => en.IsInModel.In(request.IsInModel) || en.IsInModel == null);
-                    else entities = entities.Where(en => en.IsInModel.In(request.IsInModel));
                 }
                 if(true == request.IsInsertOnly?.Any())
                 {
@@ -208,11 +179,6 @@ namespace Services.API
                 {
                     if(request.PUT.Any(v => v == null)) entities = entities.Where(en => en.PUT.In(request.PUT) || en.PUT == null);
                     else entities = entities.Where(en => en.PUT.In(request.PUT));
-                }
-                if(true == request.SuperAdminOnly?.Any())
-                {
-                    if(request.SuperAdminOnly.Any(v => v == null)) entities = entities.Where(en => en.SuperAdminOnly.In(request.SuperAdminOnly) || en.SuperAdminOnly == null);
-                    else entities = entities.Where(en => en.SuperAdminOnly.In(request.SuperAdminOnly));
                 }
                 if(true == request.TabsIds?.Any())
                 {
@@ -259,7 +225,6 @@ namespace Services.API
             var pAllowDelete = request.AllowDelete;
             var pAllVisibleFieldsByDefault = request.AllVisibleFieldsByDefault;
             var pClassId = request.ClassId;
-            var pCustomAuthorization = request.CustomAuthorization;
             var pCustomCollections = request.CustomCollections?.ToList();
             var pDELETE = request.DELETE;
             var pDescription = request.Description;
@@ -267,14 +232,8 @@ namespace Services.API
             var pDtoSuffix = request.DtoSuffix;
             var pFlattenReferences = request.FlattenReferences;
             var pGET = request.GET;
-            var pHasDto = request.HasDto;
-            var pIgnoreInSearch = request.IgnoreInSearch;
             var pIgnoreProps = request.IgnoreProps?.ToList();
-            var pImplementService = request.ImplementService;
-            var pInherits = request.Inherits;
-            var pIsBaseClass = request.IsBaseClass;
             var pIsCached = request.IsCached;
-            var pIsInModel = request.IsInModel;
             var pIsInsertOnly = request.IsInsertOnly;
             var pIsReadOnly = request.IsReadOnly;
             var pJsonIgnore = request.JsonIgnore?.ToList();
@@ -283,7 +242,6 @@ namespace Services.API
             var pPOST = request.POST;
             var pProperties = request.Properties?.ToList();
             var pPUT = request.PUT;
-            var pSuperAdminOnly = request.SuperAdminOnly;
             var pTabs = request.Tabs?.ToList();
 
             DocEntityDataClass entity = null;
@@ -332,16 +290,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<int?>(request, pClassId, nameof(request.ClassId)) && !request.VisibleFields.Matches(nameof(request.ClassId), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.ClassId));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pCustomAuthorization, permission, DocConstantModelName.DATACLASS, nameof(request.CustomAuthorization)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pCustomAuthorization, entity.CustomAuthorization, nameof(request.CustomAuthorization)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CustomAuthorization)} cannot be modified once set.");
-                    entity.CustomAuthorization = pCustomAuthorization;
-                if(DocPermissionFactory.IsRequested<bool>(request, pCustomAuthorization, nameof(request.CustomAuthorization)) && !request.VisibleFields.Matches(nameof(request.CustomAuthorization), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.CustomAuthorization));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pDELETE, permission, DocConstantModelName.DATACLASS, nameof(request.DELETE)))
@@ -393,56 +341,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.GET));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pHasDto, permission, DocConstantModelName.DATACLASS, nameof(request.HasDto)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pHasDto, entity.HasDto, nameof(request.HasDto)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.HasDto)} cannot be modified once set.");
-                    entity.HasDto = pHasDto;
-                if(DocPermissionFactory.IsRequested<bool>(request, pHasDto, nameof(request.HasDto)) && !request.VisibleFields.Matches(nameof(request.HasDto), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.HasDto));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pIgnoreInSearch, permission, DocConstantModelName.DATACLASS, nameof(request.IgnoreInSearch)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pIgnoreInSearch, entity.IgnoreInSearch, nameof(request.IgnoreInSearch)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IgnoreInSearch)} cannot be modified once set.");
-                    entity.IgnoreInSearch = pIgnoreInSearch;
-                if(DocPermissionFactory.IsRequested<string>(request, pIgnoreInSearch, nameof(request.IgnoreInSearch)) && !request.VisibleFields.Matches(nameof(request.IgnoreInSearch), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.IgnoreInSearch));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pImplementService, permission, DocConstantModelName.DATACLASS, nameof(request.ImplementService)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pImplementService, entity.ImplementService, nameof(request.ImplementService)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ImplementService)} cannot be modified once set.");
-                    entity.ImplementService = pImplementService;
-                if(DocPermissionFactory.IsRequested<bool>(request, pImplementService, nameof(request.ImplementService)) && !request.VisibleFields.Matches(nameof(request.ImplementService), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.ImplementService));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pInherits, permission, DocConstantModelName.DATACLASS, nameof(request.Inherits)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pInherits, entity.Inherits, nameof(request.Inherits)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Inherits)} cannot be modified once set.");
-                    entity.Inherits = pInherits;
-                if(DocPermissionFactory.IsRequested<string>(request, pInherits, nameof(request.Inherits)) && !request.VisibleFields.Matches(nameof(request.Inherits), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Inherits));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsBaseClass, permission, DocConstantModelName.DATACLASS, nameof(request.IsBaseClass)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pIsBaseClass, entity.IsBaseClass, nameof(request.IsBaseClass)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsBaseClass)} cannot be modified once set.");
-                    entity.IsBaseClass = pIsBaseClass;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsBaseClass, nameof(request.IsBaseClass)) && !request.VisibleFields.Matches(nameof(request.IsBaseClass), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.IsBaseClass));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsCached, permission, DocConstantModelName.DATACLASS, nameof(request.IsCached)))
             {
                 if(DocPermissionFactory.IsRequested(request, pIsCached, entity.IsCached, nameof(request.IsCached)))
@@ -451,16 +349,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsCached, nameof(request.IsCached)) && !request.VisibleFields.Matches(nameof(request.IsCached), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.IsCached));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsInModel, permission, DocConstantModelName.DATACLASS, nameof(request.IsInModel)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pIsInModel, entity.IsInModel, nameof(request.IsInModel)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsInModel)} cannot be modified once set.");
-                    entity.IsInModel = pIsInModel;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsInModel, nameof(request.IsInModel)) && !request.VisibleFields.Matches(nameof(request.IsInModel), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.IsInModel));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsInsertOnly, permission, DocConstantModelName.DATACLASS, nameof(request.IsInsertOnly)))
@@ -521,16 +409,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pPUT, nameof(request.PUT)) && !request.VisibleFields.Matches(nameof(request.PUT), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.PUT));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pSuperAdminOnly, permission, DocConstantModelName.DATACLASS, nameof(request.SuperAdminOnly)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pSuperAdminOnly, entity.SuperAdminOnly, nameof(request.SuperAdminOnly)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SuperAdminOnly)} cannot be modified once set.");
-                    entity.SuperAdminOnly = pSuperAdminOnly;
-                if(DocPermissionFactory.IsRequested<bool>(request, pSuperAdminOnly, nameof(request.SuperAdminOnly)) && !request.VisibleFields.Matches(nameof(request.SuperAdminOnly), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.SuperAdminOnly));
                 }
             }
             
@@ -810,7 +688,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<DataClass> Put(DataClassBatch request)
         {
             return Patch(request);
@@ -820,7 +697,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<DataClass> Patch(DataClassBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -881,7 +757,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public object Get(DataClassJunction request) =>
             Execute.Run( s => 
             {
@@ -946,7 +821,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private DataClass GetDataClass(DataClass request)
         {
             var id = request?.Id;

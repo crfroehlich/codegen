@@ -201,7 +201,6 @@ namespace Services.Dto
         public bool doTask { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskHistory.Task))); }
     }
 
-    [Route("/backgroundtaskhistory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class BackgroundTaskHistoryBatch : List<BackgroundTaskHistory> { }
 
     [Route("/backgroundtaskhistory/{Id}/{Junction}/version", "GET, POST")]

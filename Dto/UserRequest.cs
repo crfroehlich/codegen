@@ -174,7 +174,6 @@ namespace Services.Dto
         public bool doUserSession { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserRequest.UserSession))); }
     }
 
-    [Route("/userrequest/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserRequestBatch : List<UserRequest> { }
 
 }

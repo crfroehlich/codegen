@@ -288,10 +288,6 @@ namespace Services.API
             });
             return ret;
         }
-
-
-
-
         private AuditDelta GetAuditDelta(AuditDelta request)
         {
             var id = request?.Id;

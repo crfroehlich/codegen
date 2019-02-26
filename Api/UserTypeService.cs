@@ -394,7 +394,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<UserType> Put(UserTypeBatch request)
         {
             return Patch(request);
@@ -404,7 +403,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<UserType> Patch(UserTypeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -465,7 +463,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(UserTypeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -577,7 +574,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for usertype/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private UserType GetUserType(UserType request)
         {
             var id = request?.Id;

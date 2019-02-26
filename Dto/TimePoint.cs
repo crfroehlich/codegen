@@ -164,7 +164,6 @@ namespace Services.Dto
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimePoint.Type))); }
     }
 
-    [Route("/timepoint/batch", "DELETE, PATCH, POST, PUT")]
     public partial class TimePointBatch : List<TimePoint> { }
 
 }

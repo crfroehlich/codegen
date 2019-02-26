@@ -164,9 +164,6 @@ namespace Services.API
         public List<BackgroundTaskItem> Get(BackgroundTaskItemSearch request) => GetSearchResult<BackgroundTaskItem,DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(DocConstantModelName.BACKGROUNDTASKITEM, request, _ExecSearch);
 
         public BackgroundTaskItem Get(BackgroundTaskItem request) => GetEntity<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, request, GetBackgroundTaskItem);
-
-
-
         public object Get(BackgroundTaskItemJunction request) =>
             Execute.Run( s => 
             {
@@ -178,7 +175,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtaskitem/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private BackgroundTaskItem GetBackgroundTaskItem(BackgroundTaskItem request)
         {
             var id = request?.Id;

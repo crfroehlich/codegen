@@ -439,7 +439,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<TimeCard> Put(TimeCardBatch request)
         {
             return Patch(request);
@@ -449,7 +448,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<TimeCard> Patch(TimeCardBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -510,7 +508,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(TimeCardBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -588,7 +585,6 @@ namespace Services.API
                 });
             });
         }
-
         private TimeCard GetTimeCard(TimeCard request)
         {
             var id = request?.Id;

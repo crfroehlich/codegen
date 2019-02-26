@@ -588,7 +588,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Team> Put(TeamBatch request)
         {
             return Patch(request);
@@ -598,7 +597,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Team> Patch(TeamBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -659,7 +657,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(TeamBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -789,7 +786,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Team GetTeam(Team request)
         {
             var id = request?.Id;

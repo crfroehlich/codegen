@@ -194,7 +194,6 @@ namespace Services.Dto
         public bool doUserHistory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.UserHistory))); }
     }
 
-    [Route("/usersession/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UserSessionBatch : List<UserSession> { }
 
     [Route("/usersession/{Id}/{Junction}/version", "GET, POST")]

@@ -56,8 +56,6 @@ namespace Services.Dto
 
     }
 
-    [Route("/units", "POST")]
-    [Route("/units/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class UnitsDto : UnitsBase, IReturn<UnitsDto>, IDto
     {
         public UnitsDto()
@@ -107,17 +105,12 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/Units/{Id}/copy", "POST")]
-    public partial class UnitsDtoCopy : UnitsDto {}
     public partial class UnitsSearchBase : Search<UnitsDto>
     {
         public int? Id { get; set; }
         public List<int> UnitsIds { get; set; }
     }
 
-    [Route("/units", "GET")]
-    [Route("/units/version", "GET, POST")]
-    [Route("/units/search", "GET, POST, DELETE")]
     public partial class UnitsSearch : UnitsSearchBase
     {
     }
@@ -139,7 +132,6 @@ namespace Services.Dto
         public bool doUnits { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitsDto.Units))); }
     }
 
-    [Route("/units/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitsBatch : List<UnitsDto> { }
 
     [Route("/units/{Id}/{Junction}/version", "GET, POST")]

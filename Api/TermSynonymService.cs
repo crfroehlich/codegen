@@ -401,7 +401,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<TermSynonym> Put(TermSynonymBatch request)
         {
             return Patch(request);
@@ -411,7 +410,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<TermSynonym> Patch(TermSynonymBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -472,7 +470,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(TermSynonymBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -584,7 +581,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private TermSynonym GetTermSynonym(TermSynonym request)
         {
             var id = request?.Id;

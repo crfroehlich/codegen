@@ -576,7 +576,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Role> Put(RoleBatch request)
         {
             return Patch(request);
@@ -586,7 +585,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Role> Patch(RoleBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -647,7 +645,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(RoleBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -777,7 +774,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Role GetRole(Role request)
         {
             var id = request?.Id;

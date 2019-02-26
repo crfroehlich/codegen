@@ -123,10 +123,6 @@ namespace Services.API
         public List<DatabaseVersion> Get(DatabaseVersionSearch request) => GetSearchResult<DatabaseVersion,DocEntityDatabaseVersion,DatabaseVersionSearch>(DocConstantModelName.DATABASEVERSION, request, _ExecSearch);
 
         public DatabaseVersion Get(DatabaseVersion request) => GetEntity<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, request, GetDatabaseVersion);
-
-
-
-
         private DatabaseVersion GetDatabaseVersion(DatabaseVersion request)
         {
             var id = request?.Id;

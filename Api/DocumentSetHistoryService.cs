@@ -133,10 +133,6 @@ namespace Services.API
         public List<DocumentSetHistory> Get(DocumentSetHistorySearch request) => GetSearchResult<DocumentSetHistory,DocEntityDocumentSetHistory,DocumentSetHistorySearch>(DocConstantModelName.DOCUMENTSETHISTORY, request, _ExecSearch);
 
         public DocumentSetHistory Get(DocumentSetHistory request) => GetEntity<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, request, GetDocumentSetHistory);
-
-
-
-
         private DocumentSetHistory GetDocumentSetHistory(DocumentSetHistory request)
         {
             var id = request?.Id;

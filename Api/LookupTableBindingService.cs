@@ -444,7 +444,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<LookupTableBinding> Put(LookupTableBindingBatch request)
         {
             return Patch(request);
@@ -454,7 +453,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<LookupTableBinding> Patch(LookupTableBindingBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -515,7 +513,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(LookupTableBindingBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -633,7 +630,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptablebinding/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private LookupTableBinding GetLookupTableBinding(LookupTableBinding request)
         {
             var id = request?.Id;

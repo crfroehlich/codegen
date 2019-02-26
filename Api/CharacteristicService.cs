@@ -343,7 +343,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Characteristic> Put(CharacteristicBatch request)
         {
             return Patch(request);
@@ -353,7 +352,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Characteristic> Patch(CharacteristicBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -414,7 +412,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(CharacteristicBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -526,7 +523,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for characteristic/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Characteristic GetCharacteristic(Characteristic request)
         {
             var id = request?.Id;

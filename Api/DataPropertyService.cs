@@ -768,7 +768,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<DataProperty> Put(DataPropertyBatch request)
         {
             return Patch(request);
@@ -778,7 +777,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<DataProperty> Patch(DataPropertyBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -839,7 +837,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public object Get(DataPropertyJunction request) =>
             Execute.Run( s => 
             {
@@ -874,7 +871,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private DataProperty GetDataProperty(DataProperty request)
         {
             var id = request?.Id;

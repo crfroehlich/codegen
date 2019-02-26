@@ -383,7 +383,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Update> Put(UpdateBatch request)
         {
             return Patch(request);
@@ -393,7 +392,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Update> Patch(UpdateBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -454,7 +452,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public object Get(UpdateJunction request) =>
             Execute.Run( s => 
             {
@@ -466,7 +463,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for update/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Update GetUpdate(Update request)
         {
             var id = request?.Id;

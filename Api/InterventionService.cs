@@ -343,7 +343,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Intervention> Put(InterventionBatch request)
         {
             return Patch(request);
@@ -353,7 +352,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Intervention> Patch(InterventionBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -414,7 +412,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(InterventionBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -526,7 +523,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Intervention GetIntervention(Intervention request)
         {
             var id = request?.Id;

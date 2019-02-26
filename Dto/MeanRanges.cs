@@ -56,8 +56,6 @@ namespace Services.Dto
 
     }
 
-    [Route("/meanranges", "POST")]
-    [Route("/meanranges/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class MeanRanges : MeanRangesBase, IReturn<MeanRanges>, IDto
     {
         public MeanRanges()
@@ -107,17 +105,12 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/MeanRanges/{Id}/copy", "POST")]
-    public partial class MeanRangesCopy : MeanRanges {}
     public partial class MeanRangesSearchBase : Search<MeanRanges>
     {
         public int? Id { get; set; }
         public List<int> RangesIds { get; set; }
     }
 
-    [Route("/meanranges", "GET")]
-    [Route("/meanranges/version", "GET, POST")]
-    [Route("/meanranges/search", "GET, POST, DELETE")]
     public partial class MeanRangesSearch : MeanRangesSearchBase
     {
     }
@@ -139,7 +132,6 @@ namespace Services.Dto
         public bool doRanges { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanRanges.Ranges))); }
     }
 
-    [Route("/meanranges/batch", "DELETE, PATCH, POST, PUT")]
     public partial class MeanRangesBatch : List<MeanRanges> { }
 
     [Route("/meanranges/{Id}/{Junction}/version", "GET, POST")]

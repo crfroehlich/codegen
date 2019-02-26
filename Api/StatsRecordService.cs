@@ -139,10 +139,6 @@ namespace Services.API
         public List<StatsRecord> Get(StatsRecordSearch request) => GetSearchResult<StatsRecord,DocEntityStatsRecord,StatsRecordSearch>(DocConstantModelName.STATSRECORD, request, _ExecSearch);
 
         public StatsRecord Get(StatsRecord request) => GetEntity<StatsRecord>(DocConstantModelName.STATSRECORD, request, GetStatsRecord);
-
-
-
-
         private StatsRecord GetStatsRecord(StatsRecord request)
         {
             var id = request?.Id;

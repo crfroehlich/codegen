@@ -338,7 +338,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<App> Put(AppBatch request)
         {
             return Patch(request);
@@ -348,7 +347,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<App> Patch(AppBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -409,7 +407,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public object Get(AppJunction request) =>
             Execute.Run( s => 
             {
@@ -456,7 +453,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private App GetApp(App request)
         {
             var id = request?.Id;

@@ -340,7 +340,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<ReleaseStatus> Put(ReleaseStatusBatch request)
         {
             return Patch(request);
@@ -350,7 +349,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<ReleaseStatus> Patch(ReleaseStatusBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -411,7 +409,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(ReleaseStatusBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -489,7 +486,6 @@ namespace Services.API
                 });
             });
         }
-
         private ReleaseStatus GetReleaseStatus(ReleaseStatus request)
         {
             var id = request?.Id;

@@ -61,7 +61,6 @@ namespace Services.Dto
 
     }
 
-    [Route("/studytype/{Id}", "GET")]
     public partial class StudyType : StudyTypeBase, IReturn<StudyType>, IDto
     {
         public StudyType()
@@ -115,9 +114,6 @@ namespace Services.Dto
         public List<string> TypeNames { get; set; }
     }
 
-    [Route("/studytype", "GET")]
-    [Route("/studytype/version", "GET, POST")]
-    [Route("/studytype/search", "GET, POST, DELETE")]
     public partial class StudyTypeSearch : StudyTypeSearchBase
     {
     }
@@ -139,7 +135,6 @@ namespace Services.Dto
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyType.Type))); }
     }
 
-    [Route("/studytype/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StudyTypeBatch : List<StudyType> { }
 
 }

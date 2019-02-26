@@ -169,7 +169,6 @@ namespace Services.Dto
         public bool doStudySetStats { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.StudySetStats))); }
     }
 
-    [Route("/stats/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsBatch : List<Stats> { }
 
 }

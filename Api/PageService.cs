@@ -508,7 +508,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Page> Put(PageBatch request)
         {
             return Patch(request);
@@ -518,7 +517,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Page> Patch(PageBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -579,7 +577,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(PageBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -709,7 +706,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Page GetPage(Page request)
         {
             var id = request?.Id;

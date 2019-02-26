@@ -175,9 +175,6 @@ namespace Services.API
         public List<AuditRecord> Get(AuditRecordSearch request) => GetSearchResult<AuditRecord,DocEntityAuditRecord,AuditRecordSearch>(DocConstantModelName.AUDITRECORD, request, _ExecSearch);
 
         public AuditRecord Get(AuditRecord request) => GetEntity<AuditRecord>(DocConstantModelName.AUDITRECORD, request, GetAuditRecord);
-
-
-
         public object Get(AuditRecordJunction request) =>
             Execute.Run( s => 
             {
@@ -189,7 +186,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for auditrecord/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private AuditRecord GetAuditRecord(AuditRecord request)
         {
             var id = request?.Id;

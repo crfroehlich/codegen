@@ -526,7 +526,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<VariableRule> Put(VariableRuleBatch request)
         {
             return Patch(request);
@@ -536,7 +535,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<VariableRule> Patch(VariableRuleBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -597,7 +595,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(VariableRuleBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -721,7 +718,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private VariableRule GetVariableRule(VariableRule request)
         {
             var id = request?.Id;

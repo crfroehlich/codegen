@@ -122,11 +122,6 @@ namespace Services.Schema
         public int ClassId { get; set; }
 
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(CustomAuthorization))]
-        public bool CustomAuthorization { get; set; }
-
-
         [Field()]
         [FieldMapping(nameof(CustomCollections))]
         public DocEntitySet<DocEntityDataProperty> CustomCollections { get; private set; }
@@ -168,16 +163,6 @@ namespace Services.Schema
         public bool GET { get; set; }
 
 
-        [Field(DefaultValue = true)]
-        [FieldMapping(nameof(HasDto))]
-        public bool HasDto { get; set; }
-
-
-        [Field()]
-        [FieldMapping(nameof(IgnoreInSearch))]
-        public string IgnoreInSearch { get; set; }
-
-
         [Field()]
         [FieldMapping(nameof(IgnoreProps))]
         public DocEntitySet<DocEntityDataProperty> IgnoreProps { get; private set; }
@@ -187,28 +172,8 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(ImplementService))]
-        public bool ImplementService { get; set; }
-
-
-        [Field()]
-        [FieldMapping(nameof(Inherits))]
-        public string Inherits { get; set; }
-
-
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsBaseClass))]
-        public bool IsBaseClass { get; set; }
-
-
-        [Field(DefaultValue = true)]
         [FieldMapping(nameof(IsCached))]
         public bool IsCached { get; set; }
-
-
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsInModel))]
-        public bool IsInModel { get; set; }
 
 
         [Field(DefaultValue = false)]
@@ -256,11 +221,6 @@ namespace Services.Schema
         [Field(DefaultValue = false)]
         [FieldMapping(nameof(PUT))]
         public bool PUT { get; set; }
-
-
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(SuperAdminOnly))]
-        public bool SuperAdminOnly { get; set; }
 
 
         [Field()]
@@ -351,8 +311,6 @@ namespace Services.Schema
         {
             Description = Description?.TrimAndPruneSpaces();
             DtoSuffix = DtoSuffix?.TrimAndPruneSpaces();
-            IgnoreInSearch = IgnoreInSearch?.TrimAndPruneSpaces();
-            Inherits = Inherits?.TrimAndPruneSpaces();
             Name = Name?.TrimAndPruneSpaces();
             return base.SaveChanges(permission);
         }
@@ -422,7 +380,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.AllowDelete, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.AllowDelete))))
                 .ForMember(dest => dest.AllVisibleFieldsByDefault, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.AllVisibleFieldsByDefault))))
                 .ForMember(dest => dest.ClassId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.ClassId))))
-                .ForMember(dest => dest.CustomAuthorization, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomAuthorization))))
                 .ForMember(dest => dest.CustomCollections, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomCollections))))
                 .ForMember(dest => dest.CustomCollectionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomCollectionsCount))))
                 .ForMember(dest => dest.DELETE, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DELETE))))
@@ -432,15 +389,9 @@ namespace Services.Schema
                 .ForMember(dest => dest.DtoSuffix, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DtoSuffix))))
                 .ForMember(dest => dest.FlattenReferences, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.FlattenReferences))))
                 .ForMember(dest => dest.GET, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.GET))))
-                .ForMember(dest => dest.HasDto, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.HasDto))))
-                .ForMember(dest => dest.IgnoreInSearch, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnoreInSearch))))
                 .ForMember(dest => dest.IgnoreProps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnoreProps))))
                 .ForMember(dest => dest.IgnorePropsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnorePropsCount))))
-                .ForMember(dest => dest.ImplementService, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.ImplementService))))
-                .ForMember(dest => dest.Inherits, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Inherits))))
-                .ForMember(dest => dest.IsBaseClass, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsBaseClass))))
                 .ForMember(dest => dest.IsCached, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsCached))))
-                .ForMember(dest => dest.IsInModel, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsInModel))))
                 .ForMember(dest => dest.IsInsertOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsInsertOnly))))
                 .ForMember(dest => dest.IsReadOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsReadOnly))))
                 .ForMember(dest => dest.JsonIgnore, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.JsonIgnore))))
@@ -451,7 +402,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Properties, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Properties))))
                 .ForMember(dest => dest.PropertiesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.PropertiesCount))))
                 .ForMember(dest => dest.PUT, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.PUT))))
-                .ForMember(dest => dest.SuperAdminOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.SuperAdminOnly))))
                 .ForMember(dest => dest.Tabs, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Tabs))))
                 .ForMember(dest => dest.TabsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.TabsCount))))
                 .MaxDepth(2);

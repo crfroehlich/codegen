@@ -627,7 +627,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<ImportData> Put(ImportDataBatch request)
         {
             return Patch(request);
@@ -637,7 +636,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<ImportData> Patch(ImportDataBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -698,7 +696,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(ImportDataBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -810,7 +807,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for importdata/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private ImportData GetImportData(ImportData request)
         {
             var id = request?.Id;

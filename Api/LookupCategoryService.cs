@@ -348,7 +348,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<LookupCategory> Put(LookupCategoryBatch request)
         {
             return Patch(request);
@@ -358,7 +357,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<LookupCategory> Patch(LookupCategoryBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -419,7 +417,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(LookupCategoryBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -531,7 +528,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private LookupCategory GetLookupCategory(LookupCategory request)
         {
             var id = request?.Id;

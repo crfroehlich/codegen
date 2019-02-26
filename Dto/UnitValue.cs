@@ -79,8 +79,6 @@ namespace Services.Dto
 
     }
 
-    [Route("/unitvalue", "POST")]
-    [Route("/unitvalue/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class UnitValue : UnitValueBase, IReturn<UnitValue>, IDto
     {
         public UnitValue()
@@ -130,8 +128,6 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/UnitValue/{Id}/copy", "POST")]
-    public partial class UnitValueCopy : UnitValue {}
     public partial class UnitValueSearchBase : Search<UnitValue>
     {
         public int? Id { get; set; }
@@ -146,9 +142,6 @@ namespace Services.Dto
         public List<int> UnitIds { get; set; }
     }
 
-    [Route("/unitvalue", "GET")]
-    [Route("/unitvalue/version", "GET, POST")]
-    [Route("/unitvalue/search", "GET, POST, DELETE")]
     public partial class UnitValueSearch : UnitValueSearchBase
     {
     }
@@ -175,7 +168,6 @@ namespace Services.Dto
         public bool doUnit { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitValue.Unit))); }
     }
 
-    [Route("/unitvalue/batch", "DELETE, PATCH, POST, PUT")]
     public partial class UnitValueBatch : List<UnitValue> { }
 
     [Route("/unitvalue/{Id}/{Junction}/version", "GET, POST")]

@@ -1614,7 +1614,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<DocumentSet> Put(DocumentSetBatch request)
         {
             return Patch(request);
@@ -1624,7 +1623,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<DocumentSet> Patch(DocumentSetBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -1685,7 +1683,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(DocumentSetBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -1871,7 +1868,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private DocumentSet GetDocumentSet(DocumentSet request)
         {
             var id = request?.Id;

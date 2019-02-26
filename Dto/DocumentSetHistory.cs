@@ -162,7 +162,6 @@ namespace Services.Dto
         public bool doStudyCountFQ { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSetHistory.StudyCountFQ))); }
     }
 
-    [Route("/documentsethistory/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DocumentSetHistoryBatch : List<DocumentSetHistory> { }
 
 }

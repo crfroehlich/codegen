@@ -315,7 +315,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<DateTimeDto> Put(DateTimeBatch request)
         {
             return Patch(request);
@@ -325,7 +324,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<DateTimeDto> Patch(DateTimeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -386,7 +384,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(DateTimeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -464,7 +461,6 @@ namespace Services.API
                 });
             });
         }
-
         private DateTimeDto GetDateTime(DateTimeDto request)
         {
             var id = request?.Id;

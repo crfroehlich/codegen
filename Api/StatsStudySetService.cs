@@ -161,9 +161,6 @@ namespace Services.API
         public List<StatsStudySet> Get(StatsStudySetSearch request) => GetSearchResult<StatsStudySet,DocEntityStatsStudySet,StatsStudySetSearch>(DocConstantModelName.STATSSTUDYSET, request, _ExecSearch);
 
         public StatsStudySet Get(StatsStudySet request) => GetEntity<StatsStudySet>(DocConstantModelName.STATSSTUDYSET, request, GetStatsStudySet);
-
-
-
         public object Get(StatsStudySetJunction request) =>
             Execute.Run( s => 
             {
@@ -175,7 +172,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for statsstudyset/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private StatsStudySet GetStatsStudySet(StatsStudySet request)
         {
             var id = request?.Id;

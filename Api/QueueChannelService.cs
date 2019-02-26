@@ -377,7 +377,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<QueueChannel> Put(QueueChannelBatch request)
         {
             return Patch(request);
@@ -387,7 +386,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<QueueChannel> Patch(QueueChannelBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -448,7 +446,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(QueueChannelBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -526,7 +523,6 @@ namespace Services.API
                 });
             });
         }
-
         private QueueChannel GetQueueChannel(QueueChannel request)
         {
             var id = request?.Id;

@@ -223,7 +223,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<DataTab> Put(DataTabBatch request)
         {
             return Patch(request);
@@ -233,7 +232,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<DataTab> Patch(DataTabBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -294,8 +292,6 @@ namespace Services.API
             });
             return ret;
         }
-
-
         private DataTab GetDataTab(DataTab request)
         {
             var id = request?.Id;

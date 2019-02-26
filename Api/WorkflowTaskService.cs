@@ -417,7 +417,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<WorkflowTask> Put(WorkflowTaskBatch request)
         {
             return Patch(request);
@@ -427,7 +426,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<WorkflowTask> Patch(WorkflowTaskBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -488,7 +486,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(WorkflowTaskBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -566,7 +563,6 @@ namespace Services.API
                 });
             });
         }
-
         private WorkflowTask GetWorkflowTask(WorkflowTask request)
         {
             var id = request?.Id;

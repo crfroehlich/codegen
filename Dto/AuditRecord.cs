@@ -239,7 +239,6 @@ namespace Services.Dto
         public bool doUserSession { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.UserSession))); }
     }
 
-    [Route("/auditrecord/batch", "DELETE, PATCH, POST, PUT")]
     public partial class AuditRecordBatch : List<AuditRecord> { }
 
     [Route("/auditrecord/{Id}/{Junction}/version", "GET, POST")]

@@ -302,10 +302,6 @@ namespace Services.API
             });
             return ret;
         }
-
-
-
-
         private LocaleLookup GetLocaleLookup(LocaleLookup request)
         {
             var id = request?.Id;

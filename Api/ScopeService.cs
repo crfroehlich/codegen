@@ -782,7 +782,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Scope> Put(ScopeBatch request)
         {
             return Patch(request);
@@ -792,7 +791,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Scope> Patch(ScopeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -853,7 +851,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(ScopeBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -995,7 +992,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Scope GetScope(Scope request)
         {
             var id = request?.Id;

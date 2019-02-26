@@ -559,7 +559,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Client> Put(ClientBatch request)
         {
             return Patch(request);
@@ -569,7 +568,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Client> Patch(ClientBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -630,7 +628,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(ClientBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -762,7 +759,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for client/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Client GetClient(Client request)
         {
             var id = request?.Id;

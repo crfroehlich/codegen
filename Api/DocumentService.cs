@@ -127,6 +127,10 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.DatabaseType.Name.In(request.DatabaseTypeNames));
                 }
+                if(true == request.DocumentSetsIds?.Any())
+                {
+                    entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.DocumentType) && !DocTools.IsNullOrEmpty(request.DocumentType.Id))
                 {
                     entities = entities.Where(en => en.DocumentType.Id == request.DocumentType.Id );
@@ -201,6 +205,10 @@ namespace Services.API
                     entities = entities.Where(en => request.MedlineID.Value == en.MedlineID);
                 if(!DocTools.IsNullOrEmpty(request.MeSH))
                     entities = entities.Where(en => en.MeSH.Contains(request.MeSH));
+                if(true == request.NonDigitizedDocumentSetsIds?.Any())
+                {
+                    entities = entities.Where(en => en.NonDigitizedDocumentSets.Any(r => r.Id.In(request.NonDigitizedDocumentSetsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Pages))
                     entities = entities.Where(en => en.Pages.Contains(request.Pages));
                 if(request.ParentChildStatus.HasValue)
@@ -1137,7 +1145,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Document> Put(DocumentBatch request)
         {
             return Patch(request);
@@ -1147,7 +1154,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Document> Patch(DocumentBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -1208,7 +1214,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(DocumentBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -1338,7 +1343,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for document/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Document GetDocument(Document request)
         {
             var id = request?.Id;

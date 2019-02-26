@@ -78,8 +78,6 @@ namespace Services.Dto
 
     }
 
-    [Route("/meanvariancevalue", "POST")]
-    [Route("/meanvariancevalue/{Id}", "GET, PATCH, PUT, DELETE")]
     public partial class MeanVarianceValue : MeanVarianceValueBase, IReturn<MeanVarianceValue>, IDto
     {
         public MeanVarianceValue()
@@ -129,8 +127,6 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
-    [Route("/MeanVarianceValue/{Id}/copy", "POST")]
-    public partial class MeanVarianceValueCopy : MeanVarianceValue {}
     public partial class MeanVarianceValueSearchBase : Search<MeanVarianceValue>
     {
         public int? Id { get; set; }
@@ -144,9 +140,6 @@ namespace Services.Dto
         public List<int> OwnersIds { get; set; }
     }
 
-    [Route("/meanvariancevalue", "GET")]
-    [Route("/meanvariancevalue/version", "GET, POST")]
-    [Route("/meanvariancevalue/search", "GET, POST, DELETE")]
     public partial class MeanVarianceValueSearch : MeanVarianceValueSearchBase
     {
     }
@@ -172,7 +165,6 @@ namespace Services.Dto
         public bool doOwners { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVarianceValue.Owners))); }
     }
 
-    [Route("/meanvariancevalue/batch", "DELETE, PATCH, POST, PUT")]
     public partial class MeanVarianceValueBatch : List<MeanVarianceValue> { }
 
     [Route("/meanvariancevalue/{Id}/{Junction}/version", "GET, POST")]

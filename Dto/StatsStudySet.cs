@@ -223,7 +223,6 @@ namespace Services.Dto
         public bool doUnboundTerms { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsStudySet.UnboundTerms))); }
     }
 
-    [Route("/statsstudyset/batch", "DELETE, PATCH, POST, PUT")]
     public partial class StatsStudySetBatch : List<StatsStudySet> { }
 
     [Route("/statsstudyset/{Id}/{Junction}/version", "GET, POST")]

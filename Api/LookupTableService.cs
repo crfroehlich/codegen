@@ -458,7 +458,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<LookupTable> Put(LookupTableBatch request)
         {
             return Patch(request);
@@ -468,7 +467,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<LookupTable> Patch(LookupTableBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -529,7 +527,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(LookupTableBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -653,7 +650,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptable/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private LookupTable GetLookupTable(LookupTable request)
         {
             var id = request?.Id;

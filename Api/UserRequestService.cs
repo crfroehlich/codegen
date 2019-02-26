@@ -147,10 +147,6 @@ namespace Services.API
         public List<UserRequest> Get(UserRequestSearch request) => GetSearchResult<UserRequest,DocEntityUserRequest,UserRequestSearch>(DocConstantModelName.USERREQUEST, request, _ExecSearch);
 
         public UserRequest Get(UserRequest request) => GetEntity<UserRequest>(DocConstantModelName.USERREQUEST, request, GetUserRequest);
-
-
-
-
         private UserRequest GetUserRequest(UserRequest request)
         {
             var id = request?.Id;

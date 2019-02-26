@@ -449,7 +449,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<BackgroundTask> Put(BackgroundTaskBatch request)
         {
             return Patch(request);
@@ -459,7 +458,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<BackgroundTask> Patch(BackgroundTaskBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -520,7 +518,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public object Get(BackgroundTaskJunction request) =>
             Execute.Run( s => 
             {
@@ -534,7 +531,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtask/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private BackgroundTask GetBackgroundTask(BackgroundTask request)
         {
             var id = request?.Id;

@@ -351,7 +351,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Interval> Put(IntervalBatch request)
         {
             return Patch(request);
@@ -361,7 +360,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Interval> Patch(IntervalBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -422,7 +420,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(IntervalBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -500,7 +497,6 @@ namespace Services.API
                 });
             });
         }
-
         private Interval GetInterval(Interval request)
         {
             var id = request?.Id;

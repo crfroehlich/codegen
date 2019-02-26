@@ -336,7 +336,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Default> Put(DefaultBatch request)
         {
             return Patch(request);
@@ -346,7 +345,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Default> Patch(DefaultBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -407,8 +405,6 @@ namespace Services.API
             });
             return ret;
         }
-
-
         private Default GetDefault(Default request)
         {
             var id = request?.Id;

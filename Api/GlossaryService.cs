@@ -346,7 +346,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Glossary> Put(GlossaryBatch request)
         {
             return Patch(request);
@@ -356,7 +355,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Glossary> Patch(GlossaryBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -417,7 +415,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(GlossaryBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -495,7 +492,6 @@ namespace Services.API
                 });
             });
         }
-
         private Glossary GetGlossary(Glossary request)
         {
             var id = request?.Id;

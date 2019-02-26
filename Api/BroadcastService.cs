@@ -454,7 +454,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Broadcast> Put(BroadcastBatch request)
         {
             return Patch(request);
@@ -464,7 +463,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Broadcast> Patch(BroadcastBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -525,7 +523,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(BroadcastBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -637,7 +634,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Broadcast GetBroadcast(Broadcast request)
         {
             var id = request?.Id;

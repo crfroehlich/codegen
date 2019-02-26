@@ -149,10 +149,6 @@ namespace Services.API
         public List<ValueType> Get(ValueTypeSearch request) => GetSearchResult<ValueType,DocEntityValueType,ValueTypeSearch>(DocConstantModelName.VALUETYPE, request, _ExecSearch);
 
         public ValueType Get(ValueType request) => GetEntity<ValueType>(DocConstantModelName.VALUETYPE, request, GetValueType);
-
-
-
-
         private ValueType GetValueType(ValueType request)
         {
             var id = request?.Id;

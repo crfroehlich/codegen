@@ -147,9 +147,6 @@ namespace Services.API
         public List<Event> Get(EventSearch request) => GetSearchResult<Event,DocEntityEvent,EventSearch>(DocConstantModelName.EVENT, request, _ExecSearch);
 
         public Event Get(Event request) => GetEntity<Event>(DocConstantModelName.EVENT, request, GetEvent);
-
-
-
         public object Get(EventJunction request) =>
             Execute.Run( s => 
             {
@@ -165,7 +162,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Event GetEvent(Event request)
         {
             var id = request?.Id;

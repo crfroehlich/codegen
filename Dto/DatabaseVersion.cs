@@ -153,7 +153,6 @@ namespace Services.Dto
         public bool doVersionName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DatabaseVersion.VersionName))); }
     }
 
-    [Route("/databaseversion/batch", "DELETE, PATCH, POST, PUT")]
     public partial class DatabaseVersionBatch : List<DatabaseVersion> { }
 
 }

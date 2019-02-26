@@ -138,10 +138,6 @@ namespace Services.API
         public List<TimePoint> Get(TimePointSearch request) => GetSearchResult<TimePoint,DocEntityTimePoint,TimePointSearch>(DocConstantModelName.TIMEPOINT, request, _ExecSearch);
 
         public TimePoint Get(TimePoint request) => GetEntity<TimePoint>(DocConstantModelName.TIMEPOINT, request, GetTimePoint);
-
-
-
-
         private TimePoint GetTimePoint(TimePoint request)
         {
             var id = request?.Id;

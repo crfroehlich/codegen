@@ -418,10 +418,6 @@ namespace Services.API
             });
             return ret;
         }
-
-
-
-
         private History GetHistory(History request)
         {
             var id = request?.Id;

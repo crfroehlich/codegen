@@ -156,7 +156,6 @@ namespace Services.Dto
         public bool doUserSession { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Impersonation.UserSession))); }
     }
 
-    [Route("/impersonation/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ImpersonationBatch : List<Impersonation> { }
 
 }

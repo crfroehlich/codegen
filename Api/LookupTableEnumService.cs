@@ -278,7 +278,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<LookupTableEnum> Put(LookupTableEnumBatch request)
         {
             return Patch(request);
@@ -288,7 +287,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<LookupTableEnum> Patch(LookupTableEnumBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -349,7 +347,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(LookupTableEnumBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -427,7 +424,6 @@ namespace Services.API
                 });
             });
         }
-
         private LookupTableEnum GetLookupTableEnum(LookupTableEnum request)
         {
             var id = request?.Id;

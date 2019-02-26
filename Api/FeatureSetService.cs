@@ -250,7 +250,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<FeatureSet> Put(FeatureSetBatch request)
         {
             return Patch(request);
@@ -260,7 +259,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<FeatureSet> Patch(FeatureSetBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -321,7 +319,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public object Get(FeatureSetJunction request) =>
             Execute.Run( s => 
             {
@@ -356,7 +353,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private FeatureSet GetFeatureSet(FeatureSet request)
         {
             var id = request?.Id;

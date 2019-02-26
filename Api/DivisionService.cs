@@ -453,7 +453,6 @@ namespace Services.API
             return ret;
         }
 
-
         public List<Division> Put(DivisionBatch request)
         {
             return Patch(request);
@@ -463,7 +462,6 @@ namespace Services.API
         {
             return Patch(request);
         }
-
         public List<Division> Patch(DivisionBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -524,7 +522,6 @@ namespace Services.API
             });
             return ret;
         }
-
         public void Delete(DivisionBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
@@ -642,7 +639,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for division/{request.Id}/{request.Junction} was not found");
                 }
             });
-
         private Division GetDivision(Division request)
         {
             var id = request?.Id;

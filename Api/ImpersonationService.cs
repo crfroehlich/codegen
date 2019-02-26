@@ -141,10 +141,6 @@ namespace Services.API
         public List<Impersonation> Get(ImpersonationSearch request) => GetSearchResult<Impersonation,DocEntityImpersonation,ImpersonationSearch>(DocConstantModelName.IMPERSONATION, request, _ExecSearch);
 
         public Impersonation Get(Impersonation request) => GetEntity<Impersonation>(DocConstantModelName.IMPERSONATION, request, GetImpersonation);
-
-
-
-
         private Impersonation GetImpersonation(Impersonation request)
         {
             var id = request?.Id;

@@ -147,9 +147,6 @@ namespace Services.API
         public object Get(UserSessionSearch request) => GetSearchResultWithCache<UserSession,DocEntityUserSession,UserSessionSearch>(DocConstantModelName.USERSESSION, request, _ExecSearch);
 
         public object Get(UserSession request) => GetEntityWithCache<UserSession>(DocConstantModelName.USERSESSION, request, GetUserSession);
-
-
-
         public object Get(UserSessionJunction request) =>
             Execute.Run( s => 
             {
@@ -165,30 +162,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
                 }
             });
-        public object Post(UserSessionJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
-                    case "impersonation":
-                        return AddJunction<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
-                }
-            });
-
-        public object Delete(UserSessionJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
-                    case "impersonation":
-                        return RemoveJunction<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
-                }
-            });
-
         private UserSession GetUserSession(UserSession request)
         {
             var id = request?.Id;
