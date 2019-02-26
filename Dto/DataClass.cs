@@ -68,8 +68,9 @@ namespace Services.Dto
         public bool CustomAuthorization { get; set; }
 
 
-        [ApiMember(Name = nameof(CustomCollections), Description = "string", IsRequired = false)]
-        public string CustomCollections { get; set; }
+        [ApiMember(Name = nameof(CustomCollections), Description = "DataProperty", IsRequired = false)]
+        public List<Reference> CustomCollections { get; set; }
+        public int? CustomCollectionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(DELETE), Description = "bool", IsRequired = false)]
@@ -80,8 +81,9 @@ namespace Services.Dto
         public string Description { get; set; }
 
 
-        [ApiMember(Name = nameof(DontFlattenProperties), Description = "string", IsRequired = false)]
-        public string DontFlattenProperties { get; set; }
+        [ApiMember(Name = nameof(DontFlattenProperties), Description = "DataProperty", IsRequired = false)]
+        public List<Reference> DontFlattenProperties { get; set; }
+        public int? DontFlattenPropertiesCount { get; set; }
 
 
         [ApiMember(Name = nameof(DtoSuffix), Description = "string", IsRequired = false)]
@@ -104,8 +106,9 @@ namespace Services.Dto
         public string IgnoreInSearch { get; set; }
 
 
-        [ApiMember(Name = nameof(IgnoreProps), Description = "string", IsRequired = false)]
-        public string IgnoreProps { get; set; }
+        [ApiMember(Name = nameof(IgnoreProps), Description = "DataProperty", IsRequired = false)]
+        public List<Reference> IgnoreProps { get; set; }
+        public int? IgnorePropsCount { get; set; }
 
 
         [ApiMember(Name = nameof(ImplementService), Description = "bool", IsRequired = false)]
@@ -136,8 +139,9 @@ namespace Services.Dto
         public bool IsReadOnly { get; set; }
 
 
-        [ApiMember(Name = nameof(JsonIgnore), Description = "string", IsRequired = false)]
-        public string JsonIgnore { get; set; }
+        [ApiMember(Name = nameof(JsonIgnore), Description = "DataProperty", IsRequired = false)]
+        public List<Reference> JsonIgnore { get; set; }
+        public int? JsonIgnoreCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
@@ -196,7 +200,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllVisibleFieldsByDefault),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomAuthorization),nameof(CustomCollections),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(HasDto),nameof(IgnoreInSearch),nameof(IgnoreProps),nameof(ImplementService),nameof(Inherits),nameof(IsBaseClass),nameof(IsCached),nameof(IsInModel),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(JsonIgnore),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(SuperAdminOnly),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllVisibleFieldsByDefault),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomAuthorization),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(HasDto),nameof(IgnoreInSearch),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(ImplementService),nameof(Inherits),nameof(IsBaseClass),nameof(IsCached),nameof(IsInModel),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(JsonIgnore),nameof(JsonIgnoreCount),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(SuperAdminOnly),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -217,7 +221,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Properties), nameof(PropertiesCount), nameof(Tabs), nameof(TabsCount)
+            nameof(CustomCollections), nameof(CustomCollectionsCount), nameof(DontFlattenProperties), nameof(DontFlattenPropertiesCount), nameof(IgnoreProps), nameof(IgnorePropsCount), nameof(JsonIgnore), nameof(JsonIgnoreCount), nameof(Properties), nameof(PropertiesCount), nameof(Tabs), nameof(TabsCount)
         };
         private List<string> collections { get { return _collections; } }
     }
@@ -232,11 +236,11 @@ namespace Services.Dto
         public int? ClassId { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> CustomAuthorization { get; set; }
-        public string CustomCollections { get; set; }
+        public List<int> CustomCollectionsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> DELETE { get; set; }
         public string Description { get; set; }
-        public string DontFlattenProperties { get; set; }
+        public List<int> DontFlattenPropertiesIds { get; set; }
         public string DtoSuffix { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> FlattenReferences { get; set; }
@@ -245,7 +249,7 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> HasDto { get; set; }
         public string IgnoreInSearch { get; set; }
-        public string IgnoreProps { get; set; }
+        public List<int> IgnorePropsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> ImplementService { get; set; }
         public string Inherits { get; set; }
@@ -259,7 +263,7 @@ namespace Services.Dto
         public List<bool> IsInsertOnly { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsReadOnly { get; set; }
-        public string JsonIgnore { get; set; }
+        public List<int> JsonIgnoreIds { get; set; }
         public string Name { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> PATCH { get; set; }

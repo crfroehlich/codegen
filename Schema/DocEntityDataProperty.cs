@@ -332,6 +332,7 @@ namespace Services.Schema
         [Field(DefaultValue = false)]
         [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
+
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -339,9 +340,6 @@ namespace Services.Schema
         public override DocConstantModelName TableName => TABLE_NAME;
 
         public const string CACHE_KEY_PREFIX = "FindDataPropertys";
-
-
-        public override T ToModel<T>() =>  null;
 
         #endregion Overrides of DocEntity
 
@@ -439,8 +437,9 @@ namespace Services.Schema
 
     public partial class DataPropertyMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityDataProperty,DataProperty> _EntityToDto;
-        private IMappingExpression<DataProperty,DocEntityDataProperty> _DtoToEntity;
+        protected IMappingExpression<DocEntityDataProperty,DataProperty> _EntityToDto;
+        protected IMappingExpression<DataProperty,DocEntityDataProperty> _DtoToEntity;
+
         public DataPropertyMapper()
         {
             CreateMap<DocEntitySet<DocEntityDataProperty>,List<Reference>>()

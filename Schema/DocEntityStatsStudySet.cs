@@ -207,6 +207,7 @@ namespace Services.Schema
         [Field(DefaultValue = false)]
         [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
+
         #endregion Properties
 
         #region Overrides of DocEntity

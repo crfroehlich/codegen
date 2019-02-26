@@ -148,6 +148,7 @@ namespace Services.Schema
         [Field(DefaultValue = false)]
         [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
+
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -155,9 +156,6 @@ namespace Services.Schema
         public override DocConstantModelName TableName => TABLE_NAME;
 
         public const string CACHE_KEY_PREFIX = "FindDataTabs";
-
-
-        public override T ToModel<T>() =>  null;
 
         #endregion Overrides of DocEntity
 
@@ -243,8 +241,9 @@ namespace Services.Schema
 
     public partial class DataTabMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityDataTab,DataTab> _EntityToDto;
-        private IMappingExpression<DataTab,DocEntityDataTab> _DtoToEntity;
+        protected IMappingExpression<DocEntityDataTab,DataTab> _EntityToDto;
+        protected IMappingExpression<DataTab,DocEntityDataTab> _DtoToEntity;
+
         public DataTabMapper()
         {
             CreateMap<DocEntitySet<DocEntityDataTab>,List<Reference>>()

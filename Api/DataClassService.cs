@@ -114,8 +114,10 @@ namespace Services.API
                     if(request.CustomAuthorization.Any(v => v == null)) entities = entities.Where(en => en.CustomAuthorization.In(request.CustomAuthorization) || en.CustomAuthorization == null);
                     else entities = entities.Where(en => en.CustomAuthorization.In(request.CustomAuthorization));
                 }
-                if(!DocTools.IsNullOrEmpty(request.CustomCollections))
-                    entities = entities.Where(en => en.CustomCollections.Contains(request.CustomCollections));
+                if(true == request.CustomCollectionsIds?.Any())
+                {
+                    entities = entities.Where(en => en.CustomCollections.Any(r => r.Id.In(request.CustomCollectionsIds)));
+                }
                 if(true == request.DELETE?.Any())
                 {
                     if(request.DELETE.Any(v => v == null)) entities = entities.Where(en => en.DELETE.In(request.DELETE) || en.DELETE == null);
@@ -123,8 +125,10 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
-                if(!DocTools.IsNullOrEmpty(request.DontFlattenProperties))
-                    entities = entities.Where(en => en.DontFlattenProperties.Contains(request.DontFlattenProperties));
+                if(true == request.DontFlattenPropertiesIds?.Any())
+                {
+                    entities = entities.Where(en => en.DontFlattenProperties.Any(r => r.Id.In(request.DontFlattenPropertiesIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.DtoSuffix))
                     entities = entities.Where(en => en.DtoSuffix.Contains(request.DtoSuffix));
                 if(true == request.FlattenReferences?.Any())
@@ -144,8 +148,10 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.IgnoreInSearch))
                     entities = entities.Where(en => en.IgnoreInSearch.Contains(request.IgnoreInSearch));
-                if(!DocTools.IsNullOrEmpty(request.IgnoreProps))
-                    entities = entities.Where(en => en.IgnoreProps.Contains(request.IgnoreProps));
+                if(true == request.IgnorePropsIds?.Any())
+                {
+                    entities = entities.Where(en => en.IgnoreProps.Any(r => r.Id.In(request.IgnorePropsIds)));
+                }
                 if(true == request.ImplementService?.Any())
                 {
                     if(request.ImplementService.Any(v => v == null)) entities = entities.Where(en => en.ImplementService.In(request.ImplementService) || en.ImplementService == null);
@@ -178,8 +184,10 @@ namespace Services.API
                     if(request.IsReadOnly.Any(v => v == null)) entities = entities.Where(en => en.IsReadOnly.In(request.IsReadOnly) || en.IsReadOnly == null);
                     else entities = entities.Where(en => en.IsReadOnly.In(request.IsReadOnly));
                 }
-                if(!DocTools.IsNullOrEmpty(request.JsonIgnore))
-                    entities = entities.Where(en => en.JsonIgnore.Contains(request.JsonIgnore));
+                if(true == request.JsonIgnoreIds?.Any())
+                {
+                    entities = entities.Where(en => en.JsonIgnore.Any(r => r.Id.In(request.JsonIgnoreIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(true == request.PATCH?.Any())
@@ -252,16 +260,16 @@ namespace Services.API
             var pAllVisibleFieldsByDefault = request.AllVisibleFieldsByDefault;
             var pClassId = request.ClassId;
             var pCustomAuthorization = request.CustomAuthorization;
-            var pCustomCollections = request.CustomCollections;
+            var pCustomCollections = request.CustomCollections?.ToList();
             var pDELETE = request.DELETE;
             var pDescription = request.Description;
-            var pDontFlattenProperties = request.DontFlattenProperties;
+            var pDontFlattenProperties = request.DontFlattenProperties?.ToList();
             var pDtoSuffix = request.DtoSuffix;
             var pFlattenReferences = request.FlattenReferences;
             var pGET = request.GET;
             var pHasDto = request.HasDto;
             var pIgnoreInSearch = request.IgnoreInSearch;
-            var pIgnoreProps = request.IgnoreProps;
+            var pIgnoreProps = request.IgnoreProps?.ToList();
             var pImplementService = request.ImplementService;
             var pInherits = request.Inherits;
             var pIsBaseClass = request.IsBaseClass;
@@ -269,7 +277,7 @@ namespace Services.API
             var pIsInModel = request.IsInModel;
             var pIsInsertOnly = request.IsInsertOnly;
             var pIsReadOnly = request.IsReadOnly;
-            var pJsonIgnore = request.JsonIgnore;
+            var pJsonIgnore = request.JsonIgnore?.ToList();
             var pName = request.Name;
             var pPATCH = request.PATCH;
             var pPOST = request.POST;
@@ -336,16 +344,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.CustomAuthorization));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pCustomCollections, permission, DocConstantModelName.DATACLASS, nameof(request.CustomCollections)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pCustomCollections, entity.CustomCollections, nameof(request.CustomCollections)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CustomCollections)} cannot be modified once set.");
-                    entity.CustomCollections = pCustomCollections;
-                if(DocPermissionFactory.IsRequested<string>(request, pCustomCollections, nameof(request.CustomCollections)) && !request.VisibleFields.Matches(nameof(request.CustomCollections), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.CustomCollections));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pDELETE, permission, DocConstantModelName.DATACLASS, nameof(request.DELETE)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDELETE, entity.DELETE, nameof(request.DELETE)))
@@ -363,16 +361,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Description));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDontFlattenProperties, permission, DocConstantModelName.DATACLASS, nameof(request.DontFlattenProperties)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pDontFlattenProperties, entity.DontFlattenProperties, nameof(request.DontFlattenProperties)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DontFlattenProperties)} cannot be modified once set.");
-                    entity.DontFlattenProperties = pDontFlattenProperties;
-                if(DocPermissionFactory.IsRequested<string>(request, pDontFlattenProperties, nameof(request.DontFlattenProperties)) && !request.VisibleFields.Matches(nameof(request.DontFlattenProperties), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.DontFlattenProperties));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDtoSuffix, permission, DocConstantModelName.DATACLASS, nameof(request.DtoSuffix)))
@@ -423,16 +411,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pIgnoreInSearch, nameof(request.IgnoreInSearch)) && !request.VisibleFields.Matches(nameof(request.IgnoreInSearch), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.IgnoreInSearch));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pIgnoreProps, permission, DocConstantModelName.DATACLASS, nameof(request.IgnoreProps)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pIgnoreProps, entity.IgnoreProps, nameof(request.IgnoreProps)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IgnoreProps)} cannot be modified once set.");
-                    entity.IgnoreProps = pIgnoreProps;
-                if(DocPermissionFactory.IsRequested<string>(request, pIgnoreProps, nameof(request.IgnoreProps)) && !request.VisibleFields.Matches(nameof(request.IgnoreProps), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.IgnoreProps));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pImplementService, permission, DocConstantModelName.DATACLASS, nameof(request.ImplementService)))
@@ -505,16 +483,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.IsReadOnly));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pJsonIgnore, permission, DocConstantModelName.DATACLASS, nameof(request.JsonIgnore)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pJsonIgnore, entity.JsonIgnore, nameof(request.JsonIgnore)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.JsonIgnore)} cannot be modified once set.");
-                    entity.JsonIgnore = pJsonIgnore;
-                if(DocPermissionFactory.IsRequested<string>(request, pJsonIgnore, nameof(request.JsonIgnore)) && !request.VisibleFields.Matches(nameof(request.JsonIgnore), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.JsonIgnore));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.DATACLASS, nameof(request.Name)))
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
@@ -570,6 +538,182 @@ namespace Services.API
 
             entity.SaveChanges(permission);
             
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pCustomCollections, permission, DocConstantModelName.DATACLASS, nameof(request.CustomCollections)))
+            {
+                if (true == pCustomCollections?.Any() )
+                {
+                    var requestedCustomCollections = pCustomCollections.Select(p => p.Id).Distinct().ToList();
+                    var existsCustomCollections = Execute.SelectAll<DocEntityDataProperty>().Where(e => e.Id.In(requestedCustomCollections)).Select( e => e.Id ).ToList();
+                    if (existsCustomCollections.Count != requestedCustomCollections.Count)
+                    {
+                        var nonExists = requestedCustomCollections.Where(id => existsCustomCollections.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection CustomCollections with objects that do not exist. No matching CustomCollections(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedCustomCollections.Where(id => entity.CustomCollections.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.CustomCollections)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.CustomCollections)} to {nameof(DataClass)}");
+                        entity.CustomCollections.Add(target);
+                    });
+                    var toRemove = entity.CustomCollections.Where(e => requestedCustomCollections.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.CustomCollections)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.CustomCollections)} from {nameof(DataClass)}");
+                        entity.CustomCollections.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.CustomCollections.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.CustomCollections)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.CustomCollections)} from {nameof(DataClass)}");
+                        entity.CustomCollections.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pCustomCollections, nameof(request.CustomCollections)) && !request.VisibleFields.Matches(nameof(request.CustomCollections), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.CustomCollections));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDontFlattenProperties, permission, DocConstantModelName.DATACLASS, nameof(request.DontFlattenProperties)))
+            {
+                if (true == pDontFlattenProperties?.Any() )
+                {
+                    var requestedDontFlattenProperties = pDontFlattenProperties.Select(p => p.Id).Distinct().ToList();
+                    var existsDontFlattenProperties = Execute.SelectAll<DocEntityDataProperty>().Where(e => e.Id.In(requestedDontFlattenProperties)).Select( e => e.Id ).ToList();
+                    if (existsDontFlattenProperties.Count != requestedDontFlattenProperties.Count)
+                    {
+                        var nonExists = requestedDontFlattenProperties.Where(id => existsDontFlattenProperties.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DontFlattenProperties with objects that do not exist. No matching DontFlattenProperties(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedDontFlattenProperties.Where(id => entity.DontFlattenProperties.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.DontFlattenProperties)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DontFlattenProperties)} to {nameof(DataClass)}");
+                        entity.DontFlattenProperties.Add(target);
+                    });
+                    var toRemove = entity.DontFlattenProperties.Where(e => requestedDontFlattenProperties.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.DontFlattenProperties)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DontFlattenProperties)} from {nameof(DataClass)}");
+                        entity.DontFlattenProperties.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.DontFlattenProperties.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.DontFlattenProperties)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DontFlattenProperties)} from {nameof(DataClass)}");
+                        entity.DontFlattenProperties.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDontFlattenProperties, nameof(request.DontFlattenProperties)) && !request.VisibleFields.Matches(nameof(request.DontFlattenProperties), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.DontFlattenProperties));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pIgnoreProps, permission, DocConstantModelName.DATACLASS, nameof(request.IgnoreProps)))
+            {
+                if (true == pIgnoreProps?.Any() )
+                {
+                    var requestedIgnoreProps = pIgnoreProps.Select(p => p.Id).Distinct().ToList();
+                    var existsIgnoreProps = Execute.SelectAll<DocEntityDataProperty>().Where(e => e.Id.In(requestedIgnoreProps)).Select( e => e.Id ).ToList();
+                    if (existsIgnoreProps.Count != requestedIgnoreProps.Count)
+                    {
+                        var nonExists = requestedIgnoreProps.Where(id => existsIgnoreProps.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection IgnoreProps with objects that do not exist. No matching IgnoreProps(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedIgnoreProps.Where(id => entity.IgnoreProps.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.IgnoreProps)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.IgnoreProps)} to {nameof(DataClass)}");
+                        entity.IgnoreProps.Add(target);
+                    });
+                    var toRemove = entity.IgnoreProps.Where(e => requestedIgnoreProps.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.IgnoreProps)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.IgnoreProps)} from {nameof(DataClass)}");
+                        entity.IgnoreProps.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.IgnoreProps.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.IgnoreProps)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.IgnoreProps)} from {nameof(DataClass)}");
+                        entity.IgnoreProps.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pIgnoreProps, nameof(request.IgnoreProps)) && !request.VisibleFields.Matches(nameof(request.IgnoreProps), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.IgnoreProps));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pJsonIgnore, permission, DocConstantModelName.DATACLASS, nameof(request.JsonIgnore)))
+            {
+                if (true == pJsonIgnore?.Any() )
+                {
+                    var requestedJsonIgnore = pJsonIgnore.Select(p => p.Id).Distinct().ToList();
+                    var existsJsonIgnore = Execute.SelectAll<DocEntityDataProperty>().Where(e => e.Id.In(requestedJsonIgnore)).Select( e => e.Id ).ToList();
+                    if (existsJsonIgnore.Count != requestedJsonIgnore.Count)
+                    {
+                        var nonExists = requestedJsonIgnore.Where(id => existsJsonIgnore.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection JsonIgnore with objects that do not exist. No matching JsonIgnore(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedJsonIgnore.Where(id => entity.JsonIgnore.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.JsonIgnore)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.JsonIgnore)} to {nameof(DataClass)}");
+                        entity.JsonIgnore.Add(target);
+                    });
+                    var toRemove = entity.JsonIgnore.Where(e => requestedJsonIgnore.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.JsonIgnore)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.JsonIgnore)} from {nameof(DataClass)}");
+                        entity.JsonIgnore.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.JsonIgnore.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.JsonIgnore)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.JsonIgnore)} from {nameof(DataClass)}");
+                        entity.JsonIgnore.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pJsonIgnore, nameof(request.JsonIgnore)) && !request.VisibleFields.Matches(nameof(request.JsonIgnore), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.JsonIgnore));
+                }
+            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<DataProperty>>(currentUser, request, pProperties, permission, DocConstantModelName.DATACLASS, nameof(request.Properties)))
             {
                 if (true == pProperties?.Any() )
@@ -743,6 +887,14 @@ namespace Services.API
             {
                 switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
+                    case "customcollections":
+                        return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
+                    case "dontflattenproperties":
+                        return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
+                    case "ignoreprops":
+                        return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
+                    case "jsonignore":
+                        return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "JsonIgnore", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "dataproperty":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "datatab":
@@ -756,6 +908,14 @@ namespace Services.API
             {
                 switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
+                    case "customcollections":
+                        return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request);
+                    case "dontflattenproperties":
+                        return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request);
+                    case "ignoreprops":
+                        return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request);
+                    case "jsonignore":
+                        return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "JsonIgnore", request);
                     case "dataproperty":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request);
                     case "datatab":
@@ -770,6 +930,14 @@ namespace Services.API
             {
                 switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
+                    case "customcollections":
+                        return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request);
+                    case "dontflattenproperties":
+                        return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request);
+                    case "ignoreprops":
+                        return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request);
+                    case "jsonignore":
+                        return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "JsonIgnore", request);
                     case "dataproperty":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request);
                     case "datatab":

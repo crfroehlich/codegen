@@ -41,7 +41,7 @@ using ValueType = Services.Dto.ValueType;
 
 namespace Services.Dto
 {
-    public abstract partial class AttributeBase : ValueWrapper
+    public abstract partial class AttributeBase : Dto<Attribute>
     {
         public AttributeBase() {}
 

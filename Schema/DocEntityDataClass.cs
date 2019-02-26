@@ -127,9 +127,12 @@ namespace Services.Schema
         public bool CustomAuthorization { get; set; }
 
 
-        [Field(DefaultValue = "False")]
+        [Field()]
         [FieldMapping(nameof(CustomCollections))]
-        public string CustomCollections { get; set; }
+        public DocEntitySet<DocEntityDataProperty> CustomCollections { get; private set; }
+
+
+        public int? CustomCollectionsCount { get { return CustomCollections.Count(); } private set { var noid = value; } }
 
 
         [Field(DefaultValue = false)]
@@ -144,7 +147,10 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(DontFlattenProperties))]
-        public string DontFlattenProperties { get; set; }
+        public DocEntitySet<DocEntityDataProperty> DontFlattenProperties { get; private set; }
+
+
+        public int? DontFlattenPropertiesCount { get { return DontFlattenProperties.Count(); } private set { var noid = value; } }
 
 
         [Field()]
@@ -174,7 +180,10 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(IgnoreProps))]
-        public string IgnoreProps { get; set; }
+        public DocEntitySet<DocEntityDataProperty> IgnoreProps { get; private set; }
+
+
+        public int? IgnorePropsCount { get { return IgnoreProps.Count(); } private set { var noid = value; } }
 
 
         [Field(DefaultValue = true)]
@@ -214,7 +223,10 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(JsonIgnore))]
-        public string JsonIgnore { get; set; }
+        public DocEntitySet<DocEntityDataProperty> JsonIgnore { get; private set; }
+
+
+        public int? JsonIgnoreCount { get { return JsonIgnore.Count(); } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
@@ -280,6 +292,7 @@ namespace Services.Schema
         [Field(DefaultValue = false)]
         [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
+
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -287,9 +300,6 @@ namespace Services.Schema
         public override DocConstantModelName TableName => TABLE_NAME;
 
         public const string CACHE_KEY_PREFIX = "FindDataClasss";
-
-
-        public override T ToModel<T>() =>  null;
 
         #endregion Overrides of DocEntity
 
@@ -339,14 +349,10 @@ namespace Services.Schema
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
-            CustomCollections = CustomCollections?.TrimAndPruneSpaces();
             Description = Description?.TrimAndPruneSpaces();
-            DontFlattenProperties = DontFlattenProperties?.TrimAndPruneSpaces();
             DtoSuffix = DtoSuffix?.TrimAndPruneSpaces();
             IgnoreInSearch = IgnoreInSearch?.TrimAndPruneSpaces();
-            IgnoreProps = IgnoreProps?.TrimAndPruneSpaces();
             Inherits = Inherits?.TrimAndPruneSpaces();
-            JsonIgnore = JsonIgnore?.TrimAndPruneSpaces();
             Name = Name?.TrimAndPruneSpaces();
             return base.SaveChanges(permission);
         }
@@ -398,8 +404,9 @@ namespace Services.Schema
 
     public partial class DataClassMapper : DocMapperBase
     {
-        private IMappingExpression<DocEntityDataClass,DataClass> _EntityToDto;
-        private IMappingExpression<DataClass,DocEntityDataClass> _DtoToEntity;
+        protected IMappingExpression<DocEntityDataClass,DataClass> _EntityToDto;
+        protected IMappingExpression<DataClass,DocEntityDataClass> _DtoToEntity;
+
         public DataClassMapper()
         {
             CreateMap<DocEntitySet<DocEntityDataClass>,List<Reference>>()
@@ -417,15 +424,18 @@ namespace Services.Schema
                 .ForMember(dest => dest.ClassId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.ClassId))))
                 .ForMember(dest => dest.CustomAuthorization, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomAuthorization))))
                 .ForMember(dest => dest.CustomCollections, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomCollections))))
+                .ForMember(dest => dest.CustomCollectionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomCollectionsCount))))
                 .ForMember(dest => dest.DELETE, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DELETE))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Description))))
                 .ForMember(dest => dest.DontFlattenProperties, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DontFlattenProperties))))
+                .ForMember(dest => dest.DontFlattenPropertiesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DontFlattenPropertiesCount))))
                 .ForMember(dest => dest.DtoSuffix, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DtoSuffix))))
                 .ForMember(dest => dest.FlattenReferences, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.FlattenReferences))))
                 .ForMember(dest => dest.GET, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.GET))))
                 .ForMember(dest => dest.HasDto, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.HasDto))))
                 .ForMember(dest => dest.IgnoreInSearch, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnoreInSearch))))
                 .ForMember(dest => dest.IgnoreProps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnoreProps))))
+                .ForMember(dest => dest.IgnorePropsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnorePropsCount))))
                 .ForMember(dest => dest.ImplementService, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.ImplementService))))
                 .ForMember(dest => dest.Inherits, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Inherits))))
                 .ForMember(dest => dest.IsBaseClass, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsBaseClass))))
@@ -434,6 +444,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.IsInsertOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsInsertOnly))))
                 .ForMember(dest => dest.IsReadOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsReadOnly))))
                 .ForMember(dest => dest.JsonIgnore, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.JsonIgnore))))
+                .ForMember(dest => dest.JsonIgnoreCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.JsonIgnoreCount))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Name))))
                 .ForMember(dest => dest.PATCH, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.PATCH))))
                 .ForMember(dest => dest.POST, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.POST))))
