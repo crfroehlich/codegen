@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityRole> _ExecSearch(RoleSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Role, RoleSearch>(request);
             IQueryable<DocEntityRole> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new RoleFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityRole,RoleFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -83,6 +84,18 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.ROLE, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
                 if(!DocTools.IsNullOrEmpty(request.AdminTeam) && !DocTools.IsNullOrEmpty(request.AdminTeam.Id))
                 {
@@ -92,32 +105,38 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.AdminTeam.Id.In(request.AdminTeamIds));
                 }
-                        if(true == request.AppsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Apps.Any(r => r.Id.In(request.AppsIds)));
-                        }
+                if(true == request.AppsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Apps.Any(r => r.Id.In(request.AppsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
-                        if(true == request.FeatureSetsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.FeatureSets.Any(r => r.Id.In(request.FeatureSetsIds)));
-                        }
-                if(request.IsInternal.HasValue)
-                    entities = entities.Where(en => request.IsInternal.Value == en.IsInternal);
-                if(request.IsSuperAdmin.HasValue)
-                    entities = entities.Where(en => request.IsSuperAdmin.Value == en.IsSuperAdmin);
+                if(true == request.FeatureSetsIds?.Any())
+                {
+                    entities = entities.Where(en => en.FeatureSets.Any(r => r.Id.In(request.FeatureSetsIds)));
+                }
+                if(true == request.IsInternal?.Any())
+                {
+                    if(request.IsInternal.Any(v => v == null)) entities = entities.Where(en => en.IsInternal.In(request.IsInternal) || en.IsInternal == null);
+                    else entities = entities.Where(en => en.IsInternal.In(request.IsInternal));
+                }
+                if(true == request.IsSuperAdmin?.Any())
+                {
+                    if(request.IsSuperAdmin.Any(v => v == null)) entities = entities.Where(en => en.IsSuperAdmin.In(request.IsSuperAdmin) || en.IsSuperAdmin == null);
+                    else entities = entities.Where(en => en.IsSuperAdmin.In(request.IsSuperAdmin));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                        if(true == request.PagesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Pages.Any(r => r.Id.In(request.PagesIds)));
-                        }
-                        if(true == request.UsersIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
-                        }
+                if(true == request.PagesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Pages.Any(r => r.Id.In(request.PagesIds)));
+                }
+                if(true == request.UsersIds?.Any())
+                {
+                    entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
+                }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityRole,RoleSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -135,18 +154,6 @@ namespace Services.API
 
         public object Get(RoleSearch request) => GetSearchResultWithCache<Role,DocEntityRole,RoleSearch>(DocConstantModelName.ROLE, request, _ExecSearch);
 
-        public object Post(RoleVersion request) => Get(request);
-
-        public object Get(RoleVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(Role request) => GetEntityWithCache<Role>(DocConstantModelName.ROLE, request, GetRole);
         private Role _AssignValues(Role request, DocConstantPermission permission, Session session)
         {
@@ -159,7 +166,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Role ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Role>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -240,11 +247,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<Permissions>(currentUser, request, pPermissions, permission, DocConstantModelName.ROLE, nameof(request.Permissions)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pPermissions, permission, DocConstantModelName.ROLE, nameof(request.Permissions)))
             {
                 if(DocPermissionFactory.IsRequested(request, pPermissions, entity.Permissions, nameof(request.Permissions)))
-                    entity.Permissions = DocSerialize<Permissions>.ToString(pPermissions);
-                if(DocPermissionFactory.IsRequested<Permissions>(request, pPermissions, nameof(request.Permissions)) && !request.VisibleFields.Matches(nameof(request.Permissions), ignoreSpaces: true))
+                    entity.Permissions = pPermissions;
+                if(DocPermissionFactory.IsRequested<string>(request, pPermissions, nameof(request.Permissions)) && !request.VisibleFields.Matches(nameof(request.Permissions), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Permissions));
                 }
@@ -270,7 +277,7 @@ namespace Services.API
                     {
                         var target = DocEntityApp.GetApp(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Apps)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Apps)} to {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Apps)} to {nameof(Role)}");
                         entity.Apps.Add(target);
                     });
                     var toRemove = entity.Apps.Where(e => requestedApps.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -278,7 +285,7 @@ namespace Services.API
                     {
                         var target = DocEntityApp.GetApp(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Apps)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Apps)} from {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Apps)} from {nameof(Role)}");
                         entity.Apps.Remove(target);
                     });
                 }
@@ -289,7 +296,7 @@ namespace Services.API
                     {
                         var target = DocEntityApp.GetApp(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Apps)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Apps)} from {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Apps)} from {nameof(Role)}");
                         entity.Apps.Remove(target);
                     });
                 }
@@ -314,7 +321,7 @@ namespace Services.API
                     {
                         var target = DocEntityFeatureSet.GetFeatureSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.FeatureSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.FeatureSets)} to {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.FeatureSets)} to {nameof(Role)}");
                         entity.FeatureSets.Add(target);
                     });
                     var toRemove = entity.FeatureSets.Where(e => requestedFeatureSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -322,7 +329,7 @@ namespace Services.API
                     {
                         var target = DocEntityFeatureSet.GetFeatureSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.FeatureSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.FeatureSets)} from {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.FeatureSets)} from {nameof(Role)}");
                         entity.FeatureSets.Remove(target);
                     });
                 }
@@ -333,7 +340,7 @@ namespace Services.API
                     {
                         var target = DocEntityFeatureSet.GetFeatureSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.FeatureSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.FeatureSets)} from {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.FeatureSets)} from {nameof(Role)}");
                         entity.FeatureSets.Remove(target);
                     });
                 }
@@ -358,7 +365,7 @@ namespace Services.API
                     {
                         var target = DocEntityPage.GetPage(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Pages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Pages)} to {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Pages)} to {nameof(Role)}");
                         entity.Pages.Add(target);
                     });
                     var toRemove = entity.Pages.Where(e => requestedPages.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -366,7 +373,7 @@ namespace Services.API
                     {
                         var target = DocEntityPage.GetPage(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Pages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Pages)} from {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Pages)} from {nameof(Role)}");
                         entity.Pages.Remove(target);
                     });
                 }
@@ -377,7 +384,7 @@ namespace Services.API
                     {
                         var target = DocEntityPage.GetPage(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Pages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Pages)} from {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Pages)} from {nameof(Role)}");
                         entity.Pages.Remove(target);
                     });
                 }
@@ -402,7 +409,7 @@ namespace Services.API
                     {
                         var target = DocEntityUser.GetUser(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Users)} to {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Users)} to {nameof(Role)}");
                         entity.Users.Add(target);
                     });
                     var toRemove = entity.Users.Where(e => requestedUsers.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -410,7 +417,7 @@ namespace Services.API
                     {
                         var target = DocEntityUser.GetUser(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Users)} from {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(Role)}");
                         entity.Users.Remove(target);
                     });
                 }
@@ -421,7 +428,7 @@ namespace Services.API
                     {
                         var target = DocEntityUser.GetUser(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Role), columnName: nameof(request.Users)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Users)} from {nameof(Role)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(Role)}");
                         entity.Users.Remove(target);
                     });
                 }
@@ -718,384 +725,58 @@ namespace Services.API
                 });
             });
         }
-        public object Get(RoleJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
+        public object Get(RoleJunction request) =>
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "app":
-                    ret = _GetRoleApp(request, skip, take);
-                    break;
-                case "featureset":
-                    ret = _GetRoleFeatureSet(request, skip, take);
-                    break;
-                case "page":
-                    ret = _GetRolePage(request, skip, take);
-                    break;
-                case "user":
-                    ret = _GetRoleUser(request, skip, take);
-                    break;
+                    case "app":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request, (ss) => HostContext.ResolveService<AppService>(Request)?.Get(ss));
+                    case "featureset":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request, (ss) => HostContext.ResolveService<FeatureSetService>(Request)?.Get(ss));
+                    case "page":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
+                    case "user":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
-        public object Get(RoleJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
+        public object Post(RoleJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "app":
-                    ret = GetRoleAppVersion(request);
-                    break;
-                case "featureset":
-                    ret = GetRoleFeatureSetVersion(request);
-                    break;
-                case "page":
-                    ret = GetRolePageVersion(request);
-                    break;
-                case "user":
-                    ret = GetRoleUserVersion(request);
-                    break;
+                    case "app":
+                        return AddJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
+                    case "featureset":
+                        return AddJunction<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request);
+                    case "page":
+                        return AddJunction<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
+                    case "user":
+                        return AddJunction<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
 
-        private object _GetRoleApp(RoleJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<App>(Dto.App.Fields, request.VisibleFields);
-             var en = DocEntityRole.GetRole(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Apps", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and App");
-             return en?.Apps.Take(take).Skip(skip).ConvertFromEntityList<DocEntityApp,App>(new List<App>());
-        }
-
-        private List<Version> GetRoleAppVersion(RoleJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityRole.GetRole(request.Id);
-                ret = en?.Apps.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetRoleFeatureSet(RoleJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<FeatureSet>(Dto.FeatureSet.Fields, request.VisibleFields);
-             var en = DocEntityRole.GetRole(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "FeatureSets", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and FeatureSet");
-             return en?.FeatureSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityFeatureSet,FeatureSet>(new List<FeatureSet>());
-        }
-
-        private List<Version> GetRoleFeatureSetVersion(RoleJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityRole.GetRole(request.Id);
-                ret = en?.FeatureSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetRolePage(RoleJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request.VisibleFields);
-             var en = DocEntityRole.GetRole(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Pages", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and Page");
-             return en?.Pages.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPage,Page>(new List<Page>());
-        }
-
-        private List<Version> GetRolePageVersion(RoleJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityRole.GetRole(request.Id);
-                ret = en?.Pages.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetRoleUser(RoleJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<User>(Dto.User.Fields, request.VisibleFields);
-             var en = DocEntityRole.GetRole(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.ROLE, columnName: "Users", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Role and User");
-             return en?.Users.Take(take).Skip(skip).ConvertFromEntityList<DocEntityUser,User>(new List<User>());
-        }
-
-        private List<Version> GetRoleUserVersion(RoleJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityRole.GetRole(request.Id);
-                ret = en?.Users.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
-        public object Post(RoleJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(RoleJunction request) =>
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "app":
-                    ret = _PostRoleApp(request);
-                    break;
-                case "featureset":
-                    ret = _PostRoleFeatureSet(request);
-                    break;
-                case "page":
-                    ret = _PostRolePage(request);
-                    break;
-                case "user":
-                    ret = _PostRoleUser(request);
-                    break;
+                    case "app":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
+                    case "featureset":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request);
+                    case "page":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
+                    case "user":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _PostRoleApp(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityApp.GetApp(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.APP, columnName: "Apps")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Apps property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Role with objects that do not exist. No matching App could be found for {id}.");
-                entity.Apps.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostRoleFeatureSet(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityFeatureSet.GetFeatureSet(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.FEATURESET, columnName: "FeatureSets")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the FeatureSets property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Role with objects that do not exist. No matching FeatureSet could be found for {id}.");
-                entity.FeatureSets.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostRolePage(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityPage.GetPage(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.PAGE, columnName: "Pages")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Pages property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Role with objects that do not exist. No matching Page could be found for {id}.");
-                entity.Pages.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostRoleUser(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityUser.GetUser(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Users property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Role with objects that do not exist. No matching User could be found for {id}.");
-                entity.Users.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(RoleJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                case "app":
-                    ret = _DeleteRoleApp(request);
-                    break;
-                case "featureset":
-                    ret = _DeleteRoleFeatureSet(request);
-                    break;
-                case "page":
-                    ret = _DeleteRolePage(request);
-                    break;
-                case "user":
-                    ret = _DeleteRoleUser(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-
-
-        private object _DeleteRoleApp(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityApp.GetApp(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.APP, columnName: "Apps"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Role and App");
-                if(null != relationship && false == relationship.IsRemoved) entity.Apps.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteRoleFeatureSet(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityFeatureSet.GetFeatureSet(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.FEATURESET, columnName: "FeatureSets"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Role and FeatureSet");
-                if(null != relationship && false == relationship.IsRemoved) entity.FeatureSets.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteRolePage(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityPage.GetPage(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.PAGE, columnName: "Pages"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Role and Page");
-                if(null != relationship && false == relationship.IsRemoved) entity.Pages.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteRoleUser(RoleJunction request)
-        {
-            var entity = DocEntityRole.GetRole(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Role found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Role");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityUser.GetUser(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.USER, columnName: "Users"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Role and User");
-                if(null != relationship && false == relationship.IsRemoved) entity.Users.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Role GetRole(Role request)
         {
@@ -1117,21 +798,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(RoleIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityRole>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

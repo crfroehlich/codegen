@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -129,10 +130,9 @@ namespace Services.Dto
     
     [Route("/Glossary/{Id}/copy", "POST")]
     public partial class GlossaryCopy : Glossary {}
-    [Route("/glossary", "GET")]
-    [Route("/glossary/search", "GET, POST, DELETE")]
-    public partial class GlossarySearch : Search<Glossary>
+    public partial class GlossarySearchBase : Search<Glossary>
     {
+        public int? Id { get; set; }
         public string Definition { get; set; }
         public Reference Enum { get; set; }
         public List<int> EnumIds { get; set; }
@@ -142,9 +142,17 @@ namespace Services.Dto
         public Reference Term { get; set; }
         public List<int> TermIds { get; set; }
     }
-    
+
+    [Route("/glossary", "GET")]
+    [Route("/glossary/version", "GET, POST")]
+    [Route("/glossary/search", "GET, POST, DELETE")]
+    public partial class GlossarySearch : GlossarySearchBase
+    {
+    }
+
     public class GlossaryFullTextSearch
     {
+        public GlossaryFullTextSearch() {}
         private GlossarySearch _request;
         public GlossaryFullTextSearch(GlossarySearch request) => _request = request;
         
@@ -163,15 +171,7 @@ namespace Services.Dto
         public bool doTerm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Glossary.Term))); }
     }
 
-    [Route("/glossary/version", "GET, POST")]
-    public partial class GlossaryVersion : GlossarySearch {}
-
     [Route("/glossary/batch", "DELETE, PATCH, POST, PUT")]
     public partial class GlossaryBatch : List<Glossary> { }
 
-    [Route("/admin/glossary/ids", "GET, POST")]
-    public class GlossaryIds
-    {
-        public bool All { get; set; }
-    }
 }

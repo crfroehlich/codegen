@@ -22,6 +22,9 @@ namespace Services.Schema
     {
         public static List<TypeMap> Maps { get; } = new List<TypeMap>
         {
+            new TypeMap() { SchemaName = typeof(DocEntityDataTab).FullName, TypeId = 20265, TableName = DocConstantModelName.DATATAB, ClassName = "DataTab", DtoName = nameof(DataTab) },
+            new TypeMap() { SchemaName = typeof(DocEntityDataProperty).FullName, TypeId = 20255, TableName = DocConstantModelName.DATAPROPERTY, ClassName = "DataProperty", DtoName = nameof(DataProperty) },
+            new TypeMap() { SchemaName = typeof(DocEntityDataClass).FullName, TypeId = 20235, TableName = DocConstantModelName.DATACLASS, ClassName = "DataClass", DtoName = nameof(DataClass) },
             new TypeMap() { SchemaName = typeof(DocEntityProject).FullName, TypeId = 20135, TableName = DocConstantModelName.PROJECT, ClassName = "Project", DtoName = nameof(Project) },
             new TypeMap() { SchemaName = typeof(DocEntityComparator).FullName, TypeId = 20035, TableName = DocConstantModelName.COMPARATOR, ClassName = "Comparator", DtoName = nameof(Comparator) },
             new TypeMap() { SchemaName = typeof(DocEntityBackgroundTaskItem).FullName, TypeId = 19935, TableName = DocConstantModelName.BACKGROUNDTASKITEM, ClassName = "BackgroundTaskItem", DtoName = nameof(BackgroundTaskItem) },
@@ -69,10 +72,7 @@ namespace Services.Schema
             new TypeMap() { SchemaName = typeof(DocEntityOutcome).FullName, TypeId = 13662, TableName = DocConstantModelName.OUTCOME, ClassName = "Outcome", DtoName = nameof(Outcome) },
             new TypeMap() { SchemaName = typeof(DocEntityIntervention).FullName, TypeId = 13420, TableName = DocConstantModelName.INTERVENTION, ClassName = "Intervention", DtoName = nameof(Intervention) },
             new TypeMap() { SchemaName = typeof(DocEntityDocumentSetHistory).FullName, TypeId = 13320, TableName = DocConstantModelName.DOCUMENTSETHISTORY, ClassName = "DocumentSetHistory", DtoName = nameof(DocumentSetHistory) },
-            new TypeMap() { SchemaName = typeof(DocEntityJctAttributeCategoryAttributeDocumentSet).FullName, TypeId = 13223, TableName = DocConstantModelName.JCTATTRIBUTECATEGORYATTRIBUTEDOCUMENTSET, ClassName = "JctAttributeCategoryAttributeDocumentSet", DtoName = nameof(JctAttributeCategoryAttributeDocumentSet) },
-            new TypeMap() { SchemaName = typeof(DocEntityAttributeCategory).FullName, TypeId = 13222, TableName = DocConstantModelName.ATTRIBUTECATEGORY, ClassName = "AttributeCategory", DtoName = nameof(AttributeCategory) },
             new TypeMap() { SchemaName = typeof(DocEntityImportData).FullName, TypeId = 12600, TableName = DocConstantModelName.IMPORTDATA, ClassName = "ImportData", DtoName = nameof(ImportData) },
-            new TypeMap() { SchemaName = typeof(DocEntityDocumentAttribute).FullName, TypeId = 6355, TableName = DocConstantModelName.DOCUMENTATTRIBUTE, ClassName = "DocumentAttribute", DtoName = nameof(DocumentAttribute) },
             new TypeMap() { SchemaName = typeof(DocEntityPage).FullName, TypeId = 180, TableName = DocConstantModelName.PAGE, ClassName = "Page", DtoName = nameof(Page) },
             new TypeMap() { SchemaName = typeof(DocEntityValueType).FullName, TypeId = 171, TableName = DocConstantModelName.VALUETYPE, ClassName = "ValueType", DtoName = nameof(ValueType) },
             new TypeMap() { SchemaName = typeof(DocEntityUser).FullName, TypeId = 153, TableName = DocConstantModelName.USER, ClassName = "User", DtoName = nameof(User) },

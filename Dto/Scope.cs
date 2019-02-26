@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -55,10 +56,6 @@ namespace Services.Dto
         public Reference App { get; set; }
         [ApiMember(Name = nameof(AppId), Description = "Primary Key of App", IsRequired = false)]
         public int? AppId { get; set; }
-
-
-        [ApiMember(Name = nameof(Archived), Description = "bool?", IsRequired = false)]
-        public bool? Archived { get; set; }
 
 
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
@@ -165,7 +162,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Archived),nameof(Bindings),nameof(BindingsCount),nameof(Broadcasts),nameof(BroadcastsCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(Delete),nameof(DocumentSet),nameof(DocumentSetId),nameof(Edit),nameof(Gestalt),nameof(Help),nameof(HelpCount),nameof(IsGlobal),nameof(Locked),nameof(Synonyms),nameof(SynonymsCount),nameof(Team),nameof(TeamId),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(VariableRules),nameof(VariableRulesCount),nameof(VersionNo),nameof(View),nameof(Workflows),nameof(WorkflowsCount)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Bindings),nameof(BindingsCount),nameof(Broadcasts),nameof(BroadcastsCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(Delete),nameof(DocumentSet),nameof(DocumentSetId),nameof(Edit),nameof(Gestalt),nameof(Help),nameof(HelpCount),nameof(IsGlobal),nameof(Locked),nameof(Synonyms),nameof(SynonymsCount),nameof(Team),nameof(TeamId),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(VariableRules),nameof(VariableRulesCount),nameof(VersionNo),nameof(View),nameof(Workflows),nameof(WorkflowsCount)})]
         public new List<string> VisibleFields
         {
             get
@@ -195,23 +192,24 @@ namespace Services.Dto
     
     [Route("/Scope/{Id}/copy", "POST")]
     public partial class ScopeCopy : Scope {}
-    [Route("/scope", "GET")]
-    [Route("/scope/search", "GET, POST, DELETE")]
-    public partial class ScopeSearch : Search<Scope>
+    public partial class ScopeSearchBase : Search<Scope>
     {
+        public int? Id { get; set; }
         public Reference App { get; set; }
         public List<int> AppIds { get; set; }
-        public bool? Archived { get; set; }
         public List<int> BindingsIds { get; set; }
         public List<int> BroadcastsIds { get; set; }
         public Reference Client { get; set; }
         public List<int> ClientIds { get; set; }
-        public bool? Delete { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
+        public List<bool?> Delete { get; set; }
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
-        public bool? Edit { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
+        public List<bool?> Edit { get; set; }
         public List<int> HelpIds { get; set; }
-        public bool? IsGlobal { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
+        public List<bool?> IsGlobal { get; set; }
         public List<int> SynonymsIds { get; set; }
         public Reference Team { get; set; }
         public List<int> TeamIds { get; set; }
@@ -222,12 +220,21 @@ namespace Services.Dto
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
         public List<int> VariableRulesIds { get; set; }
-        public bool? View { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
+        public List<bool?> View { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-    
+
+    [Route("/scope", "GET")]
+    [Route("/scope/version", "GET, POST")]
+    [Route("/scope/search", "GET, POST, DELETE")]
+    public partial class ScopeSearch : ScopeSearchBase
+    {
+    }
+
     public class ScopeFullTextSearch
     {
+        public ScopeFullTextSearch() {}
         private ScopeSearch _request;
         public ScopeFullTextSearch(ScopeSearch request) => _request = request;
         
@@ -240,7 +247,6 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Updated))); }
         
         public bool doApp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.App))); }
-        public bool doArchived { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Archived))); }
         public bool doBindings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Bindings))); }
         public bool doBroadcasts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Broadcasts))); }
         public bool doClient { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Client))); }
@@ -258,56 +264,12 @@ namespace Services.Dto
         public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Scope.Workflows))); }
     }
 
-    [Route("/scope/version", "GET, POST")]
-    public partial class ScopeVersion : ScopeSearch {}
-
     [Route("/scope/batch", "DELETE, PATCH, POST, PUT")]
     public partial class ScopeBatch : List<Scope> { }
 
-    [Route("/scope/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/broadcast", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/help", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/termsynonym", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/variablerule", "GET, POST, DELETE")]
-    [Route("/scope/{Id}/workflow", "GET, POST, DELETE")]
-    public class ScopeJunction : Search<Scope>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/scope/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/scope/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class ScopeJunction : ScopeSearchBase {}
 
 
-        public ScopeJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/scope/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/scope/{Id}/broadcast/version", "GET")]
-    [Route("/scope/{Id}/help/version", "GET")]
-    [Route("/scope/{Id}/termsynonym/version", "GET")]
-    [Route("/scope/{Id}/variablerule/version", "GET")]
-    [Route("/scope/{Id}/workflow/version", "GET")]
-    public class ScopeJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/scope/ids", "GET, POST")]
-    public class ScopeIds
-    {
-        public bool All { get; set; }
-    }
 }

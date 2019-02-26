@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityImportData> _ExecSearch(ImportDataSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<ImportData, ImportDataSearch>(request);
             IQueryable<DocEntityImportData> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ImportDataFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityImportData,ImportDataFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -83,6 +84,18 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.IMPORTDATA, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
                 if(!DocTools.IsNullOrEmpty(request.CompletedOn))
                     entities = entities.Where(en => null != en.CompletedOn && request.CompletedOn.Value.Date == en.CompletedOn.Value.Date);
@@ -98,24 +111,39 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Document.Id.In(request.DocumentIds));
                 }
-                        if(true == request.DocumentSetsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
-                        }
+                if(true == request.DocumentSetsIds?.Any())
+                {
+                    entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.ErrorData))
                     entities = entities.Where(en => en.ErrorData.Contains(request.ErrorData));
                 if(!DocTools.IsNullOrEmpty(request.ExtractUrl))
                     entities = entities.Where(en => en.ExtractUrl.Contains(request.ExtractUrl));
-                if(request.HighPriority.HasValue)
-                    entities = entities.Where(en => request.HighPriority.Value == en.HighPriority);
-                if(request.ImportFr.HasValue)
-                    entities = entities.Where(en => request.ImportFr.Value == en.ImportFr);
-                if(request.ImportNewName.HasValue)
-                    entities = entities.Where(en => request.ImportNewName.Value == en.ImportNewName);
-                if(request.ImportTable.HasValue)
-                    entities = entities.Where(en => request.ImportTable.Value == en.ImportTable);
-                if(request.ImportText.HasValue)
-                    entities = entities.Where(en => request.ImportText.Value == en.ImportText);
+                if(true == request.HighPriority?.Any())
+                {
+                    if(request.HighPriority.Any(v => v == null)) entities = entities.Where(en => en.HighPriority.In(request.HighPriority) || en.HighPriority == null);
+                    else entities = entities.Where(en => en.HighPriority.In(request.HighPriority));
+                }
+                if(true == request.ImportFr?.Any())
+                {
+                    if(request.ImportFr.Any(v => v == null)) entities = entities.Where(en => en.ImportFr.In(request.ImportFr) || en.ImportFr == null);
+                    else entities = entities.Where(en => en.ImportFr.In(request.ImportFr));
+                }
+                if(true == request.ImportNewName?.Any())
+                {
+                    if(request.ImportNewName.Any(v => v == null)) entities = entities.Where(en => en.ImportNewName.In(request.ImportNewName) || en.ImportNewName == null);
+                    else entities = entities.Where(en => en.ImportNewName.In(request.ImportNewName));
+                }
+                if(true == request.ImportTable?.Any())
+                {
+                    if(request.ImportTable.Any(v => v == null)) entities = entities.Where(en => en.ImportTable.In(request.ImportTable) || en.ImportTable == null);
+                    else entities = entities.Where(en => en.ImportTable.In(request.ImportTable));
+                }
+                if(true == request.ImportText?.Any())
+                {
+                    if(request.ImportText.Any(v => v == null)) entities = entities.Where(en => en.ImportText.In(request.ImportText) || en.ImportText == null);
+                    else entities = entities.Where(en => en.ImportText.In(request.ImportText));
+                }
                 if(!DocTools.IsNullOrEmpty(request.ImportType) && !DocTools.IsNullOrEmpty(request.ImportType.Id))
                 {
                     entities = entities.Where(en => en.ImportType.Id == request.ImportType.Id );
@@ -132,8 +160,11 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.ImportType.Name.In(request.ImportTypeNames));
                 }
-                if(request.IsLegacy.HasValue)
-                    entities = entities.Where(en => request.IsLegacy.Value == en.IsLegacy);
+                if(true == request.IsLegacy?.Any())
+                {
+                    if(request.IsLegacy.Any(v => v == null)) entities = entities.Where(en => en.IsLegacy.In(request.IsLegacy) || en.IsLegacy == null);
+                    else entities = entities.Where(en => en.IsLegacy.In(request.IsLegacy));
+                }
                 if(request.Order.HasValue)
                     entities = entities.Where(en => request.Order.Value == en.Order);
                 if(request.ReferenceId.HasValue)
@@ -175,7 +206,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityImportData,ImportDataSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -193,18 +224,6 @@ namespace Services.API
 
         public List<ImportData> Get(ImportDataSearch request) => GetSearchResult<ImportData,DocEntityImportData,ImportDataSearch>(DocConstantModelName.IMPORTDATA, request, _ExecSearch);
 
-        public object Post(ImportDataVersion request) => Get(request);
-
-        public object Get(ImportDataVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public ImportData Get(ImportData request) => GetEntity<ImportData>(DocConstantModelName.IMPORTDATA, request, GetImportData);
         private ImportData _AssignValues(ImportData request, DocConstantPermission permission, Session session)
         {
@@ -217,7 +236,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             ImportData ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<ImportData>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -441,7 +460,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.DocumentSets)} to {nameof(ImportData)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(ImportData)}");
                         entity.DocumentSets.Add(target);
                     });
                     var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -449,7 +468,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(ImportData)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(ImportData)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
@@ -460,7 +479,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(ImportData)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(ImportData)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
@@ -757,162 +776,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(ImportDataJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
+        public object Get(ImportDataJunction request) =>
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "documentset":
-                    ret = _GetImportDataDocumentSet(request, skip, take);
-                    break;
+                    case "documentset":
+                        return GetJunctionSearchResult<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for importdata/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
-        public object Get(ImportDataJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
+        public object Post(ImportDataJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "documentset":
-                    ret = GetImportDataDocumentSetVersion(request);
-                    break;
+                    case "documentset":
+                        return AddJunction<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for importdata/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
 
-        private object _GetImportDataDocumentSet(ImportDataJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
-             var en = DocEntityImportData.GetImportData(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.IMPORTDATA, columnName: "DocumentSets", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between ImportData and DocumentSet");
-             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
-        }
-
-        private List<Version> GetImportDataDocumentSetVersion(ImportDataJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityImportData.GetImportData(request.Id);
-                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
-        public object Post(ImportDataJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(ImportDataJunction request) =>
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "documentset":
-                    ret = _PostImportDataDocumentSet(request);
-                    break;
+                    case "documentset":
+                        return RemoveJunction<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for importdata/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _PostImportDataDocumentSet(ImportDataJunction request)
-        {
-            var entity = DocEntityImportData.GetImportData(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No ImportData found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to ImportData");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of ImportData with objects that do not exist. No matching DocumentSet could be found for {id}.");
-                entity.DocumentSets.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(ImportDataJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                case "documentset":
-                    ret = _DeleteImportDataDocumentSet(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-
-
-        private object _DeleteImportDataDocumentSet(ImportDataJunction request)
-        {
-            var entity = DocEntityImportData.GetImportData(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No ImportData found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to ImportData");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between ImportData and DocumentSet");
-                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private ImportData GetImportData(ImportData request)
         {
@@ -934,21 +831,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(ImportDataIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityImportData>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

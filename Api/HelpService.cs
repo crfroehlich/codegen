@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityHelp> _ExecSearch(HelpSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Help, HelpSearch>(request);
             IQueryable<DocEntityHelp> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new HelpFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityHelp,HelpFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -83,6 +84,18 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.HELP, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
                 if(!DocTools.IsNullOrEmpty(request.ConfluenceId))
                     entities = entities.Where(en => en.ConfluenceId.Contains(request.ConfluenceId));
@@ -92,14 +105,14 @@ namespace Services.API
                     entities = entities.Where(en => en.Icon.Contains(request.Icon));
                 if(request.Order.HasValue)
                     entities = entities.Where(en => request.Order.Value == en.Order);
-                        if(true == request.PagesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Pages.Any(r => r.Id.In(request.PagesIds)));
-                        }
-                        if(true == request.ScopesIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
-                        }
+                if(true == request.PagesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Pages.Any(r => r.Id.In(request.PagesIds)));
+                }
+                if(true == request.ScopesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Title))
                     entities = entities.Where(en => en.Title.Contains(request.Title));
                 if(!DocTools.IsNullOrEmpty(request.Type) && !DocTools.IsNullOrEmpty(request.Type.Id))
@@ -119,7 +132,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityHelp,HelpSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -137,18 +150,6 @@ namespace Services.API
 
         public object Get(HelpSearch request) => GetSearchResultWithCache<Help,DocEntityHelp,HelpSearch>(DocConstantModelName.HELP, request, _ExecSearch);
 
-        public object Post(HelpVersion request) => Get(request);
-
-        public object Get(HelpVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public object Get(Help request) => GetEntityWithCache<Help>(DocConstantModelName.HELP, request, GetHelp);
         private Help _AssignValues(Help request, DocConstantPermission permission, Session session)
         {
@@ -161,7 +162,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Help ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Help>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -269,7 +270,7 @@ namespace Services.API
                     {
                         var target = DocEntityPage.GetPage(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Pages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Pages)} to {nameof(Help)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Pages)} to {nameof(Help)}");
                         entity.Pages.Add(target);
                     });
                     var toRemove = entity.Pages.Where(e => requestedPages.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -277,7 +278,7 @@ namespace Services.API
                     {
                         var target = DocEntityPage.GetPage(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Pages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Pages)} from {nameof(Help)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Pages)} from {nameof(Help)}");
                         entity.Pages.Remove(target);
                     });
                 }
@@ -288,7 +289,7 @@ namespace Services.API
                     {
                         var target = DocEntityPage.GetPage(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Pages)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Pages)} from {nameof(Help)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Pages)} from {nameof(Help)}");
                         entity.Pages.Remove(target);
                     });
                 }
@@ -313,7 +314,7 @@ namespace Services.API
                     {
                         var target = DocEntityScope.GetScope(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Scopes)} to {nameof(Help)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(Help)}");
                         entity.Scopes.Add(target);
                     });
                     var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -321,7 +322,7 @@ namespace Services.API
                     {
                         var target = DocEntityScope.GetScope(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Scopes)} from {nameof(Help)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Help)}");
                         entity.Scopes.Remove(target);
                     });
                 }
@@ -332,7 +333,7 @@ namespace Services.API
                     {
                         var target = DocEntityScope.GetScope(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Scopes)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Scopes)} from {nameof(Help)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Help)}");
                         entity.Scopes.Remove(target);
                     });
                 }
@@ -619,236 +620,46 @@ namespace Services.API
                 });
             });
         }
-        public object Get(HelpJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
+        public object Get(HelpJunction request) =>
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "page":
-                    ret = _GetHelpPage(request, skip, take);
-                    break;
-                case "scope":
-                    ret = _GetHelpScope(request, skip, take);
-                    break;
+                    case "page":
+                        return GetJunctionSearchResult<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<Help, DocEntityHelp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
-        public object Get(HelpJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
+        public object Post(HelpJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "page":
-                    ret = GetHelpPageVersion(request);
-                    break;
-                case "scope":
-                    ret = GetHelpScopeVersion(request);
-                    break;
+                    case "page":
+                        return AddJunction<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
+                    case "scope":
+                        return AddJunction<Help, DocEntityHelp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
 
-        private object _GetHelpPage(HelpJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Page>(Dto.Page.Fields, request.VisibleFields);
-             var en = DocEntityHelp.GetHelp(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.HELP, columnName: "Pages", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Help and Page");
-             return en?.Pages.Take(take).Skip(skip).ConvertFromEntityList<DocEntityPage,Page>(new List<Page>());
-        }
-
-        private List<Version> GetHelpPageVersion(HelpJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityHelp.GetHelp(request.Id);
-                ret = en?.Pages.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-
-        private object _GetHelpScope(HelpJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<Scope>(Dto.Scope.Fields, request.VisibleFields);
-             var en = DocEntityHelp.GetHelp(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.HELP, columnName: "Scopes", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Help and Scope");
-             return en?.Scopes.Take(take).Skip(skip).ConvertFromEntityList<DocEntityScope,Scope>(new List<Scope>());
-        }
-
-        private List<Version> GetHelpScopeVersion(HelpJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityHelp.GetHelp(request.Id);
-                ret = en?.Scopes.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
-        public object Post(HelpJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(HelpJunction request) =>
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "page":
-                    ret = _PostHelpPage(request);
-                    break;
-                case "scope":
-                    ret = _PostHelpScope(request);
-                    break;
+                    case "page":
+                        return RemoveJunction<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
+                    case "scope":
+                        return RemoveJunction<Help, DocEntityHelp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _PostHelpPage(HelpJunction request)
-        {
-            var entity = DocEntityHelp.GetHelp(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Help found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Help");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityPage.GetPage(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.PAGE, columnName: "Pages")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Pages property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Help with objects that do not exist. No matching Page could be found for {id}.");
-                entity.Pages.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _PostHelpScope(HelpJunction request)
-        {
-            var entity = DocEntityHelp.GetHelp(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Help found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Help");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Scopes property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Help with objects that do not exist. No matching Scope could be found for {id}.");
-                entity.Scopes.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(HelpJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                case "page":
-                    ret = _DeleteHelpPage(request);
-                    break;
-                case "scope":
-                    ret = _DeleteHelpScope(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-
-
-        private object _DeleteHelpPage(HelpJunction request)
-        {
-            var entity = DocEntityHelp.GetHelp(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Help found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Help");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityPage.GetPage(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.PAGE, columnName: "Pages"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Help and Page");
-                if(null != relationship && false == relationship.IsRemoved) entity.Pages.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        private object _DeleteHelpScope(HelpJunction request)
-        {
-            var entity = DocEntityHelp.GetHelp(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Help found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Help");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityScope.GetScope(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.SCOPE, columnName: "Scopes"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Help and Scope");
-                if(null != relationship && false == relationship.IsRemoved) entity.Scopes.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Help GetHelp(Help request)
         {
@@ -870,21 +681,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(HelpIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityHelp>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

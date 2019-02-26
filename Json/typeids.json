@@ -1,7 +1,10 @@
 {
-  "NextTypeId": 20235,
-  "MaxTypeId": 20135,
+  "NextTypeId": 20365,
+  "MaxTypeId": 20265,
   "Types": {
+    "DataTab": 20265,
+    "DataProperty": 20255,
+    "DataClass": 20235,
     "Project": 20135,
     "Comparator": 20035,
     "BackgroundTaskItem": 19935,
@@ -49,10 +52,7 @@
     "Outcome": 13662,
     "Intervention": 13420,
     "DocumentSetHistory": 13320,
-    "JctAttributeCategoryAttributeDocumentSet": 13223,
-    "AttributeCategory": 13222,
     "ImportData": 12600,
-    "DocumentAttribute": 6355,
     "Page": 180,
     "ValueType": 171,
     "User": 153,

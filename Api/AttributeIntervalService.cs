@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityAttributeInterval> _ExecSearch(AttributeIntervalSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<AttributeInterval, AttributeIntervalSearch>(request);
             IQueryable<DocEntityAttributeInterval> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeIntervalFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityAttributeInterval,AttributeIntervalFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -83,9 +84,21 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.ATTRIBUTEINTERVAL, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityAttributeInterval,AttributeIntervalSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -103,18 +116,6 @@ namespace Services.API
 
         public List<AttributeInterval> Get(AttributeIntervalSearch request) => GetSearchResult<AttributeInterval,DocEntityAttributeInterval,AttributeIntervalSearch>(DocConstantModelName.ATTRIBUTEINTERVAL, request, _ExecSearch);
 
-        public object Post(AttributeIntervalVersion request) => Get(request);
-
-        public object Get(AttributeIntervalVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public AttributeInterval Get(AttributeInterval request) => GetEntity<AttributeInterval>(DocConstantModelName.ATTRIBUTEINTERVAL, request, GetAttributeInterval);
         private AttributeInterval _AssignValues(AttributeInterval request, DocConstantPermission permission, Session session)
         {
@@ -127,7 +128,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             AttributeInterval ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<AttributeInterval>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -427,21 +428,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(AttributeIntervalIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityAttributeInterval>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityComparator> _ExecSearch(ComparatorSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<Comparator, ComparatorSearch>(request);
             IQueryable<DocEntityComparator> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ComparatorFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityComparator,ComparatorFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -83,17 +84,29 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.COMPARATOR, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
-                        if(true == request.DocumentSetsIds?.Any())
-                        {
-                            entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
-                        }
+                if(true == request.DocumentSetsIds?.Any())
+                {
+                    entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(!DocTools.IsNullOrEmpty(request.URI))
                     entities = entities.Where(en => en.URI.Contains(request.URI));
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityComparator,ComparatorSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -111,18 +124,6 @@ namespace Services.API
 
         public List<Comparator> Get(ComparatorSearch request) => GetSearchResult<Comparator,DocEntityComparator,ComparatorSearch>(DocConstantModelName.COMPARATOR, request, _ExecSearch);
 
-        public object Post(ComparatorVersion request) => Get(request);
-
-        public object Get(ComparatorVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public Comparator Get(Comparator request) => GetEntity<Comparator>(DocConstantModelName.COMPARATOR, request, GetComparator);
         private Comparator _AssignValues(Comparator request, DocConstantPermission permission, Session session)
         {
@@ -135,7 +136,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             Comparator ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<Comparator>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -203,7 +204,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Comparator), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.DocumentSets)} to {nameof(Comparator)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(Comparator)}");
                         entity.DocumentSets.Add(target);
                     });
                     var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -211,7 +212,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Comparator), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Comparator)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Comparator)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
@@ -222,7 +223,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Comparator), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Comparator)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Comparator)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
@@ -491,162 +492,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(ComparatorJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
+        public object Get(ComparatorJunction request) =>
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "documentset":
-                    ret = _GetComparatorDocumentSet(request, skip, take);
-                    break;
+                    case "documentset":
+                        return GetJunctionSearchResult<Comparator, DocEntityComparator, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for comparator/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
-        public object Get(ComparatorJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
+        public object Post(ComparatorJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "documentset":
-                    ret = GetComparatorDocumentSetVersion(request);
-                    break;
+                    case "documentset":
+                        return AddJunction<Comparator, DocEntityComparator, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for comparator/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
 
-        private object _GetComparatorDocumentSet(ComparatorJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<DocumentSet>(Dto.DocumentSet.Fields, request.VisibleFields);
-             var en = DocEntityComparator.GetComparator(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.COMPARATOR, columnName: "DocumentSets", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between Comparator and DocumentSet");
-             return en?.DocumentSets.Take(take).Skip(skip).ConvertFromEntityList<DocEntityDocumentSet,DocumentSet>(new List<DocumentSet>());
-        }
-
-        private List<Version> GetComparatorDocumentSetVersion(ComparatorJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityComparator.GetComparator(request.Id);
-                ret = en?.DocumentSets.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
-        public object Post(ComparatorJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(ComparatorJunction request) =>
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "documentset":
-                    ret = _PostComparatorDocumentSet(request);
-                    break;
+                    case "documentset":
+                        return RemoveJunction<Comparator, DocEntityComparator, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for comparator/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _PostComparatorDocumentSet(ComparatorJunction request)
-        {
-            var entity = DocEntityComparator.GetComparator(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No Comparator found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Comparator");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the DocumentSets property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of Comparator with objects that do not exist. No matching DocumentSet could be found for {id}.");
-                entity.DocumentSets.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(ComparatorJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                case "documentset":
-                    ret = _DeleteComparatorDocumentSet(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-
-
-        private object _DeleteComparatorDocumentSet(ComparatorJunction request)
-        {
-            var entity = DocEntityComparator.GetComparator(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No Comparator found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to Comparator");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityDocumentSet.GetDocumentSet(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.DOCUMENTSET, columnName: "DocumentSets"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between Comparator and DocumentSet");
-                if(null != relationship && false == relationship.IsRemoved) entity.DocumentSets.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private Comparator GetComparator(Comparator request)
         {
@@ -668,21 +547,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(ComparatorIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityComparator>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }

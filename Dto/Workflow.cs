@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -51,10 +52,6 @@ namespace Services.Dto
 
         public WorkflowBase(int? id) : this(DocConvert.ToInt(id)) {}
     
-        [ApiMember(Name = nameof(Archived), Description = "bool?", IsRequired = false)]
-        public bool? Archived { get; set; }
-
-
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
         public int? BindingsCount { get; set; }
@@ -94,7 +91,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Rejected",@"Collected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Requested",@"Collected",@"Unavailable"})]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -160,7 +157,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Archived),nameof(Bindings),nameof(BindingsCount),nameof(Comments),nameof(CommentsCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Documents),nameof(DocumentsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Status),nameof(StatusId),nameof(Tags),nameof(TagsCount),nameof(Tasks),nameof(TasksCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(Variables),nameof(VariablesCount),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Bindings),nameof(BindingsCount),nameof(Comments),nameof(CommentsCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Documents),nameof(DocumentsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Status),nameof(StatusId),nameof(Tags),nameof(TagsCount),nameof(Tasks),nameof(TasksCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(Variables),nameof(VariablesCount),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
         public new List<string> VisibleFields
         {
             get
@@ -190,11 +187,9 @@ namespace Services.Dto
     
     [Route("/Workflow/{Id}/copy", "POST")]
     public partial class WorkflowCopy : Workflow {}
-    [Route("/workflow", "GET")]
-    [Route("/workflow/search", "GET, POST, DELETE")]
-    public partial class WorkflowSearch : Search<Workflow>
+    public partial class WorkflowSearchBase : Search<Workflow>
     {
-        public bool? Archived { get; set; }
+        public int? Id { get; set; }
         public List<int> BindingsIds { get; set; }
         public List<int> CommentsIds { get; set; }
         public string Data { get; set; }
@@ -206,7 +201,7 @@ namespace Services.Dto
         public List<int> ScopesIds { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Rejected",@"Collected",@"Requested",@"Unavailable"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Requested",@"Collected",@"Unavailable"})]
         public List<string> StatusNames { get; set; }
         public List<int> TagsIds { get; set; }
         public List<int> TasksIds { get; set; }
@@ -219,9 +214,17 @@ namespace Services.Dto
         public List<int> VariablesIds { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
-    
+
+    [Route("/workflow", "GET")]
+    [Route("/workflow/version", "GET, POST")]
+    [Route("/workflow/search", "GET, POST, DELETE")]
+    public partial class WorkflowSearch : WorkflowSearchBase
+    {
+    }
+
     public class WorkflowFullTextSearch
     {
+        public WorkflowFullTextSearch() {}
         private WorkflowSearch _request;
         public WorkflowFullTextSearch(WorkflowSearch request) => _request = request;
         
@@ -233,7 +236,6 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Updated))); }
         
-        public bool doArchived { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Archived))); }
         public bool doBindings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Bindings))); }
         public bool doComments { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Comments))); }
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Data))); }
@@ -251,60 +253,12 @@ namespace Services.Dto
         public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Workflows))); }
     }
 
-    [Route("/workflow/version", "GET, POST")]
-    public partial class WorkflowVersion : WorkflowSearch {}
-
     [Route("/workflow/batch", "DELETE, PATCH, POST, PUT")]
     public partial class WorkflowBatch : List<Workflow> { }
 
-    [Route("/workflow/{Id}/lookuptablebinding", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/workflowcomment", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/document", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/scope", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/tag", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/workflowtask", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/variableinstance", "GET, POST, DELETE")]
-    [Route("/workflow/{Id}/workflow", "GET, POST, DELETE")]
-    public class WorkflowJunction : Search<Workflow>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
+    [Route("/workflow/{Id}/{Junction}/version", "GET, POST")]
+    [Route("/workflow/{Id}/{Junction}", "GET, POST, DELETE")]
+    public class WorkflowJunction : WorkflowSearchBase {}
 
 
-        public WorkflowJunction(int id, List<int> ids)
-        {
-            this.Id = id;
-            this.Ids = ids;
-        }
-    }
-
-
-    [Route("/workflow/{Id}/lookuptablebinding/version", "GET")]
-    [Route("/workflow/{Id}/workflowcomment/version", "GET")]
-    [Route("/workflow/{Id}/document/version", "GET")]
-    [Route("/workflow/{Id}/scope/version", "GET")]
-    [Route("/workflow/{Id}/tag/version", "GET")]
-    [Route("/workflow/{Id}/workflowtask/version", "GET")]
-    [Route("/workflow/{Id}/variableinstance/version", "GET")]
-    [Route("/workflow/{Id}/workflow/version", "GET")]
-    public class WorkflowJunctionVersion : IReturn<Version>
-    {
-        public int? Id { get; set; }
-        public List<int> Ids { get; set; }
-        public List<string> VisibleFields { get; set; }
-        public bool ShouldSerializeVisibleFields()
-        {
-            { return false; }
-        }
-    }
-    [Route("/admin/workflow/ids", "GET, POST")]
-    public class WorkflowIds
-    {
-        public bool All { get; set; }
-    }
 }

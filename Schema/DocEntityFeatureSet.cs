@@ -13,12 +13,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Runtime.Serialization;
 
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.internals;
 using Services.Enums;
 using Services.Models;
 
@@ -39,7 +41,8 @@ namespace Services.Schema
     public partial class DocEntityFeatureSet : DocEntityBase
     {
         private const string FEATURESET_CACHE = "FeatureSetCache";
-
+        public const string TABLE_NAME = DocConstantModelName.FEATURESET;
+        
         #region Constructor
         public DocEntityFeatureSet(Session session) : base(session) {}
 
@@ -47,8 +50,8 @@ namespace Services.Schema
         #endregion Constructor
 
         #region VisibleFields
-        private List<string> __vf;
-        private List<string> _visibleFields
+
+        protected override List<string> _visibleFields
         {
             get
             {
@@ -59,11 +62,7 @@ namespace Services.Schema
                 return __vf;
             }
         }
-        
-        public bool IsPropertyVisible(string propertyName)
-        {
-            return _visibleFields.Count == 0 || _visibleFields.Any(v => DocTools.AreEqual(v, propertyName));
-        }
+
         #endregion VisibleFields
 
         #region Static Members
@@ -108,11 +107,6 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
-        public bool? Archived { get; set; }
-
-
         [Field()]
         [FieldMapping(nameof(Description))]
         public string Description { get; set; }
@@ -140,9 +134,6 @@ namespace Services.Schema
         [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
-        [Field]
-        public override Guid Hash { get; set; }
-
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
         public override int VersionNo { get; set; }
 
@@ -152,29 +143,18 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
-        private bool? _isNewlyLocked;
-        private bool? _isModified;
-        
-        private List<string> __editableFields;
-        private List<string> _editableFields 
-        {
-            get
-            {
-                if (null == __editableFields)
-                {
-                    __editableFields = _GetEditableFields();
-                }
-                return __editableFields;
-            }
-        }
+
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
+        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
-        public static readonly DocConstantModelName MODEL_NAME = DocConstantModelName.FEATURESET;
 
-        public override DocConstantModelName ModelName => MODEL_NAME;
+        public override DocConstantModelName TableName => TABLE_NAME;
 
         public const string CACHE_KEY_PREFIX = "FindFeatureSets";
 
@@ -184,72 +164,13 @@ namespace Services.Schema
         #endregion Overrides of DocEntity
 
         #region Entity overrides
-        protected override object AdjustFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
-        {
-            if (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name))
-            {
-                return base.AdjustFieldValue(fieldInfo, oldValue, newValue);
-            }
-            else
-            {
-                return oldValue;
-            }
-        }
-
-        ///    Called before field value is about to be changed. This event is raised only on actual change attempt (i.e. when new value differs from the current one).
-        protected override void OnSettingFieldValue(FieldInfo fieldInfo, object value)
-        {
-            if (_OnSettingFieldValue(fieldInfo, value) && (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name)))
-            {
-                base.OnSettingFieldValue(fieldInfo, value);
-            }
-        }
-
-        /// <summary>
-        ///    Called when field value has been changed.
-        /// </summary>
-        protected override void OnSetFieldValue(FieldInfo fieldInfo, object oldValue, object newValue)
-        {
-            if (fieldInfo.Name == nameof(Locked) && true == DocConvert.ToBool(newValue)) 
-            {
-                _isNewlyLocked = true;
-            }
-            if (fieldInfo.Name != nameof(Locked) && fieldInfo.Name != nameof(Hash) && fieldInfo.Name != nameof(Id) && fieldInfo.Name != nameof(VersionNo) && fieldInfo.Name != nameof(Gestalt) && fieldInfo.Name != nameof(Created) && fieldInfo.Name != nameof(Updated))
-            {
-                _isModified = true;
-            }
-            if (_OnSetFieldValue(fieldInfo, oldValue, newValue) && (!Locked || true == _isNewlyLocked || _editableFields.Any(f => f == fieldInfo.Name)))
-            {
-                base.OnSetFieldValue(fieldInfo, oldValue, newValue);
-            }
-        }
-
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
         protected override void OnRemoving()
         {
-            if (Locked) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"Locked records cannot be deleted.");
-            if (!DocPermissionFactory.HasPermission(this, null, DocConstantPermission.DELETE))
-            {
-                throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to delete this {ModelName}.");
-            }
-
-            _OnRemoving();
             base.OnRemoving();
         }
-
-        /// <summary>
-        ///    Called after entity marked as removed.
-        /// </summary>
-        protected override void OnRemove()
-        {
-            _OnRemove();
-            base.OnRemove();
-            FlushCache();
-        }
-
-        private bool _validated = false;
 
         /// <summary>
         ///    Called when entity should be validated. Override this method to perform custom object validation.
@@ -272,64 +193,14 @@ namespace Services.Schema
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
-            var hash = GetGuid();
-            if(Hash != hash)
-                Hash = hash;
-
             Description = Description?.TrimAndPruneSpaces();
             Name = Name?.TrimAndPruneSpaces();
-
-            if (DocTools.IsNullOrEmpty(Created))
-            {
-                Created = DateTime.UtcNow;
-            }
-            if (DocTools.IsNullOrEmpty(Updated))
-            {
-                Updated = Created;
-            }
-            if (true == _isModified)
-            {
-                Updated = DateTime.UtcNow;
-                VersionNo += 1;
-                _OnIsModified();
-                _isModified = null;
-            }
-
-            _OnSaveChanges(permission);
-
-            if(!_validated)
-                OnValidate();
-
-            _OnSetGestalt();
-
-            //Only do permissions checks AFTER validation has finished to get better errors
-            //The transaction still hasn't completed, so if we throw then the rollback will work as expected
-            permission = permission ?? DocConstantPermission.EDIT;
-            if(!DocPermissionFactory.HasPermission(this, null, permission))
-            {
-                throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to {permission} this {ModelName}.");
-            }
-
-            return this;
+            return base.SaveChanges(permission);
         }
 
-        public override bool UnlockRecord()
+        public override void FlushCache()
         {
-            var ret = DocPermissionFactory.HasPermission(this, null, DocConstantPermission.UNLOCK);
-            _OnUnlock();
-            if (!ret) throw new ServiceStack.HttpError(System.Net.HttpStatusCode.Forbidden, $"You do not have permission to unlock this {nameof(FeatureSet)}");
-            if (ret)
-            {
-                _isNewlyLocked = true;
-                Locked = false;
-            }
-            return ret;
-        }
-
-        public void FlushCache()
-        {
-            _OnFlushCache();
-            DocCacheClient.RemoveSearch("FeatureSet");
+            base.FlushCache();
             DocCacheClient.RemoveById(Id);
         }
         #endregion Entity overrides
@@ -354,32 +225,7 @@ namespace Services.Schema
         }
         #endregion Validation
 
-        #region Hash
-        
-        public static Guid GetGuid(DocEntityFeatureSet thing)
-        {
-            if(thing == null) return Guid.Empty;
-            return thing.GetGuid();
-        }
-
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override Guid GetGuid(bool forceRefresh = false)
-        {
-            return GetGuid(this);
-        }
-        #endregion Hash
-
         #region Converters
-        public override string ToString() => _ToString();
-
-        public override Reference ToReference()
-        {
-            var ret = new Reference(Id, Name , Gestalt);
-            return _ToReference(ret);
-        }
 
         public FeatureSet ToDto() => Mapper.Map<DocEntityFeatureSet, FeatureSet>(this);
 
@@ -387,11 +233,15 @@ namespace Services.Schema
         #endregion Converters
     }
 
-    public partial class FeatureSetMapper : Profile
+    public static partial class UniqueConstraintFilter
+    {
+        public static Expression<Func<DocEntityFeatureSet, bool>> FeatureSetIgnoreArchived() => d => d.Archived == false;
+    }
+
+    public partial class FeatureSetMapper : DocMapperBase
     {
         private IMappingExpression<DocEntityFeatureSet,FeatureSet> _EntityToDto;
         private IMappingExpression<FeatureSet,DocEntityFeatureSet> _DtoToEntity;
-
         public FeatureSetMapper()
         {
             CreateMap<DocEntitySet<DocEntityFeatureSet>,List<Reference>>()
@@ -404,7 +254,6 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityFeatureSet,FeatureSet>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Updated")))
-                .ForMember(dest => dest.Archived, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Archived))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Description))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.Name))))
                 .ForMember(dest => dest.PermissionTemplate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, nameof(DocEntityFeatureSet.PermissionTemplate))))

@@ -11,6 +11,7 @@ using AutoMapper;
 using Services.Core;
 using Services.Db;
 using Services.Dto;
+using Services.Dto.Security;
 using Services.Enums;
 using Services.Models;
 using Services.Schema;
@@ -45,7 +46,7 @@ namespace Services.API
     {
         private IQueryable<DocEntityWorkflowComment> _ExecSearch(WorkflowCommentSearch request)
         {
-            request = InitSearch(request);
+            request = InitSearch<WorkflowComment, WorkflowCommentSearch>(request);
             IQueryable<DocEntityWorkflowComment> entities = null;
             Execute.Run( session => 
             {
@@ -53,7 +54,7 @@ namespace Services.API
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowCommentFullTextSearch(request);
-                    entities = GetFullTextSearch(fts, entities);
+                    entities = GetFullTextSearch<DocEntityWorkflowComment,WorkflowCommentFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -83,11 +84,23 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.WORKFLOWCOMMENT, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
 
-                        if(true == request.ChildrenIds?.Any())
-                        {
-                            entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
-                        }
+                if(true == request.ChildrenIds?.Any())
+                {
+                    entities = entities.Where(en => en.Children.Any(r => r.Id.In(request.ChildrenIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Parent) && !DocTools.IsNullOrEmpty(request.Parent.Id))
                 {
                     entities = entities.Where(en => en.Parent.Id == request.Parent.Id );
@@ -115,7 +128,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Workflow.Id.In(request.WorkflowIds));
                 }
 
-                entities = ApplyFilters(request, entities);
+                entities = ApplyFilters<DocEntityWorkflowComment,WorkflowCommentSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -133,18 +146,6 @@ namespace Services.API
 
         public List<WorkflowComment> Get(WorkflowCommentSearch request) => GetSearchResult<WorkflowComment,DocEntityWorkflowComment,WorkflowCommentSearch>(DocConstantModelName.WORKFLOWCOMMENT, request, _ExecSearch);
 
-        public object Post(WorkflowCommentVersion request) => Get(request);
-
-        public object Get(WorkflowCommentVersion request) 
-        {
-            List<Version> ret = null;
-            Execute.Run(s=>
-            {
-                ret = _ExecSearch(request).Select(e => new Version(e.Id, e.VersionNo)).ToList();
-            });
-            return ret;
-        }
-
         public WorkflowComment Get(WorkflowComment request) => GetEntity<WorkflowComment>(DocConstantModelName.WORKFLOWCOMMENT, request, GetWorkflowComment);
         private WorkflowComment _AssignValues(WorkflowComment request, DocConstantPermission permission, Session session)
         {
@@ -157,7 +158,7 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
             WorkflowComment ret = null;
-            request = _InitAssignValues(request, permission, session);
+            request = _InitAssignValues<WorkflowComment>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
@@ -245,7 +246,7 @@ namespace Services.API
                     {
                         var target = DocEntityWorkflowComment.GetWorkflowComment(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(WorkflowComment), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Children)} to {nameof(WorkflowComment)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Children)} to {nameof(WorkflowComment)}");
                         entity.Children.Add(target);
                     });
                     var toRemove = entity.Children.Where(e => requestedChildren.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -253,7 +254,7 @@ namespace Services.API
                     {
                         var target = DocEntityWorkflowComment.GetWorkflowComment(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(WorkflowComment), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Children)} from {nameof(WorkflowComment)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(WorkflowComment)}");
                         entity.Children.Remove(target);
                     });
                 }
@@ -264,7 +265,7 @@ namespace Services.API
                     {
                         var target = DocEntityWorkflowComment.GetWorkflowComment(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(WorkflowComment), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Children)} from {nameof(WorkflowComment)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(WorkflowComment)}");
                         entity.Children.Remove(target);
                     });
                 }
@@ -533,162 +534,40 @@ namespace Services.API
                 });
             });
         }
-        public object Get(WorkflowCommentJunction request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            object ret = null;
-            var skip = (request.Skip > 0) ? request.Skip.Value : 0;
-            var take = (request.Take > 0) ? request.Take.Value : int.MaxValue;
-                        
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-1]?.ToLower().Trim();
+        public object Get(WorkflowCommentJunction request) =>
             Execute.Run( s => 
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "workflowcomment":
-                    ret = _GetWorkflowCommentWorkflowComment(request, skip, take);
-                    break;
+                    case "workflowcomment":
+                        return GetJunctionSearchResult<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request, (ss) => HostContext.ResolveService<WorkflowCommentService>(Request)?.Get(ss));
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
-        public object Get(WorkflowCommentJunctionVersion request)
-        {
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-            
-            var info = Request.PathInfo.Split('?')[0].Split('/');
-            var method = info[info.Length-2]?.ToLower().Trim();
+        public object Post(WorkflowCommentJunction request) =>
             Execute.Run( ssn =>
             {
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "workflowcomment":
-                    ret = GetWorkflowCommentWorkflowCommentVersion(request);
-                    break;
+                    case "workflowcomment":
+                        return AddJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-        
 
-        private object _GetWorkflowCommentWorkflowComment(WorkflowCommentJunction request, int skip, int take)
-        {
-             request.VisibleFields = InitVisibleFields<WorkflowComment>(Dto.WorkflowComment.Fields, request.VisibleFields);
-             var en = DocEntityWorkflowComment.GetWorkflowComment(request.Id);
-             if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.VIEW, targetName: DocConstantModelName.WORKFLOWCOMMENT, columnName: "Children", targetEntity: null))
-                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have View permission to relationships between WorkflowComment and WorkflowComment");
-             return en?.Children.Take(take).Skip(skip).ConvertFromEntityList<DocEntityWorkflowComment,WorkflowComment>(new List<WorkflowComment>());
-        }
-
-        private List<Version> GetWorkflowCommentWorkflowCommentVersion(WorkflowCommentJunctionVersion request)
-        { 
-            if(!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Valid Id required.");
-            var ret = new List<Version>();
-             Execute.Run((ssn) =>
-             {
-                var en = DocEntityWorkflowComment.GetWorkflowComment(request.Id);
-                ret = en?.Children.Select(e => new Version(e.Id, e.VersionNo)).ToList();
-             });
-            return ret;
-        }
-        
-        public object Post(WorkflowCommentJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
+        public object Delete(WorkflowCommentJunction request) =>
             Execute.Run( ssn =>
             {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
+                switch(request.Junction.ToLower().TrimAndPruneSpaces())
                 {
-                case "workflowcomment":
-                    ret = _PostWorkflowCommentWorkflowComment(request);
-                    break;
+                    case "workflowcomment":
+                        return RemoveJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request);
+                    default:
+                        throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
                 }
             });
-            return ret;
-        }
-
-
-        private object _PostWorkflowCommentWorkflowComment(WorkflowCommentJunction request)
-        {
-            var entity = DocEntityWorkflowComment.GetWorkflowComment(request.Id);
-
-            if (null == entity) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowComment found for Id {request.Id}");
-
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to WorkflowComment");
-
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflowComment.GetWorkflowComment(id);
-                if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOWCOMMENT, columnName: "Children")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Add permission to the Children property.");
-                if (null == relationship) throw new HttpError(HttpStatusCode.NotFound, $"Cannot post to collection of WorkflowComment with objects that do not exist. No matching WorkflowComment could be found for {id}.");
-                entity.Children.Add(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
-
-        public object Delete(WorkflowCommentJunction request)
-        {
-            if (request == null)
-                throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
-            if (!(request.Id > 0))
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the {className} to update.");
-            if (request.Ids == null || request.Ids.Count < 1)
-                throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid list of {type} Ids.");
-
-            object ret = null;
-
-            Execute.Run( ssn =>
-            {
-                var info = Request.PathInfo.Split('/');
-                var method = info[info.Length-1];
-                switch(method)
-                {
-                case "workflowcomment":
-                    ret = _DeleteWorkflowCommentWorkflowComment(request);
-                    break;
-                }
-            });
-            return ret;
-        }
-
-
-        private object _DeleteWorkflowCommentWorkflowComment(WorkflowCommentJunction request)
-        {
-            var entity = DocEntityWorkflowComment.GetWorkflowComment(request.Id);
-
-            if (null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowComment found for Id {request.Id}");
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.EDIT))
-                throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to WorkflowComment");
-            foreach (var id in request.Ids)
-            {
-                var relationship = DocEntityWorkflowComment.GetWorkflowComment(id);
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: relationship, targetName: DocConstantModelName.WORKFLOWCOMMENT, columnName: "Children"))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have Edit permission to relationships between WorkflowComment and WorkflowComment");
-                if(null != relationship && false == relationship.IsRemoved) entity.Children.Remove(relationship);
-            }
-            entity.SaveChanges();
-            return entity.ToDto();
-        }
 
         private WorkflowComment GetWorkflowComment(WorkflowComment request)
         {
@@ -710,21 +589,6 @@ namespace Services.API
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
             
             ret = entity?.ToDto();
-            return ret;
-        }
-
-        public List<int> Any(WorkflowCommentIds request)
-        {
-            List<int> ret = null;
-            if (currentUser.IsSuperAdmin)
-            {
-                Execute.Run(s => { ret = Execute.SelectAll<DocEntityWorkflowComment>().Select(d => d.Id).ToList(); });
-            }
-            else
-            {
-                throw new HttpError(HttpStatusCode.Forbidden);
-            }
-
             return ret;
         }
     }
