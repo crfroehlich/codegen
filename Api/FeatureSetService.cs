@@ -226,7 +226,7 @@ namespace Services.API
                     {
                         var target = DocEntityRole.GetRole(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Roles)} to {nameof(FeatureSet)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Roles)} to {nameof(FeatureSet)}");
                         entity.Roles.Add(target);
                     });
                     var toRemove = entity.Roles.Where(e => requestedRoles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -234,7 +234,7 @@ namespace Services.API
                     {
                         var target = DocEntityRole.GetRole(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(FeatureSet)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Roles)} from {nameof(FeatureSet)}");
                         entity.Roles.Remove(target);
                     });
                 }
@@ -245,7 +245,7 @@ namespace Services.API
                     {
                         var target = DocEntityRole.GetRole(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(FeatureSet)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Roles)} from {nameof(FeatureSet)}");
                         entity.Roles.Remove(target);
                     });
                 }

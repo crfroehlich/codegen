@@ -297,7 +297,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermCategory.GetTermCategory(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Categories)} to {nameof(TermMaster)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Categories)} to {nameof(TermMaster)}");
                         entity.Categories.Add(target);
                     });
                     var toRemove = entity.Categories.Where(e => requestedCategories.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -305,7 +305,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermCategory.GetTermCategory(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(TermMaster)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Categories)} from {nameof(TermMaster)}");
                         entity.Categories.Remove(target);
                     });
                 }
@@ -316,7 +316,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermCategory.GetTermCategory(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Categories)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(TermMaster)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Categories)} from {nameof(TermMaster)}");
                         entity.Categories.Remove(target);
                     });
                 }
@@ -341,7 +341,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermSynonym.GetTermSynonym(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Synonyms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Synonyms)} to {nameof(TermMaster)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Synonyms)} to {nameof(TermMaster)}");
                         entity.Synonyms.Add(target);
                     });
                     var toRemove = entity.Synonyms.Where(e => requestedSynonyms.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -349,7 +349,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermSynonym.GetTermSynonym(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Synonyms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Synonyms)} from {nameof(TermMaster)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Synonyms)} from {nameof(TermMaster)}");
                         entity.Synonyms.Remove(target);
                     });
                 }
@@ -360,7 +360,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermSynonym.GetTermSynonym(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermMaster), columnName: nameof(request.Synonyms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Synonyms)} from {nameof(TermMaster)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Synonyms)} from {nameof(TermMaster)}");
                         entity.Synonyms.Remove(target);
                     });
                 }

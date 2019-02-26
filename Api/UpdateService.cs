@@ -346,7 +346,7 @@ namespace Services.API
                     {
                         var target = DocEntityEvent.GetEvent(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Events)} to {nameof(Update)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Events)} to {nameof(Update)}");
                         entity.Events.Add(target);
                     });
                     var toRemove = entity.Events.Where(e => requestedEvents.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -354,7 +354,7 @@ namespace Services.API
                     {
                         var target = DocEntityEvent.GetEvent(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Events)} from {nameof(Update)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Events)} from {nameof(Update)}");
                         entity.Events.Remove(target);
                     });
                 }
@@ -365,7 +365,7 @@ namespace Services.API
                     {
                         var target = DocEntityEvent.GetEvent(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Events)} from {nameof(Update)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Events)} from {nameof(Update)}");
                         entity.Events.Remove(target);
                     });
                 }

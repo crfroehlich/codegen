@@ -251,7 +251,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Bindings)} to {nameof(TermSynonym)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Bindings)} to {nameof(TermSynonym)}");
                         entity.Bindings.Add(target);
                     });
                     var toRemove = entity.Bindings.Where(e => requestedBindings.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -259,7 +259,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(TermSynonym)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Bindings)} from {nameof(TermSynonym)}");
                         entity.Bindings.Remove(target);
                     });
                 }
@@ -270,7 +270,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermSynonym), columnName: nameof(request.Bindings)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(TermSynonym)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Bindings)} from {nameof(TermSynonym)}");
                         entity.Bindings.Remove(target);
                     });
                 }

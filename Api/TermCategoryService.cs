@@ -222,7 +222,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermMaster.GetTermMaster(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Terms)} to {nameof(TermCategory)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Terms)} to {nameof(TermCategory)}");
                         entity.Terms.Add(target);
                     });
                     var toRemove = entity.Terms.Where(e => requestedTerms.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -230,7 +230,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermMaster.GetTermMaster(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Terms)} from {nameof(TermCategory)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Terms)} from {nameof(TermCategory)}");
                         entity.Terms.Remove(target);
                     });
                 }
@@ -241,7 +241,7 @@ namespace Services.API
                     {
                         var target = DocEntityTermMaster.GetTermMaster(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(TermCategory), columnName: nameof(request.Terms)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Terms)} from {nameof(TermCategory)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Terms)} from {nameof(TermCategory)}");
                         entity.Terms.Remove(target);
                     });
                 }

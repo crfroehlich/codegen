@@ -440,7 +440,7 @@ namespace Services.API
                     {
                         var target = DocEntityProject.GetProject(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Children)} to {nameof(Project)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Children)} to {nameof(Project)}");
                         entity.Children.Add(target);
                     });
                     var toRemove = entity.Children.Where(e => requestedChildren.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -448,7 +448,7 @@ namespace Services.API
                     {
                         var target = DocEntityProject.GetProject(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Project)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Children)} from {nameof(Project)}");
                         entity.Children.Remove(target);
                     });
                 }
@@ -459,7 +459,7 @@ namespace Services.API
                     {
                         var target = DocEntityProject.GetProject(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.Children)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Project)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Children)} from {nameof(Project)}");
                         entity.Children.Remove(target);
                     });
                 }
@@ -484,7 +484,7 @@ namespace Services.API
                     {
                         var target = DocEntityTimeCard.GetTimeCard(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.TimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.TimeCards)} to {nameof(Project)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.TimeCards)} to {nameof(Project)}");
                         entity.TimeCards.Add(target);
                     });
                     var toRemove = entity.TimeCards.Where(e => requestedTimeCards.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -492,7 +492,7 @@ namespace Services.API
                     {
                         var target = DocEntityTimeCard.GetTimeCard(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.TimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TimeCards)} from {nameof(Project)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.TimeCards)} from {nameof(Project)}");
                         entity.TimeCards.Remove(target);
                     });
                 }
@@ -503,7 +503,7 @@ namespace Services.API
                     {
                         var target = DocEntityTimeCard.GetTimeCard(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Project), columnName: nameof(request.TimeCards)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TimeCards)} from {nameof(Project)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.TimeCards)} from {nameof(Project)}");
                         entity.TimeCards.Remove(target);
                     });
                 }

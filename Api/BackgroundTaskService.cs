@@ -356,7 +356,7 @@ namespace Services.API
                     {
                         var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Items)} to {nameof(BackgroundTask)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Items)} to {nameof(BackgroundTask)}");
                         entity.Items.Add(target);
                     });
                     var toRemove = entity.Items.Where(e => requestedItems.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -364,7 +364,7 @@ namespace Services.API
                     {
                         var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Items)} from {nameof(BackgroundTask)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Items)} from {nameof(BackgroundTask)}");
                         entity.Items.Remove(target);
                     });
                 }
@@ -375,7 +375,7 @@ namespace Services.API
                     {
                         var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Items)} from {nameof(BackgroundTask)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Items)} from {nameof(BackgroundTask)}");
                         entity.Items.Remove(target);
                     });
                 }
@@ -400,7 +400,7 @@ namespace Services.API
                     {
                         var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.TaskHistory)} to {nameof(BackgroundTask)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.TaskHistory)} to {nameof(BackgroundTask)}");
                         entity.TaskHistory.Add(target);
                     });
                     var toRemove = entity.TaskHistory.Where(e => requestedTaskHistory.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -408,7 +408,7 @@ namespace Services.API
                     {
                         var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TaskHistory)} from {nameof(BackgroundTask)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.TaskHistory)} from {nameof(BackgroundTask)}");
                         entity.TaskHistory.Remove(target);
                     });
                 }
@@ -419,7 +419,7 @@ namespace Services.API
                     {
                         var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TaskHistory)} from {nameof(BackgroundTask)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.TaskHistory)} from {nameof(BackgroundTask)}");
                         entity.TaskHistory.Remove(target);
                     });
                 }

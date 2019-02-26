@@ -723,7 +723,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.DocumentSets)} to {nameof(Document)}");
                         entity.DocumentSets.Add(target);
                     });
                     var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -731,7 +731,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Document)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
@@ -742,7 +742,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(Document)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
@@ -767,7 +767,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTable.GetLookupTable(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.LookupTables)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.LookupTables)} to {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.LookupTables)} to {nameof(Document)}");
                         entity.LookupTables.Add(target);
                     });
                     var toRemove = entity.LookupTables.Where(e => requestedLookupTables.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -775,7 +775,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTable.GetLookupTable(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.LookupTables)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.LookupTables)} from {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.LookupTables)} from {nameof(Document)}");
                         entity.LookupTables.Remove(target);
                     });
                 }
@@ -786,7 +786,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTable.GetLookupTable(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.LookupTables)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.LookupTables)} from {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.LookupTables)} from {nameof(Document)}");
                         entity.LookupTables.Remove(target);
                     });
                 }
@@ -811,7 +811,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.NonDigitizedDocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.NonDigitizedDocumentSets)} to {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.NonDigitizedDocumentSets)} to {nameof(Document)}");
                         entity.NonDigitizedDocumentSets.Add(target);
                     });
                     var toRemove = entity.NonDigitizedDocumentSets.Where(e => requestedNonDigitizedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -819,7 +819,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.NonDigitizedDocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.NonDigitizedDocumentSets)} from {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.NonDigitizedDocumentSets)} from {nameof(Document)}");
                         entity.NonDigitizedDocumentSets.Remove(target);
                     });
                 }
@@ -830,7 +830,7 @@ namespace Services.API
                     {
                         var target = DocEntityDocumentSet.GetDocumentSet(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.NonDigitizedDocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.NonDigitizedDocumentSets)} from {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.NonDigitizedDocumentSets)} from {nameof(Document)}");
                         entity.NonDigitizedDocumentSets.Remove(target);
                     });
                 }
@@ -855,7 +855,7 @@ namespace Services.API
                     {
                         var target = DocEntityVariableInstance.GetVariableInstance(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.VariableData)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.VariableData)} to {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.VariableData)} to {nameof(Document)}");
                         entity.VariableData.Add(target);
                     });
                     var toRemove = entity.VariableData.Where(e => requestedVariableData.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -863,7 +863,7 @@ namespace Services.API
                     {
                         var target = DocEntityVariableInstance.GetVariableInstance(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.VariableData)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.VariableData)} from {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.VariableData)} from {nameof(Document)}");
                         entity.VariableData.Remove(target);
                     });
                 }
@@ -874,7 +874,7 @@ namespace Services.API
                     {
                         var target = DocEntityVariableInstance.GetVariableInstance(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.VariableData)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.VariableData)} from {nameof(Document)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.VariableData)} from {nameof(Document)}");
                         entity.VariableData.Remove(target);
                     });
                 }

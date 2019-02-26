@@ -210,7 +210,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTable.GetLookupTable(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupCategory), columnName: nameof(request.Lookups)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Lookups)} to {nameof(LookupCategory)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to add {nameof(request.Lookups)} to {nameof(LookupCategory)}");
                         entity.Lookups.Add(target);
                     });
                     var toRemove = entity.Lookups.Where(e => requestedLookups.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
@@ -218,7 +218,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTable.GetLookupTable(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupCategory), columnName: nameof(request.Lookups)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Lookups)} from {nameof(LookupCategory)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Lookups)} from {nameof(LookupCategory)}");
                         entity.Lookups.Remove(target);
                     });
                 }
@@ -229,7 +229,7 @@ namespace Services.API
                     {
                         var target = DocEntityLookupTable.GetLookupTable(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupCategory), columnName: nameof(request.Lookups)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Lookups)} from {nameof(LookupCategory)}");
+                            throw new HttpError(HttpStatusCode.Forbidden, $"You do not have permission to remove {nameof(request.Lookups)} from {nameof(LookupCategory)}");
                         entity.Lookups.Remove(target);
                     });
                 }
