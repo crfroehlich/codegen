@@ -194,7 +194,7 @@ namespace Services.Schema
         public int? FramedQuestionId { get; set; }
 
 
-        [Field(DefaultValue = "", Length = int.MaxValue)]
+        [Field(Length = int.MaxValue)]
         [FieldMapping(nameof(GeneralScope))]
         public string GeneralScope { get; set; }
 

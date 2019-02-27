@@ -148,7 +148,7 @@ namespace Services.Schema
         public int? ItemsCount { get { return Items.Count(); } private set { var noid = value; } }
 
 
-        [Field(DefaultValue = "")]
+        [Field()]
         [FieldMapping(nameof(LastRunVersion))]
         public string LastRunVersion { get; set; }
 
