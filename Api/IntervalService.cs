@@ -237,11 +237,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.TimeOfDay));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<Interval>(currentUser, nameof(Interval), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -324,7 +325,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pCalendarDateEnd = entity.CalendarDateEnd;
                     var pCalendarDateStart = entity.CalendarDateStart;
                     var pCalendarType = entity.CalendarType;
@@ -343,6 +344,7 @@ namespace Services.API
                                 , FollowUp = pFollowUp
                                 , TimeOfDay = pTimeOfDay
                 };
+
                 #region Custom After copyInterval
                 #endregion Custom After copyInterval
                 copy.SaveChanges(DocConstantPermission.ADD);

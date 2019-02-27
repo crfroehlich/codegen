@@ -348,11 +348,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.StartAt));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pItems, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.Items)))
             {
                 if (true == pItems?.Any() )

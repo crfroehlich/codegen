@@ -232,11 +232,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Term));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, nameof(Glossary), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -319,7 +320,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pDefinition = entity.Definition;
                     var pEnum = entity.Enum;
                     var pIcon = entity.Icon;
@@ -338,6 +339,7 @@ namespace Services.API
                                 , Page = pPage
                                 , Term = pTerm
                 };
+
                 #region Custom After copyGlossary
                 #endregion Custom After copyGlossary
                 copy.SaveChanges(DocConstantPermission.ADD);

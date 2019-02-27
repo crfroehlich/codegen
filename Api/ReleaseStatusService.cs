@@ -218,11 +218,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Version));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, nameof(ReleaseStatus), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -305,7 +306,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pBranch = entity.Branch;
                     if(!DocTools.IsNullOrEmpty(pBranch))
                         pBranch += " (Copy)";
@@ -332,6 +333,7 @@ namespace Services.API
                                 , URL = pURL
                                 , Version = pVersion
                 };
+
                 #region Custom After copyReleaseStatus
                 #endregion Custom After copyReleaseStatus
                 copy.SaveChanges(DocConstantPermission.ADD);

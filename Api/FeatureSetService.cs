@@ -193,11 +193,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.PermissionTemplate));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pRoles, permission, DocConstantModelName.FEATURESET, nameof(request.Roles)))
             {
                 if (true == pRoles?.Any() )

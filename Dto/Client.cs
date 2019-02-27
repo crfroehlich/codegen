@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public ClientBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(DefaultLocale), Description = "Locale", IsRequired = false)]
         public Reference DefaultLocale { get; set; }
         [ApiMember(Name = nameof(DefaultLocaleId), Description = "Primary Key of Locale", IsRequired = false)]
@@ -181,7 +181,7 @@ namespace Services.Dto
         public ClientFullTextSearch() {}
         private ClientSearch _request;
         public ClientFullTextSearch(ClientSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -189,7 +189,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Updated))); }
-        
+
         public bool doDefaultLocale { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.DefaultLocale))); }
         public bool doDivisions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.Divisions))); }
         public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Client.DocumentSets))); }

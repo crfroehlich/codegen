@@ -317,11 +317,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.WorkType));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, nameof(TimeCard), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -404,7 +405,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
                         pDescription += " (Copy)";
@@ -431,6 +432,7 @@ namespace Services.API
                                 , User = pUser
                                 , WorkType = pWorkType
                 };
+
                 #region Custom After copyTimeCard
                 #endregion Custom After copyTimeCard
                 copy.SaveChanges(DocConstantPermission.ADD);

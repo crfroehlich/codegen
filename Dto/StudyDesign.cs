@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public StudyDesignBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Design), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Before and After Trial",@"Case Control",@"Case Report",@"Case Series",@"Cluster RCT",@"Cohort Study",@"Controlled Before and After Trial",@"Cross Sectional Study",@"Expanded Access Program",@"Follow-up/Extension",@"Literature Review",@"Non-Comparative, Other",@"Non-Controlled Clinical Trial",@"Non-Randomized Controlled Trial",@"Non-Randomized Crossover",@"Observational Non-Comparative Study",@"Pooled Analysis",@"Posthoc Analysis",@"Prospective Cohort Study",@"Qualitative Research",@"Randomized Controlled Trial",@"Randomized Crossover",@"Randomized Non-Controlled Trial",@"Retrospective Cohort Study",@"Sub-Group Analysis"})]
         public Reference Design { get; set; }
@@ -123,7 +123,7 @@ namespace Services.Dto
         public StudyDesignFullTextSearch() {}
         private StudyDesignSearch _request;
         public StudyDesignFullTextSearch(StudyDesignSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -131,7 +131,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyDesign.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyDesign.Updated))); }
-        
+
         public bool doDesign { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyDesign.Design))); }
     }
 

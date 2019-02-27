@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public UserTypeBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(PayrollStatus), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Contract",@"Full-Time",@"Part-Time"})]
         public Reference PayrollStatus { get; set; }
@@ -165,7 +165,7 @@ namespace Services.Dto
         public UserTypeFullTextSearch() {}
         private UserTypeSearch _request;
         public UserTypeFullTextSearch(UserTypeSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -173,7 +173,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.Updated))); }
-        
+
         public bool doPayrollStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.PayrollStatus))); }
         public bool doPayrollType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.PayrollType))); }
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.Type))); }

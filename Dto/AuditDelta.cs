@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public AuditDeltaBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Audit), Description = "AuditRecord", IsRequired = true)]
         public Reference Audit { get; set; }
         [ApiMember(Name = nameof(AuditId), Description = "Primary Key of AuditRecord", IsRequired = false)]
@@ -134,7 +134,7 @@ namespace Services.Dto
         public AuditDeltaFullTextSearch() {}
         private AuditDeltaSearch _request;
         public AuditDeltaFullTextSearch(AuditDeltaSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -142,7 +142,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditDelta.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditDelta.Updated))); }
-        
+
         public bool doAudit { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditDelta.Audit))); }
         public bool doDelta { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditDelta.Delta))); }
     }

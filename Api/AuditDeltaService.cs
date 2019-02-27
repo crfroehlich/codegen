@@ -183,11 +183,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Delta));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, nameof(AuditDelta), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -270,7 +271,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pAudit = entity.Audit;
                     var pDelta = entity.Delta;
                 #region Custom Before copyAuditDelta
@@ -281,6 +282,7 @@ namespace Services.API
                                 , Audit = pAudit
                                 , Delta = pDelta
                 };
+
                 #region Custom After copyAuditDelta
                 #endregion Custom After copyAuditDelta
                 copy.SaveChanges(DocConstantPermission.ADD);

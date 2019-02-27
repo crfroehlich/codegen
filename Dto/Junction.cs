@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public JunctionBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Children), Description = "Junction", IsRequired = false)]
         public List<Reference> Children { get; set; }
         public int? ChildrenCount { get; set; }
@@ -184,7 +184,7 @@ namespace Services.Dto
         public JunctionFullTextSearch() {}
         private JunctionSearch _request;
         public JunctionFullTextSearch(JunctionSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -192,7 +192,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Updated))); }
-        
+
         public bool doChildren { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Children))); }
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Data))); }
         public bool doOwnerId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.OwnerId))); }

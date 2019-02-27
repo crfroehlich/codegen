@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public DataClassBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(AllowDelete), Description = "bool", IsRequired = false)]
         public bool AllowDelete { get; set; }
 
@@ -243,7 +243,7 @@ namespace Services.Dto
         public DataClassFullTextSearch() {}
         private DataClassSearch _request;
         public DataClassFullTextSearch(DataClassSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -251,7 +251,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Updated))); }
-        
+
         public bool doAllowDelete { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.AllowDelete))); }
         public bool doAllVisibleFieldsByDefault { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.AllVisibleFieldsByDefault))); }
         public bool doClassId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.ClassId))); }

@@ -168,11 +168,13 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            
+
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, nameof(LookupTableEnum), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -255,7 +257,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pIsBindable = entity.IsBindable;
                     var pIsGlobal = entity.IsGlobal;
                     var pName = entity.Name;
@@ -270,6 +272,7 @@ namespace Services.API
                                 , IsGlobal = pIsGlobal
                                 , Name = pName
                 };
+
                 #region Custom After copyLookupTableEnum
                 #endregion Custom After copyLookupTableEnum
                 copy.SaveChanges(DocConstantPermission.ADD);

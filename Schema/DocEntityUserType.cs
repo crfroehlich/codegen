@@ -170,6 +170,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+
             base.OnRemoving();
         }
 
@@ -194,6 +195,7 @@ namespace Services.Schema
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
         {
+
             return base.SaveChanges(permission);
         }
 

@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public VariableRuleBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Children), Description = "VariableRule", IsRequired = false)]
         public List<Reference> Children { get; set; }
         public int? ChildrenCount { get; set; }
@@ -184,7 +184,7 @@ namespace Services.Dto
         public VariableRuleFullTextSearch() {}
         private VariableRuleSearch _request;
         public VariableRuleFullTextSearch(VariableRuleSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -192,7 +192,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableRule.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableRule.Updated))); }
-        
+
         public bool doChildren { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableRule.Children))); }
         public bool doDefinition { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableRule.Definition))); }
         public bool doInstances { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableRule.Instances))); }

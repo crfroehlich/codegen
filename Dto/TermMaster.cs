@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public TermMasterBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(BioPortal), Description = "string", IsRequired = false)]
         public string BioPortal { get; set; }
 
@@ -186,7 +186,7 @@ namespace Services.Dto
         public TermMasterFullTextSearch() {}
         private TermMasterSearch _request;
         public TermMasterFullTextSearch(TermMasterSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -194,7 +194,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Updated))); }
-        
+
         public bool doBioPortal { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.BioPortal))); }
         public bool doCategories { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Categories))); }
         public bool doCUI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.CUI))); }

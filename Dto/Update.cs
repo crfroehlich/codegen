@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public UpdateBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Body), Description = "string", IsRequired = false)]
         public string Body { get; set; }
 
@@ -196,7 +196,7 @@ namespace Services.Dto
         public UpdateFullTextSearch() {}
         private UpdateSearch _request;
         public UpdateFullTextSearch(UpdateSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -204,7 +204,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.Updated))); }
-        
+
         public bool doBody { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.Body))); }
         public bool doDeliveryStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.DeliveryStatus))); }
         public bool doEmailAttempts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Update.EmailAttempts))); }

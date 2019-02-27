@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public FeatureSetBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -144,7 +144,7 @@ namespace Services.Dto
         public FeatureSetFullTextSearch() {}
         private FeatureSetSearch _request;
         public FeatureSetFullTextSearch(FeatureSetSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -152,7 +152,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Updated))); }
-        
+
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Description))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.Name))); }
         public bool doPermissionTemplate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(FeatureSet.PermissionTemplate))); }

@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public AuditRecordBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Action), Description = "string", IsRequired = false)]
         public string Action { get; set; }
 
@@ -213,7 +213,7 @@ namespace Services.Dto
         public AuditRecordFullTextSearch() {}
         private AuditRecordSearch _request;
         public AuditRecordFullTextSearch(AuditRecordSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -221,7 +221,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.Updated))); }
-        
+
         public bool doAction { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.Action))); }
         public bool doBackgroundTask { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.BackgroundTask))); }
         public bool doChangedOnDate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(AuditRecord.ChangedOnDate))); }

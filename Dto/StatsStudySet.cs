@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public StatsStudySetBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(BoundTerms), Description = "int?", IsRequired = false)]
         public int? BoundTerms { get; set; }
 
@@ -197,7 +197,7 @@ namespace Services.Dto
         public StatsStudySetFullTextSearch() {}
         private StatsStudySetSearch _request;
         public StatsStudySetFullTextSearch(StatsStudySetSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -205,7 +205,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsStudySet.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsStudySet.Updated))); }
-        
+
         public bool doBoundTerms { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsStudySet.BoundTerms))); }
         public bool doCharacteristics { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsStudySet.Characteristics))); }
         public bool doDataPoints { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsStudySet.DataPoints))); }

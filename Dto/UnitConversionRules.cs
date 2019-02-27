@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public UnitConversionRulesBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(DestinationUnit), Description = "UnitOfMeasure", IsRequired = true)]
         public Reference DestinationUnit { get; set; }
         [ApiMember(Name = nameof(DestinationUnitId), Description = "Primary Key of UnitOfMeasure", IsRequired = false)]
@@ -177,7 +177,7 @@ namespace Services.Dto
         public UnitConversionRulesFullTextSearch() {}
         private UnitConversionRulesSearch _request;
         public UnitConversionRulesFullTextSearch(UnitConversionRulesSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -185,7 +185,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitConversionRules.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitConversionRules.Updated))); }
-        
+
         public bool doDestinationUnit { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitConversionRules.DestinationUnit))); }
         public bool doIsDefault { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitConversionRules.IsDefault))); }
         public bool doIsDestinationSi { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitConversionRules.IsDestinationSi))); }

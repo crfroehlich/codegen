@@ -210,11 +210,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Order));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<DataTab>(currentUser, nameof(DataTab), request.VisibleFields);
             ret = entity.ToDto();
 

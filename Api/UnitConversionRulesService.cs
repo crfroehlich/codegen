@@ -297,11 +297,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.SourceUnit));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, nameof(UnitConversionRules), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -384,7 +385,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pDestinationUnit = entity.DestinationUnit;
                     var pIsDefault = entity.IsDefault;
                     var pIsDestinationSi = entity.IsDestinationSi;
@@ -407,6 +408,7 @@ namespace Services.API
                                 , RootTerm = pRootTerm
                                 , SourceUnit = pSourceUnit
                 };
+
                 #region Custom After copyUnitConversionRules
                 #endregion Custom After copyUnitConversionRules
                 copy.SaveChanges(DocConstantPermission.ADD);

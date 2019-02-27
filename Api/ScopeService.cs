@@ -360,11 +360,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.View));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pBindings, permission, DocConstantModelName.SCOPE, nameof(request.Bindings)))
             {
                 if (true == pBindings?.Any() )
@@ -711,7 +711,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pApp = entity.App;
                     var pBindings = entity.Bindings.ToList();
                     var pBroadcasts = entity.Broadcasts.ToList();

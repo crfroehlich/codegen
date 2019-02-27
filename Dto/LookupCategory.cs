@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public LookupCategoryBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Category), Description = "string", IsRequired = true)]
         public string Category { get; set; }
 
@@ -143,7 +143,7 @@ namespace Services.Dto
         public LookupCategoryFullTextSearch() {}
         private LookupCategorySearch _request;
         public LookupCategoryFullTextSearch(LookupCategorySearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -151,7 +151,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Updated))); }
-        
+
         public bool doCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Category))); }
         public bool doEnum { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Enum))); }
         public bool doLookups { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Lookups))); }

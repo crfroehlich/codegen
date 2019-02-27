@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public ValueTypeBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(FieldType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Binary",@"Continuous",@"Count",@"Individual",@"Kaplan-Meier",@"Range",@"Rate",@"Yes/No/Na"})]
         public Reference FieldType { get; set; }
@@ -138,7 +138,7 @@ namespace Services.Dto
         public ValueTypeFullTextSearch() {}
         private ValueTypeSearch _request;
         public ValueTypeFullTextSearch(ValueTypeSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -146,7 +146,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ValueType.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ValueType.Updated))); }
-        
+
         public bool doFieldType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ValueType.FieldType))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ValueType.Name))); }
     }

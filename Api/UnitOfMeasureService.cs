@@ -248,11 +248,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Unit));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, nameof(UnitOfMeasure), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -335,7 +336,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pIsSI = entity.IsSI;
                     var pName = entity.Name;
                     var pType = entity.Type;
@@ -350,6 +351,7 @@ namespace Services.API
                                 , Type = pType
                                 , Unit = pUnit
                 };
+
                 #region Custom After copyUnitOfMeasure
                 #endregion Custom After copyUnitOfMeasure
                 copy.SaveChanges(DocConstantPermission.ADD);

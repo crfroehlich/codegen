@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public LocaleBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Country), Description = "string", IsRequired = true)]
         public string Country { get; set; }
 
@@ -136,7 +136,7 @@ namespace Services.Dto
         public LocaleFullTextSearch() {}
         private LocaleSearch _request;
         public LocaleFullTextSearch(LocaleSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -144,7 +144,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Locale.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Locale.Updated))); }
-        
+
         public bool doCountry { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Locale.Country))); }
         public bool doLanguage { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Locale.Language))); }
         public bool doTimeZone { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Locale.TimeZone))); }

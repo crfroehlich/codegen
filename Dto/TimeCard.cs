@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public TimeCardBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -189,7 +189,7 @@ namespace Services.Dto
         public TimeCardFullTextSearch() {}
         private TimeCardSearch _request;
         public TimeCardFullTextSearch(TimeCardSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -197,7 +197,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Updated))); }
-        
+
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Description))); }
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.Document))); }
         public bool doEnd { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimeCard.End))); }

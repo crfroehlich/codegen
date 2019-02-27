@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public HelpBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(ConfluenceId), Description = "string", IsRequired = false)]
         public string ConfluenceId { get; set; }
 
@@ -174,7 +174,7 @@ namespace Services.Dto
         public HelpFullTextSearch() {}
         private HelpSearch _request;
         public HelpFullTextSearch(HelpSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -182,7 +182,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Updated))); }
-        
+
         public bool doConfluenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.ConfluenceId))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Description))); }
         public bool doIcon { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Icon))); }

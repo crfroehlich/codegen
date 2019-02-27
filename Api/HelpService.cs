@@ -249,11 +249,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Type));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pPages, permission, DocConstantModelName.HELP, nameof(request.Pages)))
             {
                 if (true == pPages?.Any() )
@@ -424,7 +424,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pConfluenceId = entity.ConfluenceId;
                     if(!DocTools.IsNullOrEmpty(pConfluenceId))
                         pConfluenceId += " (Copy)";

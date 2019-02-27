@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public TimePointBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(IsAbsolute), Description = "bool", IsRequired = false)]
         public bool IsAbsolute { get; set; }
 
@@ -148,7 +148,7 @@ namespace Services.Dto
         public TimePointFullTextSearch() {}
         private TimePointSearch _request;
         public TimePointFullTextSearch(TimePointSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -156,7 +156,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimePoint.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimePoint.Updated))); }
-        
+
         public bool doIsAbsolute { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimePoint.IsAbsolute))); }
         public bool doMeanValue { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimePoint.MeanValue))); }
         public bool doSingleValue { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TimePoint.SingleValue))); }

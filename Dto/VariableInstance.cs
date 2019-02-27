@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public VariableInstanceBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
 
@@ -153,7 +153,7 @@ namespace Services.Dto
         public VariableInstanceFullTextSearch() {}
         private VariableInstanceSearch _request;
         public VariableInstanceFullTextSearch(VariableInstanceSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -161,7 +161,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableInstance.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableInstance.Updated))); }
-        
+
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableInstance.Data))); }
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableInstance.Document))); }
         public bool doRule { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(VariableInstance.Rule))); }

@@ -277,11 +277,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.URI));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
             if (DocPermissionFactory.IsRequestedHasPermission<List<TermCategory>>(currentUser, request, pCategories, permission, DocConstantModelName.TERMMASTER, nameof(request.Categories)))
             {
                 if (true == pCategories?.Any() )
@@ -452,7 +452,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pBioPortal = entity.BioPortal;
                     if(!DocTools.IsNullOrEmpty(pBioPortal))
                         pBioPortal += " (Copy)";

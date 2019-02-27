@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public TermCategoryBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(ParentCategory), Description = "TermCategory", IsRequired = false)]
         public Reference ParentCategory { get; set; }
         [ApiMember(Name = nameof(ParentCategoryId), Description = "Primary Key of TermCategory", IsRequired = false)]
@@ -138,7 +138,7 @@ namespace Services.Dto
         public TermCategoryFullTextSearch() {}
         private TermCategorySearch _request;
         public TermCategoryFullTextSearch(TermCategorySearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -146,7 +146,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Updated))); }
-        
+
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Name))); }
         public bool doParentCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.ParentCategory))); }
         public bool doTerms { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Terms))); }

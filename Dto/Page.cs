@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public PageBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Apps), Description = "App", IsRequired = false)]
         public List<Reference> Apps { get; set; }
         public int? AppsCount { get; set; }
@@ -160,7 +160,7 @@ namespace Services.Dto
         public PageFullTextSearch() {}
         private PageSearch _request;
         public PageFullTextSearch(PageSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -168,7 +168,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Updated))); }
-        
+
         public bool doApps { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Apps))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Description))); }
         public bool doGlossary { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Page.Glossary))); }

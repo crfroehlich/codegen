@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public EventBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(AuditRecord), Description = "AuditRecord", IsRequired = true)]
         public Reference AuditRecord { get; set; }
         [ApiMember(Name = nameof(AuditRecordId), Description = "Primary Key of AuditRecord", IsRequired = false)]
@@ -166,7 +166,7 @@ namespace Services.Dto
         public EventFullTextSearch() {}
         private EventSearch _request;
         public EventFullTextSearch(EventSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -174,7 +174,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Updated))); }
-        
+
         public bool doAuditRecord { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.AuditRecord))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Description))); }
         public bool doProcessed { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Event.Processed))); }

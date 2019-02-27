@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public BackgroundTaskItemBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Attempts), Description = "int?", IsRequired = false)]
         public int? Attempts { get; set; }
 
@@ -195,7 +195,7 @@ namespace Services.Dto
         public BackgroundTaskItemFullTextSearch() {}
         private BackgroundTaskItemSearch _request;
         public BackgroundTaskItemFullTextSearch(BackgroundTaskItemSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -203,7 +203,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Updated))); }
-        
+
         public bool doAttempts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Attempts))); }
         public bool doAuditRecord { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.AuditRecord))); }
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Data))); }

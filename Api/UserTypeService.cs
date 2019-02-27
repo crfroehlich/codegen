@@ -236,11 +236,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Type));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pUsers, permission, DocConstantModelName.USERTYPE, nameof(request.Users)))
             {
                 if (true == pUsers?.Any() )
@@ -367,7 +367,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pPayrollStatus = entity.PayrollStatus;
                     var pPayrollType = entity.PayrollType;
                     var pType = entity.Type;

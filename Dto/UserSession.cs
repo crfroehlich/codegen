@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public UserSessionBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(ClientId), Description = "string", IsRequired = false)]
         public string ClientId { get; set; }
 
@@ -174,7 +174,7 @@ namespace Services.Dto
         public UserSessionFullTextSearch() {}
         private UserSessionSearch _request;
         public UserSessionFullTextSearch(UserSessionSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -182,7 +182,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Updated))); }
-        
+
         public bool doClientId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.ClientId))); }
         public bool doHits { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Hits))); }
         public bool doImpersonations { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Impersonations))); }

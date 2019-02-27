@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public StatsRecordBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Ambispective Observational",@"Bound Characteristic Variables",@"Bound Group Variables",@"Bound Outcome Iterations",@"Bound Outcome Variables",@"Bound Study Level Variables",@"Bound Total Variables",@"Case Control",@"Case Report",@"Case Series",@"Collected Characteristic Variables",@"Collected MainGroups",@"Collected Outcome Variables",@"Comparisons",@"Cross-Sectional",@"Data Points Avg",@"Data Points Max",@"Data Points Total",@"Data Studies",@"Diagnosis",@"Follow-up/Extension",@"FR Studies",@"Harm",@"Interventions",@"Modeling",@"Non-Randomized Controlled Trial",@"Non-Randomized Crossover",@"Non-Randomized Non-Controlled Trial",@"Other",@"Pooled Analysis",@"Posthoc Analysis",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Prospective Observational",@"Randomized Controlled Trial",@"Randomized Crossover",@"Randomized Non-Controlled Trial",@"Retrospective Observational",@"Study Design Overview",@"Sub-Group Analysis",@"SubGroups",@"Therapy",@"Total Characteristic Variables",@"Total Comparative Statements",@"Total Group Variables",@"Total MainGroups",@"Total Outcome Iterations",@"Total Outcome Variables",@"Total Participants",@"Total Studies",@"Total Study Level Variables",@"Total Variables",@"Uncollected Characteristic Variables",@"Uncollected MainGroups",@"Uncollected Outcome Variables"})]
         public Reference Name { get; set; }
@@ -142,7 +142,7 @@ namespace Services.Dto
         public StatsRecordFullTextSearch() {}
         private StatsRecordSearch _request;
         public StatsRecordFullTextSearch(StatsRecordSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -150,7 +150,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsRecord.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsRecord.Updated))); }
-        
+
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsRecord.Name))); }
         public bool doOwnerId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsRecord.OwnerId))); }
         public bool doOwnerType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StatsRecord.OwnerType))); }

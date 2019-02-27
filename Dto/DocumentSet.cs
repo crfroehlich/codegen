@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public DocumentSetBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(AdditionalCriteria), Description = "string", IsRequired = false)]
         public string AdditionalCriteria { get; set; }
 
@@ -394,7 +394,7 @@ namespace Services.Dto
         public DocumentSetFullTextSearch() {}
         private DocumentSetSearch _request;
         public DocumentSetFullTextSearch(DocumentSetSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -402,7 +402,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Updated))); }
-        
+
         public bool doAdditionalCriteria { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.AdditionalCriteria))); }
         public bool doCharacteristics { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Characteristics))); }
         public bool doClients { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Clients))); }

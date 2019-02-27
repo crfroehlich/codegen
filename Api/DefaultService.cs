@@ -226,11 +226,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.TherapeuticArea));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<Default>(currentUser, nameof(Default), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -313,7 +314,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pDiseaseState = entity.DiseaseState;
                     var pRole = entity.Role;
                     var pScope = entity.Scope;
@@ -328,6 +329,7 @@ namespace Services.API
                                 , Scope = pScope
                                 , TherapeuticArea = pTherapeuticArea
                 };
+
                 #region Custom After copyDefault
                 #endregion Custom After copyDefault
                 copy.SaveChanges(DocConstantPermission.ADD);

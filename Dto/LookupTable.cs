@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public LookupTableBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
         public int? BindingsCount { get; set; }
@@ -155,7 +155,7 @@ namespace Services.Dto
         public LookupTableFullTextSearch() {}
         private LookupTableSearch _request;
         public LookupTableFullTextSearch(LookupTableSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -163,7 +163,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupTable.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupTable.Updated))); }
-        
+
         public bool doBindings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupTable.Bindings))); }
         public bool doCategories { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupTable.Categories))); }
         public bool doDocuments { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupTable.Documents))); }

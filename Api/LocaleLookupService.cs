@@ -193,11 +193,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Locale));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, nameof(LocaleLookup), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -280,7 +281,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pData = entity.Data;
                     var pIpAddress = entity.IpAddress;
                     if(!DocTools.IsNullOrEmpty(pIpAddress))
@@ -295,6 +296,7 @@ namespace Services.API
                                 , IpAddress = pIpAddress
                                 , Locale = pLocale
                 };
+
                 #region Custom After copyLocaleLookup
                 #endregion Custom After copyLocaleLookup
                 copy.SaveChanges(DocConstantPermission.ADD);

@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public BackgroundTaskBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(App), Description = "App", IsRequired = true)]
         public Reference App { get; set; }
         [ApiMember(Name = nameof(AppId), Description = "Primary Key of App", IsRequired = false)]
@@ -210,7 +210,7 @@ namespace Services.Dto
         public BackgroundTaskFullTextSearch() {}
         private BackgroundTaskSearch _request;
         public BackgroundTaskFullTextSearch(BackgroundTaskSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -218,7 +218,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Updated))); }
-        
+
         public bool doApp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.App))); }
         public bool doChannel { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Channel))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Description))); }

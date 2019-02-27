@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public WorkflowTaskBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Assignee), Description = "User", IsRequired = false)]
         public Reference Assignee { get; set; }
         [ApiMember(Name = nameof(AssigneeId), Description = "Primary Key of User", IsRequired = false)]
@@ -184,7 +184,7 @@ namespace Services.Dto
         public WorkflowTaskFullTextSearch() {}
         private WorkflowTaskSearch _request;
         public WorkflowTaskFullTextSearch(WorkflowTaskSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -192,7 +192,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Updated))); }
-        
+
         public bool doAssignee { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Assignee))); }
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Data))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Description))); }

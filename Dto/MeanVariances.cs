@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public MeanVariancesBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
 
 
     }
@@ -120,7 +120,7 @@ namespace Services.Dto
         public MeanVariancesFullTextSearch() {}
         private MeanVariancesSearch _request;
         public MeanVariancesFullTextSearch(MeanVariancesSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -128,7 +128,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVariances.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVariances.Updated))); }
-        
+
         public bool doVariances { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVariances.Variances))); }
     }
 

@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public UnitValueBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(EqualityOperator), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"~=",@"~>",@"~>=",@"~<",@"~<=",@"=",@">",@">=",@"≥",@"<",@"<=",@"≤",@"!="})]
         public Reference EqualityOperator { get; set; }
@@ -151,7 +151,7 @@ namespace Services.Dto
         public UnitValueFullTextSearch() {}
         private UnitValueSearch _request;
         public UnitValueFullTextSearch(UnitValueSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -159,7 +159,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitValue.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitValue.Updated))); }
-        
+
         public bool doEqualityOperator { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitValue.EqualityOperator))); }
         public bool doMultiplier { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitValue.Multiplier))); }
         public bool doNumber { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UnitValue.Number))); }

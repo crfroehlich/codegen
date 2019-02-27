@@ -159,6 +159,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+
             base.OnRemoving();
         }
 
@@ -178,6 +179,7 @@ namespace Services.Schema
 
             _validated = true;
 
+
         }
 
         public override IDocEntity SaveChanges(DocConstantPermission permission = null)
@@ -191,6 +193,7 @@ namespace Services.Schema
         public override void FlushCache()
         {
             base.FlushCache();
+
         }
         #endregion Entity overrides
 

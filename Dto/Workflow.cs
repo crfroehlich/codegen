@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public WorkflowBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
         public int? BindingsCount { get; set; }
@@ -227,7 +227,7 @@ namespace Services.Dto
         public WorkflowFullTextSearch() {}
         private WorkflowSearch _request;
         public WorkflowFullTextSearch(WorkflowSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -235,7 +235,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Updated))); }
-        
+
         public bool doBindings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Bindings))); }
         public bool doComments { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Comments))); }
         public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Workflow.Data))); }

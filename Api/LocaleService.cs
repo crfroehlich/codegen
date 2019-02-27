@@ -189,11 +189,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.TimeZone));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<Locale>(currentUser, nameof(Locale), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -276,7 +277,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pCountry = entity.Country;
                     if(!DocTools.IsNullOrEmpty(pCountry))
                         pCountry += " (Copy)";
@@ -295,6 +296,7 @@ namespace Services.API
                                 , Language = pLanguage
                                 , TimeZone = pTimeZone
                 };
+
                 #region Custom After copyLocale
                 #endregion Custom After copyLocale
                 copy.SaveChanges(DocConstantPermission.ADD);

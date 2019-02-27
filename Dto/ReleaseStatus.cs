@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public ReleaseStatusBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Branch), Description = "string", IsRequired = true)]
         public string Branch { get; set; }
 
@@ -146,7 +146,7 @@ namespace Services.Dto
         public ReleaseStatusFullTextSearch() {}
         private ReleaseStatusSearch _request;
         public ReleaseStatusFullTextSearch(ReleaseStatusSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -154,7 +154,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ReleaseStatus.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ReleaseStatus.Updated))); }
-        
+
         public bool doBranch { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ReleaseStatus.Branch))); }
         public bool doRelease { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ReleaseStatus.Release))); }
         public bool doServer { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ReleaseStatus.Server))); }

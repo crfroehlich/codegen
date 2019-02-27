@@ -205,11 +205,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.DateYear));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, nameof(DateTimeDto), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -292,7 +293,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pDateDay = entity.DateDay;
                     var pDateMonth = entity.DateMonth;
                     var pDateTime = entity.DateTime;
@@ -307,6 +308,7 @@ namespace Services.API
                                 , DateTime = pDateTime
                                 , DateYear = pDateYear
                 };
+
                 #region Custom After copyDateTime
                 #endregion Custom After copyDateTime
                 copy.SaveChanges(DocConstantPermission.ADD);

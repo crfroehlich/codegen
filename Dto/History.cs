@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public HistoryBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(App), Description = "App", IsRequired = false)]
         public Reference App { get; set; }
         [ApiMember(Name = nameof(AppId), Description = "Primary Key of App", IsRequired = false)]
@@ -182,7 +182,7 @@ namespace Services.Dto
         public HistoryFullTextSearch() {}
         private HistorySearch _request;
         public HistoryFullTextSearch(HistorySearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -190,7 +190,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Updated))); }
-        
+
         public bool doApp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.App))); }
         public bool doDocumentSet { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.DocumentSet))); }
         public bool doImpersonation { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Impersonation))); }

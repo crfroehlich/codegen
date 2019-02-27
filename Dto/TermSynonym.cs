@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public TermSynonymBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Approved), Description = "bool", IsRequired = false)]
         public bool Approved { get; set; }
 
@@ -165,7 +165,7 @@ namespace Services.Dto
         public TermSynonymFullTextSearch() {}
         private TermSynonymSearch _request;
         public TermSynonymFullTextSearch(TermSynonymSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -173,7 +173,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermSynonym.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermSynonym.Updated))); }
-        
+
         public bool doApproved { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermSynonym.Approved))); }
         public bool doBindings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermSynonym.Bindings))); }
         public bool doMaster { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermSynonym.Master))); }

@@ -711,11 +711,11 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.UIType));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pChildren, permission, DocConstantModelName.DATAPROPERTY, nameof(request.Children)))
             {
                 if (true == pChildren?.Any() )

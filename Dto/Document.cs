@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public DocumentBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Abstract), Description = "string", IsRequired = false)]
         public string Abstract { get; set; }
 
@@ -375,7 +375,7 @@ namespace Services.Dto
         public DocumentFullTextSearch() {}
         private DocumentSearch _request;
         public DocumentFullTextSearch(DocumentSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -383,7 +383,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Updated))); }
-        
+
         public bool doAbstract { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Abstract))); }
         public bool doAccessionID { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.AccessionID))); }
         public bool doAcronym { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Acronym))); }

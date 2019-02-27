@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public RoleBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(AdminTeam), Description = "Team", IsRequired = false)]
         public Reference AdminTeam { get; set; }
         [ApiMember(Name = nameof(AdminTeamId), Description = "Primary Key of Team", IsRequired = false)]
@@ -190,7 +190,7 @@ namespace Services.Dto
         public RoleFullTextSearch() {}
         private RoleSearch _request;
         public RoleFullTextSearch(RoleSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -198,7 +198,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Updated))); }
-        
+
         public bool doAdminTeam { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.AdminTeam))); }
         public bool doApps { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Apps))); }
         public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Role.Description))); }

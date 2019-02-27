@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public MeanVarianceValueBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(MeanVariance), Description = "Units", IsRequired = false)]
         public TypeUnits MeanVariance { get; set; }
 
@@ -149,7 +149,7 @@ namespace Services.Dto
         public MeanVarianceValueFullTextSearch() {}
         private MeanVarianceValueSearch _request;
         public MeanVarianceValueFullTextSearch(MeanVarianceValueSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -157,7 +157,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVarianceValue.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVarianceValue.Updated))); }
-        
+
         public bool doMeanVariance { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVarianceValue.MeanVariance))); }
         public bool doMeanVarianceRange { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVarianceValue.MeanVarianceRange))); }
         public bool doMeanVarianceType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(MeanVarianceValue.MeanVarianceType))); }

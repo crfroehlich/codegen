@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public IntervalBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(CalendarDateEnd), Description = "DateTime", IsRequired = false)]
         public DateTimeDto CalendarDateEnd { get; set; }
         [ApiMember(Name = nameof(CalendarDateEndId), Description = "Primary Key of DateTime", IsRequired = false)]
@@ -156,7 +156,7 @@ namespace Services.Dto
         public IntervalFullTextSearch() {}
         private IntervalSearch _request;
         public IntervalFullTextSearch(IntervalSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -164,7 +164,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Interval.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Interval.Updated))); }
-        
+
         public bool doCalendarDateEnd { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Interval.CalendarDateEnd))); }
         public bool doCalendarDateStart { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Interval.CalendarDateStart))); }
         public bool doCalendarType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Interval.CalendarType))); }

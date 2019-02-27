@@ -154,11 +154,13 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
-            
+
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, nameof(AttributeInterval), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -241,7 +243,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pInterval = entity.Interval;
                 #region Custom Before copyAttributeInterval
                 #endregion Custom Before copyAttributeInterval
@@ -250,6 +252,7 @@ namespace Services.API
                     Hash = Guid.NewGuid()
                                 , Interval = pInterval
                 };
+
                 #region Custom After copyAttributeInterval
                 #endregion Custom After copyAttributeInterval
                 copy.SaveChanges(DocConstantPermission.ADD);

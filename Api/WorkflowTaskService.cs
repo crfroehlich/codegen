@@ -297,11 +297,12 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Workflow));
                 }
             }
-            
+
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
-            
+
+
             DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, nameof(WorkflowTask), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -384,7 +385,7 @@ namespace Services.API
                 if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                 if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                     throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
-                
+
                     var pAssignee = entity.Assignee;
                     var pData = entity.Data;
                     var pDescription = entity.Description;
@@ -409,6 +410,7 @@ namespace Services.API
                                 , Type = pType
                                 , Workflow = pWorkflow
                 };
+
                 #region Custom After copyWorkflowTask
                 #endregion Custom After copyWorkflowTask
                 copy.SaveChanges(DocConstantPermission.ADD);

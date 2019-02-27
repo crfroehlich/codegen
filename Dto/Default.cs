@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public DefaultBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(DiseaseState), Description = "DocumentSet", IsRequired = true)]
         public Reference DiseaseState { get; set; }
         [ApiMember(Name = nameof(DiseaseStateId), Description = "Primary Key of DocumentSet", IsRequired = false)]
@@ -153,7 +153,7 @@ namespace Services.Dto
         public DefaultFullTextSearch() {}
         private DefaultSearch _request;
         public DefaultFullTextSearch(DefaultSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -161,7 +161,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Default.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Default.Updated))); }
-        
+
         public bool doDiseaseState { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Default.DiseaseState))); }
         public bool doRole { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Default.Role))); }
         public bool doScope { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Default.Scope))); }

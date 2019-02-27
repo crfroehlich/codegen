@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public DocumentSetHistoryBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = true)]
         public Reference DocumentSet { get; set; }
         [ApiMember(Name = nameof(DocumentSetId), Description = "Primary Key of DocumentSet", IsRequired = false)]
@@ -146,7 +146,7 @@ namespace Services.Dto
         public DocumentSetHistoryFullTextSearch() {}
         private DocumentSetHistorySearch _request;
         public DocumentSetHistoryFullTextSearch(DocumentSetHistorySearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -154,7 +154,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSetHistory.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSetHistory.Updated))); }
-        
+
         public bool doDocumentSet { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSetHistory.DocumentSet))); }
         public bool doEvidencePortalID { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSetHistory.EvidencePortalID))); }
         public bool doFqId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSetHistory.FqId))); }

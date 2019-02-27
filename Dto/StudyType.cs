@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public StudyTypeBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Causation/Etiology",@"Diagnosis",@"Harm",@"Modeling",@"Other",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Therapy"})]
         public Reference Type { get; set; }
@@ -123,7 +123,7 @@ namespace Services.Dto
         public StudyTypeFullTextSearch() {}
         private StudyTypeSearch _request;
         public StudyTypeFullTextSearch(StudyTypeSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -131,7 +131,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyType.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyType.Updated))); }
-        
+
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(StudyType.Type))); }
     }
 

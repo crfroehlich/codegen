@@ -51,7 +51,7 @@ namespace Services.Dto
         }
 
         public AttributeBase(int? id) : this(DocConvert.ToInt(id)) {}
-    
+
         [ApiMember(Name = nameof(AttributeName), Description = "LookupTable", IsRequired = true)]
         public Reference AttributeName { get; set; }
         [ApiMember(Name = nameof(AttributeNameId), Description = "Primary Key of LookupTable", IsRequired = false)]
@@ -170,7 +170,7 @@ namespace Services.Dto
         public AttributeFullTextSearch() {}
         private AttributeSearch _request;
         public AttributeFullTextSearch(AttributeSearch request) => _request = request;
-        
+
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
@@ -178,7 +178,7 @@ namespace Services.Dto
         public bool isDate { get => ftsDate != DateTime.MinValue; }
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Attribute.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Attribute.Updated))); }
-        
+
         public bool doAttributeName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Attribute.AttributeName))); }
         public bool doAttributeType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Attribute.AttributeType))); }
         public bool doInterval { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Attribute.Interval))); }
