@@ -63,7 +63,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Amount",@"Area",@"Concentration",@"Label",@"Length",@"NonTime",@"NonUnit",@"Radiation",@"Time",@"Volume",@"Weight",@"Mass",@"Moles",@"Concentration Molar",@"Concentration Solution"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Amount",@"Area",@"Concentration",@"Concentration Molar",@"Concentration Solution",@"Label",@"Length",@"Mass",@"Moles",@"NonTime",@"NonUnit",@"Radiation",@"Time",@"Volume",@"Weight"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -135,7 +135,7 @@ namespace Services.Dto
         public List<string> NameNames { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Amount",@"Area",@"Concentration",@"Label",@"Length",@"NonTime",@"NonUnit",@"Radiation",@"Time",@"Volume",@"Weight",@"Mass",@"Moles",@"Concentration Molar",@"Concentration Solution"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Amount",@"Area",@"Concentration",@"Concentration Molar",@"Concentration Solution",@"Label",@"Length",@"Mass",@"Moles",@"NonTime",@"NonUnit",@"Radiation",@"Time",@"Volume",@"Weight"})]
         public List<string> TypeNames { get; set; }
         public Reference Unit { get; set; }
         public List<int> UnitIds { get; set; }

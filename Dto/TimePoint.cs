@@ -69,7 +69,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Duration",@"Maximum",@"Average",@"Mean",@"Median",@"Total",@"Max Range",@"Time Zero",@"Not Reported",@"N/A",@"None",@"Varies",@"Before",@"During",@"After"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"After",@"Average",@"Before",@"Duration",@"During",@"Max Range",@"Maximum",@"Mean",@"Median",@"N/A",@"None",@"Not Reported",@"Time Zero",@"Total",@"Varies"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -132,7 +132,7 @@ namespace Services.Dto
         public TypeUnitRange TotalValue { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Duration",@"Maximum",@"Average",@"Mean",@"Median",@"Total",@"Max Range",@"Time Zero",@"Not Reported",@"N/A",@"None",@"Varies",@"Before",@"During",@"After"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"After",@"Average",@"Before",@"Duration",@"During",@"Max Range",@"Maximum",@"Mean",@"Median",@"N/A",@"None",@"Not Reported",@"Time Zero",@"Total",@"Varies"})]
         public List<string> TypeNames { get; set; }
     }
 

@@ -96,7 +96,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
         public Reference ImportType { get; set; }
         [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? ImportTypeId { get; set; }
@@ -129,7 +129,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Queued",@"Processing",@"Succeeded",@"Already Imported",@"Failed",@"No JSON Found",@"Cancelled"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Already Imported",@"Cancelled",@"Failed",@"No JSON Found",@"Processing",@"Queued",@"Succeeded"})]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -213,7 +213,7 @@ namespace Services.Dto
         public List<bool> ImportText { get; set; }
         public Reference ImportType { get; set; }
         public List<int> ImportTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
         public List<string> ImportTypeNames { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsLegacy { get; set; }
@@ -229,7 +229,7 @@ namespace Services.Dto
         public DateTime? StartedOnBefore { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Queued",@"Processing",@"Succeeded",@"Already Imported",@"Failed",@"No JSON Found",@"Cancelled"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Already Imported",@"Cancelled",@"Failed",@"No JSON Found",@"Processing",@"Queued",@"Succeeded"})]
         public List<string> StatusNames { get; set; }
     }
 

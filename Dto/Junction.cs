@@ -84,7 +84,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Comment",@"Rating",@"Approval",@"Flagged for Approval"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Approval",@"Comment",@"Flagged for Approval",@"Rating"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -166,7 +166,7 @@ namespace Services.Dto
         public string TargetType { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Comment",@"Rating",@"Approval",@"Flagged for Approval"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Approval",@"Comment",@"Flagged for Approval",@"Rating"})]
         public List<string> TypeNames { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }

@@ -81,7 +81,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Pending",@"Approved",@"Rejected"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Approved",@"Pending",@"Rejected"})]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -168,7 +168,7 @@ namespace Services.Dto
         public DateTime? StartBefore { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Pending",@"Approved",@"Rejected"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Approved",@"Pending",@"Rejected"})]
         public List<string> StatusNames { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }

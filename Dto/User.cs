@@ -164,7 +164,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Inactive",@"Archived",@"Disabled"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Disabled",@"Inactive"})]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
@@ -292,7 +292,7 @@ namespace Services.Dto
         public DateTime? StartDateBefore { get; set; }
         public Reference Status { get; set; }
         public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Inactive",@"Archived",@"Disabled"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Disabled",@"Inactive"})]
         public List<string> StatusNames { get; set; }
         public List<int> TeamsIds { get; set; }
         public List<int> TimeCardsIds { get; set; }

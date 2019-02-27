@@ -94,7 +94,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(DocumentType), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Data Hub",@"CTG",@"DOC Extract",@"DOC Library",@"PubMed"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"CTG",@"Data Hub",@"DOC Extract",@"DOC Library",@"PubMed"})]
         public Reference DocumentType { get; set; }
         [ApiMember(Name = nameof(DocumentTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? DocumentTypeId { get; set; }
@@ -131,7 +131,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
         public Reference ImportType { get; set; }
         [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? ImportTypeId { get; set; }
@@ -319,7 +319,7 @@ namespace Services.Dto
         public List<int> DocumentSetsIds { get; set; }
         public Reference DocumentType { get; set; }
         public List<int> DocumentTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Data Hub",@"CTG",@"DOC Extract",@"DOC Library",@"PubMed"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"CTG",@"Data Hub",@"DOC Extract",@"DOC Library",@"PubMed"})]
         public List<string> DocumentTypeNames { get; set; }
         public string DOI { get; set; }
         public string EmbaseAccessionNumber { get; set; }
@@ -331,7 +331,7 @@ namespace Services.Dto
         public List<int> ImportIds { get; set; }
         public Reference ImportType { get; set; }
         public List<int> ImportTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Legacy",@"Extract",@"ClinicalTrials.gov"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
         public List<string> ImportTypeNames { get; set; }
         public string Institution { get; set; }
         public string ISSN { get; set; }

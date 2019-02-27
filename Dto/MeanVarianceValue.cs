@@ -61,7 +61,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(MeanVarianceType), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"SD",@"SE",@"Unknown",@"Semi IQR",@"IQR Difference",@"CV"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"CV",@"IQR Difference",@"SD",@"SE",@"Semi IQR",@"Unknown"})]
         public Reference MeanVarianceType { get; set; }
         [ApiMember(Name = nameof(MeanVarianceTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? MeanVarianceTypeId { get; set; }
@@ -134,7 +134,7 @@ namespace Services.Dto
         public TypeUnitsRange MeanVarianceRange { get; set; }
         public Reference MeanVarianceType { get; set; }
         public List<int> MeanVarianceTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"SD",@"SE",@"Unknown",@"Semi IQR",@"IQR Difference",@"CV"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"CV",@"IQR Difference",@"SD",@"SE",@"Semi IQR",@"Unknown"})]
         public List<string> MeanVarianceTypeNames { get; set; }
         public int? Order { get; set; }
         public List<int> OwnersIds { get; set; }

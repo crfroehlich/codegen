@@ -77,7 +77,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Rule), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Study Edit",@"Author Error",@"Inversion",@"Aggregation",@"Customization",@"Normalization",@"Correction",@"Addition"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Addition",@"Aggregation",@"Author Error",@"Correction",@"Customization",@"Inversion",@"Normalization",@"Study Edit"})]
         public Reference Rule { get; set; }
         [ApiMember(Name = nameof(RuleId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? RuleId { get; set; }
@@ -89,7 +89,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Template",@"Applied",@"Override"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Applied",@"Override",@"Template"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -163,12 +163,12 @@ namespace Services.Dto
         public List<int> OwnerIds { get; set; }
         public Reference Rule { get; set; }
         public List<int> RuleIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Study Edit",@"Author Error",@"Inversion",@"Aggregation",@"Customization",@"Normalization",@"Correction",@"Addition"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Addition",@"Aggregation",@"Author Error",@"Correction",@"Customization",@"Inversion",@"Normalization",@"Study Edit"})]
         public List<string> RuleNames { get; set; }
         public List<int> ScopesIds { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Template",@"Applied",@"Override"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Applied",@"Override",@"Template"})]
         public List<string> TypeNames { get; set; }
     }
 

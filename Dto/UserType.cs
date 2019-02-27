@@ -53,21 +53,21 @@ namespace Services.Dto
         public UserTypeBase(int? id) : this(DocConvert.ToInt(id)) {}
     
         [ApiMember(Name = nameof(PayrollStatus), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Full-Time",@"Part-Time",@"Contract"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Contract",@"Full-Time",@"Part-Time"})]
         public Reference PayrollStatus { get; set; }
         [ApiMember(Name = nameof(PayrollStatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? PayrollStatusId { get; set; }
 
 
         [ApiMember(Name = nameof(PayrollType), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Salary",@"Hourly"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Hourly",@"Salary"})]
         public Reference PayrollType { get; set; }
         [ApiMember(Name = nameof(PayrollTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? PayrollTypeId { get; set; }
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Employee",@"Contractor",@"Client",@"Vendor"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Client",@"Contractor",@"Employee",@"Vendor"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -140,15 +140,15 @@ namespace Services.Dto
         public int? Id { get; set; }
         public Reference PayrollStatus { get; set; }
         public List<int> PayrollStatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Full-Time",@"Part-Time",@"Contract"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Contract",@"Full-Time",@"Part-Time"})]
         public List<string> PayrollStatusNames { get; set; }
         public Reference PayrollType { get; set; }
         public List<int> PayrollTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Salary",@"Hourly"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Hourly",@"Salary"})]
         public List<string> PayrollTypeNames { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Employee",@"Contractor",@"Client",@"Vendor"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Client",@"Contractor",@"Employee",@"Vendor"})]
         public List<string> TypeNames { get; set; }
         public List<int> UsersIds { get; set; }
     }

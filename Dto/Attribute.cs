@@ -59,7 +59,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(AttributeType), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Standard",@"Change",@"% Change",@"Time Since",@"Time To",@"Duration",@"Not In Study"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Change",@"Duration",@"Not In Study",@"% Change",@"Standard",@"Time Since",@"Time To"})]
         public Reference AttributeType { get; set; }
         [ApiMember(Name = nameof(AttributeTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? AttributeTypeId { get; set; }
@@ -145,7 +145,7 @@ namespace Services.Dto
         public List<string> AttributeNameNames { get; set; }
         public Reference AttributeType { get; set; }
         public List<int> AttributeTypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Standard",@"Change",@"% Change",@"Time Since",@"Time To",@"Duration",@"Not In Study"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Change",@"Duration",@"Not In Study",@"% Change",@"Standard",@"Time Since",@"Time To"})]
         public List<string> AttributeTypeNames { get; set; }
         public Reference Interval { get; set; }
         public List<int> IntervalIds { get; set; }

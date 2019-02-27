@@ -87,7 +87,7 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"System Alert",@"Terms of Service",@"Scope Specific"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"Scope Specific",@"System Alert",@"Terms of Service"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
@@ -169,7 +169,7 @@ namespace Services.Dto
         public List<string> StatusNames { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"System Alert",@"Terms of Service",@"Scope Specific"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"Scope Specific",@"System Alert",@"Terms of Service"})]
         public List<string> TypeNames { get; set; }
     }
 
