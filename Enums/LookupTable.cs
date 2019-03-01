@@ -253,8 +253,6 @@ namespace Services.Enums
         TERMCLASSIFICATION,
         [EnumMember(Value = DocConstantLookupTable.TERMSECTION)]
         TERMSECTION,
-        [EnumMember(Value = DocConstantLookupTable.test)]
-        test,
         [EnumMember(Value = DocConstantLookupTable.TIMECARDSTATUS)]
         TIMECARDSTATUS,
         [EnumMember(Value = DocConstantLookupTable.TIMEPOINTTYPE)]
@@ -393,7 +391,6 @@ namespace Services.Enums
         public const string STUDYYEARS = "StudyYears";
         public const string TERMCLASSIFICATION = "TermClassification";
         public const string TERMSECTION = "TermSection";
-        public const string test = "2019-03-01T07:45:17.3829171-05:00";
         public const string TIMECARDSTATUS = "TimeCardStatus";
         public const string TIMEPOINTTYPE = "TimepointType";
         public const string UNITSOFMEASURE = "UnitsOfMeasure";
