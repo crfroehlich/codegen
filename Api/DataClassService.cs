@@ -159,10 +159,6 @@ namespace Services.API
                     if(request.IsReadOnly.Any(v => v == null)) entities = entities.Where(en => en.IsReadOnly.In(request.IsReadOnly) || en.IsReadOnly == null);
                     else entities = entities.Where(en => en.IsReadOnly.In(request.IsReadOnly));
                 }
-                if(true == request.JsonIgnoreIds?.Any())
-                {
-                    entities = entities.Where(en => en.JsonIgnore.Any(r => r.Id.In(request.JsonIgnoreIds)));
-                }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(true == request.PATCH?.Any())
@@ -240,7 +236,6 @@ namespace Services.API
             var pIsCached = request.IsCached;
             var pIsInsertOnly = request.IsInsertOnly;
             var pIsReadOnly = request.IsReadOnly;
-            var pJsonIgnore = request.JsonIgnore?.ToList();
             var pName = request.Name;
             var pPATCH = request.PATCH;
             var pPOST = request.POST;
@@ -552,50 +547,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.IgnoreProps));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pJsonIgnore, permission, DocConstantModelName.DATACLASS, nameof(request.JsonIgnore)))
-            {
-                if (true == pJsonIgnore?.Any() )
-                {
-                    var requestedJsonIgnore = pJsonIgnore.Select(p => p.Id).Distinct().ToList();
-                    var existsJsonIgnore = Execute.SelectAll<DocEntityDataProperty>().Where(e => e.Id.In(requestedJsonIgnore)).Select( e => e.Id ).ToList();
-                    if (existsJsonIgnore.Count != requestedJsonIgnore.Count)
-                    {
-                        var nonExists = requestedJsonIgnore.Where(id => existsJsonIgnore.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection JsonIgnore with objects that do not exist. No matching JsonIgnore(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedJsonIgnore.Where(id => entity.JsonIgnore.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityDataProperty.GetDataProperty(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.JsonIgnore)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.JsonIgnore)} to {nameof(DataClass)}");
-                        entity.JsonIgnore.Add(target);
-                    });
-                    var toRemove = entity.JsonIgnore.Where(e => requestedJsonIgnore.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDataProperty.GetDataProperty(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.JsonIgnore)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.JsonIgnore)} from {nameof(DataClass)}");
-                        entity.JsonIgnore.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.JsonIgnore.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDataProperty.GetDataProperty(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataClass), columnName: nameof(request.JsonIgnore)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.JsonIgnore)} from {nameof(DataClass)}");
-                        entity.JsonIgnore.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pJsonIgnore, nameof(request.JsonIgnore)) && !request.VisibleFields.Matches(nameof(request.JsonIgnore), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.JsonIgnore));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<DataProperty>>(currentUser, request, pProperties, permission, DocConstantModelName.DATACLASS, nameof(request.Properties)))
             {
                 if (true == pProperties?.Any() )
@@ -772,8 +723,6 @@ namespace Services.API
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "ignoreprops":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
-                    case "jsonignore":
-                        return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "JsonIgnore", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "dataproperty":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "datatab":
@@ -793,8 +742,6 @@ namespace Services.API
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request);
                     case "ignoreprops":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request);
-                    case "jsonignore":
-                        return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "JsonIgnore", request);
                     case "dataproperty":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request);
                     case "datatab":
@@ -815,8 +762,6 @@ namespace Services.API
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request);
                     case "ignoreprops":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request);
-                    case "jsonignore":
-                        return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "JsonIgnore", request);
                     case "dataproperty":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request);
                     case "datatab":

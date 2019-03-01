@@ -116,11 +116,6 @@ namespace Services.Dto
         public bool IsReadOnly { get; set; }
 
 
-        [ApiMember(Name = nameof(JsonIgnore), Description = "DataProperty", IsRequired = false)]
-        public List<Reference> JsonIgnore { get; set; }
-        public int? JsonIgnoreCount { get; set; }
-
-
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
 
@@ -173,7 +168,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllVisibleFieldsByDefault),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(IsCached),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(JsonIgnore),nameof(JsonIgnoreCount),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllVisibleFieldsByDefault),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(IsCached),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -194,7 +189,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(CustomCollections), nameof(CustomCollectionsCount), nameof(DontFlattenProperties), nameof(DontFlattenPropertiesCount), nameof(IgnoreProps), nameof(IgnorePropsCount), nameof(JsonIgnore), nameof(JsonIgnoreCount), nameof(Properties), nameof(PropertiesCount), nameof(Tabs), nameof(TabsCount)
+            nameof(CustomCollections), nameof(CustomCollectionsCount), nameof(DontFlattenProperties), nameof(DontFlattenPropertiesCount), nameof(IgnoreProps), nameof(IgnorePropsCount), nameof(Properties), nameof(PropertiesCount), nameof(Tabs), nameof(TabsCount)
         };
         private List<string> collections { get { return _collections; } }
     }
@@ -224,7 +219,6 @@ namespace Services.Dto
         public List<bool> IsInsertOnly { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsReadOnly { get; set; }
-        public List<int> JsonIgnoreIds { get; set; }
         public string Name { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> PATCH { get; set; }
@@ -271,7 +265,6 @@ namespace Services.Dto
         public bool doIsCached { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsCached))); }
         public bool doIsInsertOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsInsertOnly))); }
         public bool doIsReadOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsReadOnly))); }
-        public bool doJsonIgnore { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.JsonIgnore))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Name))); }
         public bool doPATCH { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.PATCH))); }
         public bool doPOST { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.POST))); }

@@ -195,14 +195,6 @@ namespace Services.Schema
         public bool IsReadOnly { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(JsonIgnore))]
-        public DocEntitySet<DocEntityDataProperty> JsonIgnore { get; private set; }
-
-
-        public int? JsonIgnoreCount { get { return JsonIgnore.Count(); } private set { var noid = value; } }
-
-
         [Field(Nullable = false)]
         [FieldMapping(nameof(Name))]
         public string Name { get; set; }
@@ -403,8 +395,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.IsCached, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsCached))))
                 .ForMember(dest => dest.IsInsertOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsInsertOnly))))
                 .ForMember(dest => dest.IsReadOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsReadOnly))))
-                .ForMember(dest => dest.JsonIgnore, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.JsonIgnore))))
-                .ForMember(dest => dest.JsonIgnoreCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.JsonIgnoreCount))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Name))))
                 .ForMember(dest => dest.PATCH, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.PATCH))))
                 .ForMember(dest => dest.POST, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.POST))))
