@@ -128,6 +128,7 @@ namespace Services.Schema
             new TypeMap() { SchemaName = typeof(DocEntityTermMaster).FullName, TypeId = 147, TableName = DocConstantModelName.TERMMASTER, ClassName = "TermMaster", DtoName = nameof(TermMaster) },
             new TypeMap() { SchemaName = typeof(DocEntityTermCategory).FullName, TypeId = 146, TableName = DocConstantModelName.TERMCATEGORY, ClassName = "TermCategory", DtoName = nameof(TermCategory) },
             new TypeMap() { SchemaName = typeof(DocEntityStudyType).FullName, TypeId = 143, TableName = DocConstantModelName.STUDYTYPE, ClassName = "StudyType", DtoName = nameof(StudyType) },
+            new TypeMap() { SchemaName = typeof(DocEntityDocumentSet).FullName, TypeId = 142, TableName = DocConstantModelName.DOCUMENTSET, ClassName = "DocumentSet", DtoName = nameof(DocumentSet) },
             new TypeMap() { SchemaName = typeof(DocEntityStudyDesign).FullName, TypeId = 137, TableName = DocConstantModelName.STUDYDESIGN, ClassName = "StudyDesign", DtoName = nameof(StudyDesign) },
             new TypeMap() { SchemaName = typeof(DocEntityDocument).FullName, TypeId = 136, TableName = DocConstantModelName.DOCUMENT, ClassName = "Document", DtoName = nameof(Document) },
             new TypeMap() { SchemaName = typeof(DocEntityRole).FullName, TypeId = 133, TableName = DocConstantModelName.ROLE, ClassName = "Role", DtoName = nameof(Role) },

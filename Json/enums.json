@@ -629,6 +629,7 @@
     "DEFAULT": "Default",
     "DIVISION": "Division",
     "DOCUMENT": "Document",
+    "DOCUMENTSET": "DocumentSet",
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
     "EVENT": "Event",
     "FEATURESET": "FeatureSet",

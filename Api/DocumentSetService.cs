@@ -420,7 +420,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pFramedQuestionId, permission, DocConstantModelName.DOCUMENTSET, nameof(request.FramedQuestionId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pFramedQuestionId, entity.FramedQuestionId, nameof(request.FramedQuestionId)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FramedQuestionId)} cannot be modified once set.");
                     entity.FramedQuestionId = pFramedQuestionId;
                 if(DocPermissionFactory.IsRequested<int?>(request, pFramedQuestionId, nameof(request.FramedQuestionId)) && !request.VisibleFields.Matches(nameof(request.FramedQuestionId), ignoreSpaces: true))
                 {

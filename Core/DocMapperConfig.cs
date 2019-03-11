@@ -87,6 +87,7 @@ namespace Services.Core
             cfg.AddProfile<DefaultMapper>();
             cfg.AddProfile<DivisionMapper>();
             cfg.AddProfile<DocumentMapper>();
+            cfg.AddProfile<DocumentSetMapper>();
             cfg.AddProfile<DocumentSetHistoryMapper>();
             cfg.AddProfile<EventMapper>();
             cfg.AddProfile<FeatureSetMapper>();
