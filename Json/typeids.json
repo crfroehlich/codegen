@@ -1,6 +1,6 @@
 {
-  "NextTypeId": 20365,
   "MaxTypeId": 20265,
+  "NextTypeId": 20365,
   "Types": {
     "DataTab": 20265,
     "DataProperty": 20255,
@@ -64,7 +64,6 @@
     "TermMaster": 147,
     "TermCategory": 146,
     "StudyType": 143,
-    "DocumentSet": 142,
     "StudyDesign": 137,
     "Document": 136,
     "Role": 133,

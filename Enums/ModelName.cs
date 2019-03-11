@@ -88,8 +88,6 @@ namespace Services.Enums
         DIVISION,
         [EnumMember(Value = DocConstantModelName.DOCUMENT)]
         DOCUMENT,
-        [EnumMember(Value = DocConstantModelName.DOCUMENTSET)]
-        DOCUMENTSET,
         [EnumMember(Value = DocConstantModelName.DOCUMENTSETHISTORY)]
         DOCUMENTSETHISTORY,
         [EnumMember(Value = DocConstantModelName.ENTITIES)]
@@ -226,7 +224,6 @@ namespace Services.Enums
         public const string DEFAULT = "Default";
         public const string DIVISION = "Division";
         public const string DOCUMENT = "Document";
-        public const string DOCUMENTSET = "DocumentSet";
         public const string DOCUMENTSETHISTORY = "DocumentSetHistory";
         public const string ENTITIES = "Entities";
         public const string EVENT = "Event";
