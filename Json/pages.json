@@ -145,6 +145,14 @@
             "Order": 80
           },
           {
+            "Name": "DRE Admin SERVE Setup",
+            "Title": "Admin SERVE Setup",
+            "Link": "AdminSERVESetup",
+            "Icon": "fa-server",
+            "Order": 0,
+            "Menu": []
+          },
+          {
             "Name": "DRE Admin User Requests",
             "Title": "User Requests",
             "Link": "UserRequests",
@@ -780,6 +788,14 @@
             "Order": 0
           },
           {
+            "Name": "SERVE FAQ",
+            "Title": "SERVE FAQ",
+            "Link": "ServeFAQ",
+            "Icon": "fa-server",
+            "Order": 0,
+            "Menu": []
+          },
+          {
             "Name": "DOC Development Units of Measures",
             "Title": "All Units of Measures",
             "Link": "AllUnitsofMeasures",
@@ -923,6 +939,134 @@
     ]
   },
   {
+    "Name": "SERVE",
+    "Sidebar": [
+      {
+        "Name": "SERVE Landing",
+        "Title": "SERVE Portals",
+        "Link": "ServeLanding",
+        "Hidden": true,
+        "Icon": "fa-home",
+        "Order": 0,
+        "Menu": []
+      },
+      {
+        "Name": "SERVE FAQ",
+        "Title": "SERVE FAQ",
+        "Link": "ServeFAQ",
+        "Icon": "fa-server",
+        "Order": 0,
+        "Menu": []
+      },
+      {
+        "Name": "Studies",
+        "Title": "Studies",
+        "Icon": "fa-clipboard",
+        "Description": "Studies",
+        "Order": 10,
+        "Menu": [
+          {
+            "Name": "SERVE Study List",
+            "Title": "Study List",
+            "Link": "StudyList",
+            "Icon": "fa-clipboard",
+            "Order": 0
+          },
+          {
+            "Name": "SERVE Evidence Table",
+            "Title": "Evidence Table",
+            "Link": "EvidenceTable",
+            "Icon": "fa-clipboard",
+            "Order": 20
+          }
+        ]
+      },
+      {
+        "Name": "Analysis",
+        "Title": "Analysis",
+        "Icon": "fa-eye",
+        "Description": "Analysis",
+        "Order": 20,
+        "Menu": [
+          {
+            "Name": "SERVE Direct Meta Analysis",
+            "Title": "Direct Meta Analysis",
+            "Link": "DirectMetaAnalysis",
+            "Icon": "fa-eye",
+            "Order": 0
+          },
+          {
+            "Name": "SERVE Frequentist NMA",
+            "Title": "Frequentist NMA",
+            "Link": "FrequentistNMA",
+            "Icon": "fa-eye",
+            "Order": 10
+          },
+          {
+            "Name": "SERVE Bayesian NMA",
+            "Title": "Bayesian NMA",
+            "Link": "BayesianNMA",
+            "Icon": "fa-eye",
+            "Order": 20
+          },
+          {
+            "Name": "SERVE Cohort Analysis",
+            "Title": "Cohort Analysis",
+            "Link": "CohortAnalysis",
+            "Icon": "fa-eye",
+            "Order": 30
+          },
+          {
+            "Name": "SERVE Custom Report",
+            "Title": "Custom Report",
+            "Link": "CustomReport",
+            "Icon": "fa-exchange",
+            "Order": 80
+          }
+        ]
+      },
+      {
+        "Name": "SERVE Evidence Statements",
+        "Title": "Evidence Statements",
+        "Link": "EvidenceStatements",
+        "Icon": "fa-certificate",
+        "Order": 70
+      },
+      {
+        "Name": "DOC Search",
+        "Title": "DOC Search",
+        "Href": "https://search.doctorevidence.com/",
+        "Icon": "fa-search",
+        "Order": 0
+      },
+      {
+        "Name": "DOC Label",
+        "Title": "DOC Label",
+        "Href": "https://label.doctorevidence.com/",
+        "Icon": "fa-balance-scale",
+        "Order": 0
+      },
+      {
+        "Name": "SERVE Study Summary",
+        "Title": "Study Summary",
+        "Link": "StudySummary",
+        "Hidden": true,
+        "Icon": "fa-clipboard",
+        "Order": 0,
+        "Menu": []
+      },
+      {
+        "Name": "SERVE View Analysis",
+        "Title": "View Analysis",
+        "Link": "ViewAnalysis",
+        "Hidden": true,
+        "Icon": "fa-eye",
+        "Order": 0,
+        "Menu": []
+      }
+    ]
+  },
+  {
     "Name": "DOC Library",
     "Sidebar": [
       {
@@ -956,6 +1100,14 @@
         "Title": "Reference List",
         "Link": "ReferenceList",
         "Icon": "fa-clipboard",
+        "Order": 0,
+        "Menu": []
+      },
+      {
+        "Name": "DOC Library Ratings Adjudication",
+        "Title": "Ratings Adjudication",
+        "Link": "RatingsAdjudication",
+        "Icon": "fa-gavel",
         "Order": 0,
         "Menu": []
       }
