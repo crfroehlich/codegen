@@ -128,6 +128,10 @@ namespace Services.API
                     entities = entities.Where(en => en.EntityType.Contains(request.EntityType));
                 if(request.EntityVersion.HasValue)
                     entities = entities.Where(en => request.EntityVersion.Value == en.EntityVersion);
+                if(true == request.EventsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Events.Any(r => r.Id.In(request.EventsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Impersonation) && !DocTools.IsNullOrEmpty(request.Impersonation.Id))
                 {
                     entities = entities.Where(en => en.Impersonation.Id == request.Impersonation.Id );
@@ -185,6 +189,8 @@ namespace Services.API
                 {
                     case "auditdelta":
                         return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityAuditDelta, AuditDelta, AuditDeltaSearch>((int)request.Id, DocConstantModelName.AUDITDELTA, "Deltas", request, (ss) => HostContext.ResolveService<AuditDeltaService>(Request)?.Get(ss));
+                    case "event":
+                        return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request, (ss) => HostContext.ResolveService<EventService>(Request)?.Get(ss));
                     default:
                         throw new HttpError(HttpStatusCode.NotFound, $"Route for auditrecord/{request.Id}/{request.Junction} was not found");
                 }

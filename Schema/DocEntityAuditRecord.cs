@@ -166,6 +166,14 @@ namespace Services.Schema
 
 
         [Field()]
+        [FieldMapping(nameof(Events))]
+        public DocEntitySet<DocEntityEvent> Events { get; private set; }
+
+
+        public int? EventsCount { get { return Events.Count(); } private set { var noid = value; } }
+
+
+        [Field()]
         [FieldMapping(nameof(Impersonation))]
         public DocEntityImpersonation Impersonation { get; set; }
         public int? ImpersonationId { get { return Impersonation?.Id; } private set { var noid = value; } }
@@ -335,6 +343,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.EntityId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.EntityId))))
                 .ForMember(dest => dest.EntityType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.EntityType))))
                 .ForMember(dest => dest.EntityVersion, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.EntityVersion))))
+                .ForMember(dest => dest.Events, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.Events))))
+                .ForMember(dest => dest.EventsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.EventsCount))))
                 .ForMember(dest => dest.Impersonation, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.Impersonation))))
                 .ForMember(dest => dest.ImpersonationId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.ImpersonationId))))
                 .ForMember(dest => dest.TargetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.TargetId))))
