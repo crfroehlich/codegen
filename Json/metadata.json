@@ -4544,21 +4544,6 @@
         "Target": "Project",
         "TargetAlias": "ProjectLink",
         "Type": "relationships"
-      },
-      "LibraryPackages": {
-        "Description": "A list of Library Packages for this document set",
-        "DisplayName": "Library Packages",
-        "IsAllowAddInForm": false,
-        "IsAllowRemoveInForm": false,
-        "IsDisplayInForm": true,
-        "IsDisplayInGrid": false,
-        "Name": "LibraryPackages",
-        "Order": 40,
-        "Tab": "Library Packages",
-        "TabOrder": 110,
-        "Target": "LibraryPackage",
-        "TargetAlias": "LibraryPackage",
-        "Type": "relationships"
       }
     },
     "Properties": {
