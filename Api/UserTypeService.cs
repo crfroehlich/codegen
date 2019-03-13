@@ -216,6 +216,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pPayrollStatus, permission, DocConstantModelName.USERTYPE, nameof(request.PayrollStatus)))
             {
                 if(DocPermissionFactory.IsRequested(request, pPayrollStatus, entity.PayrollStatus, nameof(request.PayrollStatus)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.USERTYPE, nameof(request.PayrollStatus)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.PayrollStatus)} cannot be modified once set.");
                     entity.PayrollStatus = pPayrollStatus;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pPayrollStatus, nameof(request.PayrollStatus)) && !request.VisibleFields.Matches(nameof(request.PayrollStatus), ignoreSpaces: true))
                 {
@@ -225,6 +226,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pPayrollType, permission, DocConstantModelName.USERTYPE, nameof(request.PayrollType)))
             {
                 if(DocPermissionFactory.IsRequested(request, pPayrollType, entity.PayrollType, nameof(request.PayrollType)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.USERTYPE, nameof(request.PayrollType)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.PayrollType)} cannot be modified once set.");
                     entity.PayrollType = pPayrollType;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pPayrollType, nameof(request.PayrollType)) && !request.VisibleFields.Matches(nameof(request.PayrollType), ignoreSpaces: true))
                 {
@@ -234,6 +236,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.USERTYPE, nameof(request.Type)))
             {
                 if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.USERTYPE, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
                     entity.Type = pType;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {

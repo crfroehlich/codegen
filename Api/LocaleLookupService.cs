@@ -173,6 +173,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<IpData>(currentUser, request, pData, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.Data)))
             {
                 if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.Data)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
                     entity.Data = DocSerialize<IpData>.ToString(pData);
                 if(DocPermissionFactory.IsRequested<IpData>(request, pData, nameof(request.Data)) && !request.VisibleFields.Matches(nameof(request.Data), ignoreSpaces: true))
                 {
@@ -182,6 +183,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pIpAddress, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress)))
             {
                 if(DocPermissionFactory.IsRequested(request, pIpAddress, entity.IpAddress, nameof(request.IpAddress)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IpAddress)} cannot be modified once set.");
                     entity.IpAddress = pIpAddress;
                 if(DocPermissionFactory.IsRequested<string>(request, pIpAddress, nameof(request.IpAddress)) && !request.VisibleFields.Matches(nameof(request.IpAddress), ignoreSpaces: true))
                 {
@@ -191,6 +193,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, request, pLocale, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.Locale)))
             {
                 if(DocPermissionFactory.IsRequested(request, pLocale, entity.Locale, nameof(request.Locale)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.Locale)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Locale)} cannot be modified once set.");
                     entity.Locale = pLocale;
                 if(DocPermissionFactory.IsRequested<DocEntityLocale>(request, pLocale, nameof(request.Locale)) && !request.VisibleFields.Matches(nameof(request.Locale), ignoreSpaces: true))
                 {

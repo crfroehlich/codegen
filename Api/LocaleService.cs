@@ -169,6 +169,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pCountry, permission, DocConstantModelName.LOCALE, nameof(request.Country)))
             {
                 if(DocPermissionFactory.IsRequested(request, pCountry, entity.Country, nameof(request.Country)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Country)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Country)} cannot be modified once set.");
                     entity.Country = pCountry;
                 if(DocPermissionFactory.IsRequested<string>(request, pCountry, nameof(request.Country)) && !request.VisibleFields.Matches(nameof(request.Country), ignoreSpaces: true))
                 {
@@ -178,6 +179,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLanguage, permission, DocConstantModelName.LOCALE, nameof(request.Language)))
             {
                 if(DocPermissionFactory.IsRequested(request, pLanguage, entity.Language, nameof(request.Language)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Language)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Language)} cannot be modified once set.");
                     entity.Language = pLanguage;
                 if(DocPermissionFactory.IsRequested<string>(request, pLanguage, nameof(request.Language)) && !request.VisibleFields.Matches(nameof(request.Language), ignoreSpaces: true))
                 {
@@ -187,6 +189,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pTimeZone, permission, DocConstantModelName.LOCALE, nameof(request.TimeZone)))
             {
                 if(DocPermissionFactory.IsRequested(request, pTimeZone, entity.TimeZone, nameof(request.TimeZone)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.TimeZone)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TimeZone)} cannot be modified once set.");
                     entity.TimeZone = pTimeZone;
                 if(DocPermissionFactory.IsRequested<string>(request, pTimeZone, nameof(request.TimeZone)) && !request.VisibleFields.Matches(nameof(request.TimeZone), ignoreSpaces: true))
                 {

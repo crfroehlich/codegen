@@ -200,6 +200,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<Bindings>(currentUser, request, pBinding, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Binding)))
             {
                 if(DocPermissionFactory.IsRequested(request, pBinding, entity.Binding, nameof(request.Binding)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Binding)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Binding)} cannot be modified once set.");
                     entity.Binding = DocSerialize<Bindings>.ToString(pBinding);
                 if(DocPermissionFactory.IsRequested<Bindings>(request, pBinding, nameof(request.Binding)) && !request.VisibleFields.Matches(nameof(request.Binding), ignoreSpaces: true))
                 {
@@ -209,7 +210,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pBoundName, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.BoundName)))
             {
                 if(DocPermissionFactory.IsRequested(request, pBoundName, entity.BoundName, nameof(request.BoundName)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.BoundName)} cannot be modified once set.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.BoundName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.BoundName)} cannot be modified once set.");
                     entity.BoundName = pBoundName;
                 if(DocPermissionFactory.IsRequested<string>(request, pBoundName, nameof(request.BoundName)) && !request.VisibleFields.Matches(nameof(request.BoundName), ignoreSpaces: true))
                 {
@@ -219,7 +220,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pLookupTable, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.LookupTable)))
             {
                 if(DocPermissionFactory.IsRequested(request, pLookupTable, entity.LookupTable, nameof(request.LookupTable)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LookupTable)} cannot be modified once set.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.LookupTable)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LookupTable)} cannot be modified once set.");
                     entity.LookupTable = pLookupTable;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pLookupTable, nameof(request.LookupTable)) && !request.VisibleFields.Matches(nameof(request.LookupTable), ignoreSpaces: true))
                 {
@@ -229,7 +230,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityScope>(currentUser, request, pScope, permission, DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Scope)))
             {
                 if(DocPermissionFactory.IsRequested(request, pScope, entity.Scope, nameof(request.Scope)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Scope)} cannot be modified once set.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Scope)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Scope)} cannot be modified once set.");
                     entity.Scope = pScope;
                 if(DocPermissionFactory.IsRequested<DocEntityScope>(request, pScope, nameof(request.Scope)) && !request.VisibleFields.Matches(nameof(request.Scope), ignoreSpaces: true))
                 {

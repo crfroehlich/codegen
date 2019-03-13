@@ -191,6 +191,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pName, permission, DocConstantModelName.TERMCATEGORY, nameof(request.Name)))
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMCATEGORY, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
@@ -200,6 +201,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermCategory>(currentUser, request, pParentCategory, permission, DocConstantModelName.TERMCATEGORY, nameof(request.ParentCategory)))
             {
                 if(DocPermissionFactory.IsRequested(request, pParentCategory, entity.ParentCategory, nameof(request.ParentCategory)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMCATEGORY, nameof(request.ParentCategory)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ParentCategory)} cannot be modified once set.");
                     entity.ParentCategory = pParentCategory;
                 if(DocPermissionFactory.IsRequested<DocEntityTermCategory>(request, pParentCategory, nameof(request.ParentCategory)) && !request.VisibleFields.Matches(nameof(request.ParentCategory), ignoreSpaces: true))
                 {

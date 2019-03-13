@@ -177,7 +177,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pCategory, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.Category)))
             {
                 if(DocPermissionFactory.IsRequested(request, pCategory, entity.Category, nameof(request.Category)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Category)} cannot be modified once set.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Category)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Category)} cannot be modified once set.");
                     entity.Category = pCategory;
                 if(DocPermissionFactory.IsRequested<string>(request, pCategory, nameof(request.Category)) && !request.VisibleFields.Matches(nameof(request.Category), ignoreSpaces: true))
                 {
@@ -187,7 +187,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, request, pEnum, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.Enum)))
             {
                 if(DocPermissionFactory.IsRequested(request, pEnum, entity.Enum, nameof(request.Enum)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enum)} cannot be modified once set.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Enum)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enum)} cannot be modified once set.");
                     entity.Enum = pEnum;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
                 {

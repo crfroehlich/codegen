@@ -208,6 +208,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.TEAM, nameof(request.Description)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Description)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Description)} cannot be modified once set.");
                     entity.Description = pDescription;
                 if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
@@ -217,6 +218,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pEmail, permission, DocConstantModelName.TEAM, nameof(request.Email)))
             {
                 if(DocPermissionFactory.IsRequested(request, pEmail, entity.Email, nameof(request.Email)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Email)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Email)} cannot be modified once set.");
                     entity.Email = pEmail;
                 if(DocPermissionFactory.IsRequested<string>(request, pEmail, nameof(request.Email)) && !request.VisibleFields.Matches(nameof(request.Email), ignoreSpaces: true))
                 {
@@ -226,6 +228,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsInternal, permission, DocConstantModelName.TEAM, nameof(request.IsInternal)))
             {
                 if(DocPermissionFactory.IsRequested(request, pIsInternal, entity.IsInternal, nameof(request.IsInternal)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.IsInternal)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsInternal)} cannot be modified once set.");
                     entity.IsInternal = pIsInternal;
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsInternal, nameof(request.IsInternal)) && !request.VisibleFields.Matches(nameof(request.IsInternal), ignoreSpaces: true))
                 {
@@ -235,6 +238,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.TEAM, nameof(request.Name)))
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
@@ -244,6 +248,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pOwner, permission, DocConstantModelName.TEAM, nameof(request.Owner)))
             {
                 if(DocPermissionFactory.IsRequested(request, pOwner, entity.Owner, nameof(request.Owner)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Owner)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Owner)} cannot be modified once set.");
                     entity.Owner = pOwner;
                 if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pOwner, nameof(request.Owner)) && !request.VisibleFields.Matches(nameof(request.Owner), ignoreSpaces: true))
                 {
@@ -253,6 +258,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<TeamSettings>(currentUser, request, pSettings, permission, DocConstantModelName.TEAM, nameof(request.Settings)))
             {
                 if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Settings)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Settings)} cannot be modified once set.");
                     entity.Settings = DocSerialize<TeamSettings>.ToString(pSettings);
                 if(DocPermissionFactory.IsRequested<TeamSettings>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
                 {
@@ -262,6 +268,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSlack, permission, DocConstantModelName.TEAM, nameof(request.Slack)))
             {
                 if(DocPermissionFactory.IsRequested(request, pSlack, entity.Slack, nameof(request.Slack)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Slack)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Slack)} cannot be modified once set.");
                     entity.Slack = pSlack;
                 if(DocPermissionFactory.IsRequested<string>(request, pSlack, nameof(request.Slack)) && !request.VisibleFields.Matches(nameof(request.Slack), ignoreSpaces: true))
                 {

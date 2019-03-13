@@ -227,6 +227,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityApp>(currentUser, request, pApp, permission, DocConstantModelName.BROADCAST, nameof(request.App)))
             {
                 if(DocPermissionFactory.IsRequested(request, pApp, entity.App, nameof(request.App)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.App)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.App)} cannot be modified once set.");
                     entity.App = pApp;
                 if(DocPermissionFactory.IsRequested<DocEntityApp>(request, pApp, nameof(request.App)) && !request.VisibleFields.Matches(nameof(request.App), ignoreSpaces: true))
                 {
@@ -236,6 +237,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pConfluenceId, permission, DocConstantModelName.BROADCAST, nameof(request.ConfluenceId)))
             {
                 if(DocPermissionFactory.IsRequested(request, pConfluenceId, entity.ConfluenceId, nameof(request.ConfluenceId)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.ConfluenceId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ConfluenceId)} cannot be modified once set.");
                     entity.ConfluenceId = pConfluenceId;
                 if(DocPermissionFactory.IsRequested<string>(request, pConfluenceId, nameof(request.ConfluenceId)) && !request.VisibleFields.Matches(nameof(request.ConfluenceId), ignoreSpaces: true))
                 {
@@ -245,6 +247,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.BROADCAST, nameof(request.Name)))
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
@@ -254,6 +257,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pReprocess, permission, DocConstantModelName.BROADCAST, nameof(request.Reprocess)))
             {
                 if(DocPermissionFactory.IsRequested(request, pReprocess, entity.Reprocess, nameof(request.Reprocess)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Reprocess)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Reprocess)} cannot be modified once set.");
                     entity.Reprocess = pReprocess;
                 if(DocPermissionFactory.IsRequested<bool>(request, pReprocess, nameof(request.Reprocess)) && !request.VisibleFields.Matches(nameof(request.Reprocess), ignoreSpaces: true))
                 {
@@ -263,6 +267,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pReprocessed, permission, DocConstantModelName.BROADCAST, nameof(request.Reprocessed)))
             {
                 if(DocPermissionFactory.IsRequested(request, pReprocessed, entity.Reprocessed, nameof(request.Reprocessed)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Reprocessed)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Reprocessed)} cannot be modified once set.");
                     entity.Reprocessed = pReprocessed;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pReprocessed, nameof(request.Reprocessed)) && !request.VisibleFields.Matches(nameof(request.Reprocessed), ignoreSpaces: true))
                 {
@@ -272,6 +277,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.BROADCAST, nameof(request.Status)))
             {
                 if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
                     entity.Status = pStatus;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
@@ -281,7 +287,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.BROADCAST, nameof(request.Type)))
             {
                 if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
                     entity.Type = pType;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {

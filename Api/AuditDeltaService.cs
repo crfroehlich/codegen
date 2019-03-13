@@ -170,7 +170,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAuditRecord>(currentUser, request, pAudit, permission, DocConstantModelName.AUDITDELTA, nameof(request.Audit)))
             {
                 if(DocPermissionFactory.IsRequested(request, pAudit, entity.Audit, nameof(request.Audit)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Audit)} cannot be modified once set.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Audit)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Audit)} cannot be modified once set.");
                     entity.Audit = pAudit;
                 if(DocPermissionFactory.IsRequested<DocEntityAuditRecord>(request, pAudit, nameof(request.Audit)) && !request.VisibleFields.Matches(nameof(request.Audit), ignoreSpaces: true))
                 {
@@ -180,7 +180,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDelta, permission, DocConstantModelName.AUDITDELTA, nameof(request.Delta)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDelta, entity.Delta, nameof(request.Delta)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Delta)} cannot be modified once set.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Delta)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Delta)} cannot be modified once set.");
                     entity.Delta = pDelta;
                 if(DocPermissionFactory.IsRequested<string>(request, pDelta, nameof(request.Delta)) && !request.VisibleFields.Matches(nameof(request.Delta), ignoreSpaces: true))
                 {

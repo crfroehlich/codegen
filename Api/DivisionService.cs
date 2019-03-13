@@ -201,6 +201,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityClient>(currentUser, request, pClient, permission, DocConstantModelName.DIVISION, nameof(request.Client)))
             {
                 if(DocPermissionFactory.IsRequested(request, pClient, entity.Client, nameof(request.Client)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DIVISION, nameof(request.Client)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Client)} cannot be modified once set.");
                     entity.Client = pClient;
                 if(DocPermissionFactory.IsRequested<DocEntityClient>(request, pClient, nameof(request.Client)) && !request.VisibleFields.Matches(nameof(request.Client), ignoreSpaces: true))
                 {
@@ -210,6 +211,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, request, pDefaultLocale, permission, DocConstantModelName.DIVISION, nameof(request.DefaultLocale)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDefaultLocale, entity.DefaultLocale, nameof(request.DefaultLocale)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DIVISION, nameof(request.DefaultLocale)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DefaultLocale)} cannot be modified once set.");
                     entity.DefaultLocale = pDefaultLocale;
                 if(DocPermissionFactory.IsRequested<DocEntityLocale>(request, pDefaultLocale, nameof(request.DefaultLocale)) && !request.VisibleFields.Matches(nameof(request.DefaultLocale), ignoreSpaces: true))
                 {
@@ -219,6 +221,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.DIVISION, nameof(request.Name)))
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DIVISION, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
@@ -228,6 +231,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityRole>(currentUser, request, pRole, permission, DocConstantModelName.DIVISION, nameof(request.Role)))
             {
                 if(DocPermissionFactory.IsRequested(request, pRole, entity.Role, nameof(request.Role)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DIVISION, nameof(request.Role)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Role)} cannot be modified once set.");
                     entity.Role = pRole;
                 if(DocPermissionFactory.IsRequested<DocEntityRole>(request, pRole, nameof(request.Role)) && !request.VisibleFields.Matches(nameof(request.Role), ignoreSpaces: true))
                 {
@@ -237,6 +241,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DivisionSettings>(currentUser, request, pSettings, permission, DocConstantModelName.DIVISION, nameof(request.Settings)))
             {
                 if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DIVISION, nameof(request.Settings)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Settings)} cannot be modified once set.");
                     entity.Settings = DocSerialize<DivisionSettings>.ToString(pSettings);
                 if(DocPermissionFactory.IsRequested<DivisionSettings>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
                 {

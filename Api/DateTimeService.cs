@@ -176,6 +176,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateDay, permission, DocConstantModelName.DATETIME, nameof(request.DateDay)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDateDay, entity.DateDay, nameof(request.DateDay)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.DateDay)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DateDay)} cannot be modified once set.");
                     entity.DateDay = pDateDay;
                 if(DocPermissionFactory.IsRequested<int?>(request, pDateDay, nameof(request.DateDay)) && !request.VisibleFields.Matches(nameof(request.DateDay), ignoreSpaces: true))
                 {
@@ -185,6 +186,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateMonth, permission, DocConstantModelName.DATETIME, nameof(request.DateMonth)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDateMonth, entity.DateMonth, nameof(request.DateMonth)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.DateMonth)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DateMonth)} cannot be modified once set.");
                     entity.DateMonth = pDateMonth;
                 if(DocPermissionFactory.IsRequested<int?>(request, pDateMonth, nameof(request.DateMonth)) && !request.VisibleFields.Matches(nameof(request.DateMonth), ignoreSpaces: true))
                 {
@@ -194,6 +196,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDateTime, permission, DocConstantModelName.DATETIME, nameof(request.DateTime)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDateTime, entity.DateTime, nameof(request.DateTime)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.DateTime)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DateTime)} cannot be modified once set.");
                     entity.DateTime = pDateTime;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pDateTime, nameof(request.DateTime)) && !request.VisibleFields.Matches(nameof(request.DateTime), ignoreSpaces: true))
                 {
@@ -203,6 +206,7 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pDateYear, permission, DocConstantModelName.DATETIME, nameof(request.DateYear)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDateYear, entity.DateYear, nameof(request.DateYear)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATETIME, nameof(request.DateYear)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DateYear)} cannot be modified once set.");
                     entity.DateYear = pDateYear;
                 if(DocPermissionFactory.IsRequested<int?>(request, pDateYear, nameof(request.DateYear)) && !request.VisibleFields.Matches(nameof(request.DateYear), ignoreSpaces: true))
                 {
