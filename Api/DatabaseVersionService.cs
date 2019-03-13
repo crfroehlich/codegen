@@ -121,11 +121,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<DatabaseVersion> Post(DatabaseVersionSearch request) => Get(request);
+        public object Post(DatabaseVersionSearch request) => Get(request);
 
-        public List<DatabaseVersion> Get(DatabaseVersionSearch request) => GetSearchResult<DatabaseVersion,DocEntityDatabaseVersion,DatabaseVersionSearch>(DocConstantModelName.DATABASEVERSION, request, _ExecSearch);
+        public object Get(DatabaseVersionSearch request) => GetSearchResultWithCache<DatabaseVersion,DocEntityDatabaseVersion,DatabaseVersionSearch>(DocConstantModelName.DATABASEVERSION, request, _ExecSearch);
 
-        public DatabaseVersion Get(DatabaseVersion request) => GetEntity<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, request, GetDatabaseVersion);
+        public object Get(DatabaseVersion request) => GetEntityWithCache<DatabaseVersion>(DocConstantModelName.DATABASEVERSION, request, GetDatabaseVersion);
+
         private DatabaseVersion GetDatabaseVersion(DatabaseVersion request)
         {
             var id = request?.Id;

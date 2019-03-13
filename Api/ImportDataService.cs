@@ -223,11 +223,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<ImportData> Post(ImportDataSearch request) => Get(request);
+        public object Post(ImportDataSearch request) => Get(request);
 
-        public List<ImportData> Get(ImportDataSearch request) => GetSearchResult<ImportData,DocEntityImportData,ImportDataSearch>(DocConstantModelName.IMPORTDATA, request, _ExecSearch);
+        public object Get(ImportDataSearch request) => GetSearchResultWithCache<ImportData,DocEntityImportData,ImportDataSearch>(DocConstantModelName.IMPORTDATA, request, _ExecSearch);
 
-        public ImportData Get(ImportData request) => GetEntity<ImportData>(DocConstantModelName.IMPORTDATA, request, GetImportData);
+        public object Get(ImportData request) => GetEntityWithCache<ImportData>(DocConstantModelName.IMPORTDATA, request, GetImportData);
+
         private ImportData _AssignValues(ImportData request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -494,7 +495,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<ImportData>(currentUser, nameof(ImportData), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.IMPORTDATA);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.IMPORTDATA);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.IMPORTDATA, cacheExpires);
 
             return ret;
         }

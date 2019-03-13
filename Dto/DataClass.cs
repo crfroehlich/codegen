@@ -64,6 +64,10 @@ namespace Services.Dto
         public bool AllVisibleFieldsByDefault { get; set; }
 
 
+        [ApiMember(Name = nameof(CacheDuration), Description = "int?", IsRequired = false)]
+        public int? CacheDuration { get; set; }
+
+
         [ApiMember(Name = nameof(ClassId), Description = "int?", IsRequired = true)]
         public int? ClassId { get; set; }
 
@@ -101,10 +105,6 @@ namespace Services.Dto
         [ApiMember(Name = nameof(IgnoreProps), Description = "DataProperty", IsRequired = false)]
         public List<Reference> IgnoreProps { get; set; }
         public int? IgnorePropsCount { get; set; }
-
-
-        [ApiMember(Name = nameof(IsCached), Description = "bool", IsRequired = false)]
-        public bool IsCached { get; set; }
 
 
         [ApiMember(Name = nameof(IsInsertOnly), Description = "bool", IsRequired = false)]
@@ -167,7 +167,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllVisibleFieldsByDefault),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(IsCached),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllVisibleFieldsByDefault),nameof(CacheDuration),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -200,6 +200,7 @@ namespace Services.Dto
         public List<bool> AllowDelete { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> AllVisibleFieldsByDefault { get; set; }
+        public int? CacheDuration { get; set; }
         public int? ClassId { get; set; }
         public List<int> CustomCollectionsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -212,8 +213,6 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> GET { get; set; }
         public List<int> IgnorePropsIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> IsCached { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> IsInsertOnly { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -252,6 +251,7 @@ namespace Services.Dto
 
         public bool doAllowDelete { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.AllowDelete))); }
         public bool doAllVisibleFieldsByDefault { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.AllVisibleFieldsByDefault))); }
+        public bool doCacheDuration { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.CacheDuration))); }
         public bool doClassId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.ClassId))); }
         public bool doCustomCollections { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.CustomCollections))); }
         public bool doDELETE { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.DELETE))); }
@@ -261,7 +261,6 @@ namespace Services.Dto
         public bool doFlattenReferences { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.FlattenReferences))); }
         public bool doGET { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.GET))); }
         public bool doIgnoreProps { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IgnoreProps))); }
-        public bool doIsCached { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsCached))); }
         public bool doIsInsertOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsInsertOnly))); }
         public bool doIsReadOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.IsReadOnly))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Name))); }

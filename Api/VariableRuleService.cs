@@ -169,11 +169,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<VariableRule> Post(VariableRuleSearch request) => Get(request);
+        public object Post(VariableRuleSearch request) => Get(request);
 
-        public List<VariableRule> Get(VariableRuleSearch request) => GetSearchResult<VariableRule,DocEntityVariableRule,VariableRuleSearch>(DocConstantModelName.VARIABLERULE, request, _ExecSearch);
+        public object Get(VariableRuleSearch request) => GetSearchResultWithCache<VariableRule,DocEntityVariableRule,VariableRuleSearch>(DocConstantModelName.VARIABLERULE, request, _ExecSearch);
 
-        public VariableRule Get(VariableRule request) => GetEntity<VariableRule>(DocConstantModelName.VARIABLERULE, request, GetVariableRule);
+        public object Get(VariableRule request) => GetEntityWithCache<VariableRule>(DocConstantModelName.VARIABLERULE, request, GetVariableRule);
+
         private VariableRule _AssignValues(VariableRule request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -405,7 +406,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<VariableRule>(currentUser, nameof(VariableRule), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.VARIABLERULE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLERULE, cacheExpires);
 
             return ret;
         }

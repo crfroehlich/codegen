@@ -121,11 +121,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Locale> Post(LocaleSearch request) => Get(request);
+        public object Post(LocaleSearch request) => Get(request);
 
-        public List<Locale> Get(LocaleSearch request) => GetSearchResult<Locale,DocEntityLocale,LocaleSearch>(DocConstantModelName.LOCALE, request, _ExecSearch);
+        public object Get(LocaleSearch request) => GetSearchResultWithCache<Locale,DocEntityLocale,LocaleSearch>(DocConstantModelName.LOCALE, request, _ExecSearch);
 
-        public Locale Get(Locale request) => GetEntity<Locale>(DocConstantModelName.LOCALE, request, GetLocale);
+        public object Get(Locale request) => GetEntityWithCache<Locale>(DocConstantModelName.LOCALE, request, GetLocale);
+
         private Locale _AssignValues(Locale request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -201,7 +202,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Locale>(currentUser, nameof(Locale), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOCALE);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.LOCALE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOCALE, cacheExpires);
 
             return ret;
         }

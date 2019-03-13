@@ -208,7 +208,7 @@ namespace Services.Schema
         public override void FlushCache()
         {
             base.FlushCache();
-
+            DocCacheClient.RemoveById(Id);
         }
         #endregion Entity overrides
 

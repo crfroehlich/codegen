@@ -110,6 +110,8 @@ namespace Services.API
                     if(request.AllVisibleFieldsByDefault.Any(v => v == null)) entities = entities.Where(en => en.AllVisibleFieldsByDefault.In(request.AllVisibleFieldsByDefault) || en.AllVisibleFieldsByDefault == null);
                     else entities = entities.Where(en => en.AllVisibleFieldsByDefault.In(request.AllVisibleFieldsByDefault));
                 }
+                if(request.CacheDuration.HasValue)
+                    entities = entities.Where(en => request.CacheDuration.Value == en.CacheDuration);
                 if(request.ClassId.HasValue)
                     entities = entities.Where(en => request.ClassId.Value == en.ClassId);
                 if(true == request.CustomCollectionsIds?.Any())
@@ -142,11 +144,6 @@ namespace Services.API
                 if(true == request.IgnorePropsIds?.Any())
                 {
                     entities = entities.Where(en => en.IgnoreProps.Any(r => r.Id.In(request.IgnorePropsIds)));
-                }
-                if(true == request.IsCached?.Any())
-                {
-                    if(request.IsCached.Any(v => v == null)) entities = entities.Where(en => en.IsCached.In(request.IsCached) || en.IsCached == null);
-                    else entities = entities.Where(en => en.IsCached.In(request.IsCached));
                 }
                 if(true == request.IsInsertOnly?.Any())
                 {
@@ -203,6 +200,7 @@ namespace Services.API
         public object Get(DataClassSearch request) => GetSearchResultWithCache<DataClass,DocEntityDataClass,DataClassSearch>(DocConstantModelName.DATACLASS, request, _ExecSearch);
 
         public object Get(DataClass request) => GetEntityWithCache<DataClass>(DocConstantModelName.DATACLASS, request, GetDataClass);
+
         private DataClass _AssignValues(DataClass request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -223,6 +221,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pAllowDelete = request.AllowDelete;
             var pAllVisibleFieldsByDefault = request.AllVisibleFieldsByDefault;
+            var pCacheDuration = request.CacheDuration;
             var pClassId = request.ClassId;
             var pCustomCollections = request.CustomCollections?.ToList();
             var pDELETE = request.DELETE;
@@ -232,7 +231,6 @@ namespace Services.API
             var pFlattenReferences = request.FlattenReferences;
             var pGET = request.GET;
             var pIgnoreProps = request.IgnoreProps?.ToList();
-            var pIsCached = request.IsCached;
             var pIsInsertOnly = request.IsInsertOnly;
             var pIsReadOnly = request.IsReadOnly;
             var pName = request.Name;
@@ -277,6 +275,16 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pAllVisibleFieldsByDefault, nameof(request.AllVisibleFieldsByDefault)) && !request.VisibleFields.Matches(nameof(request.AllVisibleFieldsByDefault), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.AllVisibleFieldsByDefault));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pCacheDuration, permission, DocConstantModelName.DATACLASS, nameof(request.CacheDuration)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pCacheDuration, entity.CacheDuration, nameof(request.CacheDuration)))
+                    if(null != pCacheDuration)
+                        entity.CacheDuration = (int) pCacheDuration;
+                if(DocPermissionFactory.IsRequested<int?>(request, pCacheDuration, nameof(request.CacheDuration)) && !request.VisibleFields.Matches(nameof(request.CacheDuration), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.CacheDuration));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pClassId, permission, DocConstantModelName.DATACLASS, nameof(request.ClassId)))
@@ -339,20 +347,9 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.GET));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsCached, permission, DocConstantModelName.DATACLASS, nameof(request.IsCached)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pIsCached, entity.IsCached, nameof(request.IsCached)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsCached)} cannot be modified once set.");
-                    entity.IsCached = pIsCached;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsCached, nameof(request.IsCached)) && !request.VisibleFields.Matches(nameof(request.IsCached), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.IsCached));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsInsertOnly, permission, DocConstantModelName.DATACLASS, nameof(request.IsInsertOnly)))
             {
                 if(DocPermissionFactory.IsRequested(request, pIsInsertOnly, entity.IsInsertOnly, nameof(request.IsInsertOnly)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsInsertOnly)} cannot be modified once set.");
                     entity.IsInsertOnly = pIsInsertOnly;
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsInsertOnly, nameof(request.IsInsertOnly)) && !request.VisibleFields.Matches(nameof(request.IsInsertOnly), ignoreSpaces: true))
                 {
@@ -362,7 +359,6 @@ namespace Services.API
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsReadOnly, permission, DocConstantModelName.DATACLASS, nameof(request.IsReadOnly)))
             {
                 if(DocPermissionFactory.IsRequested(request, pIsReadOnly, entity.IsReadOnly, nameof(request.IsReadOnly)))
-                    if (DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsReadOnly)} cannot be modified once set.");
                     entity.IsReadOnly = pIsReadOnly;
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsReadOnly, nameof(request.IsReadOnly)) && !request.VisibleFields.Matches(nameof(request.IsReadOnly), ignoreSpaces: true))
                 {
@@ -637,7 +633,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<DataClass>(currentUser, nameof(DataClass), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATACLASS);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.DATACLASS);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATACLASS, cacheExpires);
 
             return ret;
         }

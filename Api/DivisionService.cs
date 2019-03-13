@@ -154,6 +154,7 @@ namespace Services.API
         public object Get(DivisionSearch request) => GetSearchResultWithCache<Division,DocEntityDivision,DivisionSearch>(DocConstantModelName.DIVISION, request, _ExecSearch);
 
         public object Get(Division request) => GetEntityWithCache<Division>(DocConstantModelName.DIVISION, request, GetDivision);
+
         private Division _AssignValues(Division request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -338,7 +339,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Division>(currentUser, nameof(Division), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DIVISION);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.DIVISION);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DIVISION, cacheExpires);
 
             return ret;
         }

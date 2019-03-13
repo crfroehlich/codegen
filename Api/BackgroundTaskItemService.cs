@@ -162,11 +162,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<BackgroundTaskItem> Post(BackgroundTaskItemSearch request) => Get(request);
+        public object Post(BackgroundTaskItemSearch request) => Get(request);
 
-        public List<BackgroundTaskItem> Get(BackgroundTaskItemSearch request) => GetSearchResult<BackgroundTaskItem,DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(DocConstantModelName.BACKGROUNDTASKITEM, request, _ExecSearch);
+        public object Get(BackgroundTaskItemSearch request) => GetSearchResultWithCache<BackgroundTaskItem,DocEntityBackgroundTaskItem,BackgroundTaskItemSearch>(DocConstantModelName.BACKGROUNDTASKITEM, request, _ExecSearch);
 
-        public BackgroundTaskItem Get(BackgroundTaskItem request) => GetEntity<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, request, GetBackgroundTaskItem);
+        public object Get(BackgroundTaskItem request) => GetEntityWithCache<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, request, GetBackgroundTaskItem);
+
         public object Get(BackgroundTaskItemJunction request) =>
             Execute.Run( s => 
             {

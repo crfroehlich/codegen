@@ -173,11 +173,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<BackgroundTask> Post(BackgroundTaskSearch request) => Get(request);
+        public object Post(BackgroundTaskSearch request) => Get(request);
 
-        public List<BackgroundTask> Get(BackgroundTaskSearch request) => GetSearchResult<BackgroundTask,DocEntityBackgroundTask,BackgroundTaskSearch>(DocConstantModelName.BACKGROUNDTASK, request, _ExecSearch);
+        public object Get(BackgroundTaskSearch request) => GetSearchResultWithCache<BackgroundTask,DocEntityBackgroundTask,BackgroundTaskSearch>(DocConstantModelName.BACKGROUNDTASK, request, _ExecSearch);
 
-        public BackgroundTask Get(BackgroundTask request) => GetEntity<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, request, GetBackgroundTask);
+        public object Get(BackgroundTask request) => GetEntityWithCache<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, request, GetBackgroundTask);
+
         private BackgroundTask _AssignValues(BackgroundTask request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -447,7 +448,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<BackgroundTask>(currentUser, nameof(BackgroundTask), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASK);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.BACKGROUNDTASK);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BACKGROUNDTASK, cacheExpires);
 
             return ret;
         }

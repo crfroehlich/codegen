@@ -137,11 +137,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<StatsRecord> Post(StatsRecordSearch request) => Get(request);
+        public object Post(StatsRecordSearch request) => Get(request);
 
-        public List<StatsRecord> Get(StatsRecordSearch request) => GetSearchResult<StatsRecord,DocEntityStatsRecord,StatsRecordSearch>(DocConstantModelName.STATSRECORD, request, _ExecSearch);
+        public object Get(StatsRecordSearch request) => GetSearchResultWithCache<StatsRecord,DocEntityStatsRecord,StatsRecordSearch>(DocConstantModelName.STATSRECORD, request, _ExecSearch);
 
-        public StatsRecord Get(StatsRecord request) => GetEntity<StatsRecord>(DocConstantModelName.STATSRECORD, request, GetStatsRecord);
+        public object Get(StatsRecord request) => GetEntityWithCache<StatsRecord>(DocConstantModelName.STATSRECORD, request, GetStatsRecord);
+
         private StatsRecord GetStatsRecord(StatsRecord request)
         {
             var id = request?.Id;

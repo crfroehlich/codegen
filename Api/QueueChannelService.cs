@@ -152,6 +152,7 @@ namespace Services.API
         public object Get(QueueChannelSearch request) => GetSearchResultWithCache<QueueChannel,DocEntityQueueChannel,QueueChannelSearch>(DocConstantModelName.QUEUECHANNEL, request, _ExecSearch);
 
         public object Get(QueueChannel request) => GetEntityWithCache<QueueChannel>(DocConstantModelName.QUEUECHANNEL, request, GetQueueChannel);
+
         private QueueChannel _AssignValues(QueueChannel request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -269,7 +270,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<QueueChannel>(currentUser, nameof(QueueChannel), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.QUEUECHANNEL);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.QUEUECHANNEL);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.QUEUECHANNEL, cacheExpires);
 
             return ret;
         }

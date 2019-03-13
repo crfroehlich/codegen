@@ -127,11 +127,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<DateTimeDto> Post(DateTimeSearch request) => Get(request);
+        public object Post(DateTimeSearch request) => Get(request);
 
-        public List<DateTimeDto> Get(DateTimeSearch request) => GetSearchResult<DateTimeDto,DocEntityDateTime,DateTimeSearch>(DocConstantModelName.DATETIME, request, _ExecSearch);
+        public object Get(DateTimeSearch request) => GetSearchResultWithCache<DateTimeDto,DocEntityDateTime,DateTimeSearch>(DocConstantModelName.DATETIME, request, _ExecSearch);
 
-        public DateTimeDto Get(DateTimeDto request) => GetEntity<DateTimeDto>(DocConstantModelName.DATETIME, request, GetDateTime);
+        public object Get(DateTimeDto request) => GetEntityWithCache<DateTimeDto>(DocConstantModelName.DATETIME, request, GetDateTime);
+
         private DateTimeDto _AssignValues(DateTimeDto request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -217,7 +218,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<DateTimeDto>(currentUser, nameof(DateTimeDto), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATETIME);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.DATETIME);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATETIME, cacheExpires);
 
             return ret;
         }

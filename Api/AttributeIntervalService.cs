@@ -115,11 +115,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<AttributeInterval> Post(AttributeIntervalSearch request) => Get(request);
+        public object Post(AttributeIntervalSearch request) => Get(request);
 
-        public List<AttributeInterval> Get(AttributeIntervalSearch request) => GetSearchResult<AttributeInterval,DocEntityAttributeInterval,AttributeIntervalSearch>(DocConstantModelName.ATTRIBUTEINTERVAL, request, _ExecSearch);
+        public object Get(AttributeIntervalSearch request) => GetSearchResultWithCache<AttributeInterval,DocEntityAttributeInterval,AttributeIntervalSearch>(DocConstantModelName.ATTRIBUTEINTERVAL, request, _ExecSearch);
 
-        public AttributeInterval Get(AttributeInterval request) => GetEntity<AttributeInterval>(DocConstantModelName.ATTRIBUTEINTERVAL, request, GetAttributeInterval);
+        public object Get(AttributeInterval request) => GetEntityWithCache<AttributeInterval>(DocConstantModelName.ATTRIBUTEINTERVAL, request, GetAttributeInterval);
+
         private AttributeInterval _AssignValues(AttributeInterval request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -167,7 +168,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<AttributeInterval>(currentUser, nameof(AttributeInterval), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTEINTERVAL);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.ATTRIBUTEINTERVAL);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ATTRIBUTEINTERVAL, cacheExpires);
 
             return ret;
         }

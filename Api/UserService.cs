@@ -249,6 +249,7 @@ namespace Services.API
         public object Get(UserSearch request) => GetSearchResultWithCache<User,DocEntityUser,UserSearch>(DocConstantModelName.USER, request, _ExecSearch);
 
         public object Get(User request) => GetEntityWithCache<User>(DocConstantModelName.USER, request, GetUser);
+
         private User _AssignValues(User request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -983,7 +984,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<User>(currentUser, nameof(User), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.USER);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.USER);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.USER, cacheExpires);
 
             return ret;
         }

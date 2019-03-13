@@ -150,6 +150,7 @@ namespace Services.API
         public object Get(UserSessionSearch request) => GetSearchResultWithCache<UserSession,DocEntityUserSession,UserSessionSearch>(DocConstantModelName.USERSESSION, request, _ExecSearch);
 
         public object Get(UserSession request) => GetEntityWithCache<UserSession>(DocConstantModelName.USERSESSION, request, GetUserSession);
+
         public object Get(UserSessionJunction request) =>
             Execute.Run( s => 
             {

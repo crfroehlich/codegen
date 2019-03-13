@@ -147,11 +147,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<ValueType> Post(ValueTypeSearch request) => Get(request);
+        public object Post(ValueTypeSearch request) => Get(request);
 
-        public List<ValueType> Get(ValueTypeSearch request) => GetSearchResult<ValueType,DocEntityValueType,ValueTypeSearch>(DocConstantModelName.VALUETYPE, request, _ExecSearch);
+        public object Get(ValueTypeSearch request) => GetSearchResultWithCache<ValueType,DocEntityValueType,ValueTypeSearch>(DocConstantModelName.VALUETYPE, request, _ExecSearch);
 
-        public ValueType Get(ValueType request) => GetEntity<ValueType>(DocConstantModelName.VALUETYPE, request, GetValueType);
+        public object Get(ValueType request) => GetEntityWithCache<ValueType>(DocConstantModelName.VALUETYPE, request, GetValueType);
+
         private ValueType GetValueType(ValueType request)
         {
             var id = request?.Id;

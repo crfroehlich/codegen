@@ -123,11 +123,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Characteristic> Post(CharacteristicSearch request) => Get(request);
+        public object Post(CharacteristicSearch request) => Get(request);
 
-        public List<Characteristic> Get(CharacteristicSearch request) => GetSearchResult<Characteristic,DocEntityCharacteristic,CharacteristicSearch>(DocConstantModelName.CHARACTERISTIC, request, _ExecSearch);
+        public object Get(CharacteristicSearch request) => GetSearchResultWithCache<Characteristic,DocEntityCharacteristic,CharacteristicSearch>(DocConstantModelName.CHARACTERISTIC, request, _ExecSearch);
 
-        public Characteristic Get(Characteristic request) => GetEntity<Characteristic>(DocConstantModelName.CHARACTERISTIC, request, GetCharacteristic);
+        public object Get(Characteristic request) => GetEntityWithCache<Characteristic>(DocConstantModelName.CHARACTERISTIC, request, GetCharacteristic);
+
         private Characteristic _AssignValues(Characteristic request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -238,7 +239,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, nameof(Characteristic), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.CHARACTERISTIC);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.CHARACTERISTIC);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.CHARACTERISTIC, cacheExpires);
 
             return ret;
         }

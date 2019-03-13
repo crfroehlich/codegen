@@ -148,6 +148,7 @@ namespace Services.API
         public object Get(TermCategorySearch request) => GetSearchResultWithCache<TermCategory,DocEntityTermCategory,TermCategorySearch>(DocConstantModelName.TERMCATEGORY, request, _ExecSearch);
 
         public object Get(TermCategory request) => GetEntityWithCache<TermCategory>(DocConstantModelName.TERMCATEGORY, request, GetTermCategory);
+
         private TermCategory _AssignValues(TermCategory request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -257,7 +258,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<TermCategory>(currentUser, nameof(TermCategory), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMCATEGORY);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.TERMCATEGORY);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMCATEGORY, cacheExpires);
 
             return ret;
         }

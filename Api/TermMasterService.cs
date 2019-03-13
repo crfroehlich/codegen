@@ -152,6 +152,7 @@ namespace Services.API
         public object Get(TermMasterSearch request) => GetSearchResultWithCache<TermMaster,DocEntityTermMaster,TermMasterSearch>(DocConstantModelName.TERMMASTER, request, _ExecSearch);
 
         public object Get(TermMaster request) => GetEntityWithCache<TermMaster>(DocConstantModelName.TERMMASTER, request, GetTermMaster);
+
         private TermMaster _AssignValues(TermMaster request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -376,7 +377,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<TermMaster>(currentUser, nameof(TermMaster), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMMASTER);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.TERMMASTER);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMMASTER, cacheExpires);
 
             return ret;
         }

@@ -126,6 +126,7 @@ namespace Services.API
         public object Get(TagSearch request) => GetSearchResultWithCache<Tag,DocEntityTag,TagSearch>(DocConstantModelName.TAG, request, _ExecSearch);
 
         public object Get(Tag request) => GetEntityWithCache<Tag>(DocConstantModelName.TAG, request, GetTag);
+
         private Tag _AssignValues(Tag request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -226,7 +227,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Tag>(currentUser, nameof(Tag), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TAG);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.TAG);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TAG, cacheExpires);
 
             return ret;
         }

@@ -179,11 +179,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<WorkflowTask> Post(WorkflowTaskSearch request) => Get(request);
+        public object Post(WorkflowTaskSearch request) => Get(request);
 
-        public List<WorkflowTask> Get(WorkflowTaskSearch request) => GetSearchResult<WorkflowTask,DocEntityWorkflowTask,WorkflowTaskSearch>(DocConstantModelName.WORKFLOWTASK, request, _ExecSearch);
+        public object Get(WorkflowTaskSearch request) => GetSearchResultWithCache<WorkflowTask,DocEntityWorkflowTask,WorkflowTaskSearch>(DocConstantModelName.WORKFLOWTASK, request, _ExecSearch);
 
-        public WorkflowTask Get(WorkflowTask request) => GetEntity<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, request, GetWorkflowTask);
+        public object Get(WorkflowTask request) => GetEntityWithCache<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, request, GetWorkflowTask);
+
         private WorkflowTask _AssignValues(WorkflowTask request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -309,7 +310,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, nameof(WorkflowTask), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWTASK);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.WORKFLOWTASK);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWTASK, cacheExpires);
 
             return ret;
         }

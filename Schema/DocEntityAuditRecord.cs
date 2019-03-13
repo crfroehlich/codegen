@@ -167,6 +167,7 @@ namespace Services.Schema
 
         [Field()]
         [FieldMapping(nameof(Events))]
+        [Association(PairTo = nameof(DocEntityEvent.AuditRecord), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityEvent> Events { get; private set; }
 
 
@@ -243,7 +244,14 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
-
+            try
+            {
+                Events.Clear(); //foreach thing in Events en.Remove();
+            }
+            catch(Exception ex)
+            {
+                throw new DocException("Failed to delete AuditRecord in Events delete", ex);
+            }
             base.OnRemoving();
         }
 

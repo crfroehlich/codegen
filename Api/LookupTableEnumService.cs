@@ -132,6 +132,7 @@ namespace Services.API
         public object Get(LookupTableEnumSearch request) => GetSearchResultWithCache<LookupTableEnum,DocEntityLookupTableEnum,LookupTableEnumSearch>(DocConstantModelName.LOOKUPTABLEENUM, request, _ExecSearch);
 
         public object Get(LookupTableEnum request) => GetEntityWithCache<LookupTableEnum>(DocConstantModelName.LOOKUPTABLEENUM, request, GetLookupTableEnum);
+
         private LookupTableEnum _AssignValues(LookupTableEnum request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -181,7 +182,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, nameof(LookupTableEnum), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.LOOKUPTABLEENUM);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.LOOKUPTABLEENUM, cacheExpires);
 
             return ret;
         }

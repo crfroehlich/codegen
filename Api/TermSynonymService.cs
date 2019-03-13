@@ -152,6 +152,7 @@ namespace Services.API
         public object Get(TermSynonymSearch request) => GetSearchResultWithCache<TermSynonym,DocEntityTermSynonym,TermSynonymSearch>(DocConstantModelName.TERMSYNONYM, request, _ExecSearch);
 
         public object Get(TermSynonym request) => GetEntityWithCache<TermSynonym>(DocConstantModelName.TERMSYNONYM, request, GetTermSynonym);
+
         private TermSynonym _AssignValues(TermSynonym request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -292,7 +293,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<TermSynonym>(currentUser, nameof(TermSynonym), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.TERMSYNONYM);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TERMSYNONYM, cacheExpires);
 
             return ret;
         }

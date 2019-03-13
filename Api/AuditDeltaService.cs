@@ -123,11 +123,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<AuditDelta> Post(AuditDeltaSearch request) => Get(request);
+        public object Post(AuditDeltaSearch request) => Get(request);
 
-        public List<AuditDelta> Get(AuditDeltaSearch request) => GetSearchResult<AuditDelta,DocEntityAuditDelta,AuditDeltaSearch>(DocConstantModelName.AUDITDELTA, request, _ExecSearch);
+        public object Get(AuditDeltaSearch request) => GetSearchResultWithCache<AuditDelta,DocEntityAuditDelta,AuditDeltaSearch>(DocConstantModelName.AUDITDELTA, request, _ExecSearch);
 
-        public AuditDelta Get(AuditDelta request) => GetEntity<AuditDelta>(DocConstantModelName.AUDITDELTA, request, GetAuditDelta);
+        public object Get(AuditDelta request) => GetEntityWithCache<AuditDelta>(DocConstantModelName.AUDITDELTA, request, GetAuditDelta);
+
         private AuditDelta _AssignValues(AuditDelta request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -195,7 +196,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, nameof(AuditDelta), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.AUDITDELTA);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.AUDITDELTA);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.AUDITDELTA, cacheExpires);
 
             return ret;
         }

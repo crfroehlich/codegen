@@ -149,11 +149,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Interval> Post(IntervalSearch request) => Get(request);
+        public object Post(IntervalSearch request) => Get(request);
 
-        public List<Interval> Get(IntervalSearch request) => GetSearchResult<Interval,DocEntityInterval,IntervalSearch>(DocConstantModelName.INTERVAL, request, _ExecSearch);
+        public object Get(IntervalSearch request) => GetSearchResultWithCache<Interval,DocEntityInterval,IntervalSearch>(DocConstantModelName.INTERVAL, request, _ExecSearch);
 
-        public Interval Get(Interval request) => GetEntity<Interval>(DocConstantModelName.INTERVAL, request, GetInterval);
+        public object Get(Interval request) => GetEntityWithCache<Interval>(DocConstantModelName.INTERVAL, request, GetInterval);
+
         private Interval _AssignValues(Interval request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -249,7 +250,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Interval>(currentUser, nameof(Interval), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVAL);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.INTERVAL);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVAL, cacheExpires);
 
             return ret;
         }

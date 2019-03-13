@@ -177,11 +177,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<AuditRecord> Post(AuditRecordSearch request) => Get(request);
+        public object Post(AuditRecordSearch request) => Get(request);
 
-        public List<AuditRecord> Get(AuditRecordSearch request) => GetSearchResult<AuditRecord,DocEntityAuditRecord,AuditRecordSearch>(DocConstantModelName.AUDITRECORD, request, _ExecSearch);
+        public object Get(AuditRecordSearch request) => GetSearchResultWithCache<AuditRecord,DocEntityAuditRecord,AuditRecordSearch>(DocConstantModelName.AUDITRECORD, request, _ExecSearch);
 
-        public AuditRecord Get(AuditRecord request) => GetEntity<AuditRecord>(DocConstantModelName.AUDITRECORD, request, GetAuditRecord);
+        public object Get(AuditRecord request) => GetEntityWithCache<AuditRecord>(DocConstantModelName.AUDITRECORD, request, GetAuditRecord);
+
         public object Get(AuditRecordJunction request) =>
             Execute.Run( s => 
             {

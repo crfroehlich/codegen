@@ -179,6 +179,7 @@ namespace Services.API
         public object Get(BroadcastSearch request) => GetSearchResultWithCache<Broadcast,DocEntityBroadcast,BroadcastSearch>(DocConstantModelName.BROADCAST, request, _ExecSearch);
 
         public object Get(Broadcast request) => GetEntityWithCache<Broadcast>(DocConstantModelName.BROADCAST, request, GetBroadcast);
+
         private Broadcast _AssignValues(Broadcast request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -339,7 +340,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Broadcast>(currentUser, nameof(Broadcast), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BROADCAST);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.BROADCAST);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.BROADCAST, cacheExpires);
 
             return ret;
         }

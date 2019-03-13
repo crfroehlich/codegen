@@ -136,11 +136,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<TimePoint> Post(TimePointSearch request) => Get(request);
+        public object Post(TimePointSearch request) => Get(request);
 
-        public List<TimePoint> Get(TimePointSearch request) => GetSearchResult<TimePoint,DocEntityTimePoint,TimePointSearch>(DocConstantModelName.TIMEPOINT, request, _ExecSearch);
+        public object Get(TimePointSearch request) => GetSearchResultWithCache<TimePoint,DocEntityTimePoint,TimePointSearch>(DocConstantModelName.TIMEPOINT, request, _ExecSearch);
 
-        public TimePoint Get(TimePoint request) => GetEntity<TimePoint>(DocConstantModelName.TIMEPOINT, request, GetTimePoint);
+        public object Get(TimePoint request) => GetEntityWithCache<TimePoint>(DocConstantModelName.TIMEPOINT, request, GetTimePoint);
+
         private TimePoint GetTimePoint(TimePoint request)
         {
             var id = request?.Id;

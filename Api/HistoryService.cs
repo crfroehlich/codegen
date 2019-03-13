@@ -173,11 +173,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<History> Post(HistorySearch request) => Get(request);
+        public object Post(HistorySearch request) => Get(request);
 
-        public List<History> Get(HistorySearch request) => GetSearchResult<History,DocEntityHistory,HistorySearch>(DocConstantModelName.HISTORY, request, _ExecSearch);
+        public object Get(HistorySearch request) => GetSearchResultWithCache<History,DocEntityHistory,HistorySearch>(DocConstantModelName.HISTORY, request, _ExecSearch);
 
-        public History Get(History request) => GetEntity<History>(DocConstantModelName.HISTORY, request, GetHistory);
+        public object Get(History request) => GetEntityWithCache<History>(DocConstantModelName.HISTORY, request, GetHistory);
+
         private History _AssignValues(History request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -311,7 +312,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<History>(currentUser, nameof(History), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HISTORY);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.HISTORY);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HISTORY, cacheExpires);
 
             return ret;
         }

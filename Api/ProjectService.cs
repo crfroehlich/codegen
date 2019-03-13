@@ -204,6 +204,7 @@ namespace Services.API
         public object Get(ProjectSearch request) => GetSearchResultWithCache<Project,DocEntityProject,ProjectSearch>(DocConstantModelName.PROJECT, request, _ExecSearch);
 
         public object Get(Project request) => GetEntityWithCache<Project>(DocConstantModelName.PROJECT, request, GetProject);
+
         private Project _AssignValues(Project request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -519,7 +520,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Project>(currentUser, nameof(Project), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.PROJECT);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.PROJECT);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.PROJECT, cacheExpires);
 
             return ret;
         }

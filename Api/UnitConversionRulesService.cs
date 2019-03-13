@@ -180,6 +180,7 @@ namespace Services.API
         public object Get(UnitConversionRulesSearch request) => GetSearchResultWithCache<UnitConversionRules,DocEntityUnitConversionRules,UnitConversionRulesSearch>(DocConstantModelName.UNITCONVERSIONRULES, request, _ExecSearch);
 
         public object Get(UnitConversionRules request) => GetEntityWithCache<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, request, GetUnitConversionRules);
+
         private UnitConversionRules _AssignValues(UnitConversionRules request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -309,7 +310,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<UnitConversionRules>(currentUser, nameof(UnitConversionRules), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.UNITCONVERSIONRULES);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITCONVERSIONRULES, cacheExpires);
 
             return ret;
         }

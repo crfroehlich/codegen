@@ -135,11 +135,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<VariableInstance> Post(VariableInstanceSearch request) => Get(request);
+        public object Post(VariableInstanceSearch request) => Get(request);
 
-        public List<VariableInstance> Get(VariableInstanceSearch request) => GetSearchResult<VariableInstance,DocEntityVariableInstance,VariableInstanceSearch>(DocConstantModelName.VARIABLEINSTANCE, request, _ExecSearch);
+        public object Get(VariableInstanceSearch request) => GetSearchResultWithCache<VariableInstance,DocEntityVariableInstance,VariableInstanceSearch>(DocConstantModelName.VARIABLEINSTANCE, request, _ExecSearch);
 
-        public VariableInstance Get(VariableInstance request) => GetEntity<VariableInstance>(DocConstantModelName.VARIABLEINSTANCE, request, GetVariableInstance);
+        public object Get(VariableInstance request) => GetEntityWithCache<VariableInstance>(DocConstantModelName.VARIABLEINSTANCE, request, GetVariableInstance);
+
         private VariableInstance _AssignValues(VariableInstance request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -260,7 +261,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<VariableInstance>(currentUser, nameof(VariableInstance), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLEINSTANCE);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.VARIABLEINSTANCE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.VARIABLEINSTANCE, cacheExpires);
 
             return ret;
         }

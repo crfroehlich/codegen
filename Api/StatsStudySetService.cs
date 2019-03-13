@@ -159,11 +159,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<StatsStudySet> Post(StatsStudySetSearch request) => Get(request);
+        public object Post(StatsStudySetSearch request) => Get(request);
 
-        public List<StatsStudySet> Get(StatsStudySetSearch request) => GetSearchResult<StatsStudySet,DocEntityStatsStudySet,StatsStudySetSearch>(DocConstantModelName.STATSSTUDYSET, request, _ExecSearch);
+        public object Get(StatsStudySetSearch request) => GetSearchResultWithCache<StatsStudySet,DocEntityStatsStudySet,StatsStudySetSearch>(DocConstantModelName.STATSSTUDYSET, request, _ExecSearch);
 
-        public StatsStudySet Get(StatsStudySet request) => GetEntity<StatsStudySet>(DocConstantModelName.STATSSTUDYSET, request, GetStatsStudySet);
+        public object Get(StatsStudySet request) => GetEntityWithCache<StatsStudySet>(DocConstantModelName.STATSSTUDYSET, request, GetStatsStudySet);
+
         public object Get(StatsStudySetJunction request) =>
             Execute.Run( s => 
             {

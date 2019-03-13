@@ -154,6 +154,7 @@ namespace Services.API
         public object Get(HelpSearch request) => GetSearchResultWithCache<Help,DocEntityHelp,HelpSearch>(DocConstantModelName.HELP, request, _ExecSearch);
 
         public object Get(Help request) => GetEntityWithCache<Help>(DocConstantModelName.HELP, request, GetHelp);
+
         private Help _AssignValues(Help request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -348,7 +349,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Help>(currentUser, nameof(Help), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HELP);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.HELP);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.HELP, cacheExpires);
 
             return ret;
         }

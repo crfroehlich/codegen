@@ -123,11 +123,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Intervention> Post(InterventionSearch request) => Get(request);
+        public object Post(InterventionSearch request) => Get(request);
 
-        public List<Intervention> Get(InterventionSearch request) => GetSearchResult<Intervention,DocEntityIntervention,InterventionSearch>(DocConstantModelName.INTERVENTION, request, _ExecSearch);
+        public object Get(InterventionSearch request) => GetSearchResultWithCache<Intervention,DocEntityIntervention,InterventionSearch>(DocConstantModelName.INTERVENTION, request, _ExecSearch);
 
-        public Intervention Get(Intervention request) => GetEntity<Intervention>(DocConstantModelName.INTERVENTION, request, GetIntervention);
+        public object Get(Intervention request) => GetEntityWithCache<Intervention>(DocConstantModelName.INTERVENTION, request, GetIntervention);
+
         private Intervention _AssignValues(Intervention request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -238,7 +239,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Intervention>(currentUser, nameof(Intervention), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVENTION);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.INTERVENTION);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.INTERVENTION, cacheExpires);
 
             return ret;
         }

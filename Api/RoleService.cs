@@ -158,6 +158,7 @@ namespace Services.API
         public object Get(RoleSearch request) => GetSearchResultWithCache<Role,DocEntityRole,RoleSearch>(DocConstantModelName.ROLE, request, _ExecSearch);
 
         public object Get(Role request) => GetEntityWithCache<Role>(DocConstantModelName.ROLE, request, GetRole);
+
         private Role _AssignValues(Role request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -443,7 +444,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Role>(currentUser, nameof(Role), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ROLE);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.ROLE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.ROLE, cacheExpires);
 
             return ret;
         }

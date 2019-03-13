@@ -131,11 +131,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<DocumentSetHistory> Post(DocumentSetHistorySearch request) => Get(request);
+        public object Post(DocumentSetHistorySearch request) => Get(request);
 
-        public List<DocumentSetHistory> Get(DocumentSetHistorySearch request) => GetSearchResult<DocumentSetHistory,DocEntityDocumentSetHistory,DocumentSetHistorySearch>(DocConstantModelName.DOCUMENTSETHISTORY, request, _ExecSearch);
+        public object Get(DocumentSetHistorySearch request) => GetSearchResultWithCache<DocumentSetHistory,DocEntityDocumentSetHistory,DocumentSetHistorySearch>(DocConstantModelName.DOCUMENTSETHISTORY, request, _ExecSearch);
 
-        public DocumentSetHistory Get(DocumentSetHistory request) => GetEntity<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, request, GetDocumentSetHistory);
+        public object Get(DocumentSetHistory request) => GetEntityWithCache<DocumentSetHistory>(DocConstantModelName.DOCUMENTSETHISTORY, request, GetDocumentSetHistory);
+
         private DocumentSetHistory GetDocumentSetHistory(DocumentSetHistory request)
         {
             var id = request?.Id;

@@ -145,11 +145,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<UserRequest> Post(UserRequestSearch request) => Get(request);
+        public object Post(UserRequestSearch request) => Get(request);
 
-        public List<UserRequest> Get(UserRequestSearch request) => GetSearchResult<UserRequest,DocEntityUserRequest,UserRequestSearch>(DocConstantModelName.USERREQUEST, request, _ExecSearch);
+        public object Get(UserRequestSearch request) => GetSearchResultWithCache<UserRequest,DocEntityUserRequest,UserRequestSearch>(DocConstantModelName.USERREQUEST, request, _ExecSearch);
 
-        public UserRequest Get(UserRequest request) => GetEntity<UserRequest>(DocConstantModelName.USERREQUEST, request, GetUserRequest);
+        public object Get(UserRequest request) => GetEntityWithCache<UserRequest>(DocConstantModelName.USERREQUEST, request, GetUserRequest);
+
         private UserRequest GetUserRequest(UserRequest request)
         {
             var id = request?.Id;

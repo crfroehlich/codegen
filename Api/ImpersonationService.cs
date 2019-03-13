@@ -139,11 +139,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Impersonation> Post(ImpersonationSearch request) => Get(request);
+        public object Post(ImpersonationSearch request) => Get(request);
 
-        public List<Impersonation> Get(ImpersonationSearch request) => GetSearchResult<Impersonation,DocEntityImpersonation,ImpersonationSearch>(DocConstantModelName.IMPERSONATION, request, _ExecSearch);
+        public object Get(ImpersonationSearch request) => GetSearchResultWithCache<Impersonation,DocEntityImpersonation,ImpersonationSearch>(DocConstantModelName.IMPERSONATION, request, _ExecSearch);
 
-        public Impersonation Get(Impersonation request) => GetEntity<Impersonation>(DocConstantModelName.IMPERSONATION, request, GetImpersonation);
+        public object Get(Impersonation request) => GetEntityWithCache<Impersonation>(DocConstantModelName.IMPERSONATION, request, GetImpersonation);
+
         private Impersonation GetImpersonation(Impersonation request)
         {
             var id = request?.Id;

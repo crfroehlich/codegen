@@ -192,6 +192,7 @@ namespace Services.API
         public object Get(TimeCardSearch request) => GetSearchResultWithCache<TimeCard,DocEntityTimeCard,TimeCardSearch>(DocConstantModelName.TIMECARD, request, _ExecSearch);
 
         public object Get(TimeCard request) => GetEntityWithCache<TimeCard>(DocConstantModelName.TIMECARD, request, GetTimeCard);
+
         private TimeCard _AssignValues(TimeCard request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -329,7 +330,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<TimeCard>(currentUser, nameof(TimeCard), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TIMECARD);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.TIMECARD);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TIMECARD, cacheExpires);
 
             return ret;
         }

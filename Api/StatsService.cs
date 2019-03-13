@@ -139,11 +139,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Stats> Post(StatsSearch request) => Get(request);
+        public object Post(StatsSearch request) => Get(request);
 
-        public List<Stats> Get(StatsSearch request) => GetSearchResult<Stats,DocEntityStats,StatsSearch>(DocConstantModelName.STATS, request, _ExecSearch);
+        public object Get(StatsSearch request) => GetSearchResultWithCache<Stats,DocEntityStats,StatsSearch>(DocConstantModelName.STATS, request, _ExecSearch);
 
-        public Stats Get(Stats request) => GetEntity<Stats>(DocConstantModelName.STATS, request, GetStats);
+        public object Get(Stats request) => GetEntityWithCache<Stats>(DocConstantModelName.STATS, request, GetStats);
+
         private Stats GetStats(Stats request)
         {
             var id = request?.Id;

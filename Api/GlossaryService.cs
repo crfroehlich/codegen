@@ -148,6 +148,7 @@ namespace Services.API
         public object Get(GlossarySearch request) => GetSearchResultWithCache<Glossary,DocEntityGlossary,GlossarySearch>(DocConstantModelName.GLOSSARY, request, _ExecSearch);
 
         public object Get(Glossary request) => GetEntityWithCache<Glossary>(DocConstantModelName.GLOSSARY, request, GetGlossary);
+
         private Glossary _AssignValues(Glossary request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -244,7 +245,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, nameof(Glossary), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.GLOSSARY);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.GLOSSARY, cacheExpires);
 
             return ret;
         }

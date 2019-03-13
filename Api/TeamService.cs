@@ -157,6 +157,7 @@ namespace Services.API
         public object Get(TeamSearch request) => GetSearchResultWithCache<Team,DocEntityTeam,TeamSearch>(DocConstantModelName.TEAM, request, _ExecSearch);
 
         public object Get(Team request) => GetEntityWithCache<Team>(DocConstantModelName.TEAM, request, GetTeam);
+
         private Team _AssignValues(Team request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -451,7 +452,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Team>(currentUser, nameof(Team), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TEAM);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.TEAM);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TEAM, cacheExpires);
 
             return ret;
         }

@@ -134,6 +134,7 @@ namespace Services.API
         public object Get(DataTabSearch request) => GetSearchResultWithCache<DataTab,DocEntityDataTab,DataTabSearch>(DocConstantModelName.DATATAB, request, _ExecSearch);
 
         public object Get(DataTab request) => GetEntityWithCache<DataTab>(DocConstantModelName.DATATAB, request, GetDataTab);
+
         private DataTab _AssignValues(DataTab request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -222,7 +223,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<DataTab>(currentUser, nameof(DataTab), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATATAB);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.DATATAB);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATATAB, cacheExpires);
 
             return ret;
         }

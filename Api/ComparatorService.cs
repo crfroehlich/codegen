@@ -123,11 +123,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Comparator> Post(ComparatorSearch request) => Get(request);
+        public object Post(ComparatorSearch request) => Get(request);
 
-        public List<Comparator> Get(ComparatorSearch request) => GetSearchResult<Comparator,DocEntityComparator,ComparatorSearch>(DocConstantModelName.COMPARATOR, request, _ExecSearch);
+        public object Get(ComparatorSearch request) => GetSearchResultWithCache<Comparator,DocEntityComparator,ComparatorSearch>(DocConstantModelName.COMPARATOR, request, _ExecSearch);
 
-        public Comparator Get(Comparator request) => GetEntity<Comparator>(DocConstantModelName.COMPARATOR, request, GetComparator);
+        public object Get(Comparator request) => GetEntityWithCache<Comparator>(DocConstantModelName.COMPARATOR, request, GetComparator);
+
         private Comparator _AssignValues(Comparator request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -238,7 +239,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Comparator>(currentUser, nameof(Comparator), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.COMPARATOR);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.COMPARATOR);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.COMPARATOR, cacheExpires);
 
             return ret;
         }

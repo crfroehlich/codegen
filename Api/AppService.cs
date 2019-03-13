@@ -140,6 +140,7 @@ namespace Services.API
         public object Get(AppSearch request) => GetSearchResultWithCache<App,DocEntityApp,AppSearch>(DocConstantModelName.APP, request, _ExecSearch);
 
         public object Get(App request) => GetEntityWithCache<App>(DocConstantModelName.APP, request, GetApp);
+
         private App _AssignValues(App request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -340,7 +341,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<App>(currentUser, nameof(App), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.APP);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.APP);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.APP, cacheExpires);
 
             return ret;
         }

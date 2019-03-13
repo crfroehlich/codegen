@@ -173,6 +173,7 @@ namespace Services.API
         public object Get(UnitOfMeasureSearch request) => GetSearchResultWithCache<UnitOfMeasure,DocEntityUnitOfMeasure,UnitOfMeasureSearch>(DocConstantModelName.UNITOFMEASURE, request, _ExecSearch);
 
         public object Get(UnitOfMeasure request) => GetEntityWithCache<UnitOfMeasure>(DocConstantModelName.UNITOFMEASURE, request, GetUnitOfMeasure);
+
         private UnitOfMeasure _AssignValues(UnitOfMeasure request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -260,7 +261,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<UnitOfMeasure>(currentUser, nameof(UnitOfMeasure), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.UNITOFMEASURE);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.UNITOFMEASURE, cacheExpires);
 
             return ret;
         }

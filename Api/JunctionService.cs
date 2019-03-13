@@ -159,11 +159,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Junction> Post(JunctionSearch request) => Get(request);
+        public object Post(JunctionSearch request) => Get(request);
 
-        public List<Junction> Get(JunctionSearch request) => GetSearchResult<Junction,DocEntityJunction,JunctionSearch>(DocConstantModelName.JUNCTION, request, _ExecSearch);
+        public object Get(JunctionSearch request) => GetSearchResultWithCache<Junction,DocEntityJunction,JunctionSearch>(DocConstantModelName.JUNCTION, request, _ExecSearch);
 
-        public Junction Get(Junction request) => GetEntity<Junction>(DocConstantModelName.JUNCTION, request, GetJunction);
+        public object Get(Junction request) => GetEntityWithCache<Junction>(DocConstantModelName.JUNCTION, request, GetJunction);
+
         private Junction _AssignValues(Junction request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -340,7 +341,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Junction>(currentUser, nameof(Junction), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JUNCTION);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.JUNCTION);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.JUNCTION, cacheExpires);
 
             return ret;
         }

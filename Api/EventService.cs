@@ -145,11 +145,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<Event> Post(EventSearch request) => Get(request);
+        public object Post(EventSearch request) => Get(request);
 
-        public List<Event> Get(EventSearch request) => GetSearchResult<Event,DocEntityEvent,EventSearch>(DocConstantModelName.EVENT, request, _ExecSearch);
+        public object Get(EventSearch request) => GetSearchResultWithCache<Event,DocEntityEvent,EventSearch>(DocConstantModelName.EVENT, request, _ExecSearch);
 
-        public Event Get(Event request) => GetEntity<Event>(DocConstantModelName.EVENT, request, GetEvent);
+        public object Get(Event request) => GetEntityWithCache<Event>(DocConstantModelName.EVENT, request, GetEvent);
+
         public object Get(EventJunction request) =>
             Execute.Run( s => 
             {

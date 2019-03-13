@@ -293,6 +293,7 @@ namespace Services.API
         public object Get(DataPropertySearch request) => GetSearchResultWithCache<DataProperty,DocEntityDataProperty,DataPropertySearch>(DocConstantModelName.DATAPROPERTY, request, _ExecSearch);
 
         public object Get(DataProperty request) => GetEntityWithCache<DataProperty>(DocConstantModelName.DATAPROPERTY, request, GetDataProperty);
+
         private DataProperty _AssignValues(DataProperty request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -766,7 +767,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<DataProperty>(currentUser, nameof(DataProperty), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATAPROPERTY);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.DATAPROPERTY);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.DATAPROPERTY, cacheExpires);
 
             return ret;
         }

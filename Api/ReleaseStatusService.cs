@@ -125,11 +125,12 @@ namespace Services.API
             return entities;
         }
 
-        public List<ReleaseStatus> Post(ReleaseStatusSearch request) => Get(request);
+        public object Post(ReleaseStatusSearch request) => Get(request);
 
-        public List<ReleaseStatus> Get(ReleaseStatusSearch request) => GetSearchResult<ReleaseStatus,DocEntityReleaseStatus,ReleaseStatusSearch>(DocConstantModelName.RELEASESTATUS, request, _ExecSearch);
+        public object Get(ReleaseStatusSearch request) => GetSearchResultWithCache<ReleaseStatus,DocEntityReleaseStatus,ReleaseStatusSearch>(DocConstantModelName.RELEASESTATUS, request, _ExecSearch);
 
-        public ReleaseStatus Get(ReleaseStatus request) => GetEntity<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, request, GetReleaseStatus);
+        public object Get(ReleaseStatus request) => GetEntityWithCache<ReleaseStatus>(DocConstantModelName.RELEASESTATUS, request, GetReleaseStatus);
+
         private ReleaseStatus _AssignValues(ReleaseStatus request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -230,7 +231,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<ReleaseStatus>(currentUser, nameof(ReleaseStatus), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.RELEASESTATUS);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.RELEASESTATUS);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.RELEASESTATUS, cacheExpires);
 
             return ret;
         }

@@ -128,6 +128,7 @@ namespace Services.API
         public object Get(FeatureSetSearch request) => GetSearchResultWithCache<FeatureSet,DocEntityFeatureSet,FeatureSetSearch>(DocConstantModelName.FEATURESET, request, _ExecSearch);
 
         public object Get(FeatureSet request) => GetEntityWithCache<FeatureSet>(DocConstantModelName.FEATURESET, request, GetFeatureSet);
+
         private FeatureSet _AssignValues(FeatureSet request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -248,7 +249,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<FeatureSet>(currentUser, nameof(FeatureSet), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FEATURESET);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.FEATURESET);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.FEATURESET, cacheExpires);
 
             return ret;
         }

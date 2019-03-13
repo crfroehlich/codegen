@@ -204,6 +204,7 @@ namespace Services.API
         public object Get(WorkflowSearch request) => GetSearchResultWithCache<Workflow,DocEntityWorkflow,WorkflowSearch>(DocConstantModelName.WORKFLOW, request, _ExecSearch);
 
         public object Get(Workflow request) => GetEntityWithCache<Workflow>(DocConstantModelName.WORKFLOW, request, GetWorkflow);
+
         private Workflow _AssignValues(Workflow request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
@@ -679,7 +680,8 @@ namespace Services.API
             DocPermissionFactory.SetVisibleFields<Workflow>(currentUser, nameof(Workflow), request.VisibleFields);
             ret = entity.ToDto();
 
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.WORKFLOW);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOW, cacheExpires);
 
             return ret;
         }

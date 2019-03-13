@@ -125,6 +125,11 @@ namespace Services.Schema
         public bool AllVisibleFieldsByDefault { get; set; }
 
 
+        [Field(Nullable = false, DefaultValue = 5)]
+        [FieldMapping(nameof(CacheDuration))]
+        public int CacheDuration { get; set; }
+
+
         [Field(Nullable = false)]
         [FieldMapping(nameof(ClassId))]
         public int ClassId { get; set; }
@@ -177,11 +182,6 @@ namespace Services.Schema
 
 
         public int? IgnorePropsCount { get { return IgnoreProps.Count(); } private set { var noid = value; } }
-
-
-        [Field(DefaultValue = true)]
-        [FieldMapping(nameof(IsCached))]
-        public bool IsCached { get; set; }
 
 
         [Field(DefaultValue = false)]
@@ -330,6 +330,11 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
+                if(DocTools.IsNullOrEmpty(CacheDuration))
+                {
+                    isValid = false;
+                    message += " CacheDuration is a required property.";
+                }
                 if(DocTools.IsNullOrEmpty(ClassId))
                 {
                     isValid = false;
@@ -379,6 +384,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, "Updated")))
                 .ForMember(dest => dest.AllowDelete, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.AllowDelete))))
                 .ForMember(dest => dest.AllVisibleFieldsByDefault, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.AllVisibleFieldsByDefault))))
+                .ForMember(dest => dest.CacheDuration, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CacheDuration))))
                 .ForMember(dest => dest.ClassId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.ClassId))))
                 .ForMember(dest => dest.CustomCollections, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomCollections))))
                 .ForMember(dest => dest.CustomCollectionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomCollectionsCount))))
@@ -391,7 +397,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.GET, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.GET))))
                 .ForMember(dest => dest.IgnoreProps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnoreProps))))
                 .ForMember(dest => dest.IgnorePropsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnorePropsCount))))
-                .ForMember(dest => dest.IsCached, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsCached))))
                 .ForMember(dest => dest.IsInsertOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsInsertOnly))))
                 .ForMember(dest => dest.IsReadOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsReadOnly))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Name))))
