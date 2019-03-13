@@ -171,6 +171,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pAudit, entity.Audit, nameof(request.Audit)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Audit)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Audit)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pAudit) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Audit))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Audit)} requires a value.");
                     entity.Audit = pAudit;
                 if(DocPermissionFactory.IsRequested<DocEntityAuditRecord>(request, pAudit, nameof(request.Audit)) && !request.VisibleFields.Matches(nameof(request.Audit), ignoreSpaces: true))
                 {
@@ -181,6 +182,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pDelta, entity.Delta, nameof(request.Delta)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Delta)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Delta)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pDelta) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Delta))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Delta)} requires a value.");
                     entity.Delta = pDelta;
                 if(DocPermissionFactory.IsRequested<string>(request, pDelta, nameof(request.Delta)) && !request.VisibleFields.Matches(nameof(request.Delta), ignoreSpaces: true))
                 {

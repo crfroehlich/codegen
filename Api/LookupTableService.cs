@@ -188,6 +188,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pEnum, entity.Enum, nameof(request.Enum)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLE, nameof(request.Enum)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enum)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pEnum) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLE, nameof(request.Enum))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Enum)} requires a value.");
                     entity.Enum = pEnum;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
                 {
@@ -198,6 +199,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLE, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLE, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {

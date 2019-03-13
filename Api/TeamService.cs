@@ -209,6 +209,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Description)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Description)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pDescription) && DocResources.Metadata.IsRequired(DocConstantModelName.TEAM, nameof(request.Description))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Description)} requires a value.");
                     entity.Description = pDescription;
                 if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
@@ -219,6 +220,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pEmail, entity.Email, nameof(request.Email)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Email)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Email)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pEmail) && DocResources.Metadata.IsRequired(DocConstantModelName.TEAM, nameof(request.Email))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Email)} requires a value.");
                     entity.Email = pEmail;
                 if(DocPermissionFactory.IsRequested<string>(request, pEmail, nameof(request.Email)) && !request.VisibleFields.Matches(nameof(request.Email), ignoreSpaces: true))
                 {
@@ -229,6 +231,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pIsInternal, entity.IsInternal, nameof(request.IsInternal)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.IsInternal)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsInternal)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pIsInternal) && DocResources.Metadata.IsRequired(DocConstantModelName.TEAM, nameof(request.IsInternal))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsInternal)} requires a value.");
                     entity.IsInternal = pIsInternal;
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsInternal, nameof(request.IsInternal)) && !request.VisibleFields.Matches(nameof(request.IsInternal), ignoreSpaces: true))
                 {
@@ -239,6 +242,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.TEAM, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
@@ -249,6 +253,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pOwner, entity.Owner, nameof(request.Owner)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Owner)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Owner)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pOwner) && DocResources.Metadata.IsRequired(DocConstantModelName.TEAM, nameof(request.Owner))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Owner)} requires a value.");
                     entity.Owner = pOwner;
                 if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pOwner, nameof(request.Owner)) && !request.VisibleFields.Matches(nameof(request.Owner), ignoreSpaces: true))
                 {
@@ -259,6 +264,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Settings)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Settings)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pSettings) && DocResources.Metadata.IsRequired(DocConstantModelName.TEAM, nameof(request.Settings))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Settings)} requires a value.");
                     entity.Settings = DocSerialize<TeamSettings>.ToString(pSettings);
                 if(DocPermissionFactory.IsRequested<TeamSettings>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
                 {
@@ -269,6 +275,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pSlack, entity.Slack, nameof(request.Slack)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TEAM, nameof(request.Slack)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Slack)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pSlack) && DocResources.Metadata.IsRequired(DocConstantModelName.TEAM, nameof(request.Slack))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Slack)} requires a value.");
                     entity.Slack = pSlack;
                 if(DocPermissionFactory.IsRequested<string>(request, pSlack, nameof(request.Slack)) && !request.VisibleFields.Matches(nameof(request.Slack), ignoreSpaces: true))
                 {

@@ -196,6 +196,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pParent, entity.Parent, nameof(request.Parent)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWCOMMENT, nameof(request.Parent)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Parent)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pParent) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWCOMMENT, nameof(request.Parent))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Parent)} requires a value.");
                     entity.Parent = pParent;
                 if(DocPermissionFactory.IsRequested<DocEntityWorkflowComment>(request, pParent, nameof(request.Parent)) && !request.VisibleFields.Matches(nameof(request.Parent), ignoreSpaces: true))
                 {
@@ -206,6 +207,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pText, entity.Text, nameof(request.Text)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWCOMMENT, nameof(request.Text)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Text)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pText) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWCOMMENT, nameof(request.Text))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Text)} requires a value.");
                     entity.Text = pText;
                 if(DocPermissionFactory.IsRequested<string>(request, pText, nameof(request.Text)) && !request.VisibleFields.Matches(nameof(request.Text), ignoreSpaces: true))
                 {
@@ -216,6 +218,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pUser, entity.User, nameof(request.User)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWCOMMENT, nameof(request.User)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.User)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pUser) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWCOMMENT, nameof(request.User))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.User)} requires a value.");
                     entity.User = pUser;
                 if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.VisibleFields.Matches(nameof(request.User), ignoreSpaces: true))
                 {
@@ -226,6 +229,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pWorkflow, entity.Workflow, nameof(request.Workflow)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWCOMMENT, nameof(request.Workflow)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Workflow)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pWorkflow) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWCOMMENT, nameof(request.Workflow))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Workflow)} requires a value.");
                     entity.Workflow = pWorkflow;
                 if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(request, pWorkflow, nameof(request.Workflow)) && !request.VisibleFields.Matches(nameof(request.Workflow), ignoreSpaces: true))
                 {

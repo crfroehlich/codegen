@@ -228,6 +228,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pApp, entity.App, nameof(request.App)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.App)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.App)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pApp) && DocResources.Metadata.IsRequired(DocConstantModelName.BROADCAST, nameof(request.App))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.App)} requires a value.");
                     entity.App = pApp;
                 if(DocPermissionFactory.IsRequested<DocEntityApp>(request, pApp, nameof(request.App)) && !request.VisibleFields.Matches(nameof(request.App), ignoreSpaces: true))
                 {
@@ -238,6 +239,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pConfluenceId, entity.ConfluenceId, nameof(request.ConfluenceId)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.ConfluenceId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ConfluenceId)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pConfluenceId) && DocResources.Metadata.IsRequired(DocConstantModelName.BROADCAST, nameof(request.ConfluenceId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ConfluenceId)} requires a value.");
                     entity.ConfluenceId = pConfluenceId;
                 if(DocPermissionFactory.IsRequested<string>(request, pConfluenceId, nameof(request.ConfluenceId)) && !request.VisibleFields.Matches(nameof(request.ConfluenceId), ignoreSpaces: true))
                 {
@@ -248,6 +250,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.BROADCAST, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
@@ -258,6 +261,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pReprocess, entity.Reprocess, nameof(request.Reprocess)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Reprocess)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Reprocess)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pReprocess) && DocResources.Metadata.IsRequired(DocConstantModelName.BROADCAST, nameof(request.Reprocess))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Reprocess)} requires a value.");
                     entity.Reprocess = pReprocess;
                 if(DocPermissionFactory.IsRequested<bool>(request, pReprocess, nameof(request.Reprocess)) && !request.VisibleFields.Matches(nameof(request.Reprocess), ignoreSpaces: true))
                 {
@@ -268,6 +272,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pReprocessed, entity.Reprocessed, nameof(request.Reprocessed)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Reprocessed)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Reprocessed)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pReprocessed) && DocResources.Metadata.IsRequired(DocConstantModelName.BROADCAST, nameof(request.Reprocessed))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Reprocessed)} requires a value.");
                     entity.Reprocessed = pReprocessed;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pReprocessed, nameof(request.Reprocessed)) && !request.VisibleFields.Matches(nameof(request.Reprocessed), ignoreSpaces: true))
                 {
@@ -278,6 +283,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.BROADCAST, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
                     entity.Status = pStatus;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
@@ -288,6 +294,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BROADCAST, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.BROADCAST, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
                     entity.Type = pType;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {

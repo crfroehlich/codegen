@@ -204,6 +204,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pBioPortal, entity.BioPortal, nameof(request.BioPortal)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.BioPortal)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.BioPortal)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pBioPortal) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.BioPortal))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.BioPortal)} requires a value.");
                     entity.BioPortal = pBioPortal;
                 if(DocPermissionFactory.IsRequested<string>(request, pBioPortal, nameof(request.BioPortal)) && !request.VisibleFields.Matches(nameof(request.BioPortal), ignoreSpaces: true))
                 {
@@ -214,6 +215,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pCUI, entity.CUI, nameof(request.CUI)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.CUI)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CUI)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pCUI) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.CUI))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.CUI)} requires a value.");
                     entity.CUI = pCUI;
                 if(DocPermissionFactory.IsRequested<string>(request, pCUI, nameof(request.CUI)) && !request.VisibleFields.Matches(nameof(request.CUI), ignoreSpaces: true))
                 {
@@ -224,6 +226,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pEnum, entity.Enum, nameof(request.Enum)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.Enum)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enum)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pEnum) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.Enum))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Enum)} requires a value.");
                     entity.Enum = pEnum;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
                 {
@@ -234,6 +237,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pMedDRA, entity.MedDRA, nameof(request.MedDRA)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.MedDRA)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.MedDRA)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pMedDRA) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.MedDRA))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.MedDRA)} requires a value.");
                     entity.MedDRA = pMedDRA;
                 if(DocPermissionFactory.IsRequested<string>(request, pMedDRA, nameof(request.MedDRA)) && !request.VisibleFields.Matches(nameof(request.MedDRA), ignoreSpaces: true))
                 {
@@ -244,6 +248,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
@@ -254,6 +259,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pRxNorm, entity.RxNorm, nameof(request.RxNorm)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.RxNorm)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RxNorm)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pRxNorm) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.RxNorm))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.RxNorm)} requires a value.");
                     entity.RxNorm = pRxNorm;
                 if(DocPermissionFactory.IsRequested<string>(request, pRxNorm, nameof(request.RxNorm)) && !request.VisibleFields.Matches(nameof(request.RxNorm), ignoreSpaces: true))
                 {
@@ -264,6 +270,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pSNOWMED, entity.SNOWMED, nameof(request.SNOWMED)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.SNOWMED)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SNOWMED)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pSNOWMED) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.SNOWMED))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.SNOWMED)} requires a value.");
                     entity.SNOWMED = pSNOWMED;
                 if(DocPermissionFactory.IsRequested<string>(request, pSNOWMED, nameof(request.SNOWMED)) && !request.VisibleFields.Matches(nameof(request.SNOWMED), ignoreSpaces: true))
                 {
@@ -274,6 +281,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pTUI, entity.TUI, nameof(request.TUI)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.TUI)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TUI)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pTUI) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.TUI))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.TUI)} requires a value.");
                     entity.TUI = pTUI;
                 if(DocPermissionFactory.IsRequested<string>(request, pTUI, nameof(request.TUI)) && !request.VisibleFields.Matches(nameof(request.TUI), ignoreSpaces: true))
                 {
@@ -284,6 +292,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMMASTER, nameof(request.URI)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.URI)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pURI) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMMASTER, nameof(request.URI))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.URI)} requires a value.");
                     entity.URI = pURI;
                 if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
                 {

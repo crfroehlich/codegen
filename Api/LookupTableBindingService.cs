@@ -201,6 +201,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pBinding, entity.Binding, nameof(request.Binding)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Binding)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Binding)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pBinding) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Binding))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Binding)} requires a value.");
                     entity.Binding = DocSerialize<Bindings>.ToString(pBinding);
                 if(DocPermissionFactory.IsRequested<Bindings>(request, pBinding, nameof(request.Binding)) && !request.VisibleFields.Matches(nameof(request.Binding), ignoreSpaces: true))
                 {
@@ -211,6 +212,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pBoundName, entity.BoundName, nameof(request.BoundName)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.BoundName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.BoundName)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pBoundName) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.BoundName))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.BoundName)} requires a value.");
                     entity.BoundName = pBoundName;
                 if(DocPermissionFactory.IsRequested<string>(request, pBoundName, nameof(request.BoundName)) && !request.VisibleFields.Matches(nameof(request.BoundName), ignoreSpaces: true))
                 {
@@ -221,6 +223,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pLookupTable, entity.LookupTable, nameof(request.LookupTable)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.LookupTable)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LookupTable)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pLookupTable) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.LookupTable))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LookupTable)} requires a value.");
                     entity.LookupTable = pLookupTable;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pLookupTable, nameof(request.LookupTable)) && !request.VisibleFields.Matches(nameof(request.LookupTable), ignoreSpaces: true))
                 {
@@ -231,6 +234,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pScope, entity.Scope, nameof(request.Scope)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Scope)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Scope)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pScope) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEBINDING, nameof(request.Scope))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Scope)} requires a value.");
                     entity.Scope = pScope;
                 if(DocPermissionFactory.IsRequested<DocEntityScope>(request, pScope, nameof(request.Scope)) && !request.VisibleFields.Matches(nameof(request.Scope), ignoreSpaces: true))
                 {

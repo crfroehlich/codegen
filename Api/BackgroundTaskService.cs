@@ -234,6 +234,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pApp, entity.App, nameof(request.App)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.App)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.App)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pApp) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.App))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.App)} requires a value.");
                     entity.App = pApp;
                 if(DocPermissionFactory.IsRequested<DocEntityApp>(request, pApp, nameof(request.App)) && !request.VisibleFields.Matches(nameof(request.App), ignoreSpaces: true))
                 {
@@ -244,6 +245,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pChannel, entity.Channel, nameof(request.Channel)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.Channel)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Channel)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pChannel) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.Channel))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Channel)} requires a value.");
                     entity.Channel = pChannel;
                 if(DocPermissionFactory.IsRequested<DocEntityQueueChannel>(request, pChannel, nameof(request.Channel)) && !request.VisibleFields.Matches(nameof(request.Channel), ignoreSpaces: true))
                 {
@@ -254,6 +256,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.Description)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Description)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pDescription) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.Description))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Description)} requires a value.");
                     entity.Description = pDescription;
                 if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
@@ -264,6 +267,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pEnabled, entity.Enabled, nameof(request.Enabled)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.Enabled)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enabled)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pEnabled) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.Enabled))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Enabled)} requires a value.");
                     entity.Enabled = pEnabled;
                 if(DocPermissionFactory.IsRequested<bool>(request, pEnabled, nameof(request.Enabled)) && !request.VisibleFields.Matches(nameof(request.Enabled), ignoreSpaces: true))
                 {
@@ -274,6 +278,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pFrequency, entity.Frequency, nameof(request.Frequency)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.Frequency)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Frequency)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pFrequency) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.Frequency))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Frequency)} requires a value.");
                     if(null != pFrequency)
                         entity.Frequency = (int) pFrequency;
                 if(DocPermissionFactory.IsRequested<int?>(request, pFrequency, nameof(request.Frequency)) && !request.VisibleFields.Matches(nameof(request.Frequency), ignoreSpaces: true))
@@ -285,6 +290,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pHistoryRetention, entity.HistoryRetention, nameof(request.HistoryRetention)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.HistoryRetention)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.HistoryRetention)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pHistoryRetention) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.HistoryRetention))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.HistoryRetention)} requires a value.");
                     entity.HistoryRetention = pHistoryRetention;
                 if(DocPermissionFactory.IsRequested<int?>(request, pHistoryRetention, nameof(request.HistoryRetention)) && !request.VisibleFields.Matches(nameof(request.HistoryRetention), ignoreSpaces: true))
                 {
@@ -295,6 +301,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pLastRunVersion, entity.LastRunVersion, nameof(request.LastRunVersion)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.LastRunVersion)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LastRunVersion)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pLastRunVersion) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.LastRunVersion))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LastRunVersion)} requires a value.");
                     entity.LastRunVersion = pLastRunVersion;
                 if(DocPermissionFactory.IsRequested<string>(request, pLastRunVersion, nameof(request.LastRunVersion)) && !request.VisibleFields.Matches(nameof(request.LastRunVersion), ignoreSpaces: true))
                 {
@@ -305,6 +312,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pLogError, entity.LogError, nameof(request.LogError)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.LogError)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LogError)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pLogError) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.LogError))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LogError)} requires a value.");
                     entity.LogError = pLogError;
                 if(DocPermissionFactory.IsRequested<bool>(request, pLogError, nameof(request.LogError)) && !request.VisibleFields.Matches(nameof(request.LogError), ignoreSpaces: true))
                 {
@@ -315,6 +323,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pLogInfo, entity.LogInfo, nameof(request.LogInfo)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.LogInfo)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LogInfo)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pLogInfo) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.LogInfo))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LogInfo)} requires a value.");
                     entity.LogInfo = pLogInfo;
                 if(DocPermissionFactory.IsRequested<bool>(request, pLogInfo, nameof(request.LogInfo)) && !request.VisibleFields.Matches(nameof(request.LogInfo), ignoreSpaces: true))
                 {
@@ -325,6 +334,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
                     entity.Name = pName;
                 if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
@@ -335,6 +345,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pRowsToProcessPerIteration, entity.RowsToProcessPerIteration, nameof(request.RowsToProcessPerIteration)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.RowsToProcessPerIteration)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RowsToProcessPerIteration)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pRowsToProcessPerIteration) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.RowsToProcessPerIteration))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.RowsToProcessPerIteration)} requires a value.");
                     if(null != pRowsToProcessPerIteration)
                         entity.RowsToProcessPerIteration = (int) pRowsToProcessPerIteration;
                 if(DocPermissionFactory.IsRequested<int?>(request, pRowsToProcessPerIteration, nameof(request.RowsToProcessPerIteration)) && !request.VisibleFields.Matches(nameof(request.RowsToProcessPerIteration), ignoreSpaces: true))
@@ -346,6 +357,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pRunNow, entity.RunNow, nameof(request.RunNow)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.RunNow)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RunNow)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pRunNow) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.RunNow))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.RunNow)} requires a value.");
                     entity.RunNow = pRunNow;
                 if(DocPermissionFactory.IsRequested<bool>(request, pRunNow, nameof(request.RunNow)) && !request.VisibleFields.Matches(nameof(request.RunNow), ignoreSpaces: true))
                 {
@@ -356,6 +368,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pStartAt, entity.StartAt, nameof(request.StartAt)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.StartAt)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.StartAt)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pStartAt) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.StartAt))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.StartAt)} requires a value.");
                     entity.StartAt = pStartAt;
                 if(DocPermissionFactory.IsRequested<string>(request, pStartAt, nameof(request.StartAt)) && !request.VisibleFields.Matches(nameof(request.StartAt), ignoreSpaces: true))
                 {

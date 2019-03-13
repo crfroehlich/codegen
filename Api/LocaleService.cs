@@ -170,6 +170,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pCountry, entity.Country, nameof(request.Country)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Country)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Country)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pCountry) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.Country))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Country)} requires a value.");
                     entity.Country = pCountry;
                 if(DocPermissionFactory.IsRequested<string>(request, pCountry, nameof(request.Country)) && !request.VisibleFields.Matches(nameof(request.Country), ignoreSpaces: true))
                 {
@@ -180,6 +181,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pLanguage, entity.Language, nameof(request.Language)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Language)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Language)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pLanguage) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.Language))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Language)} requires a value.");
                     entity.Language = pLanguage;
                 if(DocPermissionFactory.IsRequested<string>(request, pLanguage, nameof(request.Language)) && !request.VisibleFields.Matches(nameof(request.Language), ignoreSpaces: true))
                 {
@@ -190,6 +192,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pTimeZone, entity.TimeZone, nameof(request.TimeZone)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.TimeZone)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TimeZone)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pTimeZone) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.TimeZone))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.TimeZone)} requires a value.");
                     entity.TimeZone = pTimeZone;
                 if(DocPermissionFactory.IsRequested<string>(request, pTimeZone, nameof(request.TimeZone)) && !request.VisibleFields.Matches(nameof(request.TimeZone), ignoreSpaces: true))
                 {

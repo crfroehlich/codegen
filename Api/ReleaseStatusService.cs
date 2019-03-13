@@ -176,6 +176,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pBranch, entity.Branch, nameof(request.Branch)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RELEASESTATUS, nameof(request.Branch)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Branch)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pBranch) && DocResources.Metadata.IsRequired(DocConstantModelName.RELEASESTATUS, nameof(request.Branch))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Branch)} requires a value.");
                     entity.Branch = pBranch;
                 if(DocPermissionFactory.IsRequested<string>(request, pBranch, nameof(request.Branch)) && !request.VisibleFields.Matches(nameof(request.Branch), ignoreSpaces: true))
                 {
@@ -186,6 +187,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pRelease, entity.Release, nameof(request.Release)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RELEASESTATUS, nameof(request.Release)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Release)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pRelease) && DocResources.Metadata.IsRequired(DocConstantModelName.RELEASESTATUS, nameof(request.Release))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Release)} requires a value.");
                     entity.Release = pRelease;
                 if(DocPermissionFactory.IsRequested<string>(request, pRelease, nameof(request.Release)) && !request.VisibleFields.Matches(nameof(request.Release), ignoreSpaces: true))
                 {
@@ -196,6 +198,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pServer, entity.Server, nameof(request.Server)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RELEASESTATUS, nameof(request.Server)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Server)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pServer) && DocResources.Metadata.IsRequired(DocConstantModelName.RELEASESTATUS, nameof(request.Server))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Server)} requires a value.");
                     entity.Server = pServer;
                 if(DocPermissionFactory.IsRequested<string>(request, pServer, nameof(request.Server)) && !request.VisibleFields.Matches(nameof(request.Server), ignoreSpaces: true))
                 {
@@ -206,6 +209,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pURL, entity.URL, nameof(request.URL)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RELEASESTATUS, nameof(request.URL)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.URL)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pURL) && DocResources.Metadata.IsRequired(DocConstantModelName.RELEASESTATUS, nameof(request.URL))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.URL)} requires a value.");
                     entity.URL = pURL;
                 if(DocPermissionFactory.IsRequested<string>(request, pURL, nameof(request.URL)) && !request.VisibleFields.Matches(nameof(request.URL), ignoreSpaces: true))
                 {
@@ -216,6 +220,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pVersion, entity.Version, nameof(request.Version)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RELEASESTATUS, nameof(request.Version)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Version)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pVersion) && DocResources.Metadata.IsRequired(DocConstantModelName.RELEASESTATUS, nameof(request.Version))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Version)} requires a value.");
                     entity.Version = pVersion;
                 if(DocPermissionFactory.IsRequested<string>(request, pVersion, nameof(request.Version)) && !request.VisibleFields.Matches(nameof(request.Version), ignoreSpaces: true))
                 {

@@ -199,6 +199,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pApproved, entity.Approved, nameof(request.Approved)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMSYNONYM, nameof(request.Approved)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Approved)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pApproved) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMSYNONYM, nameof(request.Approved))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Approved)} requires a value.");
                     entity.Approved = pApproved;
                 if(DocPermissionFactory.IsRequested<bool>(request, pApproved, nameof(request.Approved)) && !request.VisibleFields.Matches(nameof(request.Approved), ignoreSpaces: true))
                 {
@@ -209,6 +210,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pMaster, entity.Master, nameof(request.Master)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMSYNONYM, nameof(request.Master)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Master)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pMaster) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMSYNONYM, nameof(request.Master))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Master)} requires a value.");
                     entity.Master = pMaster;
                 if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pMaster, nameof(request.Master)) && !request.VisibleFields.Matches(nameof(request.Master), ignoreSpaces: true))
                 {
@@ -219,6 +221,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pPreferred, entity.Preferred, nameof(request.Preferred)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMSYNONYM, nameof(request.Preferred)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Preferred)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pPreferred) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMSYNONYM, nameof(request.Preferred))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Preferred)} requires a value.");
                     entity.Preferred = pPreferred;
                 if(DocPermissionFactory.IsRequested<bool>(request, pPreferred, nameof(request.Preferred)) && !request.VisibleFields.Matches(nameof(request.Preferred), ignoreSpaces: true))
                 {
@@ -229,6 +232,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pScope, entity.Scope, nameof(request.Scope)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMSYNONYM, nameof(request.Scope)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Scope)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pScope) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMSYNONYM, nameof(request.Scope))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Scope)} requires a value.");
                     entity.Scope = pScope;
                 if(DocPermissionFactory.IsRequested<DocEntityScope>(request, pScope, nameof(request.Scope)) && !request.VisibleFields.Matches(nameof(request.Scope), ignoreSpaces: true))
                 {
@@ -239,6 +243,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pSynonym, entity.Synonym, nameof(request.Synonym)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMSYNONYM, nameof(request.Synonym)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Synonym)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pSynonym) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMSYNONYM, nameof(request.Synonym))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Synonym)} requires a value.");
                     entity.Synonym = pSynonym;
                 if(DocPermissionFactory.IsRequested<string>(request, pSynonym, nameof(request.Synonym)) && !request.VisibleFields.Matches(nameof(request.Synonym), ignoreSpaces: true))
                 {

@@ -200,6 +200,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pCalendarDateEnd, entity.CalendarDateEnd, nameof(request.CalendarDateEnd)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.CalendarDateEnd)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CalendarDateEnd)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pCalendarDateEnd) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.CalendarDateEnd))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.CalendarDateEnd)} requires a value.");
                     entity.CalendarDateEnd = pCalendarDateEnd;
                 if(DocPermissionFactory.IsRequested<DocEntityDateTime>(request, pCalendarDateEnd, nameof(request.CalendarDateEnd)) && !request.VisibleFields.Matches(nameof(request.CalendarDateEnd), ignoreSpaces: true))
                 {
@@ -210,6 +211,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pCalendarDateStart, entity.CalendarDateStart, nameof(request.CalendarDateStart)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.CalendarDateStart)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CalendarDateStart)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pCalendarDateStart) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.CalendarDateStart))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.CalendarDateStart)} requires a value.");
                     entity.CalendarDateStart = pCalendarDateStart;
                 if(DocPermissionFactory.IsRequested<DocEntityDateTime>(request, pCalendarDateStart, nameof(request.CalendarDateStart)) && !request.VisibleFields.Matches(nameof(request.CalendarDateStart), ignoreSpaces: true))
                 {
@@ -220,6 +222,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pCalendarType, entity.CalendarType, nameof(request.CalendarType)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.CalendarType)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CalendarType)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pCalendarType) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.CalendarType))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.CalendarType)} requires a value.");
                     entity.CalendarType = pCalendarType;
                 if(DocPermissionFactory.IsRequested<string>(request, pCalendarType, nameof(request.CalendarType)) && !request.VisibleFields.Matches(nameof(request.CalendarType), ignoreSpaces: true))
                 {
@@ -230,6 +233,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pFollowUp, entity.FollowUp, nameof(request.FollowUp)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.FollowUp)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FollowUp)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pFollowUp) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.FollowUp))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.FollowUp)} requires a value.");
                     entity.FollowUp = pFollowUp;
                 if(DocPermissionFactory.IsRequested<DocEntityTimePoint>(request, pFollowUp, nameof(request.FollowUp)) && !request.VisibleFields.Matches(nameof(request.FollowUp), ignoreSpaces: true))
                 {
@@ -240,6 +244,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pTimeOfDay, entity.TimeOfDay, nameof(request.TimeOfDay)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.TimeOfDay)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TimeOfDay)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pTimeOfDay) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.TimeOfDay))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.TimeOfDay)} requires a value.");
                     entity.TimeOfDay = pTimeOfDay;
                 if(DocPermissionFactory.IsRequested<DocEntityTimePoint>(request, pTimeOfDay, nameof(request.TimeOfDay)) && !request.VisibleFields.Matches(nameof(request.TimeOfDay), ignoreSpaces: true))
                 {

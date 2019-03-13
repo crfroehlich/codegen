@@ -287,6 +287,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pCompletedOn, entity.CompletedOn, nameof(request.CompletedOn)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.CompletedOn)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CompletedOn)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pCompletedOn) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.CompletedOn))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.CompletedOn)} requires a value.");
                     entity.CompletedOn = pCompletedOn;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pCompletedOn, nameof(request.CompletedOn)) && !request.VisibleFields.Matches(nameof(request.CompletedOn), ignoreSpaces: true))
                 {
@@ -297,6 +298,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pDocument, entity.Document, nameof(request.Document)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.Document)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Document)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pDocument) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.Document))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Document)} requires a value.");
                     entity.Document = pDocument;
                 if(DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.VisibleFields.Matches(nameof(request.Document), ignoreSpaces: true))
                 {
@@ -307,6 +309,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pErrorData, entity.ErrorData, nameof(request.ErrorData)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.ErrorData)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ErrorData)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pErrorData) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.ErrorData))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ErrorData)} requires a value.");
                     entity.ErrorData = pErrorData;
                 if(DocPermissionFactory.IsRequested<string>(request, pErrorData, nameof(request.ErrorData)) && !request.VisibleFields.Matches(nameof(request.ErrorData), ignoreSpaces: true))
                 {
@@ -317,6 +320,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pExtractUrl, entity.ExtractUrl, nameof(request.ExtractUrl)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.ExtractUrl)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ExtractUrl)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pExtractUrl) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.ExtractUrl))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ExtractUrl)} requires a value.");
                     entity.ExtractUrl = pExtractUrl;
                 if(DocPermissionFactory.IsRequested<string>(request, pExtractUrl, nameof(request.ExtractUrl)) && !request.VisibleFields.Matches(nameof(request.ExtractUrl), ignoreSpaces: true))
                 {
@@ -327,6 +331,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pHighPriority, entity.HighPriority, nameof(request.HighPriority)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.HighPriority)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.HighPriority)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pHighPriority) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.HighPriority))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.HighPriority)} requires a value.");
                     entity.HighPriority = pHighPriority;
                 if(DocPermissionFactory.IsRequested<bool>(request, pHighPriority, nameof(request.HighPriority)) && !request.VisibleFields.Matches(nameof(request.HighPriority), ignoreSpaces: true))
                 {
@@ -337,6 +342,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pImportFr, entity.ImportFr, nameof(request.ImportFr)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.ImportFr)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ImportFr)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pImportFr) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.ImportFr))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ImportFr)} requires a value.");
                     entity.ImportFr = pImportFr;
                 if(DocPermissionFactory.IsRequested<bool>(request, pImportFr, nameof(request.ImportFr)) && !request.VisibleFields.Matches(nameof(request.ImportFr), ignoreSpaces: true))
                 {
@@ -347,6 +353,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pImportNewName, entity.ImportNewName, nameof(request.ImportNewName)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.ImportNewName)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ImportNewName)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pImportNewName) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.ImportNewName))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ImportNewName)} requires a value.");
                     entity.ImportNewName = pImportNewName;
                 if(DocPermissionFactory.IsRequested<bool>(request, pImportNewName, nameof(request.ImportNewName)) && !request.VisibleFields.Matches(nameof(request.ImportNewName), ignoreSpaces: true))
                 {
@@ -357,6 +364,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pImportTable, entity.ImportTable, nameof(request.ImportTable)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.ImportTable)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ImportTable)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pImportTable) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.ImportTable))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ImportTable)} requires a value.");
                     entity.ImportTable = pImportTable;
                 if(DocPermissionFactory.IsRequested<bool>(request, pImportTable, nameof(request.ImportTable)) && !request.VisibleFields.Matches(nameof(request.ImportTable), ignoreSpaces: true))
                 {
@@ -367,6 +375,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pImportText, entity.ImportText, nameof(request.ImportText)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.ImportText)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ImportText)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pImportText) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.ImportText))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ImportText)} requires a value.");
                     entity.ImportText = pImportText;
                 if(DocPermissionFactory.IsRequested<bool>(request, pImportText, nameof(request.ImportText)) && !request.VisibleFields.Matches(nameof(request.ImportText), ignoreSpaces: true))
                 {
@@ -377,6 +386,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pImportType, entity.ImportType, nameof(request.ImportType)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.ImportType)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ImportType)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pImportType) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.ImportType))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ImportType)} requires a value.");
                     entity.ImportType = pImportType;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pImportType, nameof(request.ImportType)) && !request.VisibleFields.Matches(nameof(request.ImportType), ignoreSpaces: true))
                 {
@@ -387,6 +397,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pIsLegacy, entity.IsLegacy, nameof(request.IsLegacy)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.IsLegacy)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsLegacy)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pIsLegacy) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.IsLegacy))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsLegacy)} requires a value.");
                     entity.IsLegacy = pIsLegacy;
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsLegacy, nameof(request.IsLegacy)) && !request.VisibleFields.Matches(nameof(request.IsLegacy), ignoreSpaces: true))
                 {
@@ -397,6 +408,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pOrder, entity.Order, nameof(request.Order)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.Order)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Order)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pOrder) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.Order))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Order)} requires a value.");
                     entity.Order = pOrder;
                 if(DocPermissionFactory.IsRequested<int?>(request, pOrder, nameof(request.Order)) && !request.VisibleFields.Matches(nameof(request.Order), ignoreSpaces: true))
                 {
@@ -407,6 +419,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pReferenceId, entity.ReferenceId, nameof(request.ReferenceId)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.ReferenceId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ReferenceId)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pReferenceId) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.ReferenceId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ReferenceId)} requires a value.");
                     if(null != pReferenceId)
                         entity.ReferenceId = (int) pReferenceId;
                 if(DocPermissionFactory.IsRequested<int?>(request, pReferenceId, nameof(request.ReferenceId)) && !request.VisibleFields.Matches(nameof(request.ReferenceId), ignoreSpaces: true))
@@ -418,6 +431,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pRequestedBy, entity.RequestedBy, nameof(request.RequestedBy)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.RequestedBy)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RequestedBy)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pRequestedBy) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.RequestedBy))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.RequestedBy)} requires a value.");
                     entity.RequestedBy = pRequestedBy;
                 if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pRequestedBy, nameof(request.RequestedBy)) && !request.VisibleFields.Matches(nameof(request.RequestedBy), ignoreSpaces: true))
                 {
@@ -428,6 +442,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pRequestedOn, entity.RequestedOn, nameof(request.RequestedOn)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.RequestedOn)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.RequestedOn)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pRequestedOn) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.RequestedOn))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.RequestedOn)} requires a value.");
                     entity.RequestedOn = pRequestedOn;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pRequestedOn, nameof(request.RequestedOn)) && !request.VisibleFields.Matches(nameof(request.RequestedOn), ignoreSpaces: true))
                 {
@@ -438,6 +453,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pStartedOn, entity.StartedOn, nameof(request.StartedOn)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.StartedOn)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.StartedOn)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pStartedOn) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.StartedOn))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.StartedOn)} requires a value.");
                     entity.StartedOn = pStartedOn;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pStartedOn, nameof(request.StartedOn)) && !request.VisibleFields.Matches(nameof(request.StartedOn), ignoreSpaces: true))
                 {
@@ -448,6 +464,7 @@ namespace Services.API
             {
                 if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.IMPORTDATA, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.IMPORTDATA, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
                     entity.Status = pStatus;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
