@@ -1,6 +1,6 @@
 {
-  "NextTypeId": 20365,
   "MaxTypeId": 20265,
+  "NextTypeId": 20365,
   "Types": {
     "DataTab": 20265,
     "DataProperty": 20255,

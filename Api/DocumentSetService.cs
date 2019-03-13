@@ -1848,6 +1848,8 @@ namespace Services.API
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityImportData, ImportData, ImportDataSearch>((int)request.Id, DocConstantModelName.IMPORTDATA, "Imports", request, (ss) => HostContext.ResolveService<ImportDataService>(Request)?.Get(ss));
                     case "intervention":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request, (ss) => HostContext.ResolveService<InterventionService>(Request)?.Get(ss));
+                    case "librarypackage":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLibraryPackage, LibraryPackage, LibraryPackageSearch>((int)request.Id, DocConstantModelName.LIBRARYPACKAGE, "LibraryPackages", request, (ss) => HostContext.ResolveService<LibraryPackageService>(Request)?.Get(ss));
                     case "nondigitizeddocument":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "NonDigitizedDocuments", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
                     case "outcome":
