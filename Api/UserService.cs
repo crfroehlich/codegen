@@ -473,13 +473,13 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Name));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<UserSettings>(currentUser, request, pSettings, permission, DocConstantModelName.USER, nameof(request.Settings)))
+            if (DocPermissionFactory.IsRequestedHasPermission<JsonObject>(currentUser, request, pSettings, permission, DocConstantModelName.USER, nameof(request.Settings)))
             {
                 if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.USER, nameof(request.Settings)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Settings)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pSettings) && DocResources.Metadata.IsRequired(DocConstantModelName.USER, nameof(request.Settings))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Settings)} requires a value.");
-                    entity.Settings = DocSerialize<UserSettings>.ToString(pSettings);
-                if(DocPermissionFactory.IsRequested<UserSettings>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
+                    entity.Settings = DocSerialize<JsonObject>.ToString(pSettings);
+                if(DocPermissionFactory.IsRequested<JsonObject>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Settings));
                 }

@@ -155,8 +155,8 @@ namespace Services.Dto
         public int? SessionsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Settings), Description = "UserSettings", IsRequired = false)]
-        public UserSettings Settings { get; set; }
+        [ApiMember(Name = nameof(Settings), Description = "JsonObject", IsRequired = false)]
+        public JsonObject Settings { get; set; }
 
 
         [ApiMember(Name = nameof(Slack), Description = "string", IsRequired = false)]
