@@ -80,6 +80,8 @@ namespace Services.Enums
         SERVICES_LOGS_TO_SLACK,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS_TO_STACKIFY)]
         SERVICES_LOGS_TO_STACKIFY,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_METADATA_UPDATE)]
+        SERVICES_METADATA_UPDATE,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_SALESFORCE)]
         SERVICES_SALESFORCE,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_SLACK)]
@@ -126,6 +128,7 @@ namespace Services.Enums
         public const string SERVICES_LOGS_TO_SEGMENT = "services_logs_to_segment";
         public const string SERVICES_LOGS_TO_SLACK = "services_logs_to_slack";
         public const string SERVICES_LOGS_TO_STACKIFY = "services_logs_to_stackify";
+        public const string SERVICES_METADATA_UPDATE = "services_metadata_update";
         public const string SERVICES_SALESFORCE = "services_salesforce";
         public const string SERVICES_SLACK = "services_slack";
         public const string SERVICES_TEAM_SERVE = "services_team_serve";
