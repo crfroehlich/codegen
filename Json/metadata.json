@@ -6659,6 +6659,26 @@
         "TabOrder": 0,
         "Type": "string",
         "UIType": ""
+      },
+      "ImportLocation": {
+        "Description": "Description of ImportLocation",
+        "DisplayName": "ImportLocation",
+        "IsAudited": true,
+        "IsDisplayInForm": true,
+        "IsDisplayInGrid": true,
+        "IsRelationship": true,
+        "IsRequired": false,
+        "IsRequiredInForm": false,
+        "IsUniqueConstraint": false,
+        "LookupTableEnum": "StudyImportLocation",
+        "ModelType": "LookupTable",
+        "Name": "ImportLocation",
+        "Order": 190,
+        "SetDefaultValue": "Extract",
+        "Tab": "ImportData",
+        "TabOrder": 0,
+        "Type": "LookupTable",
+        "UIType": ""
       }
     }
   },

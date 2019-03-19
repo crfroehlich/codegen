@@ -154,6 +154,12 @@ namespace Services.Schema
         public bool ImportFr { get; set; }
 
 
+        [Field()]
+        [FieldMapping(nameof(ImportLocation))]
+        public DocEntityLookupTable ImportLocation { get; set; }
+        public int? ImportLocationId { get { return ImportLocation?.Id; } private set { var noid = value; } }
+
+
         [Field(DefaultValue = false)]
         [FieldMapping(nameof(ImportNewName))]
         public bool ImportNewName { get; set; }
@@ -293,6 +299,11 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
+                if(null != ImportLocation && ImportLocation?.Enum?.Name != "StudyImportLocation")
+                {
+                    isValid = false;
+                    message += " ImportLocation is a " + ImportLocation?.Enum?.Name + ", but must be a StudyImportLocation.";
+                }
                 if(null != ImportType && ImportType?.Enum?.Name != "StudyImportType")
                 {
                     isValid = false;
@@ -367,6 +378,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.ExtractUrl, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ExtractUrl))))
                 .ForMember(dest => dest.HighPriority, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.HighPriority))))
                 .ForMember(dest => dest.ImportFr, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportFr))))
+                .ForMember(dest => dest.ImportLocation, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportLocation))))
+                .ForMember(dest => dest.ImportLocationId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportLocationId))))
                 .ForMember(dest => dest.ImportNewName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportNewName))))
                 .ForMember(dest => dest.ImportTable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportTable))))
                 .ForMember(dest => dest.ImportText, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ImportData>(c, nameof(DocEntityImportData.ImportText))))

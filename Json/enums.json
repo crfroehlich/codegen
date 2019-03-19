@@ -1089,6 +1089,12 @@
     "ARM": "Arm",
     "AUTHOR_CALCULATED": "Author Calculated"
   },
+  "StudyImportLocation": {
+    "DEFAULT": "Default",
+    "DOCDATA": "DocData",
+    "EXTRACT": "Extract",
+    "IMPORT_DATA": "Import Data"
+  },
   "StudyImportType": {
     "LEGACY": "Legacy",
     "EXTRACT": "Extract",

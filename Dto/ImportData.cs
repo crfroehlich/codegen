@@ -87,6 +87,13 @@ namespace Services.Dto
         public bool ImportFr { get; set; }
 
 
+        [ApiMember(Name = nameof(ImportLocation), Description = "LookupTable", IsRequired = false)]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Default",@"DocData",@"Extract",@"Import Data"})]
+        public Reference ImportLocation { get; set; }
+        [ApiMember(Name = nameof(ImportLocationId), Description = "Primary Key of LookupTable", IsRequired = false)]
+        public int? ImportLocationId { get; set; }
+
+
         [ApiMember(Name = nameof(ImportNewName), Description = "bool", IsRequired = false)]
         public bool ImportNewName { get; set; }
 
@@ -166,7 +173,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(CompletedOn),nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(ErrorData),nameof(ExtractUrl),nameof(Gestalt),nameof(HighPriority),nameof(ImportFr),nameof(ImportNewName),nameof(ImportTable),nameof(ImportText),nameof(ImportType),nameof(ImportTypeId),nameof(IsLegacy),nameof(Locked),nameof(Order),nameof(ReferenceId),nameof(RequestedBy),nameof(RequestedById),nameof(RequestedOn),nameof(StartedOn),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(CompletedOn),nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(ErrorData),nameof(ExtractUrl),nameof(Gestalt),nameof(HighPriority),nameof(ImportFr),nameof(ImportLocation),nameof(ImportLocationId),nameof(ImportNewName),nameof(ImportTable),nameof(ImportText),nameof(ImportType),nameof(ImportTypeId),nameof(IsLegacy),nameof(Locked),nameof(Order),nameof(ReferenceId),nameof(RequestedBy),nameof(RequestedById),nameof(RequestedOn),nameof(StartedOn),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -209,6 +216,10 @@ namespace Services.Dto
         public List<bool> HighPriority { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> ImportFr { get; set; }
+        public Reference ImportLocation { get; set; }
+        public List<int> ImportLocationIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"Default",@"DocData",@"Extract",@"Import Data"})]
+        public List<string> ImportLocationNames { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> ImportNewName { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -265,6 +276,7 @@ namespace Services.Dto
         public bool doExtractUrl { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ExtractUrl))); }
         public bool doHighPriority { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.HighPriority))); }
         public bool doImportFr { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportFr))); }
+        public bool doImportLocation { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportLocation))); }
         public bool doImportNewName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportNewName))); }
         public bool doImportTable { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportTable))); }
         public bool doImportText { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportText))); }
