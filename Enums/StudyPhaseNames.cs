@@ -68,7 +68,37 @@ namespace Services.Enums
         WASH_OUT_PERIOD
     }
     
-    public sealed partial class DocConstantStudyPhaseNames
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this StudyPhaseNamesEnm instance)
+		{
+			switch(instance) 
+			{
+                case StudyPhaseNamesEnm.FOLLOW_UP_PERIOD:
+                    return DocConstantStudyPhaseNames.FOLLOW_UP_PERIOD;
+                case StudyPhaseNamesEnm.NR:
+                    return DocConstantStudyPhaseNames.NR;
+                case StudyPhaseNamesEnm.OBSERVATIONAL_PERIOD:
+                    return DocConstantStudyPhaseNames.OBSERVATIONAL_PERIOD;
+                case StudyPhaseNamesEnm.RUN_IN_PERIOD:
+                    return DocConstantStudyPhaseNames.RUN_IN_PERIOD;
+                case StudyPhaseNamesEnm.SCREENING_PERIOD:
+                    return DocConstantStudyPhaseNames.SCREENING_PERIOD;
+                case StudyPhaseNamesEnm.TITRATION_PERIOD:
+                    return DocConstantStudyPhaseNames.TITRATION_PERIOD;
+                case StudyPhaseNamesEnm.TOTAL_STUDY_LENGTH:
+                    return DocConstantStudyPhaseNames.TOTAL_STUDY_LENGTH;
+                case StudyPhaseNamesEnm.TREATMENT_PERIOD:
+                    return DocConstantStudyPhaseNames.TREATMENT_PERIOD;
+                case StudyPhaseNamesEnm.WASH_OUT_PERIOD:
+                    return DocConstantStudyPhaseNames.WASH_OUT_PERIOD;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantStudyPhaseNames : IEquatable<DocConstantStudyPhaseNames>, IEqualityComparer<DocConstantStudyPhaseNames>
     {
         public const string FOLLOW_UP_PERIOD = "Follow-up Period";
         public const string NR = "NR";
@@ -83,102 +113,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantStudyPhaseNames).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantStudyPhaseNames(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantStudyPhaseNames(string Val)
-        {
-            return new DocConstantStudyPhaseNames(Val);
-        }
+        public static implicit operator DocConstantStudyPhaseNames(string Val) => new DocConstantStudyPhaseNames(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantStudyPhaseNames item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantStudyPhaseNames item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantStudyPhaseNames)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantStudyPhaseNames obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantStudyPhaseNames obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantStudyPhaseNames ft1, DocConstantStudyPhaseNames ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantStudyPhaseNames x, DocConstantStudyPhaseNames y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantStudyPhaseNames x, DocConstantStudyPhaseNames y) => x == y;
+        
+        public static bool operator !=(DocConstantStudyPhaseNames x, DocConstantStudyPhaseNames y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantStudyPhaseNames ft1, DocConstantStudyPhaseNames ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -193,19 +159,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantStudyPhaseNames obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantStudyPhaseNames)
+        #endregion IEquatable
     }
 }

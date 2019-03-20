@@ -94,7 +94,63 @@ namespace Services.Enums
         TRANSDERMAL
     }
     
-    public sealed partial class DocConstantInterventionRoute
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this InterventionRouteEnm instance)
+		{
+			switch(instance) 
+			{
+                case InterventionRouteEnm.GROUP_THERAPY:
+                    return DocConstantInterventionRoute.GROUP_THERAPY;
+                case InterventionRouteEnm.HAI:
+                    return DocConstantInterventionRoute.HAI;
+                case InterventionRouteEnm.I_V:
+                    return DocConstantInterventionRoute.I_V;
+                case InterventionRouteEnm.IMPLANT:
+                    return DocConstantInterventionRoute.IMPLANT;
+                case InterventionRouteEnm.INDIVIDUAL_THERAPY:
+                    return DocConstantInterventionRoute.INDIVIDUAL_THERAPY;
+                case InterventionRouteEnm.INHALENT:
+                    return DocConstantInterventionRoute.INHALENT;
+                case InterventionRouteEnm.INJECTION:
+                    return DocConstantInterventionRoute.INJECTION;
+                case InterventionRouteEnm.INSTILLED_INTO_EYE:
+                    return DocConstantInterventionRoute.INSTILLED_INTO_EYE;
+                case InterventionRouteEnm.INTRAMUSCULAR:
+                    return DocConstantInterventionRoute.INTRAMUSCULAR;
+                case InterventionRouteEnm.INTRANASAL:
+                    return DocConstantInterventionRoute.INTRANASAL;
+                case InterventionRouteEnm.INTRATHECAL:
+                    return DocConstantInterventionRoute.INTRATHECAL;
+                case InterventionRouteEnm.INTRAVESICULAR:
+                    return DocConstantInterventionRoute.INTRAVESICULAR;
+                case InterventionRouteEnm.IONTOPHORETIC:
+                    return DocConstantInterventionRoute.IONTOPHORETIC;
+                case InterventionRouteEnm.LAPAROSCOPIC_SURGERY:
+                    return DocConstantInterventionRoute.LAPAROSCOPIC_SURGERY;
+                case InterventionRouteEnm.OPEN_SURGERY:
+                    return DocConstantInterventionRoute.OPEN_SURGERY;
+                case InterventionRouteEnm.ORAL:
+                    return DocConstantInterventionRoute.ORAL;
+                case InterventionRouteEnm.SUBQ:
+                    return DocConstantInterventionRoute.SUBQ;
+                case InterventionRouteEnm.SUBQ_PEN:
+                    return DocConstantInterventionRoute.SUBQ_PEN;
+                case InterventionRouteEnm.SUBQ_VIAL:
+                    return DocConstantInterventionRoute.SUBQ_VIAL;
+                case InterventionRouteEnm.SUPPOSITORY:
+                    return DocConstantInterventionRoute.SUPPOSITORY;
+                case InterventionRouteEnm.TOPICAL:
+                    return DocConstantInterventionRoute.TOPICAL;
+                case InterventionRouteEnm.TRANSDERMAL:
+                    return DocConstantInterventionRoute.TRANSDERMAL;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantInterventionRoute : IEquatable<DocConstantInterventionRoute>, IEqualityComparer<DocConstantInterventionRoute>
     {
         public const string GROUP_THERAPY = "Group Therapy";
         public const string HAI = "HAI";
@@ -122,102 +178,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantInterventionRoute).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantInterventionRoute(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantInterventionRoute(string Val)
-        {
-            return new DocConstantInterventionRoute(Val);
-        }
+        public static implicit operator DocConstantInterventionRoute(string Val) => new DocConstantInterventionRoute(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantInterventionRoute item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantInterventionRoute item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantInterventionRoute)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantInterventionRoute obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantInterventionRoute obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantInterventionRoute ft1, DocConstantInterventionRoute ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantInterventionRoute x, DocConstantInterventionRoute y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantInterventionRoute x, DocConstantInterventionRoute y) => x == y;
+        
+        public static bool operator !=(DocConstantInterventionRoute x, DocConstantInterventionRoute y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantInterventionRoute ft1, DocConstantInterventionRoute ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -232,19 +224,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantInterventionRoute obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantInterventionRoute)
+        #endregion IEquatable
     }
 }

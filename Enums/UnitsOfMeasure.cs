@@ -324,7 +324,293 @@ namespace Services.Enums
         YEAR
     }
     
-    public sealed partial class DocConstantUnitsOfMeasure
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this UnitsOfMeasureEnm instance)
+		{
+			switch(instance) 
+			{
+                case UnitsOfMeasureEnm.ARE:
+                    return DocConstantUnitsOfMeasure.ARE;
+                case UnitsOfMeasureEnm.ATOMS:
+                    return DocConstantUnitsOfMeasure.ATOMS;
+                case UnitsOfMeasureEnm.BECQUEREL:
+                    return DocConstantUnitsOfMeasure.BECQUEREL;
+                case UnitsOfMeasureEnm.CENTIGRAM:
+                    return DocConstantUnitsOfMeasure.CENTIGRAM;
+                case UnitsOfMeasureEnm.CENTILITER:
+                    return DocConstantUnitsOfMeasure.CENTILITER;
+                case UnitsOfMeasureEnm.CENTIMETER:
+                    return DocConstantUnitsOfMeasure.CENTIMETER;
+                case UnitsOfMeasureEnm.CUBIC_CENTIMETER:
+                    return DocConstantUnitsOfMeasure.CUBIC_CENTIMETER;
+                case UnitsOfMeasureEnm.CUBIC_FOOT:
+                    return DocConstantUnitsOfMeasure.CUBIC_FOOT;
+                case UnitsOfMeasureEnm.CUBIC_INCH:
+                    return DocConstantUnitsOfMeasure.CUBIC_INCH;
+                case UnitsOfMeasureEnm.CUBIC_KILOMETER:
+                    return DocConstantUnitsOfMeasure.CUBIC_KILOMETER;
+                case UnitsOfMeasureEnm.CUBIC_METER:
+                    return DocConstantUnitsOfMeasure.CUBIC_METER;
+                case UnitsOfMeasureEnm.CUBIC_MICROLITER:
+                    return DocConstantUnitsOfMeasure.CUBIC_MICROLITER;
+                case UnitsOfMeasureEnm.CUBIC_MICROMETER:
+                    return DocConstantUnitsOfMeasure.CUBIC_MICROMETER;
+                case UnitsOfMeasureEnm.CUBIC_MILE:
+                    return DocConstantUnitsOfMeasure.CUBIC_MILE;
+                case UnitsOfMeasureEnm.CUBIC_MILLIMETER:
+                    return DocConstantUnitsOfMeasure.CUBIC_MILLIMETER;
+                case UnitsOfMeasureEnm.CUBIC_NANOMETER:
+                    return DocConstantUnitsOfMeasure.CUBIC_NANOMETER;
+                case UnitsOfMeasureEnm.CUBIC_YARD:
+                    return DocConstantUnitsOfMeasure.CUBIC_YARD;
+                case UnitsOfMeasureEnm.CUP:
+                    return DocConstantUnitsOfMeasure.CUP;
+                case UnitsOfMeasureEnm.CURIE:
+                    return DocConstantUnitsOfMeasure.CURIE;
+                case UnitsOfMeasureEnm.DAY:
+                    return DocConstantUnitsOfMeasure.DAY;
+                case UnitsOfMeasureEnm.DECIGRAM:
+                    return DocConstantUnitsOfMeasure.DECIGRAM;
+                case UnitsOfMeasureEnm.DECILITER:
+                    return DocConstantUnitsOfMeasure.DECILITER;
+                case UnitsOfMeasureEnm.DEKAGRAM:
+                    return DocConstantUnitsOfMeasure.DEKAGRAM;
+                case UnitsOfMeasureEnm.EXAGRAM:
+                    return DocConstantUnitsOfMeasure.EXAGRAM;
+                case UnitsOfMeasureEnm.GALLON:
+                    return DocConstantUnitsOfMeasure.GALLON;
+                case UnitsOfMeasureEnm.GIGABECQUEREL:
+                    return DocConstantUnitsOfMeasure.GIGABECQUEREL;
+                case UnitsOfMeasureEnm.GIGAGRAM:
+                    return DocConstantUnitsOfMeasure.GIGAGRAM;
+                case UnitsOfMeasureEnm.GRAM:
+                    return DocConstantUnitsOfMeasure.GRAM;
+                case UnitsOfMeasureEnm.GRAM_PER_CUBIC_CENTIMETER:
+                    return DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_CENTIMETER;
+                case UnitsOfMeasureEnm.GRAM_PER_CUBIC_METER:
+                    return DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_METER;
+                case UnitsOfMeasureEnm.GRAM_PER_DECILITER:
+                    return DocConstantUnitsOfMeasure.GRAM_PER_DECILITER;
+                case UnitsOfMeasureEnm.GRAM_PER_LITER:
+                    return DocConstantUnitsOfMeasure.GRAM_PER_LITER;
+                case UnitsOfMeasureEnm.HECTARE:
+                    return DocConstantUnitsOfMeasure.HECTARE;
+                case UnitsOfMeasureEnm.HECTOGRAM:
+                    return DocConstantUnitsOfMeasure.HECTOGRAM;
+                case UnitsOfMeasureEnm.HOUR:
+                    return DocConstantUnitsOfMeasure.HOUR;
+                case UnitsOfMeasureEnm.INTERNATIONAL_UNIT_PER_LITER:
+                    return DocConstantUnitsOfMeasure.INTERNATIONAL_UNIT_PER_LITER;
+                case UnitsOfMeasureEnm.INTERNATIONALUNIT:
+                    return DocConstantUnitsOfMeasure.INTERNATIONALUNIT;
+                case UnitsOfMeasureEnm.KILIMOL_PER_CUBIC_CENTIMETER:
+                    return DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_CENTIMETER;
+                case UnitsOfMeasureEnm.KILIMOL_PER_CUBIC_METER:
+                    return DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_METER;
+                case UnitsOfMeasureEnm.KILIMOL_PER_CUBIC_MILLIMETER:
+                    return DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_MILLIMETER;
+                case UnitsOfMeasureEnm.KILIMOL_PER_LITER:
+                    return DocConstantUnitsOfMeasure.KILIMOL_PER_LITER;
+                case UnitsOfMeasureEnm.KILOBECQUEREL:
+                    return DocConstantUnitsOfMeasure.KILOBECQUEREL;
+                case UnitsOfMeasureEnm.KILOCURIE:
+                    return DocConstantUnitsOfMeasure.KILOCURIE;
+                case UnitsOfMeasureEnm.KILOGRAM:
+                    return DocConstantUnitsOfMeasure.KILOGRAM;
+                case UnitsOfMeasureEnm.KILOGRAM_PER_CUBIC_METER:
+                    return DocConstantUnitsOfMeasure.KILOGRAM_PER_CUBIC_METER;
+                case UnitsOfMeasureEnm.KILOGRAM_PER_DECILITER:
+                    return DocConstantUnitsOfMeasure.KILOGRAM_PER_DECILITER;
+                case UnitsOfMeasureEnm.KILOGRAM_PER_LITER:
+                    return DocConstantUnitsOfMeasure.KILOGRAM_PER_LITER;
+                case UnitsOfMeasureEnm.KILOGRAM_PER_MICROLITER:
+                    return DocConstantUnitsOfMeasure.KILOGRAM_PER_MICROLITER;
+                case UnitsOfMeasureEnm.KILOGRAM_PER_MILLILITER:
+                    return DocConstantUnitsOfMeasure.KILOGRAM_PER_MILLILITER;
+                case UnitsOfMeasureEnm.KILOGRAM_PER_SQUARE_METER:
+                    return DocConstantUnitsOfMeasure.KILOGRAM_PER_SQUARE_METER;
+                case UnitsOfMeasureEnm.KILOLITER:
+                    return DocConstantUnitsOfMeasure.KILOLITER;
+                case UnitsOfMeasureEnm.KILOMOLE:
+                    return DocConstantUnitsOfMeasure.KILOMOLE;
+                case UnitsOfMeasureEnm.LITER:
+                    return DocConstantUnitsOfMeasure.LITER;
+                case UnitsOfMeasureEnm.MEGABECQUEREL:
+                    return DocConstantUnitsOfMeasure.MEGABECQUEREL;
+                case UnitsOfMeasureEnm.METER:
+                    return DocConstantUnitsOfMeasure.METER;
+                case UnitsOfMeasureEnm.MICRO_INTERNATIONAL_UNIT_PER_MILLILITER:
+                    return DocConstantUnitsOfMeasure.MICRO_INTERNATIONAL_UNIT_PER_MILLILITER;
+                case UnitsOfMeasureEnm.MICROCURIE:
+                    return DocConstantUnitsOfMeasure.MICROCURIE;
+                case UnitsOfMeasureEnm.MICROGRAM:
+                    return DocConstantUnitsOfMeasure.MICROGRAM;
+                case UnitsOfMeasureEnm.MICROGRAM_PER_DECILITER:
+                    return DocConstantUnitsOfMeasure.MICROGRAM_PER_DECILITER;
+                case UnitsOfMeasureEnm.MICROGRAM_PER_LITER:
+                    return DocConstantUnitsOfMeasure.MICROGRAM_PER_LITER;
+                case UnitsOfMeasureEnm.MICROGRAM_PER_MICROLITER:
+                    return DocConstantUnitsOfMeasure.MICROGRAM_PER_MICROLITER;
+                case UnitsOfMeasureEnm.MICROGRAM_PER_MILLILITER:
+                    return DocConstantUnitsOfMeasure.MICROGRAM_PER_MILLILITER;
+                case UnitsOfMeasureEnm.MICROLITER:
+                    return DocConstantUnitsOfMeasure.MICROLITER;
+                case UnitsOfMeasureEnm.MICROMETER:
+                    return DocConstantUnitsOfMeasure.MICROMETER;
+                case UnitsOfMeasureEnm.MICROMOL_PER_CUBIC_CENTIMETER:
+                    return DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_CENTIMETER;
+                case UnitsOfMeasureEnm.MICROMOL_PER_CUBIC_METER:
+                    return DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_METER;
+                case UnitsOfMeasureEnm.MICROMOL_PER_CUBIC_MILLIMETER:
+                    return DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_MILLIMETER;
+                case UnitsOfMeasureEnm.MICROMOL_PER_DECILITER:
+                    return DocConstantUnitsOfMeasure.MICROMOL_PER_DECILITER;
+                case UnitsOfMeasureEnm.MICROMOL_PER_LITER:
+                    return DocConstantUnitsOfMeasure.MICROMOL_PER_LITER;
+                case UnitsOfMeasureEnm.MICROMOLE:
+                    return DocConstantUnitsOfMeasure.MICROMOLE;
+                case UnitsOfMeasureEnm.MILLI_INTERNATIONAL_UNIT_PER_MILLILITER:
+                    return DocConstantUnitsOfMeasure.MILLI_INTERNATIONAL_UNIT_PER_MILLILITER;
+                case UnitsOfMeasureEnm.MILLICURIE:
+                    return DocConstantUnitsOfMeasure.MILLICURIE;
+                case UnitsOfMeasureEnm.MILLIEQUIVALENT:
+                    return DocConstantUnitsOfMeasure.MILLIEQUIVALENT;
+                case UnitsOfMeasureEnm.MILLIGRAM:
+                    return DocConstantUnitsOfMeasure.MILLIGRAM;
+                case UnitsOfMeasureEnm.MILLIGRAM_PER_DECILITER:
+                    return DocConstantUnitsOfMeasure.MILLIGRAM_PER_DECILITER;
+                case UnitsOfMeasureEnm.MILLIGRAM_PER_LITER:
+                    return DocConstantUnitsOfMeasure.MILLIGRAM_PER_LITER;
+                case UnitsOfMeasureEnm.MILLIGRAM_PER_MICROLITER:
+                    return DocConstantUnitsOfMeasure.MILLIGRAM_PER_MICROLITER;
+                case UnitsOfMeasureEnm.MILLIGRAM_PER_MILLILITER:
+                    return DocConstantUnitsOfMeasure.MILLIGRAM_PER_MILLILITER;
+                case UnitsOfMeasureEnm.MILLIGRAM_PER_TEASPOON:
+                    return DocConstantUnitsOfMeasure.MILLIGRAM_PER_TEASPOON;
+                case UnitsOfMeasureEnm.MILLILITER:
+                    return DocConstantUnitsOfMeasure.MILLILITER;
+                case UnitsOfMeasureEnm.MILLIMETER:
+                    return DocConstantUnitsOfMeasure.MILLIMETER;
+                case UnitsOfMeasureEnm.MILLIMETER_OF_MERCURY:
+                    return DocConstantUnitsOfMeasure.MILLIMETER_OF_MERCURY;
+                case UnitsOfMeasureEnm.MILLIMOL_PER_CUBIC_CENTIMETER:
+                    return DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_CENTIMETER;
+                case UnitsOfMeasureEnm.MILLIMOL_PER_CUBIC_METER:
+                    return DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_METER;
+                case UnitsOfMeasureEnm.MILLIMOL_PER_CUBIC_MILLIMETER:
+                    return DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_MILLIMETER;
+                case UnitsOfMeasureEnm.MILLIMOL_PER_LITER:
+                    return DocConstantUnitsOfMeasure.MILLIMOL_PER_LITER;
+                case UnitsOfMeasureEnm.MILLIMOLE:
+                    return DocConstantUnitsOfMeasure.MILLIMOLE;
+                case UnitsOfMeasureEnm.MILLIONINTERFERONREFERENCEUNIT:
+                    return DocConstantUnitsOfMeasure.MILLIONINTERFERONREFERENCEUNIT;
+                case UnitsOfMeasureEnm.MILLIONINTERNATIONALUNIT:
+                    return DocConstantUnitsOfMeasure.MILLIONINTERNATIONALUNIT;
+                case UnitsOfMeasureEnm.MILLISECOND:
+                    return DocConstantUnitsOfMeasure.MILLISECOND;
+                case UnitsOfMeasureEnm.MINUTE:
+                    return DocConstantUnitsOfMeasure.MINUTE;
+                case UnitsOfMeasureEnm.MOL_PER_CUBIC_CENTIMETER:
+                    return DocConstantUnitsOfMeasure.MOL_PER_CUBIC_CENTIMETER;
+                case UnitsOfMeasureEnm.MOL_PER_CUBIC_METER:
+                    return DocConstantUnitsOfMeasure.MOL_PER_CUBIC_METER;
+                case UnitsOfMeasureEnm.MOL_PER_CUBIC_MILLIMETER:
+                    return DocConstantUnitsOfMeasure.MOL_PER_CUBIC_MILLIMETER;
+                case UnitsOfMeasureEnm.MOL_PER_LITER:
+                    return DocConstantUnitsOfMeasure.MOL_PER_LITER;
+                case UnitsOfMeasureEnm.MOLE:
+                    return DocConstantUnitsOfMeasure.MOLE;
+                case UnitsOfMeasureEnm.MONTH:
+                    return DocConstantUnitsOfMeasure.MONTH;
+                case UnitsOfMeasureEnm.NANOCURIE:
+                    return DocConstantUnitsOfMeasure.NANOCURIE;
+                case UnitsOfMeasureEnm.NANOGRAM:
+                    return DocConstantUnitsOfMeasure.NANOGRAM;
+                case UnitsOfMeasureEnm.NANOGRAM_PER_DECILITER:
+                    return DocConstantUnitsOfMeasure.NANOGRAM_PER_DECILITER;
+                case UnitsOfMeasureEnm.NANOGRAM_PER_LITER:
+                    return DocConstantUnitsOfMeasure.NANOGRAM_PER_LITER;
+                case UnitsOfMeasureEnm.NANOGRAM_PER_MICROLITER:
+                    return DocConstantUnitsOfMeasure.NANOGRAM_PER_MICROLITER;
+                case UnitsOfMeasureEnm.NANOGRAM_PER_MILLILITER:
+                    return DocConstantUnitsOfMeasure.NANOGRAM_PER_MILLILITER;
+                case UnitsOfMeasureEnm.NANOMOL_PER_LITER:
+                    return DocConstantUnitsOfMeasure.NANOMOL_PER_LITER;
+                case UnitsOfMeasureEnm.NANOMOLE:
+                    return DocConstantUnitsOfMeasure.NANOMOLE;
+                case UnitsOfMeasureEnm.OUNCE:
+                    return DocConstantUnitsOfMeasure.OUNCE;
+                case UnitsOfMeasureEnm.OUNCES:
+                    return DocConstantUnitsOfMeasure.OUNCES;
+                case UnitsOfMeasureEnm.PARTSPERBILLION:
+                    return DocConstantUnitsOfMeasure.PARTSPERBILLION;
+                case UnitsOfMeasureEnm.PARTSPERMILLION:
+                    return DocConstantUnitsOfMeasure.PARTSPERMILLION;
+                case UnitsOfMeasureEnm.PICOGRAM:
+                    return DocConstantUnitsOfMeasure.PICOGRAM;
+                case UnitsOfMeasureEnm.PICOGRAM_PER_DECILITER:
+                    return DocConstantUnitsOfMeasure.PICOGRAM_PER_DECILITER;
+                case UnitsOfMeasureEnm.PICOGRAM_PER_LITER:
+                    return DocConstantUnitsOfMeasure.PICOGRAM_PER_LITER;
+                case UnitsOfMeasureEnm.PICOGRAM_PER_MICROLITER:
+                    return DocConstantUnitsOfMeasure.PICOGRAM_PER_MICROLITER;
+                case UnitsOfMeasureEnm.PICOGRAM_PER_MILLILITER:
+                    return DocConstantUnitsOfMeasure.PICOGRAM_PER_MILLILITER;
+                case UnitsOfMeasureEnm.PICOMOL_PER_LITER:
+                    return DocConstantUnitsOfMeasure.PICOMOL_PER_LITER;
+                case UnitsOfMeasureEnm.PICOMOLE:
+                    return DocConstantUnitsOfMeasure.PICOMOLE;
+                case UnitsOfMeasureEnm.PINT:
+                    return DocConstantUnitsOfMeasure.PINT;
+                case UnitsOfMeasureEnm.POUND:
+                    return DocConstantUnitsOfMeasure.POUND;
+                case UnitsOfMeasureEnm.QUART:
+                    return DocConstantUnitsOfMeasure.QUART;
+                case UnitsOfMeasureEnm.SECOND:
+                    return DocConstantUnitsOfMeasure.SECOND;
+                case UnitsOfMeasureEnm.SQUARE_DEKAMETER:
+                    return DocConstantUnitsOfMeasure.SQUARE_DEKAMETER;
+                case UnitsOfMeasureEnm.SQUARE_FOOT:
+                    return DocConstantUnitsOfMeasure.SQUARE_FOOT;
+                case UnitsOfMeasureEnm.SQUARE_HECTOMETER:
+                    return DocConstantUnitsOfMeasure.SQUARE_HECTOMETER;
+                case UnitsOfMeasureEnm.SQUARE_INCH:
+                    return DocConstantUnitsOfMeasure.SQUARE_INCH;
+                case UnitsOfMeasureEnm.SQUARE_KILOMETER:
+                    return DocConstantUnitsOfMeasure.SQUARE_KILOMETER;
+                case UnitsOfMeasureEnm.SQUARE_METER:
+                    return DocConstantUnitsOfMeasure.SQUARE_METER;
+                case UnitsOfMeasureEnm.SQUARE_MICROMETER:
+                    return DocConstantUnitsOfMeasure.SQUARE_MICROMETER;
+                case UnitsOfMeasureEnm.SQUARE_MILE:
+                    return DocConstantUnitsOfMeasure.SQUARE_MILE;
+                case UnitsOfMeasureEnm.SQUARE_MILIMETER:
+                    return DocConstantUnitsOfMeasure.SQUARE_MILIMETER;
+                case UnitsOfMeasureEnm.SQUARE_NANOMETER:
+                    return DocConstantUnitsOfMeasure.SQUARE_NANOMETER;
+                case UnitsOfMeasureEnm.SQUARE_YARD:
+                    return DocConstantUnitsOfMeasure.SQUARE_YARD;
+                case UnitsOfMeasureEnm.TABLESPOON:
+                    return DocConstantUnitsOfMeasure.TABLESPOON;
+                case UnitsOfMeasureEnm.TEASPOON:
+                    return DocConstantUnitsOfMeasure.TEASPOON;
+                case UnitsOfMeasureEnm.TERABECQUEREL:
+                    return DocConstantUnitsOfMeasure.TERABECQUEREL;
+                case UnitsOfMeasureEnm.TERAGRAM:
+                    return DocConstantUnitsOfMeasure.TERAGRAM;
+                case UnitsOfMeasureEnm.WEEK:
+                    return DocConstantUnitsOfMeasure.WEEK;
+                case UnitsOfMeasureEnm.YEAR:
+                    return DocConstantUnitsOfMeasure.YEAR;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantUnitsOfMeasure : IEquatable<DocConstantUnitsOfMeasure>, IEqualityComparer<DocConstantUnitsOfMeasure>
     {
         public const string ARE = "a";
         public const string ATOMS = "atoms";
@@ -467,102 +753,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantUnitsOfMeasure).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantUnitsOfMeasure(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantUnitsOfMeasure(string Val)
-        {
-            return new DocConstantUnitsOfMeasure(Val);
-        }
+        public static implicit operator DocConstantUnitsOfMeasure(string Val) => new DocConstantUnitsOfMeasure(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantUnitsOfMeasure item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantUnitsOfMeasure item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantUnitsOfMeasure)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantUnitsOfMeasure obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantUnitsOfMeasure obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantUnitsOfMeasure ft1, DocConstantUnitsOfMeasure ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantUnitsOfMeasure x, DocConstantUnitsOfMeasure y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantUnitsOfMeasure x, DocConstantUnitsOfMeasure y) => x == y;
+        
+        public static bool operator !=(DocConstantUnitsOfMeasure x, DocConstantUnitsOfMeasure y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantUnitsOfMeasure ft1, DocConstantUnitsOfMeasure ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -577,19 +799,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantUnitsOfMeasure obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantUnitsOfMeasure)
+        #endregion IEquatable
     }
 }

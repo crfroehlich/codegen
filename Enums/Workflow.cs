@@ -118,7 +118,87 @@ namespace Services.Enums
         VIEW
     }
     
-    public sealed partial class DocConstantWorkflow
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this WorkflowEnm instance)
+		{
+			switch(instance) 
+			{
+                case WorkflowEnm.AUDIT_ERROR:
+                    return DocConstantWorkflow.AUDIT_ERROR;
+                case WorkflowEnm.BAYESIAN_ANALYSIS:
+                    return DocConstantWorkflow.BAYESIAN_ANALYSIS;
+                case WorkflowEnm.COHORT_ANALYSIS:
+                    return DocConstantWorkflow.COHORT_ANALYSIS;
+                case WorkflowEnm.CUSTOM_REPORT:
+                    return DocConstantWorkflow.CUSTOM_REPORT;
+                case WorkflowEnm.DATA_EXPORT:
+                    return DocConstantWorkflow.DATA_EXPORT;
+                case WorkflowEnm.DIA_PROJECT:
+                    return DocConstantWorkflow.DIA_PROJECT;
+                case WorkflowEnm.DIA_REPORT:
+                    return DocConstantWorkflow.DIA_REPORT;
+                case WorkflowEnm.DOC_DATA_PROJECT:
+                    return DocConstantWorkflow.DOC_DATA_PROJECT;
+                case WorkflowEnm.DOC_EXTRACT_PROJECT:
+                    return DocConstantWorkflow.DOC_EXTRACT_PROJECT;
+                case WorkflowEnm.DOC_LIBRARY_PROJECT:
+                    return DocConstantWorkflow.DOC_LIBRARY_PROJECT;
+                case WorkflowEnm.EVIDENCE_ON_DEMAND:
+                    return DocConstantWorkflow.EVIDENCE_ON_DEMAND;
+                case WorkflowEnm.EVIDENCE_STATEMENTS:
+                    return DocConstantWorkflow.EVIDENCE_STATEMENTS;
+                case WorkflowEnm.EVIDENCE_TABLE:
+                    return DocConstantWorkflow.EVIDENCE_TABLE;
+                case WorkflowEnm.FAQ:
+                    return DocConstantWorkflow.FAQ;
+                case WorkflowEnm.FILTER:
+                    return DocConstantWorkflow.FILTER;
+                case WorkflowEnm.FRAMED_QUESTION_DATA_SET:
+                    return DocConstantWorkflow.FRAMED_QUESTION_DATA_SET;
+                case WorkflowEnm.FRAMED_QUESTION_LIBRARY:
+                    return DocConstantWorkflow.FRAMED_QUESTION_LIBRARY;
+                case WorkflowEnm.FREQUENTIST_ANALYSIS:
+                    return DocConstantWorkflow.FREQUENTIST_ANALYSIS;
+                case WorkflowEnm.HTA:
+                    return DocConstantWorkflow.HTA;
+                case WorkflowEnm.META_ANALYSIS:
+                    return DocConstantWorkflow.META_ANALYSIS;
+                case WorkflowEnm.METHODOLOGY_PROJECT:
+                    return DocConstantWorkflow.METHODOLOGY_PROJECT;
+                case WorkflowEnm.NAMESET:
+                    return DocConstantWorkflow.NAMESET;
+                case WorkflowEnm.ONTOLOGY_PROJECT:
+                    return DocConstantWorkflow.ONTOLOGY_PROJECT;
+                case WorkflowEnm.PICO_RATING:
+                    return DocConstantWorkflow.PICO_RATING;
+                case WorkflowEnm.R_SNIPPET:
+                    return DocConstantWorkflow.R_SNIPPET;
+                case WorkflowEnm.RAPID_REVIEW:
+                    return DocConstantWorkflow.RAPID_REVIEW;
+                case WorkflowEnm.RESPONSE_LETTER:
+                    return DocConstantWorkflow.RESPONSE_LETTER;
+                case WorkflowEnm.RISK_OF_BIAS:
+                    return DocConstantWorkflow.RISK_OF_BIAS;
+                case WorkflowEnm.RMD_SNIPPET:
+                    return DocConstantWorkflow.RMD_SNIPPET;
+                case WorkflowEnm.SURVEY_DESIGN:
+                    return DocConstantWorkflow.SURVEY_DESIGN;
+                case WorkflowEnm.SURVEY_WIZARD:
+                    return DocConstantWorkflow.SURVEY_WIZARD;
+                case WorkflowEnm.SYSTEMATIC_REVIEW:
+                    return DocConstantWorkflow.SYSTEMATIC_REVIEW;
+                case WorkflowEnm.TAG:
+                    return DocConstantWorkflow.TAG;
+                case WorkflowEnm.VIEW:
+                    return DocConstantWorkflow.VIEW;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantWorkflow : IEquatable<DocConstantWorkflow>, IEqualityComparer<DocConstantWorkflow>
     {
         public const string AUDIT_ERROR = "Audit Error";
         public const string BAYESIAN_ANALYSIS = "Bayesian NMA";
@@ -158,102 +238,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantWorkflow).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantWorkflow(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantWorkflow(string Val)
-        {
-            return new DocConstantWorkflow(Val);
-        }
+        public static implicit operator DocConstantWorkflow(string Val) => new DocConstantWorkflow(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantWorkflow item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantWorkflow item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantWorkflow)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantWorkflow obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantWorkflow obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantWorkflow ft1, DocConstantWorkflow ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantWorkflow x, DocConstantWorkflow y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantWorkflow x, DocConstantWorkflow y) => x == y;
+        
+        public static bool operator !=(DocConstantWorkflow x, DocConstantWorkflow y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantWorkflow ft1, DocConstantWorkflow ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -268,19 +284,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantWorkflow obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantWorkflow)
+        #endregion IEquatable
     }
 }

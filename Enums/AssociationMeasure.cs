@@ -76,7 +76,45 @@ namespace Services.Enums
         RISK_RATIO_RELATIVE_RISK
     }
     
-    public sealed partial class DocConstantAssociationMeasure
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this AssociationMeasureEnm instance)
+		{
+			switch(instance) 
+			{
+                case AssociationMeasureEnm.COHENS_D:
+                    return DocConstantAssociationMeasure.COHENS_D;
+                case AssociationMeasureEnm.HAZARD_RATIO:
+                    return DocConstantAssociationMeasure.HAZARD_RATIO;
+                case AssociationMeasureEnm.HEDGES_G:
+                    return DocConstantAssociationMeasure.HEDGES_G;
+                case AssociationMeasureEnm.MEAN_DIFFERENCE:
+                    return DocConstantAssociationMeasure.MEAN_DIFFERENCE;
+                case AssociationMeasureEnm.ODDS_RATIO:
+                    return DocConstantAssociationMeasure.ODDS_RATIO;
+                case AssociationMeasureEnm.RATE_DIFFERENCE:
+                    return DocConstantAssociationMeasure.RATE_DIFFERENCE;
+                case AssociationMeasureEnm.RATE_RATIO:
+                    return DocConstantAssociationMeasure.RATE_RATIO;
+                case AssociationMeasureEnm.RAW_DIFFERENCE:
+                    return DocConstantAssociationMeasure.RAW_DIFFERENCE;
+                case AssociationMeasureEnm.RELATIVE_RISK_INCREASE:
+                    return DocConstantAssociationMeasure.RELATIVE_RISK_INCREASE;
+                case AssociationMeasureEnm.RELATIVE_RISK_REDUCTION:
+                    return DocConstantAssociationMeasure.RELATIVE_RISK_REDUCTION;
+                case AssociationMeasureEnm.RISK_DIFFERENCE:
+                    return DocConstantAssociationMeasure.RISK_DIFFERENCE;
+                case AssociationMeasureEnm.RISK_RATIO:
+                    return DocConstantAssociationMeasure.RISK_RATIO;
+                case AssociationMeasureEnm.RISK_RATIO_RELATIVE_RISK:
+                    return DocConstantAssociationMeasure.RISK_RATIO_RELATIVE_RISK;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantAssociationMeasure : IEquatable<DocConstantAssociationMeasure>, IEqualityComparer<DocConstantAssociationMeasure>
     {
         public const string COHENS_D = "Cohen's D";
         public const string HAZARD_RATIO = "Hazard Ratio";
@@ -95,102 +133,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantAssociationMeasure).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantAssociationMeasure(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantAssociationMeasure(string Val)
-        {
-            return new DocConstantAssociationMeasure(Val);
-        }
+        public static implicit operator DocConstantAssociationMeasure(string Val) => new DocConstantAssociationMeasure(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantAssociationMeasure item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantAssociationMeasure item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantAssociationMeasure)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantAssociationMeasure obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantAssociationMeasure obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantAssociationMeasure ft1, DocConstantAssociationMeasure ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantAssociationMeasure x, DocConstantAssociationMeasure y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantAssociationMeasure x, DocConstantAssociationMeasure y) => x == y;
+        
+        public static bool operator !=(DocConstantAssociationMeasure x, DocConstantAssociationMeasure y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantAssociationMeasure ft1, DocConstantAssociationMeasure ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -205,19 +179,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantAssociationMeasure obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantAssociationMeasure)
+        #endregion IEquatable
     }
 }

@@ -100,7 +100,69 @@ namespace Services.Enums
         SUB_GROUP_ANALYSIS
     }
     
-    public sealed partial class DocConstantStudyDesign
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this StudyDesignEnm instance)
+		{
+			switch(instance) 
+			{
+                case StudyDesignEnm.BEFORE_AND_AFTER_TRIAL:
+                    return DocConstantStudyDesign.BEFORE_AND_AFTER_TRIAL;
+                case StudyDesignEnm.CASE_CONTROL:
+                    return DocConstantStudyDesign.CASE_CONTROL;
+                case StudyDesignEnm.CASE_REPORT:
+                    return DocConstantStudyDesign.CASE_REPORT;
+                case StudyDesignEnm.CASE_SERIES:
+                    return DocConstantStudyDesign.CASE_SERIES;
+                case StudyDesignEnm.CLUSTER_RCT:
+                    return DocConstantStudyDesign.CLUSTER_RCT;
+                case StudyDesignEnm.COHORT_STUDY:
+                    return DocConstantStudyDesign.COHORT_STUDY;
+                case StudyDesignEnm.CONTROLLED_BEFORE_AND_AFTER_TRIAL:
+                    return DocConstantStudyDesign.CONTROLLED_BEFORE_AND_AFTER_TRIAL;
+                case StudyDesignEnm.CROSS_SECTIONAL_STUDY:
+                    return DocConstantStudyDesign.CROSS_SECTIONAL_STUDY;
+                case StudyDesignEnm.EXPANDED_ACCESS_PROGRAM:
+                    return DocConstantStudyDesign.EXPANDED_ACCESS_PROGRAM;
+                case StudyDesignEnm.FOLLOW_UP_EXTENSION:
+                    return DocConstantStudyDesign.FOLLOW_UP_EXTENSION;
+                case StudyDesignEnm.LITERATURE_REVIEW:
+                    return DocConstantStudyDesign.LITERATURE_REVIEW;
+                case StudyDesignEnm.NON_COMPARATIVE_OTHER:
+                    return DocConstantStudyDesign.NON_COMPARATIVE_OTHER;
+                case StudyDesignEnm.NON_CONTROLLED_CLINICAL_TRIAL:
+                    return DocConstantStudyDesign.NON_CONTROLLED_CLINICAL_TRIAL;
+                case StudyDesignEnm.NON_RANDOMIZED_CONTROLLED_TRIAL:
+                    return DocConstantStudyDesign.NON_RANDOMIZED_CONTROLLED_TRIAL;
+                case StudyDesignEnm.NON_RANDOMIZED_CROSSOVER:
+                    return DocConstantStudyDesign.NON_RANDOMIZED_CROSSOVER;
+                case StudyDesignEnm.OBSERVATIONAL_NON_COMPARATIVE_STUDY:
+                    return DocConstantStudyDesign.OBSERVATIONAL_NON_COMPARATIVE_STUDY;
+                case StudyDesignEnm.POOLED_ANALYSIS:
+                    return DocConstantStudyDesign.POOLED_ANALYSIS;
+                case StudyDesignEnm.POSTHOC_ANALYSIS:
+                    return DocConstantStudyDesign.POSTHOC_ANALYSIS;
+                case StudyDesignEnm.PROSPECTIVE_COHORT_STUDY:
+                    return DocConstantStudyDesign.PROSPECTIVE_COHORT_STUDY;
+                case StudyDesignEnm.QUALITATIVE_RESEARCH:
+                    return DocConstantStudyDesign.QUALITATIVE_RESEARCH;
+                case StudyDesignEnm.RANDOMIZED_CONTROLLED_TRIAL:
+                    return DocConstantStudyDesign.RANDOMIZED_CONTROLLED_TRIAL;
+                case StudyDesignEnm.RANDOMIZED_CROSSOVER:
+                    return DocConstantStudyDesign.RANDOMIZED_CROSSOVER;
+                case StudyDesignEnm.RANDOMIZED_NON_CONTROLLED_TRIAL:
+                    return DocConstantStudyDesign.RANDOMIZED_NON_CONTROLLED_TRIAL;
+                case StudyDesignEnm.RETROSPECTIVE_COHORT_STUDY:
+                    return DocConstantStudyDesign.RETROSPECTIVE_COHORT_STUDY;
+                case StudyDesignEnm.SUB_GROUP_ANALYSIS:
+                    return DocConstantStudyDesign.SUB_GROUP_ANALYSIS;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantStudyDesign : IEquatable<DocConstantStudyDesign>, IEqualityComparer<DocConstantStudyDesign>
     {
         public const string BEFORE_AND_AFTER_TRIAL = "Before and After Trial";
         public const string CASE_CONTROL = "Case Control";
@@ -131,102 +193,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantStudyDesign).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantStudyDesign(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantStudyDesign(string Val)
-        {
-            return new DocConstantStudyDesign(Val);
-        }
+        public static implicit operator DocConstantStudyDesign(string Val) => new DocConstantStudyDesign(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantStudyDesign item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantStudyDesign item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantStudyDesign)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantStudyDesign obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantStudyDesign obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantStudyDesign ft1, DocConstantStudyDesign ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantStudyDesign x, DocConstantStudyDesign y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantStudyDesign x, DocConstantStudyDesign y) => x == y;
+        
+        public static bool operator !=(DocConstantStudyDesign x, DocConstantStudyDesign y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantStudyDesign ft1, DocConstantStudyDesign ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -241,19 +239,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantStudyDesign obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantStudyDesign)
+        #endregion IEquatable
     }
 }

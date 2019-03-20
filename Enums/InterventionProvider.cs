@@ -92,7 +92,61 @@ namespace Services.Enums
         UNPAID_CAREGIVER
     }
     
-    public sealed partial class DocConstantInterventionProvider
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this InterventionProviderEnm instance)
+		{
+			switch(instance) 
+			{
+                case InterventionProviderEnm.ALLIED_HEALTH_CARE_PROVIDER:
+                    return DocConstantInterventionProvider.ALLIED_HEALTH_CARE_PROVIDER;
+                case InterventionProviderEnm.CARE_PROVIDER:
+                    return DocConstantInterventionProvider.CARE_PROVIDER;
+                case InterventionProviderEnm.CLINICIAN:
+                    return DocConstantInterventionProvider.CLINICIAN;
+                case InterventionProviderEnm.DOCTOR:
+                    return DocConstantInterventionProvider.DOCTOR;
+                case InterventionProviderEnm.DOCTORAL_STUDENT:
+                    return DocConstantInterventionProvider.DOCTORAL_STUDENT;
+                case InterventionProviderEnm.FOSTER_PARENT:
+                    return DocConstantInterventionProvider.FOSTER_PARENT;
+                case InterventionProviderEnm.GENERAL_PRACTICIONER:
+                    return DocConstantInterventionProvider.GENERAL_PRACTICIONER;
+                case InterventionProviderEnm.GRADUATE_STUDENT:
+                    return DocConstantInterventionProvider.GRADUATE_STUDENT;
+                case InterventionProviderEnm.MULTIPLE_INDIVIDUALS:
+                    return DocConstantInterventionProvider.MULTIPLE_INDIVIDUALS;
+                case InterventionProviderEnm.N_A:
+                    return DocConstantInterventionProvider.N_A;
+                case InterventionProviderEnm.NR:
+                    return DocConstantInterventionProvider.NR;
+                case InterventionProviderEnm.NURSE:
+                    return DocConstantInterventionProvider.NURSE;
+                case InterventionProviderEnm.PAID_CAREGIVER:
+                    return DocConstantInterventionProvider.PAID_CAREGIVER;
+                case InterventionProviderEnm.PHARMACIST:
+                    return DocConstantInterventionProvider.PHARMACIST;
+                case InterventionProviderEnm.PSYCHIATRIST:
+                    return DocConstantInterventionProvider.PSYCHIATRIST;
+                case InterventionProviderEnm.PSYCHOLOGIST:
+                    return DocConstantInterventionProvider.PSYCHOLOGIST;
+                case InterventionProviderEnm.SELF:
+                    return DocConstantInterventionProvider.SELF;
+                case InterventionProviderEnm.TEACHER:
+                    return DocConstantInterventionProvider.TEACHER;
+                case InterventionProviderEnm.TEAM:
+                    return DocConstantInterventionProvider.TEAM;
+                case InterventionProviderEnm.THERAPIST:
+                    return DocConstantInterventionProvider.THERAPIST;
+                case InterventionProviderEnm.UNPAID_CAREGIVER:
+                    return DocConstantInterventionProvider.UNPAID_CAREGIVER;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantInterventionProvider : IEquatable<DocConstantInterventionProvider>, IEqualityComparer<DocConstantInterventionProvider>
     {
         public const string ALLIED_HEALTH_CARE_PROVIDER = "Allied Health Care Provider";
         public const string CARE_PROVIDER = "Care Provider";
@@ -119,102 +173,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantInterventionProvider).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantInterventionProvider(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantInterventionProvider(string Val)
-        {
-            return new DocConstantInterventionProvider(Val);
-        }
+        public static implicit operator DocConstantInterventionProvider(string Val) => new DocConstantInterventionProvider(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantInterventionProvider item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantInterventionProvider item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantInterventionProvider)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantInterventionProvider obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantInterventionProvider obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantInterventionProvider ft1, DocConstantInterventionProvider ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantInterventionProvider x, DocConstantInterventionProvider y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantInterventionProvider x, DocConstantInterventionProvider y) => x == y;
+        
+        public static bool operator !=(DocConstantInterventionProvider x, DocConstantInterventionProvider y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantInterventionProvider ft1, DocConstantInterventionProvider ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -229,19 +219,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantInterventionProvider obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantInterventionProvider)
+        #endregion IEquatable
     }
 }

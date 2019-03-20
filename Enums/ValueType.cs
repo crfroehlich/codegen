@@ -130,7 +130,99 @@ namespace Services.Enums
         YESNONA
     }
     
-    public sealed partial class DocConstantValueType
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this ValueTypeEnm instance)
+		{
+			switch(instance) 
+			{
+                case ValueTypeEnm.ASSOCIATIONMEASURE:
+                    return DocConstantValueType.ASSOCIATIONMEASURE;
+                case ValueTypeEnm.BOOLEAN:
+                    return DocConstantValueType.BOOLEAN;
+                case ValueTypeEnm.CALENDARDATE:
+                    return DocConstantValueType.CALENDARDATE;
+                case ValueTypeEnm.CALENDARDATES:
+                    return DocConstantValueType.CALENDARDATES;
+                case ValueTypeEnm.CONTACT:
+                    return DocConstantValueType.CONTACT;
+                case ValueTypeEnm.DATETIME:
+                    return DocConstantValueType.DATETIME;
+                case ValueTypeEnm.DATETIMERANGE:
+                    return DocConstantValueType.DATETIMERANGE;
+                case ValueTypeEnm.DECIMAL:
+                    return DocConstantValueType.DECIMAL;
+                case ValueTypeEnm.DECIMALRANGE:
+                    return DocConstantValueType.DECIMALRANGE;
+                case ValueTypeEnm.DESIGNNESTEDSTUDYIDLINK:
+                    return DocConstantValueType.DESIGNNESTEDSTUDYIDLINK;
+                case ValueTypeEnm.EVENTCOUNTS:
+                    return DocConstantValueType.EVENTCOUNTS;
+                case ValueTypeEnm.FACILITY:
+                    return DocConstantValueType.FACILITY;
+                case ValueTypeEnm.FIXEDDOSEINTERVENTION:
+                    return DocConstantValueType.FIXEDDOSEINTERVENTION;
+                case ValueTypeEnm.FLAG:
+                    return DocConstantValueType.FLAG;
+                case ValueTypeEnm.FUNDING:
+                    return DocConstantValueType.FUNDING;
+                case ValueTypeEnm.INTEGER:
+                    return DocConstantValueType.INTEGER;
+                case ValueTypeEnm.INTERVAL:
+                    return DocConstantValueType.INTERVAL;
+                case ValueTypeEnm.INTERVALS:
+                    return DocConstantValueType.INTERVALS;
+                case ValueTypeEnm.LOOKUP:
+                    return DocConstantValueType.LOOKUP;
+                case ValueTypeEnm.MEMO:
+                    return DocConstantValueType.MEMO;
+                case ValueTypeEnm.NPERSONS:
+                    return DocConstantValueType.NPERSONS;
+                case ValueTypeEnm.PARTICIPANT:
+                    return DocConstantValueType.PARTICIPANT;
+                case ValueTypeEnm.PARTICIPANTS:
+                    return DocConstantValueType.PARTICIPANTS;
+                case ValueTypeEnm.POPULATIONANALYZED:
+                    return DocConstantValueType.POPULATIONANALYZED;
+                case ValueTypeEnm.PVALUE:
+                    return DocConstantValueType.PVALUE;
+                case ValueTypeEnm.RATE:
+                    return DocConstantValueType.RATE;
+                case ValueTypeEnm.SETTINGLOCATION:
+                    return DocConstantValueType.SETTINGLOCATION;
+                case ValueTypeEnm.SETTINGLOCATIONTOTAL:
+                    return DocConstantValueType.SETTINGLOCATIONTOTAL;
+                case ValueTypeEnm.STUDYDOC:
+                    return DocConstantValueType.STUDYDOC;
+                case ValueTypeEnm.STUDYOBJECTIVE:
+                    return DocConstantValueType.STUDYOBJECTIVE;
+                case ValueTypeEnm.STUDYREFERENCE:
+                    return DocConstantValueType.STUDYREFERENCE;
+                case ValueTypeEnm.SUBGROUPDESCRIPTOR:
+                    return DocConstantValueType.SUBGROUPDESCRIPTOR;
+                case ValueTypeEnm.TIMEPOINT:
+                    return DocConstantValueType.TIMEPOINT;
+                case ValueTypeEnm.TIMEPOINTS:
+                    return DocConstantValueType.TIMEPOINTS;
+                case ValueTypeEnm.UNCOLLECTEDVALUE:
+                    return DocConstantValueType.UNCOLLECTEDVALUE;
+                case ValueTypeEnm.UNITRANGE:
+                    return DocConstantValueType.UNITRANGE;
+                case ValueTypeEnm.UNITS:
+                    return DocConstantValueType.UNITS;
+                case ValueTypeEnm.UNITSRANGE:
+                    return DocConstantValueType.UNITSRANGE;
+                case ValueTypeEnm.UNITVALUE:
+                    return DocConstantValueType.UNITVALUE;
+                case ValueTypeEnm.YESNONA:
+                    return DocConstantValueType.YESNONA;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantValueType : IEquatable<DocConstantValueType>, IEqualityComparer<DocConstantValueType>
     {
         public const string ASSOCIATIONMEASURE = "AssociationMeasure";
         public const string BOOLEAN = "Boolean";
@@ -176,102 +268,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantValueType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantValueType(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantValueType(string Val)
-        {
-            return new DocConstantValueType(Val);
-        }
+        public static implicit operator DocConstantValueType(string Val) => new DocConstantValueType(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantValueType item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantValueType item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantValueType)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantValueType obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantValueType obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantValueType ft1, DocConstantValueType ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantValueType x, DocConstantValueType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantValueType x, DocConstantValueType y) => x == y;
+        
+        public static bool operator !=(DocConstantValueType x, DocConstantValueType y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantValueType ft1, DocConstantValueType ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -286,19 +314,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantValueType obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantValueType)
+        #endregion IEquatable
     }
 }

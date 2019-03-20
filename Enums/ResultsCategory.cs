@@ -74,7 +74,43 @@ namespace Services.Enums
         WITHDRAWAL_DRUG_DISCONTINUATION
     }
     
-    public sealed partial class DocConstantResultsCategory
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this ResultsCategoryEnm instance)
+		{
+			switch(instance) 
+			{
+                case ResultsCategoryEnm.ADVERSE_EVENT:
+                    return DocConstantResultsCategory.ADVERSE_EVENT;
+                case ResultsCategoryEnm.CLINICAL_OUTCOME:
+                    return DocConstantResultsCategory.CLINICAL_OUTCOME;
+                case ResultsCategoryEnm.COST_UTILIZATION:
+                    return DocConstantResultsCategory.COST_UTILIZATION;
+                case ResultsCategoryEnm.DEMOGRAPHICS:
+                    return DocConstantResultsCategory.DEMOGRAPHICS;
+                case ResultsCategoryEnm.LABORATORY_VALUE_DIAGNOSTIC:
+                    return DocConstantResultsCategory.LABORATORY_VALUE_DIAGNOSTIC;
+                case ResultsCategoryEnm.MEDICAL_HISTORY:
+                    return DocConstantResultsCategory.MEDICAL_HISTORY;
+                case ResultsCategoryEnm.MISCELLANEOUS:
+                    return DocConstantResultsCategory.MISCELLANEOUS;
+                case ResultsCategoryEnm.MORTALITY:
+                    return DocConstantResultsCategory.MORTALITY;
+                case ResultsCategoryEnm.SCALES_SCORES:
+                    return DocConstantResultsCategory.SCALES_SCORES;
+                case ResultsCategoryEnm.SOCIAL_HISTORY:
+                    return DocConstantResultsCategory.SOCIAL_HISTORY;
+                case ResultsCategoryEnm.THERAPIES:
+                    return DocConstantResultsCategory.THERAPIES;
+                case ResultsCategoryEnm.WITHDRAWAL_DRUG_DISCONTINUATION:
+                    return DocConstantResultsCategory.WITHDRAWAL_DRUG_DISCONTINUATION;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantResultsCategory : IEquatable<DocConstantResultsCategory>, IEqualityComparer<DocConstantResultsCategory>
     {
         public const string ADVERSE_EVENT = "Adverse Event";
         public const string CLINICAL_OUTCOME = "Clinical Outcome";
@@ -92,102 +128,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantResultsCategory).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantResultsCategory(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantResultsCategory(string Val)
-        {
-            return new DocConstantResultsCategory(Val);
-        }
+        public static implicit operator DocConstantResultsCategory(string Val) => new DocConstantResultsCategory(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantResultsCategory item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantResultsCategory item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantResultsCategory)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantResultsCategory obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantResultsCategory obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantResultsCategory ft1, DocConstantResultsCategory ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantResultsCategory x, DocConstantResultsCategory y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantResultsCategory x, DocConstantResultsCategory y) => x == y;
+        
+        public static bool operator !=(DocConstantResultsCategory x, DocConstantResultsCategory y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantResultsCategory ft1, DocConstantResultsCategory ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -202,19 +174,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantResultsCategory obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantResultsCategory)
+        #endregion IEquatable
     }
 }

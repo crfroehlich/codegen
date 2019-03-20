@@ -98,7 +98,67 @@ namespace Services.Enums
         WRONG_STUDY_DESIGN
     }
     
-    public sealed partial class DocConstantReasonRejected
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this ReasonRejectedEnm instance)
+		{
+			switch(instance) 
+			{
+                case ReasonRejectedEnm.ABSTRACT_INSUFFICIENT_INFORMATION:
+                    return DocConstantReasonRejected.ABSTRACT_INSUFFICIENT_INFORMATION;
+                case ReasonRejectedEnm.ANIMAL_STUDY:
+                    return DocConstantReasonRejected.ANIMAL_STUDY;
+                case ReasonRejectedEnm.DOES_NOT_MEET_PROTOCOL:
+                    return DocConstantReasonRejected.DOES_NOT_MEET_PROTOCOL;
+                case ReasonRejectedEnm.DUPLICATE_PUBLICATION:
+                    return DocConstantReasonRejected.DUPLICATE_PUBLICATION;
+                case ReasonRejectedEnm.ERRONEOUS_DATA:
+                    return DocConstantReasonRejected.ERRONEOUS_DATA;
+                case ReasonRejectedEnm.FAILED_JOURNAL_FILTER:
+                    return DocConstantReasonRejected.FAILED_JOURNAL_FILTER;
+                case ReasonRejectedEnm.IN_VITRO_STUDY:
+                    return DocConstantReasonRejected.IN_VITRO_STUDY;
+                case ReasonRejectedEnm.MISSING_CHARACTERISTICS:
+                    return DocConstantReasonRejected.MISSING_CHARACTERISTICS;
+                case ReasonRejectedEnm.MISSING_OUTCOMES:
+                    return DocConstantReasonRejected.MISSING_OUTCOMES;
+                case ReasonRejectedEnm.NOT_CLINICAL_STUDY:
+                    return DocConstantReasonRejected.NOT_CLINICAL_STUDY;
+                case ReasonRejectedEnm.NOT_ENGLISH:
+                    return DocConstantReasonRejected.NOT_ENGLISH;
+                case ReasonRejectedEnm.NOT_TREAMENT_STUDY:
+                    return DocConstantReasonRejected.NOT_TREAMENT_STUDY;
+                case ReasonRejectedEnm.OTHER:
+                    return DocConstantReasonRejected.OTHER;
+                case ReasonRejectedEnm.RELEVANT_MISCLASSIFIED_REFERENCE:
+                    return DocConstantReasonRejected.RELEVANT_MISCLASSIFIED_REFERENCE;
+                case ReasonRejectedEnm.STUDY_FITS_PROTOCOL_ADD_LATER:
+                    return DocConstantReasonRejected.STUDY_FITS_PROTOCOL_ADD_LATER;
+                case ReasonRejectedEnm.WRONG_COMPARISON:
+                    return DocConstantReasonRejected.WRONG_COMPARISON;
+                case ReasonRejectedEnm.WRONG_FOLLOWUP:
+                    return DocConstantReasonRejected.WRONG_FOLLOWUP;
+                case ReasonRejectedEnm.WRONG_INTERVENTION:
+                    return DocConstantReasonRejected.WRONG_INTERVENTION;
+                case ReasonRejectedEnm.WRONG_NUMBER_PARTICIPANTS:
+                    return DocConstantReasonRejected.WRONG_NUMBER_PARTICIPANTS;
+                case ReasonRejectedEnm.WRONG_OUTCOME_STRATIFICATION:
+                    return DocConstantReasonRejected.WRONG_OUTCOME_STRATIFICATION;
+                case ReasonRejectedEnm.WRONG_OUTCOMES:
+                    return DocConstantReasonRejected.WRONG_OUTCOMES;
+                case ReasonRejectedEnm.WRONG_POPULATION:
+                    return DocConstantReasonRejected.WRONG_POPULATION;
+                case ReasonRejectedEnm.WRONG_PUBLICATION_DATE_CUTOFF:
+                    return DocConstantReasonRejected.WRONG_PUBLICATION_DATE_CUTOFF;
+                case ReasonRejectedEnm.WRONG_STUDY_DESIGN:
+                    return DocConstantReasonRejected.WRONG_STUDY_DESIGN;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantReasonRejected : IEquatable<DocConstantReasonRejected>, IEqualityComparer<DocConstantReasonRejected>
     {
         public const string ABSTRACT_INSUFFICIENT_INFORMATION = "Abstract with Insufficient Information";
         public const string ANIMAL_STUDY = "Animal study";
@@ -128,102 +188,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantReasonRejected).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantReasonRejected(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantReasonRejected(string Val)
-        {
-            return new DocConstantReasonRejected(Val);
-        }
+        public static implicit operator DocConstantReasonRejected(string Val) => new DocConstantReasonRejected(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantReasonRejected item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantReasonRejected item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantReasonRejected)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantReasonRejected obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantReasonRejected obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantReasonRejected ft1, DocConstantReasonRejected ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantReasonRejected x, DocConstantReasonRejected y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantReasonRejected x, DocConstantReasonRejected y) => x == y;
+        
+        public static bool operator !=(DocConstantReasonRejected x, DocConstantReasonRejected y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantReasonRejected ft1, DocConstantReasonRejected ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -238,19 +234,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantReasonRejected obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantReasonRejected)
+        #endregion IEquatable
     }
 }

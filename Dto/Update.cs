@@ -111,7 +111,8 @@ namespace Services.Dto
 
     }
 
-    [Route("/update/{Id}", "GET, PATCH")]
+    [Route("/update", "POST")]
+    [Route("/update/{Id}", "GET")]
     public partial class Update : UpdateBase, IReturn<Update>, IDto
     {
         public Update()
@@ -163,6 +164,8 @@ namespace Services.Dto
         private List<string> collections { get { return _collections; } }
     }
     
+    [Route("/Update/{Id}/copy", "POST")]
+    public partial class UpdateCopy : Update {}
     public partial class UpdateSearchBase : Search<Update>
     {
         public int? Id { get; set; }

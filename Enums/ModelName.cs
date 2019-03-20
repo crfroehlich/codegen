@@ -204,7 +204,173 @@ namespace Services.Enums
         WORKFLOWTASK
     }
     
-    public sealed partial class DocConstantModelName
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this ModelNameEnm instance)
+		{
+			switch(instance) 
+			{
+                case ModelNameEnm.APP:
+                    return DocConstantModelName.APP;
+                case ModelNameEnm.ATTRIBUTE:
+                    return DocConstantModelName.ATTRIBUTE;
+                case ModelNameEnm.ATTRIBUTEINTERVAL:
+                    return DocConstantModelName.ATTRIBUTEINTERVAL;
+                case ModelNameEnm.AUDITDELTA:
+                    return DocConstantModelName.AUDITDELTA;
+                case ModelNameEnm.AUDITRECORD:
+                    return DocConstantModelName.AUDITRECORD;
+                case ModelNameEnm.BACKGROUNDTASK:
+                    return DocConstantModelName.BACKGROUNDTASK;
+                case ModelNameEnm.BACKGROUNDTASKHISTORY:
+                    return DocConstantModelName.BACKGROUNDTASKHISTORY;
+                case ModelNameEnm.BACKGROUNDTASKITEM:
+                    return DocConstantModelName.BACKGROUNDTASKITEM;
+                case ModelNameEnm.BROADCAST:
+                    return DocConstantModelName.BROADCAST;
+                case ModelNameEnm.CHARACTERISTIC:
+                    return DocConstantModelName.CHARACTERISTIC;
+                case ModelNameEnm.CLIENT:
+                    return DocConstantModelName.CLIENT;
+                case ModelNameEnm.COMPARATOR:
+                    return DocConstantModelName.COMPARATOR;
+                case ModelNameEnm.DATABASEVERSION:
+                    return DocConstantModelName.DATABASEVERSION;
+                case ModelNameEnm.DATACLASS:
+                    return DocConstantModelName.DATACLASS;
+                case ModelNameEnm.DATAPROPERTY:
+                    return DocConstantModelName.DATAPROPERTY;
+                case ModelNameEnm.DATATAB:
+                    return DocConstantModelName.DATATAB;
+                case ModelNameEnm.DATETIME:
+                    return DocConstantModelName.DATETIME;
+                case ModelNameEnm.DEFAULT:
+                    return DocConstantModelName.DEFAULT;
+                case ModelNameEnm.DIVISION:
+                    return DocConstantModelName.DIVISION;
+                case ModelNameEnm.DOCUMENT:
+                    return DocConstantModelName.DOCUMENT;
+                case ModelNameEnm.DOCUMENTSET:
+                    return DocConstantModelName.DOCUMENTSET;
+                case ModelNameEnm.DOCUMENTSETHISTORY:
+                    return DocConstantModelName.DOCUMENTSETHISTORY;
+                case ModelNameEnm.ENTITIES:
+                    return DocConstantModelName.ENTITIES;
+                case ModelNameEnm.EVENT:
+                    return DocConstantModelName.EVENT;
+                case ModelNameEnm.FEATURESET:
+                    return DocConstantModelName.FEATURESET;
+                case ModelNameEnm.GLOSSARY:
+                    return DocConstantModelName.GLOSSARY;
+                case ModelNameEnm.HELP:
+                    return DocConstantModelName.HELP;
+                case ModelNameEnm.HISTORY:
+                    return DocConstantModelName.HISTORY;
+                case ModelNameEnm.IMPERSONATION:
+                    return DocConstantModelName.IMPERSONATION;
+                case ModelNameEnm.IMPORTDATA:
+                    return DocConstantModelName.IMPORTDATA;
+                case ModelNameEnm.INTERVAL:
+                    return DocConstantModelName.INTERVAL;
+                case ModelNameEnm.INTERVENTION:
+                    return DocConstantModelName.INTERVENTION;
+                case ModelNameEnm.JUNCTION:
+                    return DocConstantModelName.JUNCTION;
+                case ModelNameEnm.LOCALE:
+                    return DocConstantModelName.LOCALE;
+                case ModelNameEnm.LOCALELOOKUP:
+                    return DocConstantModelName.LOCALELOOKUP;
+                case ModelNameEnm.LOOKUPCATEGORY:
+                    return DocConstantModelName.LOOKUPCATEGORY;
+                case ModelNameEnm.LOOKUPTABLE:
+                    return DocConstantModelName.LOOKUPTABLE;
+                case ModelNameEnm.LOOKUPTABLEBINDING:
+                    return DocConstantModelName.LOOKUPTABLEBINDING;
+                case ModelNameEnm.LOOKUPTABLEENUM:
+                    return DocConstantModelName.LOOKUPTABLEENUM;
+                case ModelNameEnm.MEANRANGES:
+                    return DocConstantModelName.MEANRANGES;
+                case ModelNameEnm.MEANRANGEVALUE:
+                    return DocConstantModelName.MEANRANGEVALUE;
+                case ModelNameEnm.MEANVARIANCES:
+                    return DocConstantModelName.MEANVARIANCES;
+                case ModelNameEnm.MEANVARIANCEVALUE:
+                    return DocConstantModelName.MEANVARIANCEVALUE;
+                case ModelNameEnm.OUTCOME:
+                    return DocConstantModelName.OUTCOME;
+                case ModelNameEnm.PAGE:
+                    return DocConstantModelName.PAGE;
+                case ModelNameEnm.PROJECT:
+                    return DocConstantModelName.PROJECT;
+                case ModelNameEnm.QUEUECHANNEL:
+                    return DocConstantModelName.QUEUECHANNEL;
+                case ModelNameEnm.RELEASESTATUS:
+                    return DocConstantModelName.RELEASESTATUS;
+                case ModelNameEnm.ROLE:
+                    return DocConstantModelName.ROLE;
+                case ModelNameEnm.SCOPE:
+                    return DocConstantModelName.SCOPE;
+                case ModelNameEnm.STATS:
+                    return DocConstantModelName.STATS;
+                case ModelNameEnm.STATSRECORD:
+                    return DocConstantModelName.STATSRECORD;
+                case ModelNameEnm.STATSSTUDYSET:
+                    return DocConstantModelName.STATSSTUDYSET;
+                case ModelNameEnm.STUDYDESIGN:
+                    return DocConstantModelName.STUDYDESIGN;
+                case ModelNameEnm.STUDYTYPE:
+                    return DocConstantModelName.STUDYTYPE;
+                case ModelNameEnm.TAG:
+                    return DocConstantModelName.TAG;
+                case ModelNameEnm.TEAM:
+                    return DocConstantModelName.TEAM;
+                case ModelNameEnm.TERMCATEGORY:
+                    return DocConstantModelName.TERMCATEGORY;
+                case ModelNameEnm.TERMMASTER:
+                    return DocConstantModelName.TERMMASTER;
+                case ModelNameEnm.TERMSYNONYM:
+                    return DocConstantModelName.TERMSYNONYM;
+                case ModelNameEnm.TIMECARD:
+                    return DocConstantModelName.TIMECARD;
+                case ModelNameEnm.TIMEPOINT:
+                    return DocConstantModelName.TIMEPOINT;
+                case ModelNameEnm.UNITCONVERSIONRULES:
+                    return DocConstantModelName.UNITCONVERSIONRULES;
+                case ModelNameEnm.UNITOFMEASURE:
+                    return DocConstantModelName.UNITOFMEASURE;
+                case ModelNameEnm.UNITS:
+                    return DocConstantModelName.UNITS;
+                case ModelNameEnm.UNITVALUE:
+                    return DocConstantModelName.UNITVALUE;
+                case ModelNameEnm.UPDATE:
+                    return DocConstantModelName.UPDATE;
+                case ModelNameEnm.USER:
+                    return DocConstantModelName.USER;
+                case ModelNameEnm.USERREQUEST:
+                    return DocConstantModelName.USERREQUEST;
+                case ModelNameEnm.USERSESSION:
+                    return DocConstantModelName.USERSESSION;
+                case ModelNameEnm.USERTYPE:
+                    return DocConstantModelName.USERTYPE;
+                case ModelNameEnm.VALUETYPE:
+                    return DocConstantModelName.VALUETYPE;
+                case ModelNameEnm.VARIABLEINSTANCE:
+                    return DocConstantModelName.VARIABLEINSTANCE;
+                case ModelNameEnm.VARIABLERULE:
+                    return DocConstantModelName.VARIABLERULE;
+                case ModelNameEnm.WORKFLOW:
+                    return DocConstantModelName.WORKFLOW;
+                case ModelNameEnm.WORKFLOWCOMMENT:
+                    return DocConstantModelName.WORKFLOWCOMMENT;
+                case ModelNameEnm.WORKFLOWTASK:
+                    return DocConstantModelName.WORKFLOWTASK;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantModelName : IEquatable<DocConstantModelName>, IEqualityComparer<DocConstantModelName>
     {
         public const string APP = "App";
         public const string ATTRIBUTE = "Attribute";
@@ -287,102 +453,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantModelName).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantModelName(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantModelName(string Val)
-        {
-            return new DocConstantModelName(Val);
-        }
+        public static implicit operator DocConstantModelName(string Val) => new DocConstantModelName(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantModelName item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantModelName item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantModelName)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantModelName obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantModelName obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantModelName ft1, DocConstantModelName ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantModelName x, DocConstantModelName y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantModelName x, DocConstantModelName y) => x == y;
+        
+        public static bool operator !=(DocConstantModelName x, DocConstantModelName y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantModelName ft1, DocConstantModelName ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -397,19 +499,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantModelName obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantModelName)
+        #endregion IEquatable
     }
 }

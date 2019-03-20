@@ -399,17 +399,26 @@ namespace Services.API
 
             return ret;
         }
-
-        public List<Update> Put(UpdateBatch request)
+        public Update Post(Update request)
         {
-            return Patch(request);
-        }
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-        public Update Put(Update request)
-        {
-            return Patch(request);
+            request.VisibleFields = request.VisibleFields ?? new List<string>();
+
+            Update ret = null;
+
+            Execute.Run(ssn =>
+            {
+                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Update")) 
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+
+                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+            });
+
+            return ret;
         }
-        public List<Update> Patch(UpdateBatch request)
+   
+        public List<Update> Post(UpdateBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
@@ -421,13 +430,13 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as Update;
+                    var obj = Post(dto) as Update;
                     ret.Add(obj);
-                    errorMap[$"{i}"] = $"true";
+                    errorMap[$"{i}"] = $"{obj.Id}";
                 }
                 catch (Exception ex)
                 {
-                    errorMap[$"{i}"] = $"false";
+                    errorMap[$"{i}"] = null;
                     errors.Add(new ResponseError()
                     {
                         Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
@@ -456,16 +465,58 @@ namespace Services.API
             return ret;
         }
 
-        public Update Patch(Update request)
+        public Update Post(UpdateCopy request)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Update to patch.");
-            
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
-            
             Update ret = null;
             Execute.Run(ssn =>
             {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                var entity = DocEntityUpdate.GetUpdate(request?.Id);
+                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+
+                    var pBody = entity.Body;
+                    var pDeliveryStatus = entity.DeliveryStatus;
+                    var pEmailAttempts = entity.EmailAttempts;
+                    var pEmailSent = entity.EmailSent;
+                    var pEvents = entity.Events.ToList();
+                    var pLink = entity.Link;
+                    if(!DocTools.IsNullOrEmpty(pLink))
+                        pLink += " (Copy)";
+                    var pPriority = entity.Priority;
+                    var pRead = entity.Read;
+                    var pSlackSent = entity.SlackSent;
+                    var pSubject = entity.Subject;
+                    if(!DocTools.IsNullOrEmpty(pSubject))
+                        pSubject += " (Copy)";
+                    var pTeam = entity.Team;
+                    var pUser = entity.User;
+                #region Custom Before copyUpdate
+                #endregion Custom Before copyUpdate
+                var copy = new DocEntityUpdate(ssn)
+                {
+                    Hash = Guid.NewGuid()
+                                , Body = pBody
+                                , DeliveryStatus = pDeliveryStatus
+                                , EmailAttempts = pEmailAttempts
+                                , EmailSent = pEmailSent
+                                , Link = pLink
+                                , Priority = pPriority
+                                , Read = pRead
+                                , SlackSent = pSlackSent
+                                , Subject = pSubject
+                                , Team = pTeam
+                                , User = pUser
+                };
+                            foreach(var item in pEvents)
+                            {
+                                entity.Events.Add(item);
+                            }
+
+                #region Custom After copyUpdate
+                #endregion Custom After copyUpdate
+                copy.SaveChanges(DocConstantPermission.ADD);
+                ret = copy.ToDto();
             });
             return ret;
         }

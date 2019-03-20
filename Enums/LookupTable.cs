@@ -288,7 +288,257 @@ namespace Services.Enums
         YESNONA
     }
     
-    public sealed partial class DocConstantLookupTable
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this LookupTableEnm instance)
+		{
+			switch(instance) 
+			{
+                case LookupTableEnm.AMPERSONCOUNT:
+                    return DocConstantLookupTable.AMPERSONCOUNT;
+                case LookupTableEnm.APP:
+                    return DocConstantLookupTable.APP;
+                case LookupTableEnm.ARMPOPULATIONAGE:
+                    return DocConstantLookupTable.ARMPOPULATIONAGE;
+                case LookupTableEnm.ARMPOPULATIONN:
+                    return DocConstantLookupTable.ARMPOPULATIONN;
+                case LookupTableEnm.ASSOCIATIONMEASURE:
+                    return DocConstantLookupTable.ASSOCIATIONMEASURE;
+                case LookupTableEnm.ATTRIBUTECATEGORY:
+                    return DocConstantLookupTable.ATTRIBUTECATEGORY;
+                case LookupTableEnm.ATTRIBUTETYPE:
+                    return DocConstantLookupTable.ATTRIBUTETYPE;
+                case LookupTableEnm.BROADCASTSTATUS:
+                    return DocConstantLookupTable.BROADCASTSTATUS;
+                case LookupTableEnm.BROADCASTTYPE:
+                    return DocConstantLookupTable.BROADCASTTYPE;
+                case LookupTableEnm.CONFIDENCEINTERVAL:
+                    return DocConstantLookupTable.CONFIDENCEINTERVAL;
+                case LookupTableEnm.CONJUNCTION:
+                    return DocConstantLookupTable.CONJUNCTION;
+                case LookupTableEnm.DATABASETYPE:
+                    return DocConstantLookupTable.DATABASETYPE;
+                case LookupTableEnm.DATAHUBSEARCHCATEGORY:
+                    return DocConstantLookupTable.DATAHUBSEARCHCATEGORY;
+                case LookupTableEnm.DATAHUBSOURCE:
+                    return DocConstantLookupTable.DATAHUBSOURCE;
+                case LookupTableEnm.DEFAULTTIMEUNIT:
+                    return DocConstantLookupTable.DEFAULTTIMEUNIT;
+                case LookupTableEnm.DEFAULTUNITTYPE:
+                    return DocConstantLookupTable.DEFAULTUNITTYPE;
+                case LookupTableEnm.DIRECTIONALITY:
+                    return DocConstantLookupTable.DIRECTIONALITY;
+                case LookupTableEnm.DOCUMENTSETTYPE:
+                    return DocConstantLookupTable.DOCUMENTSETTYPE;
+                case LookupTableEnm.DOCUMENTTYPE:
+                    return DocConstantLookupTable.DOCUMENTTYPE;
+                case LookupTableEnm.DOSAGEPROTOCOL:
+                    return DocConstantLookupTable.DOSAGEPROTOCOL;
+                case LookupTableEnm.DOSAGETYPE:
+                    return DocConstantLookupTable.DOSAGETYPE;
+                case LookupTableEnm.EQUALITYOPERATOR:
+                    return DocConstantLookupTable.EQUALITYOPERATOR;
+                case LookupTableEnm.ERRORMESSAGE:
+                    return DocConstantLookupTable.ERRORMESSAGE;
+                case LookupTableEnm.EXTERNALKEY:
+                    return DocConstantLookupTable.EXTERNALKEY;
+                case LookupTableEnm.FEATURE:
+                    return DocConstantLookupTable.FEATURE;
+                case LookupTableEnm.FIELDTYPE:
+                    return DocConstantLookupTable.FIELDTYPE;
+                case LookupTableEnm.FOREIGNKEYSTATUS:
+                    return DocConstantLookupTable.FOREIGNKEYSTATUS;
+                case LookupTableEnm.FQREFERENCESTATUS:
+                    return DocConstantLookupTable.FQREFERENCESTATUS;
+                case LookupTableEnm.HELP:
+                    return DocConstantLookupTable.HELP;
+                case LookupTableEnm.IMPORTSTATUS:
+                    return DocConstantLookupTable.IMPORTSTATUS;
+                case LookupTableEnm.INCIDENCERATETYPE:
+                    return DocConstantLookupTable.INCIDENCERATETYPE;
+                case LookupTableEnm.INSTITUTIONTYPE:
+                    return DocConstantLookupTable.INSTITUTIONTYPE;
+                case LookupTableEnm.INTEGRATIONNAME:
+                    return DocConstantLookupTable.INTEGRATIONNAME;
+                case LookupTableEnm.INTEGRATIONPROPERTYNAME:
+                    return DocConstantLookupTable.INTEGRATIONPROPERTYNAME;
+                case LookupTableEnm.INTERVENTIONLINEOFTREATMENT:
+                    return DocConstantLookupTable.INTERVENTIONLINEOFTREATMENT;
+                case LookupTableEnm.INTERVENTIONMEDIUM:
+                    return DocConstantLookupTable.INTERVENTIONMEDIUM;
+                case LookupTableEnm.INTERVENTIONPROVIDER:
+                    return DocConstantLookupTable.INTERVENTIONPROVIDER;
+                case LookupTableEnm.INTERVENTIONROUTE:
+                    return DocConstantLookupTable.INTERVENTIONROUTE;
+                case LookupTableEnm.INTERVENTIONSCHEDULE:
+                    return DocConstantLookupTable.INTERVENTIONSCHEDULE;
+                case LookupTableEnm.INTERVENTIONSTAGESETTING:
+                    return DocConstantLookupTable.INTERVENTIONSTAGESETTING;
+                case LookupTableEnm.INTERVENTIONTYPE:
+                    return DocConstantLookupTable.INTERVENTIONTYPE;
+                case LookupTableEnm.JOB:
+                    return DocConstantLookupTable.JOB;
+                case LookupTableEnm.JUNCTIONTYPE:
+                    return DocConstantLookupTable.JUNCTIONTYPE;
+                case LookupTableEnm.LOOKUPTABLE:
+                    return DocConstantLookupTable.LOOKUPTABLE;
+                case LookupTableEnm.LOOKUPTYPE:
+                    return DocConstantLookupTable.LOOKUPTYPE;
+                case LookupTableEnm.MANUALIZEDTREATMENT:
+                    return DocConstantLookupTable.MANUALIZEDTREATMENT;
+                case LookupTableEnm.MEANCALCULATIONTYPE:
+                    return DocConstantLookupTable.MEANCALCULATIONTYPE;
+                case LookupTableEnm.MEANRANGETYPE:
+                    return DocConstantLookupTable.MEANRANGETYPE;
+                case LookupTableEnm.MEANVARIABLETYPE:
+                    return DocConstantLookupTable.MEANVARIABLETYPE;
+                case LookupTableEnm.MEANVARIANCETYPE:
+                    return DocConstantLookupTable.MEANVARIANCETYPE;
+                case LookupTableEnm.METHODOFANALYSIS:
+                    return DocConstantLookupTable.METHODOFANALYSIS;
+                case LookupTableEnm.MODELNAME:
+                    return DocConstantLookupTable.MODELNAME;
+                case LookupTableEnm.OUTCOMECATEGORY:
+                    return DocConstantLookupTable.OUTCOMECATEGORY;
+                case LookupTableEnm.OUTCOMETYPE:
+                    return DocConstantLookupTable.OUTCOMETYPE;
+                case LookupTableEnm.PERMISSION:
+                    return DocConstantLookupTable.PERMISSION;
+                case LookupTableEnm.POPULATIONTYPE:
+                    return DocConstantLookupTable.POPULATIONTYPE;
+                case LookupTableEnm.PREVALENCETYPE:
+                    return DocConstantLookupTable.PREVALENCETYPE;
+                case LookupTableEnm.PROTOCOLFILTEROWNER:
+                    return DocConstantLookupTable.PROTOCOLFILTEROWNER;
+                case LookupTableEnm.PROTOCOLFILTERTYPE:
+                    return DocConstantLookupTable.PROTOCOLFILTERTYPE;
+                case LookupTableEnm.PROTOCOLTYPE:
+                    return DocConstantLookupTable.PROTOCOLTYPE;
+                case LookupTableEnm.PUBLICATIONPOOLSTUDIES:
+                    return DocConstantLookupTable.PUBLICATIONPOOLSTUDIES;
+                case LookupTableEnm.PUBTYPE:
+                    return DocConstantLookupTable.PUBTYPE;
+                case LookupTableEnm.QUESTION:
+                    return DocConstantLookupTable.QUESTION;
+                case LookupTableEnm.QUESTIONCATEGORY:
+                    return DocConstantLookupTable.QUESTIONCATEGORY;
+                case LookupTableEnm.QUESTIONTYPE:
+                    return DocConstantLookupTable.QUESTIONTYPE;
+                case LookupTableEnm.QUEUECHANNEL:
+                    return DocConstantLookupTable.QUEUECHANNEL;
+                case LookupTableEnm.RANDOMIZATION:
+                    return DocConstantLookupTable.RANDOMIZATION;
+                case LookupTableEnm.RANGETYPE:
+                    return DocConstantLookupTable.RANGETYPE;
+                case LookupTableEnm.RATING:
+                    return DocConstantLookupTable.RATING;
+                case LookupTableEnm.REASONREJECTED:
+                    return DocConstantLookupTable.REASONREJECTED;
+                case LookupTableEnm.RECRUITMENTMETHOD:
+                    return DocConstantLookupTable.RECRUITMENTMETHOD;
+                case LookupTableEnm.REPRESENTATIVESAMPLE:
+                    return DocConstantLookupTable.REPRESENTATIVESAMPLE;
+                case LookupTableEnm.RESPONSESCOLLECTEDBY:
+                    return DocConstantLookupTable.RESPONSESCOLLECTEDBY;
+                case LookupTableEnm.RESULTSCATEGORY:
+                    return DocConstantLookupTable.RESULTSCATEGORY;
+                case LookupTableEnm.RISKOFBIASASSESSMENT:
+                    return DocConstantLookupTable.RISKOFBIASASSESSMENT;
+                case LookupTableEnm.SCOPE:
+                    return DocConstantLookupTable.SCOPE;
+                case LookupTableEnm.SETTINGTYPE:
+                    return DocConstantLookupTable.SETTINGTYPE;
+                case LookupTableEnm.STATISTICALSIGNIFICANCE:
+                    return DocConstantLookupTable.STATISTICALSIGNIFICANCE;
+                case LookupTableEnm.STATISTICALTEST:
+                    return DocConstantLookupTable.STATISTICALTEST;
+                case LookupTableEnm.STATSRECORDNAME:
+                    return DocConstantLookupTable.STATSRECORDNAME;
+                case LookupTableEnm.STATUS:
+                    return DocConstantLookupTable.STATUS;
+                case LookupTableEnm.STRATIFICATIONTYPE:
+                    return DocConstantLookupTable.STRATIFICATIONTYPE;
+                case LookupTableEnm.STUDYALLOCATTIONMETHOD:
+                    return DocConstantLookupTable.STUDYALLOCATTIONMETHOD;
+                case LookupTableEnm.STUDYBIAS:
+                    return DocConstantLookupTable.STUDYBIAS;
+                case LookupTableEnm.STUDYBLINDINGMETHOD:
+                    return DocConstantLookupTable.STUDYBLINDINGMETHOD;
+                case LookupTableEnm.STUDYCOMPLIANCE:
+                    return DocConstantLookupTable.STUDYCOMPLIANCE;
+                case LookupTableEnm.STUDYDESIGN:
+                    return DocConstantLookupTable.STUDYDESIGN;
+                case LookupTableEnm.STUDYDOCUMENTTYPE:
+                    return DocConstantLookupTable.STUDYDOCUMENTTYPE;
+                case LookupTableEnm.STUDYFUNDING:
+                    return DocConstantLookupTable.STUDYFUNDING;
+                case LookupTableEnm.STUDYGROUPTYPE:
+                    return DocConstantLookupTable.STUDYGROUPTYPE;
+                case LookupTableEnm.STUDYIMPORTLOCATION:
+                    return DocConstantLookupTable.STUDYIMPORTLOCATION;
+                case LookupTableEnm.STUDYIMPORTTYPE:
+                    return DocConstantLookupTable.STUDYIMPORTTYPE;
+                case LookupTableEnm.STUDYNGA:
+                    return DocConstantLookupTable.STUDYNGA;
+                case LookupTableEnm.STUDYOBJECTIVE:
+                    return DocConstantLookupTable.STUDYOBJECTIVE;
+                case LookupTableEnm.STUDYPHASENAMES:
+                    return DocConstantLookupTable.STUDYPHASENAMES;
+                case LookupTableEnm.STUDYPURPOSE:
+                    return DocConstantLookupTable.STUDYPURPOSE;
+                case LookupTableEnm.STUDYRANDOMIZATIONMETHOD:
+                    return DocConstantLookupTable.STUDYRANDOMIZATIONMETHOD;
+                case LookupTableEnm.STUDYTYPE:
+                    return DocConstantLookupTable.STUDYTYPE;
+                case LookupTableEnm.STUDYTYPEHARMETIOLOGY:
+                    return DocConstantLookupTable.STUDYTYPEHARMETIOLOGY;
+                case LookupTableEnm.STUDYTYPETHERAPY:
+                    return DocConstantLookupTable.STUDYTYPETHERAPY;
+                case LookupTableEnm.STUDYYEARS:
+                    return DocConstantLookupTable.STUDYYEARS;
+                case LookupTableEnm.TERMCLASSIFICATION:
+                    return DocConstantLookupTable.TERMCLASSIFICATION;
+                case LookupTableEnm.TERMSECTION:
+                    return DocConstantLookupTable.TERMSECTION;
+                case LookupTableEnm.TIMECARDSTATUS:
+                    return DocConstantLookupTable.TIMECARDSTATUS;
+                case LookupTableEnm.TIMEPOINTTYPE:
+                    return DocConstantLookupTable.TIMEPOINTTYPE;
+                case LookupTableEnm.UNITSOFMEASURE:
+                    return DocConstantLookupTable.UNITSOFMEASURE;
+                case LookupTableEnm.UNITTYPE:
+                    return DocConstantLookupTable.UNITTYPE;
+                case LookupTableEnm.USEREMPLOYEETYPE:
+                    return DocConstantLookupTable.USEREMPLOYEETYPE;
+                case LookupTableEnm.USERPAYROLLSTATUS:
+                    return DocConstantLookupTable.USERPAYROLLSTATUS;
+                case LookupTableEnm.USERPAYROLLTYPE:
+                    return DocConstantLookupTable.USERPAYROLLTYPE;
+                case LookupTableEnm.USERTYPE:
+                    return DocConstantLookupTable.USERTYPE;
+                case LookupTableEnm.VALUESTATUS:
+                    return DocConstantLookupTable.VALUESTATUS;
+                case LookupTableEnm.VALUETYPE:
+                    return DocConstantLookupTable.VALUETYPE;
+                case LookupTableEnm.VARIABLERULE:
+                    return DocConstantLookupTable.VARIABLERULE;
+                case LookupTableEnm.VARIABLETYPE:
+                    return DocConstantLookupTable.VARIABLETYPE;
+                case LookupTableEnm.WORKFLOW:
+                    return DocConstantLookupTable.WORKFLOW;
+                case LookupTableEnm.WORKFLOWSTATUS:
+                    return DocConstantLookupTable.WORKFLOWSTATUS;
+                case LookupTableEnm.WORKFLOWTASKTYPE:
+                    return DocConstantLookupTable.WORKFLOWTASKTYPE;
+                case LookupTableEnm.YESNONA:
+                    return DocConstantLookupTable.YESNONA;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantLookupTable : IEquatable<DocConstantLookupTable>, IEqualityComparer<DocConstantLookupTable>
     {
         public const string AMPERSONCOUNT = "AmPersonCount";
         public const string APP = "App";
@@ -413,102 +663,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantLookupTable).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantLookupTable(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantLookupTable(string Val)
-        {
-            return new DocConstantLookupTable(Val);
-        }
+        public static implicit operator DocConstantLookupTable(string Val) => new DocConstantLookupTable(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantLookupTable item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantLookupTable item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantLookupTable)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantLookupTable obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantLookupTable obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantLookupTable ft1, DocConstantLookupTable ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantLookupTable x, DocConstantLookupTable y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantLookupTable x, DocConstantLookupTable y) => x == y;
+        
+        public static bool operator !=(DocConstantLookupTable x, DocConstantLookupTable y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantLookupTable ft1, DocConstantLookupTable ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -523,19 +709,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantLookupTable obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantLookupTable)
+        #endregion IEquatable
     }
 }

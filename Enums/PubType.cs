@@ -64,7 +64,33 @@ namespace Services.Enums
         REGULATORY_DOCUMENTS
     }
     
-    public sealed partial class DocConstantPubType
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this PubTypeEnm instance)
+		{
+			switch(instance) 
+			{
+                case PubTypeEnm.GUIDELINE_HTA:
+                    return DocConstantPubType.GUIDELINE_HTA;
+                case PubTypeEnm.JOURNAL_ARTICLE:
+                    return DocConstantPubType.JOURNAL_ARTICLE;
+                case PubTypeEnm.LETTER_COMMENTARY:
+                    return DocConstantPubType.LETTER_COMMENTARY;
+                case PubTypeEnm.MEETING_ABSTRACT_ORAL_POSTER:
+                    return DocConstantPubType.MEETING_ABSTRACT_ORAL_POSTER;
+                case PubTypeEnm.NEWS_ARTICLE_PRESS_RELEASE:
+                    return DocConstantPubType.NEWS_ARTICLE_PRESS_RELEASE;
+                case PubTypeEnm.OTHER:
+                    return DocConstantPubType.OTHER;
+                case PubTypeEnm.REGULATORY_DOCUMENTS:
+                    return DocConstantPubType.REGULATORY_DOCUMENTS;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantPubType : IEquatable<DocConstantPubType>, IEqualityComparer<DocConstantPubType>
     {
         public const string GUIDELINE_HTA = "Guideline/HTA";
         public const string JOURNAL_ARTICLE = "Journal Article";
@@ -77,102 +103,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantPubType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantPubType(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantPubType(string Val)
-        {
-            return new DocConstantPubType(Val);
-        }
+        public static implicit operator DocConstantPubType(string Val) => new DocConstantPubType(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantPubType item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantPubType item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantPubType)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantPubType obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantPubType obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantPubType ft1, DocConstantPubType ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantPubType x, DocConstantPubType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantPubType x, DocConstantPubType y) => x == y;
+        
+        public static bool operator !=(DocConstantPubType x, DocConstantPubType y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantPubType ft1, DocConstantPubType ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -187,19 +149,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantPubType obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantPubType)
+        #endregion IEquatable
     }
 }

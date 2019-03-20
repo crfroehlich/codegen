@@ -60,7 +60,29 @@ namespace Services.Enums
         UNAVAILABLE
     }
     
-    public sealed partial class DocConstantWorkflowStatus
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this WorkflowStatusEnm instance)
+		{
+			switch(instance) 
+			{
+                case WorkflowStatusEnm.ACCEPTED:
+                    return DocConstantWorkflowStatus.ACCEPTED;
+                case WorkflowStatusEnm.COLLECTED:
+                    return DocConstantWorkflowStatus.COLLECTED;
+                case WorkflowStatusEnm.REJECTED:
+                    return DocConstantWorkflowStatus.REJECTED;
+                case WorkflowStatusEnm.REQUESTED:
+                    return DocConstantWorkflowStatus.REQUESTED;
+                case WorkflowStatusEnm.UNAVAILABLE:
+                    return DocConstantWorkflowStatus.UNAVAILABLE;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantWorkflowStatus : IEquatable<DocConstantWorkflowStatus>, IEqualityComparer<DocConstantWorkflowStatus>
     {
         public const string ACCEPTED = "Accepted";
         public const string COLLECTED = "Collected";
@@ -71,102 +93,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantWorkflowStatus).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantWorkflowStatus(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantWorkflowStatus(string Val)
-        {
-            return new DocConstantWorkflowStatus(Val);
-        }
+        public static implicit operator DocConstantWorkflowStatus(string Val) => new DocConstantWorkflowStatus(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantWorkflowStatus item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantWorkflowStatus item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantWorkflowStatus)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantWorkflowStatus obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantWorkflowStatus obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantWorkflowStatus ft1, DocConstantWorkflowStatus ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => x == y;
+        
+        public static bool operator !=(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantWorkflowStatus ft1, DocConstantWorkflowStatus ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -181,19 +139,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantWorkflowStatus obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantWorkflowStatus)
+        #endregion IEquatable
     }
 }

@@ -108,7 +108,77 @@ namespace Services.Enums
         SERVE
     }
     
-    public sealed partial class DocConstantApp
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this AppEnm instance)
+		{
+			switch(instance) 
+			{
+                case AppEnm.BAMBOO:
+                    return DocConstantApp.BAMBOO;
+                case AppEnm.BITBUCKET:
+                    return DocConstantApp.BITBUCKET;
+                case AppEnm.CONFLUENCE:
+                    return DocConstantApp.CONFLUENCE;
+                case AppEnm.DOC_CREATE:
+                    return DocConstantApp.DOC_CREATE;
+                case AppEnm.DOC_DASHBOARD:
+                    return DocConstantApp.DOC_DASHBOARD;
+                case AppEnm.DOC_DATA_ADMIN:
+                    return DocConstantApp.DOC_DATA_ADMIN;
+                case AppEnm.DOC_DATA_V1:
+                    return DocConstantApp.DOC_DATA_V1;
+                case AppEnm.DOC_DATA_V2:
+                    return DocConstantApp.DOC_DATA_V2;
+                case AppEnm.DOC_DEVELOPMENT:
+                    return DocConstantApp.DOC_DEVELOPMENT;
+                case AppEnm.DOC_EXTRACT_V1:
+                    return DocConstantApp.DOC_EXTRACT_V1;
+                case AppEnm.DOC_EXTRACT_V2:
+                    return DocConstantApp.DOC_EXTRACT_V2;
+                case AppEnm.DOC_EXTRACT_V3:
+                    return DocConstantApp.DOC_EXTRACT_V3;
+                case AppEnm.DOC_LABEL:
+                    return DocConstantApp.DOC_LABEL;
+                case AppEnm.DOC_LIBRARY_V1:
+                    return DocConstantApp.DOC_LIBRARY_V1;
+                case AppEnm.DOC_LIBRARY_V2:
+                    return DocConstantApp.DOC_LIBRARY_V2;
+                case AppEnm.DOC_NHANES:
+                    return DocConstantApp.DOC_NHANES;
+                case AppEnm.DOC_SEARCH:
+                    return DocConstantApp.DOC_SEARCH;
+                case AppEnm.DOC_TIMELY:
+                    return DocConstantApp.DOC_TIMELY;
+                case AppEnm.DOC_TRACK:
+                    return DocConstantApp.DOC_TRACK;
+                case AppEnm.DRE_ADMIN:
+                    return DocConstantApp.DRE_ADMIN;
+                case AppEnm.GRADE:
+                    return DocConstantApp.GRADE;
+                case AppEnm.GROWTH:
+                    return DocConstantApp.GROWTH;
+                case AppEnm.JIRA:
+                    return DocConstantApp.JIRA;
+                case AppEnm.LAUNCH:
+                    return DocConstantApp.LAUNCH;
+                case AppEnm.LMS:
+                    return DocConstantApp.LMS;
+                case AppEnm.LOGIN:
+                    return DocConstantApp.LOGIN;
+                case AppEnm.MISC:
+                    return DocConstantApp.MISC;
+                case AppEnm.REPORTS:
+                    return DocConstantApp.REPORTS;
+                case AppEnm.SERVE:
+                    return DocConstantApp.SERVE;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantApp : IEquatable<DocConstantApp>, IEqualityComparer<DocConstantApp>
     {
         public const string BAMBOO = "Bamboo";
         public const string BITBUCKET = "Bitbucket";
@@ -143,102 +213,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantApp).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantApp(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantApp(string Val)
-        {
-            return new DocConstantApp(Val);
-        }
+        public static implicit operator DocConstantApp(string Val) => new DocConstantApp(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantApp item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantApp item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantApp)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantApp obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantApp obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantApp ft1, DocConstantApp ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantApp x, DocConstantApp y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantApp x, DocConstantApp y) => x == y;
+        
+        public static bool operator !=(DocConstantApp x, DocConstantApp y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantApp ft1, DocConstantApp ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -253,19 +259,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantApp obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantApp)
+        #endregion IEquatable
     }
 }

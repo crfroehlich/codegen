@@ -80,7 +80,49 @@ namespace Services.Enums
         VARIES
     }
     
-    public sealed partial class DocConstantTimepointType
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this TimepointTypeEnm instance)
+		{
+			switch(instance) 
+			{
+                case TimepointTypeEnm.AFTER:
+                    return DocConstantTimepointType.AFTER;
+                case TimepointTypeEnm.AVERAGE:
+                    return DocConstantTimepointType.AVERAGE;
+                case TimepointTypeEnm.BEFORE:
+                    return DocConstantTimepointType.BEFORE;
+                case TimepointTypeEnm.DURATION:
+                    return DocConstantTimepointType.DURATION;
+                case TimepointTypeEnm.DURING:
+                    return DocConstantTimepointType.DURING;
+                case TimepointTypeEnm.MAX_RANGE:
+                    return DocConstantTimepointType.MAX_RANGE;
+                case TimepointTypeEnm.MAXIMUM:
+                    return DocConstantTimepointType.MAXIMUM;
+                case TimepointTypeEnm.MEAN:
+                    return DocConstantTimepointType.MEAN;
+                case TimepointTypeEnm.MEDIAN:
+                    return DocConstantTimepointType.MEDIAN;
+                case TimepointTypeEnm.NA:
+                    return DocConstantTimepointType.NA;
+                case TimepointTypeEnm.NONE:
+                    return DocConstantTimepointType.NONE;
+                case TimepointTypeEnm.NR:
+                    return DocConstantTimepointType.NR;
+                case TimepointTypeEnm.TIME_ZERO:
+                    return DocConstantTimepointType.TIME_ZERO;
+                case TimepointTypeEnm.TOTAL:
+                    return DocConstantTimepointType.TOTAL;
+                case TimepointTypeEnm.VARIES:
+                    return DocConstantTimepointType.VARIES;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantTimepointType : IEquatable<DocConstantTimepointType>, IEqualityComparer<DocConstantTimepointType>
     {
         public const string AFTER = "After";
         public const string AVERAGE = "Average";
@@ -101,102 +143,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantTimepointType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantTimepointType(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantTimepointType(string Val)
-        {
-            return new DocConstantTimepointType(Val);
-        }
+        public static implicit operator DocConstantTimepointType(string Val) => new DocConstantTimepointType(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantTimepointType item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantTimepointType item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantTimepointType)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantTimepointType obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantTimepointType obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantTimepointType ft1, DocConstantTimepointType ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantTimepointType x, DocConstantTimepointType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantTimepointType x, DocConstantTimepointType y) => x == y;
+        
+        public static bool operator !=(DocConstantTimepointType x, DocConstantTimepointType y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantTimepointType ft1, DocConstantTimepointType ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -211,19 +189,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantTimepointType obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantTimepointType)
+        #endregion IEquatable
     }
 }

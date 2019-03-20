@@ -72,7 +72,41 @@ namespace Services.Enums
         VITAMINS
     }
     
-    public sealed partial class DocConstantInterventionType
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this InterventionTypeEnm instance)
+		{
+			switch(instance) 
+			{
+                case InterventionTypeEnm.ACCURACY_OUTCOMES:
+                    return DocConstantInterventionType.ACCURACY_OUTCOMES;
+                case InterventionTypeEnm.CLINICAL_OUTCOMES:
+                    return DocConstantInterventionType.CLINICAL_OUTCOMES;
+                case InterventionTypeEnm.COST_EFFECTIVENESS:
+                    return DocConstantInterventionType.COST_EFFECTIVENESS;
+                case InterventionTypeEnm.GENE_TRANSFER:
+                    return DocConstantInterventionType.GENE_TRANSFER;
+                case InterventionTypeEnm.INFORMATIONAL_MATERIAL:
+                    return DocConstantInterventionType.INFORMATIONAL_MATERIAL;
+                case InterventionTypeEnm.MINERALS:
+                    return DocConstantInterventionType.MINERALS;
+                case InterventionTypeEnm.QUALITY_OF_LIFE:
+                    return DocConstantInterventionType.QUALITY_OF_LIFE;
+                case InterventionTypeEnm.RECOMBINANT_DNA:
+                    return DocConstantInterventionType.RECOMBINANT_DNA;
+                case InterventionTypeEnm.SESSION_MEETING:
+                    return DocConstantInterventionType.SESSION_MEETING;
+                case InterventionTypeEnm.STEM_CELL:
+                    return DocConstantInterventionType.STEM_CELL;
+                case InterventionTypeEnm.VITAMINS:
+                    return DocConstantInterventionType.VITAMINS;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantInterventionType : IEquatable<DocConstantInterventionType>, IEqualityComparer<DocConstantInterventionType>
     {
         public const string ACCURACY_OUTCOMES = "Accuracy Outcomes";
         public const string CLINICAL_OUTCOMES = "Clinical Outcomes";
@@ -89,102 +123,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantInterventionType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantInterventionType(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantInterventionType(string Val)
-        {
-            return new DocConstantInterventionType(Val);
-        }
+        public static implicit operator DocConstantInterventionType(string Val) => new DocConstantInterventionType(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantInterventionType item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantInterventionType item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantInterventionType)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantInterventionType obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantInterventionType obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantInterventionType ft1, DocConstantInterventionType ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantInterventionType x, DocConstantInterventionType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantInterventionType x, DocConstantInterventionType y) => x == y;
+        
+        public static bool operator !=(DocConstantInterventionType x, DocConstantInterventionType y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantInterventionType ft1, DocConstantInterventionType ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -199,19 +169,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantInterventionType obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantInterventionType)
+        #endregion IEquatable
     }
 }

@@ -110,7 +110,79 @@ namespace Services.Enums
         SERVICES_USER_UPDATE_TEAMS
     }
     
-    public sealed partial class DocConstantQueueChannel
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this QueueChannelEnm instance)
+		{
+			switch(instance) 
+			{
+                case QueueChannelEnm.PORTAL_AUDIT:
+                    return DocConstantQueueChannel.PORTAL_AUDIT;
+                case QueueChannelEnm.PORTAL_BACKGROUND_TASK:
+                    return DocConstantQueueChannel.PORTAL_BACKGROUND_TASK;
+                case QueueChannelEnm.PORTAL_NOTIFICATION:
+                    return DocConstantQueueChannel.PORTAL_NOTIFICATION;
+                case QueueChannelEnm.PORTAL_USER_UPDATE:
+                    return DocConstantQueueChannel.PORTAL_USER_UPDATE;
+                case QueueChannelEnm.QUEUE_ERROR:
+                    return DocConstantQueueChannel.QUEUE_ERROR;
+                case QueueChannelEnm.SERVICES_AUDIT:
+                    return DocConstantQueueChannel.SERVICES_AUDIT;
+                case QueueChannelEnm.SERVICES_AUDIT_FAILURES:
+                    return DocConstantQueueChannel.SERVICES_AUDIT_FAILURES;
+                case QueueChannelEnm.SERVICES_DOCUMENT_IMPORT:
+                    return DocConstantQueueChannel.SERVICES_DOCUMENT_IMPORT;
+                case QueueChannelEnm.SERVICES_DOCUMENT_UPDATE:
+                    return DocConstantQueueChannel.SERVICES_DOCUMENT_UPDATE;
+                case QueueChannelEnm.SERVICES_ERRORS:
+                    return DocConstantQueueChannel.SERVICES_ERRORS;
+                case QueueChannelEnm.SERVICES_EXTRACT_NOTIFICATION:
+                    return DocConstantQueueChannel.SERVICES_EXTRACT_NOTIFICATION;
+                case QueueChannelEnm.SERVICES_HEARTBEAT:
+                    return DocConstantQueueChannel.SERVICES_HEARTBEAT;
+                case QueueChannelEnm.SERVICES_LOGS:
+                    return DocConstantQueueChannel.SERVICES_LOGS;
+                case QueueChannelEnm.SERVICES_LOGS_TO_SEGMENT:
+                    return DocConstantQueueChannel.SERVICES_LOGS_TO_SEGMENT;
+                case QueueChannelEnm.SERVICES_LOGS_TO_SLACK:
+                    return DocConstantQueueChannel.SERVICES_LOGS_TO_SLACK;
+                case QueueChannelEnm.SERVICES_LOGS_TO_STACKIFY:
+                    return DocConstantQueueChannel.SERVICES_LOGS_TO_STACKIFY;
+                case QueueChannelEnm.SERVICES_METADATA_UPDATE:
+                    return DocConstantQueueChannel.SERVICES_METADATA_UPDATE;
+                case QueueChannelEnm.SERVICES_SALESFORCE:
+                    return DocConstantQueueChannel.SERVICES_SALESFORCE;
+                case QueueChannelEnm.SERVICES_SLACK:
+                    return DocConstantQueueChannel.SERVICES_SLACK;
+                case QueueChannelEnm.SERVICES_TEAM_SERVE:
+                    return DocConstantQueueChannel.SERVICES_TEAM_SERVE;
+                case QueueChannelEnm.SERVICES_USER_SESSION:
+                    return DocConstantQueueChannel.SERVICES_USER_SESSION;
+                case QueueChannelEnm.SERVICES_USER_UPDATE:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE;
+                case QueueChannelEnm.SERVICES_USER_UPDATE_ARCHIVING:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE_ARCHIVING;
+                case QueueChannelEnm.SERVICES_USER_UPDATE_BROADCASTS:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE_BROADCASTS;
+                case QueueChannelEnm.SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT;
+                case QueueChannelEnm.SERVICES_USER_UPDATE_DOCUMENT_IMPORTS:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_IMPORTS;
+                case QueueChannelEnm.SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT;
+                case QueueChannelEnm.SERVICES_USER_UPDATE_ROLES:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE_ROLES;
+                case QueueChannelEnm.SERVICES_USER_UPDATE_SHARING:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE_SHARING;
+                case QueueChannelEnm.SERVICES_USER_UPDATE_TEAMS:
+                    return DocConstantQueueChannel.SERVICES_USER_UPDATE_TEAMS;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantQueueChannel : IEquatable<DocConstantQueueChannel>, IEqualityComparer<DocConstantQueueChannel>
     {
         public const string PORTAL_AUDIT = "portal_audit";
         public const string PORTAL_BACKGROUND_TASK = "portal_background_task";
@@ -146,102 +218,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantQueueChannel).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantQueueChannel(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantQueueChannel(string Val)
-        {
-            return new DocConstantQueueChannel(Val);
-        }
+        public static implicit operator DocConstantQueueChannel(string Val) => new DocConstantQueueChannel(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantQueueChannel item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantQueueChannel item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantQueueChannel)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantQueueChannel obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantQueueChannel obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantQueueChannel ft1, DocConstantQueueChannel ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantQueueChannel x, DocConstantQueueChannel y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantQueueChannel x, DocConstantQueueChannel y) => x == y;
+        
+        public static bool operator !=(DocConstantQueueChannel x, DocConstantQueueChannel y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantQueueChannel ft1, DocConstantQueueChannel ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -256,19 +264,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantQueueChannel obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantQueueChannel)
+        #endregion IEquatable
     }
 }

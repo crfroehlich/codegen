@@ -162,7 +162,131 @@ namespace Services.Enums
         UNCOLLECTEDOUTCOMEVARIABLES
     }
     
-    public sealed partial class DocConstantStatsRecordName
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this StatsRecordNameEnm instance)
+		{
+			switch(instance) 
+			{
+                case StatsRecordNameEnm.AMBISPECTIVE_OBSERVATIONAL:
+                    return DocConstantStatsRecordName.AMBISPECTIVE_OBSERVATIONAL;
+                case StatsRecordNameEnm.BOUNDCHARACTERISTICVARIABLES:
+                    return DocConstantStatsRecordName.BOUNDCHARACTERISTICVARIABLES;
+                case StatsRecordNameEnm.BOUNDGROUPVARIABLES:
+                    return DocConstantStatsRecordName.BOUNDGROUPVARIABLES;
+                case StatsRecordNameEnm.BOUNDOUTCOMEITERATIONS:
+                    return DocConstantStatsRecordName.BOUNDOUTCOMEITERATIONS;
+                case StatsRecordNameEnm.BOUNDOUTCOMEVARIABLES:
+                    return DocConstantStatsRecordName.BOUNDOUTCOMEVARIABLES;
+                case StatsRecordNameEnm.BOUNDSTUDYLEVELVARIABLES:
+                    return DocConstantStatsRecordName.BOUNDSTUDYLEVELVARIABLES;
+                case StatsRecordNameEnm.BOUNDTOTALVARIABLES:
+                    return DocConstantStatsRecordName.BOUNDTOTALVARIABLES;
+                case StatsRecordNameEnm.CASE_CONTROL:
+                    return DocConstantStatsRecordName.CASE_CONTROL;
+                case StatsRecordNameEnm.CASE_REPORT:
+                    return DocConstantStatsRecordName.CASE_REPORT;
+                case StatsRecordNameEnm.CASE_SERIES:
+                    return DocConstantStatsRecordName.CASE_SERIES;
+                case StatsRecordNameEnm.COLLECTEDCHARACTERISTICVARIABLES:
+                    return DocConstantStatsRecordName.COLLECTEDCHARACTERISTICVARIABLES;
+                case StatsRecordNameEnm.COLLECTEDMAINGROUPS:
+                    return DocConstantStatsRecordName.COLLECTEDMAINGROUPS;
+                case StatsRecordNameEnm.COLLECTEDOUTCOMEVARIABLES:
+                    return DocConstantStatsRecordName.COLLECTEDOUTCOMEVARIABLES;
+                case StatsRecordNameEnm.COMPARISONS:
+                    return DocConstantStatsRecordName.COMPARISONS;
+                case StatsRecordNameEnm.CROSS_SECTIONAL:
+                    return DocConstantStatsRecordName.CROSS_SECTIONAL;
+                case StatsRecordNameEnm.DATAPOINTSAVG:
+                    return DocConstantStatsRecordName.DATAPOINTSAVG;
+                case StatsRecordNameEnm.DATAPOINTSMAX:
+                    return DocConstantStatsRecordName.DATAPOINTSMAX;
+                case StatsRecordNameEnm.DATAPOINTSTOTAL:
+                    return DocConstantStatsRecordName.DATAPOINTSTOTAL;
+                case StatsRecordNameEnm.DATASTUDIES:
+                    return DocConstantStatsRecordName.DATASTUDIES;
+                case StatsRecordNameEnm.DIAGNOSIS:
+                    return DocConstantStatsRecordName.DIAGNOSIS;
+                case StatsRecordNameEnm.FOLLOW_UP_EXTENSION:
+                    return DocConstantStatsRecordName.FOLLOW_UP_EXTENSION;
+                case StatsRecordNameEnm.FRSTUDIES:
+                    return DocConstantStatsRecordName.FRSTUDIES;
+                case StatsRecordNameEnm.HARM:
+                    return DocConstantStatsRecordName.HARM;
+                case StatsRecordNameEnm.INTERVENTIONS:
+                    return DocConstantStatsRecordName.INTERVENTIONS;
+                case StatsRecordNameEnm.MODELING:
+                    return DocConstantStatsRecordName.MODELING;
+                case StatsRecordNameEnm.NON_RANDOMIZED_CONTROLLED_TRIAL:
+                    return DocConstantStatsRecordName.NON_RANDOMIZED_CONTROLLED_TRIAL;
+                case StatsRecordNameEnm.NON_RANDOMIZED_CROSSOVER:
+                    return DocConstantStatsRecordName.NON_RANDOMIZED_CROSSOVER;
+                case StatsRecordNameEnm.NON_RANDOMIZED_NON_CONTROLLED_TRIAL:
+                    return DocConstantStatsRecordName.NON_RANDOMIZED_NON_CONTROLLED_TRIAL;
+                case StatsRecordNameEnm.OTHER:
+                    return DocConstantStatsRecordName.OTHER;
+                case StatsRecordNameEnm.POOLED_ANALYSIS:
+                    return DocConstantStatsRecordName.POOLED_ANALYSIS;
+                case StatsRecordNameEnm.POSTHOC_ANALYSIS:
+                    return DocConstantStatsRecordName.POSTHOC_ANALYSIS;
+                case StatsRecordNameEnm.PREVALENCE:
+                    return DocConstantStatsRecordName.PREVALENCE;
+                case StatsRecordNameEnm.PREVENTION_RISK:
+                    return DocConstantStatsRecordName.PREVENTION_RISK;
+                case StatsRecordNameEnm.PROGNOSIS:
+                    return DocConstantStatsRecordName.PROGNOSIS;
+                case StatsRecordNameEnm.PROSPECTIVE_OBSERVATIONAL:
+                    return DocConstantStatsRecordName.PROSPECTIVE_OBSERVATIONAL;
+                case StatsRecordNameEnm.RANDOMIZED_CONTROLLED_TRIAL:
+                    return DocConstantStatsRecordName.RANDOMIZED_CONTROLLED_TRIAL;
+                case StatsRecordNameEnm.RANDOMIZED_CROSSOVER:
+                    return DocConstantStatsRecordName.RANDOMIZED_CROSSOVER;
+                case StatsRecordNameEnm.RANDOMIZED_NON_CONTROLLED_TRIAL:
+                    return DocConstantStatsRecordName.RANDOMIZED_NON_CONTROLLED_TRIAL;
+                case StatsRecordNameEnm.RETROSPECTIVE_OBSERVATIONAL:
+                    return DocConstantStatsRecordName.RETROSPECTIVE_OBSERVATIONAL;
+                case StatsRecordNameEnm.STUDY_DESIGN_OVERVIEW:
+                    return DocConstantStatsRecordName.STUDY_DESIGN_OVERVIEW;
+                case StatsRecordNameEnm.SUB_GROUP_ANALYSIS:
+                    return DocConstantStatsRecordName.SUB_GROUP_ANALYSIS;
+                case StatsRecordNameEnm.SUBGROUPS:
+                    return DocConstantStatsRecordName.SUBGROUPS;
+                case StatsRecordNameEnm.THERAPY:
+                    return DocConstantStatsRecordName.THERAPY;
+                case StatsRecordNameEnm.TOTALCHARACTERISTICVARIABLES:
+                    return DocConstantStatsRecordName.TOTALCHARACTERISTICVARIABLES;
+                case StatsRecordNameEnm.TOTALCOMPARATIVESTATEMENTS:
+                    return DocConstantStatsRecordName.TOTALCOMPARATIVESTATEMENTS;
+                case StatsRecordNameEnm.TOTALGROUPVARIABLES:
+                    return DocConstantStatsRecordName.TOTALGROUPVARIABLES;
+                case StatsRecordNameEnm.TOTALMAINGROUPS:
+                    return DocConstantStatsRecordName.TOTALMAINGROUPS;
+                case StatsRecordNameEnm.TOTALOUTCOMEITERATIONS:
+                    return DocConstantStatsRecordName.TOTALOUTCOMEITERATIONS;
+                case StatsRecordNameEnm.TOTALOUTCOMEVARIABLES:
+                    return DocConstantStatsRecordName.TOTALOUTCOMEVARIABLES;
+                case StatsRecordNameEnm.TOTALPARTICIPANTS:
+                    return DocConstantStatsRecordName.TOTALPARTICIPANTS;
+                case StatsRecordNameEnm.TOTALSTUDIES:
+                    return DocConstantStatsRecordName.TOTALSTUDIES;
+                case StatsRecordNameEnm.TOTALSTUDYLEVELVARIABLES:
+                    return DocConstantStatsRecordName.TOTALSTUDYLEVELVARIABLES;
+                case StatsRecordNameEnm.TOTALVARIABLES:
+                    return DocConstantStatsRecordName.TOTALVARIABLES;
+                case StatsRecordNameEnm.UNCOLLECTEDCHARACTERISTICVARIABLES:
+                    return DocConstantStatsRecordName.UNCOLLECTEDCHARACTERISTICVARIABLES;
+                case StatsRecordNameEnm.UNCOLLECTEDMAINGROUPS:
+                    return DocConstantStatsRecordName.UNCOLLECTEDMAINGROUPS;
+                case StatsRecordNameEnm.UNCOLLECTEDOUTCOMEVARIABLES:
+                    return DocConstantStatsRecordName.UNCOLLECTEDOUTCOMEVARIABLES;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantStatsRecordName : IEquatable<DocConstantStatsRecordName>, IEqualityComparer<DocConstantStatsRecordName>
     {
         public const string AMBISPECTIVE_OBSERVATIONAL = "Ambispective Observational";
         public const string BOUNDCHARACTERISTICVARIABLES = "Bound Characteristic Variables";
@@ -224,102 +348,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantStatsRecordName).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantStatsRecordName(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantStatsRecordName(string Val)
-        {
-            return new DocConstantStatsRecordName(Val);
-        }
+        public static implicit operator DocConstantStatsRecordName(string Val) => new DocConstantStatsRecordName(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantStatsRecordName item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantStatsRecordName item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantStatsRecordName)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantStatsRecordName obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantStatsRecordName obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantStatsRecordName ft1, DocConstantStatsRecordName ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantStatsRecordName x, DocConstantStatsRecordName y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantStatsRecordName x, DocConstantStatsRecordName y) => x == y;
+        
+        public static bool operator !=(DocConstantStatsRecordName x, DocConstantStatsRecordName y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantStatsRecordName ft1, DocConstantStatsRecordName ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -334,19 +394,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantStatsRecordName obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantStatsRecordName)
+        #endregion IEquatable
     }
 }

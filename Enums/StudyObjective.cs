@@ -92,7 +92,61 @@ namespace Services.Enums
         TERTIARY_SAFETY_OUTCOME
     }
     
-    public sealed partial class DocConstantStudyObjective
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this StudyObjectiveEnm instance)
+		{
+			switch(instance) 
+			{
+                case StudyObjectiveEnm.OTHERS:
+                    return DocConstantStudyObjective.OTHERS;
+                case StudyObjectiveEnm.PRIMARY_EFFICACY_OUTCOME:
+                    return DocConstantStudyObjective.PRIMARY_EFFICACY_OUTCOME;
+                case StudyObjectiveEnm.PRIMARY_ENDPOINT:
+                    return DocConstantStudyObjective.PRIMARY_ENDPOINT;
+                case StudyObjectiveEnm.PRIMARY_ENDPOINT_OUTCOME:
+                    return DocConstantStudyObjective.PRIMARY_ENDPOINT_OUTCOME;
+                case StudyObjectiveEnm.PRIMARY_OBJECTIVE:
+                    return DocConstantStudyObjective.PRIMARY_OBJECTIVE;
+                case StudyObjectiveEnm.PRIMARY_SAFETY_OUTCOME:
+                    return DocConstantStudyObjective.PRIMARY_SAFETY_OUTCOME;
+                case StudyObjectiveEnm.SECONDARY_EFFICACY_OUTCOME:
+                    return DocConstantStudyObjective.SECONDARY_EFFICACY_OUTCOME;
+                case StudyObjectiveEnm.SECONDARY_ENDPOINT:
+                    return DocConstantStudyObjective.SECONDARY_ENDPOINT;
+                case StudyObjectiveEnm.SECONDARY_ENDPOINT_OUTCOME:
+                    return DocConstantStudyObjective.SECONDARY_ENDPOINT_OUTCOME;
+                case StudyObjectiveEnm.SECONDARY_OBJECTIVE:
+                    return DocConstantStudyObjective.SECONDARY_OBJECTIVE;
+                case StudyObjectiveEnm.SECONDARY_SAFETY_OUTCOME:
+                    return DocConstantStudyObjective.SECONDARY_SAFETY_OUTCOME;
+                case StudyObjectiveEnm.STUDY_AIM:
+                    return DocConstantStudyObjective.STUDY_AIM;
+                case StudyObjectiveEnm.STUDY_HYPOTHESIS:
+                    return DocConstantStudyObjective.STUDY_HYPOTHESIS;
+                case StudyObjectiveEnm.STUDY_OBJECTIVE:
+                    return DocConstantStudyObjective.STUDY_OBJECTIVE;
+                case StudyObjectiveEnm.STUDY_PURPOSE:
+                    return DocConstantStudyObjective.STUDY_PURPOSE;
+                case StudyObjectiveEnm.STUDY_QUESTION:
+                    return DocConstantStudyObjective.STUDY_QUESTION;
+                case StudyObjectiveEnm.TERIARY_ENDPOINT:
+                    return DocConstantStudyObjective.TERIARY_ENDPOINT;
+                case StudyObjectiveEnm.TERTIARY_EFFICACY_OUTCOME:
+                    return DocConstantStudyObjective.TERTIARY_EFFICACY_OUTCOME;
+                case StudyObjectiveEnm.TERTIARY_ENDPOINT_OUTCOME:
+                    return DocConstantStudyObjective.TERTIARY_ENDPOINT_OUTCOME;
+                case StudyObjectiveEnm.TERTIARY_OBJECTIVE:
+                    return DocConstantStudyObjective.TERTIARY_OBJECTIVE;
+                case StudyObjectiveEnm.TERTIARY_SAFETY_OUTCOME:
+                    return DocConstantStudyObjective.TERTIARY_SAFETY_OUTCOME;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantStudyObjective : IEquatable<DocConstantStudyObjective>, IEqualityComparer<DocConstantStudyObjective>
     {
         public const string OTHERS = "Others";
         public const string PRIMARY_EFFICACY_OUTCOME = "Primary Efficacy Outcome";
@@ -119,102 +173,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantStudyObjective).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantStudyObjective(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantStudyObjective(string Val)
-        {
-            return new DocConstantStudyObjective(Val);
-        }
+        public static implicit operator DocConstantStudyObjective(string Val) => new DocConstantStudyObjective(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantStudyObjective item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantStudyObjective item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantStudyObjective)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantStudyObjective obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantStudyObjective obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantStudyObjective ft1, DocConstantStudyObjective ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantStudyObjective x, DocConstantStudyObjective y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantStudyObjective x, DocConstantStudyObjective y) => x == y;
+        
+        public static bool operator !=(DocConstantStudyObjective x, DocConstantStudyObjective y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantStudyObjective ft1, DocConstantStudyObjective ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -229,19 +219,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantStudyObjective obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantStudyObjective)
+        #endregion IEquatable
     }
 }

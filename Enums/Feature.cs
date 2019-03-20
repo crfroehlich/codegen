@@ -106,7 +106,75 @@ namespace Services.Enums
         WORKFLOW_ACCESS
     }
     
-    public sealed partial class DocConstantFeature
+	public static partial class EnumExtensions
+    {
+        public static string ToEnumString(this FeatureEnm instance)
+		{
+			switch(instance) 
+			{
+                case FeatureEnm.ACCESS_BACKEND:
+                    return DocConstantFeature.ACCESS_BACKEND;
+                case FeatureEnm.ALL_ENTITIES:
+                    return DocConstantFeature.ALL_ENTITIES;
+                case FeatureEnm.ALL_PAGES:
+                    return DocConstantFeature.ALL_PAGES;
+                case FeatureEnm.ALL_STUDY_SETS:
+                    return DocConstantFeature.ALL_STUDY_SETS;
+                case FeatureEnm.ALPHA_TESTING:
+                    return DocConstantFeature.ALPHA_TESTING;
+                case FeatureEnm.AUDITING:
+                    return DocConstantFeature.AUDITING;
+                case FeatureEnm.BINDINGS_ADMIN:
+                    return DocConstantFeature.BINDINGS_ADMIN;
+                case FeatureEnm.CLIENT_BINDING:
+                    return DocConstantFeature.CLIENT_BINDING;
+                case FeatureEnm.CONTRACT_ONBOARDING_REPORT:
+                    return DocConstantFeature.CONTRACT_ONBOARDING_REPORT;
+                case FeatureEnm.DEBUG:
+                    return DocConstantFeature.DEBUG;
+                case FeatureEnm.DISPLAY_BROADCASTS:
+                    return DocConstantFeature.DISPLAY_BROADCASTS;
+                case FeatureEnm.DISPLAY_NOTIFICATIONS:
+                    return DocConstantFeature.DISPLAY_NOTIFICATIONS;
+                case FeatureEnm.DOCUMENT_SET_ACCESS:
+                    return DocConstantFeature.DOCUMENT_SET_ACCESS;
+                case FeatureEnm.ERROR_REPORTS:
+                    return DocConstantFeature.ERROR_REPORTS;
+                case FeatureEnm.EXTRACTION:
+                    return DocConstantFeature.EXTRACTION;
+                case FeatureEnm.IMPERSONATION:
+                    return DocConstantFeature.IMPERSONATION;
+                case FeatureEnm.LIVE_CHAT:
+                    return DocConstantFeature.LIVE_CHAT;
+                case FeatureEnm.PRODUCTION_REPORT:
+                    return DocConstantFeature.PRODUCTION_REPORT;
+                case FeatureEnm.PRODUCTION_RESET:
+                    return DocConstantFeature.PRODUCTION_RESET;
+                case FeatureEnm.PROTOCOL_ADMIN:
+                    return DocConstantFeature.PROTOCOL_ADMIN;
+                case FeatureEnm.QC:
+                    return DocConstantFeature.QC;
+                case FeatureEnm.RELEVANCE_RATING:
+                    return DocConstantFeature.RELEVANCE_RATING;
+                case FeatureEnm.RISK_OF_BIAS:
+                    return DocConstantFeature.RISK_OF_BIAS;
+                case FeatureEnm.SALESFORCE_DATA:
+                    return DocConstantFeature.SALESFORCE_DATA;
+                case FeatureEnm.SHARING:
+                    return DocConstantFeature.SHARING;
+                case FeatureEnm.SUBMIT_FEEDBACK:
+                    return DocConstantFeature.SUBMIT_FEEDBACK;
+                case FeatureEnm.TERMS_ADMIN:
+                    return DocConstantFeature.TERMS_ADMIN;
+                case FeatureEnm.WORKFLOW_ACCESS:
+                    return DocConstantFeature.WORKFLOW_ACCESS;
+				default:
+					return string.Empty;
+			}
+		}
+    }
+
+    public sealed partial class DocConstantFeature : IEquatable<DocConstantFeature>, IEqualityComparer<DocConstantFeature>
     {
         public const string ACCESS_BACKEND = "Access Doc Data Backend";
         public const string ALL_ENTITIES = "All Entities";
@@ -140,102 +208,38 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        
         public static List<string> All => _all ?? (_all = typeof(DocConstantFeature).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
-        /// <summary>
-        ///    The string value of the current instance
-        /// </summary>
         private readonly string Value;
 
-        /// <summary>
-        ///    The enum constructor
-        /// </summary>
-        /// <param name="ItemName">Name of the item.</param>
         private DocConstantFeature(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
         }
 
-        /// <summary>
-        /// Determines if the Constant contains an exact match (case insensitive) for the name
-        /// </summary>
         public static bool Contains(string name) => All.Any(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>
-        ///    Implicit cast to Enum
-        /// </summary>
-        /// <param name="Val">The value.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator DocConstantFeature(string Val)
-        {
-            return new DocConstantFeature(Val);
-        }
+        public static implicit operator DocConstantFeature(string Val) => new DocConstantFeature(Val);
 
-        /// <summary>
-        ///    Implicit cast to string
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator string(DocConstantFeature item)
-        {
-            return item?.Value ?? string.Empty;
-        }
+        public static implicit operator string(DocConstantFeature item) => item?.Value ?? string.Empty;
 
-        /// <summary>
-        ///    Override of ToString
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
-        public override string ToString()
-        {
-            return Value;
-        }
+        public override string ToString() => Value;
 
         #endregion Internals
 
         #region IEquatable (DocConstantFeature)
 
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
-        public bool Equals(DocConstantFeature obj)
-        {
-            return this == obj;
-        }
+        public bool Equals(DocConstantFeature obj) => this == obj;
 
-        /// <summary>
-        ///    == Equality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(DocConstantFeature ft1, DocConstantFeature ft2)
-        {
-            //do a string comparison on the fieldtypes
-            return string.Equals(Convert.ToString(ft1), Convert.ToString(ft2), StringComparison.OrdinalIgnoreCase);
-        }
+        public static bool operator ==(DocConstantFeature x, DocConstantFeature y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+		
+		public bool Equals(DocConstantFeature x, DocConstantFeature y) => x == y;
+        
+        public static bool operator !=(DocConstantFeature x, DocConstantFeature y) => !(x == y);
 
-        /// <summary>
-        ///    != Inequality operator guarantees we're evaluating instance values
-        /// </summary>
-        /// <param name="ft1">The FT1.</param>
-        /// <param name="ft2">The FT2.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(DocConstantFeature ft1, DocConstantFeature ft2)
-        {
-            return !(ft1 == ft2);
-        }
-
-        /// <summary>
-        ///    Equals
-        /// </summary>
-        /// <param name="obj">The object to compare with the current object.</param>
-        /// <returns><c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.</returns>
         public override bool Equals(object obj)
         {
             var ret = false;
@@ -250,19 +254,10 @@ namespace Services.Enums
             return ret;
         }
 
-        /// <summary>
-        ///    Get Hash Code
-        /// </summary>
-        /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
-        public override int GetHashCode()
-        {
-            var ret = 23;
-            const int prime = 37;
-            ret = (ret * prime) + Value.GetHashCode();
-            ret = (ret * prime) + All.GetHashCode();
-            return ret;
-        }
+        public override int GetHashCode() => 17 * Value.GetHashCode();
+				
+        public int GetHashCode(DocConstantFeature obj) => obj.GetHashCode();
 
-        #endregion IEquatable (DocConstantFeature)
+        #endregion IEquatable
     }
 }
