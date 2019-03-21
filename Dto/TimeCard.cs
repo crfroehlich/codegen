@@ -56,6 +56,24 @@ namespace Services.Dto
 
         public TimeCardBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public TimeCardBase(int? pId, string pDescription, Reference pDocument, int? pDocumentId, DateTime? pEnd, Reference pProject, int? pProjectId, int? pReferenceId, DateTime? pStart, Reference pStatus, int? pStatusId, Reference pUser, int? pUserId, Reference pWorkType, int? pWorkTypeId) : this(DocConvert.ToInt(pId)) 
+		{
+            Description = pDescription;
+            Document = pDocument;
+            DocumentId = pDocumentId;
+            End = pEnd;
+            Project = pProject;
+            ProjectId = pProjectId;
+            ReferenceId = pReferenceId;
+            Start = pStart;
+            Status = pStatus;
+            StatusId = pStatusId;
+            User = pUser;
+            UserId = pUserId;
+            WorkType = pWorkType;
+            WorkTypeId = pWorkTypeId;
+		}
+
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
 
@@ -103,11 +121,34 @@ namespace Services.Dto
         public int? WorkTypeId { get; set; }
 
 
+
+		public void Deconstruct(out string pDescription, out Reference pDocument, out int? pDocumentId, out DateTime? pEnd, out Reference pProject, out int? pProjectId, out int? pReferenceId, out DateTime? pStart, out Reference pStatus, out int? pStatusId, out Reference pUser, out int? pUserId, out Reference pWorkType, out int? pWorkTypeId)
+		{
+            pDescription = Description;
+            pDocument = Document;
+            pDocumentId = DocumentId;
+            pEnd = End;
+            pProject = Project;
+            pProjectId = ProjectId;
+            pReferenceId = ReferenceId;
+            pStart = Start;
+            pStatus = Status;
+            pStatusId = StatusId;
+            pUser = User;
+            pUserId = UserId;
+            pWorkType = WorkType;
+            pWorkTypeId = WorkTypeId;
+		}
+
+		//Not ready until C# v8.?
+		//public TimeCardBase With(int? pId = Id, string pDescription = Description, Reference pDocument = Document, int? pDocumentId = DocumentId, DateTime? pEnd = End, Reference pProject = Project, int? pProjectId = ProjectId, int? pReferenceId = ReferenceId, DateTime? pStart = Start, Reference pStatus = Status, int? pStatusId = StatusId, Reference pUser = User, int? pUserId = UserId, Reference pWorkType = WorkType, int? pWorkTypeId = WorkTypeId) => 
+		//	new TimeCardBase(pId, pDescription, pDocument, pDocumentId, pEnd, pProject, pProjectId, pReferenceId, pStart, pStatus, pStatusId, pUser, pUserId, pWorkType, pWorkTypeId);
+
     }
 
     [Route("/timecard", "POST")]
     [Route("/timecard/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class TimeCard : TimeCardBase, IReturn<TimeCard>, IDto
+    public partial class TimeCard : TimeCardBase, IReturn<TimeCard>, IDto, ICloneable
     {
         public TimeCard()
         {
@@ -116,7 +157,8 @@ namespace Services.Dto
 
         public TimeCard(int? id) : base(DocConvert.ToInt(id)) {}
         public TimeCard(int id) : base(id) {}
-        
+        public TimeCard(int? pId, string pDescription, Reference pDocument, int? pDocumentId, DateTime? pEnd, Reference pProject, int? pProjectId, int? pReferenceId, DateTime? pStart, Reference pStatus, int? pStatusId, Reference pUser, int? pUserId, Reference pWorkType, int? pWorkTypeId) : 
+			base(pId, pDescription, pDocument, pDocumentId, pEnd, pProject, pProjectId, pReferenceId, pStart, pStatus, pStatusId, pUser, pUserId, pWorkType, pWorkTypeId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -151,6 +193,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<TimeCard>();
     }
     
     [Route("/TimeCard/{Id}/copy", "POST")]

@@ -56,6 +56,17 @@ namespace Services.Dto
 
         public VariableInstanceBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public VariableInstanceBase(int? pId, string pData, Reference pDocument, int? pDocumentId, Reference pRule, int? pRuleId, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+		{
+            Data = pData;
+            Document = pDocument;
+            DocumentId = pDocumentId;
+            Rule = pRule;
+            RuleId = pRuleId;
+            Workflows = pWorkflows;
+            WorkflowsCount = pWorkflowsCount;
+		}
+
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
 
@@ -77,11 +88,27 @@ namespace Services.Dto
         public int? WorkflowsCount { get; set; }
 
 
+
+		public void Deconstruct(out string pData, out Reference pDocument, out int? pDocumentId, out Reference pRule, out int? pRuleId, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+		{
+            pData = Data;
+            pDocument = Document;
+            pDocumentId = DocumentId;
+            pRule = Rule;
+            pRuleId = RuleId;
+            pWorkflows = Workflows;
+            pWorkflowsCount = WorkflowsCount;
+		}
+
+		//Not ready until C# v8.?
+		//public VariableInstanceBase With(int? pId = Id, string pData = Data, Reference pDocument = Document, int? pDocumentId = DocumentId, Reference pRule = Rule, int? pRuleId = RuleId, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+		//	new VariableInstanceBase(pId, pData, pDocument, pDocumentId, pRule, pRuleId, pWorkflows, pWorkflowsCount);
+
     }
 
     [Route("/variableinstance", "POST")]
     [Route("/variableinstance/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class VariableInstance : VariableInstanceBase, IReturn<VariableInstance>, IDto
+    public partial class VariableInstance : VariableInstanceBase, IReturn<VariableInstance>, IDto, ICloneable
     {
         public VariableInstance()
         {
@@ -90,7 +117,8 @@ namespace Services.Dto
 
         public VariableInstance(int? id) : base(DocConvert.ToInt(id)) {}
         public VariableInstance(int id) : base(id) {}
-        
+        public VariableInstance(int? pId, string pData, Reference pDocument, int? pDocumentId, Reference pRule, int? pRuleId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+			base(pId, pData, pDocument, pDocumentId, pRule, pRuleId, pWorkflows, pWorkflowsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -130,6 +158,8 @@ namespace Services.Dto
             nameof(Workflows), nameof(WorkflowsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<VariableInstance>();
     }
     
     [Route("/VariableInstance/{Id}/copy", "POST")]

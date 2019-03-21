@@ -56,6 +56,22 @@ namespace Services.Dto
 
         public BroadcastBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public BroadcastBase(int? pId, Reference pApp, int? pAppId, string pConfluenceId, string pName, bool pReprocess, DateTime? pReprocessed, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
+		{
+            App = pApp;
+            AppId = pAppId;
+            ConfluenceId = pConfluenceId;
+            Name = pName;
+            Reprocess = pReprocess;
+            Reprocessed = pReprocessed;
+            Scopes = pScopes;
+            ScopesCount = pScopesCount;
+            Status = pStatus;
+            StatusId = pStatusId;
+            Type = pType;
+            TypeId = pTypeId;
+		}
+
         [ApiMember(Name = nameof(App), Description = "App", IsRequired = true)]
         public Reference App { get; set; }
         [ApiMember(Name = nameof(AppId), Description = "Primary Key of App", IsRequired = false)]
@@ -97,11 +113,32 @@ namespace Services.Dto
         public int? TypeId { get; set; }
 
 
+
+		public void Deconstruct(out Reference pApp, out int? pAppId, out string pConfluenceId, out string pName, out bool pReprocess, out DateTime? pReprocessed, out List<Reference> pScopes, out int? pScopesCount, out Reference pStatus, out int? pStatusId, out Reference pType, out int? pTypeId)
+		{
+            pApp = App;
+            pAppId = AppId;
+            pConfluenceId = ConfluenceId;
+            pName = Name;
+            pReprocess = Reprocess;
+            pReprocessed = Reprocessed;
+            pScopes = Scopes;
+            pScopesCount = ScopesCount;
+            pStatus = Status;
+            pStatusId = StatusId;
+            pType = Type;
+            pTypeId = TypeId;
+		}
+
+		//Not ready until C# v8.?
+		//public BroadcastBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, string pConfluenceId = ConfluenceId, string pName = Name, bool pReprocess = Reprocess, DateTime? pReprocessed = Reprocessed, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, Reference pStatus = Status, int? pStatusId = StatusId, Reference pType = Type, int? pTypeId = TypeId) => 
+		//	new BroadcastBase(pId, pApp, pAppId, pConfluenceId, pName, pReprocess, pReprocessed, pScopes, pScopesCount, pStatus, pStatusId, pType, pTypeId);
+
     }
 
     [Route("/broadcast", "POST")]
     [Route("/broadcast/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Broadcast : BroadcastBase, IReturn<Broadcast>, IDto
+    public partial class Broadcast : BroadcastBase, IReturn<Broadcast>, IDto, ICloneable
     {
         public Broadcast()
         {
@@ -110,7 +147,8 @@ namespace Services.Dto
 
         public Broadcast(int? id) : base(DocConvert.ToInt(id)) {}
         public Broadcast(int id) : base(id) {}
-        
+        public Broadcast(int? pId, Reference pApp, int? pAppId, string pConfluenceId, string pName, bool pReprocess, DateTime? pReprocessed, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId) : 
+			base(pId, pApp, pAppId, pConfluenceId, pName, pReprocess, pReprocessed, pScopes, pScopesCount, pStatus, pStatusId, pType, pTypeId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -150,6 +188,8 @@ namespace Services.Dto
             nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<Broadcast>();
     }
     
     [Route("/Broadcast/{Id}/copy", "POST")]

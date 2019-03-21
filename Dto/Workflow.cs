@@ -56,6 +56,37 @@ namespace Services.Dto
 
         public WorkflowBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public WorkflowBase(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pComments, int? pCommentsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, List<Reference> pTags, int? pTagsCount, List<Reference> pTasks, int? pTasksCount, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+		{
+            Bindings = pBindings;
+            BindingsCount = pBindingsCount;
+            Comments = pComments;
+            CommentsCount = pCommentsCount;
+            Data = pData;
+            Description = pDescription;
+            Documents = pDocuments;
+            DocumentsCount = pDocumentsCount;
+            Name = pName;
+            Owner = pOwner;
+            OwnerId = pOwnerId;
+            Scopes = pScopes;
+            ScopesCount = pScopesCount;
+            Status = pStatus;
+            StatusId = pStatusId;
+            Tags = pTags;
+            TagsCount = pTagsCount;
+            Tasks = pTasks;
+            TasksCount = pTasksCount;
+            Type = pType;
+            TypeId = pTypeId;
+            User = pUser;
+            UserId = pUserId;
+            Variables = pVariables;
+            VariablesCount = pVariablesCount;
+            Workflows = pWorkflows;
+            WorkflowsCount = pWorkflowsCount;
+		}
+
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
         public int? BindingsCount { get; set; }
@@ -134,11 +165,47 @@ namespace Services.Dto
         public int? WorkflowsCount { get; set; }
 
 
+
+		public void Deconstruct(out List<Reference> pBindings, out int? pBindingsCount, out List<Reference> pComments, out int? pCommentsCount, out string pData, out string pDescription, out List<Reference> pDocuments, out int? pDocumentsCount, out string pName, out Reference pOwner, out int? pOwnerId, out List<Reference> pScopes, out int? pScopesCount, out Reference pStatus, out int? pStatusId, out List<Reference> pTags, out int? pTagsCount, out List<Reference> pTasks, out int? pTasksCount, out Reference pType, out int? pTypeId, out Reference pUser, out int? pUserId, out List<Reference> pVariables, out int? pVariablesCount, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+		{
+            pBindings = Bindings;
+            pBindingsCount = BindingsCount;
+            pComments = Comments;
+            pCommentsCount = CommentsCount;
+            pData = Data;
+            pDescription = Description;
+            pDocuments = Documents;
+            pDocumentsCount = DocumentsCount;
+            pName = Name;
+            pOwner = Owner;
+            pOwnerId = OwnerId;
+            pScopes = Scopes;
+            pScopesCount = ScopesCount;
+            pStatus = Status;
+            pStatusId = StatusId;
+            pTags = Tags;
+            pTagsCount = TagsCount;
+            pTasks = Tasks;
+            pTasksCount = TasksCount;
+            pType = Type;
+            pTypeId = TypeId;
+            pUser = User;
+            pUserId = UserId;
+            pVariables = Variables;
+            pVariablesCount = VariablesCount;
+            pWorkflows = Workflows;
+            pWorkflowsCount = WorkflowsCount;
+		}
+
+		//Not ready until C# v8.?
+		//public WorkflowBase With(int? pId = Id, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, List<Reference> pComments = Comments, int? pCommentsCount = CommentsCount, string pData = Data, string pDescription = Description, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, Reference pStatus = Status, int? pStatusId = StatusId, List<Reference> pTags = Tags, int? pTagsCount = TagsCount, List<Reference> pTasks = Tasks, int? pTasksCount = TasksCount, Reference pType = Type, int? pTypeId = TypeId, Reference pUser = User, int? pUserId = UserId, List<Reference> pVariables = Variables, int? pVariablesCount = VariablesCount, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+		//	new WorkflowBase(pId, pBindings, pBindingsCount, pComments, pCommentsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pStatusId, pTags, pTagsCount, pTasks, pTasksCount, pType, pTypeId, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount);
+
     }
 
     [Route("/workflow", "POST")]
     [Route("/workflow/{Id}", "GET, PATCH, PUT")]
-    public partial class Workflow : WorkflowBase, IReturn<Workflow>, IDto
+    public partial class Workflow : WorkflowBase, IReturn<Workflow>, IDto, ICloneable
     {
         public Workflow()
         {
@@ -147,7 +214,8 @@ namespace Services.Dto
 
         public Workflow(int? id) : base(DocConvert.ToInt(id)) {}
         public Workflow(int id) : base(id) {}
-        
+        public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pComments, int? pCommentsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, List<Reference> pTags, int? pTagsCount, List<Reference> pTasks, int? pTasksCount, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+			base(pId, pBindings, pBindingsCount, pComments, pCommentsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pStatusId, pTags, pTagsCount, pTasks, pTasksCount, pType, pTypeId, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -187,6 +255,8 @@ namespace Services.Dto
             nameof(Bindings), nameof(BindingsCount), nameof(Comments), nameof(CommentsCount), nameof(Documents), nameof(DocumentsCount), nameof(Scopes), nameof(ScopesCount), nameof(Tags), nameof(TagsCount), nameof(Tasks), nameof(TasksCount), nameof(Variables), nameof(VariablesCount), nameof(Workflows), nameof(WorkflowsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<Workflow>();
     }
     
     [Route("/Workflow/{Id}/copy", "POST")]

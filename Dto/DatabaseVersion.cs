@@ -56,6 +56,14 @@ namespace Services.Dto
 
         public DatabaseVersionBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public DatabaseVersionBase(int? pId, string pDatabaseState, string pDescription, string pRelease, string pVersionName) : this(DocConvert.ToInt(pId)) 
+		{
+            DatabaseState = pDatabaseState;
+            Description = pDescription;
+            Release = pRelease;
+            VersionName = pVersionName;
+		}
+
         [ApiMember(Name = nameof(DatabaseState), Description = "string", IsRequired = false)]
         public string DatabaseState { get; set; }
 
@@ -72,10 +80,23 @@ namespace Services.Dto
         public string VersionName { get; set; }
 
 
+
+		public void Deconstruct(out string pDatabaseState, out string pDescription, out string pRelease, out string pVersionName)
+		{
+            pDatabaseState = DatabaseState;
+            pDescription = Description;
+            pRelease = Release;
+            pVersionName = VersionName;
+		}
+
+		//Not ready until C# v8.?
+		//public DatabaseVersionBase With(int? pId = Id, string pDatabaseState = DatabaseState, string pDescription = Description, string pRelease = Release, string pVersionName = VersionName) => 
+		//	new DatabaseVersionBase(pId, pDatabaseState, pDescription, pRelease, pVersionName);
+
     }
 
     [Route("/databaseversion/{Id}", "GET")]
-    public partial class DatabaseVersion : DatabaseVersionBase, IReturn<DatabaseVersion>, IDto
+    public partial class DatabaseVersion : DatabaseVersionBase, IReturn<DatabaseVersion>, IDto, ICloneable
     {
         public DatabaseVersion()
         {
@@ -84,7 +105,8 @@ namespace Services.Dto
 
         public DatabaseVersion(int? id) : base(DocConvert.ToInt(id)) {}
         public DatabaseVersion(int id) : base(id) {}
-        
+        public DatabaseVersion(int? pId, string pDatabaseState, string pDescription, string pRelease, string pVersionName) : 
+			base(pId, pDatabaseState, pDescription, pRelease, pVersionName) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -119,6 +141,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<DatabaseVersion>();
     }
     
     public partial class DatabaseVersionSearchBase : Search<DatabaseVersion>

@@ -56,6 +56,26 @@ namespace Services.Dto
 
         public TeamBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public TeamBase(int? pId, List<Reference> pAdminRoles, int? pAdminRolesCount, string pDescription, string pEmail, bool pIsInternal, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, TeamSettings pSettings, string pSlack, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+		{
+            AdminRoles = pAdminRoles;
+            AdminRolesCount = pAdminRolesCount;
+            Description = pDescription;
+            Email = pEmail;
+            IsInternal = pIsInternal;
+            Name = pName;
+            Owner = pOwner;
+            OwnerId = pOwnerId;
+            Scopes = pScopes;
+            ScopesCount = pScopesCount;
+            Settings = pSettings;
+            Slack = pSlack;
+            Updates = pUpdates;
+            UpdatesCount = pUpdatesCount;
+            Users = pUsers;
+            UsersCount = pUsersCount;
+		}
+
         [ApiMember(Name = nameof(AdminRoles), Description = "Role", IsRequired = false)]
         public List<Reference> AdminRoles { get; set; }
         public int? AdminRolesCount { get; set; }
@@ -106,11 +126,36 @@ namespace Services.Dto
         public int? UsersCount { get; set; }
 
 
+
+		public void Deconstruct(out List<Reference> pAdminRoles, out int? pAdminRolesCount, out string pDescription, out string pEmail, out bool pIsInternal, out string pName, out Reference pOwner, out int? pOwnerId, out List<Reference> pScopes, out int? pScopesCount, out TeamSettings pSettings, out string pSlack, out List<Reference> pUpdates, out int? pUpdatesCount, out List<Reference> pUsers, out int? pUsersCount)
+		{
+            pAdminRoles = AdminRoles;
+            pAdminRolesCount = AdminRolesCount;
+            pDescription = Description;
+            pEmail = Email;
+            pIsInternal = IsInternal;
+            pName = Name;
+            pOwner = Owner;
+            pOwnerId = OwnerId;
+            pScopes = Scopes;
+            pScopesCount = ScopesCount;
+            pSettings = Settings;
+            pSlack = Slack;
+            pUpdates = Updates;
+            pUpdatesCount = UpdatesCount;
+            pUsers = Users;
+            pUsersCount = UsersCount;
+		}
+
+		//Not ready until C# v8.?
+		//public TeamBase With(int? pId = Id, List<Reference> pAdminRoles = AdminRoles, int? pAdminRolesCount = AdminRolesCount, string pDescription = Description, string pEmail = Email, bool pIsInternal = IsInternal, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, TeamSettings pSettings = Settings, string pSlack = Slack, List<Reference> pUpdates = Updates, int? pUpdatesCount = UpdatesCount, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+		//	new TeamBase(pId, pAdminRoles, pAdminRolesCount, pDescription, pEmail, pIsInternal, pName, pOwner, pOwnerId, pScopes, pScopesCount, pSettings, pSlack, pUpdates, pUpdatesCount, pUsers, pUsersCount);
+
     }
 
     [Route("/team", "POST")]
     [Route("/team/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Team : TeamBase, IReturn<Team>, IDto
+    public partial class Team : TeamBase, IReturn<Team>, IDto, ICloneable
     {
         public Team()
         {
@@ -119,7 +164,8 @@ namespace Services.Dto
 
         public Team(int? id) : base(DocConvert.ToInt(id)) {}
         public Team(int id) : base(id) {}
-        
+        public Team(int? pId, List<Reference> pAdminRoles, int? pAdminRolesCount, string pDescription, string pEmail, bool pIsInternal, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, TeamSettings pSettings, string pSlack, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : 
+			base(pId, pAdminRoles, pAdminRolesCount, pDescription, pEmail, pIsInternal, pName, pOwner, pOwnerId, pScopes, pScopesCount, pSettings, pSlack, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -159,6 +205,8 @@ namespace Services.Dto
             nameof(AdminRoles), nameof(AdminRolesCount), nameof(Scopes), nameof(ScopesCount), nameof(Updates), nameof(UpdatesCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<Team>();
     }
     
     [Route("/Team/{Id}/copy", "POST")]

@@ -56,6 +56,32 @@ namespace Services.Dto
 
         public AuditRecordBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public AuditRecordBase(int? pId, string pAction, Reference pBackgroundTask, int? pBackgroundTaskId, DateTime? pChangedOnDate, string pData, string pDatabaseSessionId, List<Reference> pDeltas, int? pDeltasCount, int? pEntityId, string pEntityType, int? pEntityVersion, List<Reference> pEvents, int? pEventsCount, Reference pImpersonation, int? pImpersonationId, int? pTargetId, string pTargetType, int? pTargetVersion, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId) : this(DocConvert.ToInt(pId)) 
+		{
+            Action = pAction;
+            BackgroundTask = pBackgroundTask;
+            BackgroundTaskId = pBackgroundTaskId;
+            ChangedOnDate = pChangedOnDate;
+            Data = pData;
+            DatabaseSessionId = pDatabaseSessionId;
+            Deltas = pDeltas;
+            DeltasCount = pDeltasCount;
+            EntityId = pEntityId;
+            EntityType = pEntityType;
+            EntityVersion = pEntityVersion;
+            Events = pEvents;
+            EventsCount = pEventsCount;
+            Impersonation = pImpersonation;
+            ImpersonationId = pImpersonationId;
+            TargetId = pTargetId;
+            TargetType = pTargetType;
+            TargetVersion = pTargetVersion;
+            User = pUser;
+            UserId = pUserId;
+            UserSession = pUserSession;
+            UserSessionId = pUserSessionId;
+		}
+
         [ApiMember(Name = nameof(Action), Description = "string", IsRequired = false)]
         public string Action { get; set; }
 
@@ -130,10 +156,41 @@ namespace Services.Dto
         public int? UserSessionId { get; set; }
 
 
+
+		public void Deconstruct(out string pAction, out Reference pBackgroundTask, out int? pBackgroundTaskId, out DateTime? pChangedOnDate, out string pData, out string pDatabaseSessionId, out List<Reference> pDeltas, out int? pDeltasCount, out int? pEntityId, out string pEntityType, out int? pEntityVersion, out List<Reference> pEvents, out int? pEventsCount, out Reference pImpersonation, out int? pImpersonationId, out int? pTargetId, out string pTargetType, out int? pTargetVersion, out Reference pUser, out int? pUserId, out Reference pUserSession, out int? pUserSessionId)
+		{
+            pAction = Action;
+            pBackgroundTask = BackgroundTask;
+            pBackgroundTaskId = BackgroundTaskId;
+            pChangedOnDate = ChangedOnDate;
+            pData = Data;
+            pDatabaseSessionId = DatabaseSessionId;
+            pDeltas = Deltas;
+            pDeltasCount = DeltasCount;
+            pEntityId = EntityId;
+            pEntityType = EntityType;
+            pEntityVersion = EntityVersion;
+            pEvents = Events;
+            pEventsCount = EventsCount;
+            pImpersonation = Impersonation;
+            pImpersonationId = ImpersonationId;
+            pTargetId = TargetId;
+            pTargetType = TargetType;
+            pTargetVersion = TargetVersion;
+            pUser = User;
+            pUserId = UserId;
+            pUserSession = UserSession;
+            pUserSessionId = UserSessionId;
+		}
+
+		//Not ready until C# v8.?
+		//public AuditRecordBase With(int? pId = Id, string pAction = Action, Reference pBackgroundTask = BackgroundTask, int? pBackgroundTaskId = BackgroundTaskId, DateTime? pChangedOnDate = ChangedOnDate, string pData = Data, string pDatabaseSessionId = DatabaseSessionId, List<Reference> pDeltas = Deltas, int? pDeltasCount = DeltasCount, int? pEntityId = EntityId, string pEntityType = EntityType, int? pEntityVersion = EntityVersion, List<Reference> pEvents = Events, int? pEventsCount = EventsCount, Reference pImpersonation = Impersonation, int? pImpersonationId = ImpersonationId, int? pTargetId = TargetId, string pTargetType = TargetType, int? pTargetVersion = TargetVersion, Reference pUser = User, int? pUserId = UserId, Reference pUserSession = UserSession, int? pUserSessionId = UserSessionId) => 
+		//	new AuditRecordBase(pId, pAction, pBackgroundTask, pBackgroundTaskId, pChangedOnDate, pData, pDatabaseSessionId, pDeltas, pDeltasCount, pEntityId, pEntityType, pEntityVersion, pEvents, pEventsCount, pImpersonation, pImpersonationId, pTargetId, pTargetType, pTargetVersion, pUser, pUserId, pUserSession, pUserSessionId);
+
     }
 
     [Route("/auditrecord/{Id}", "GET")]
-    public partial class AuditRecord : AuditRecordBase, IReturn<AuditRecord>, IDto
+    public partial class AuditRecord : AuditRecordBase, IReturn<AuditRecord>, IDto, ICloneable
     {
         public AuditRecord()
         {
@@ -142,7 +199,8 @@ namespace Services.Dto
 
         public AuditRecord(int? id) : base(DocConvert.ToInt(id)) {}
         public AuditRecord(int id) : base(id) {}
-        
+        public AuditRecord(int? pId, string pAction, Reference pBackgroundTask, int? pBackgroundTaskId, DateTime? pChangedOnDate, string pData, string pDatabaseSessionId, List<Reference> pDeltas, int? pDeltasCount, int? pEntityId, string pEntityType, int? pEntityVersion, List<Reference> pEvents, int? pEventsCount, Reference pImpersonation, int? pImpersonationId, int? pTargetId, string pTargetType, int? pTargetVersion, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId) : 
+			base(pId, pAction, pBackgroundTask, pBackgroundTaskId, pChangedOnDate, pData, pDatabaseSessionId, pDeltas, pDeltasCount, pEntityId, pEntityType, pEntityVersion, pEvents, pEventsCount, pImpersonation, pImpersonationId, pTargetId, pTargetType, pTargetVersion, pUser, pUserId, pUserSession, pUserSessionId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -182,6 +240,8 @@ namespace Services.Dto
             nameof(Deltas), nameof(DeltasCount), nameof(Events), nameof(EventsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<AuditRecord>();
     }
     
     public partial class AuditRecordSearchBase : Search<AuditRecord>

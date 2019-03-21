@@ -56,6 +56,15 @@ namespace Services.Dto
 
         public DataTabBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public DataTabBase(int? pId, Reference pClass, int? pClassId, string pDescription, string pName, int? pOrder) : this(DocConvert.ToInt(pId)) 
+		{
+            Class = pClass;
+            ClassId = pClassId;
+            Description = pDescription;
+            Name = pName;
+            Order = pOrder;
+		}
+
         [ApiMember(Name = nameof(Class), Description = "DataClass", IsRequired = true)]
         public Reference Class { get; set; }
         [ApiMember(Name = nameof(ClassId), Description = "Primary Key of DataClass", IsRequired = false)]
@@ -74,10 +83,24 @@ namespace Services.Dto
         public int? Order { get; set; }
 
 
+
+		public void Deconstruct(out Reference pClass, out int? pClassId, out string pDescription, out string pName, out int? pOrder)
+		{
+            pClass = Class;
+            pClassId = ClassId;
+            pDescription = Description;
+            pName = Name;
+            pOrder = Order;
+		}
+
+		//Not ready until C# v8.?
+		//public DataTabBase With(int? pId = Id, Reference pClass = Class, int? pClassId = ClassId, string pDescription = Description, string pName = Name, int? pOrder = Order) => 
+		//	new DataTabBase(pId, pClass, pClassId, pDescription, pName, pOrder);
+
     }
 
     [Route("/datatab/{Id}", "GET, PATCH, PUT")]
-    public partial class DataTab : DataTabBase, IReturn<DataTab>, IDto
+    public partial class DataTab : DataTabBase, IReturn<DataTab>, IDto, ICloneable
     {
         public DataTab()
         {
@@ -86,7 +109,8 @@ namespace Services.Dto
 
         public DataTab(int? id) : base(DocConvert.ToInt(id)) {}
         public DataTab(int id) : base(id) {}
-        
+        public DataTab(int? pId, Reference pClass, int? pClassId, string pDescription, string pName, int? pOrder) : 
+			base(pId, pClass, pClassId, pDescription, pName, pOrder) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -119,6 +143,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<DataTab>();
     }
     
     public partial class DataTabSearchBase : Search<DataTab>

@@ -56,6 +56,19 @@ namespace Services.Dto
 
         public LookupTableBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public LookupTableBase(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pCategories, int? pCategoriesCount, List<Reference> pDocuments, int? pDocumentsCount, Reference pEnum, int? pEnumId, string pName) : this(DocConvert.ToInt(pId)) 
+		{
+            Bindings = pBindings;
+            BindingsCount = pBindingsCount;
+            Categories = pCategories;
+            CategoriesCount = pCategoriesCount;
+            Documents = pDocuments;
+            DocumentsCount = pDocumentsCount;
+            Enum = pEnum;
+            EnumId = pEnumId;
+            Name = pName;
+		}
+
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
         public int? BindingsCount { get; set; }
@@ -81,11 +94,29 @@ namespace Services.Dto
         public string Name { get; set; }
 
 
+
+		public void Deconstruct(out List<Reference> pBindings, out int? pBindingsCount, out List<Reference> pCategories, out int? pCategoriesCount, out List<Reference> pDocuments, out int? pDocumentsCount, out Reference pEnum, out int? pEnumId, out string pName)
+		{
+            pBindings = Bindings;
+            pBindingsCount = BindingsCount;
+            pCategories = Categories;
+            pCategoriesCount = CategoriesCount;
+            pDocuments = Documents;
+            pDocumentsCount = DocumentsCount;
+            pEnum = Enum;
+            pEnumId = EnumId;
+            pName = Name;
+		}
+
+		//Not ready until C# v8.?
+		//public LookupTableBase With(int? pId = Id, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, List<Reference> pCategories = Categories, int? pCategoriesCount = CategoriesCount, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, Reference pEnum = Enum, int? pEnumId = EnumId, string pName = Name) => 
+		//	new LookupTableBase(pId, pBindings, pBindingsCount, pCategories, pCategoriesCount, pDocuments, pDocumentsCount, pEnum, pEnumId, pName);
+
     }
 
     [Route("/lookuptable", "POST")]
     [Route("/lookuptable/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class LookupTable : LookupTableBase, IReturn<LookupTable>, IDto
+    public partial class LookupTable : LookupTableBase, IReturn<LookupTable>, IDto, ICloneable
     {
         public LookupTable()
         {
@@ -94,7 +125,8 @@ namespace Services.Dto
 
         public LookupTable(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupTable(int id) : base(id) {}
-        
+        public LookupTable(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pCategories, int? pCategoriesCount, List<Reference> pDocuments, int? pDocumentsCount, Reference pEnum, int? pEnumId, string pName) : 
+			base(pId, pBindings, pBindingsCount, pCategories, pCategoriesCount, pDocuments, pDocumentsCount, pEnum, pEnumId, pName) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -132,6 +164,8 @@ namespace Services.Dto
             nameof(Bindings), nameof(BindingsCount), nameof(Categories), nameof(CategoriesCount), nameof(Documents), nameof(DocumentsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<LookupTable>();
     }
     
     [Route("/LookupTable/{Id}/copy", "POST")]

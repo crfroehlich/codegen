@@ -56,6 +56,61 @@ namespace Services.Dto
 
         public DocumentBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public DocumentBase(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, string pLegacyModel, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, List<Reference> pNonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : this(DocConvert.ToInt(pId)) 
+		{
+            Abstract = pAbstract;
+            AccessionID = pAccessionID;
+            Acronym = pAcronym;
+            Authors = pAuthors;
+            CochraneID = pCochraneID;
+            CorporateAuthor = pCorporateAuthor;
+            Country = pCountry;
+            CustomData = pCustomData;
+            DatabaseType = pDatabaseType;
+            DatabaseTypeId = pDatabaseTypeId;
+            DocumentType = pDocumentType;
+            DocumentTypeId = pDocumentTypeId;
+            DOI = pDOI;
+            EmbaseAccessionNumber = pEmbaseAccessionNumber;
+            Emtree = pEmtree;
+            ErrataText = pErrataText;
+            FullText = pFullText;
+            FullTextURL = pFullTextURL;
+            Import = pImport;
+            ImportId = pImportId;
+            ImportType = pImportType;
+            ImportTypeId = pImportTypeId;
+            Institution = pInstitution;
+            ISSN = pISSN;
+            Issue = pIssue;
+            JournalTitle = pJournalTitle;
+            LegacyModel = pLegacyModel;
+            LegacySync = pLegacySync;
+            LookupTables = pLookupTables;
+            LookupTablesCount = pLookupTablesCount;
+            MedlineID = pMedlineID;
+            MeSH = pMeSH;
+            NonDigitizedDocumentSets = pNonDigitizedDocumentSets;
+            NonDigitizedDocumentSetsCount = pNonDigitizedDocumentSetsCount;
+            Pages = pPages;
+            ParentChildStatus = pParentChildStatus;
+            ParentID = pParentID;
+            PublicationDate = pPublicationDate;
+            PublicationYear = pPublicationYear;
+            PubType = pPubType;
+            ReferenceStudy = pReferenceStudy;
+            SecondarySourceID = pSecondarySourceID;
+            Source = pSource;
+            StorageModel = pStorageModel;
+            SupplementalFiles = pSupplementalFiles;
+            TaStudyDesign = pTaStudyDesign;
+            Title = pTitle;
+            TrialOutcome = pTrialOutcome;
+            VariableData = pVariableData;
+            VariableDataCount = pVariableDataCount;
+            Volume = pVolume;
+		}
+
         [ApiMember(Name = nameof(Abstract), Description = "string", IsRequired = false)]
         public string Abstract { get; set; }
 
@@ -248,11 +303,71 @@ namespace Services.Dto
         public string Volume { get; set; }
 
 
+
+		public void Deconstruct(out string pAbstract, out string pAccessionID, out string pAcronym, out string pAuthors, out string pCochraneID, out string pCorporateAuthor, out string pCountry, out string pCustomData, out Reference pDatabaseType, out int? pDatabaseTypeId, out Reference pDocumentType, out int? pDocumentTypeId, out string pDOI, out string pEmbaseAccessionNumber, out string pEmtree, out string pErrataText, out string pFullText, out string pFullTextURL, out Reference pImport, out int? pImportId, out Reference pImportType, out int? pImportTypeId, out string pInstitution, out string pISSN, out string pIssue, out string pJournalTitle, out string pLegacyModel, out DateTime? pLegacySync, out List<Reference> pLookupTables, out int? pLookupTablesCount, out int? pMedlineID, out string pMeSH, out List<Reference> pNonDigitizedDocumentSets, out int? pNonDigitizedDocumentSetsCount, out string pPages, out char? pParentChildStatus, out int? pParentID, out string pPublicationDate, out int? pPublicationYear, out string pPubType, out int? pReferenceStudy, out string pSecondarySourceID, out string pSource, out string pStorageModel, out string pSupplementalFiles, out string pTaStudyDesign, out string pTitle, out short? pTrialOutcome, out List<Reference> pVariableData, out int? pVariableDataCount, out string pVolume)
+		{
+            pAbstract = Abstract;
+            pAccessionID = AccessionID;
+            pAcronym = Acronym;
+            pAuthors = Authors;
+            pCochraneID = CochraneID;
+            pCorporateAuthor = CorporateAuthor;
+            pCountry = Country;
+            pCustomData = CustomData;
+            pDatabaseType = DatabaseType;
+            pDatabaseTypeId = DatabaseTypeId;
+            pDocumentType = DocumentType;
+            pDocumentTypeId = DocumentTypeId;
+            pDOI = DOI;
+            pEmbaseAccessionNumber = EmbaseAccessionNumber;
+            pEmtree = Emtree;
+            pErrataText = ErrataText;
+            pFullText = FullText;
+            pFullTextURL = FullTextURL;
+            pImport = Import;
+            pImportId = ImportId;
+            pImportType = ImportType;
+            pImportTypeId = ImportTypeId;
+            pInstitution = Institution;
+            pISSN = ISSN;
+            pIssue = Issue;
+            pJournalTitle = JournalTitle;
+            pLegacyModel = LegacyModel;
+            pLegacySync = LegacySync;
+            pLookupTables = LookupTables;
+            pLookupTablesCount = LookupTablesCount;
+            pMedlineID = MedlineID;
+            pMeSH = MeSH;
+            pNonDigitizedDocumentSets = NonDigitizedDocumentSets;
+            pNonDigitizedDocumentSetsCount = NonDigitizedDocumentSetsCount;
+            pPages = Pages;
+            pParentChildStatus = ParentChildStatus;
+            pParentID = ParentID;
+            pPublicationDate = PublicationDate;
+            pPublicationYear = PublicationYear;
+            pPubType = PubType;
+            pReferenceStudy = ReferenceStudy;
+            pSecondarySourceID = SecondarySourceID;
+            pSource = Source;
+            pStorageModel = StorageModel;
+            pSupplementalFiles = SupplementalFiles;
+            pTaStudyDesign = TaStudyDesign;
+            pTitle = Title;
+            pTrialOutcome = TrialOutcome;
+            pVariableData = VariableData;
+            pVariableDataCount = VariableDataCount;
+            pVolume = Volume;
+		}
+
+		//Not ready until C# v8.?
+		//public DocumentBase With(int? pId = Id, string pAbstract = Abstract, string pAccessionID = AccessionID, string pAcronym = Acronym, string pAuthors = Authors, string pCochraneID = CochraneID, string pCorporateAuthor = CorporateAuthor, string pCountry = Country, string pCustomData = CustomData, Reference pDatabaseType = DatabaseType, int? pDatabaseTypeId = DatabaseTypeId, Reference pDocumentType = DocumentType, int? pDocumentTypeId = DocumentTypeId, string pDOI = DOI, string pEmbaseAccessionNumber = EmbaseAccessionNumber, string pEmtree = Emtree, string pErrataText = ErrataText, string pFullText = FullText, string pFullTextURL = FullTextURL, Reference pImport = Import, int? pImportId = ImportId, Reference pImportType = ImportType, int? pImportTypeId = ImportTypeId, string pInstitution = Institution, string pISSN = ISSN, string pIssue = Issue, string pJournalTitle = JournalTitle, string pLegacyModel = LegacyModel, DateTime? pLegacySync = LegacySync, List<Reference> pLookupTables = LookupTables, int? pLookupTablesCount = LookupTablesCount, int? pMedlineID = MedlineID, string pMeSH = MeSH, List<Reference> pNonDigitizedDocumentSets = NonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount = NonDigitizedDocumentSetsCount, string pPages = Pages, char? pParentChildStatus = ParentChildStatus, int? pParentID = ParentID, string pPublicationDate = PublicationDate, int? pPublicationYear = PublicationYear, string pPubType = PubType, int? pReferenceStudy = ReferenceStudy, string pSecondarySourceID = SecondarySourceID, string pSource = Source, string pStorageModel = StorageModel, string pSupplementalFiles = SupplementalFiles, string pTaStudyDesign = TaStudyDesign, string pTitle = Title, short? pTrialOutcome = TrialOutcome, List<Reference> pVariableData = VariableData, int? pVariableDataCount = VariableDataCount, string pVolume = Volume) => 
+		//	new DocumentBase(pId, pAbstract, pAccessionID, pAcronym, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDatabaseTypeId, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacyModel, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pNonDigitizedDocumentSets, pNonDigitizedDocumentSetsCount, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume);
+
     }
 
     [Route("/document", "POST")]
     [Route("/document/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Document : DocumentBase, IReturn<Document>, IDto
+    public partial class Document : DocumentBase, IReturn<Document>, IDto, ICloneable
     {
         public Document()
         {
@@ -261,7 +376,8 @@ namespace Services.Dto
 
         public Document(int? id) : base(DocConvert.ToInt(id)) {}
         public Document(int id) : base(id) {}
-        
+        public Document(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, string pLegacyModel, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, List<Reference> pNonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : 
+			base(pId, pAbstract, pAccessionID, pAcronym, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDatabaseTypeId, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacyModel, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pNonDigitizedDocumentSets, pNonDigitizedDocumentSetsCount, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -301,6 +417,8 @@ namespace Services.Dto
             nameof(Attributes), nameof(Characteristics), nameof(Outcomes), nameof(Groups), nameof(Phases), nameof(Sources), nameof(DocumentSets), nameof(Designs), nameof(FramedQuestions), nameof(Types), nameof(AttributeLabels), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(LookupTables), nameof(LookupTablesCount), nameof(NonDigitizedDocumentSets), nameof(NonDigitizedDocumentSetsCount), nameof(VariableData), nameof(VariableDataCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<Document>();
     }
     
     [Route("/Document/{Id}/copy", "POST")]

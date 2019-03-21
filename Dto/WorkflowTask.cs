@@ -56,6 +56,23 @@ namespace Services.Dto
 
         public WorkflowTaskBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public WorkflowTaskBase(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
+		{
+            Assignee = pAssignee;
+            AssigneeId = pAssigneeId;
+            Data = pData;
+            Description = pDescription;
+            DueDate = pDueDate;
+            Reporter = pReporter;
+            ReporterId = pReporterId;
+            Status = pStatus;
+            StatusId = pStatusId;
+            Type = pType;
+            TypeId = pTypeId;
+            Workflow = pWorkflow;
+            WorkflowId = pWorkflowId;
+		}
+
         [ApiMember(Name = nameof(Assignee), Description = "User", IsRequired = false)]
         public Reference Assignee { get; set; }
         [ApiMember(Name = nameof(AssigneeId), Description = "Primary Key of User", IsRequired = false)]
@@ -100,11 +117,33 @@ namespace Services.Dto
         public int? WorkflowId { get; set; }
 
 
+
+		public void Deconstruct(out Reference pAssignee, out int? pAssigneeId, out string pData, out string pDescription, out DateTime? pDueDate, out Reference pReporter, out int? pReporterId, out Reference pStatus, out int? pStatusId, out Reference pType, out int? pTypeId, out Reference pWorkflow, out int? pWorkflowId)
+		{
+            pAssignee = Assignee;
+            pAssigneeId = AssigneeId;
+            pData = Data;
+            pDescription = Description;
+            pDueDate = DueDate;
+            pReporter = Reporter;
+            pReporterId = ReporterId;
+            pStatus = Status;
+            pStatusId = StatusId;
+            pType = Type;
+            pTypeId = TypeId;
+            pWorkflow = Workflow;
+            pWorkflowId = WorkflowId;
+		}
+
+		//Not ready until C# v8.?
+		//public WorkflowTaskBase With(int? pId = Id, Reference pAssignee = Assignee, int? pAssigneeId = AssigneeId, string pData = Data, string pDescription = Description, DateTime? pDueDate = DueDate, Reference pReporter = Reporter, int? pReporterId = ReporterId, Reference pStatus = Status, int? pStatusId = StatusId, Reference pType = Type, int? pTypeId = TypeId, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
+		//	new WorkflowTaskBase(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pStatus, pStatusId, pType, pTypeId, pWorkflow, pWorkflowId);
+
     }
 
     [Route("/workflowtask", "POST")]
     [Route("/workflowtask/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class WorkflowTask : WorkflowTaskBase, IReturn<WorkflowTask>, IDto
+    public partial class WorkflowTask : WorkflowTaskBase, IReturn<WorkflowTask>, IDto, ICloneable
     {
         public WorkflowTask()
         {
@@ -113,7 +152,8 @@ namespace Services.Dto
 
         public WorkflowTask(int? id) : base(DocConvert.ToInt(id)) {}
         public WorkflowTask(int id) : base(id) {}
-        
+        public WorkflowTask(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId, Reference pWorkflow, int? pWorkflowId) : 
+			base(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pStatus, pStatusId, pType, pTypeId, pWorkflow, pWorkflowId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -148,6 +188,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<WorkflowTask>();
     }
     
     [Route("/WorkflowTask/{Id}/copy", "POST")]

@@ -56,6 +56,18 @@ namespace Services.Dto
 
         public UserTypeBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public UserTypeBase(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+		{
+            PayrollStatus = pPayrollStatus;
+            PayrollStatusId = pPayrollStatusId;
+            PayrollType = pPayrollType;
+            PayrollTypeId = pPayrollTypeId;
+            Type = pType;
+            TypeId = pTypeId;
+            Users = pUsers;
+            UsersCount = pUsersCount;
+		}
+
         [ApiMember(Name = nameof(PayrollStatus), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Contract",@"Full-Time",@"Part-Time"})]
         public Reference PayrollStatus { get; set; }
@@ -82,11 +94,28 @@ namespace Services.Dto
         public int? UsersCount { get; set; }
 
 
+
+		public void Deconstruct(out Reference pPayrollStatus, out int? pPayrollStatusId, out Reference pPayrollType, out int? pPayrollTypeId, out Reference pType, out int? pTypeId, out List<Reference> pUsers, out int? pUsersCount)
+		{
+            pPayrollStatus = PayrollStatus;
+            pPayrollStatusId = PayrollStatusId;
+            pPayrollType = PayrollType;
+            pPayrollTypeId = PayrollTypeId;
+            pType = Type;
+            pTypeId = TypeId;
+            pUsers = Users;
+            pUsersCount = UsersCount;
+		}
+
+		//Not ready until C# v8.?
+		//public UserTypeBase With(int? pId = Id, Reference pPayrollStatus = PayrollStatus, int? pPayrollStatusId = PayrollStatusId, Reference pPayrollType = PayrollType, int? pPayrollTypeId = PayrollTypeId, Reference pType = Type, int? pTypeId = TypeId, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+		//	new UserTypeBase(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount);
+
     }
 
     [Route("/usertype", "POST")]
     [Route("/usertype/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class UserType : UserTypeBase, IReturn<UserType>, IDto
+    public partial class UserType : UserTypeBase, IReturn<UserType>, IDto, ICloneable
     {
         public UserType()
         {
@@ -95,7 +124,8 @@ namespace Services.Dto
 
         public UserType(int? id) : base(DocConvert.ToInt(id)) {}
         public UserType(int id) : base(id) {}
-        
+        public UserType(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : 
+			base(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -135,6 +165,8 @@ namespace Services.Dto
             nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<UserType>();
     }
     
     [Route("/UserType/{Id}/copy", "POST")]

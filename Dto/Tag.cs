@@ -56,6 +56,13 @@ namespace Services.Dto
 
         public TagBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public TagBase(int? pId, string pName, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+		{
+            Name = pName;
+            Workflows = pWorkflows;
+            WorkflowsCount = pWorkflowsCount;
+		}
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
 
@@ -65,11 +72,23 @@ namespace Services.Dto
         public int? WorkflowsCount { get; set; }
 
 
+
+		public void Deconstruct(out string pName, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+		{
+            pName = Name;
+            pWorkflows = Workflows;
+            pWorkflowsCount = WorkflowsCount;
+		}
+
+		//Not ready until C# v8.?
+		//public TagBase With(int? pId = Id, string pName = Name, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+		//	new TagBase(pId, pName, pWorkflows, pWorkflowsCount);
+
     }
 
     [Route("/tag", "POST")]
     [Route("/tag/{Id}", "GET, DELETE")]
-    public partial class Tag : TagBase, IReturn<Tag>, IDto
+    public partial class Tag : TagBase, IReturn<Tag>, IDto, ICloneable
     {
         public Tag()
         {
@@ -78,7 +97,8 @@ namespace Services.Dto
 
         public Tag(int? id) : base(DocConvert.ToInt(id)) {}
         public Tag(int id) : base(id) {}
-        
+        public Tag(int? pId, string pName, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+			base(pId, pName, pWorkflows, pWorkflowsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -118,6 +138,8 @@ namespace Services.Dto
             nameof(Workflows), nameof(WorkflowsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<Tag>();
     }
     
     [Route("/Tag/{Id}/copy", "POST")]

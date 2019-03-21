@@ -56,6 +56,17 @@ namespace Services.Dto
 
         public UnitOfMeasureBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public UnitOfMeasureBase(int? pId, bool pIsSI, Reference pName, int? pNameId, Reference pType, int? pTypeId, Reference pUnit, int? pUnitId) : this(DocConvert.ToInt(pId)) 
+		{
+            IsSI = pIsSI;
+            Name = pName;
+            NameId = pNameId;
+            Type = pType;
+            TypeId = pTypeId;
+            Unit = pUnit;
+            UnitId = pUnitId;
+		}
+
         [ApiMember(Name = nameof(IsSI), Description = "bool", IsRequired = false)]
         public bool IsSI { get; set; }
 
@@ -79,11 +90,27 @@ namespace Services.Dto
         public int? UnitId { get; set; }
 
 
+
+		public void Deconstruct(out bool pIsSI, out Reference pName, out int? pNameId, out Reference pType, out int? pTypeId, out Reference pUnit, out int? pUnitId)
+		{
+            pIsSI = IsSI;
+            pName = Name;
+            pNameId = NameId;
+            pType = Type;
+            pTypeId = TypeId;
+            pUnit = Unit;
+            pUnitId = UnitId;
+		}
+
+		//Not ready until C# v8.?
+		//public UnitOfMeasureBase With(int? pId = Id, bool pIsSI = IsSI, Reference pName = Name, int? pNameId = NameId, Reference pType = Type, int? pTypeId = TypeId, Reference pUnit = Unit, int? pUnitId = UnitId) => 
+		//	new UnitOfMeasureBase(pId, pIsSI, pName, pNameId, pType, pTypeId, pUnit, pUnitId);
+
     }
 
     [Route("/unitofmeasure", "POST")]
     [Route("/unitofmeasure/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class UnitOfMeasure : UnitOfMeasureBase, IReturn<UnitOfMeasure>, IDto
+    public partial class UnitOfMeasure : UnitOfMeasureBase, IReturn<UnitOfMeasure>, IDto, ICloneable
     {
         public UnitOfMeasure()
         {
@@ -92,7 +119,8 @@ namespace Services.Dto
 
         public UnitOfMeasure(int? id) : base(DocConvert.ToInt(id)) {}
         public UnitOfMeasure(int id) : base(id) {}
-        
+        public UnitOfMeasure(int? pId, bool pIsSI, Reference pName, int? pNameId, Reference pType, int? pTypeId, Reference pUnit, int? pUnitId) : 
+			base(pId, pIsSI, pName, pNameId, pType, pTypeId, pUnit, pUnitId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -125,6 +153,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<UnitOfMeasure>();
     }
     
     [Route("/UnitOfMeasure/{Id}/copy", "POST")]

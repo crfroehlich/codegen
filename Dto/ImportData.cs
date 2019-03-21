@@ -56,6 +56,35 @@ namespace Services.Dto
 
         public ImportDataBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public ImportDataBase(int? pId, DateTime? pCompletedOn, Reference pDocument, int? pDocumentId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : this(DocConvert.ToInt(pId)) 
+		{
+            CompletedOn = pCompletedOn;
+            Document = pDocument;
+            DocumentId = pDocumentId;
+            DocumentSets = pDocumentSets;
+            DocumentSetsCount = pDocumentSetsCount;
+            ErrorData = pErrorData;
+            ExtractUrl = pExtractUrl;
+            HighPriority = pHighPriority;
+            ImportFr = pImportFr;
+            ImportLocation = pImportLocation;
+            ImportLocationId = pImportLocationId;
+            ImportNewName = pImportNewName;
+            ImportTable = pImportTable;
+            ImportText = pImportText;
+            ImportType = pImportType;
+            ImportTypeId = pImportTypeId;
+            IsLegacy = pIsLegacy;
+            Order = pOrder;
+            ReferenceId = pReferenceId;
+            RequestedBy = pRequestedBy;
+            RequestedById = pRequestedById;
+            RequestedOn = pRequestedOn;
+            StartedOn = pStartedOn;
+            Status = pStatus;
+            StatusId = pStatusId;
+		}
+
         [ApiMember(Name = nameof(CompletedOn), Description = "DateTime?", IsRequired = false)]
         public DateTime? CompletedOn { get; set; }
 
@@ -146,11 +175,45 @@ namespace Services.Dto
         public int? StatusId { get; set; }
 
 
+
+		public void Deconstruct(out DateTime? pCompletedOn, out Reference pDocument, out int? pDocumentId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pErrorData, out string pExtractUrl, out bool pHighPriority, out bool pImportFr, out Reference pImportLocation, out int? pImportLocationId, out bool pImportNewName, out bool pImportTable, out bool pImportText, out Reference pImportType, out int? pImportTypeId, out bool pIsLegacy, out int? pOrder, out int? pReferenceId, out Reference pRequestedBy, out int? pRequestedById, out DateTime? pRequestedOn, out DateTime? pStartedOn, out Reference pStatus, out int? pStatusId)
+		{
+            pCompletedOn = CompletedOn;
+            pDocument = Document;
+            pDocumentId = DocumentId;
+            pDocumentSets = DocumentSets;
+            pDocumentSetsCount = DocumentSetsCount;
+            pErrorData = ErrorData;
+            pExtractUrl = ExtractUrl;
+            pHighPriority = HighPriority;
+            pImportFr = ImportFr;
+            pImportLocation = ImportLocation;
+            pImportLocationId = ImportLocationId;
+            pImportNewName = ImportNewName;
+            pImportTable = ImportTable;
+            pImportText = ImportText;
+            pImportType = ImportType;
+            pImportTypeId = ImportTypeId;
+            pIsLegacy = IsLegacy;
+            pOrder = Order;
+            pReferenceId = ReferenceId;
+            pRequestedBy = RequestedBy;
+            pRequestedById = RequestedById;
+            pRequestedOn = RequestedOn;
+            pStartedOn = StartedOn;
+            pStatus = Status;
+            pStatusId = StatusId;
+		}
+
+		//Not ready until C# v8.?
+		//public ImportDataBase With(int? pId = Id, DateTime? pCompletedOn = CompletedOn, Reference pDocument = Document, int? pDocumentId = DocumentId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pErrorData = ErrorData, string pExtractUrl = ExtractUrl, bool pHighPriority = HighPriority, bool pImportFr = ImportFr, Reference pImportLocation = ImportLocation, int? pImportLocationId = ImportLocationId, bool pImportNewName = ImportNewName, bool pImportTable = ImportTable, bool pImportText = ImportText, Reference pImportType = ImportType, int? pImportTypeId = ImportTypeId, bool pIsLegacy = IsLegacy, int? pOrder = Order, int? pReferenceId = ReferenceId, Reference pRequestedBy = RequestedBy, int? pRequestedById = RequestedById, DateTime? pRequestedOn = RequestedOn, DateTime? pStartedOn = StartedOn, Reference pStatus = Status, int? pStatusId = StatusId) => 
+		//	new ImportDataBase(pId, pCompletedOn, pDocument, pDocumentId, pDocumentSets, pDocumentSetsCount, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId);
+
     }
 
     [Route("/importdata", "POST")]
     [Route("/importdata/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class ImportData : ImportDataBase, IReturn<ImportData>, IDto
+    public partial class ImportData : ImportDataBase, IReturn<ImportData>, IDto, ICloneable
     {
         public ImportData()
         {
@@ -159,7 +222,8 @@ namespace Services.Dto
 
         public ImportData(int? id) : base(DocConvert.ToInt(id)) {}
         public ImportData(int id) : base(id) {}
-        
+        public ImportData(int? pId, DateTime? pCompletedOn, Reference pDocument, int? pDocumentId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : 
+			base(pId, pCompletedOn, pDocument, pDocumentId, pDocumentSets, pDocumentSetsCount, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -197,6 +261,8 @@ namespace Services.Dto
             nameof(DocumentSets), nameof(DocumentSetsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<ImportData>();
     }
     
     [Route("/ImportData/{Id}/copy", "POST")]

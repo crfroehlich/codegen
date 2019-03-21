@@ -56,6 +56,22 @@ namespace Services.Dto
 
         public BackgroundTaskHistoryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public BackgroundTaskHistoryBase(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) : this(DocConvert.ToInt(pId)) 
+		{
+            Completed = pCompleted;
+            Data = pData;
+            Ended = pEnded;
+            Errors = pErrors;
+            Failed = pFailed;
+            Items = pItems;
+            ItemsCount = pItemsCount;
+            Logs = pLogs;
+            Succeeded = pSucceeded;
+            Summary = pSummary;
+            Task = pTask;
+            TaskId = pTaskId;
+		}
+
         [ApiMember(Name = nameof(Completed), Description = "int?", IsRequired = false)]
         public int? Completed { get; set; }
 
@@ -99,10 +115,31 @@ namespace Services.Dto
         public int? TaskId { get; set; }
 
 
+
+		public void Deconstruct(out int? pCompleted, out string pData, out DateTime? pEnded, out string pErrors, out int? pFailed, out List<Reference> pItems, out int? pItemsCount, out string pLogs, out bool? pSucceeded, out string pSummary, out Reference pTask, out int? pTaskId)
+		{
+            pCompleted = Completed;
+            pData = Data;
+            pEnded = Ended;
+            pErrors = Errors;
+            pFailed = Failed;
+            pItems = Items;
+            pItemsCount = ItemsCount;
+            pLogs = Logs;
+            pSucceeded = Succeeded;
+            pSummary = Summary;
+            pTask = Task;
+            pTaskId = TaskId;
+		}
+
+		//Not ready until C# v8.?
+		//public BackgroundTaskHistoryBase With(int? pId = Id, int? pCompleted = Completed, string pData = Data, DateTime? pEnded = Ended, string pErrors = Errors, int? pFailed = Failed, List<Reference> pItems = Items, int? pItemsCount = ItemsCount, string pLogs = Logs, bool? pSucceeded = Succeeded, string pSummary = Summary, Reference pTask = Task, int? pTaskId = TaskId) => 
+		//	new BackgroundTaskHistoryBase(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId);
+
     }
 
     [Route("/backgroundtaskhistory/{Id}", "GET")]
-    public partial class BackgroundTaskHistory : BackgroundTaskHistoryBase, IReturn<BackgroundTaskHistory>, IDto
+    public partial class BackgroundTaskHistory : BackgroundTaskHistoryBase, IReturn<BackgroundTaskHistory>, IDto, ICloneable
     {
         public BackgroundTaskHistory()
         {
@@ -111,7 +148,8 @@ namespace Services.Dto
 
         public BackgroundTaskHistory(int? id) : base(DocConvert.ToInt(id)) {}
         public BackgroundTaskHistory(int id) : base(id) {}
-        
+        public BackgroundTaskHistory(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) : 
+			base(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -151,6 +189,8 @@ namespace Services.Dto
             nameof(Items), nameof(ItemsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<BackgroundTaskHistory>();
     }
     
     public partial class BackgroundTaskHistorySearchBase : Search<BackgroundTaskHistory>

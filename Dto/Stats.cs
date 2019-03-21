@@ -56,6 +56,18 @@ namespace Services.Dto
 
         public StatsBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public StatsBase(int? pId, Reference pApp, int? pAppId, int? pExternalId, string pExternalType, int? pObjectId, string pObjectType, Reference pStudySetStats, int? pStudySetStatsId) : this(DocConvert.ToInt(pId)) 
+		{
+            App = pApp;
+            AppId = pAppId;
+            ExternalId = pExternalId;
+            ExternalType = pExternalType;
+            ObjectId = pObjectId;
+            ObjectType = pObjectType;
+            StudySetStats = pStudySetStats;
+            StudySetStatsId = pStudySetStatsId;
+		}
+
         [ApiMember(Name = nameof(App), Description = "App", IsRequired = true)]
         public Reference App { get; set; }
         [ApiMember(Name = nameof(AppId), Description = "Primary Key of App", IsRequired = false)]
@@ -84,10 +96,27 @@ namespace Services.Dto
         public int? StudySetStatsId { get; set; }
 
 
+
+		public void Deconstruct(out Reference pApp, out int? pAppId, out int? pExternalId, out string pExternalType, out int? pObjectId, out string pObjectType, out Reference pStudySetStats, out int? pStudySetStatsId)
+		{
+            pApp = App;
+            pAppId = AppId;
+            pExternalId = ExternalId;
+            pExternalType = ExternalType;
+            pObjectId = ObjectId;
+            pObjectType = ObjectType;
+            pStudySetStats = StudySetStats;
+            pStudySetStatsId = StudySetStatsId;
+		}
+
+		//Not ready until C# v8.?
+		//public StatsBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, int? pExternalId = ExternalId, string pExternalType = ExternalType, int? pObjectId = ObjectId, string pObjectType = ObjectType, Reference pStudySetStats = StudySetStats, int? pStudySetStatsId = StudySetStatsId) => 
+		//	new StatsBase(pId, pApp, pAppId, pExternalId, pExternalType, pObjectId, pObjectType, pStudySetStats, pStudySetStatsId);
+
     }
 
     [Route("/stats/{Id}", "GET")]
-    public partial class Stats : StatsBase, IReturn<Stats>, IDto
+    public partial class Stats : StatsBase, IReturn<Stats>, IDto, ICloneable
     {
         public Stats()
         {
@@ -96,7 +125,8 @@ namespace Services.Dto
 
         public Stats(int? id) : base(DocConvert.ToInt(id)) {}
         public Stats(int id) : base(id) {}
-        
+        public Stats(int? pId, Reference pApp, int? pAppId, int? pExternalId, string pExternalType, int? pObjectId, string pObjectType, Reference pStudySetStats, int? pStudySetStatsId) : 
+			base(pId, pApp, pAppId, pExternalId, pExternalType, pObjectId, pObjectType, pStudySetStats, pStudySetStatsId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -129,6 +159,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<Stats>();
     }
     
     public partial class StatsSearchBase : Search<Stats>

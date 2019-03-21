@@ -56,6 +56,13 @@ namespace Services.Dto
 
         public LookupTableEnumBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public LookupTableEnumBase(int? pId, bool pIsBindable, bool pIsGlobal, string pName) : this(DocConvert.ToInt(pId)) 
+		{
+            IsBindable = pIsBindable;
+            IsGlobal = pIsGlobal;
+            Name = pName;
+		}
+
         [ApiMember(Name = nameof(IsBindable), Description = "bool", IsRequired = false)]
         public bool IsBindable { get; set; }
 
@@ -68,11 +75,23 @@ namespace Services.Dto
         public string Name { get; set; }
 
 
+
+		public void Deconstruct(out bool pIsBindable, out bool pIsGlobal, out string pName)
+		{
+            pIsBindable = IsBindable;
+            pIsGlobal = IsGlobal;
+            pName = Name;
+		}
+
+		//Not ready until C# v8.?
+		//public LookupTableEnumBase With(int? pId = Id, bool pIsBindable = IsBindable, bool pIsGlobal = IsGlobal, string pName = Name) => 
+		//	new LookupTableEnumBase(pId, pIsBindable, pIsGlobal, pName);
+
     }
 
     [Route("/lookuptableenum", "POST")]
     [Route("/lookuptableenum/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class LookupTableEnum : LookupTableEnumBase, IReturn<LookupTableEnum>, IDto
+    public partial class LookupTableEnum : LookupTableEnumBase, IReturn<LookupTableEnum>, IDto, ICloneable
     {
         public LookupTableEnum()
         {
@@ -81,7 +100,8 @@ namespace Services.Dto
 
         public LookupTableEnum(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupTableEnum(int id) : base(id) {}
-        
+        public LookupTableEnum(int? pId, bool pIsBindable, bool pIsGlobal, string pName) : 
+			base(pId, pIsBindable, pIsGlobal, pName) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -114,6 +134,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<LookupTableEnum>();
     }
     
     [Route("/LookupTableEnum/{Id}/copy", "POST")]

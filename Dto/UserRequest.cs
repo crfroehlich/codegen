@@ -56,6 +56,19 @@ namespace Services.Dto
 
         public UserRequestBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public UserRequestBase(int? pId, Reference pApp, int? pAppId, string pMethod, Reference pPage, int? pPageId, string pPath, string pURL, Reference pUserSession, int? pUserSessionId) : this(DocConvert.ToInt(pId)) 
+		{
+            App = pApp;
+            AppId = pAppId;
+            Method = pMethod;
+            Page = pPage;
+            PageId = pPageId;
+            Path = pPath;
+            URL = pURL;
+            UserSession = pUserSession;
+            UserSessionId = pUserSessionId;
+		}
+
         [ApiMember(Name = nameof(App), Description = "App", IsRequired = false)]
         public Reference App { get; set; }
         [ApiMember(Name = nameof(AppId), Description = "Primary Key of App", IsRequired = false)]
@@ -86,10 +99,28 @@ namespace Services.Dto
         public int? UserSessionId { get; set; }
 
 
+
+		public void Deconstruct(out Reference pApp, out int? pAppId, out string pMethod, out Reference pPage, out int? pPageId, out string pPath, out string pURL, out Reference pUserSession, out int? pUserSessionId)
+		{
+            pApp = App;
+            pAppId = AppId;
+            pMethod = Method;
+            pPage = Page;
+            pPageId = PageId;
+            pPath = Path;
+            pURL = URL;
+            pUserSession = UserSession;
+            pUserSessionId = UserSessionId;
+		}
+
+		//Not ready until C# v8.?
+		//public UserRequestBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, string pMethod = Method, Reference pPage = Page, int? pPageId = PageId, string pPath = Path, string pURL = URL, Reference pUserSession = UserSession, int? pUserSessionId = UserSessionId) => 
+		//	new UserRequestBase(pId, pApp, pAppId, pMethod, pPage, pPageId, pPath, pURL, pUserSession, pUserSessionId);
+
     }
 
     [Route("/userrequest/{Id}", "GET")]
-    public partial class UserRequest : UserRequestBase, IReturn<UserRequest>, IDto
+    public partial class UserRequest : UserRequestBase, IReturn<UserRequest>, IDto, ICloneable
     {
         public UserRequest()
         {
@@ -98,7 +129,8 @@ namespace Services.Dto
 
         public UserRequest(int? id) : base(DocConvert.ToInt(id)) {}
         public UserRequest(int id) : base(id) {}
-        
+        public UserRequest(int? pId, Reference pApp, int? pAppId, string pMethod, Reference pPage, int? pPageId, string pPath, string pURL, Reference pUserSession, int? pUserSessionId) : 
+			base(pId, pApp, pAppId, pMethod, pPage, pPageId, pPath, pURL, pUserSession, pUserSessionId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -133,6 +165,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<UserRequest>();
     }
     
     public partial class UserRequestSearchBase : Search<UserRequest>

@@ -56,6 +56,21 @@ namespace Services.Dto
 
         public MeanRangeValueBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public MeanRangeValueBase(int? pId, Reference pMeanVarianceType, int? pMeanVarianceTypeId, TypeUnits pMidSpread, int? pOrder, List<MeanRanges> pOwners, int? pOwnersCount, decimal? pPercent, decimal? pPercentLow, TypeUnitsRange pRange, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
+		{
+            MeanVarianceType = pMeanVarianceType;
+            MeanVarianceTypeId = pMeanVarianceTypeId;
+            MidSpread = pMidSpread;
+            Order = pOrder;
+            Owners = pOwners;
+            OwnersCount = pOwnersCount;
+            Percent = pPercent;
+            PercentLow = pPercentLow;
+            Range = pRange;
+            Type = pType;
+            TypeId = pTypeId;
+		}
+
         [ApiMember(Name = nameof(MeanVarianceType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"CV",@"IQR Difference",@"SD",@"SE",@"Semi IQR",@"Unknown"})]
         public Reference MeanVarianceType { get; set; }
@@ -95,9 +110,29 @@ namespace Services.Dto
         public int? TypeId { get; set; }
 
 
+
+		public void Deconstruct(out Reference pMeanVarianceType, out int? pMeanVarianceTypeId, out TypeUnits pMidSpread, out int? pOrder, out List<MeanRanges> pOwners, out int? pOwnersCount, out decimal? pPercent, out decimal? pPercentLow, out TypeUnitsRange pRange, out Reference pType, out int? pTypeId)
+		{
+            pMeanVarianceType = MeanVarianceType;
+            pMeanVarianceTypeId = MeanVarianceTypeId;
+            pMidSpread = MidSpread;
+            pOrder = Order;
+            pOwners = Owners;
+            pOwnersCount = OwnersCount;
+            pPercent = Percent;
+            pPercentLow = PercentLow;
+            pRange = Range;
+            pType = Type;
+            pTypeId = TypeId;
+		}
+
+		//Not ready until C# v8.?
+		//public MeanRangeValueBase With(int? pId = Id, Reference pMeanVarianceType = MeanVarianceType, int? pMeanVarianceTypeId = MeanVarianceTypeId, TypeUnits pMidSpread = MidSpread, int? pOrder = Order, List<MeanRanges> pOwners = Owners, int? pOwnersCount = OwnersCount, decimal? pPercent = Percent, decimal? pPercentLow = PercentLow, TypeUnitsRange pRange = Range, Reference pType = Type, int? pTypeId = TypeId) => 
+		//	new MeanRangeValueBase(pId, pMeanVarianceType, pMeanVarianceTypeId, pMidSpread, pOrder, pOwners, pOwnersCount, pPercent, pPercentLow, pRange, pType, pTypeId);
+
     }
 
-    public partial class MeanRangeValue : MeanRangeValueBase, IReturn<MeanRangeValue>, IDto
+    public partial class MeanRangeValue : MeanRangeValueBase, IReturn<MeanRangeValue>, IDto, ICloneable
     {
         public MeanRangeValue()
         {
@@ -106,7 +141,8 @@ namespace Services.Dto
 
         public MeanRangeValue(int? id) : base(DocConvert.ToInt(id)) {}
         public MeanRangeValue(int id) : base(id) {}
-        
+        public MeanRangeValue(int? pId, Reference pMeanVarianceType, int? pMeanVarianceTypeId, TypeUnits pMidSpread, int? pOrder, List<MeanRanges> pOwners, int? pOwnersCount, decimal? pPercent, decimal? pPercentLow, TypeUnitsRange pRange, Reference pType, int? pTypeId) : 
+			base(pId, pMeanVarianceType, pMeanVarianceTypeId, pMidSpread, pOrder, pOwners, pOwnersCount, pPercent, pPercentLow, pRange, pType, pTypeId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -144,6 +180,8 @@ namespace Services.Dto
             nameof(Owners), nameof(OwnersCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<MeanRangeValue>();
     }
     
     public partial class MeanRangeValueSearchBase : Search<MeanRangeValue>

@@ -56,6 +56,18 @@ namespace Services.Dto
 
         public GlossaryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public GlossaryBase(int? pId, string pDefinition, Reference pEnum, int? pEnumId, string pIcon, Reference pPage, int? pPageId, Reference pTerm, int? pTermId) : this(DocConvert.ToInt(pId)) 
+		{
+            Definition = pDefinition;
+            Enum = pEnum;
+            EnumId = pEnumId;
+            Icon = pIcon;
+            Page = pPage;
+            PageId = pPageId;
+            Term = pTerm;
+            TermId = pTermId;
+		}
+
         [ApiMember(Name = nameof(Definition), Description = "string", IsRequired = false)]
         public string Definition { get; set; }
 
@@ -82,11 +94,28 @@ namespace Services.Dto
         public int? TermId { get; set; }
 
 
+
+		public void Deconstruct(out string pDefinition, out Reference pEnum, out int? pEnumId, out string pIcon, out Reference pPage, out int? pPageId, out Reference pTerm, out int? pTermId)
+		{
+            pDefinition = Definition;
+            pEnum = Enum;
+            pEnumId = EnumId;
+            pIcon = Icon;
+            pPage = Page;
+            pPageId = PageId;
+            pTerm = Term;
+            pTermId = TermId;
+		}
+
+		//Not ready until C# v8.?
+		//public GlossaryBase With(int? pId = Id, string pDefinition = Definition, Reference pEnum = Enum, int? pEnumId = EnumId, string pIcon = Icon, Reference pPage = Page, int? pPageId = PageId, Reference pTerm = Term, int? pTermId = TermId) => 
+		//	new GlossaryBase(pId, pDefinition, pEnum, pEnumId, pIcon, pPage, pPageId, pTerm, pTermId);
+
     }
 
     [Route("/glossary", "POST")]
     [Route("/glossary/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Glossary : GlossaryBase, IReturn<Glossary>, IDto
+    public partial class Glossary : GlossaryBase, IReturn<Glossary>, IDto, ICloneable
     {
         public Glossary()
         {
@@ -95,7 +124,8 @@ namespace Services.Dto
 
         public Glossary(int? id) : base(DocConvert.ToInt(id)) {}
         public Glossary(int id) : base(id) {}
-        
+        public Glossary(int? pId, string pDefinition, Reference pEnum, int? pEnumId, string pIcon, Reference pPage, int? pPageId, Reference pTerm, int? pTermId) : 
+			base(pId, pDefinition, pEnum, pEnumId, pIcon, pPage, pPageId, pTerm, pTermId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -130,6 +160,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<Glossary>();
     }
     
     [Route("/Glossary/{Id}/copy", "POST")]

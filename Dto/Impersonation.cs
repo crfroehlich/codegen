@@ -56,6 +56,16 @@ namespace Services.Dto
 
         public ImpersonationBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public ImpersonationBase(int? pId, Reference pAuthenticatedUser, int? pAuthenticatedUserId, Reference pImpersonatedUser, int? pImpersonatedUserId, Reference pUserSession, int? pUserSessionId) : this(DocConvert.ToInt(pId)) 
+		{
+            AuthenticatedUser = pAuthenticatedUser;
+            AuthenticatedUserId = pAuthenticatedUserId;
+            ImpersonatedUser = pImpersonatedUser;
+            ImpersonatedUserId = pImpersonatedUserId;
+            UserSession = pUserSession;
+            UserSessionId = pUserSessionId;
+		}
+
         [ApiMember(Name = nameof(AuthenticatedUser), Description = "User", IsRequired = true)]
         public Reference AuthenticatedUser { get; set; }
         [ApiMember(Name = nameof(AuthenticatedUserId), Description = "Primary Key of User", IsRequired = false)]
@@ -74,10 +84,25 @@ namespace Services.Dto
         public int? UserSessionId { get; set; }
 
 
+
+		public void Deconstruct(out Reference pAuthenticatedUser, out int? pAuthenticatedUserId, out Reference pImpersonatedUser, out int? pImpersonatedUserId, out Reference pUserSession, out int? pUserSessionId)
+		{
+            pAuthenticatedUser = AuthenticatedUser;
+            pAuthenticatedUserId = AuthenticatedUserId;
+            pImpersonatedUser = ImpersonatedUser;
+            pImpersonatedUserId = ImpersonatedUserId;
+            pUserSession = UserSession;
+            pUserSessionId = UserSessionId;
+		}
+
+		//Not ready until C# v8.?
+		//public ImpersonationBase With(int? pId = Id, Reference pAuthenticatedUser = AuthenticatedUser, int? pAuthenticatedUserId = AuthenticatedUserId, Reference pImpersonatedUser = ImpersonatedUser, int? pImpersonatedUserId = ImpersonatedUserId, Reference pUserSession = UserSession, int? pUserSessionId = UserSessionId) => 
+		//	new ImpersonationBase(pId, pAuthenticatedUser, pAuthenticatedUserId, pImpersonatedUser, pImpersonatedUserId, pUserSession, pUserSessionId);
+
     }
 
     [Route("/impersonation/{Id}", "GET")]
-    public partial class Impersonation : ImpersonationBase, IReturn<Impersonation>, IDto
+    public partial class Impersonation : ImpersonationBase, IReturn<Impersonation>, IDto, ICloneable
     {
         public Impersonation()
         {
@@ -86,7 +111,8 @@ namespace Services.Dto
 
         public Impersonation(int? id) : base(DocConvert.ToInt(id)) {}
         public Impersonation(int id) : base(id) {}
-        
+        public Impersonation(int? pId, Reference pAuthenticatedUser, int? pAuthenticatedUserId, Reference pImpersonatedUser, int? pImpersonatedUserId, Reference pUserSession, int? pUserSessionId) : 
+			base(pId, pAuthenticatedUser, pAuthenticatedUserId, pImpersonatedUser, pImpersonatedUserId, pUserSession, pUserSessionId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -121,6 +147,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<Impersonation>();
     }
     
     public partial class ImpersonationSearchBase : Search<Impersonation>

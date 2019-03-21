@@ -56,6 +56,25 @@ namespace Services.Dto
 
         public UpdateBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public UpdateBase(int? pId, string pBody, string pDeliveryStatus, int? pEmailAttempts, DateTime? pEmailSent, List<Reference> pEvents, int? pEventsCount, string pLink, int? pPriority, DateTime? pRead, DateTime? pSlackSent, string pSubject, Reference pTeam, int? pTeamId, Reference pUser, int? pUserId) : this(DocConvert.ToInt(pId)) 
+		{
+            Body = pBody;
+            DeliveryStatus = pDeliveryStatus;
+            EmailAttempts = pEmailAttempts;
+            EmailSent = pEmailSent;
+            Events = pEvents;
+            EventsCount = pEventsCount;
+            Link = pLink;
+            Priority = pPriority;
+            Read = pRead;
+            SlackSent = pSlackSent;
+            Subject = pSubject;
+            Team = pTeam;
+            TeamId = pTeamId;
+            User = pUser;
+            UserId = pUserId;
+		}
+
         [ApiMember(Name = nameof(Body), Description = "string", IsRequired = false)]
         public string Body { get; set; }
 
@@ -109,11 +128,35 @@ namespace Services.Dto
         public int? UserId { get; set; }
 
 
+
+		public void Deconstruct(out string pBody, out string pDeliveryStatus, out int? pEmailAttempts, out DateTime? pEmailSent, out List<Reference> pEvents, out int? pEventsCount, out string pLink, out int? pPriority, out DateTime? pRead, out DateTime? pSlackSent, out string pSubject, out Reference pTeam, out int? pTeamId, out Reference pUser, out int? pUserId)
+		{
+            pBody = Body;
+            pDeliveryStatus = DeliveryStatus;
+            pEmailAttempts = EmailAttempts;
+            pEmailSent = EmailSent;
+            pEvents = Events;
+            pEventsCount = EventsCount;
+            pLink = Link;
+            pPriority = Priority;
+            pRead = Read;
+            pSlackSent = SlackSent;
+            pSubject = Subject;
+            pTeam = Team;
+            pTeamId = TeamId;
+            pUser = User;
+            pUserId = UserId;
+		}
+
+		//Not ready until C# v8.?
+		//public UpdateBase With(int? pId = Id, string pBody = Body, string pDeliveryStatus = DeliveryStatus, int? pEmailAttempts = EmailAttempts, DateTime? pEmailSent = EmailSent, List<Reference> pEvents = Events, int? pEventsCount = EventsCount, string pLink = Link, int? pPriority = Priority, DateTime? pRead = Read, DateTime? pSlackSent = SlackSent, string pSubject = Subject, Reference pTeam = Team, int? pTeamId = TeamId, Reference pUser = User, int? pUserId = UserId) => 
+		//	new UpdateBase(pId, pBody, pDeliveryStatus, pEmailAttempts, pEmailSent, pEvents, pEventsCount, pLink, pPriority, pRead, pSlackSent, pSubject, pTeam, pTeamId, pUser, pUserId);
+
     }
 
     [Route("/update", "POST")]
     [Route("/update/{Id}", "GET")]
-    public partial class Update : UpdateBase, IReturn<Update>, IDto
+    public partial class Update : UpdateBase, IReturn<Update>, IDto, ICloneable
     {
         public Update()
         {
@@ -122,7 +165,8 @@ namespace Services.Dto
 
         public Update(int? id) : base(DocConvert.ToInt(id)) {}
         public Update(int id) : base(id) {}
-        
+        public Update(int? pId, string pBody, string pDeliveryStatus, int? pEmailAttempts, DateTime? pEmailSent, List<Reference> pEvents, int? pEventsCount, string pLink, int? pPriority, DateTime? pRead, DateTime? pSlackSent, string pSubject, Reference pTeam, int? pTeamId, Reference pUser, int? pUserId) : 
+			base(pId, pBody, pDeliveryStatus, pEmailAttempts, pEmailSent, pEvents, pEventsCount, pLink, pPriority, pRead, pSlackSent, pSubject, pTeam, pTeamId, pUser, pUserId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -162,6 +206,8 @@ namespace Services.Dto
             nameof(Events), nameof(EventsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<Update>();
     }
     
     [Route("/Update/{Id}/copy", "POST")]

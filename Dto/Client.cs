@@ -56,6 +56,25 @@ namespace Services.Dto
 
         public ClientBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public ClientBase(int? pId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, List<Reference> pProjects, int? pProjectsCount, Reference pRole, int? pRoleId, string pSalesforceAccountId, List<Reference> pScopes, int? pScopesCount, ClientSettings pSettings) : this(DocConvert.ToInt(pId)) 
+		{
+            DefaultLocale = pDefaultLocale;
+            DefaultLocaleId = pDefaultLocaleId;
+            Divisions = pDivisions;
+            DivisionsCount = pDivisionsCount;
+            DocumentSets = pDocumentSets;
+            DocumentSetsCount = pDocumentSetsCount;
+            Name = pName;
+            Projects = pProjects;
+            ProjectsCount = pProjectsCount;
+            Role = pRole;
+            RoleId = pRoleId;
+            SalesforceAccountId = pSalesforceAccountId;
+            Scopes = pScopes;
+            ScopesCount = pScopesCount;
+            Settings = pSettings;
+		}
+
         [ApiMember(Name = nameof(DefaultLocale), Description = "Locale", IsRequired = false)]
         public Reference DefaultLocale { get; set; }
         [ApiMember(Name = nameof(DefaultLocaleId), Description = "Primary Key of Locale", IsRequired = false)]
@@ -100,11 +119,35 @@ namespace Services.Dto
         public ClientSettings Settings { get; set; }
 
 
+
+		public void Deconstruct(out Reference pDefaultLocale, out int? pDefaultLocaleId, out List<Reference> pDivisions, out int? pDivisionsCount, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out List<Reference> pProjects, out int? pProjectsCount, out Reference pRole, out int? pRoleId, out string pSalesforceAccountId, out List<Reference> pScopes, out int? pScopesCount, out ClientSettings pSettings)
+		{
+            pDefaultLocale = DefaultLocale;
+            pDefaultLocaleId = DefaultLocaleId;
+            pDivisions = Divisions;
+            pDivisionsCount = DivisionsCount;
+            pDocumentSets = DocumentSets;
+            pDocumentSetsCount = DocumentSetsCount;
+            pName = Name;
+            pProjects = Projects;
+            pProjectsCount = ProjectsCount;
+            pRole = Role;
+            pRoleId = RoleId;
+            pSalesforceAccountId = SalesforceAccountId;
+            pScopes = Scopes;
+            pScopesCount = ScopesCount;
+            pSettings = Settings;
+		}
+
+		//Not ready until C# v8.?
+		//public ClientBase With(int? pId = Id, Reference pDefaultLocale = DefaultLocale, int? pDefaultLocaleId = DefaultLocaleId, List<Reference> pDivisions = Divisions, int? pDivisionsCount = DivisionsCount, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, List<Reference> pProjects = Projects, int? pProjectsCount = ProjectsCount, Reference pRole = Role, int? pRoleId = RoleId, string pSalesforceAccountId = SalesforceAccountId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, ClientSettings pSettings = Settings) => 
+		//	new ClientBase(pId, pDefaultLocale, pDefaultLocaleId, pDivisions, pDivisionsCount, pDocumentSets, pDocumentSetsCount, pName, pProjects, pProjectsCount, pRole, pRoleId, pSalesforceAccountId, pScopes, pScopesCount, pSettings);
+
     }
 
     [Route("/client", "POST")]
     [Route("/client/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Client : ClientBase, IReturn<Client>, IDto
+    public partial class Client : ClientBase, IReturn<Client>, IDto, ICloneable
     {
         public Client()
         {
@@ -113,7 +156,8 @@ namespace Services.Dto
 
         public Client(int? id) : base(DocConvert.ToInt(id)) {}
         public Client(int id) : base(id) {}
-        
+        public Client(int? pId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, List<Reference> pProjects, int? pProjectsCount, Reference pRole, int? pRoleId, string pSalesforceAccountId, List<Reference> pScopes, int? pScopesCount, ClientSettings pSettings) : 
+			base(pId, pDefaultLocale, pDefaultLocaleId, pDivisions, pDivisionsCount, pDocumentSets, pDocumentSetsCount, pName, pProjects, pProjectsCount, pRole, pRoleId, pSalesforceAccountId, pScopes, pScopesCount, pSettings) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -153,6 +197,8 @@ namespace Services.Dto
             nameof(Divisions), nameof(DivisionsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Projects), nameof(ProjectsCount), nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<Client>();
     }
     
     [Route("/Client/{Id}/copy", "POST")]

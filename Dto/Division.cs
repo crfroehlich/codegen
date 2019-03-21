@@ -56,6 +56,22 @@ namespace Services.Dto
 
         public DivisionBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public DivisionBase(int? pId, Reference pClient, int? pClientId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, Reference pRole, int? pRoleId, DivisionSettings pSettings, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+		{
+            Client = pClient;
+            ClientId = pClientId;
+            DefaultLocale = pDefaultLocale;
+            DefaultLocaleId = pDefaultLocaleId;
+            DocumentSets = pDocumentSets;
+            DocumentSetsCount = pDocumentSetsCount;
+            Name = pName;
+            Role = pRole;
+            RoleId = pRoleId;
+            Settings = pSettings;
+            Users = pUsers;
+            UsersCount = pUsersCount;
+		}
+
         [ApiMember(Name = nameof(Client), Description = "Client", IsRequired = true)]
         public Reference Client { get; set; }
         [ApiMember(Name = nameof(ClientId), Description = "Primary Key of Client", IsRequired = false)]
@@ -92,11 +108,32 @@ namespace Services.Dto
         public int? UsersCount { get; set; }
 
 
+
+		public void Deconstruct(out Reference pClient, out int? pClientId, out Reference pDefaultLocale, out int? pDefaultLocaleId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out Reference pRole, out int? pRoleId, out DivisionSettings pSettings, out List<Reference> pUsers, out int? pUsersCount)
+		{
+            pClient = Client;
+            pClientId = ClientId;
+            pDefaultLocale = DefaultLocale;
+            pDefaultLocaleId = DefaultLocaleId;
+            pDocumentSets = DocumentSets;
+            pDocumentSetsCount = DocumentSetsCount;
+            pName = Name;
+            pRole = Role;
+            pRoleId = RoleId;
+            pSettings = Settings;
+            pUsers = Users;
+            pUsersCount = UsersCount;
+		}
+
+		//Not ready until C# v8.?
+		//public DivisionBase With(int? pId = Id, Reference pClient = Client, int? pClientId = ClientId, Reference pDefaultLocale = DefaultLocale, int? pDefaultLocaleId = DefaultLocaleId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, Reference pRole = Role, int? pRoleId = RoleId, DivisionSettings pSettings = Settings, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+		//	new DivisionBase(pId, pClient, pClientId, pDefaultLocale, pDefaultLocaleId, pDocumentSets, pDocumentSetsCount, pName, pRole, pRoleId, pSettings, pUsers, pUsersCount);
+
     }
 
     [Route("/division", "POST")]
     [Route("/division/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class Division : DivisionBase, IReturn<Division>, IDto
+    public partial class Division : DivisionBase, IReturn<Division>, IDto, ICloneable
     {
         public Division()
         {
@@ -105,7 +142,8 @@ namespace Services.Dto
 
         public Division(int? id) : base(DocConvert.ToInt(id)) {}
         public Division(int id) : base(id) {}
-        
+        public Division(int? pId, Reference pClient, int? pClientId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, Reference pRole, int? pRoleId, DivisionSettings pSettings, List<Reference> pUsers, int? pUsersCount) : 
+			base(pId, pClient, pClientId, pDefaultLocale, pDefaultLocaleId, pDocumentSets, pDocumentSetsCount, pName, pRole, pRoleId, pSettings, pUsers, pUsersCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -145,6 +183,8 @@ namespace Services.Dto
             nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<Division>();
     }
     
     [Route("/Division/{Id}/copy", "POST")]

@@ -56,6 +56,56 @@ namespace Services.Dto
 
         public DataPropertyBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public DataPropertyBase(int? pId, bool pAutoCreateMissing, List<Reference> pChildren, int? pChildrenCount, Reference pClass, int? pClassId, string pDescription, string pDisplayName, bool pIsAllowAddInForm, bool pIsAllowCreateInForm, bool pIsAllowEditInForm, bool pIsAllowFreeText, bool pIsAllowRemoveInForm, bool pIsAudited, bool pIsDisplayInForm, bool pIsDisplayInGrid, bool pIsEditColumn, bool pIsInsertOnly, bool pIsJSON, bool pIsLazy, bool pIsNullOnUpgrade, bool pIsReadOnly, bool pIsRelationship, bool pIsRequired, bool pIsRequiredInForm, bool pIsVirtual, string pJsonType, Reference pLookupTableEnum, int? pLookupTableEnumId, string pName, int? pOrder, Reference pOwner, int? pOwnerId, int? pPrecision, OnRemoveAction? pRelationshipOnOwnerRemove, OnRemoveAction? pRelationshipOnTargetRemove, Reference pRelationshipPairTo, int? pRelationshipPairToId, int? pScale, string pSetDefaultValue, Reference pTab, int? pTabId, Reference pTarget, int? pTargetId, string pTargetAlias, DataType? pType, UiType? pUIType) : this(DocConvert.ToInt(pId)) 
+		{
+            AutoCreateMissing = pAutoCreateMissing;
+            Children = pChildren;
+            ChildrenCount = pChildrenCount;
+            Class = pClass;
+            ClassId = pClassId;
+            Description = pDescription;
+            DisplayName = pDisplayName;
+            IsAllowAddInForm = pIsAllowAddInForm;
+            IsAllowCreateInForm = pIsAllowCreateInForm;
+            IsAllowEditInForm = pIsAllowEditInForm;
+            IsAllowFreeText = pIsAllowFreeText;
+            IsAllowRemoveInForm = pIsAllowRemoveInForm;
+            IsAudited = pIsAudited;
+            IsDisplayInForm = pIsDisplayInForm;
+            IsDisplayInGrid = pIsDisplayInGrid;
+            IsEditColumn = pIsEditColumn;
+            IsInsertOnly = pIsInsertOnly;
+            IsJSON = pIsJSON;
+            IsLazy = pIsLazy;
+            IsNullOnUpgrade = pIsNullOnUpgrade;
+            IsReadOnly = pIsReadOnly;
+            IsRelationship = pIsRelationship;
+            IsRequired = pIsRequired;
+            IsRequiredInForm = pIsRequiredInForm;
+            IsVirtual = pIsVirtual;
+            JsonType = pJsonType;
+            LookupTableEnum = pLookupTableEnum;
+            LookupTableEnumId = pLookupTableEnumId;
+            Name = pName;
+            Order = pOrder;
+            Owner = pOwner;
+            OwnerId = pOwnerId;
+            Precision = pPrecision;
+            RelationshipOnOwnerRemove = pRelationshipOnOwnerRemove;
+            RelationshipOnTargetRemove = pRelationshipOnTargetRemove;
+            RelationshipPairTo = pRelationshipPairTo;
+            RelationshipPairToId = pRelationshipPairToId;
+            Scale = pScale;
+            SetDefaultValue = pSetDefaultValue;
+            Tab = pTab;
+            TabId = pTabId;
+            Target = pTarget;
+            TargetId = pTargetId;
+            TargetAlias = pTargetAlias;
+            Type = pType;
+            UIType = pUIType;
+		}
+
         [ApiMember(Name = nameof(AutoCreateMissing), Description = "bool", IsRequired = false)]
         public bool AutoCreateMissing { get; set; }
 
@@ -225,10 +275,65 @@ namespace Services.Dto
         public UiType? UIType { get; set; }
 
 
+
+		public void Deconstruct(out bool pAutoCreateMissing, out List<Reference> pChildren, out int? pChildrenCount, out Reference pClass, out int? pClassId, out string pDescription, out string pDisplayName, out bool pIsAllowAddInForm, out bool pIsAllowCreateInForm, out bool pIsAllowEditInForm, out bool pIsAllowFreeText, out bool pIsAllowRemoveInForm, out bool pIsAudited, out bool pIsDisplayInForm, out bool pIsDisplayInGrid, out bool pIsEditColumn, out bool pIsInsertOnly, out bool pIsJSON, out bool pIsLazy, out bool pIsNullOnUpgrade, out bool pIsReadOnly, out bool pIsRelationship, out bool pIsRequired, out bool pIsRequiredInForm, out bool pIsVirtual, out string pJsonType, out Reference pLookupTableEnum, out int? pLookupTableEnumId, out string pName, out int? pOrder, out Reference pOwner, out int? pOwnerId, out int? pPrecision, out OnRemoveAction? pRelationshipOnOwnerRemove, out OnRemoveAction? pRelationshipOnTargetRemove, out Reference pRelationshipPairTo, out int? pRelationshipPairToId, out int? pScale, out string pSetDefaultValue, out Reference pTab, out int? pTabId, out Reference pTarget, out int? pTargetId, out string pTargetAlias, out DataType? pType, out UiType? pUIType)
+		{
+            pAutoCreateMissing = AutoCreateMissing;
+            pChildren = Children;
+            pChildrenCount = ChildrenCount;
+            pClass = Class;
+            pClassId = ClassId;
+            pDescription = Description;
+            pDisplayName = DisplayName;
+            pIsAllowAddInForm = IsAllowAddInForm;
+            pIsAllowCreateInForm = IsAllowCreateInForm;
+            pIsAllowEditInForm = IsAllowEditInForm;
+            pIsAllowFreeText = IsAllowFreeText;
+            pIsAllowRemoveInForm = IsAllowRemoveInForm;
+            pIsAudited = IsAudited;
+            pIsDisplayInForm = IsDisplayInForm;
+            pIsDisplayInGrid = IsDisplayInGrid;
+            pIsEditColumn = IsEditColumn;
+            pIsInsertOnly = IsInsertOnly;
+            pIsJSON = IsJSON;
+            pIsLazy = IsLazy;
+            pIsNullOnUpgrade = IsNullOnUpgrade;
+            pIsReadOnly = IsReadOnly;
+            pIsRelationship = IsRelationship;
+            pIsRequired = IsRequired;
+            pIsRequiredInForm = IsRequiredInForm;
+            pIsVirtual = IsVirtual;
+            pJsonType = JsonType;
+            pLookupTableEnum = LookupTableEnum;
+            pLookupTableEnumId = LookupTableEnumId;
+            pName = Name;
+            pOrder = Order;
+            pOwner = Owner;
+            pOwnerId = OwnerId;
+            pPrecision = Precision;
+            pRelationshipOnOwnerRemove = RelationshipOnOwnerRemove;
+            pRelationshipOnTargetRemove = RelationshipOnTargetRemove;
+            pRelationshipPairTo = RelationshipPairTo;
+            pRelationshipPairToId = RelationshipPairToId;
+            pScale = Scale;
+            pSetDefaultValue = SetDefaultValue;
+            pTab = Tab;
+            pTabId = TabId;
+            pTarget = Target;
+            pTargetId = TargetId;
+            pTargetAlias = TargetAlias;
+            pType = Type;
+            pUIType = UIType;
+		}
+
+		//Not ready until C# v8.?
+		//public DataPropertyBase With(int? pId = Id, bool pAutoCreateMissing = AutoCreateMissing, List<Reference> pChildren = Children, int? pChildrenCount = ChildrenCount, Reference pClass = Class, int? pClassId = ClassId, string pDescription = Description, string pDisplayName = DisplayName, bool pIsAllowAddInForm = IsAllowAddInForm, bool pIsAllowCreateInForm = IsAllowCreateInForm, bool pIsAllowEditInForm = IsAllowEditInForm, bool pIsAllowFreeText = IsAllowFreeText, bool pIsAllowRemoveInForm = IsAllowRemoveInForm, bool pIsAudited = IsAudited, bool pIsDisplayInForm = IsDisplayInForm, bool pIsDisplayInGrid = IsDisplayInGrid, bool pIsEditColumn = IsEditColumn, bool pIsInsertOnly = IsInsertOnly, bool pIsJSON = IsJSON, bool pIsLazy = IsLazy, bool pIsNullOnUpgrade = IsNullOnUpgrade, bool pIsReadOnly = IsReadOnly, bool pIsRelationship = IsRelationship, bool pIsRequired = IsRequired, bool pIsRequiredInForm = IsRequiredInForm, bool pIsVirtual = IsVirtual, string pJsonType = JsonType, Reference pLookupTableEnum = LookupTableEnum, int? pLookupTableEnumId = LookupTableEnumId, string pName = Name, int? pOrder = Order, Reference pOwner = Owner, int? pOwnerId = OwnerId, int? pPrecision = Precision, OnRemoveAction? pRelationshipOnOwnerRemove = RelationshipOnOwnerRemove, OnRemoveAction? pRelationshipOnTargetRemove = RelationshipOnTargetRemove, Reference pRelationshipPairTo = RelationshipPairTo, int? pRelationshipPairToId = RelationshipPairToId, int? pScale = Scale, string pSetDefaultValue = SetDefaultValue, Reference pTab = Tab, int? pTabId = TabId, Reference pTarget = Target, int? pTargetId = TargetId, string pTargetAlias = TargetAlias, DataType? pType = Type, UiType? pUIType = UIType) => 
+		//	new DataPropertyBase(pId, pAutoCreateMissing, pChildren, pChildrenCount, pClass, pClassId, pDescription, pDisplayName, pIsAllowAddInForm, pIsAllowCreateInForm, pIsAllowEditInForm, pIsAllowFreeText, pIsAllowRemoveInForm, pIsAudited, pIsDisplayInForm, pIsDisplayInGrid, pIsEditColumn, pIsInsertOnly, pIsJSON, pIsLazy, pIsNullOnUpgrade, pIsReadOnly, pIsRelationship, pIsRequired, pIsRequiredInForm, pIsVirtual, pJsonType, pLookupTableEnum, pLookupTableEnumId, pName, pOrder, pOwner, pOwnerId, pPrecision, pRelationshipOnOwnerRemove, pRelationshipOnTargetRemove, pRelationshipPairTo, pRelationshipPairToId, pScale, pSetDefaultValue, pTab, pTabId, pTarget, pTargetId, pTargetAlias, pType, pUIType);
+
     }
 
     [Route("/dataproperty/{Id}", "GET, PATCH, PUT")]
-    public partial class DataProperty : DataPropertyBase, IReturn<DataProperty>, IDto
+    public partial class DataProperty : DataPropertyBase, IReturn<DataProperty>, IDto, ICloneable
     {
         public DataProperty()
         {
@@ -237,7 +342,8 @@ namespace Services.Dto
 
         public DataProperty(int? id) : base(DocConvert.ToInt(id)) {}
         public DataProperty(int id) : base(id) {}
-        
+        public DataProperty(int? pId, bool pAutoCreateMissing, List<Reference> pChildren, int? pChildrenCount, Reference pClass, int? pClassId, string pDescription, string pDisplayName, bool pIsAllowAddInForm, bool pIsAllowCreateInForm, bool pIsAllowEditInForm, bool pIsAllowFreeText, bool pIsAllowRemoveInForm, bool pIsAudited, bool pIsDisplayInForm, bool pIsDisplayInGrid, bool pIsEditColumn, bool pIsInsertOnly, bool pIsJSON, bool pIsLazy, bool pIsNullOnUpgrade, bool pIsReadOnly, bool pIsRelationship, bool pIsRequired, bool pIsRequiredInForm, bool pIsVirtual, string pJsonType, Reference pLookupTableEnum, int? pLookupTableEnumId, string pName, int? pOrder, Reference pOwner, int? pOwnerId, int? pPrecision, OnRemoveAction? pRelationshipOnOwnerRemove, OnRemoveAction? pRelationshipOnTargetRemove, Reference pRelationshipPairTo, int? pRelationshipPairToId, int? pScale, string pSetDefaultValue, Reference pTab, int? pTabId, Reference pTarget, int? pTargetId, string pTargetAlias, DataType? pType, UiType? pUIType) : 
+			base(pId, pAutoCreateMissing, pChildren, pChildrenCount, pClass, pClassId, pDescription, pDisplayName, pIsAllowAddInForm, pIsAllowCreateInForm, pIsAllowEditInForm, pIsAllowFreeText, pIsAllowRemoveInForm, pIsAudited, pIsDisplayInForm, pIsDisplayInGrid, pIsEditColumn, pIsInsertOnly, pIsJSON, pIsLazy, pIsNullOnUpgrade, pIsReadOnly, pIsRelationship, pIsRequired, pIsRequiredInForm, pIsVirtual, pJsonType, pLookupTableEnum, pLookupTableEnumId, pName, pOrder, pOwner, pOwnerId, pPrecision, pRelationshipOnOwnerRemove, pRelationshipOnTargetRemove, pRelationshipPairTo, pRelationshipPairToId, pScale, pSetDefaultValue, pTab, pTabId, pTarget, pTargetId, pTargetAlias, pType, pUIType) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -275,6 +381,8 @@ namespace Services.Dto
             nameof(Children), nameof(ChildrenCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<DataProperty>();
     }
     
     public partial class DataPropertySearchBase : Search<DataProperty>

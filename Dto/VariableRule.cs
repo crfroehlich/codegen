@@ -56,6 +56,24 @@ namespace Services.Dto
 
         public VariableRuleBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public VariableRuleBase(int? pId, List<Reference> pChildren, int? pChildrenCount, string pDefinition, List<Reference> pInstances, int? pInstancesCount, string pName, Reference pOwner, int? pOwnerId, Reference pRule, int? pRuleId, List<Reference> pScopes, int? pScopesCount, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
+		{
+            Children = pChildren;
+            ChildrenCount = pChildrenCount;
+            Definition = pDefinition;
+            Instances = pInstances;
+            InstancesCount = pInstancesCount;
+            Name = pName;
+            Owner = pOwner;
+            OwnerId = pOwnerId;
+            Rule = pRule;
+            RuleId = pRuleId;
+            Scopes = pScopes;
+            ScopesCount = pScopesCount;
+            Type = pType;
+            TypeId = pTypeId;
+		}
+
         [ApiMember(Name = nameof(Children), Description = "VariableRule", IsRequired = false)]
         public List<Reference> Children { get; set; }
         public int? ChildrenCount { get; set; }
@@ -99,11 +117,34 @@ namespace Services.Dto
         public int? TypeId { get; set; }
 
 
+
+		public void Deconstruct(out List<Reference> pChildren, out int? pChildrenCount, out string pDefinition, out List<Reference> pInstances, out int? pInstancesCount, out string pName, out Reference pOwner, out int? pOwnerId, out Reference pRule, out int? pRuleId, out List<Reference> pScopes, out int? pScopesCount, out Reference pType, out int? pTypeId)
+		{
+            pChildren = Children;
+            pChildrenCount = ChildrenCount;
+            pDefinition = Definition;
+            pInstances = Instances;
+            pInstancesCount = InstancesCount;
+            pName = Name;
+            pOwner = Owner;
+            pOwnerId = OwnerId;
+            pRule = Rule;
+            pRuleId = RuleId;
+            pScopes = Scopes;
+            pScopesCount = ScopesCount;
+            pType = Type;
+            pTypeId = TypeId;
+		}
+
+		//Not ready until C# v8.?
+		//public VariableRuleBase With(int? pId = Id, List<Reference> pChildren = Children, int? pChildrenCount = ChildrenCount, string pDefinition = Definition, List<Reference> pInstances = Instances, int? pInstancesCount = InstancesCount, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, Reference pRule = Rule, int? pRuleId = RuleId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, Reference pType = Type, int? pTypeId = TypeId) => 
+		//	new VariableRuleBase(pId, pChildren, pChildrenCount, pDefinition, pInstances, pInstancesCount, pName, pOwner, pOwnerId, pRule, pRuleId, pScopes, pScopesCount, pType, pTypeId);
+
     }
 
     [Route("/variablerule", "POST")]
     [Route("/variablerule/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class VariableRule : VariableRuleBase, IReturn<VariableRule>, IDto
+    public partial class VariableRule : VariableRuleBase, IReturn<VariableRule>, IDto, ICloneable
     {
         public VariableRule()
         {
@@ -112,7 +153,8 @@ namespace Services.Dto
 
         public VariableRule(int? id) : base(DocConvert.ToInt(id)) {}
         public VariableRule(int id) : base(id) {}
-        
+        public VariableRule(int? pId, List<Reference> pChildren, int? pChildrenCount, string pDefinition, List<Reference> pInstances, int? pInstancesCount, string pName, Reference pOwner, int? pOwnerId, Reference pRule, int? pRuleId, List<Reference> pScopes, int? pScopesCount, Reference pType, int? pTypeId) : 
+			base(pId, pChildren, pChildrenCount, pDefinition, pInstances, pInstancesCount, pName, pOwner, pOwnerId, pRule, pRuleId, pScopes, pScopesCount, pType, pTypeId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -152,6 +194,8 @@ namespace Services.Dto
             nameof(Children), nameof(ChildrenCount), nameof(Instances), nameof(InstancesCount), nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<VariableRule>();
     }
     
     [Route("/VariableRule/{Id}/copy", "POST")]

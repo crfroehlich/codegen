@@ -56,6 +56,24 @@ namespace Services.Dto
 
         public TermMasterBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public TermMasterBase(int? pId, string pBioPortal, List<TermCategory> pCategories, int? pCategoriesCount, string pCUI, Reference pEnum, int? pEnumId, string pMedDRA, string pName, string pRxNorm, string pSNOWMED, List<Reference> pSynonyms, int? pSynonymsCount, string pTUI, string pURI) : this(DocConvert.ToInt(pId)) 
+		{
+            BioPortal = pBioPortal;
+            Categories = pCategories;
+            CategoriesCount = pCategoriesCount;
+            CUI = pCUI;
+            Enum = pEnum;
+            EnumId = pEnumId;
+            MedDRA = pMedDRA;
+            Name = pName;
+            RxNorm = pRxNorm;
+            SNOWMED = pSNOWMED;
+            Synonyms = pSynonyms;
+            SynonymsCount = pSynonymsCount;
+            TUI = pTUI;
+            URI = pURI;
+		}
+
         [ApiMember(Name = nameof(BioPortal), Description = "string", IsRequired = false)]
         public string BioPortal { get; set; }
 
@@ -104,11 +122,34 @@ namespace Services.Dto
         public string URI { get; set; }
 
 
+
+		public void Deconstruct(out string pBioPortal, out List<TermCategory> pCategories, out int? pCategoriesCount, out string pCUI, out Reference pEnum, out int? pEnumId, out string pMedDRA, out string pName, out string pRxNorm, out string pSNOWMED, out List<Reference> pSynonyms, out int? pSynonymsCount, out string pTUI, out string pURI)
+		{
+            pBioPortal = BioPortal;
+            pCategories = Categories;
+            pCategoriesCount = CategoriesCount;
+            pCUI = CUI;
+            pEnum = Enum;
+            pEnumId = EnumId;
+            pMedDRA = MedDRA;
+            pName = Name;
+            pRxNorm = RxNorm;
+            pSNOWMED = SNOWMED;
+            pSynonyms = Synonyms;
+            pSynonymsCount = SynonymsCount;
+            pTUI = TUI;
+            pURI = URI;
+		}
+
+		//Not ready until C# v8.?
+		//public TermMasterBase With(int? pId = Id, string pBioPortal = BioPortal, List<TermCategory> pCategories = Categories, int? pCategoriesCount = CategoriesCount, string pCUI = CUI, Reference pEnum = Enum, int? pEnumId = EnumId, string pMedDRA = MedDRA, string pName = Name, string pRxNorm = RxNorm, string pSNOWMED = SNOWMED, List<Reference> pSynonyms = Synonyms, int? pSynonymsCount = SynonymsCount, string pTUI = TUI, string pURI = URI) => 
+		//	new TermMasterBase(pId, pBioPortal, pCategories, pCategoriesCount, pCUI, pEnum, pEnumId, pMedDRA, pName, pRxNorm, pSNOWMED, pSynonyms, pSynonymsCount, pTUI, pURI);
+
     }
 
     [Route("/termmaster", "POST")]
     [Route("/termmaster/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class TermMaster : TermMasterBase, IReturn<TermMaster>, IDto
+    public partial class TermMaster : TermMasterBase, IReturn<TermMaster>, IDto, ICloneable
     {
         public TermMaster()
         {
@@ -117,7 +158,8 @@ namespace Services.Dto
 
         public TermMaster(int? id) : base(DocConvert.ToInt(id)) {}
         public TermMaster(int id) : base(id) {}
-        
+        public TermMaster(int? pId, string pBioPortal, List<TermCategory> pCategories, int? pCategoriesCount, string pCUI, Reference pEnum, int? pEnumId, string pMedDRA, string pName, string pRxNorm, string pSNOWMED, List<Reference> pSynonyms, int? pSynonymsCount, string pTUI, string pURI) : 
+			base(pId, pBioPortal, pCategories, pCategoriesCount, pCUI, pEnum, pEnumId, pMedDRA, pName, pRxNorm, pSNOWMED, pSynonyms, pSynonymsCount, pTUI, pURI) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -157,6 +199,8 @@ namespace Services.Dto
             nameof(Categories), nameof(CategoriesCount), nameof(Synonyms), nameof(SynonymsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<TermMaster>();
     }
     
     [Route("/TermMaster/{Id}/copy", "POST")]

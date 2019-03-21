@@ -56,6 +56,23 @@ namespace Services.Dto
 
         public UnitConversionRulesBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public UnitConversionRulesBase(int? pId, Reference pDestinationUnit, int? pDestinationUnitId, bool pIsDefault, bool pIsDestinationSi, Reference pModifierTerm, int? pModifierTermId, decimal pMultiplier, Reference pParent, int? pParentId, Reference pRootTerm, int? pRootTermId, Reference pSourceUnit, int? pSourceUnitId) : this(DocConvert.ToInt(pId)) 
+		{
+            DestinationUnit = pDestinationUnit;
+            DestinationUnitId = pDestinationUnitId;
+            IsDefault = pIsDefault;
+            IsDestinationSi = pIsDestinationSi;
+            ModifierTerm = pModifierTerm;
+            ModifierTermId = pModifierTermId;
+            Multiplier = pMultiplier;
+            Parent = pParent;
+            ParentId = pParentId;
+            RootTerm = pRootTerm;
+            RootTermId = pRootTermId;
+            SourceUnit = pSourceUnit;
+            SourceUnitId = pSourceUnitId;
+		}
+
         [ApiMember(Name = nameof(DestinationUnit), Description = "UnitOfMeasure", IsRequired = true)]
         public Reference DestinationUnit { get; set; }
         [ApiMember(Name = nameof(DestinationUnitId), Description = "Primary Key of UnitOfMeasure", IsRequired = false)]
@@ -98,11 +115,33 @@ namespace Services.Dto
         public int? SourceUnitId { get; set; }
 
 
+
+		public void Deconstruct(out Reference pDestinationUnit, out int? pDestinationUnitId, out bool pIsDefault, out bool pIsDestinationSi, out Reference pModifierTerm, out int? pModifierTermId, out decimal pMultiplier, out Reference pParent, out int? pParentId, out Reference pRootTerm, out int? pRootTermId, out Reference pSourceUnit, out int? pSourceUnitId)
+		{
+            pDestinationUnit = DestinationUnit;
+            pDestinationUnitId = DestinationUnitId;
+            pIsDefault = IsDefault;
+            pIsDestinationSi = IsDestinationSi;
+            pModifierTerm = ModifierTerm;
+            pModifierTermId = ModifierTermId;
+            pMultiplier = Multiplier;
+            pParent = Parent;
+            pParentId = ParentId;
+            pRootTerm = RootTerm;
+            pRootTermId = RootTermId;
+            pSourceUnit = SourceUnit;
+            pSourceUnitId = SourceUnitId;
+		}
+
+		//Not ready until C# v8.?
+		//public UnitConversionRulesBase With(int? pId = Id, Reference pDestinationUnit = DestinationUnit, int? pDestinationUnitId = DestinationUnitId, bool pIsDefault = IsDefault, bool pIsDestinationSi = IsDestinationSi, Reference pModifierTerm = ModifierTerm, int? pModifierTermId = ModifierTermId, decimal pMultiplier = Multiplier, Reference pParent = Parent, int? pParentId = ParentId, Reference pRootTerm = RootTerm, int? pRootTermId = RootTermId, Reference pSourceUnit = SourceUnit, int? pSourceUnitId = SourceUnitId) => 
+		//	new UnitConversionRulesBase(pId, pDestinationUnit, pDestinationUnitId, pIsDefault, pIsDestinationSi, pModifierTerm, pModifierTermId, pMultiplier, pParent, pParentId, pRootTerm, pRootTermId, pSourceUnit, pSourceUnitId);
+
     }
 
     [Route("/unitconversionrules", "POST")]
     [Route("/unitconversionrules/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class UnitConversionRules : UnitConversionRulesBase, IReturn<UnitConversionRules>, IDto
+    public partial class UnitConversionRules : UnitConversionRulesBase, IReturn<UnitConversionRules>, IDto, ICloneable
     {
         public UnitConversionRules()
         {
@@ -111,7 +150,8 @@ namespace Services.Dto
 
         public UnitConversionRules(int? id) : base(DocConvert.ToInt(id)) {}
         public UnitConversionRules(int id) : base(id) {}
-        
+        public UnitConversionRules(int? pId, Reference pDestinationUnit, int? pDestinationUnitId, bool pIsDefault, bool pIsDestinationSi, Reference pModifierTerm, int? pModifierTermId, decimal pMultiplier, Reference pParent, int? pParentId, Reference pRootTerm, int? pRootTermId, Reference pSourceUnit, int? pSourceUnitId) : 
+			base(pId, pDestinationUnit, pDestinationUnitId, pIsDefault, pIsDestinationSi, pModifierTerm, pModifierTermId, pMultiplier, pParent, pParentId, pRootTerm, pRootTermId, pSourceUnit, pSourceUnitId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -144,6 +184,8 @@ namespace Services.Dto
         }
 
         #endregion Fields
+
+		public object Clone() => this.Copy<UnitConversionRules>();
     }
     
     [Route("/UnitConversionRules/{Id}/copy", "POST")]

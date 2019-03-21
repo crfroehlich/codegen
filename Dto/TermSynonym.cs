@@ -56,6 +56,19 @@ namespace Services.Dto
 
         public TermSynonymBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public TermSynonymBase(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) : this(DocConvert.ToInt(pId)) 
+		{
+            Approved = pApproved;
+            Bindings = pBindings;
+            BindingsCount = pBindingsCount;
+            Master = pMaster;
+            MasterId = pMasterId;
+            Preferred = pPreferred;
+            Scope = pScope;
+            ScopeId = pScopeId;
+            Synonym = pSynonym;
+		}
+
         [ApiMember(Name = nameof(Approved), Description = "bool", IsRequired = false)]
         public bool Approved { get; set; }
 
@@ -85,11 +98,29 @@ namespace Services.Dto
         public string Synonym { get; set; }
 
 
+
+		public void Deconstruct(out bool pApproved, out List<Reference> pBindings, out int? pBindingsCount, out Reference pMaster, out int? pMasterId, out bool pPreferred, out Reference pScope, out int? pScopeId, out string pSynonym)
+		{
+            pApproved = Approved;
+            pBindings = Bindings;
+            pBindingsCount = BindingsCount;
+            pMaster = Master;
+            pMasterId = MasterId;
+            pPreferred = Preferred;
+            pScope = Scope;
+            pScopeId = ScopeId;
+            pSynonym = Synonym;
+		}
+
+		//Not ready until C# v8.?
+		//public TermSynonymBase With(int? pId = Id, bool pApproved = Approved, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, Reference pMaster = Master, int? pMasterId = MasterId, bool pPreferred = Preferred, Reference pScope = Scope, int? pScopeId = ScopeId, string pSynonym = Synonym) => 
+		//	new TermSynonymBase(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym);
+
     }
 
     [Route("/termsynonym", "POST")]
     [Route("/termsynonym/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class TermSynonym : TermSynonymBase, IReturn<TermSynonym>, IDto
+    public partial class TermSynonym : TermSynonymBase, IReturn<TermSynonym>, IDto, ICloneable
     {
         public TermSynonym()
         {
@@ -98,7 +129,8 @@ namespace Services.Dto
 
         public TermSynonym(int? id) : base(DocConvert.ToInt(id)) {}
         public TermSynonym(int id) : base(id) {}
-        
+        public TermSynonym(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) : 
+			base(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -138,6 +170,8 @@ namespace Services.Dto
             nameof(Bindings), nameof(BindingsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<TermSynonym>();
     }
     
     [Route("/TermSynonym/{Id}/copy", "POST")]

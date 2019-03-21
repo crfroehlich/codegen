@@ -56,6 +56,14 @@ namespace Services.Dto
 
         public TermCategoryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public TermCategoryBase(int? pId, Reference pParentCategory, int? pParentCategoryId, List<Reference> pTerms, int? pTermsCount) : this(DocConvert.ToInt(pId)) 
+		{
+            ParentCategory = pParentCategory;
+            ParentCategoryId = pParentCategoryId;
+            Terms = pTerms;
+            TermsCount = pTermsCount;
+		}
+
         [ApiMember(Name = nameof(ParentCategory), Description = "TermCategory", IsRequired = false)]
         public Reference ParentCategory { get; set; }
         [ApiMember(Name = nameof(ParentCategoryId), Description = "Primary Key of TermCategory", IsRequired = false)]
@@ -67,11 +75,24 @@ namespace Services.Dto
         public int? TermsCount { get; set; }
 
 
+
+		public void Deconstruct(out Reference pParentCategory, out int? pParentCategoryId, out List<Reference> pTerms, out int? pTermsCount)
+		{
+            pParentCategory = ParentCategory;
+            pParentCategoryId = ParentCategoryId;
+            pTerms = Terms;
+            pTermsCount = TermsCount;
+		}
+
+		//Not ready until C# v8.?
+		//public TermCategoryBase With(int? pId = Id, Reference pParentCategory = ParentCategory, int? pParentCategoryId = ParentCategoryId, List<Reference> pTerms = Terms, int? pTermsCount = TermsCount) => 
+		//	new TermCategoryBase(pId, pParentCategory, pParentCategoryId, pTerms, pTermsCount);
+
     }
 
     [Route("/termcategory", "POST")]
     [Route("/termcategory/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class TermCategory : TermCategoryBase, IReturn<TermCategory>, IDto
+    public partial class TermCategory : TermCategoryBase, IReturn<TermCategory>, IDto, ICloneable
     {
         public TermCategory()
         {
@@ -80,7 +101,8 @@ namespace Services.Dto
 
         public TermCategory(int? id) : base(DocConvert.ToInt(id)) {}
         public TermCategory(int id) : base(id) {}
-        
+        public TermCategory(int? pId, Reference pParentCategory, int? pParentCategoryId, List<Reference> pTerms, int? pTermsCount) : 
+			base(pId, pParentCategory, pParentCategoryId, pTerms, pTermsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -118,6 +140,8 @@ namespace Services.Dto
             nameof(Terms), nameof(TermsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<TermCategory>();
     }
     
     [Route("/TermCategory/{Id}/copy", "POST")]

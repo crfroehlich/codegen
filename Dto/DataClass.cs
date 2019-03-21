@@ -56,6 +56,35 @@ namespace Services.Dto
 
         public DataClassBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public DataClassBase(int? pId, bool pAllowDelete, bool pAllVisibleFieldsByDefault, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : this(DocConvert.ToInt(pId)) 
+		{
+            AllowDelete = pAllowDelete;
+            AllVisibleFieldsByDefault = pAllVisibleFieldsByDefault;
+            CacheDuration = pCacheDuration;
+            ClassId = pClassId;
+            CustomCollections = pCustomCollections;
+            CustomCollectionsCount = pCustomCollectionsCount;
+            DELETE = pDELETE;
+            Description = pDescription;
+            DontFlattenProperties = pDontFlattenProperties;
+            DontFlattenPropertiesCount = pDontFlattenPropertiesCount;
+            DtoSuffix = pDtoSuffix;
+            FlattenReferences = pFlattenReferences;
+            GET = pGET;
+            IgnoreProps = pIgnoreProps;
+            IgnorePropsCount = pIgnorePropsCount;
+            IsInsertOnly = pIsInsertOnly;
+            IsReadOnly = pIsReadOnly;
+            Name = pName;
+            PATCH = pPATCH;
+            POST = pPOST;
+            Properties = pProperties;
+            PropertiesCount = pPropertiesCount;
+            PUT = pPUT;
+            Tabs = pTabs;
+            TabsCount = pTabsCount;
+		}
+
         [ApiMember(Name = nameof(AllowDelete), Description = "bool", IsRequired = false)]
         public bool AllowDelete { get; set; }
 
@@ -141,10 +170,44 @@ namespace Services.Dto
         public int? TabsCount { get; set; }
 
 
+
+		public void Deconstruct(out bool pAllowDelete, out bool pAllVisibleFieldsByDefault, out int? pCacheDuration, out int? pClassId, out List<Reference> pCustomCollections, out int? pCustomCollectionsCount, out bool pDELETE, out string pDescription, out List<Reference> pDontFlattenProperties, out int? pDontFlattenPropertiesCount, out string pDtoSuffix, out bool pFlattenReferences, out bool pGET, out List<Reference> pIgnoreProps, out int? pIgnorePropsCount, out bool pIsInsertOnly, out bool pIsReadOnly, out string pName, out bool pPATCH, out bool pPOST, out List<DataProperty> pProperties, out int? pPropertiesCount, out bool pPUT, out List<DataTab> pTabs, out int? pTabsCount)
+		{
+            pAllowDelete = AllowDelete;
+            pAllVisibleFieldsByDefault = AllVisibleFieldsByDefault;
+            pCacheDuration = CacheDuration;
+            pClassId = ClassId;
+            pCustomCollections = CustomCollections;
+            pCustomCollectionsCount = CustomCollectionsCount;
+            pDELETE = DELETE;
+            pDescription = Description;
+            pDontFlattenProperties = DontFlattenProperties;
+            pDontFlattenPropertiesCount = DontFlattenPropertiesCount;
+            pDtoSuffix = DtoSuffix;
+            pFlattenReferences = FlattenReferences;
+            pGET = GET;
+            pIgnoreProps = IgnoreProps;
+            pIgnorePropsCount = IgnorePropsCount;
+            pIsInsertOnly = IsInsertOnly;
+            pIsReadOnly = IsReadOnly;
+            pName = Name;
+            pPATCH = PATCH;
+            pPOST = POST;
+            pProperties = Properties;
+            pPropertiesCount = PropertiesCount;
+            pPUT = PUT;
+            pTabs = Tabs;
+            pTabsCount = TabsCount;
+		}
+
+		//Not ready until C# v8.?
+		//public DataClassBase With(int? pId = Id, bool pAllowDelete = AllowDelete, bool pAllVisibleFieldsByDefault = AllVisibleFieldsByDefault, int? pCacheDuration = CacheDuration, int? pClassId = ClassId, List<Reference> pCustomCollections = CustomCollections, int? pCustomCollectionsCount = CustomCollectionsCount, bool pDELETE = DELETE, string pDescription = Description, List<Reference> pDontFlattenProperties = DontFlattenProperties, int? pDontFlattenPropertiesCount = DontFlattenPropertiesCount, string pDtoSuffix = DtoSuffix, bool pFlattenReferences = FlattenReferences, bool pGET = GET, List<Reference> pIgnoreProps = IgnoreProps, int? pIgnorePropsCount = IgnorePropsCount, bool pIsInsertOnly = IsInsertOnly, bool pIsReadOnly = IsReadOnly, string pName = Name, bool pPATCH = PATCH, bool pPOST = POST, List<DataProperty> pProperties = Properties, int? pPropertiesCount = PropertiesCount, bool pPUT = PUT, List<DataTab> pTabs = Tabs, int? pTabsCount = TabsCount) => 
+		//	new DataClassBase(pId, pAllowDelete, pAllVisibleFieldsByDefault, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount);
+
     }
 
     [Route("/dataclass/{Id}", "GET, PATCH, PUT")]
-    public partial class DataClass : DataClassBase, IReturn<DataClass>, IDto
+    public partial class DataClass : DataClassBase, IReturn<DataClass>, IDto, ICloneable
     {
         public DataClass()
         {
@@ -153,7 +216,8 @@ namespace Services.Dto
 
         public DataClass(int? id) : base(DocConvert.ToInt(id)) {}
         public DataClass(int id) : base(id) {}
-        
+        public DataClass(int? pId, bool pAllowDelete, bool pAllVisibleFieldsByDefault, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : 
+			base(pId, pAllowDelete, pAllVisibleFieldsByDefault, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -191,6 +255,8 @@ namespace Services.Dto
             nameof(CustomCollections), nameof(CustomCollectionsCount), nameof(DontFlattenProperties), nameof(DontFlattenPropertiesCount), nameof(IgnoreProps), nameof(IgnorePropsCount), nameof(Properties), nameof(PropertiesCount), nameof(Tabs), nameof(TabsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<DataClass>();
     }
     
     public partial class DataClassSearchBase : Search<DataClass>

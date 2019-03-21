@@ -56,6 +56,17 @@ namespace Services.Dto
 
         public MeanVarianceValueBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public MeanVarianceValueBase(int? pId, TypeUnits pMeanVariance, TypeUnitsRange pMeanVarianceRange, Reference pMeanVarianceType, int? pMeanVarianceTypeId, int? pOrder, List<MeanVariances> pOwners, int? pOwnersCount) : this(DocConvert.ToInt(pId)) 
+		{
+            MeanVariance = pMeanVariance;
+            MeanVarianceRange = pMeanVarianceRange;
+            MeanVarianceType = pMeanVarianceType;
+            MeanVarianceTypeId = pMeanVarianceTypeId;
+            Order = pOrder;
+            Owners = pOwners;
+            OwnersCount = pOwnersCount;
+		}
+
         [ApiMember(Name = nameof(MeanVariance), Description = "Units", IsRequired = false)]
         public TypeUnits MeanVariance { get; set; }
 
@@ -80,9 +91,25 @@ namespace Services.Dto
         public int? OwnersCount { get; set; }
 
 
+
+		public void Deconstruct(out TypeUnits pMeanVariance, out TypeUnitsRange pMeanVarianceRange, out Reference pMeanVarianceType, out int? pMeanVarianceTypeId, out int? pOrder, out List<MeanVariances> pOwners, out int? pOwnersCount)
+		{
+            pMeanVariance = MeanVariance;
+            pMeanVarianceRange = MeanVarianceRange;
+            pMeanVarianceType = MeanVarianceType;
+            pMeanVarianceTypeId = MeanVarianceTypeId;
+            pOrder = Order;
+            pOwners = Owners;
+            pOwnersCount = OwnersCount;
+		}
+
+		//Not ready until C# v8.?
+		//public MeanVarianceValueBase With(int? pId = Id, TypeUnits pMeanVariance = MeanVariance, TypeUnitsRange pMeanVarianceRange = MeanVarianceRange, Reference pMeanVarianceType = MeanVarianceType, int? pMeanVarianceTypeId = MeanVarianceTypeId, int? pOrder = Order, List<MeanVariances> pOwners = Owners, int? pOwnersCount = OwnersCount) => 
+		//	new MeanVarianceValueBase(pId, pMeanVariance, pMeanVarianceRange, pMeanVarianceType, pMeanVarianceTypeId, pOrder, pOwners, pOwnersCount);
+
     }
 
-    public partial class MeanVarianceValue : MeanVarianceValueBase, IReturn<MeanVarianceValue>, IDto
+    public partial class MeanVarianceValue : MeanVarianceValueBase, IReturn<MeanVarianceValue>, IDto, ICloneable
     {
         public MeanVarianceValue()
         {
@@ -91,7 +118,8 @@ namespace Services.Dto
 
         public MeanVarianceValue(int? id) : base(DocConvert.ToInt(id)) {}
         public MeanVarianceValue(int id) : base(id) {}
-        
+        public MeanVarianceValue(int? pId, TypeUnits pMeanVariance, TypeUnitsRange pMeanVarianceRange, Reference pMeanVarianceType, int? pMeanVarianceTypeId, int? pOrder, List<MeanVariances> pOwners, int? pOwnersCount) : 
+			base(pId, pMeanVariance, pMeanVarianceRange, pMeanVarianceType, pMeanVarianceTypeId, pOrder, pOwners, pOwnersCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -129,6 +157,8 @@ namespace Services.Dto
             nameof(Owners), nameof(OwnersCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<MeanVarianceValue>();
     }
     
     public partial class MeanVarianceValueSearchBase : Search<MeanVarianceValue>

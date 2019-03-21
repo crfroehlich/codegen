@@ -56,6 +56,15 @@ namespace Services.Dto
 
         public LookupCategoryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
+		public LookupCategoryBase(int? pId, string pCategory, Reference pEnum, int? pEnumId, List<Reference> pLookups, int? pLookupsCount) : this(DocConvert.ToInt(pId)) 
+		{
+            Category = pCategory;
+            Enum = pEnum;
+            EnumId = pEnumId;
+            Lookups = pLookups;
+            LookupsCount = pLookupsCount;
+		}
+
         [ApiMember(Name = nameof(Category), Description = "string", IsRequired = true)]
         public string Category { get; set; }
 
@@ -71,11 +80,25 @@ namespace Services.Dto
         public int? LookupsCount { get; set; }
 
 
+
+		public void Deconstruct(out string pCategory, out Reference pEnum, out int? pEnumId, out List<Reference> pLookups, out int? pLookupsCount)
+		{
+            pCategory = Category;
+            pEnum = Enum;
+            pEnumId = EnumId;
+            pLookups = Lookups;
+            pLookupsCount = LookupsCount;
+		}
+
+		//Not ready until C# v8.?
+		//public LookupCategoryBase With(int? pId = Id, string pCategory = Category, Reference pEnum = Enum, int? pEnumId = EnumId, List<Reference> pLookups = Lookups, int? pLookupsCount = LookupsCount) => 
+		//	new LookupCategoryBase(pId, pCategory, pEnum, pEnumId, pLookups, pLookupsCount);
+
     }
 
     [Route("/lookupcategory", "POST")]
     [Route("/lookupcategory/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class LookupCategory : LookupCategoryBase, IReturn<LookupCategory>, IDto
+    public partial class LookupCategory : LookupCategoryBase, IReturn<LookupCategory>, IDto, ICloneable
     {
         public LookupCategory()
         {
@@ -84,7 +107,8 @@ namespace Services.Dto
 
         public LookupCategory(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupCategory(int id) : base(id) {}
-        
+        public LookupCategory(int? pId, string pCategory, Reference pEnum, int? pEnumId, List<Reference> pLookups, int? pLookupsCount) : 
+			base(pId, pCategory, pEnum, pEnumId, pLookups, pLookupsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -122,6 +146,8 @@ namespace Services.Dto
             nameof(Lookups), nameof(LookupsCount)
         };
         private List<string> collections { get { return _collections; } }
+
+		public object Clone() => this.Copy<LookupCategory>();
     }
     
     [Route("/LookupCategory/{Id}/copy", "POST")]
