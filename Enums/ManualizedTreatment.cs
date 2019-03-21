@@ -115,7 +115,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantManualizedTreatment)
+        #region IEquatable
 
         public bool Equals(DocConstantManualizedTreatment obj) => this == obj;
 
@@ -139,9 +139,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantManualizedTreatment obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantManualizedTreatment obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

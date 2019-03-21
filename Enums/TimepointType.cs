@@ -165,7 +165,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantTimepointType)
+        #region IEquatable
 
         public bool Equals(DocConstantTimepointType obj) => this == obj;
 
@@ -189,9 +189,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantTimepointType obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantTimepointType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

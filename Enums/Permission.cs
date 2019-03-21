@@ -120,7 +120,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantPermission)
+        #region IEquatable
 
         public bool Equals(DocConstantPermission obj) => this == obj;
 
@@ -144,9 +144,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantPermission obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantPermission obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

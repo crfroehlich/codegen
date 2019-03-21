@@ -120,7 +120,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantInterventionLineOfTreatment)
+        #region IEquatable
 
         public bool Equals(DocConstantInterventionLineOfTreatment obj) => this == obj;
 
@@ -144,9 +144,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantInterventionLineOfTreatment obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantInterventionLineOfTreatment obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

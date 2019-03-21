@@ -240,7 +240,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantQueueChannel)
+        #region IEquatable
 
         public bool Equals(DocConstantQueueChannel obj) => this == obj;
 
@@ -264,9 +264,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantQueueChannel obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantQueueChannel obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

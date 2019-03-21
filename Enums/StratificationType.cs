@@ -105,7 +105,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantStratificationType)
+        #region IEquatable
 
         public bool Equals(DocConstantStratificationType obj) => this == obj;
 
@@ -129,9 +129,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantStratificationType obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantStratificationType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

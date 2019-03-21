@@ -125,7 +125,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantScope)
+        #region IEquatable
 
         public bool Equals(DocConstantScope obj) => this == obj;
 
@@ -149,9 +149,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantScope obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantScope obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

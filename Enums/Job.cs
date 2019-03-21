@@ -180,7 +180,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantJob)
+        #region IEquatable
 
         public bool Equals(DocConstantJob obj) => this == obj;
 
@@ -204,9 +204,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantJob obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantJob obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

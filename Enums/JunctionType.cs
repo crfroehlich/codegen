@@ -110,7 +110,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantJunctionType)
+        #region IEquatable
 
         public bool Equals(DocConstantJunctionType obj) => this == obj;
 
@@ -134,9 +134,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantJunctionType obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantJunctionType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

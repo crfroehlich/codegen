@@ -260,7 +260,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantWorkflow)
+        #region IEquatable
 
         public bool Equals(DocConstantWorkflow obj) => this == obj;
 
@@ -284,9 +284,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantWorkflow obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantWorkflow obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

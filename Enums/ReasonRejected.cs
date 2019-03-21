@@ -210,7 +210,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantReasonRejected)
+        #region IEquatable
 
         public bool Equals(DocConstantReasonRejected obj) => this == obj;
 
@@ -234,9 +234,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantReasonRejected obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantReasonRejected obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

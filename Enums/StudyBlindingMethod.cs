@@ -110,7 +110,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantStudyBlindingMethod)
+        #region IEquatable
 
         public bool Equals(DocConstantStudyBlindingMethod obj) => this == obj;
 
@@ -134,9 +134,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantStudyBlindingMethod obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantStudyBlindingMethod obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

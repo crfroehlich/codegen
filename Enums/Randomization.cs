@@ -105,7 +105,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantRandomization)
+        #region IEquatable
 
         public bool Equals(DocConstantRandomization obj) => this == obj;
 
@@ -129,9 +129,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantRandomization obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantRandomization obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

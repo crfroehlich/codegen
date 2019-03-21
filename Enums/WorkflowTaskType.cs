@@ -95,7 +95,7 @@ namespace Services.Enums
 
         #endregion Internals
 
-        #region IEquatable (DocConstantWorkflowTaskType)
+        #region IEquatable
 
         public bool Equals(DocConstantWorkflowTaskType obj) => this == obj;
 
@@ -119,9 +119,9 @@ namespace Services.Enums
             return ret;
         }
 
-        public override int GetHashCode() => 17 * Value.GetHashCode();
+        public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
 				
-        public int GetHashCode(DocConstantWorkflowTaskType obj) => obj.GetHashCode();
+        public int GetHashCode(DocConstantWorkflowTaskType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }
