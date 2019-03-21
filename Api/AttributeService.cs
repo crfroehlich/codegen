@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class AttributeService : DocServiceBase
     {
-        private IQueryable<DocEntityAttribute> _ExecSearch(AttributeSearch request)
+        private IQueryable<DocEntityAttribute> _ExecSearch(AttributeSearch request, DocQuery query)
         {
             request = InitSearch<Attribute, AttributeSearch>(request);
             IQueryable<DocEntityAttribute> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityAttribute>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityAttribute>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AttributeFullTextSearch(request);
@@ -176,7 +176,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -340,14 +340,16 @@ namespace Services.API
 
             Attribute ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Attribute")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Attribute")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -401,12 +403,14 @@ namespace Services.API
         public Attribute Post(AttributeCopy request)
         {
             Attribute ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityAttribute.GetAttribute(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityAttribute.GetAttribute(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pAttributeName = entity.AttributeName;
                     var pAttributeType = entity.AttributeType;
@@ -418,11 +422,11 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pUniqueKey))
                         pUniqueKey += " (Copy)";
                     var pValueType = entity.ValueType;
-                #region Custom Before copyAttribute
-                #endregion Custom Before copyAttribute
-                var copy = new DocEntityAttribute(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyAttribute
+					#endregion Custom Before copyAttribute
+					var copy = new DocEntityAttribute(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , AttributeName = pAttributeName
                                 , AttributeType = pAttributeType
                                 , Interval = pInterval
@@ -431,13 +435,14 @@ namespace Services.API
                                 , IsPositive = pIsPositive
                                 , UniqueKey = pUniqueKey
                                 , ValueType = pValueType
-                };
+					};
 
-                #region Custom After copyAttribute
-                #endregion Custom After copyAttribute
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyAttribute
+					#endregion Custom After copyAttribute
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -504,10 +509,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Attribute ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(AttributeBatch request)
@@ -556,36 +564,35 @@ namespace Services.API
 
         public void Delete(Attribute request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.ATTRIBUTE);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityAttribute.GetAttribute(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.ATTRIBUTE);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityAttribute.GetAttribute(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Attribute could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Attribute could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(AttributeSearch request)
         {
             var matches = Get(request) as List<Attribute>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
         private Attribute GetAttribute(Attribute request)
         {

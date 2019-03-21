@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class DataTabService : DocServiceBase
     {
-        private IQueryable<DocEntityDataTab> _ExecSearch(DataTabSearch request)
+        private IQueryable<DocEntityDataTab> _ExecSearch(DataTabSearch request, DocQuery query)
         {
             request = InitSearch<DataTab, DataTabSearch>(request);
             IQueryable<DocEntityDataTab> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityDataTab>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityDataTab>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DataTabFullTextSearch(request);
@@ -125,7 +125,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -298,10 +298,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             DataTab ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         private DataTab GetDataTab(DataTab request)

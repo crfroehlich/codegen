@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class UnitConversionRulesService : DocServiceBase
     {
-        private IQueryable<DocEntityUnitConversionRules> _ExecSearch(UnitConversionRulesSearch request)
+        private IQueryable<DocEntityUnitConversionRules> _ExecSearch(UnitConversionRulesSearch request, DocQuery query)
         {
             request = InitSearch<UnitConversionRules, UnitConversionRulesSearch>(request);
             IQueryable<DocEntityUnitConversionRules> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityUnitConversionRules>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityUnitConversionRules>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UnitConversionRulesFullTextSearch(request);
@@ -171,7 +171,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -335,14 +335,16 @@ namespace Services.API
 
             UnitConversionRules ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UnitConversionRules")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UnitConversionRules")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -396,12 +398,14 @@ namespace Services.API
         public UnitConversionRules Post(UnitConversionRulesCopy request)
         {
             UnitConversionRules ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityUnitConversionRules.GetUnitConversionRules(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityUnitConversionRules.GetUnitConversionRules(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pDestinationUnit = entity.DestinationUnit;
                     var pIsDefault = entity.IsDefault;
@@ -411,11 +415,11 @@ namespace Services.API
                     var pParent = entity.Parent;
                     var pRootTerm = entity.RootTerm;
                     var pSourceUnit = entity.SourceUnit;
-                #region Custom Before copyUnitConversionRules
-                #endregion Custom Before copyUnitConversionRules
-                var copy = new DocEntityUnitConversionRules(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyUnitConversionRules
+					#endregion Custom Before copyUnitConversionRules
+					var copy = new DocEntityUnitConversionRules(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , DestinationUnit = pDestinationUnit
                                 , IsDefault = pIsDefault
                                 , IsDestinationSi = pIsDestinationSi
@@ -424,13 +428,14 @@ namespace Services.API
                                 , Parent = pParent
                                 , RootTerm = pRootTerm
                                 , SourceUnit = pSourceUnit
-                };
+					};
 
-                #region Custom After copyUnitConversionRules
-                #endregion Custom After copyUnitConversionRules
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyUnitConversionRules
+					#endregion Custom After copyUnitConversionRules
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -497,10 +502,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             UnitConversionRules ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(UnitConversionRulesBatch request)
@@ -549,36 +557,35 @@ namespace Services.API
 
         public void Delete(UnitConversionRules request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.UNITCONVERSIONRULES);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityUnitConversionRules.GetUnitConversionRules(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.UNITCONVERSIONRULES);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityUnitConversionRules.GetUnitConversionRules(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UnitConversionRules could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UnitConversionRules could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(UnitConversionRulesSearch request)
         {
             var matches = Get(request) as List<UnitConversionRules>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
         private UnitConversionRules GetUnitConversionRules(UnitConversionRules request)
         {

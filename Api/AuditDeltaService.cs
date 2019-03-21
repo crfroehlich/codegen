@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class AuditDeltaService : DocServiceBase
     {
-        private IQueryable<DocEntityAuditDelta> _ExecSearch(AuditDeltaSearch request)
+        private IQueryable<DocEntityAuditDelta> _ExecSearch(AuditDeltaSearch request, DocQuery query)
         {
             request = InitSearch<AuditDelta, AuditDeltaSearch>(request);
             IQueryable<DocEntityAuditDelta> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityAuditDelta>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityAuditDelta>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AuditDeltaFullTextSearch(request);
@@ -119,7 +119,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -211,14 +211,16 @@ namespace Services.API
 
             AuditDelta ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "AuditDelta")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "AuditDelta")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -272,29 +274,32 @@ namespace Services.API
         public AuditDelta Post(AuditDeltaCopy request)
         {
             AuditDelta ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityAuditDelta.GetAuditDelta(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityAuditDelta.GetAuditDelta(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pAudit = entity.Audit;
                     var pDelta = entity.Delta;
-                #region Custom Before copyAuditDelta
-                #endregion Custom Before copyAuditDelta
-                var copy = new DocEntityAuditDelta(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyAuditDelta
+					#endregion Custom Before copyAuditDelta
+					var copy = new DocEntityAuditDelta(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Audit = pAudit
                                 , Delta = pDelta
-                };
+					};
 
-                #region Custom After copyAuditDelta
-                #endregion Custom After copyAuditDelta
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyAuditDelta
+					#endregion Custom After copyAuditDelta
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
         private AuditDelta GetAuditDelta(AuditDelta request)

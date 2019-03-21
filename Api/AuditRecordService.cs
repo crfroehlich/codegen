@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class AuditRecordService : DocServiceBase
     {
-        private IQueryable<DocEntityAuditRecord> _ExecSearch(AuditRecordSearch request)
+        private IQueryable<DocEntityAuditRecord> _ExecSearch(AuditRecordSearch request, DocQuery query)
         {
             request = InitSearch<AuditRecord, AuditRecordSearch>(request);
             IQueryable<DocEntityAuditRecord> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityAuditRecord>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityAuditRecord>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AuditRecordFullTextSearch(request);
@@ -173,7 +173,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -183,19 +183,18 @@ namespace Services.API
 
         public object Get(AuditRecord request) => GetEntityWithCache<AuditRecord>(DocConstantModelName.AUDITRECORD, request, GetAuditRecord);
 
-        public object Get(AuditRecordJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(AuditRecordJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "auditdelta":
                         return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityAuditDelta, AuditDelta, AuditDeltaSearch>((int)request.Id, DocConstantModelName.AUDITDELTA, "Deltas", request, (ss) => HostContext.ResolveService<AuditDeltaService>(Request)?.Get(ss));
                     case "event":
                         return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request, (ss) => HostContext.ResolveService<EventService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for auditrecord/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for auditrecord/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private AuditRecord GetAuditRecord(AuditRecord request)
         {
             var id = request?.Id;

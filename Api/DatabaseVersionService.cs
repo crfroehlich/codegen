@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class DatabaseVersionService : DocServiceBase
     {
-        private IQueryable<DocEntityDatabaseVersion> _ExecSearch(DatabaseVersionSearch request)
+        private IQueryable<DocEntityDatabaseVersion> _ExecSearch(DatabaseVersionSearch request, DocQuery query)
         {
             request = InitSearch<DatabaseVersion, DatabaseVersionSearch>(request);
             IQueryable<DocEntityDatabaseVersion> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityDatabaseVersion>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityDatabaseVersion>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DatabaseVersionFullTextSearch(request);
@@ -117,7 +117,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 

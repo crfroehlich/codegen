@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class LookupTableEnumService : DocServiceBase
     {
-        private IQueryable<DocEntityLookupTableEnum> _ExecSearch(LookupTableEnumSearch request)
+        private IQueryable<DocEntityLookupTableEnum> _ExecSearch(LookupTableEnumSearch request, DocQuery query)
         {
             request = InitSearch<LookupTableEnum, LookupTableEnumSearch>(request);
             IQueryable<DocEntityLookupTableEnum> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityLookupTableEnum>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityLookupTableEnum>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LookupTableEnumFullTextSearch(request);
@@ -123,7 +123,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -195,14 +195,16 @@ namespace Services.API
 
             LookupTableEnum ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupTableEnum")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupTableEnum")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -256,33 +258,36 @@ namespace Services.API
         public LookupTableEnum Post(LookupTableEnumCopy request)
         {
             LookupTableEnum ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityLookupTableEnum.GetLookupTableEnum(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityLookupTableEnum.GetLookupTableEnum(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pIsBindable = entity.IsBindable;
                     var pIsGlobal = entity.IsGlobal;
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
-                #region Custom Before copyLookupTableEnum
-                #endregion Custom Before copyLookupTableEnum
-                var copy = new DocEntityLookupTableEnum(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyLookupTableEnum
+					#endregion Custom Before copyLookupTableEnum
+					var copy = new DocEntityLookupTableEnum(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , IsBindable = pIsBindable
                                 , IsGlobal = pIsGlobal
                                 , Name = pName
-                };
+					};
 
-                #region Custom After copyLookupTableEnum
-                #endregion Custom After copyLookupTableEnum
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyLookupTableEnum
+					#endregion Custom After copyLookupTableEnum
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -349,10 +354,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             LookupTableEnum ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(LookupTableEnumBatch request)
@@ -401,36 +409,35 @@ namespace Services.API
 
         public void Delete(LookupTableEnum request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPTABLEENUM);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityLookupTableEnum.GetLookupTableEnum(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.LOOKUPTABLEENUM);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityLookupTableEnum.GetLookupTableEnum(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No LookupTableEnum could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No LookupTableEnum could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(LookupTableEnumSearch request)
         {
             var matches = Get(request) as List<LookupTableEnum>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
         private LookupTableEnum GetLookupTableEnum(LookupTableEnum request)
         {

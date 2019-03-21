@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class ScopeService : DocServiceBase
     {
-        private IQueryable<DocEntityScope> _ExecSearch(ScopeSearch request)
+        private IQueryable<DocEntityScope> _ExecSearch(ScopeSearch request, DocQuery query)
         {
             request = InitSearch<Scope, ScopeSearch>(request);
             IQueryable<DocEntityScope> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityScope>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityScope>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ScopeFullTextSearch(request);
@@ -211,7 +211,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -668,14 +668,16 @@ namespace Services.API
 
             Scope ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Scope")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Scope")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -729,12 +731,14 @@ namespace Services.API
         public Scope Post(ScopeCopy request)
         {
             Scope ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityScope.GetScope(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityScope.GetScope(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pApp = entity.App;
                     var pBindings = entity.Bindings.ToList();
@@ -752,11 +756,11 @@ namespace Services.API
                     var pVariableRules = entity.VariableRules.ToList();
                     var pView = entity.View;
                     var pWorkflows = entity.Workflows.ToList();
-                #region Custom Before copyScope
-                #endregion Custom Before copyScope
-                var copy = new DocEntityScope(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyScope
+					#endregion Custom Before copyScope
+					var copy = new DocEntityScope(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , App = pApp
                                 , Client = pClient
                                 , Delete = pDelete
@@ -767,7 +771,7 @@ namespace Services.API
                                 , Type = pType
                                 , User = pUser
                                 , View = pView
-                };
+					};
                             foreach(var item in pBindings)
                             {
                                 entity.Bindings.Add(item);
@@ -798,11 +802,12 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-                #region Custom After copyScope
-                #endregion Custom After copyScope
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyScope
+					#endregion Custom After copyScope
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -869,10 +874,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Scope ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(ScopeBatch request)
@@ -921,42 +929,40 @@ namespace Services.API
 
         public void Delete(Scope request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.SCOPE);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityScope.GetScope(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.SCOPE);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityScope.GetScope(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Scope could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Scope could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(ScopeSearch request)
         {
             var matches = Get(request) as List<Scope>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(ScopeJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(ScopeJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
                     case "broadcast":
@@ -969,15 +975,14 @@ namespace Services.API
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request, (ss) => HostContext.ResolveService<VariableRuleService>(Request)?.Get(ss));
                     case "workflow":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(ScopeJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(ScopeJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "lookuptablebinding":
                         return AddJunction<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     case "broadcast":
@@ -990,16 +995,15 @@ namespace Services.API
                         return AddJunction<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request);
                     case "workflow":
                         return AddJunction<Scope, DocEntityScope, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(ScopeJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(ScopeJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "lookuptablebinding":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     case "broadcast":
@@ -1012,10 +1016,10 @@ namespace Services.API
                         return RemoveJunction<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request);
                     case "workflow":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for scope/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private Scope GetScope(Scope request)
         {
             var id = request?.Id;

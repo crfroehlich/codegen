@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class VariableInstanceService : DocServiceBase
     {
-        private IQueryable<DocEntityVariableInstance> _ExecSearch(VariableInstanceSearch request)
+        private IQueryable<DocEntityVariableInstance> _ExecSearch(VariableInstanceSearch request, DocQuery query)
         {
             request = InitSearch<VariableInstance, VariableInstanceSearch>(request);
             IQueryable<DocEntityVariableInstance> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityVariableInstance>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityVariableInstance>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableInstanceFullTextSearch(request);
@@ -131,7 +131,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -279,14 +279,16 @@ namespace Services.API
 
             VariableInstance ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "VariableInstance")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "VariableInstance")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -340,36 +342,39 @@ namespace Services.API
         public VariableInstance Post(VariableInstanceCopy request)
         {
             VariableInstance ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityVariableInstance.GetVariableInstance(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityVariableInstance.GetVariableInstance(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pData = entity.Data;
                     var pDocument = entity.Document;
                     var pRule = entity.Rule;
                     var pWorkflows = entity.Workflows.ToList();
-                #region Custom Before copyVariableInstance
-                #endregion Custom Before copyVariableInstance
-                var copy = new DocEntityVariableInstance(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyVariableInstance
+					#endregion Custom Before copyVariableInstance
+					var copy = new DocEntityVariableInstance(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Data = pData
                                 , Document = pDocument
                                 , Rule = pRule
-                };
+					};
                             foreach(var item in pWorkflows)
                             {
                                 entity.Workflows.Add(item);
                             }
 
-                #region Custom After copyVariableInstance
-                #endregion Custom After copyVariableInstance
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyVariableInstance
+					#endregion Custom After copyVariableInstance
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -436,10 +441,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             VariableInstance ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(VariableInstanceBatch request)
@@ -488,71 +496,67 @@ namespace Services.API
 
         public void Delete(VariableInstance request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.VARIABLEINSTANCE);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityVariableInstance.GetVariableInstance(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.VARIABLEINSTANCE);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityVariableInstance.GetVariableInstance(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No VariableInstance could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No VariableInstance could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(VariableInstanceSearch request)
         {
             var matches = Get(request) as List<VariableInstance>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(VariableInstanceJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(VariableInstanceJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "workflow":
                         return GetJunctionSearchResult<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(VariableInstanceJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(VariableInstanceJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "workflow":
                         return AddJunction<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(VariableInstanceJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(VariableInstanceJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "workflow":
                         return RemoveJunction<VariableInstance, DocEntityVariableInstance, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for variableinstance/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private VariableInstance GetVariableInstance(VariableInstance request)
         {
             var id = request?.Id;

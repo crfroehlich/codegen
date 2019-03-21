@@ -51,13 +51,13 @@ namespace Services.API
 {
     public partial class AppService : DocServiceBase
     {
-        private IQueryable<DocEntityApp> _ExecSearch(AppSearch request)
+        private IQueryable<DocEntityApp> _ExecSearch(AppSearch request, DocQuery query)
         {
             request = InitSearch<App, AppSearch>(request);
             IQueryable<DocEntityApp> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityApp>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityApp>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new AppFullTextSearch(request);
@@ -131,7 +131,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -413,58 +413,58 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             App ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
-        public object Get(AppJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(AppJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "page":
                         return GetJunctionSearchResult<App, DocEntityApp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
                     case "role":
                         return GetJunctionSearchResult<App, DocEntityApp, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<App, DocEntityApp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(AppJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(AppJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "page":
                         return AddJunction<App, DocEntityApp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
                     case "role":
                         return AddJunction<App, DocEntityApp, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
                     case "scope":
                         return AddJunction<App, DocEntityApp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(AppJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(AppJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "page":
                         return RemoveJunction<App, DocEntityApp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
                     case "role":
                         return RemoveJunction<App, DocEntityApp, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
                     case "scope":
                         return RemoveJunction<App, DocEntityApp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private App GetApp(App request)
         {
             var id = request?.Id;

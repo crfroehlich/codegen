@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class JunctionService : DocServiceBase
     {
-        private IQueryable<DocEntityJunction> _ExecSearch(JunctionSearch request)
+        private IQueryable<DocEntityJunction> _ExecSearch(JunctionSearch request, DocQuery query)
         {
             request = InitSearch<Junction, JunctionSearch>(request);
             IQueryable<DocEntityJunction> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityJunction>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityJunction>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new JunctionFullTextSearch(request);
@@ -155,7 +155,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -363,14 +363,16 @@ namespace Services.API
 
             Junction ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Junction")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Junction")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -424,12 +426,14 @@ namespace Services.API
         public Junction Post(JunctionCopy request)
         {
             Junction ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityJunction.GetJunction(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityJunction.GetJunction(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pChildren = entity.Children.ToList();
                     var pData = entity.Data;
@@ -444,11 +448,11 @@ namespace Services.API
                         pTargetType += " (Copy)";
                     var pType = entity.Type;
                     var pUser = entity.User;
-                #region Custom Before copyJunction
-                #endregion Custom Before copyJunction
-                var copy = new DocEntityJunction(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyJunction
+					#endregion Custom Before copyJunction
+					var copy = new DocEntityJunction(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Data = pData
                                 , OwnerId = pOwnerId
                                 , OwnerType = pOwnerType
@@ -457,17 +461,18 @@ namespace Services.API
                                 , TargetType = pTargetType
                                 , Type = pType
                                 , User = pUser
-                };
+					};
                             foreach(var item in pChildren)
                             {
                                 entity.Children.Add(item);
                             }
 
-                #region Custom After copyJunction
-                #endregion Custom After copyJunction
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyJunction
+					#endregion Custom After copyJunction
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -534,10 +539,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Junction ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(JunctionBatch request)
@@ -586,71 +594,67 @@ namespace Services.API
 
         public void Delete(Junction request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.JUNCTION);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityJunction.GetJunction(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.JUNCTION);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityJunction.GetJunction(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Junction could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Junction could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(JunctionSearch request)
         {
             var matches = Get(request) as List<Junction>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(JunctionJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(JunctionJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "junction":
                         return GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request, (ss) => HostContext.ResolveService<JunctionService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(JunctionJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(JunctionJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "junction":
                         return AddJunction<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(JunctionJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(JunctionJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "junction":
                         return RemoveJunction<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private Junction GetJunction(Junction request)
         {
             var id = request?.Id;

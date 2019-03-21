@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class LocaleLookupService : DocServiceBase
     {
-        private IQueryable<DocEntityLocaleLookup> _ExecSearch(LocaleLookupSearch request)
+        private IQueryable<DocEntityLocaleLookup> _ExecSearch(LocaleLookupSearch request, DocQuery query)
         {
             request = InitSearch<LocaleLookup, LocaleLookupSearch>(request);
             IQueryable<DocEntityLocaleLookup> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityLocaleLookup>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityLocaleLookup>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LocaleLookupFullTextSearch(request);
@@ -121,7 +121,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -225,14 +225,16 @@ namespace Services.API
 
             LocaleLookup ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "LocaleLookup")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "LocaleLookup")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -286,33 +288,36 @@ namespace Services.API
         public LocaleLookup Post(LocaleLookupCopy request)
         {
             LocaleLookup ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityLocaleLookup.GetLocaleLookup(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityLocaleLookup.GetLocaleLookup(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pData = entity.Data;
                     var pIpAddress = entity.IpAddress;
                     if(!DocTools.IsNullOrEmpty(pIpAddress))
                         pIpAddress += " (Copy)";
                     var pLocale = entity.Locale;
-                #region Custom Before copyLocaleLookup
-                #endregion Custom Before copyLocaleLookup
-                var copy = new DocEntityLocaleLookup(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyLocaleLookup
+					#endregion Custom Before copyLocaleLookup
+					var copy = new DocEntityLocaleLookup(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Data = pData
                                 , IpAddress = pIpAddress
                                 , Locale = pLocale
-                };
+					};
 
-                #region Custom After copyLocaleLookup
-                #endregion Custom After copyLocaleLookup
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyLocaleLookup
+					#endregion Custom After copyLocaleLookup
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
         private LocaleLookup GetLocaleLookup(LocaleLookup request)

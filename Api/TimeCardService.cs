@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class TimeCardService : DocServiceBase
     {
-        private IQueryable<DocEntityTimeCard> _ExecSearch(TimeCardSearch request)
+        private IQueryable<DocEntityTimeCard> _ExecSearch(TimeCardSearch request, DocQuery query)
         {
             request = InitSearch<TimeCard, TimeCardSearch>(request);
             IQueryable<DocEntityTimeCard> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityTimeCard>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityTimeCard>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimeCardFullTextSearch(request);
@@ -183,7 +183,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -361,14 +361,16 @@ namespace Services.API
 
             TimeCard ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TimeCard")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TimeCard")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -422,12 +424,14 @@ namespace Services.API
         public TimeCard Post(TimeCardCopy request)
         {
             TimeCard ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityTimeCard.GetTimeCard(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityTimeCard.GetTimeCard(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
@@ -440,11 +444,11 @@ namespace Services.API
                     var pStatus = entity.Status;
                     var pUser = entity.User;
                     var pWorkType = entity.WorkType;
-                #region Custom Before copyTimeCard
-                #endregion Custom Before copyTimeCard
-                var copy = new DocEntityTimeCard(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyTimeCard
+					#endregion Custom Before copyTimeCard
+					var copy = new DocEntityTimeCard(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Description = pDescription
                                 , Document = pDocument
                                 , End = pEnd
@@ -454,13 +458,14 @@ namespace Services.API
                                 , Status = pStatus
                                 , User = pUser
                                 , WorkType = pWorkType
-                };
+					};
 
-                #region Custom After copyTimeCard
-                #endregion Custom After copyTimeCard
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyTimeCard
+					#endregion Custom After copyTimeCard
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -527,10 +532,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             TimeCard ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(TimeCardBatch request)
@@ -579,36 +587,35 @@ namespace Services.API
 
         public void Delete(TimeCard request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.TIMECARD);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityTimeCard.GetTimeCard(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.TIMECARD);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityTimeCard.GetTimeCard(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TimeCard could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TimeCard could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(TimeCardSearch request)
         {
             var matches = Get(request) as List<TimeCard>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
         private TimeCard GetTimeCard(TimeCard request)
         {

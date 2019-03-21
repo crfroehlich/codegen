@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class UpdateService : DocServiceBase
     {
-        private IQueryable<DocEntityUpdate> _ExecSearch(UpdateSearch request)
+        private IQueryable<DocEntityUpdate> _ExecSearch(UpdateSearch request, DocQuery query)
         {
             request = InitSearch<Update, UpdateSearch>(request);
             IQueryable<DocEntityUpdate> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityUpdate>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityUpdate>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UpdateFullTextSearch(request);
@@ -161,7 +161,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -407,14 +407,16 @@ namespace Services.API
 
             Update ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Update")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Update")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -468,12 +470,14 @@ namespace Services.API
         public Update Post(UpdateCopy request)
         {
             Update ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityUpdate.GetUpdate(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityUpdate.GetUpdate(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pBody = entity.Body;
                     var pDeliveryStatus = entity.DeliveryStatus;
@@ -491,11 +495,11 @@ namespace Services.API
                         pSubject += " (Copy)";
                     var pTeam = entity.Team;
                     var pUser = entity.User;
-                #region Custom Before copyUpdate
-                #endregion Custom Before copyUpdate
-                var copy = new DocEntityUpdate(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyUpdate
+					#endregion Custom Before copyUpdate
+					var copy = new DocEntityUpdate(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Body = pBody
                                 , DeliveryStatus = pDeliveryStatus
                                 , EmailAttempts = pEmailAttempts
@@ -507,30 +511,30 @@ namespace Services.API
                                 , Subject = pSubject
                                 , Team = pTeam
                                 , User = pUser
-                };
+					};
                             foreach(var item in pEvents)
                             {
                                 entity.Events.Add(item);
                             }
 
-                #region Custom After copyUpdate
-                #endregion Custom After copyUpdate
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyUpdate
+					#endregion Custom After copyUpdate
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
-        public object Get(UpdateJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(UpdateJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "event":
                         return GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request, (ss) => HostContext.ResolveService<EventService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for update/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for update/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private Update GetUpdate(Update request)
         {
             var id = request?.Id;

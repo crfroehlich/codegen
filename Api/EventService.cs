@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class EventService : DocServiceBase
     {
-        private IQueryable<DocEntityEvent> _ExecSearch(EventSearch request)
+        private IQueryable<DocEntityEvent> _ExecSearch(EventSearch request, DocQuery query)
         {
             request = InitSearch<Event, EventSearch>(request);
             IQueryable<DocEntityEvent> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityEvent>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityEvent>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new EventFullTextSearch(request);
@@ -141,7 +141,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -151,21 +151,20 @@ namespace Services.API
 
         public object Get(Event request) => GetEntityWithCache<Event>(DocConstantModelName.EVENT, request, GetEvent);
 
-        public object Get(EventJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(EventJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "team":
                         return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request, (ss) => HostContext.ResolveService<TeamService>(Request)?.Get(ss));
                     case "update":
                         return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request, (ss) => HostContext.ResolveService<UpdateService>(Request)?.Get(ss));
                     case "user":
                         return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for event/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private Event GetEvent(Event request)
         {
             var id = request?.Id;

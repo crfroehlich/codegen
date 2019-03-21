@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class RoleService : DocServiceBase
     {
-        private IQueryable<DocEntityRole> _ExecSearch(RoleSearch request)
+        private IQueryable<DocEntityRole> _ExecSearch(RoleSearch request, DocQuery query)
         {
             request = InitSearch<Role, RoleSearch>(request);
             IQueryable<DocEntityRole> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityRole>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityRole>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new RoleFullTextSearch(request);
@@ -149,7 +149,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -469,14 +469,16 @@ namespace Services.API
 
             Role ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Role")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Role")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -530,12 +532,14 @@ namespace Services.API
         public Role Post(RoleCopy request)
         {
             Role ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityRole.GetRole(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityRole.GetRole(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pAdminTeam = entity.AdminTeam;
                     var pApps = entity.Apps.ToList();
@@ -552,11 +556,11 @@ namespace Services.API
                     var pPages = entity.Pages.ToList();
                     var pPermissions = entity.Permissions;
                     var pUsers = entity.Users.ToList();
-                #region Custom Before copyRole
-                #endregion Custom Before copyRole
-                var copy = new DocEntityRole(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyRole
+					#endregion Custom Before copyRole
+					var copy = new DocEntityRole(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , AdminTeam = pAdminTeam
                                 , Description = pDescription
                                 , Features = pFeatures
@@ -564,7 +568,7 @@ namespace Services.API
                                 , IsSuperAdmin = pIsSuperAdmin
                                 , Name = pName
                                 , Permissions = pPermissions
-                };
+					};
                             foreach(var item in pApps)
                             {
                                 entity.Apps.Add(item);
@@ -585,11 +589,12 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                #region Custom After copyRole
-                #endregion Custom After copyRole
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyRole
+					#endregion Custom After copyRole
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -656,10 +661,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Role ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(RoleBatch request)
@@ -708,42 +716,40 @@ namespace Services.API
 
         public void Delete(Role request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.ROLE);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityRole.GetRole(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.ROLE);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityRole.GetRole(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Role could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Role could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(RoleSearch request)
         {
             var matches = Get(request) as List<Role>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(RoleJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(RoleJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "app":
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request, (ss) => HostContext.ResolveService<AppService>(Request)?.Get(ss));
                     case "featureset":
@@ -752,15 +758,14 @@ namespace Services.API
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
                     case "user":
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(RoleJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(RoleJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "app":
                         return AddJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
                     case "featureset":
@@ -769,16 +774,15 @@ namespace Services.API
                         return AddJunction<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
                     case "user":
                         return AddJunction<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(RoleJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(RoleJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "app":
                         return RemoveJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
                     case "featureset":
@@ -787,10 +791,10 @@ namespace Services.API
                         return RemoveJunction<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
                     case "user":
                         return RemoveJunction<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for role/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private Role GetRole(Role request)
         {
             var id = request?.Id;

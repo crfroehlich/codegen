@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class VariableRuleService : DocServiceBase
     {
-        private IQueryable<DocEntityVariableRule> _ExecSearch(VariableRuleSearch request)
+        private IQueryable<DocEntityVariableRule> _ExecSearch(VariableRuleSearch request, DocQuery query)
         {
             request = InitSearch<VariableRule, VariableRuleSearch>(request);
             IQueryable<DocEntityVariableRule> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityVariableRule>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityVariableRule>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new VariableRuleFullTextSearch(request);
@@ -165,7 +165,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -427,14 +427,16 @@ namespace Services.API
 
             VariableRule ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "VariableRule")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "VariableRule")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -488,12 +490,14 @@ namespace Services.API
         public VariableRule Post(VariableRuleCopy request)
         {
             VariableRule ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityVariableRule.GetVariableRule(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityVariableRule.GetVariableRule(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pChildren = entity.Children.ToList();
                     var pDefinition = entity.Definition;
@@ -505,17 +509,17 @@ namespace Services.API
                     var pRule = entity.Rule;
                     var pScopes = entity.Scopes.ToList();
                     var pType = entity.Type;
-                #region Custom Before copyVariableRule
-                #endregion Custom Before copyVariableRule
-                var copy = new DocEntityVariableRule(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyVariableRule
+					#endregion Custom Before copyVariableRule
+					var copy = new DocEntityVariableRule(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Definition = pDefinition
                                 , Name = pName
                                 , Owner = pOwner
                                 , Rule = pRule
                                 , Type = pType
-                };
+					};
                             foreach(var item in pChildren)
                             {
                                 entity.Children.Add(item);
@@ -531,11 +535,12 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                #region Custom After copyVariableRule
-                #endregion Custom After copyVariableRule
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyVariableRule
+					#endregion Custom After copyVariableRule
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -602,10 +607,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             VariableRule ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(VariableRuleBatch request)
@@ -654,83 +662,79 @@ namespace Services.API
 
         public void Delete(VariableRule request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.VARIABLERULE);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityVariableRule.GetVariableRule(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.VARIABLERULE);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityVariableRule.GetVariableRule(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No VariableRule could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(VariableRuleSearch request)
         {
             var matches = Get(request) as List<VariableRule>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(VariableRuleJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(VariableRuleJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "variablerule":
                         return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request, (ss) => HostContext.ResolveService<VariableRuleService>(Request)?.Get(ss));
                     case "variableinstance":
                         return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(VariableRuleJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(VariableRuleJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "variablerule":
                         return AddJunction<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request);
                     case "variableinstance":
                         return AddJunction<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request);
                     case "scope":
                         return AddJunction<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(VariableRuleJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(VariableRuleJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "variablerule":
                         return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request);
                     case "variableinstance":
                         return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request);
                     case "scope":
                         return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private VariableRule GetVariableRule(VariableRule request)
         {
             var id = request?.Id;

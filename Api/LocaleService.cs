@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class LocaleService : DocServiceBase
     {
-        private IQueryable<DocEntityLocale> _ExecSearch(LocaleSearch request)
+        private IQueryable<DocEntityLocale> _ExecSearch(LocaleSearch request, DocQuery query)
         {
             request = InitSearch<Locale, LocaleSearch>(request);
             IQueryable<DocEntityLocale> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityLocale>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityLocale>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new LocaleFullTextSearch(request);
@@ -117,7 +117,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -221,14 +221,16 @@ namespace Services.API
 
             Locale ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Locale")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Locale")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -282,12 +284,14 @@ namespace Services.API
         public Locale Post(LocaleCopy request)
         {
             Locale ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityLocale.GetLocale(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityLocale.GetLocale(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pCountry = entity.Country;
                     if(!DocTools.IsNullOrEmpty(pCountry))
@@ -298,21 +302,22 @@ namespace Services.API
                     var pTimeZone = entity.TimeZone;
                     if(!DocTools.IsNullOrEmpty(pTimeZone))
                         pTimeZone += " (Copy)";
-                #region Custom Before copyLocale
-                #endregion Custom Before copyLocale
-                var copy = new DocEntityLocale(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyLocale
+					#endregion Custom Before copyLocale
+					var copy = new DocEntityLocale(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Country = pCountry
                                 , Language = pLanguage
                                 , TimeZone = pTimeZone
-                };
+					};
 
-                #region Custom After copyLocale
-                #endregion Custom After copyLocale
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyLocale
+					#endregion Custom After copyLocale
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
         private Locale GetLocale(Locale request)

@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class DocumentSetService : DocServiceBase
     {
-        private IQueryable<DocEntityDocumentSet> _ExecSearch(DocumentSetSearch request)
+        private IQueryable<DocEntityDocumentSet> _ExecSearch(DocumentSetSearch request, DocQuery query)
         {
             request = InitSearch<DocumentSet, DocumentSetSearch>(request);
             IQueryable<DocEntityDocumentSet> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityDocumentSet>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityDocumentSet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentSetFullTextSearch(request);
@@ -270,7 +270,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -1429,14 +1429,16 @@ namespace Services.API
 
             DocumentSet ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "DocumentSet")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "DocumentSet")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -1490,12 +1492,14 @@ namespace Services.API
         public DocumentSet Post(DocumentSetCopy request)
         {
             DocumentSet ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityDocumentSet.GetDocumentSet(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityDocumentSet.GetDocumentSet(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pAdditionalCriteria = entity.AdditionalCriteria;
                     var pCharacteristics = entity.Characteristics.ToList();
@@ -1552,11 +1556,11 @@ namespace Services.API
                     var pStudyDesigns = entity.StudyDesigns.ToList();
                     var pType = entity.Type;
                     var pUsers = entity.Users.ToList();
-                #region Custom Before copyDocumentSet
-                #endregion Custom Before copyDocumentSet
-                var copy = new DocEntityDocumentSet(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyDocumentSet
+					#endregion Custom Before copyDocumentSet
+					var copy = new DocEntityDocumentSet(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , AdditionalCriteria = pAdditionalCriteria
                                 , Confidential = pConfidential
                                 , DataCollection = pDataCollection
@@ -1588,7 +1592,7 @@ namespace Services.API
                                 , SelectionCriteria = pSelectionCriteria
                                 , Settings = pSettings
                                 , Type = pType
-                };
+					};
                             foreach(var item in pCharacteristics)
                             {
                                 entity.Characteristics.Add(item);
@@ -1669,11 +1673,12 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                #region Custom After copyDocumentSet
-                #endregion Custom After copyDocumentSet
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyDocumentSet
+					#endregion Custom After copyDocumentSet
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -1740,10 +1745,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             DocumentSet ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(DocumentSetBatch request)
@@ -1792,42 +1800,40 @@ namespace Services.API
 
         public void Delete(DocumentSet request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.DOCUMENTSET);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityDocumentSet.GetDocumentSet(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.DOCUMENTSET);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityDocumentSet.GetDocumentSet(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(DocumentSetSearch request)
         {
             var matches = Get(request) as List<DocumentSet>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(DocumentSetJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(DocumentSetJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
                     case "characteristic":
@@ -1864,15 +1870,14 @@ namespace Services.API
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                     case "workflow":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(DocumentSetJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(DocumentSetJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "characteristic":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
                     case "client":
@@ -1895,16 +1900,15 @@ namespace Services.API
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
                     case "user":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(DocumentSetJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(DocumentSetJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "characteristic":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
                     case "client":
@@ -1927,10 +1931,10 @@ namespace Services.API
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
                     case "user":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private DocumentSet GetDocumentSet(DocumentSet request)
         {
             var id = request?.Id;

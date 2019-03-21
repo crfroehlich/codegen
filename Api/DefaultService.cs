@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class DefaultService : DocServiceBase
     {
-        private IQueryable<DocEntityDefault> _ExecSearch(DefaultSearch request)
+        private IQueryable<DocEntityDefault> _ExecSearch(DefaultSearch request, DocQuery query)
         {
             request = InitSearch<Default, DefaultSearch>(request);
             IQueryable<DocEntityDefault> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityDefault>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityDefault>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DefaultFullTextSearch(request);
@@ -143,7 +143,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -259,14 +259,16 @@ namespace Services.API
 
             Default ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Default")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Default")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -320,33 +322,36 @@ namespace Services.API
         public Default Post(DefaultCopy request)
         {
             Default ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityDefault.GetDefault(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityDefault.GetDefault(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pDiseaseState = entity.DiseaseState;
                     var pRole = entity.Role;
                     var pScope = entity.Scope;
                     var pTherapeuticArea = entity.TherapeuticArea;
-                #region Custom Before copyDefault
-                #endregion Custom Before copyDefault
-                var copy = new DocEntityDefault(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyDefault
+					#endregion Custom Before copyDefault
+					var copy = new DocEntityDefault(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , DiseaseState = pDiseaseState
                                 , Role = pRole
                                 , Scope = pScope
                                 , TherapeuticArea = pTherapeuticArea
-                };
+					};
 
-                #region Custom After copyDefault
-                #endregion Custom After copyDefault
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyDefault
+					#endregion Custom After copyDefault
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -413,10 +418,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Default ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         private Default GetDefault(Default request)

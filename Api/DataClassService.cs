@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class DataClassService : DocServiceBase
     {
-        private IQueryable<DocEntityDataClass> _ExecSearch(DataClassSearch request)
+        private IQueryable<DocEntityDataClass> _ExecSearch(DataClassSearch request, DocQuery query)
         {
             request = InitSearch<DataClass, DataClassSearch>(request);
             IQueryable<DocEntityDataClass> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityDataClass>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityDataClass>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DataClassFullTextSearch(request);
@@ -191,7 +191,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -721,17 +721,19 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             DataClass ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
-        public object Get(DataClassJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(DataClassJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "customcollections":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "dontflattenproperties":
@@ -742,15 +744,14 @@ namespace Services.API
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "datatab":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataTab, DataTab, DataTabSearch>((int)request.Id, DocConstantModelName.DATATAB, "Tabs", request, (ss) => HostContext.ResolveService<DataTabService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(DataClassJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(DataClassJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "customcollections":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request);
                     case "dontflattenproperties":
@@ -761,16 +762,15 @@ namespace Services.API
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request);
                     case "datatab":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataTab, DataTab, DataTabSearch>((int)request.Id, DocConstantModelName.DATATAB, "Tabs", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(DataClassJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(DataClassJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "customcollections":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request);
                     case "dontflattenproperties":
@@ -781,10 +781,10 @@ namespace Services.API
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request);
                     case "datatab":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataTab, DataTab, DataTabSearch>((int)request.Id, DocConstantModelName.DATATAB, "Tabs", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private DataClass GetDataClass(DataClass request)
         {
             var id = request?.Id;

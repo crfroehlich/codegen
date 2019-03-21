@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class TermSynonymService : DocServiceBase
     {
-        private IQueryable<DocEntityTermSynonym> _ExecSearch(TermSynonymSearch request)
+        private IQueryable<DocEntityTermSynonym> _ExecSearch(TermSynonymSearch request, DocQuery query)
         {
             request = InitSearch<TermSynonym, TermSynonymSearch>(request);
             IQueryable<DocEntityTermSynonym> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityTermSynonym>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityTermSynonym>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermSynonymFullTextSearch(request);
@@ -143,7 +143,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -315,14 +315,16 @@ namespace Services.API
 
             TermSynonym ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermSynonym")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermSynonym")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -376,12 +378,14 @@ namespace Services.API
         public TermSynonym Post(TermSynonymCopy request)
         {
             TermSynonym ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityTermSynonym.GetTermSynonym(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityTermSynonym.GetTermSynonym(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pApproved = entity.Approved;
                     var pBindings = entity.Bindings.ToList();
@@ -391,27 +395,28 @@ namespace Services.API
                     var pSynonym = entity.Synonym;
                     if(!DocTools.IsNullOrEmpty(pSynonym))
                         pSynonym += " (Copy)";
-                #region Custom Before copyTermSynonym
-                #endregion Custom Before copyTermSynonym
-                var copy = new DocEntityTermSynonym(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyTermSynonym
+					#endregion Custom Before copyTermSynonym
+					var copy = new DocEntityTermSynonym(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Approved = pApproved
                                 , Master = pMaster
                                 , Preferred = pPreferred
                                 , Scope = pScope
                                 , Synonym = pSynonym
-                };
+					};
                             foreach(var item in pBindings)
                             {
                                 entity.Bindings.Add(item);
                             }
 
-                #region Custom After copyTermSynonym
-                #endregion Custom After copyTermSynonym
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyTermSynonym
+					#endregion Custom After copyTermSynonym
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -478,10 +483,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             TermSynonym ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(TermSynonymBatch request)
@@ -530,71 +538,67 @@ namespace Services.API
 
         public void Delete(TermSynonym request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.TERMSYNONYM);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityTermSynonym.GetTermSynonym(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.TERMSYNONYM);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityTermSynonym.GetTermSynonym(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TermSynonym could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TermSynonym could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(TermSynonymSearch request)
         {
             var matches = Get(request) as List<TermSynonym>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(TermSynonymJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(TermSynonymJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(TermSynonymJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(TermSynonymJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "lookuptablebinding":
                         return AddJunction<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(TermSynonymJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(TermSynonymJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "lookuptablebinding":
                         return RemoveJunction<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for termsynonym/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private TermSynonym GetTermSynonym(TermSynonym request)
         {
             var id = request?.Id;

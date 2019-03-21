@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class TermCategoryService : DocServiceBase
     {
-        private IQueryable<DocEntityTermCategory> _ExecSearch(TermCategorySearch request)
+        private IQueryable<DocEntityTermCategory> _ExecSearch(TermCategorySearch request, DocQuery query)
         {
             request = InitSearch<TermCategory, TermCategorySearch>(request);
             IQueryable<DocEntityTermCategory> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityTermCategory>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityTermCategory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermCategoryFullTextSearch(request);
@@ -139,7 +139,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -275,14 +275,16 @@ namespace Services.API
 
             TermCategory ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermCategory")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermCategory")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -336,34 +338,37 @@ namespace Services.API
         public TermCategory Post(TermCategoryCopy request)
         {
             TermCategory ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityTermCategory.GetTermCategory(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityTermCategory.GetTermCategory(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pName = entity.Name;
                     var pParentCategory = entity.ParentCategory;
                     var pTerms = entity.Terms.ToList();
-                #region Custom Before copyTermCategory
-                #endregion Custom Before copyTermCategory
-                var copy = new DocEntityTermCategory(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyTermCategory
+					#endregion Custom Before copyTermCategory
+					var copy = new DocEntityTermCategory(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Name = pName
                                 , ParentCategory = pParentCategory
-                };
+					};
                             foreach(var item in pTerms)
                             {
                                 entity.Terms.Add(item);
                             }
 
-                #region Custom After copyTermCategory
-                #endregion Custom After copyTermCategory
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyTermCategory
+					#endregion Custom After copyTermCategory
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -430,10 +435,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             TermCategory ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(TermCategoryBatch request)
@@ -482,71 +490,67 @@ namespace Services.API
 
         public void Delete(TermCategory request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.TERMCATEGORY);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityTermCategory.GetTermCategory(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.TERMCATEGORY);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityTermCategory.GetTermCategory(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TermCategory could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TermCategory could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(TermCategorySearch request)
         {
             var matches = Get(request) as List<TermCategory>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(TermCategoryJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(TermCategoryJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "termmaster":
                         return GetJunctionSearchResult<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request, (ss) => HostContext.ResolveService<TermMasterService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(TermCategoryJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(TermCategoryJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "termmaster":
                         return AddJunction<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(TermCategoryJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(TermCategoryJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "termmaster":
                         return RemoveJunction<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for termcategory/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private TermCategory GetTermCategory(TermCategory request)
         {
             var id = request?.Id;

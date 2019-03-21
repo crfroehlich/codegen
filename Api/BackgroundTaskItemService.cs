@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class BackgroundTaskItemService : DocServiceBase
     {
-        private IQueryable<DocEntityBackgroundTaskItem> _ExecSearch(BackgroundTaskItemSearch request)
+        private IQueryable<DocEntityBackgroundTaskItem> _ExecSearch(BackgroundTaskItemSearch request, DocQuery query)
         {
             request = InitSearch<BackgroundTaskItem, BackgroundTaskItemSearch>(request);
             IQueryable<DocEntityBackgroundTaskItem> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityBackgroundTaskItem>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityBackgroundTaskItem>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskItemFullTextSearch(request);
@@ -158,7 +158,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -168,17 +168,16 @@ namespace Services.API
 
         public object Get(BackgroundTaskItem request) => GetEntityWithCache<BackgroundTaskItem>(DocConstantModelName.BACKGROUNDTASKITEM, request, GetBackgroundTaskItem);
 
-        public object Get(BackgroundTaskItemJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(BackgroundTaskItemJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "backgroundtaskhistory":
                         return GetJunctionSearchResult<BackgroundTaskItem, DocEntityBackgroundTaskItem, DocEntityBackgroundTaskHistory, BackgroundTaskHistory, BackgroundTaskHistorySearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKHISTORY, "TaskHistory", request, (ss) => HostContext.ResolveService<BackgroundTaskHistoryService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtaskitem/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtaskitem/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private BackgroundTaskItem GetBackgroundTaskItem(BackgroundTaskItem request)
         {
             var id = request?.Id;

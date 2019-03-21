@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class StatsService : DocServiceBase
     {
-        private IQueryable<DocEntityStats> _ExecSearch(StatsSearch request)
+        private IQueryable<DocEntityStats> _ExecSearch(StatsSearch request, DocQuery query)
         {
             request = InitSearch<Stats, StatsSearch>(request);
             IQueryable<DocEntityStats> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityStats>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityStats>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new StatsFullTextSearch(request);
@@ -135,7 +135,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 

@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class DataPropertyService : DocServiceBase
     {
-        private IQueryable<DocEntityDataProperty> _ExecSearch(DataPropertySearch request)
+        private IQueryable<DocEntityDataProperty> _ExecSearch(DataPropertySearch request, DocQuery query)
         {
             request = InitSearch<DataProperty, DataPropertySearch>(request);
             IQueryable<DocEntityDataProperty> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityDataProperty>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityDataProperty>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DataPropertyFullTextSearch(request);
@@ -284,7 +284,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -910,46 +910,46 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             DataProperty ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
-        public object Get(DataPropertyJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(DataPropertyJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "dataproperty":
                         return GetJunctionSearchResult<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(DataPropertyJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(DataPropertyJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "dataproperty":
                         return AddJunction<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(DataPropertyJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(DataPropertyJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "dataproperty":
                         return RemoveJunction<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private DataProperty GetDataProperty(DataProperty request)
         {
             var id = request?.Id;

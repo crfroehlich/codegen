@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class HistoryService : DocServiceBase
     {
-        private IQueryable<DocEntityHistory> _ExecSearch(HistorySearch request)
+        private IQueryable<DocEntityHistory> _ExecSearch(HistorySearch request, DocQuery query)
         {
             request = InitSearch<History, HistorySearch>(request);
             IQueryable<DocEntityHistory> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityHistory>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityHistory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new HistoryFullTextSearch(request);
@@ -169,7 +169,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -333,14 +333,16 @@ namespace Services.API
 
             History ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "History")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "History")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -394,12 +396,14 @@ namespace Services.API
         public History Post(HistoryCopy request)
         {
             History ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityHistory.GetHistory(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityHistory.GetHistory(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pApp = entity.App;
                     var pDocumentSet = entity.DocumentSet;
@@ -411,11 +415,11 @@ namespace Services.API
                     var pUser = entity.User;
                     var pUserSession = entity.UserSession;
                     var pWorkflow = entity.Workflow;
-                #region Custom Before copyHistory
-                #endregion Custom Before copyHistory
-                var copy = new DocEntityHistory(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyHistory
+					#endregion Custom Before copyHistory
+					var copy = new DocEntityHistory(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , App = pApp
                                 , DocumentSet = pDocumentSet
                                 , Impersonation = pImpersonation
@@ -424,13 +428,14 @@ namespace Services.API
                                 , User = pUser
                                 , UserSession = pUserSession
                                 , Workflow = pWorkflow
-                };
+					};
 
-                #region Custom After copyHistory
-                #endregion Custom After copyHistory
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyHistory
+					#endregion Custom After copyHistory
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
         private History GetHistory(History request)

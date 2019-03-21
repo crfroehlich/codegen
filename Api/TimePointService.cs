@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class TimePointService : DocServiceBase
     {
-        private IQueryable<DocEntityTimePoint> _ExecSearch(TimePointSearch request)
+        private IQueryable<DocEntityTimePoint> _ExecSearch(TimePointSearch request, DocQuery query)
         {
             request = InitSearch<TimePoint, TimePointSearch>(request);
             IQueryable<DocEntityTimePoint> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityTimePoint>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityTimePoint>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimePointFullTextSearch(request);
@@ -132,7 +132,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 

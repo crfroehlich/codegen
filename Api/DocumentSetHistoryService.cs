@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class DocumentSetHistoryService : DocServiceBase
     {
-        private IQueryable<DocEntityDocumentSetHistory> _ExecSearch(DocumentSetHistorySearch request)
+        private IQueryable<DocEntityDocumentSetHistory> _ExecSearch(DocumentSetHistorySearch request, DocQuery query)
         {
             request = InitSearch<DocumentSetHistory, DocumentSetHistorySearch>(request);
             IQueryable<DocEntityDocumentSetHistory> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityDocumentSetHistory>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityDocumentSetHistory>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DocumentSetHistoryFullTextSearch(request);
@@ -127,7 +127,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 

@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class ValueTypeService : DocServiceBase
     {
-        private IQueryable<DocEntityValueType> _ExecSearch(ValueTypeSearch request)
+        private IQueryable<DocEntityValueType> _ExecSearch(ValueTypeSearch request, DocQuery query)
         {
             request = InitSearch<ValueType, ValueTypeSearch>(request);
             IQueryable<DocEntityValueType> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityValueType>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityValueType>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ValueTypeFullTextSearch(request);
@@ -143,7 +143,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 

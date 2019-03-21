@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class InterventionService : DocServiceBase
     {
-        private IQueryable<DocEntityIntervention> _ExecSearch(InterventionSearch request)
+        private IQueryable<DocEntityIntervention> _ExecSearch(InterventionSearch request, DocQuery query)
         {
             request = InitSearch<Intervention, InterventionSearch>(request);
             IQueryable<DocEntityIntervention> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityIntervention>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityIntervention>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new InterventionFullTextSearch(request);
@@ -119,7 +119,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -255,14 +255,16 @@ namespace Services.API
 
             Intervention ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Intervention")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Intervention")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -316,12 +318,14 @@ namespace Services.API
         public Intervention Post(InterventionCopy request)
         {
             Intervention ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityIntervention.GetIntervention(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityIntervention.GetIntervention(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pDocumentSets = entity.DocumentSets.ToList();
                     var pName = entity.Name;
@@ -330,24 +334,25 @@ namespace Services.API
                     var pURI = entity.URI;
                     if(!DocTools.IsNullOrEmpty(pURI))
                         pURI += " (Copy)";
-                #region Custom Before copyIntervention
-                #endregion Custom Before copyIntervention
-                var copy = new DocEntityIntervention(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyIntervention
+					#endregion Custom Before copyIntervention
+					var copy = new DocEntityIntervention(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Name = pName
                                 , URI = pURI
-                };
+					};
                             foreach(var item in pDocumentSets)
                             {
                                 entity.DocumentSets.Add(item);
                             }
 
-                #region Custom After copyIntervention
-                #endregion Custom After copyIntervention
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyIntervention
+					#endregion Custom After copyIntervention
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -414,10 +419,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             Intervention ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(InterventionBatch request)
@@ -466,71 +474,67 @@ namespace Services.API
 
         public void Delete(Intervention request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.INTERVENTION);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityIntervention.GetIntervention(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.INTERVENTION);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityIntervention.GetIntervention(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Intervention could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Intervention could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(InterventionSearch request)
         {
             var matches = Get(request) as List<Intervention>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(InterventionJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(InterventionJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "documentset":
                         return GetJunctionSearchResult<Intervention, DocEntityIntervention, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(InterventionJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(InterventionJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "documentset":
                         return AddJunction<Intervention, DocEntityIntervention, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(InterventionJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(InterventionJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "documentset":
                         return RemoveJunction<Intervention, DocEntityIntervention, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for intervention/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private Intervention GetIntervention(Intervention request)
         {
             var id = request?.Id;

@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class DateTimeService : DocServiceBase
     {
-        private IQueryable<DocEntityDateTime> _ExecSearch(DateTimeSearch request)
+        private IQueryable<DocEntityDateTime> _ExecSearch(DateTimeSearch request, DocQuery query)
         {
             request = InitSearch<DateTimeDto, DateTimeSearch>(request);
             IQueryable<DocEntityDateTime> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityDateTime>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityDateTime>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DateTimeFullTextSearch(request);
@@ -123,7 +123,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -239,14 +239,16 @@ namespace Services.API
 
             DateTimeDto ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "DateTime")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "DateTime")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -300,33 +302,36 @@ namespace Services.API
         public DateTimeDto Post(DateTimeDtoCopy request)
         {
             DateTimeDto ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityDateTime.GetDateTime(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityDateTime.GetDateTime(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pDateDay = entity.DateDay;
                     var pDateMonth = entity.DateMonth;
                     var pDateTime = entity.DateTime;
                     var pDateYear = entity.DateYear;
-                #region Custom Before copyDateTime
-                #endregion Custom Before copyDateTime
-                var copy = new DocEntityDateTime(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyDateTime
+					#endregion Custom Before copyDateTime
+					var copy = new DocEntityDateTime(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , DateDay = pDateDay
                                 , DateMonth = pDateMonth
                                 , DateTime = pDateTime
                                 , DateYear = pDateYear
-                };
+					};
 
-                #region Custom After copyDateTime
-                #endregion Custom After copyDateTime
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyDateTime
+					#endregion Custom After copyDateTime
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
 
@@ -393,10 +398,13 @@ namespace Services.API
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
             DateTimeDto ret = null;
-            Execute.Run(ssn =>
-            {
-                ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-            });
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+				});
+			}
             return ret;
         }
         public void Delete(DateTimeBatch request)
@@ -445,36 +453,35 @@ namespace Services.API
 
         public void Delete(DateTimeDto request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.DATETIME);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityDateTime.GetDateTime(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.DATETIME);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityDateTime.GetDateTime(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No DateTime could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No DateTime could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(DateTimeSearch request)
         {
             var matches = Get(request) as List<DateTimeDto>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
         private DateTimeDto GetDateTime(DateTimeDto request)
         {

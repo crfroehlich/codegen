@@ -47,13 +47,13 @@ namespace Services.API
 {
     public partial class TagService : DocServiceBase
     {
-        private IQueryable<DocEntityTag> _ExecSearch(TagSearch request)
+        private IQueryable<DocEntityTag> _ExecSearch(TagSearch request, DocQuery query)
         {
             request = InitSearch<Tag, TagSearch>(request);
             IQueryable<DocEntityTag> entities = null;
-            Execute.Run( session => 
-            {
-                entities = Execute.SelectAll<DocEntityTag>();
+			query.Run( session => 
+			{
+				entities = query.SelectAll<DocEntityTag>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TagFullTextSearch(request);
@@ -117,7 +117,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-            });
+			});
             return entities;
         }
 
@@ -241,14 +241,16 @@ namespace Services.API
 
             Tag ret = null;
 
-            Execute.Run(ssn =>
-            {
-                if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Tag")) 
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+			using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Tag")) 
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-            });
-
+					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+				});
+			}
             return ret;
         }
    
@@ -302,34 +304,37 @@ namespace Services.API
         public Tag Post(TagCopy request)
         {
             Tag ret = null;
-            Execute.Run(ssn =>
-            {
-                var entity = DocEntityTag.GetTag(request?.Id);
-                if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					var entity = DocEntityTag.GetTag(request?.Id);
+					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
                     var pWorkflows = entity.Workflows.ToList();
-                #region Custom Before copyTag
-                #endregion Custom Before copyTag
-                var copy = new DocEntityTag(ssn)
-                {
-                    Hash = Guid.NewGuid()
+					#region Custom Before copyTag
+					#endregion Custom Before copyTag
+					var copy = new DocEntityTag(ssn)
+					{
+						Hash = Guid.NewGuid()
                                 , Name = pName
-                };
+					};
                             foreach(var item in pWorkflows)
                             {
                                 entity.Workflows.Add(item);
                             }
 
-                #region Custom After copyTag
-                #endregion Custom After copyTag
-                copy.SaveChanges(DocConstantPermission.ADD);
-                ret = copy.ToDto();
-            });
+					#region Custom After copyTag
+					#endregion Custom After copyTag
+					copy.SaveChanges(DocConstantPermission.ADD);
+					ret = copy.ToDto();
+				});
+			}
             return ret;
         }
         public void Delete(TagBatch request)
@@ -378,71 +383,67 @@ namespace Services.API
 
         public void Delete(Tag request)
         {
-            Execute.Run(ssn =>
-            {
-                if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            using(Execute)
+			{
+				Execute.Run(ssn =>
+				{
+					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                DocCacheClient.RemoveSearch(DocConstantModelName.TAG);
-                DocCacheClient.RemoveById(request.Id);
-                var en = DocEntityTag.GetTag(request?.Id);
+					DocCacheClient.RemoveSearch(DocConstantModelName.TAG);
+					DocCacheClient.RemoveById(request.Id);
+					var en = DocEntityTag.GetTag(request?.Id);
 
-                if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Tag could be found for Id {request?.Id}.");
-                if(en.IsRemoved) return;
+					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Tag could be found for Id {request?.Id}.");
+					if(en.IsRemoved) return;
                 
-                if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-                    throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-                en.Remove();
-            });
+					en.Remove();
+				});
+			}
         }
 
         public void Delete(TagSearch request)
         {
             var matches = Get(request) as List<Tag>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-
-            Execute.Run(ssn =>
-            {
-                matches.ForEach(match =>
-                {
-                    Delete(match);
-                });
-            });
+			matches.ForEach(match =>
+			{
+				Delete(match);
+			});
         }
-        public object Get(TagJunction request) =>
-            Execute.Run( s => 
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Get(TagJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "workflow":
                         return GetJunctionSearchResult<Tag, DocEntityTag, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
-                }
-            });
-        public object Post(TagJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
+			}
+		}
+        public object Post(TagJunction request)
+        {
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "workflow":
                         return AddJunction<Tag, DocEntityTag, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
+			}
+		}
 
-        public object Delete(TagJunction request) =>
-            Execute.Run( ssn =>
-            {
-                switch(request.Junction.ToLower().TrimAndPruneSpaces())
-                {
+        public object Delete(TagJunction request)
+        {    
+			switch(request.Junction.ToLower().TrimAndPruneSpaces())
+			{
                     case "workflow":
                         return RemoveJunction<Tag, DocEntityTag, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
-                    default:
-                        throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
-                }
-            });
+				default:
+					throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
+			}
+		}
         private Tag GetTag(Tag request)
         {
             var id = request?.Id;
