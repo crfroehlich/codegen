@@ -231,6 +231,11 @@ namespace Services.API
                     entities = entities.Where(en => en.SearchStrategy.Contains(request.SearchStrategy));
                 if(!DocTools.IsNullOrEmpty(request.SelectionCriteria))
                     entities = entities.Where(en => en.SelectionCriteria.Contains(request.SelectionCriteria));
+                if(true == request.ShowEtw?.Any())
+                {
+                    if(request.ShowEtw.Any(v => v == null)) entities = entities.Where(en => en.ShowEtw.In(request.ShowEtw) || en.ShowEtw == null);
+                    else entities = entities.Where(en => en.ShowEtw.In(request.ShowEtw));
+                }
                 if(true == request.StatsIds?.Any())
                 {
                     entities = entities.Where(en => en.Stats.Any(r => r.Id.In(request.StatsIds)));
@@ -341,6 +346,7 @@ namespace Services.API
             var pSearchStrategy = request.SearchStrategy;
             var pSelectionCriteria = request.SelectionCriteria;
             var pSettings = request.Settings;
+            var pShowEtw = request.ShowEtw;
             var pStats = request.Stats?.ToList();
             var pStudyDesigns = request.StudyDesigns?.ToList();
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.DOCUMENTSETTYPE, request.Type?.Name, request.Type?.Id);
@@ -691,6 +697,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pSettings, nameof(request.Settings)) && !request.VisibleFields.Matches(nameof(request.Settings), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Settings));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pShowEtw, permission, DocConstantModelName.DOCUMENTSET, nameof(request.ShowEtw)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pShowEtw, entity.ShowEtw, nameof(request.ShowEtw)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.ShowEtw)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ShowEtw)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pShowEtw) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.ShowEtw))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ShowEtw)} requires a value.");
+                    entity.ShowEtw = pShowEtw;
+                if(DocPermissionFactory.IsRequested<bool>(request, pShowEtw, nameof(request.ShowEtw)) && !request.VisibleFields.Matches(nameof(request.ShowEtw), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.ShowEtw));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Type)))
@@ -1552,6 +1569,7 @@ namespace Services.API
                     var pSearchStrategy = entity.SearchStrategy;
                     var pSelectionCriteria = entity.SelectionCriteria;
                     var pSettings = entity.Settings;
+                    var pShowEtw = entity.ShowEtw;
                     var pStats = entity.Stats.ToList();
                     var pStudyDesigns = entity.StudyDesigns.ToList();
                     var pType = entity.Type;
@@ -1591,6 +1609,7 @@ namespace Services.API
                                 , SearchStrategy = pSearchStrategy
                                 , SelectionCriteria = pSelectionCriteria
                                 , Settings = pSettings
+                                , ShowEtw = pShowEtw
                                 , Type = pType
 					};
                             foreach(var item in pCharacteristics)

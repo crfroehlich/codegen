@@ -380,6 +380,11 @@ namespace Services.Schema
         public string Settings { get; set; }
 
 
+        [Field(Nullable = false, DefaultValue = false)]
+        [FieldMapping(nameof(ShowEtw))]
+        public bool ShowEtw { get; set; }
+
+
         [Field()]
         [FieldMapping(nameof(Stats))]
         [Association(PairTo = nameof(DocEntityStatsStudySet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
@@ -537,6 +542,11 @@ namespace Services.Schema
                     isValid = false;
                     message += " Name is a required property.";
                 }
+                if(DocTools.IsNullOrEmpty(ShowEtw))
+                {
+                    isValid = false;
+                    message += " ShowEtw is a required property.";
+                }
                 if(null != Type && Type?.Enum?.Name != "DocumentSetType")
                 {
                     isValid = false;
@@ -637,6 +647,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.SearchStrategy, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchStrategy))))
                 .ForMember(dest => dest.SelectionCriteria, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SelectionCriteria))))
                 .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Settings))))
+                .ForMember(dest => dest.ShowEtw, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ShowEtw))))
                 .ForMember(dest => dest.Stats, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Stats))))
                 .ForMember(dest => dest.StatsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.StatsCount))))
                 .ForMember(dest => dest.StudyDesigns, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.StudyDesigns))))
