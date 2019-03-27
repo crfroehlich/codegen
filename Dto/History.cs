@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public HistoryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public HistoryBase(int? pId, Reference pApp, int? pAppId, Reference pDocumentSet, int? pDocumentSetId, Reference pImpersonation, int? pImpersonationId, Reference pPage, int? pPageId, string pURL, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
-		{
+        public HistoryBase(int? pId, Reference pApp, int? pAppId, Reference pDocumentSet, int? pDocumentSetId, Reference pImpersonation, int? pImpersonationId, Reference pPage, int? pPageId, string pURL, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
+        {
             App = pApp;
             AppId = pAppId;
             DocumentSet = pDocumentSet;
@@ -73,7 +73,7 @@ namespace Services.Dto
             UserSessionId = pUserSessionId;
             Workflow = pWorkflow;
             WorkflowId = pWorkflowId;
-		}
+        }
 
         [ApiMember(Name = nameof(App), Description = "App", IsRequired = false)]
         public Reference App { get; set; }
@@ -122,8 +122,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pApp, out int? pAppId, out Reference pDocumentSet, out int? pDocumentSetId, out Reference pImpersonation, out int? pImpersonationId, out Reference pPage, out int? pPageId, out string pURL, out Reference pUser, out int? pUserId, out Reference pUserSession, out int? pUserSessionId, out Reference pWorkflow, out int? pWorkflowId)
-		{
+        public void Deconstruct(out Reference pApp, out int? pAppId, out Reference pDocumentSet, out int? pDocumentSetId, out Reference pImpersonation, out int? pImpersonationId, out Reference pPage, out int? pPageId, out string pURL, out Reference pUser, out int? pUserId, out Reference pUserSession, out int? pUserSessionId, out Reference pWorkflow, out int? pWorkflowId)
+        {
             pApp = App;
             pAppId = AppId;
             pDocumentSet = DocumentSet;
@@ -139,11 +139,11 @@ namespace Services.Dto
             pUserSessionId = UserSessionId;
             pWorkflow = Workflow;
             pWorkflowId = WorkflowId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public HistoryBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, Reference pImpersonation = Impersonation, int? pImpersonationId = ImpersonationId, Reference pPage = Page, int? pPageId = PageId, string pURL = URL, Reference pUser = User, int? pUserId = UserId, Reference pUserSession = UserSession, int? pUserSessionId = UserSessionId, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
-		//	new HistoryBase(pId, pApp, pAppId, pDocumentSet, pDocumentSetId, pImpersonation, pImpersonationId, pPage, pPageId, pURL, pUser, pUserId, pUserSession, pUserSessionId, pWorkflow, pWorkflowId);
+        //Not ready until C# v8.?
+        //public HistoryBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, Reference pImpersonation = Impersonation, int? pImpersonationId = ImpersonationId, Reference pPage = Page, int? pPageId = PageId, string pURL = URL, Reference pUser = User, int? pUserId = UserId, Reference pUserSession = UserSession, int? pUserSessionId = UserSessionId, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
+        //	new HistoryBase(pId, pApp, pAppId, pDocumentSet, pDocumentSetId, pImpersonation, pImpersonationId, pPage, pPageId, pURL, pUser, pUserId, pUserSession, pUserSessionId, pWorkflow, pWorkflowId);
 
     }
 
@@ -159,7 +159,7 @@ namespace Services.Dto
         public History(int? id) : base(DocConvert.ToInt(id)) {}
         public History(int id) : base(id) {}
         public History(int? pId, Reference pApp, int? pAppId, Reference pDocumentSet, int? pDocumentSetId, Reference pImpersonation, int? pImpersonationId, Reference pPage, int? pPageId, string pURL, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId, Reference pWorkflow, int? pWorkflowId) : 
-			base(pId, pApp, pAppId, pDocumentSet, pDocumentSetId, pImpersonation, pImpersonationId, pPage, pPageId, pURL, pUser, pUserId, pUserSession, pUserSessionId, pWorkflow, pWorkflowId) { }
+            base(pId, pApp, pAppId, pDocumentSet, pDocumentSetId, pImpersonation, pImpersonationId, pPage, pPageId, pURL, pUser, pUserId, pUserSession, pUserSessionId, pWorkflow, pWorkflowId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -195,10 +195,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<History>();
+        public object Clone() => this.Copy<History>();
     }
     
-    [Route("/History/{Id}/copy", "POST")]
+    [Route("/history/{Id}/copy", "POST")]
     public partial class HistoryCopy : History {}
     public partial class HistorySearchBase : Search<History>
     {

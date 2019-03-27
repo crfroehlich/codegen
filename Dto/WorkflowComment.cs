@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public WorkflowCommentBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public WorkflowCommentBase(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pParent, int? pParentId, string pText, Reference pUser, int? pUserId, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
-		{
+        public WorkflowCommentBase(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pParent, int? pParentId, string pText, Reference pUser, int? pUserId, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
+        {
             Children = pChildren;
             ChildrenCount = pChildrenCount;
             Parent = pParent;
@@ -67,7 +67,7 @@ namespace Services.Dto
             UserId = pUserId;
             Workflow = pWorkflow;
             WorkflowId = pWorkflowId;
-		}
+        }
 
         [ApiMember(Name = nameof(Children), Description = "WorkflowComment", IsRequired = false)]
         public List<Reference> Children { get; set; }
@@ -97,8 +97,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out List<Reference> pChildren, out int? pChildrenCount, out Reference pParent, out int? pParentId, out string pText, out Reference pUser, out int? pUserId, out Reference pWorkflow, out int? pWorkflowId)
-		{
+        public void Deconstruct(out List<Reference> pChildren, out int? pChildrenCount, out Reference pParent, out int? pParentId, out string pText, out Reference pUser, out int? pUserId, out Reference pWorkflow, out int? pWorkflowId)
+        {
             pChildren = Children;
             pChildrenCount = ChildrenCount;
             pParent = Parent;
@@ -108,11 +108,11 @@ namespace Services.Dto
             pUserId = UserId;
             pWorkflow = Workflow;
             pWorkflowId = WorkflowId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public WorkflowCommentBase With(int? pId = Id, List<Reference> pChildren = Children, int? pChildrenCount = ChildrenCount, Reference pParent = Parent, int? pParentId = ParentId, string pText = Text, Reference pUser = User, int? pUserId = UserId, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
-		//	new WorkflowCommentBase(pId, pChildren, pChildrenCount, pParent, pParentId, pText, pUser, pUserId, pWorkflow, pWorkflowId);
+        //Not ready until C# v8.?
+        //public WorkflowCommentBase With(int? pId = Id, List<Reference> pChildren = Children, int? pChildrenCount = ChildrenCount, Reference pParent = Parent, int? pParentId = ParentId, string pText = Text, Reference pUser = User, int? pUserId = UserId, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
+        //	new WorkflowCommentBase(pId, pChildren, pChildrenCount, pParent, pParentId, pText, pUser, pUserId, pWorkflow, pWorkflowId);
 
     }
 
@@ -128,7 +128,7 @@ namespace Services.Dto
         public WorkflowComment(int? id) : base(DocConvert.ToInt(id)) {}
         public WorkflowComment(int id) : base(id) {}
         public WorkflowComment(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pParent, int? pParentId, string pText, Reference pUser, int? pUserId, Reference pWorkflow, int? pWorkflowId) : 
-			base(pId, pChildren, pChildrenCount, pParent, pParentId, pText, pUser, pUserId, pWorkflow, pWorkflowId) { }
+            base(pId, pChildren, pChildrenCount, pParent, pParentId, pText, pUser, pUserId, pWorkflow, pWorkflowId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -169,10 +169,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<WorkflowComment>();
+        public object Clone() => this.Copy<WorkflowComment>();
     }
     
-    [Route("/WorkflowComment/{Id}/copy", "POST")]
+    [Route("/workflowcomment/{Id}/copy", "POST")]
     public partial class WorkflowCommentCopy : WorkflowComment {}
     public partial class WorkflowCommentSearchBase : Search<WorkflowComment>
     {

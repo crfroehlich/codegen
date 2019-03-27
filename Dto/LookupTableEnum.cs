@@ -56,12 +56,12 @@ namespace Services.Dto
 
         public LookupTableEnumBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public LookupTableEnumBase(int? pId, bool pIsBindable, bool pIsGlobal, string pName) : this(DocConvert.ToInt(pId)) 
-		{
+        public LookupTableEnumBase(int? pId, bool pIsBindable, bool pIsGlobal, string pName) : this(DocConvert.ToInt(pId)) 
+        {
             IsBindable = pIsBindable;
             IsGlobal = pIsGlobal;
             Name = pName;
-		}
+        }
 
         [ApiMember(Name = nameof(IsBindable), Description = "bool", IsRequired = false)]
         public bool IsBindable { get; set; }
@@ -76,16 +76,16 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out bool pIsBindable, out bool pIsGlobal, out string pName)
-		{
+        public void Deconstruct(out bool pIsBindable, out bool pIsGlobal, out string pName)
+        {
             pIsBindable = IsBindable;
             pIsGlobal = IsGlobal;
             pName = Name;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public LookupTableEnumBase With(int? pId = Id, bool pIsBindable = IsBindable, bool pIsGlobal = IsGlobal, string pName = Name) => 
-		//	new LookupTableEnumBase(pId, pIsBindable, pIsGlobal, pName);
+        //Not ready until C# v8.?
+        //public LookupTableEnumBase With(int? pId = Id, bool pIsBindable = IsBindable, bool pIsGlobal = IsGlobal, string pName = Name) => 
+        //	new LookupTableEnumBase(pId, pIsBindable, pIsGlobal, pName);
 
     }
 
@@ -101,7 +101,7 @@ namespace Services.Dto
         public LookupTableEnum(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupTableEnum(int id) : base(id) {}
         public LookupTableEnum(int? pId, bool pIsBindable, bool pIsGlobal, string pName) : 
-			base(pId, pIsBindable, pIsGlobal, pName) { }
+            base(pId, pIsBindable, pIsGlobal, pName) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -135,10 +135,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<LookupTableEnum>();
+        public object Clone() => this.Copy<LookupTableEnum>();
     }
     
-    [Route("/LookupTableEnum/{Id}/copy", "POST")]
+    [Route("/lookuptableenum/{Id}/copy", "POST")]
     public partial class LookupTableEnumCopy : LookupTableEnum {}
     public partial class LookupTableEnumSearchBase : Search<LookupTableEnum>
     {

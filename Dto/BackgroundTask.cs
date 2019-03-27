@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public BackgroundTaskBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public BackgroundTaskBase(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public BackgroundTaskBase(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : this(DocConvert.ToInt(pId)) 
+        {
             App = pApp;
             AppId = pAppId;
             Channel = pChannel;
@@ -77,7 +77,7 @@ namespace Services.Dto
             StartAt = pStartAt;
             TaskHistory = pTaskHistory;
             TaskHistoryCount = pTaskHistoryCount;
-		}
+        }
 
         [ApiMember(Name = nameof(App), Description = "App", IsRequired = true)]
         public Reference App { get; set; }
@@ -146,8 +146,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pApp, out int? pAppId, out Reference pChannel, out int? pChannelId, out string pDescription, out bool pEnabled, out int? pFrequency, out int? pHistoryRetention, out List<Reference> pItems, out int? pItemsCount, out string pLastRunVersion, out bool pLogError, out bool pLogInfo, out string pName, out int? pRowsToProcessPerIteration, out bool pRunNow, out string pStartAt, out List<Reference> pTaskHistory, out int? pTaskHistoryCount)
-		{
+        public void Deconstruct(out Reference pApp, out int? pAppId, out Reference pChannel, out int? pChannelId, out string pDescription, out bool pEnabled, out int? pFrequency, out int? pHistoryRetention, out List<Reference> pItems, out int? pItemsCount, out string pLastRunVersion, out bool pLogError, out bool pLogInfo, out string pName, out int? pRowsToProcessPerIteration, out bool pRunNow, out string pStartAt, out List<Reference> pTaskHistory, out int? pTaskHistoryCount)
+        {
             pApp = App;
             pAppId = AppId;
             pChannel = Channel;
@@ -167,11 +167,11 @@ namespace Services.Dto
             pStartAt = StartAt;
             pTaskHistory = TaskHistory;
             pTaskHistoryCount = TaskHistoryCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public BackgroundTaskBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, Reference pChannel = Channel, int? pChannelId = ChannelId, string pDescription = Description, bool pEnabled = Enabled, int? pFrequency = Frequency, int? pHistoryRetention = HistoryRetention, List<Reference> pItems = Items, int? pItemsCount = ItemsCount, string pLastRunVersion = LastRunVersion, bool pLogError = LogError, bool pLogInfo = LogInfo, string pName = Name, int? pRowsToProcessPerIteration = RowsToProcessPerIteration, bool pRunNow = RunNow, string pStartAt = StartAt, List<Reference> pTaskHistory = TaskHistory, int? pTaskHistoryCount = TaskHistoryCount) => 
-		//	new BackgroundTaskBase(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount);
+        //Not ready until C# v8.?
+        //public BackgroundTaskBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, Reference pChannel = Channel, int? pChannelId = ChannelId, string pDescription = Description, bool pEnabled = Enabled, int? pFrequency = Frequency, int? pHistoryRetention = HistoryRetention, List<Reference> pItems = Items, int? pItemsCount = ItemsCount, string pLastRunVersion = LastRunVersion, bool pLogError = LogError, bool pLogInfo = LogInfo, string pName = Name, int? pRowsToProcessPerIteration = RowsToProcessPerIteration, bool pRunNow = RunNow, string pStartAt = StartAt, List<Reference> pTaskHistory = TaskHistory, int? pTaskHistoryCount = TaskHistoryCount) => 
+        //	new BackgroundTaskBase(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount);
 
     }
 
@@ -186,7 +186,7 @@ namespace Services.Dto
         public BackgroundTask(int? id) : base(DocConvert.ToInt(id)) {}
         public BackgroundTask(int id) : base(id) {}
         public BackgroundTask(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : 
-			base(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount) { }
+            base(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -227,7 +227,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<BackgroundTask>();
+        public object Clone() => this.Copy<BackgroundTask>();
     }
     
     public partial class BackgroundTaskSearchBase : Search<BackgroundTask>

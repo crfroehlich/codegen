@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public RoleBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public RoleBase(int? pId, Reference pAdminTeam, int? pAdminTeamId, List<Reference> pApps, int? pAppsCount, string pDescription, string pFeatures, List<Reference> pFeatureSets, int? pFeatureSetsCount, bool pIsInternal, bool pIsSuperAdmin, string pName, List<Reference> pPages, int? pPagesCount, string pPermissions, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public RoleBase(int? pId, Reference pAdminTeam, int? pAdminTeamId, List<Reference> pApps, int? pAppsCount, string pDescription, string pFeatures, List<Reference> pFeatureSets, int? pFeatureSetsCount, bool pIsInternal, bool pIsSuperAdmin, string pName, List<Reference> pPages, int? pPagesCount, string pPermissions, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+        {
             AdminTeam = pAdminTeam;
             AdminTeamId = pAdminTeamId;
             Apps = pApps;
@@ -74,7 +74,7 @@ namespace Services.Dto
             Permissions = pPermissions;
             Users = pUsers;
             UsersCount = pUsersCount;
-		}
+        }
 
         [ApiMember(Name = nameof(AdminTeam), Description = "Team", IsRequired = false)]
         public Reference AdminTeam { get; set; }
@@ -127,8 +127,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pAdminTeam, out int? pAdminTeamId, out List<Reference> pApps, out int? pAppsCount, out string pDescription, out string pFeatures, out List<Reference> pFeatureSets, out int? pFeatureSetsCount, out bool pIsInternal, out bool pIsSuperAdmin, out string pName, out List<Reference> pPages, out int? pPagesCount, out string pPermissions, out List<Reference> pUsers, out int? pUsersCount)
-		{
+        public void Deconstruct(out Reference pAdminTeam, out int? pAdminTeamId, out List<Reference> pApps, out int? pAppsCount, out string pDescription, out string pFeatures, out List<Reference> pFeatureSets, out int? pFeatureSetsCount, out bool pIsInternal, out bool pIsSuperAdmin, out string pName, out List<Reference> pPages, out int? pPagesCount, out string pPermissions, out List<Reference> pUsers, out int? pUsersCount)
+        {
             pAdminTeam = AdminTeam;
             pAdminTeamId = AdminTeamId;
             pApps = Apps;
@@ -145,11 +145,11 @@ namespace Services.Dto
             pPermissions = Permissions;
             pUsers = Users;
             pUsersCount = UsersCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public RoleBase With(int? pId = Id, Reference pAdminTeam = AdminTeam, int? pAdminTeamId = AdminTeamId, List<Reference> pApps = Apps, int? pAppsCount = AppsCount, string pDescription = Description, string pFeatures = Features, List<Reference> pFeatureSets = FeatureSets, int? pFeatureSetsCount = FeatureSetsCount, bool pIsInternal = IsInternal, bool pIsSuperAdmin = IsSuperAdmin, string pName = Name, List<Reference> pPages = Pages, int? pPagesCount = PagesCount, string pPermissions = Permissions, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
-		//	new RoleBase(pId, pAdminTeam, pAdminTeamId, pApps, pAppsCount, pDescription, pFeatures, pFeatureSets, pFeatureSetsCount, pIsInternal, pIsSuperAdmin, pName, pPages, pPagesCount, pPermissions, pUsers, pUsersCount);
+        //Not ready until C# v8.?
+        //public RoleBase With(int? pId = Id, Reference pAdminTeam = AdminTeam, int? pAdminTeamId = AdminTeamId, List<Reference> pApps = Apps, int? pAppsCount = AppsCount, string pDescription = Description, string pFeatures = Features, List<Reference> pFeatureSets = FeatureSets, int? pFeatureSetsCount = FeatureSetsCount, bool pIsInternal = IsInternal, bool pIsSuperAdmin = IsSuperAdmin, string pName = Name, List<Reference> pPages = Pages, int? pPagesCount = PagesCount, string pPermissions = Permissions, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+        //	new RoleBase(pId, pAdminTeam, pAdminTeamId, pApps, pAppsCount, pDescription, pFeatures, pFeatureSets, pFeatureSetsCount, pIsInternal, pIsSuperAdmin, pName, pPages, pPagesCount, pPermissions, pUsers, pUsersCount);
 
     }
 
@@ -165,7 +165,7 @@ namespace Services.Dto
         public Role(int? id) : base(DocConvert.ToInt(id)) {}
         public Role(int id) : base(id) {}
         public Role(int? pId, Reference pAdminTeam, int? pAdminTeamId, List<Reference> pApps, int? pAppsCount, string pDescription, string pFeatures, List<Reference> pFeatureSets, int? pFeatureSetsCount, bool pIsInternal, bool pIsSuperAdmin, string pName, List<Reference> pPages, int? pPagesCount, string pPermissions, List<Reference> pUsers, int? pUsersCount) : 
-			base(pId, pAdminTeam, pAdminTeamId, pApps, pAppsCount, pDescription, pFeatures, pFeatureSets, pFeatureSetsCount, pIsInternal, pIsSuperAdmin, pName, pPages, pPagesCount, pPermissions, pUsers, pUsersCount) { }
+            base(pId, pAdminTeam, pAdminTeamId, pApps, pAppsCount, pDescription, pFeatures, pFeatureSets, pFeatureSetsCount, pIsInternal, pIsSuperAdmin, pName, pPages, pPagesCount, pPermissions, pUsers, pUsersCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -206,10 +206,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Role>();
+        public object Clone() => this.Copy<Role>();
     }
     
-    [Route("/Role/{Id}/copy", "POST")]
+    [Route("/role/{Id}/copy", "POST")]
     public partial class RoleCopy : Role {}
     public partial class RoleSearchBase : Search<Role>
     {

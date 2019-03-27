@@ -56,14 +56,14 @@ namespace Services.Dto
 
         public FeatureSetBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public FeatureSetBase(int? pId, string pDescription, string pName, string pPermissionTemplate, List<Reference> pRoles, int? pRolesCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public FeatureSetBase(int? pId, string pDescription, string pName, string pPermissionTemplate, List<Reference> pRoles, int? pRolesCount) : this(DocConvert.ToInt(pId)) 
+        {
             Description = pDescription;
             Name = pName;
             PermissionTemplate = pPermissionTemplate;
             Roles = pRoles;
             RolesCount = pRolesCount;
-		}
+        }
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
@@ -83,18 +83,18 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out string pDescription, out string pName, out string pPermissionTemplate, out List<Reference> pRoles, out int? pRolesCount)
-		{
+        public void Deconstruct(out string pDescription, out string pName, out string pPermissionTemplate, out List<Reference> pRoles, out int? pRolesCount)
+        {
             pDescription = Description;
             pName = Name;
             pPermissionTemplate = PermissionTemplate;
             pRoles = Roles;
             pRolesCount = RolesCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public FeatureSetBase With(int? pId = Id, string pDescription = Description, string pName = Name, string pPermissionTemplate = PermissionTemplate, List<Reference> pRoles = Roles, int? pRolesCount = RolesCount) => 
-		//	new FeatureSetBase(pId, pDescription, pName, pPermissionTemplate, pRoles, pRolesCount);
+        //Not ready until C# v8.?
+        //public FeatureSetBase With(int? pId = Id, string pDescription = Description, string pName = Name, string pPermissionTemplate = PermissionTemplate, List<Reference> pRoles = Roles, int? pRolesCount = RolesCount) => 
+        //	new FeatureSetBase(pId, pDescription, pName, pPermissionTemplate, pRoles, pRolesCount);
 
     }
 
@@ -109,7 +109,7 @@ namespace Services.Dto
         public FeatureSet(int? id) : base(DocConvert.ToInt(id)) {}
         public FeatureSet(int id) : base(id) {}
         public FeatureSet(int? pId, string pDescription, string pName, string pPermissionTemplate, List<Reference> pRoles, int? pRolesCount) : 
-			base(pId, pDescription, pName, pPermissionTemplate, pRoles, pRolesCount) { }
+            base(pId, pDescription, pName, pPermissionTemplate, pRoles, pRolesCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -150,7 +150,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<FeatureSet>();
+        public object Clone() => this.Copy<FeatureSet>();
     }
     
     public partial class FeatureSetSearchBase : Search<FeatureSet>

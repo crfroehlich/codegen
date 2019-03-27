@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public UserTypeBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public UserTypeBase(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public UserTypeBase(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+        {
             PayrollStatus = pPayrollStatus;
             PayrollStatusId = pPayrollStatusId;
             PayrollType = pPayrollType;
@@ -66,7 +66,7 @@ namespace Services.Dto
             TypeId = pTypeId;
             Users = pUsers;
             UsersCount = pUsersCount;
-		}
+        }
 
         [ApiMember(Name = nameof(PayrollStatus), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Contract",@"Full-Time",@"Part-Time"})]
@@ -95,8 +95,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pPayrollStatus, out int? pPayrollStatusId, out Reference pPayrollType, out int? pPayrollTypeId, out Reference pType, out int? pTypeId, out List<Reference> pUsers, out int? pUsersCount)
-		{
+        public void Deconstruct(out Reference pPayrollStatus, out int? pPayrollStatusId, out Reference pPayrollType, out int? pPayrollTypeId, out Reference pType, out int? pTypeId, out List<Reference> pUsers, out int? pUsersCount)
+        {
             pPayrollStatus = PayrollStatus;
             pPayrollStatusId = PayrollStatusId;
             pPayrollType = PayrollType;
@@ -105,11 +105,11 @@ namespace Services.Dto
             pTypeId = TypeId;
             pUsers = Users;
             pUsersCount = UsersCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public UserTypeBase With(int? pId = Id, Reference pPayrollStatus = PayrollStatus, int? pPayrollStatusId = PayrollStatusId, Reference pPayrollType = PayrollType, int? pPayrollTypeId = PayrollTypeId, Reference pType = Type, int? pTypeId = TypeId, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
-		//	new UserTypeBase(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount);
+        //Not ready until C# v8.?
+        //public UserTypeBase With(int? pId = Id, Reference pPayrollStatus = PayrollStatus, int? pPayrollStatusId = PayrollStatusId, Reference pPayrollType = PayrollType, int? pPayrollTypeId = PayrollTypeId, Reference pType = Type, int? pTypeId = TypeId, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+        //	new UserTypeBase(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount);
 
     }
 
@@ -125,7 +125,7 @@ namespace Services.Dto
         public UserType(int? id) : base(DocConvert.ToInt(id)) {}
         public UserType(int id) : base(id) {}
         public UserType(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : 
-			base(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount) { }
+            base(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -166,10 +166,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<UserType>();
+        public object Clone() => this.Copy<UserType>();
     }
     
-    [Route("/UserType/{Id}/copy", "POST")]
+    [Route("/usertype/{Id}/copy", "POST")]
     public partial class UserTypeCopy : UserType {}
     public partial class UserTypeSearchBase : Search<UserType>
     {

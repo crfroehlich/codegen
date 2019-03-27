@@ -56,13 +56,13 @@ namespace Services.Dto
 
         public ComparatorBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public ComparatorBase(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : this(DocConvert.ToInt(pId)) 
-		{
+        public ComparatorBase(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : this(DocConvert.ToInt(pId)) 
+        {
             DocumentSets = pDocumentSets;
             DocumentSetsCount = pDocumentSetsCount;
             Name = pName;
             URI = pURI;
-		}
+        }
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
@@ -78,17 +78,17 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
-		{
+        public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
+        {
             pDocumentSets = DocumentSets;
             pDocumentSetsCount = DocumentSetsCount;
             pName = Name;
             pURI = URI;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public ComparatorBase With(int? pId = Id, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, string pURI = URI) => 
-		//	new ComparatorBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
+        //Not ready until C# v8.?
+        //public ComparatorBase With(int? pId = Id, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, string pURI = URI) => 
+        //	new ComparatorBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
 
     }
 
@@ -104,7 +104,7 @@ namespace Services.Dto
         public Comparator(int? id) : base(DocConvert.ToInt(id)) {}
         public Comparator(int id) : base(id) {}
         public Comparator(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : 
-			base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
+            base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -145,10 +145,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Comparator>();
+        public object Clone() => this.Copy<Comparator>();
     }
     
-    [Route("/Comparator/{Id}/copy", "POST")]
+    [Route("/comparator/{Id}/copy", "POST")]
     public partial class ComparatorCopy : Comparator {}
     public partial class ComparatorSearchBase : Search<Comparator>
     {

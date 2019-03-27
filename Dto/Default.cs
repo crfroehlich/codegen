@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public DefaultBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public DefaultBase(int? pId, Reference pDiseaseState, int? pDiseaseStateId, Reference pRole, int? pRoleId, Reference pScope, int? pScopeId, Reference pTherapeuticArea, int? pTherapeuticAreaId) : this(DocConvert.ToInt(pId)) 
-		{
+        public DefaultBase(int? pId, Reference pDiseaseState, int? pDiseaseStateId, Reference pRole, int? pRoleId, Reference pScope, int? pScopeId, Reference pTherapeuticArea, int? pTherapeuticAreaId) : this(DocConvert.ToInt(pId)) 
+        {
             DiseaseState = pDiseaseState;
             DiseaseStateId = pDiseaseStateId;
             Role = pRole;
@@ -66,7 +66,7 @@ namespace Services.Dto
             ScopeId = pScopeId;
             TherapeuticArea = pTherapeuticArea;
             TherapeuticAreaId = pTherapeuticAreaId;
-		}
+        }
 
         [ApiMember(Name = nameof(DiseaseState), Description = "DocumentSet", IsRequired = true)]
         public Reference DiseaseState { get; set; }
@@ -93,8 +93,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pDiseaseState, out int? pDiseaseStateId, out Reference pRole, out int? pRoleId, out Reference pScope, out int? pScopeId, out Reference pTherapeuticArea, out int? pTherapeuticAreaId)
-		{
+        public void Deconstruct(out Reference pDiseaseState, out int? pDiseaseStateId, out Reference pRole, out int? pRoleId, out Reference pScope, out int? pScopeId, out Reference pTherapeuticArea, out int? pTherapeuticAreaId)
+        {
             pDiseaseState = DiseaseState;
             pDiseaseStateId = DiseaseStateId;
             pRole = Role;
@@ -103,11 +103,11 @@ namespace Services.Dto
             pScopeId = ScopeId;
             pTherapeuticArea = TherapeuticArea;
             pTherapeuticAreaId = TherapeuticAreaId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public DefaultBase With(int? pId = Id, Reference pDiseaseState = DiseaseState, int? pDiseaseStateId = DiseaseStateId, Reference pRole = Role, int? pRoleId = RoleId, Reference pScope = Scope, int? pScopeId = ScopeId, Reference pTherapeuticArea = TherapeuticArea, int? pTherapeuticAreaId = TherapeuticAreaId) => 
-		//	new DefaultBase(pId, pDiseaseState, pDiseaseStateId, pRole, pRoleId, pScope, pScopeId, pTherapeuticArea, pTherapeuticAreaId);
+        //Not ready until C# v8.?
+        //public DefaultBase With(int? pId = Id, Reference pDiseaseState = DiseaseState, int? pDiseaseStateId = DiseaseStateId, Reference pRole = Role, int? pRoleId = RoleId, Reference pScope = Scope, int? pScopeId = ScopeId, Reference pTherapeuticArea = TherapeuticArea, int? pTherapeuticAreaId = TherapeuticAreaId) => 
+        //	new DefaultBase(pId, pDiseaseState, pDiseaseStateId, pRole, pRoleId, pScope, pScopeId, pTherapeuticArea, pTherapeuticAreaId);
 
     }
 
@@ -123,7 +123,7 @@ namespace Services.Dto
         public Default(int? id) : base(DocConvert.ToInt(id)) {}
         public Default(int id) : base(id) {}
         public Default(int? pId, Reference pDiseaseState, int? pDiseaseStateId, Reference pRole, int? pRoleId, Reference pScope, int? pScopeId, Reference pTherapeuticArea, int? pTherapeuticAreaId) : 
-			base(pId, pDiseaseState, pDiseaseStateId, pRole, pRoleId, pScope, pScopeId, pTherapeuticArea, pTherapeuticAreaId) { }
+            base(pId, pDiseaseState, pDiseaseStateId, pRole, pRoleId, pScope, pScopeId, pTherapeuticArea, pTherapeuticAreaId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -159,10 +159,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<Default>();
+        public object Clone() => this.Copy<Default>();
     }
     
-    [Route("/Default/{Id}/copy", "POST")]
+    [Route("/default/{Id}/copy", "POST")]
     public partial class DefaultCopy : Default {}
     public partial class DefaultSearchBase : Search<Default>
     {

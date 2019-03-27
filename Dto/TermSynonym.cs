@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public TermSynonymBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public TermSynonymBase(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) : this(DocConvert.ToInt(pId)) 
-		{
+        public TermSynonymBase(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) : this(DocConvert.ToInt(pId)) 
+        {
             Approved = pApproved;
             Bindings = pBindings;
             BindingsCount = pBindingsCount;
@@ -67,7 +67,7 @@ namespace Services.Dto
             Scope = pScope;
             ScopeId = pScopeId;
             Synonym = pSynonym;
-		}
+        }
 
         [ApiMember(Name = nameof(Approved), Description = "bool", IsRequired = false)]
         public bool Approved { get; set; }
@@ -99,8 +99,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out bool pApproved, out List<Reference> pBindings, out int? pBindingsCount, out Reference pMaster, out int? pMasterId, out bool pPreferred, out Reference pScope, out int? pScopeId, out string pSynonym)
-		{
+        public void Deconstruct(out bool pApproved, out List<Reference> pBindings, out int? pBindingsCount, out Reference pMaster, out int? pMasterId, out bool pPreferred, out Reference pScope, out int? pScopeId, out string pSynonym)
+        {
             pApproved = Approved;
             pBindings = Bindings;
             pBindingsCount = BindingsCount;
@@ -110,11 +110,11 @@ namespace Services.Dto
             pScope = Scope;
             pScopeId = ScopeId;
             pSynonym = Synonym;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public TermSynonymBase With(int? pId = Id, bool pApproved = Approved, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, Reference pMaster = Master, int? pMasterId = MasterId, bool pPreferred = Preferred, Reference pScope = Scope, int? pScopeId = ScopeId, string pSynonym = Synonym) => 
-		//	new TermSynonymBase(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym);
+        //Not ready until C# v8.?
+        //public TermSynonymBase With(int? pId = Id, bool pApproved = Approved, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, Reference pMaster = Master, int? pMasterId = MasterId, bool pPreferred = Preferred, Reference pScope = Scope, int? pScopeId = ScopeId, string pSynonym = Synonym) => 
+        //	new TermSynonymBase(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym);
 
     }
 
@@ -130,7 +130,7 @@ namespace Services.Dto
         public TermSynonym(int? id) : base(DocConvert.ToInt(id)) {}
         public TermSynonym(int id) : base(id) {}
         public TermSynonym(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) : 
-			base(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym) { }
+            base(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -171,10 +171,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<TermSynonym>();
+        public object Clone() => this.Copy<TermSynonym>();
     }
     
-    [Route("/TermSynonym/{Id}/copy", "POST")]
+    [Route("/termsynonym/{Id}/copy", "POST")]
     public partial class TermSynonymCopy : TermSynonym {}
     public partial class TermSynonymSearchBase : Search<TermSynonym>
     {

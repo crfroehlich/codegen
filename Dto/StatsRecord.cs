@@ -56,14 +56,14 @@ namespace Services.Dto
 
         public StatsRecordBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public StatsRecordBase(int? pId, Reference pName, int? pNameId, int? pOwnerId, string pOwnerType, decimal pValue) : this(DocConvert.ToInt(pId)) 
-		{
+        public StatsRecordBase(int? pId, Reference pName, int? pNameId, int? pOwnerId, string pOwnerType, decimal pValue) : this(DocConvert.ToInt(pId)) 
+        {
             Name = pName;
             NameId = pNameId;
             OwnerId = pOwnerId;
             OwnerType = pOwnerType;
             Value = pValue;
-		}
+        }
 
         [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Ambispective Observational",@"Bound Characteristic Variables",@"Bound Group Variables",@"Bound Outcome Iterations",@"Bound Outcome Variables",@"Bound Study Level Variables",@"Bound Total Variables",@"Case Control",@"Case Report",@"Case Series",@"Collected Characteristic Variables",@"Collected MainGroups",@"Collected Outcome Variables",@"Comparisons",@"Cross-Sectional",@"Data Points Avg",@"Data Points Max",@"Data Points Total",@"Data Studies",@"Diagnosis",@"Follow-up/Extension",@"FR Studies",@"Harm",@"Interventions",@"Modeling",@"Non-Randomized Controlled Trial",@"Non-Randomized Crossover",@"Non-Randomized Non-Controlled Trial",@"Other",@"Pooled Analysis",@"Posthoc Analysis",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Prospective Observational",@"Randomized Controlled Trial",@"Randomized Crossover",@"Randomized Non-Controlled Trial",@"Retrospective Observational",@"Study Design Overview",@"Sub-Group Analysis",@"SubGroups",@"Therapy",@"Total Characteristic Variables",@"Total Comparative Statements",@"Total Group Variables",@"Total MainGroups",@"Total Outcome Iterations",@"Total Outcome Variables",@"Total Participants",@"Total Studies",@"Total Study Level Variables",@"Total Variables",@"Uncollected Characteristic Variables",@"Uncollected MainGroups",@"Uncollected Outcome Variables"})]
@@ -85,18 +85,18 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pName, out int? pNameId, out int? pOwnerId, out string pOwnerType, out decimal pValue)
-		{
+        public void Deconstruct(out Reference pName, out int? pNameId, out int? pOwnerId, out string pOwnerType, out decimal pValue)
+        {
             pName = Name;
             pNameId = NameId;
             pOwnerId = OwnerId;
             pOwnerType = OwnerType;
             pValue = Value;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public StatsRecordBase With(int? pId = Id, Reference pName = Name, int? pNameId = NameId, int? pOwnerId = OwnerId, string pOwnerType = OwnerType, decimal pValue = Value) => 
-		//	new StatsRecordBase(pId, pName, pNameId, pOwnerId, pOwnerType, pValue);
+        //Not ready until C# v8.?
+        //public StatsRecordBase With(int? pId = Id, Reference pName = Name, int? pNameId = NameId, int? pOwnerId = OwnerId, string pOwnerType = OwnerType, decimal pValue = Value) => 
+        //	new StatsRecordBase(pId, pName, pNameId, pOwnerId, pOwnerType, pValue);
 
     }
 
@@ -111,7 +111,7 @@ namespace Services.Dto
         public StatsRecord(int? id) : base(DocConvert.ToInt(id)) {}
         public StatsRecord(int id) : base(id) {}
         public StatsRecord(int? pId, Reference pName, int? pNameId, int? pOwnerId, string pOwnerType, decimal pValue) : 
-			base(pId, pName, pNameId, pOwnerId, pOwnerType, pValue) { }
+            base(pId, pName, pNameId, pOwnerId, pOwnerType, pValue) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -145,7 +145,7 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<StatsRecord>();
+        public object Clone() => this.Copy<StatsRecord>();
     }
     
     public partial class StatsRecordSearchBase : Search<StatsRecord>

@@ -56,22 +56,22 @@ namespace Services.Dto
 
         public MeanRangesBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public MeanRangesBase(int? pId, bool isDummyParam) : this(DocConvert.ToInt(pId)) 
-		{
+        public MeanRangesBase(int? pId, bool isDummyParam) : this(DocConvert.ToInt(pId)) 
+        {
 
-		}
-
-
+        }
 
 
-		public void Deconstruct(bool isDummyParam)
-		{
 
-		}
 
-		//Not ready until C# v8.?
-		//public MeanRangesBase With(int? pId = Id, ) => 
-		//	new MeanRangesBase(pId, isDummyParam);
+        public void Deconstruct(bool isDummyParam)
+        {
+
+        }
+
+        //Not ready until C# v8.?
+        //public MeanRangesBase With(int? pId = Id, ) => 
+        //	new MeanRangesBase(pId, isDummyParam);
 
     }
 
@@ -85,7 +85,7 @@ namespace Services.Dto
         public MeanRanges(int? id) : base(DocConvert.ToInt(id)) {}
         public MeanRanges(int id) : base(id) {}
         public MeanRanges(int? pId, bool isDummyParam) : 
-			base(pId, isDummyParam) { }
+            base(pId, isDummyParam) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -124,7 +124,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<MeanRanges>();
+        public object Clone() => this.Copy<MeanRanges>();
     }
     
     public partial class MeanRangesSearchBase : Search<MeanRanges>

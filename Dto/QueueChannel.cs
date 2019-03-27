@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public QueueChannelBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public QueueChannelBase(int? pId, bool pAutoDelete, Reference pBackgroundTask, int? pBackgroundTaskId, string pDescription, bool pDurable, bool pEnabled, bool pExclusive, string pName) : this(DocConvert.ToInt(pId)) 
-		{
+        public QueueChannelBase(int? pId, bool pAutoDelete, Reference pBackgroundTask, int? pBackgroundTaskId, string pDescription, bool pDurable, bool pEnabled, bool pExclusive, string pName) : this(DocConvert.ToInt(pId)) 
+        {
             AutoDelete = pAutoDelete;
             BackgroundTask = pBackgroundTask;
             BackgroundTaskId = pBackgroundTaskId;
@@ -66,7 +66,7 @@ namespace Services.Dto
             Enabled = pEnabled;
             Exclusive = pExclusive;
             Name = pName;
-		}
+        }
 
         [ApiMember(Name = nameof(AutoDelete), Description = "bool", IsRequired = false)]
         public bool AutoDelete { get; set; }
@@ -99,8 +99,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out bool pAutoDelete, out Reference pBackgroundTask, out int? pBackgroundTaskId, out string pDescription, out bool pDurable, out bool pEnabled, out bool pExclusive, out string pName)
-		{
+        public void Deconstruct(out bool pAutoDelete, out Reference pBackgroundTask, out int? pBackgroundTaskId, out string pDescription, out bool pDurable, out bool pEnabled, out bool pExclusive, out string pName)
+        {
             pAutoDelete = AutoDelete;
             pBackgroundTask = BackgroundTask;
             pBackgroundTaskId = BackgroundTaskId;
@@ -109,11 +109,11 @@ namespace Services.Dto
             pEnabled = Enabled;
             pExclusive = Exclusive;
             pName = Name;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public QueueChannelBase With(int? pId = Id, bool pAutoDelete = AutoDelete, Reference pBackgroundTask = BackgroundTask, int? pBackgroundTaskId = BackgroundTaskId, string pDescription = Description, bool pDurable = Durable, bool pEnabled = Enabled, bool pExclusive = Exclusive, string pName = Name) => 
-		//	new QueueChannelBase(pId, pAutoDelete, pBackgroundTask, pBackgroundTaskId, pDescription, pDurable, pEnabled, pExclusive, pName);
+        //Not ready until C# v8.?
+        //public QueueChannelBase With(int? pId = Id, bool pAutoDelete = AutoDelete, Reference pBackgroundTask = BackgroundTask, int? pBackgroundTaskId = BackgroundTaskId, string pDescription = Description, bool pDurable = Durable, bool pEnabled = Enabled, bool pExclusive = Exclusive, string pName = Name) => 
+        //	new QueueChannelBase(pId, pAutoDelete, pBackgroundTask, pBackgroundTaskId, pDescription, pDurable, pEnabled, pExclusive, pName);
 
     }
 
@@ -129,7 +129,7 @@ namespace Services.Dto
         public QueueChannel(int? id) : base(DocConvert.ToInt(id)) {}
         public QueueChannel(int id) : base(id) {}
         public QueueChannel(int? pId, bool pAutoDelete, Reference pBackgroundTask, int? pBackgroundTaskId, string pDescription, bool pDurable, bool pEnabled, bool pExclusive, string pName) : 
-			base(pId, pAutoDelete, pBackgroundTask, pBackgroundTaskId, pDescription, pDurable, pEnabled, pExclusive, pName) { }
+            base(pId, pAutoDelete, pBackgroundTask, pBackgroundTaskId, pDescription, pDurable, pEnabled, pExclusive, pName) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -165,10 +165,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<QueueChannel>();
+        public object Clone() => this.Copy<QueueChannel>();
     }
     
-    [Route("/QueueChannel/{Id}/copy", "POST")]
+    [Route("/queuechannel/{Id}/copy", "POST")]
     public partial class QueueChannelCopy : QueueChannel {}
     public partial class QueueChannelSearchBase : Search<QueueChannel>
     {

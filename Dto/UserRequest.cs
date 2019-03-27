@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public UserRequestBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public UserRequestBase(int? pId, Reference pApp, int? pAppId, string pMethod, Reference pPage, int? pPageId, string pPath, string pURL, Reference pUserSession, int? pUserSessionId) : this(DocConvert.ToInt(pId)) 
-		{
+        public UserRequestBase(int? pId, Reference pApp, int? pAppId, string pMethod, Reference pPage, int? pPageId, string pPath, string pURL, Reference pUserSession, int? pUserSessionId) : this(DocConvert.ToInt(pId)) 
+        {
             App = pApp;
             AppId = pAppId;
             Method = pMethod;
@@ -67,7 +67,7 @@ namespace Services.Dto
             URL = pURL;
             UserSession = pUserSession;
             UserSessionId = pUserSessionId;
-		}
+        }
 
         [ApiMember(Name = nameof(App), Description = "App", IsRequired = false)]
         public Reference App { get; set; }
@@ -100,8 +100,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pApp, out int? pAppId, out string pMethod, out Reference pPage, out int? pPageId, out string pPath, out string pURL, out Reference pUserSession, out int? pUserSessionId)
-		{
+        public void Deconstruct(out Reference pApp, out int? pAppId, out string pMethod, out Reference pPage, out int? pPageId, out string pPath, out string pURL, out Reference pUserSession, out int? pUserSessionId)
+        {
             pApp = App;
             pAppId = AppId;
             pMethod = Method;
@@ -111,11 +111,11 @@ namespace Services.Dto
             pURL = URL;
             pUserSession = UserSession;
             pUserSessionId = UserSessionId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public UserRequestBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, string pMethod = Method, Reference pPage = Page, int? pPageId = PageId, string pPath = Path, string pURL = URL, Reference pUserSession = UserSession, int? pUserSessionId = UserSessionId) => 
-		//	new UserRequestBase(pId, pApp, pAppId, pMethod, pPage, pPageId, pPath, pURL, pUserSession, pUserSessionId);
+        //Not ready until C# v8.?
+        //public UserRequestBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, string pMethod = Method, Reference pPage = Page, int? pPageId = PageId, string pPath = Path, string pURL = URL, Reference pUserSession = UserSession, int? pUserSessionId = UserSessionId) => 
+        //	new UserRequestBase(pId, pApp, pAppId, pMethod, pPage, pPageId, pPath, pURL, pUserSession, pUserSessionId);
 
     }
 
@@ -130,7 +130,7 @@ namespace Services.Dto
         public UserRequest(int? id) : base(DocConvert.ToInt(id)) {}
         public UserRequest(int id) : base(id) {}
         public UserRequest(int? pId, Reference pApp, int? pAppId, string pMethod, Reference pPage, int? pPageId, string pPath, string pURL, Reference pUserSession, int? pUserSessionId) : 
-			base(pId, pApp, pAppId, pMethod, pPage, pPageId, pPath, pURL, pUserSession, pUserSessionId) { }
+            base(pId, pApp, pAppId, pMethod, pPage, pPageId, pPath, pURL, pUserSession, pUserSessionId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -166,7 +166,7 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<UserRequest>();
+        public object Clone() => this.Copy<UserRequest>();
     }
     
     public partial class UserRequestSearchBase : Search<UserRequest>

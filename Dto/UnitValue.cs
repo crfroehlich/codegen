@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public UnitValueBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public UnitValueBase(int? pId, Reference pEqualityOperator, int? pEqualityOperatorId, int? pMultiplier, decimal? pNumber, int? pOrder, UnitOfMeasure pUnit, int? pUnitId) : this(DocConvert.ToInt(pId)) 
-		{
+        public UnitValueBase(int? pId, Reference pEqualityOperator, int? pEqualityOperatorId, int? pMultiplier, decimal? pNumber, int? pOrder, UnitOfMeasure pUnit, int? pUnitId) : this(DocConvert.ToInt(pId)) 
+        {
             EqualityOperator = pEqualityOperator;
             EqualityOperatorId = pEqualityOperatorId;
             Multiplier = pMultiplier;
@@ -65,7 +65,7 @@ namespace Services.Dto
             Order = pOrder;
             Unit = pUnit;
             UnitId = pUnitId;
-		}
+        }
 
         [ApiMember(Name = nameof(EqualityOperator), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"~=",@"~>",@"~>=",@"~<",@"~<=",@"=",@">",@">=",@"≥",@"<",@"<=",@"≤",@"!="})]
@@ -93,8 +93,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pEqualityOperator, out int? pEqualityOperatorId, out int? pMultiplier, out decimal? pNumber, out int? pOrder, out UnitOfMeasure pUnit, out int? pUnitId)
-		{
+        public void Deconstruct(out Reference pEqualityOperator, out int? pEqualityOperatorId, out int? pMultiplier, out decimal? pNumber, out int? pOrder, out UnitOfMeasure pUnit, out int? pUnitId)
+        {
             pEqualityOperator = EqualityOperator;
             pEqualityOperatorId = EqualityOperatorId;
             pMultiplier = Multiplier;
@@ -102,11 +102,11 @@ namespace Services.Dto
             pOrder = Order;
             pUnit = Unit;
             pUnitId = UnitId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public UnitValueBase With(int? pId = Id, Reference pEqualityOperator = EqualityOperator, int? pEqualityOperatorId = EqualityOperatorId, int? pMultiplier = Multiplier, decimal? pNumber = Number, int? pOrder = Order, UnitOfMeasure pUnit = Unit, int? pUnitId = UnitId) => 
-		//	new UnitValueBase(pId, pEqualityOperator, pEqualityOperatorId, pMultiplier, pNumber, pOrder, pUnit, pUnitId);
+        //Not ready until C# v8.?
+        //public UnitValueBase With(int? pId = Id, Reference pEqualityOperator = EqualityOperator, int? pEqualityOperatorId = EqualityOperatorId, int? pMultiplier = Multiplier, decimal? pNumber = Number, int? pOrder = Order, UnitOfMeasure pUnit = Unit, int? pUnitId = UnitId) => 
+        //	new UnitValueBase(pId, pEqualityOperator, pEqualityOperatorId, pMultiplier, pNumber, pOrder, pUnit, pUnitId);
 
     }
 
@@ -120,7 +120,7 @@ namespace Services.Dto
         public UnitValue(int? id) : base(DocConvert.ToInt(id)) {}
         public UnitValue(int id) : base(id) {}
         public UnitValue(int? pId, Reference pEqualityOperator, int? pEqualityOperatorId, int? pMultiplier, decimal? pNumber, int? pOrder, UnitOfMeasure pUnit, int? pUnitId) : 
-			base(pId, pEqualityOperator, pEqualityOperatorId, pMultiplier, pNumber, pOrder, pUnit, pUnitId) { }
+            base(pId, pEqualityOperator, pEqualityOperatorId, pMultiplier, pNumber, pOrder, pUnit, pUnitId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -159,7 +159,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<UnitValue>();
+        public object Clone() => this.Copy<UnitValue>();
     }
     
     public partial class UnitValueSearchBase : Search<UnitValue>

@@ -56,13 +56,13 @@ namespace Services.Dto
 
         public ValueTypeBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public ValueTypeBase(int? pId, Reference pFieldType, int? pFieldTypeId, Reference pName, int? pNameId) : this(DocConvert.ToInt(pId)) 
-		{
+        public ValueTypeBase(int? pId, Reference pFieldType, int? pFieldTypeId, Reference pName, int? pNameId) : this(DocConvert.ToInt(pId)) 
+        {
             FieldType = pFieldType;
             FieldTypeId = pFieldTypeId;
             Name = pName;
             NameId = pNameId;
-		}
+        }
 
         [ApiMember(Name = nameof(FieldType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Binary",@"Continuous",@"Count",@"Individual",@"Kaplan-Meier",@"Range",@"Rate",@"Yes/No/Na"})]
@@ -79,17 +79,17 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pFieldType, out int? pFieldTypeId, out Reference pName, out int? pNameId)
-		{
+        public void Deconstruct(out Reference pFieldType, out int? pFieldTypeId, out Reference pName, out int? pNameId)
+        {
             pFieldType = FieldType;
             pFieldTypeId = FieldTypeId;
             pName = Name;
             pNameId = NameId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public ValueTypeBase With(int? pId = Id, Reference pFieldType = FieldType, int? pFieldTypeId = FieldTypeId, Reference pName = Name, int? pNameId = NameId) => 
-		//	new ValueTypeBase(pId, pFieldType, pFieldTypeId, pName, pNameId);
+        //Not ready until C# v8.?
+        //public ValueTypeBase With(int? pId = Id, Reference pFieldType = FieldType, int? pFieldTypeId = FieldTypeId, Reference pName = Name, int? pNameId = NameId) => 
+        //	new ValueTypeBase(pId, pFieldType, pFieldTypeId, pName, pNameId);
 
     }
 
@@ -104,7 +104,7 @@ namespace Services.Dto
         public ValueType(int? id) : base(DocConvert.ToInt(id)) {}
         public ValueType(int id) : base(id) {}
         public ValueType(int? pId, Reference pFieldType, int? pFieldTypeId, Reference pName, int? pNameId) : 
-			base(pId, pFieldType, pFieldTypeId, pName, pNameId) { }
+            base(pId, pFieldType, pFieldTypeId, pName, pNameId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -138,7 +138,7 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<ValueType>();
+        public object Clone() => this.Copy<ValueType>();
     }
     
     public partial class ValueTypeSearchBase : Search<ValueType>

@@ -56,13 +56,13 @@ namespace Services.Dto
 
         public OutcomeBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public OutcomeBase(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : this(DocConvert.ToInt(pId)) 
-		{
+        public OutcomeBase(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : this(DocConvert.ToInt(pId)) 
+        {
             DocumentSets = pDocumentSets;
             DocumentSetsCount = pDocumentSetsCount;
             Name = pName;
             URI = pURI;
-		}
+        }
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
@@ -78,17 +78,17 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
-		{
+        public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
+        {
             pDocumentSets = DocumentSets;
             pDocumentSetsCount = DocumentSetsCount;
             pName = Name;
             pURI = URI;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public OutcomeBase With(int? pId = Id, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, string pURI = URI) => 
-		//	new OutcomeBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
+        //Not ready until C# v8.?
+        //public OutcomeBase With(int? pId = Id, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, string pURI = URI) => 
+        //	new OutcomeBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
 
     }
 
@@ -104,7 +104,7 @@ namespace Services.Dto
         public Outcome(int? id) : base(DocConvert.ToInt(id)) {}
         public Outcome(int id) : base(id) {}
         public Outcome(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : 
-			base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
+            base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -145,10 +145,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Outcome>();
+        public object Clone() => this.Copy<Outcome>();
     }
     
-    [Route("/Outcome/{Id}/copy", "POST")]
+    [Route("/outcome/{Id}/copy", "POST")]
     public partial class OutcomeCopy : Outcome {}
     public partial class OutcomeSearchBase : Search<Outcome>
     {

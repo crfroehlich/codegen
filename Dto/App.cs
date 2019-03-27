@@ -60,8 +60,8 @@ namespace Services.Dto
 
         public AppBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public AppBase(int? pId, string pDescription, string pName, List<Reference> pPages, int? pPagesCount, List<Reference> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public AppBase(int? pId, string pDescription, string pName, List<Reference> pPages, int? pPagesCount, List<Reference> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount) : this(DocConvert.ToInt(pId)) 
+        {
             Description = pDescription;
             Name = pName;
             Pages = pPages;
@@ -70,7 +70,7 @@ namespace Services.Dto
             RolesCount = pRolesCount;
             Scopes = pScopes;
             ScopesCount = pScopesCount;
-		}
+        }
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
@@ -96,8 +96,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out string pDescription, out string pName, out List<Reference> pPages, out int? pPagesCount, out List<Reference> pRoles, out int? pRolesCount, out List<Reference> pScopes, out int? pScopesCount)
-		{
+        public void Deconstruct(out string pDescription, out string pName, out List<Reference> pPages, out int? pPagesCount, out List<Reference> pRoles, out int? pRolesCount, out List<Reference> pScopes, out int? pScopesCount)
+        {
             pDescription = Description;
             pName = Name;
             pPages = Pages;
@@ -106,11 +106,11 @@ namespace Services.Dto
             pRolesCount = RolesCount;
             pScopes = Scopes;
             pScopesCount = ScopesCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public AppBase With(int? pId = Id, string pDescription = Description, string pName = Name, List<Reference> pPages = Pages, int? pPagesCount = PagesCount, List<Reference> pRoles = Roles, int? pRolesCount = RolesCount, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount) => 
-		//	new AppBase(pId, pDescription, pName, pPages, pPagesCount, pRoles, pRolesCount, pScopes, pScopesCount);
+        //Not ready until C# v8.?
+        //public AppBase With(int? pId = Id, string pDescription = Description, string pName = Name, List<Reference> pPages = Pages, int? pPagesCount = PagesCount, List<Reference> pRoles = Roles, int? pRolesCount = RolesCount, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount) => 
+        //	new AppBase(pId, pDescription, pName, pPages, pPagesCount, pRoles, pRolesCount, pScopes, pScopesCount);
 
     }
 
@@ -125,7 +125,7 @@ namespace Services.Dto
         public App(int? id) : base(DocConvert.ToInt(id)) {}
         public App(int id) : base(id) {}
         public App(int? pId, string pDescription, string pName, List<Reference> pPages, int? pPagesCount, List<Reference> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount) : 
-			base(pId, pDescription, pName, pPages, pPagesCount, pRoles, pRolesCount, pScopes, pScopesCount) { }
+            base(pId, pDescription, pName, pPages, pPagesCount, pRoles, pRolesCount, pScopes, pScopesCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -166,7 +166,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<App>();
+        public object Clone() => this.Copy<App>();
     }
     
     public partial class AppSearchBase : Search<App>

@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public UserBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public UserBase(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, Reference pStatus, int? pStatusId, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public UserBase(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, Reference pStatus, int? pStatusId, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+        {
             ClientDepartment = pClientDepartment;
             Division = pDivision;
             DivisionId = pDivisionId;
@@ -104,7 +104,7 @@ namespace Services.Dto
             UserTypeId = pUserTypeId;
             Workflows = pWorkflows;
             WorkflowsCount = pWorkflowsCount;
-		}
+        }
 
         [ApiMember(Name = nameof(ClientDepartment), Description = "string", IsRequired = false)]
         public string ClientDepartment { get; set; }
@@ -251,8 +251,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out string pClientDepartment, out Reference pDivision, out int? pDivisionId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pEmail, out DateTime? pExpireDate, out int? pFailedLoginCount, out string pFirstName, out string pGravatar, out List<Reference> pHistory, out int? pHistoryCount, out List<Reference> pImpersonated, out int? pImpersonatedCount, out List<Reference> pImpersonating, out int? pImpersonatingCount, out bool? pIsSystemUser, out string pJobTitle, out DateTime? pLastLogin, out string pLastName, out string pLegacyUsername, out Reference pLocale, out int? pLocaleId, out int? pLoginCount, out string pName, out List<Role> pRoles, out int? pRolesCount, out List<Reference> pScopes, out int? pScopesCount, out List<Reference> pSessions, out int? pSessionsCount, out JsonObject pSettings, out string pSlack, out DateTime? pStartDate, out Reference pStatus, out int? pStatusId, out List<Reference> pTeams, out int? pTeamsCount, out List<Reference> pTimeCards, out int? pTimeCardsCount, out List<Reference> pUpdates, out int? pUpdatesCount, out Reference pUserType, out int? pUserTypeId, out List<Reference> pWorkflows, out int? pWorkflowsCount)
-		{
+        public void Deconstruct(out string pClientDepartment, out Reference pDivision, out int? pDivisionId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pEmail, out DateTime? pExpireDate, out int? pFailedLoginCount, out string pFirstName, out string pGravatar, out List<Reference> pHistory, out int? pHistoryCount, out List<Reference> pImpersonated, out int? pImpersonatedCount, out List<Reference> pImpersonating, out int? pImpersonatingCount, out bool? pIsSystemUser, out string pJobTitle, out DateTime? pLastLogin, out string pLastName, out string pLegacyUsername, out Reference pLocale, out int? pLocaleId, out int? pLoginCount, out string pName, out List<Role> pRoles, out int? pRolesCount, out List<Reference> pScopes, out int? pScopesCount, out List<Reference> pSessions, out int? pSessionsCount, out JsonObject pSettings, out string pSlack, out DateTime? pStartDate, out Reference pStatus, out int? pStatusId, out List<Reference> pTeams, out int? pTeamsCount, out List<Reference> pTimeCards, out int? pTimeCardsCount, out List<Reference> pUpdates, out int? pUpdatesCount, out Reference pUserType, out int? pUserTypeId, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+        {
             pClientDepartment = ClientDepartment;
             pDivision = Division;
             pDivisionId = DivisionId;
@@ -299,11 +299,11 @@ namespace Services.Dto
             pUserTypeId = UserTypeId;
             pWorkflows = Workflows;
             pWorkflowsCount = WorkflowsCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public UserBase With(int? pId = Id, string pClientDepartment = ClientDepartment, Reference pDivision = Division, int? pDivisionId = DivisionId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pEmail = Email, DateTime? pExpireDate = ExpireDate, int? pFailedLoginCount = FailedLoginCount, string pFirstName = FirstName, string pGravatar = Gravatar, List<Reference> pHistory = History, int? pHistoryCount = HistoryCount, List<Reference> pImpersonated = Impersonated, int? pImpersonatedCount = ImpersonatedCount, List<Reference> pImpersonating = Impersonating, int? pImpersonatingCount = ImpersonatingCount, bool? pIsSystemUser = IsSystemUser, string pJobTitle = JobTitle, DateTime? pLastLogin = LastLogin, string pLastName = LastName, string pLegacyUsername = LegacyUsername, Reference pLocale = Locale, int? pLocaleId = LocaleId, int? pLoginCount = LoginCount, string pName = Name, List<Role> pRoles = Roles, int? pRolesCount = RolesCount, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, List<Reference> pSessions = Sessions, int? pSessionsCount = SessionsCount, JsonObject pSettings = Settings, string pSlack = Slack, DateTime? pStartDate = StartDate, Reference pStatus = Status, int? pStatusId = StatusId, List<Reference> pTeams = Teams, int? pTeamsCount = TeamsCount, List<Reference> pTimeCards = TimeCards, int? pTimeCardsCount = TimeCardsCount, List<Reference> pUpdates = Updates, int? pUpdatesCount = UpdatesCount, Reference pUserType = UserType, int? pUserTypeId = UserTypeId, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
-		//	new UserBase(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pStatusId, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount);
+        //Not ready until C# v8.?
+        //public UserBase With(int? pId = Id, string pClientDepartment = ClientDepartment, Reference pDivision = Division, int? pDivisionId = DivisionId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pEmail = Email, DateTime? pExpireDate = ExpireDate, int? pFailedLoginCount = FailedLoginCount, string pFirstName = FirstName, string pGravatar = Gravatar, List<Reference> pHistory = History, int? pHistoryCount = HistoryCount, List<Reference> pImpersonated = Impersonated, int? pImpersonatedCount = ImpersonatedCount, List<Reference> pImpersonating = Impersonating, int? pImpersonatingCount = ImpersonatingCount, bool? pIsSystemUser = IsSystemUser, string pJobTitle = JobTitle, DateTime? pLastLogin = LastLogin, string pLastName = LastName, string pLegacyUsername = LegacyUsername, Reference pLocale = Locale, int? pLocaleId = LocaleId, int? pLoginCount = LoginCount, string pName = Name, List<Role> pRoles = Roles, int? pRolesCount = RolesCount, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, List<Reference> pSessions = Sessions, int? pSessionsCount = SessionsCount, JsonObject pSettings = Settings, string pSlack = Slack, DateTime? pStartDate = StartDate, Reference pStatus = Status, int? pStatusId = StatusId, List<Reference> pTeams = Teams, int? pTeamsCount = TeamsCount, List<Reference> pTimeCards = TimeCards, int? pTimeCardsCount = TimeCardsCount, List<Reference> pUpdates = Updates, int? pUpdatesCount = UpdatesCount, Reference pUserType = UserType, int? pUserTypeId = UserTypeId, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+        //	new UserBase(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pStatusId, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount);
 
     }
 
@@ -319,7 +319,7 @@ namespace Services.Dto
         public User(int? id) : base(DocConvert.ToInt(id)) {}
         public User(int id) : base(id) {}
         public User(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, Reference pStatus, int? pStatusId, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
-			base(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pStatusId, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount) { }
+            base(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pStatusId, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -360,10 +360,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<User>();
+        public object Clone() => this.Copy<User>();
     }
     
-    [Route("/User/{Id}/copy", "POST")]
+    [Route("/user/{Id}/copy", "POST")]
     public partial class UserCopy : User {}
     public partial class UserSearchBase : Search<User>
     {

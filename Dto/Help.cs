@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public HelpBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public HelpBase(int? pId, string pConfluenceId, string pDescription, string pIcon, int? pOrder, List<Reference> pPages, int? pPagesCount, List<Reference> pScopes, int? pScopesCount, string pTitle, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
-		{
+        public HelpBase(int? pId, string pConfluenceId, string pDescription, string pIcon, int? pOrder, List<Reference> pPages, int? pPagesCount, List<Reference> pScopes, int? pScopesCount, string pTitle, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
+        {
             ConfluenceId = pConfluenceId;
             Description = pDescription;
             Icon = pIcon;
@@ -69,7 +69,7 @@ namespace Services.Dto
             Title = pTitle;
             Type = pType;
             TypeId = pTypeId;
-		}
+        }
 
         [ApiMember(Name = nameof(ConfluenceId), Description = "string", IsRequired = false)]
         public string ConfluenceId { get; set; }
@@ -109,8 +109,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out string pConfluenceId, out string pDescription, out string pIcon, out int? pOrder, out List<Reference> pPages, out int? pPagesCount, out List<Reference> pScopes, out int? pScopesCount, out string pTitle, out Reference pType, out int? pTypeId)
-		{
+        public void Deconstruct(out string pConfluenceId, out string pDescription, out string pIcon, out int? pOrder, out List<Reference> pPages, out int? pPagesCount, out List<Reference> pScopes, out int? pScopesCount, out string pTitle, out Reference pType, out int? pTypeId)
+        {
             pConfluenceId = ConfluenceId;
             pDescription = Description;
             pIcon = Icon;
@@ -122,11 +122,11 @@ namespace Services.Dto
             pTitle = Title;
             pType = Type;
             pTypeId = TypeId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public HelpBase With(int? pId = Id, string pConfluenceId = ConfluenceId, string pDescription = Description, string pIcon = Icon, int? pOrder = Order, List<Reference> pPages = Pages, int? pPagesCount = PagesCount, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, string pTitle = Title, Reference pType = Type, int? pTypeId = TypeId) => 
-		//	new HelpBase(pId, pConfluenceId, pDescription, pIcon, pOrder, pPages, pPagesCount, pScopes, pScopesCount, pTitle, pType, pTypeId);
+        //Not ready until C# v8.?
+        //public HelpBase With(int? pId = Id, string pConfluenceId = ConfluenceId, string pDescription = Description, string pIcon = Icon, int? pOrder = Order, List<Reference> pPages = Pages, int? pPagesCount = PagesCount, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, string pTitle = Title, Reference pType = Type, int? pTypeId = TypeId) => 
+        //	new HelpBase(pId, pConfluenceId, pDescription, pIcon, pOrder, pPages, pPagesCount, pScopes, pScopesCount, pTitle, pType, pTypeId);
 
     }
 
@@ -142,7 +142,7 @@ namespace Services.Dto
         public Help(int? id) : base(DocConvert.ToInt(id)) {}
         public Help(int id) : base(id) {}
         public Help(int? pId, string pConfluenceId, string pDescription, string pIcon, int? pOrder, List<Reference> pPages, int? pPagesCount, List<Reference> pScopes, int? pScopesCount, string pTitle, Reference pType, int? pTypeId) : 
-			base(pId, pConfluenceId, pDescription, pIcon, pOrder, pPages, pPagesCount, pScopes, pScopesCount, pTitle, pType, pTypeId) { }
+            base(pId, pConfluenceId, pDescription, pIcon, pOrder, pPages, pPagesCount, pScopes, pScopesCount, pTitle, pType, pTypeId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -183,10 +183,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Help>();
+        public object Clone() => this.Copy<Help>();
     }
     
-    [Route("/Help/{Id}/copy", "POST")]
+    [Route("/help/{Id}/copy", "POST")]
     public partial class HelpCopy : Help {}
     public partial class HelpSearchBase : Search<Help>
     {

@@ -56,15 +56,15 @@ namespace Services.Dto
 
         public DocumentSetHistoryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public DocumentSetHistoryBase(int? pId, Reference pDocumentSet, int? pDocumentSetId, int? pEvidencePortalID, int? pFqId, int? pStudyCount, int? pStudyCountFQ) : this(DocConvert.ToInt(pId)) 
-		{
+        public DocumentSetHistoryBase(int? pId, Reference pDocumentSet, int? pDocumentSetId, int? pEvidencePortalID, int? pFqId, int? pStudyCount, int? pStudyCountFQ) : this(DocConvert.ToInt(pId)) 
+        {
             DocumentSet = pDocumentSet;
             DocumentSetId = pDocumentSetId;
             EvidencePortalID = pEvidencePortalID;
             FqId = pFqId;
             StudyCount = pStudyCount;
             StudyCountFQ = pStudyCountFQ;
-		}
+        }
 
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = true)]
         public Reference DocumentSet { get; set; }
@@ -89,19 +89,19 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pDocumentSet, out int? pDocumentSetId, out int? pEvidencePortalID, out int? pFqId, out int? pStudyCount, out int? pStudyCountFQ)
-		{
+        public void Deconstruct(out Reference pDocumentSet, out int? pDocumentSetId, out int? pEvidencePortalID, out int? pFqId, out int? pStudyCount, out int? pStudyCountFQ)
+        {
             pDocumentSet = DocumentSet;
             pDocumentSetId = DocumentSetId;
             pEvidencePortalID = EvidencePortalID;
             pFqId = FqId;
             pStudyCount = StudyCount;
             pStudyCountFQ = StudyCountFQ;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public DocumentSetHistoryBase With(int? pId = Id, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, int? pEvidencePortalID = EvidencePortalID, int? pFqId = FqId, int? pStudyCount = StudyCount, int? pStudyCountFQ = StudyCountFQ) => 
-		//	new DocumentSetHistoryBase(pId, pDocumentSet, pDocumentSetId, pEvidencePortalID, pFqId, pStudyCount, pStudyCountFQ);
+        //Not ready until C# v8.?
+        //public DocumentSetHistoryBase With(int? pId = Id, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, int? pEvidencePortalID = EvidencePortalID, int? pFqId = FqId, int? pStudyCount = StudyCount, int? pStudyCountFQ = StudyCountFQ) => 
+        //	new DocumentSetHistoryBase(pId, pDocumentSet, pDocumentSetId, pEvidencePortalID, pFqId, pStudyCount, pStudyCountFQ);
 
     }
 
@@ -116,7 +116,7 @@ namespace Services.Dto
         public DocumentSetHistory(int? id) : base(DocConvert.ToInt(id)) {}
         public DocumentSetHistory(int id) : base(id) {}
         public DocumentSetHistory(int? pId, Reference pDocumentSet, int? pDocumentSetId, int? pEvidencePortalID, int? pFqId, int? pStudyCount, int? pStudyCountFQ) : 
-			base(pId, pDocumentSet, pDocumentSetId, pEvidencePortalID, pFqId, pStudyCount, pStudyCountFQ) { }
+            base(pId, pDocumentSet, pDocumentSetId, pEvidencePortalID, pFqId, pStudyCount, pStudyCountFQ) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -152,7 +152,7 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<DocumentSetHistory>();
+        public object Clone() => this.Copy<DocumentSetHistory>();
     }
     
     public partial class DocumentSetHistorySearchBase : Search<DocumentSetHistory>

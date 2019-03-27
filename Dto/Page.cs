@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public PageBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public PageBase(int? pId, List<Reference> pApps, int? pAppsCount, string pDescription, List<Reference> pGlossary, int? pGlossaryCount, List<Reference> pHelp, int? pHelpCount, string pName, List<Reference> pRoles, int? pRolesCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public PageBase(int? pId, List<Reference> pApps, int? pAppsCount, string pDescription, List<Reference> pGlossary, int? pGlossaryCount, List<Reference> pHelp, int? pHelpCount, string pName, List<Reference> pRoles, int? pRolesCount) : this(DocConvert.ToInt(pId)) 
+        {
             Apps = pApps;
             AppsCount = pAppsCount;
             Description = pDescription;
@@ -68,7 +68,7 @@ namespace Services.Dto
             Name = pName;
             Roles = pRoles;
             RolesCount = pRolesCount;
-		}
+        }
 
         [ApiMember(Name = nameof(Apps), Description = "App", IsRequired = false)]
         public List<Reference> Apps { get; set; }
@@ -99,8 +99,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out List<Reference> pApps, out int? pAppsCount, out string pDescription, out List<Reference> pGlossary, out int? pGlossaryCount, out List<Reference> pHelp, out int? pHelpCount, out string pName, out List<Reference> pRoles, out int? pRolesCount)
-		{
+        public void Deconstruct(out List<Reference> pApps, out int? pAppsCount, out string pDescription, out List<Reference> pGlossary, out int? pGlossaryCount, out List<Reference> pHelp, out int? pHelpCount, out string pName, out List<Reference> pRoles, out int? pRolesCount)
+        {
             pApps = Apps;
             pAppsCount = AppsCount;
             pDescription = Description;
@@ -111,11 +111,11 @@ namespace Services.Dto
             pName = Name;
             pRoles = Roles;
             pRolesCount = RolesCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public PageBase With(int? pId = Id, List<Reference> pApps = Apps, int? pAppsCount = AppsCount, string pDescription = Description, List<Reference> pGlossary = Glossary, int? pGlossaryCount = GlossaryCount, List<Reference> pHelp = Help, int? pHelpCount = HelpCount, string pName = Name, List<Reference> pRoles = Roles, int? pRolesCount = RolesCount) => 
-		//	new PageBase(pId, pApps, pAppsCount, pDescription, pGlossary, pGlossaryCount, pHelp, pHelpCount, pName, pRoles, pRolesCount);
+        //Not ready until C# v8.?
+        //public PageBase With(int? pId = Id, List<Reference> pApps = Apps, int? pAppsCount = AppsCount, string pDescription = Description, List<Reference> pGlossary = Glossary, int? pGlossaryCount = GlossaryCount, List<Reference> pHelp = Help, int? pHelpCount = HelpCount, string pName = Name, List<Reference> pRoles = Roles, int? pRolesCount = RolesCount) => 
+        //	new PageBase(pId, pApps, pAppsCount, pDescription, pGlossary, pGlossaryCount, pHelp, pHelpCount, pName, pRoles, pRolesCount);
 
     }
 
@@ -131,7 +131,7 @@ namespace Services.Dto
         public Page(int? id) : base(DocConvert.ToInt(id)) {}
         public Page(int id) : base(id) {}
         public Page(int? pId, List<Reference> pApps, int? pAppsCount, string pDescription, List<Reference> pGlossary, int? pGlossaryCount, List<Reference> pHelp, int? pHelpCount, string pName, List<Reference> pRoles, int? pRolesCount) : 
-			base(pId, pApps, pAppsCount, pDescription, pGlossary, pGlossaryCount, pHelp, pHelpCount, pName, pRoles, pRolesCount) { }
+            base(pId, pApps, pAppsCount, pDescription, pGlossary, pGlossaryCount, pHelp, pHelpCount, pName, pRoles, pRolesCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -172,10 +172,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Page>();
+        public object Clone() => this.Copy<Page>();
     }
     
-    [Route("/Page/{Id}/copy", "POST")]
+    [Route("/page/{Id}/copy", "POST")]
     public partial class PageCopy : Page {}
     public partial class PageSearchBase : Search<Page>
     {

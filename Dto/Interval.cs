@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public IntervalBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public IntervalBase(int? pId, DateTimeDto pCalendarDateEnd, int? pCalendarDateEndId, DateTimeDto pCalendarDateStart, int? pCalendarDateStartId, string pCalendarType, TimePoint pFollowUp, int? pFollowUpId, TimePoint pTimeOfDay, int? pTimeOfDayId) : this(DocConvert.ToInt(pId)) 
-		{
+        public IntervalBase(int? pId, DateTimeDto pCalendarDateEnd, int? pCalendarDateEndId, DateTimeDto pCalendarDateStart, int? pCalendarDateStartId, string pCalendarType, TimePoint pFollowUp, int? pFollowUpId, TimePoint pTimeOfDay, int? pTimeOfDayId) : this(DocConvert.ToInt(pId)) 
+        {
             CalendarDateEnd = pCalendarDateEnd;
             CalendarDateEndId = pCalendarDateEndId;
             CalendarDateStart = pCalendarDateStart;
@@ -67,7 +67,7 @@ namespace Services.Dto
             FollowUpId = pFollowUpId;
             TimeOfDay = pTimeOfDay;
             TimeOfDayId = pTimeOfDayId;
-		}
+        }
 
         [ApiMember(Name = nameof(CalendarDateEnd), Description = "DateTime", IsRequired = false)]
         public DateTimeDto CalendarDateEnd { get; set; }
@@ -98,8 +98,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out DateTimeDto pCalendarDateEnd, out int? pCalendarDateEndId, out DateTimeDto pCalendarDateStart, out int? pCalendarDateStartId, out string pCalendarType, out TimePoint pFollowUp, out int? pFollowUpId, out TimePoint pTimeOfDay, out int? pTimeOfDayId)
-		{
+        public void Deconstruct(out DateTimeDto pCalendarDateEnd, out int? pCalendarDateEndId, out DateTimeDto pCalendarDateStart, out int? pCalendarDateStartId, out string pCalendarType, out TimePoint pFollowUp, out int? pFollowUpId, out TimePoint pTimeOfDay, out int? pTimeOfDayId)
+        {
             pCalendarDateEnd = CalendarDateEnd;
             pCalendarDateEndId = CalendarDateEndId;
             pCalendarDateStart = CalendarDateStart;
@@ -109,11 +109,11 @@ namespace Services.Dto
             pFollowUpId = FollowUpId;
             pTimeOfDay = TimeOfDay;
             pTimeOfDayId = TimeOfDayId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public IntervalBase With(int? pId = Id, DateTimeDto pCalendarDateEnd = CalendarDateEnd, int? pCalendarDateEndId = CalendarDateEndId, DateTimeDto pCalendarDateStart = CalendarDateStart, int? pCalendarDateStartId = CalendarDateStartId, string pCalendarType = CalendarType, TimePoint pFollowUp = FollowUp, int? pFollowUpId = FollowUpId, TimePoint pTimeOfDay = TimeOfDay, int? pTimeOfDayId = TimeOfDayId) => 
-		//	new IntervalBase(pId, pCalendarDateEnd, pCalendarDateEndId, pCalendarDateStart, pCalendarDateStartId, pCalendarType, pFollowUp, pFollowUpId, pTimeOfDay, pTimeOfDayId);
+        //Not ready until C# v8.?
+        //public IntervalBase With(int? pId = Id, DateTimeDto pCalendarDateEnd = CalendarDateEnd, int? pCalendarDateEndId = CalendarDateEndId, DateTimeDto pCalendarDateStart = CalendarDateStart, int? pCalendarDateStartId = CalendarDateStartId, string pCalendarType = CalendarType, TimePoint pFollowUp = FollowUp, int? pFollowUpId = FollowUpId, TimePoint pTimeOfDay = TimeOfDay, int? pTimeOfDayId = TimeOfDayId) => 
+        //	new IntervalBase(pId, pCalendarDateEnd, pCalendarDateEndId, pCalendarDateStart, pCalendarDateStartId, pCalendarType, pFollowUp, pFollowUpId, pTimeOfDay, pTimeOfDayId);
 
     }
 
@@ -129,7 +129,7 @@ namespace Services.Dto
         public Interval(int? id) : base(DocConvert.ToInt(id)) {}
         public Interval(int id) : base(id) {}
         public Interval(int? pId, DateTimeDto pCalendarDateEnd, int? pCalendarDateEndId, DateTimeDto pCalendarDateStart, int? pCalendarDateStartId, string pCalendarType, TimePoint pFollowUp, int? pFollowUpId, TimePoint pTimeOfDay, int? pTimeOfDayId) : 
-			base(pId, pCalendarDateEnd, pCalendarDateEndId, pCalendarDateStart, pCalendarDateStartId, pCalendarType, pFollowUp, pFollowUpId, pTimeOfDay, pTimeOfDayId) { }
+            base(pId, pCalendarDateEnd, pCalendarDateEndId, pCalendarDateStart, pCalendarDateStartId, pCalendarType, pFollowUp, pFollowUpId, pTimeOfDay, pTimeOfDayId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -163,10 +163,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<Interval>();
+        public object Clone() => this.Copy<Interval>();
     }
     
-    [Route("/Interval/{Id}/copy", "POST")]
+    [Route("/interval/{Id}/copy", "POST")]
     public partial class IntervalCopy : Interval {}
     public partial class IntervalSearchBase : Search<Interval>
     {

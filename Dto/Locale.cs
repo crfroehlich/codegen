@@ -56,12 +56,12 @@ namespace Services.Dto
 
         public LocaleBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public LocaleBase(int? pId, string pCountry, string pLanguage, string pTimeZone) : this(DocConvert.ToInt(pId)) 
-		{
+        public LocaleBase(int? pId, string pCountry, string pLanguage, string pTimeZone) : this(DocConvert.ToInt(pId)) 
+        {
             Country = pCountry;
             Language = pLanguage;
             TimeZone = pTimeZone;
-		}
+        }
 
         [ApiMember(Name = nameof(Country), Description = "string", IsRequired = true)]
         public string Country { get; set; }
@@ -76,16 +76,16 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out string pCountry, out string pLanguage, out string pTimeZone)
-		{
+        public void Deconstruct(out string pCountry, out string pLanguage, out string pTimeZone)
+        {
             pCountry = Country;
             pLanguage = Language;
             pTimeZone = TimeZone;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public LocaleBase With(int? pId = Id, string pCountry = Country, string pLanguage = Language, string pTimeZone = TimeZone) => 
-		//	new LocaleBase(pId, pCountry, pLanguage, pTimeZone);
+        //Not ready until C# v8.?
+        //public LocaleBase With(int? pId = Id, string pCountry = Country, string pLanguage = Language, string pTimeZone = TimeZone) => 
+        //	new LocaleBase(pId, pCountry, pLanguage, pTimeZone);
 
     }
 
@@ -101,7 +101,7 @@ namespace Services.Dto
         public Locale(int? id) : base(DocConvert.ToInt(id)) {}
         public Locale(int id) : base(id) {}
         public Locale(int? pId, string pCountry, string pLanguage, string pTimeZone) : 
-			base(pId, pCountry, pLanguage, pTimeZone) { }
+            base(pId, pCountry, pLanguage, pTimeZone) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -137,10 +137,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<Locale>();
+        public object Clone() => this.Copy<Locale>();
     }
     
-    [Route("/Locale/{Id}/copy", "POST")]
+    [Route("/locale/{Id}/copy", "POST")]
     public partial class LocaleCopy : Locale {}
     public partial class LocaleSearchBase : Search<Locale>
     {

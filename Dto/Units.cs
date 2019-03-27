@@ -56,22 +56,22 @@ namespace Services.Dto
 
         public UnitsBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public UnitsBase(int? pId, bool isDummyParam) : this(DocConvert.ToInt(pId)) 
-		{
+        public UnitsBase(int? pId, bool isDummyParam) : this(DocConvert.ToInt(pId)) 
+        {
 
-		}
-
-
+        }
 
 
-		public void Deconstruct(bool isDummyParam)
-		{
 
-		}
 
-		//Not ready until C# v8.?
-		//public UnitsBase With(int? pId = Id, ) => 
-		//	new UnitsBase(pId, isDummyParam);
+        public void Deconstruct(bool isDummyParam)
+        {
+
+        }
+
+        //Not ready until C# v8.?
+        //public UnitsBase With(int? pId = Id, ) => 
+        //	new UnitsBase(pId, isDummyParam);
 
     }
 
@@ -85,7 +85,7 @@ namespace Services.Dto
         public UnitsDto(int? id) : base(DocConvert.ToInt(id)) {}
         public UnitsDto(int id) : base(id) {}
         public UnitsDto(int? pId, bool isDummyParam) : 
-			base(pId, isDummyParam) { }
+            base(pId, isDummyParam) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -124,7 +124,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<UnitsDto>();
+        public object Clone() => this.Copy<UnitsDto>();
     }
     
     public partial class UnitsSearchBase : Search<UnitsDto>

@@ -56,24 +56,24 @@ namespace Services.Dto
 
         public AttributeIntervalBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public AttributeIntervalBase(int? pId, TypeInterval pInterval) : this(DocConvert.ToInt(pId)) 
-		{
+        public AttributeIntervalBase(int? pId, TypeInterval pInterval) : this(DocConvert.ToInt(pId)) 
+        {
             Interval = pInterval;
-		}
+        }
 
         [ApiMember(Name = nameof(Interval), Description = "Interval", IsRequired = true)]
         public TypeInterval Interval { get; set; }
 
 
 
-		public void Deconstruct(out TypeInterval pInterval)
-		{
+        public void Deconstruct(out TypeInterval pInterval)
+        {
             pInterval = Interval;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public AttributeIntervalBase With(int? pId = Id, TypeInterval pInterval = Interval) => 
-		//	new AttributeIntervalBase(pId, pInterval);
+        //Not ready until C# v8.?
+        //public AttributeIntervalBase With(int? pId = Id, TypeInterval pInterval = Interval) => 
+        //	new AttributeIntervalBase(pId, pInterval);
 
     }
 
@@ -89,7 +89,7 @@ namespace Services.Dto
         public AttributeInterval(int? id) : base(DocConvert.ToInt(id)) {}
         public AttributeInterval(int id) : base(id) {}
         public AttributeInterval(int? pId, TypeInterval pInterval) : 
-			base(pId, pInterval) { }
+            base(pId, pInterval) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -123,10 +123,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<AttributeInterval>();
+        public object Clone() => this.Copy<AttributeInterval>();
     }
     
-    [Route("/AttributeInterval/{Id}/copy", "POST")]
+    [Route("/attributeinterval/{Id}/copy", "POST")]
     public partial class AttributeIntervalCopy : AttributeInterval {}
     public partial class AttributeIntervalSearchBase : Search<AttributeInterval>
     {

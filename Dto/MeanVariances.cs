@@ -56,22 +56,22 @@ namespace Services.Dto
 
         public MeanVariancesBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public MeanVariancesBase(int? pId, bool isDummyParam) : this(DocConvert.ToInt(pId)) 
-		{
+        public MeanVariancesBase(int? pId, bool isDummyParam) : this(DocConvert.ToInt(pId)) 
+        {
 
-		}
-
-
+        }
 
 
-		public void Deconstruct(bool isDummyParam)
-		{
 
-		}
 
-		//Not ready until C# v8.?
-		//public MeanVariancesBase With(int? pId = Id, ) => 
-		//	new MeanVariancesBase(pId, isDummyParam);
+        public void Deconstruct(bool isDummyParam)
+        {
+
+        }
+
+        //Not ready until C# v8.?
+        //public MeanVariancesBase With(int? pId = Id, ) => 
+        //	new MeanVariancesBase(pId, isDummyParam);
 
     }
 
@@ -85,7 +85,7 @@ namespace Services.Dto
         public MeanVariances(int? id) : base(DocConvert.ToInt(id)) {}
         public MeanVariances(int id) : base(id) {}
         public MeanVariances(int? pId, bool isDummyParam) : 
-			base(pId, isDummyParam) { }
+            base(pId, isDummyParam) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -124,7 +124,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<MeanVariances>();
+        public object Clone() => this.Copy<MeanVariances>();
     }
     
     public partial class MeanVariancesSearchBase : Search<MeanVariances>

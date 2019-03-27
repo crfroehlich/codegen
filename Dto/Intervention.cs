@@ -56,13 +56,13 @@ namespace Services.Dto
 
         public InterventionBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public InterventionBase(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : this(DocConvert.ToInt(pId)) 
-		{
+        public InterventionBase(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : this(DocConvert.ToInt(pId)) 
+        {
             DocumentSets = pDocumentSets;
             DocumentSetsCount = pDocumentSetsCount;
             Name = pName;
             URI = pURI;
-		}
+        }
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
@@ -78,17 +78,17 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
-		{
+        public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
+        {
             pDocumentSets = DocumentSets;
             pDocumentSetsCount = DocumentSetsCount;
             pName = Name;
             pURI = URI;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public InterventionBase With(int? pId = Id, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, string pURI = URI) => 
-		//	new InterventionBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
+        //Not ready until C# v8.?
+        //public InterventionBase With(int? pId = Id, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, string pURI = URI) => 
+        //	new InterventionBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
 
     }
 
@@ -104,7 +104,7 @@ namespace Services.Dto
         public Intervention(int? id) : base(DocConvert.ToInt(id)) {}
         public Intervention(int id) : base(id) {}
         public Intervention(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : 
-			base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
+            base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -145,10 +145,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Intervention>();
+        public object Clone() => this.Copy<Intervention>();
     }
     
-    [Route("/Intervention/{Id}/copy", "POST")]
+    [Route("/intervention/{Id}/copy", "POST")]
     public partial class InterventionCopy : Intervention {}
     public partial class InterventionSearchBase : Search<Intervention>
     {

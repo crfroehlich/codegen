@@ -56,15 +56,15 @@ namespace Services.Dto
 
         public TimePointBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public TimePointBase(int? pId, bool pIsAbsolute, TypeMeanBase pMeanValue, TypeUnitValue pSingleValue, TypeUnitRange pTotalValue, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
-		{
+        public TimePointBase(int? pId, bool pIsAbsolute, TypeMeanBase pMeanValue, TypeUnitValue pSingleValue, TypeUnitRange pTotalValue, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
+        {
             IsAbsolute = pIsAbsolute;
             MeanValue = pMeanValue;
             SingleValue = pSingleValue;
             TotalValue = pTotalValue;
             Type = pType;
             TypeId = pTypeId;
-		}
+        }
 
         [ApiMember(Name = nameof(IsAbsolute), Description = "bool", IsRequired = false)]
         public bool IsAbsolute { get; set; }
@@ -90,19 +90,19 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out bool pIsAbsolute, out TypeMeanBase pMeanValue, out TypeUnitValue pSingleValue, out TypeUnitRange pTotalValue, out Reference pType, out int? pTypeId)
-		{
+        public void Deconstruct(out bool pIsAbsolute, out TypeMeanBase pMeanValue, out TypeUnitValue pSingleValue, out TypeUnitRange pTotalValue, out Reference pType, out int? pTypeId)
+        {
             pIsAbsolute = IsAbsolute;
             pMeanValue = MeanValue;
             pSingleValue = SingleValue;
             pTotalValue = TotalValue;
             pType = Type;
             pTypeId = TypeId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public TimePointBase With(int? pId = Id, bool pIsAbsolute = IsAbsolute, TypeMeanBase pMeanValue = MeanValue, TypeUnitValue pSingleValue = SingleValue, TypeUnitRange pTotalValue = TotalValue, Reference pType = Type, int? pTypeId = TypeId) => 
-		//	new TimePointBase(pId, pIsAbsolute, pMeanValue, pSingleValue, pTotalValue, pType, pTypeId);
+        //Not ready until C# v8.?
+        //public TimePointBase With(int? pId = Id, bool pIsAbsolute = IsAbsolute, TypeMeanBase pMeanValue = MeanValue, TypeUnitValue pSingleValue = SingleValue, TypeUnitRange pTotalValue = TotalValue, Reference pType = Type, int? pTypeId = TypeId) => 
+        //	new TimePointBase(pId, pIsAbsolute, pMeanValue, pSingleValue, pTotalValue, pType, pTypeId);
 
     }
 
@@ -117,7 +117,7 @@ namespace Services.Dto
         public TimePoint(int? id) : base(DocConvert.ToInt(id)) {}
         public TimePoint(int id) : base(id) {}
         public TimePoint(int? pId, bool pIsAbsolute, TypeMeanBase pMeanValue, TypeUnitValue pSingleValue, TypeUnitRange pTotalValue, Reference pType, int? pTypeId) : 
-			base(pId, pIsAbsolute, pMeanValue, pSingleValue, pTotalValue, pType, pTypeId) { }
+            base(pId, pIsAbsolute, pMeanValue, pSingleValue, pTotalValue, pType, pTypeId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -151,7 +151,7 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<TimePoint>();
+        public object Clone() => this.Copy<TimePoint>();
     }
     
     public partial class TimePointSearchBase : Search<TimePoint>

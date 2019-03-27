@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public JunctionBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public JunctionBase(int? pId, List<Reference> pChildren, int? pChildrenCount, string pData, int? pOwnerId, string pOwnerType, Reference pParent, int? pParentId, int? pTargetId, string pTargetType, Reference pType, int? pTypeId, Reference pUser, int? pUserId) : this(DocConvert.ToInt(pId)) 
-		{
+        public JunctionBase(int? pId, List<Reference> pChildren, int? pChildrenCount, string pData, int? pOwnerId, string pOwnerType, Reference pParent, int? pParentId, int? pTargetId, string pTargetType, Reference pType, int? pTypeId, Reference pUser, int? pUserId) : this(DocConvert.ToInt(pId)) 
+        {
             Children = pChildren;
             ChildrenCount = pChildrenCount;
             Data = pData;
@@ -71,7 +71,7 @@ namespace Services.Dto
             TypeId = pTypeId;
             User = pUser;
             UserId = pUserId;
-		}
+        }
 
         [ApiMember(Name = nameof(Children), Description = "Junction", IsRequired = false)]
         public List<Reference> Children { get; set; }
@@ -118,8 +118,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out List<Reference> pChildren, out int? pChildrenCount, out string pData, out int? pOwnerId, out string pOwnerType, out Reference pParent, out int? pParentId, out int? pTargetId, out string pTargetType, out Reference pType, out int? pTypeId, out Reference pUser, out int? pUserId)
-		{
+        public void Deconstruct(out List<Reference> pChildren, out int? pChildrenCount, out string pData, out int? pOwnerId, out string pOwnerType, out Reference pParent, out int? pParentId, out int? pTargetId, out string pTargetType, out Reference pType, out int? pTypeId, out Reference pUser, out int? pUserId)
+        {
             pChildren = Children;
             pChildrenCount = ChildrenCount;
             pData = Data;
@@ -133,11 +133,11 @@ namespace Services.Dto
             pTypeId = TypeId;
             pUser = User;
             pUserId = UserId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public JunctionBase With(int? pId = Id, List<Reference> pChildren = Children, int? pChildrenCount = ChildrenCount, string pData = Data, int? pOwnerId = OwnerId, string pOwnerType = OwnerType, Reference pParent = Parent, int? pParentId = ParentId, int? pTargetId = TargetId, string pTargetType = TargetType, Reference pType = Type, int? pTypeId = TypeId, Reference pUser = User, int? pUserId = UserId) => 
-		//	new JunctionBase(pId, pChildren, pChildrenCount, pData, pOwnerId, pOwnerType, pParent, pParentId, pTargetId, pTargetType, pType, pTypeId, pUser, pUserId);
+        //Not ready until C# v8.?
+        //public JunctionBase With(int? pId = Id, List<Reference> pChildren = Children, int? pChildrenCount = ChildrenCount, string pData = Data, int? pOwnerId = OwnerId, string pOwnerType = OwnerType, Reference pParent = Parent, int? pParentId = ParentId, int? pTargetId = TargetId, string pTargetType = TargetType, Reference pType = Type, int? pTypeId = TypeId, Reference pUser = User, int? pUserId = UserId) => 
+        //	new JunctionBase(pId, pChildren, pChildrenCount, pData, pOwnerId, pOwnerType, pParent, pParentId, pTargetId, pTargetType, pType, pTypeId, pUser, pUserId);
 
     }
 
@@ -153,7 +153,7 @@ namespace Services.Dto
         public Junction(int? id) : base(DocConvert.ToInt(id)) {}
         public Junction(int id) : base(id) {}
         public Junction(int? pId, List<Reference> pChildren, int? pChildrenCount, string pData, int? pOwnerId, string pOwnerType, Reference pParent, int? pParentId, int? pTargetId, string pTargetType, Reference pType, int? pTypeId, Reference pUser, int? pUserId) : 
-			base(pId, pChildren, pChildrenCount, pData, pOwnerId, pOwnerType, pParent, pParentId, pTargetId, pTargetType, pType, pTypeId, pUser, pUserId) { }
+            base(pId, pChildren, pChildrenCount, pData, pOwnerId, pOwnerType, pParent, pParentId, pTargetId, pTargetType, pType, pTypeId, pUser, pUserId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -194,10 +194,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Junction>();
+        public object Clone() => this.Copy<Junction>();
     }
     
-    [Route("/Junction/{Id}/copy", "POST")]
+    [Route("/junction/{Id}/copy", "POST")]
     public partial class JunctionCopy : Junction {}
     public partial class JunctionSearchBase : Search<Junction>
     {

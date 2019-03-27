@@ -56,11 +56,11 @@ namespace Services.Dto
 
         public StudyDesignBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public StudyDesignBase(int? pId, Reference pDesign, int? pDesignId) : this(DocConvert.ToInt(pId)) 
-		{
+        public StudyDesignBase(int? pId, Reference pDesign, int? pDesignId) : this(DocConvert.ToInt(pId)) 
+        {
             Design = pDesign;
             DesignId = pDesignId;
-		}
+        }
 
         [ApiMember(Name = nameof(Design), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Before and After Trial",@"Case Control",@"Case Report",@"Case Series",@"Cluster RCT",@"Cohort Study",@"Controlled Before and After Trial",@"Cross Sectional Study",@"Expanded Access Program",@"Follow-up/Extension",@"Literature Review",@"Non-Comparative, Other",@"Non-Controlled Clinical Trial",@"Non-Randomized Controlled Trial",@"Non-Randomized Crossover",@"Observational Non-Comparative Study",@"Pooled Analysis",@"Posthoc Analysis",@"Prospective Cohort Study",@"Qualitative Research",@"Randomized Controlled Trial",@"Randomized Crossover",@"Randomized Non-Controlled Trial",@"Retrospective Cohort Study",@"Sub-Group Analysis"})]
@@ -70,15 +70,15 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pDesign, out int? pDesignId)
-		{
+        public void Deconstruct(out Reference pDesign, out int? pDesignId)
+        {
             pDesign = Design;
             pDesignId = DesignId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public StudyDesignBase With(int? pId = Id, Reference pDesign = Design, int? pDesignId = DesignId) => 
-		//	new StudyDesignBase(pId, pDesign, pDesignId);
+        //Not ready until C# v8.?
+        //public StudyDesignBase With(int? pId = Id, Reference pDesign = Design, int? pDesignId = DesignId) => 
+        //	new StudyDesignBase(pId, pDesign, pDesignId);
 
     }
 
@@ -92,7 +92,7 @@ namespace Services.Dto
         public StudyDesign(int? id) : base(DocConvert.ToInt(id)) {}
         public StudyDesign(int id) : base(id) {}
         public StudyDesign(int? pId, Reference pDesign, int? pDesignId) : 
-			base(pId, pDesign, pDesignId) { }
+            base(pId, pDesign, pDesignId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -126,7 +126,7 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<StudyDesign>();
+        public object Clone() => this.Copy<StudyDesign>();
     }
     
     public partial class StudyDesignSearchBase : Search<StudyDesign>

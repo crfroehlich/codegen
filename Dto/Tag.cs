@@ -56,12 +56,12 @@ namespace Services.Dto
 
         public TagBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public TagBase(int? pId, string pName, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public TagBase(int? pId, string pName, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+        {
             Name = pName;
             Workflows = pWorkflows;
             WorkflowsCount = pWorkflowsCount;
-		}
+        }
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
@@ -73,16 +73,16 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out string pName, out List<Reference> pWorkflows, out int? pWorkflowsCount)
-		{
+        public void Deconstruct(out string pName, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+        {
             pName = Name;
             pWorkflows = Workflows;
             pWorkflowsCount = WorkflowsCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public TagBase With(int? pId = Id, string pName = Name, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
-		//	new TagBase(pId, pName, pWorkflows, pWorkflowsCount);
+        //Not ready until C# v8.?
+        //public TagBase With(int? pId = Id, string pName = Name, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+        //	new TagBase(pId, pName, pWorkflows, pWorkflowsCount);
 
     }
 
@@ -98,7 +98,7 @@ namespace Services.Dto
         public Tag(int? id) : base(DocConvert.ToInt(id)) {}
         public Tag(int id) : base(id) {}
         public Tag(int? pId, string pName, List<Reference> pWorkflows, int? pWorkflowsCount) : 
-			base(pId, pName, pWorkflows, pWorkflowsCount) { }
+            base(pId, pName, pWorkflows, pWorkflowsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -139,10 +139,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Tag>();
+        public object Clone() => this.Copy<Tag>();
     }
     
-    [Route("/Tag/{Id}/copy", "POST")]
+    [Route("/tag/{Id}/copy", "POST")]
     public partial class TagCopy : Tag {}
     public partial class TagSearchBase : Search<Tag>
     {

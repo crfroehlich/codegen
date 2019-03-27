@@ -56,13 +56,13 @@ namespace Services.Dto
 
         public CharacteristicBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public CharacteristicBase(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : this(DocConvert.ToInt(pId)) 
-		{
+        public CharacteristicBase(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : this(DocConvert.ToInt(pId)) 
+        {
             DocumentSets = pDocumentSets;
             DocumentSetsCount = pDocumentSetsCount;
             Name = pName;
             URI = pURI;
-		}
+        }
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
@@ -78,17 +78,17 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
-		{
+        public void Deconstruct(out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pName, out string pURI)
+        {
             pDocumentSets = DocumentSets;
             pDocumentSetsCount = DocumentSetsCount;
             pName = Name;
             pURI = URI;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public CharacteristicBase With(int? pId = Id, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, string pURI = URI) => 
-		//	new CharacteristicBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
+        //Not ready until C# v8.?
+        //public CharacteristicBase With(int? pId = Id, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pName = Name, string pURI = URI) => 
+        //	new CharacteristicBase(pId, pDocumentSets, pDocumentSetsCount, pName, pURI);
 
     }
 
@@ -104,7 +104,7 @@ namespace Services.Dto
         public Characteristic(int? id) : base(DocConvert.ToInt(id)) {}
         public Characteristic(int id) : base(id) {}
         public Characteristic(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : 
-			base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
+            base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -145,10 +145,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Characteristic>();
+        public object Clone() => this.Copy<Characteristic>();
     }
     
-    [Route("/Characteristic/{Id}/copy", "POST")]
+    [Route("/characteristic/{Id}/copy", "POST")]
     public partial class CharacteristicCopy : Characteristic {}
     public partial class CharacteristicSearchBase : Search<Characteristic>
     {

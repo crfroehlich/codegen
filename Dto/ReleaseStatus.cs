@@ -56,14 +56,14 @@ namespace Services.Dto
 
         public ReleaseStatusBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public ReleaseStatusBase(int? pId, string pBranch, string pRelease, string pServer, string pURL, string pVersion) : this(DocConvert.ToInt(pId)) 
-		{
+        public ReleaseStatusBase(int? pId, string pBranch, string pRelease, string pServer, string pURL, string pVersion) : this(DocConvert.ToInt(pId)) 
+        {
             Branch = pBranch;
             Release = pRelease;
             Server = pServer;
             URL = pURL;
             Version = pVersion;
-		}
+        }
 
         [ApiMember(Name = nameof(Branch), Description = "string", IsRequired = true)]
         public string Branch { get; set; }
@@ -86,18 +86,18 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out string pBranch, out string pRelease, out string pServer, out string pURL, out string pVersion)
-		{
+        public void Deconstruct(out string pBranch, out string pRelease, out string pServer, out string pURL, out string pVersion)
+        {
             pBranch = Branch;
             pRelease = Release;
             pServer = Server;
             pURL = URL;
             pVersion = Version;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public ReleaseStatusBase With(int? pId = Id, string pBranch = Branch, string pRelease = Release, string pServer = Server, string pURL = URL, string pVersion = Version) => 
-		//	new ReleaseStatusBase(pId, pBranch, pRelease, pServer, pURL, pVersion);
+        //Not ready until C# v8.?
+        //public ReleaseStatusBase With(int? pId = Id, string pBranch = Branch, string pRelease = Release, string pServer = Server, string pURL = URL, string pVersion = Version) => 
+        //	new ReleaseStatusBase(pId, pBranch, pRelease, pServer, pURL, pVersion);
 
     }
 
@@ -113,7 +113,7 @@ namespace Services.Dto
         public ReleaseStatus(int? id) : base(DocConvert.ToInt(id)) {}
         public ReleaseStatus(int id) : base(id) {}
         public ReleaseStatus(int? pId, string pBranch, string pRelease, string pServer, string pURL, string pVersion) : 
-			base(pId, pBranch, pRelease, pServer, pURL, pVersion) { }
+            base(pId, pBranch, pRelease, pServer, pURL, pVersion) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -149,10 +149,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<ReleaseStatus>();
+        public object Clone() => this.Copy<ReleaseStatus>();
     }
     
-    [Route("/ReleaseStatus/{Id}/copy", "POST")]
+    [Route("/releasestatus/{Id}/copy", "POST")]
     public partial class ReleaseStatusCopy : ReleaseStatus {}
     public partial class ReleaseStatusSearchBase : Search<ReleaseStatus>
     {

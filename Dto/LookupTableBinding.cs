@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public LookupTableBindingBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public LookupTableBindingBase(int? pId, Bindings pBinding, string pBoundName, Reference pLookupTable, int? pLookupTableId, Reference pScope, int? pScopeId, List<Reference> pSynonyms, int? pSynonymsCount, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public LookupTableBindingBase(int? pId, Bindings pBinding, string pBoundName, Reference pLookupTable, int? pLookupTableId, Reference pScope, int? pScopeId, List<Reference> pSynonyms, int? pSynonymsCount, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+        {
             Binding = pBinding;
             BoundName = pBoundName;
             LookupTable = pLookupTable;
@@ -68,7 +68,7 @@ namespace Services.Dto
             SynonymsCount = pSynonymsCount;
             Workflows = pWorkflows;
             WorkflowsCount = pWorkflowsCount;
-		}
+        }
 
         [ApiMember(Name = nameof(Binding), Description = "Bindings", IsRequired = false)]
         public Bindings Binding { get; set; }
@@ -101,8 +101,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Bindings pBinding, out string pBoundName, out Reference pLookupTable, out int? pLookupTableId, out Reference pScope, out int? pScopeId, out List<Reference> pSynonyms, out int? pSynonymsCount, out List<Reference> pWorkflows, out int? pWorkflowsCount)
-		{
+        public void Deconstruct(out Bindings pBinding, out string pBoundName, out Reference pLookupTable, out int? pLookupTableId, out Reference pScope, out int? pScopeId, out List<Reference> pSynonyms, out int? pSynonymsCount, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+        {
             pBinding = Binding;
             pBoundName = BoundName;
             pLookupTable = LookupTable;
@@ -113,11 +113,11 @@ namespace Services.Dto
             pSynonymsCount = SynonymsCount;
             pWorkflows = Workflows;
             pWorkflowsCount = WorkflowsCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public LookupTableBindingBase With(int? pId = Id, Bindings pBinding = Binding, string pBoundName = BoundName, Reference pLookupTable = LookupTable, int? pLookupTableId = LookupTableId, Reference pScope = Scope, int? pScopeId = ScopeId, List<Reference> pSynonyms = Synonyms, int? pSynonymsCount = SynonymsCount, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
-		//	new LookupTableBindingBase(pId, pBinding, pBoundName, pLookupTable, pLookupTableId, pScope, pScopeId, pSynonyms, pSynonymsCount, pWorkflows, pWorkflowsCount);
+        //Not ready until C# v8.?
+        //public LookupTableBindingBase With(int? pId = Id, Bindings pBinding = Binding, string pBoundName = BoundName, Reference pLookupTable = LookupTable, int? pLookupTableId = LookupTableId, Reference pScope = Scope, int? pScopeId = ScopeId, List<Reference> pSynonyms = Synonyms, int? pSynonymsCount = SynonymsCount, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+        //	new LookupTableBindingBase(pId, pBinding, pBoundName, pLookupTable, pLookupTableId, pScope, pScopeId, pSynonyms, pSynonymsCount, pWorkflows, pWorkflowsCount);
 
     }
 
@@ -133,7 +133,7 @@ namespace Services.Dto
         public LookupTableBinding(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupTableBinding(int id) : base(id) {}
         public LookupTableBinding(int? pId, Bindings pBinding, string pBoundName, Reference pLookupTable, int? pLookupTableId, Reference pScope, int? pScopeId, List<Reference> pSynonyms, int? pSynonymsCount, List<Reference> pWorkflows, int? pWorkflowsCount) : 
-			base(pId, pBinding, pBoundName, pLookupTable, pLookupTableId, pScope, pScopeId, pSynonyms, pSynonymsCount, pWorkflows, pWorkflowsCount) { }
+            base(pId, pBinding, pBoundName, pLookupTable, pLookupTableId, pScope, pScopeId, pSynonyms, pSynonymsCount, pWorkflows, pWorkflowsCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -174,10 +174,10 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<LookupTableBinding>();
+        public object Clone() => this.Copy<LookupTableBinding>();
     }
     
-    [Route("/LookupTableBinding/{Id}/copy", "POST")]
+    [Route("/lookuptablebinding/{Id}/copy", "POST")]
     public partial class LookupTableBindingCopy : LookupTableBinding {}
     public partial class LookupTableBindingSearchBase : Search<LookupTableBinding>
     {

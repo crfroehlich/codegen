@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public UserSessionBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public UserSessionBase(int? pId, string pClientId, int? pHits, List<Reference> pImpersonations, int? pImpersonationsCount, string pIpAddress, List<Reference> pRequests, int? pRequestsCount, string pSessionId, string pTemporarySessionId, Reference pUser, int? pUserId, List<Reference> pUserHistory, int? pUserHistoryCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public UserSessionBase(int? pId, string pClientId, int? pHits, List<Reference> pImpersonations, int? pImpersonationsCount, string pIpAddress, List<Reference> pRequests, int? pRequestsCount, string pSessionId, string pTemporarySessionId, Reference pUser, int? pUserId, List<Reference> pUserHistory, int? pUserHistoryCount) : this(DocConvert.ToInt(pId)) 
+        {
             ClientId = pClientId;
             Hits = pHits;
             Impersonations = pImpersonations;
@@ -71,7 +71,7 @@ namespace Services.Dto
             UserId = pUserId;
             UserHistory = pUserHistory;
             UserHistoryCount = pUserHistoryCount;
-		}
+        }
 
         [ApiMember(Name = nameof(ClientId), Description = "string", IsRequired = false)]
         public string ClientId { get; set; }
@@ -115,8 +115,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out string pClientId, out int? pHits, out List<Reference> pImpersonations, out int? pImpersonationsCount, out string pIpAddress, out List<Reference> pRequests, out int? pRequestsCount, out string pSessionId, out string pTemporarySessionId, out Reference pUser, out int? pUserId, out List<Reference> pUserHistory, out int? pUserHistoryCount)
-		{
+        public void Deconstruct(out string pClientId, out int? pHits, out List<Reference> pImpersonations, out int? pImpersonationsCount, out string pIpAddress, out List<Reference> pRequests, out int? pRequestsCount, out string pSessionId, out string pTemporarySessionId, out Reference pUser, out int? pUserId, out List<Reference> pUserHistory, out int? pUserHistoryCount)
+        {
             pClientId = ClientId;
             pHits = Hits;
             pImpersonations = Impersonations;
@@ -130,11 +130,11 @@ namespace Services.Dto
             pUserId = UserId;
             pUserHistory = UserHistory;
             pUserHistoryCount = UserHistoryCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public UserSessionBase With(int? pId = Id, string pClientId = ClientId, int? pHits = Hits, List<Reference> pImpersonations = Impersonations, int? pImpersonationsCount = ImpersonationsCount, string pIpAddress = IpAddress, List<Reference> pRequests = Requests, int? pRequestsCount = RequestsCount, string pSessionId = SessionId, string pTemporarySessionId = TemporarySessionId, Reference pUser = User, int? pUserId = UserId, List<Reference> pUserHistory = UserHistory, int? pUserHistoryCount = UserHistoryCount) => 
-		//	new UserSessionBase(pId, pClientId, pHits, pImpersonations, pImpersonationsCount, pIpAddress, pRequests, pRequestsCount, pSessionId, pTemporarySessionId, pUser, pUserId, pUserHistory, pUserHistoryCount);
+        //Not ready until C# v8.?
+        //public UserSessionBase With(int? pId = Id, string pClientId = ClientId, int? pHits = Hits, List<Reference> pImpersonations = Impersonations, int? pImpersonationsCount = ImpersonationsCount, string pIpAddress = IpAddress, List<Reference> pRequests = Requests, int? pRequestsCount = RequestsCount, string pSessionId = SessionId, string pTemporarySessionId = TemporarySessionId, Reference pUser = User, int? pUserId = UserId, List<Reference> pUserHistory = UserHistory, int? pUserHistoryCount = UserHistoryCount) => 
+        //	new UserSessionBase(pId, pClientId, pHits, pImpersonations, pImpersonationsCount, pIpAddress, pRequests, pRequestsCount, pSessionId, pTemporarySessionId, pUser, pUserId, pUserHistory, pUserHistoryCount);
 
     }
 
@@ -149,7 +149,7 @@ namespace Services.Dto
         public UserSession(int? id) : base(DocConvert.ToInt(id)) {}
         public UserSession(int id) : base(id) {}
         public UserSession(int? pId, string pClientId, int? pHits, List<Reference> pImpersonations, int? pImpersonationsCount, string pIpAddress, List<Reference> pRequests, int? pRequestsCount, string pSessionId, string pTemporarySessionId, Reference pUser, int? pUserId, List<Reference> pUserHistory, int? pUserHistoryCount) : 
-			base(pId, pClientId, pHits, pImpersonations, pImpersonationsCount, pIpAddress, pRequests, pRequestsCount, pSessionId, pTemporarySessionId, pUser, pUserId, pUserHistory, pUserHistoryCount) { }
+            base(pId, pClientId, pHits, pImpersonations, pImpersonationsCount, pIpAddress, pRequests, pRequestsCount, pSessionId, pTemporarySessionId, pUser, pUserId, pUserHistory, pUserHistoryCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -190,7 +190,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<UserSession>();
+        public object Clone() => this.Copy<UserSession>();
     }
     
     public partial class UserSessionSearchBase : Search<UserSession>

@@ -56,13 +56,13 @@ namespace Services.Dto
 
         public LocaleLookupBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public LocaleLookupBase(int? pId, IpData pData, string pIpAddress, Reference pLocale, int? pLocaleId) : this(DocConvert.ToInt(pId)) 
-		{
+        public LocaleLookupBase(int? pId, IpData pData, string pIpAddress, Reference pLocale, int? pLocaleId) : this(DocConvert.ToInt(pId)) 
+        {
             Data = pData;
             IpAddress = pIpAddress;
             Locale = pLocale;
             LocaleId = pLocaleId;
-		}
+        }
 
         [ApiMember(Name = nameof(Data), Description = "IpData", IsRequired = false)]
         public IpData Data { get; set; }
@@ -79,17 +79,17 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out IpData pData, out string pIpAddress, out Reference pLocale, out int? pLocaleId)
-		{
+        public void Deconstruct(out IpData pData, out string pIpAddress, out Reference pLocale, out int? pLocaleId)
+        {
             pData = Data;
             pIpAddress = IpAddress;
             pLocale = Locale;
             pLocaleId = LocaleId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public LocaleLookupBase With(int? pId = Id, IpData pData = Data, string pIpAddress = IpAddress, Reference pLocale = Locale, int? pLocaleId = LocaleId) => 
-		//	new LocaleLookupBase(pId, pData, pIpAddress, pLocale, pLocaleId);
+        //Not ready until C# v8.?
+        //public LocaleLookupBase With(int? pId = Id, IpData pData = Data, string pIpAddress = IpAddress, Reference pLocale = Locale, int? pLocaleId = LocaleId) => 
+        //	new LocaleLookupBase(pId, pData, pIpAddress, pLocale, pLocaleId);
 
     }
 
@@ -105,7 +105,7 @@ namespace Services.Dto
         public LocaleLookup(int? id) : base(DocConvert.ToInt(id)) {}
         public LocaleLookup(int id) : base(id) {}
         public LocaleLookup(int? pId, IpData pData, string pIpAddress, Reference pLocale, int? pLocaleId) : 
-			base(pId, pData, pIpAddress, pLocale, pLocaleId) { }
+            base(pId, pData, pIpAddress, pLocale, pLocaleId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -141,10 +141,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<LocaleLookup>();
+        public object Clone() => this.Copy<LocaleLookup>();
     }
     
-    [Route("/LocaleLookup/{Id}/copy", "POST")]
+    [Route("/localelookup/{Id}/copy", "POST")]
     public partial class LocaleLookupCopy : LocaleLookup {}
     public partial class LocaleLookupSearchBase : Search<LocaleLookup>
     {

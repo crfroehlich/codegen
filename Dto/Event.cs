@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public EventBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public EventBase(int? pId, Reference pAuditRecord, int? pAuditRecordId, string pDescription, DateTime? pProcessed, string pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public EventBase(int? pId, Reference pAuditRecord, int? pAuditRecordId, string pDescription, DateTime? pProcessed, string pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+        {
             AuditRecord = pAuditRecord;
             AuditRecordId = pAuditRecordId;
             Description = pDescription;
@@ -69,7 +69,7 @@ namespace Services.Dto
             UpdatesCount = pUpdatesCount;
             Users = pUsers;
             UsersCount = pUsersCount;
-		}
+        }
 
         [ApiMember(Name = nameof(AuditRecord), Description = "AuditRecord", IsRequired = true)]
         public Reference AuditRecord { get; set; }
@@ -105,8 +105,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pAuditRecord, out int? pAuditRecordId, out string pDescription, out DateTime? pProcessed, out string pStatus, out List<Reference> pTeams, out int? pTeamsCount, out List<Reference> pUpdates, out int? pUpdatesCount, out List<Reference> pUsers, out int? pUsersCount)
-		{
+        public void Deconstruct(out Reference pAuditRecord, out int? pAuditRecordId, out string pDescription, out DateTime? pProcessed, out string pStatus, out List<Reference> pTeams, out int? pTeamsCount, out List<Reference> pUpdates, out int? pUpdatesCount, out List<Reference> pUsers, out int? pUsersCount)
+        {
             pAuditRecord = AuditRecord;
             pAuditRecordId = AuditRecordId;
             pDescription = Description;
@@ -118,11 +118,11 @@ namespace Services.Dto
             pUpdatesCount = UpdatesCount;
             pUsers = Users;
             pUsersCount = UsersCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public EventBase With(int? pId = Id, Reference pAuditRecord = AuditRecord, int? pAuditRecordId = AuditRecordId, string pDescription = Description, DateTime? pProcessed = Processed, string pStatus = Status, List<Reference> pTeams = Teams, int? pTeamsCount = TeamsCount, List<Reference> pUpdates = Updates, int? pUpdatesCount = UpdatesCount, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
-		//	new EventBase(pId, pAuditRecord, pAuditRecordId, pDescription, pProcessed, pStatus, pTeams, pTeamsCount, pUpdates, pUpdatesCount, pUsers, pUsersCount);
+        //Not ready until C# v8.?
+        //public EventBase With(int? pId = Id, Reference pAuditRecord = AuditRecord, int? pAuditRecordId = AuditRecordId, string pDescription = Description, DateTime? pProcessed = Processed, string pStatus = Status, List<Reference> pTeams = Teams, int? pTeamsCount = TeamsCount, List<Reference> pUpdates = Updates, int? pUpdatesCount = UpdatesCount, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+        //	new EventBase(pId, pAuditRecord, pAuditRecordId, pDescription, pProcessed, pStatus, pTeams, pTeamsCount, pUpdates, pUpdatesCount, pUsers, pUsersCount);
 
     }
 
@@ -137,7 +137,7 @@ namespace Services.Dto
         public Event(int? id) : base(DocConvert.ToInt(id)) {}
         public Event(int id) : base(id) {}
         public Event(int? pId, Reference pAuditRecord, int? pAuditRecordId, string pDescription, DateTime? pProcessed, string pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : 
-			base(pId, pAuditRecord, pAuditRecordId, pDescription, pProcessed, pStatus, pTeams, pTeamsCount, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
+            base(pId, pAuditRecord, pAuditRecordId, pDescription, pProcessed, pStatus, pTeams, pTeamsCount, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -178,7 +178,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<Event>();
+        public object Clone() => this.Copy<Event>();
     }
     
     public partial class EventSearchBase : Search<Event>

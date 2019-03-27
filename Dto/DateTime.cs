@@ -56,13 +56,13 @@ namespace Services.Dto
 
         public DateTimeBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public DateTimeBase(int? pId, int? pDateDay, int? pDateMonth, DateTime? pDateTime, int? pDateYear) : this(DocConvert.ToInt(pId)) 
-		{
+        public DateTimeBase(int? pId, int? pDateDay, int? pDateMonth, DateTime? pDateTime, int? pDateYear) : this(DocConvert.ToInt(pId)) 
+        {
             DateDay = pDateDay;
             DateMonth = pDateMonth;
             DateTime = pDateTime;
             DateYear = pDateYear;
-		}
+        }
 
         [ApiMember(Name = nameof(DateDay), Description = "int?", IsRequired = false)]
         public int? DateDay { get; set; }
@@ -81,17 +81,17 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out int? pDateDay, out int? pDateMonth, out DateTime? pDateTime, out int? pDateYear)
-		{
+        public void Deconstruct(out int? pDateDay, out int? pDateMonth, out DateTime? pDateTime, out int? pDateYear)
+        {
             pDateDay = DateDay;
             pDateMonth = DateMonth;
             pDateTime = DateTime;
             pDateYear = DateYear;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public DateTimeBase With(int? pId = Id, int? pDateDay = DateDay, int? pDateMonth = DateMonth, DateTime? pDateTime = DateTime, int? pDateYear = DateYear) => 
-		//	new DateTimeBase(pId, pDateDay, pDateMonth, pDateTime, pDateYear);
+        //Not ready until C# v8.?
+        //public DateTimeBase With(int? pId = Id, int? pDateDay = DateDay, int? pDateMonth = DateMonth, DateTime? pDateTime = DateTime, int? pDateYear = DateYear) => 
+        //	new DateTimeBase(pId, pDateDay, pDateMonth, pDateTime, pDateYear);
 
     }
 
@@ -107,7 +107,7 @@ namespace Services.Dto
         public DateTimeDto(int? id) : base(DocConvert.ToInt(id)) {}
         public DateTimeDto(int id) : base(id) {}
         public DateTimeDto(int? pId, int? pDateDay, int? pDateMonth, DateTime? pDateTime, int? pDateYear) : 
-			base(pId, pDateDay, pDateMonth, pDateTime, pDateYear) { }
+            base(pId, pDateDay, pDateMonth, pDateTime, pDateYear) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -141,10 +141,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<DateTimeDto>();
+        public object Clone() => this.Copy<DateTimeDto>();
     }
     
-    [Route("/DateTime/{Id}/copy", "POST")]
+    [Route("/datetime/{Id}/copy", "POST")]
     public partial class DateTimeDtoCopy : DateTimeDto {}
     public partial class DateTimeSearchBase : Search<DateTimeDto>
     {

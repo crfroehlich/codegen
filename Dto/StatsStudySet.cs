@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public StatsStudySetBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public StatsStudySetBase(int? pId, int? pBoundTerms, int? pCharacteristics, int? pDataPoints, int? pDesignCount, string pDesignList, Reference pDocumentSet, int? pDocumentSetId, int? pInterventions, int? pOutcomes, int? pOutcomesReported, Reference pStat, int? pStatId, int? pStudies, int? pTypeCount, string pTypeList, int? pUnboundTerms) : this(DocConvert.ToInt(pId)) 
-		{
+        public StatsStudySetBase(int? pId, int? pBoundTerms, int? pCharacteristics, int? pDataPoints, int? pDesignCount, string pDesignList, Reference pDocumentSet, int? pDocumentSetId, int? pInterventions, int? pOutcomes, int? pOutcomesReported, Reference pStat, int? pStatId, int? pStudies, int? pTypeCount, string pTypeList, int? pUnboundTerms) : this(DocConvert.ToInt(pId)) 
+        {
             BoundTerms = pBoundTerms;
             Characteristics = pCharacteristics;
             DataPoints = pDataPoints;
@@ -74,7 +74,7 @@ namespace Services.Dto
             TypeCount = pTypeCount;
             TypeList = pTypeList;
             UnboundTerms = pUnboundTerms;
-		}
+        }
 
         [ApiMember(Name = nameof(BoundTerms), Description = "int?", IsRequired = false)]
         public int? BoundTerms { get; set; }
@@ -137,8 +137,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out int? pBoundTerms, out int? pCharacteristics, out int? pDataPoints, out int? pDesignCount, out string pDesignList, out Reference pDocumentSet, out int? pDocumentSetId, out int? pInterventions, out int? pOutcomes, out int? pOutcomesReported, out Reference pStat, out int? pStatId, out int? pStudies, out int? pTypeCount, out string pTypeList, out int? pUnboundTerms)
-		{
+        public void Deconstruct(out int? pBoundTerms, out int? pCharacteristics, out int? pDataPoints, out int? pDesignCount, out string pDesignList, out Reference pDocumentSet, out int? pDocumentSetId, out int? pInterventions, out int? pOutcomes, out int? pOutcomesReported, out Reference pStat, out int? pStatId, out int? pStudies, out int? pTypeCount, out string pTypeList, out int? pUnboundTerms)
+        {
             pBoundTerms = BoundTerms;
             pCharacteristics = Characteristics;
             pDataPoints = DataPoints;
@@ -155,11 +155,11 @@ namespace Services.Dto
             pTypeCount = TypeCount;
             pTypeList = TypeList;
             pUnboundTerms = UnboundTerms;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public StatsStudySetBase With(int? pId = Id, int? pBoundTerms = BoundTerms, int? pCharacteristics = Characteristics, int? pDataPoints = DataPoints, int? pDesignCount = DesignCount, string pDesignList = DesignList, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, int? pInterventions = Interventions, int? pOutcomes = Outcomes, int? pOutcomesReported = OutcomesReported, Reference pStat = Stat, int? pStatId = StatId, int? pStudies = Studies, int? pTypeCount = TypeCount, string pTypeList = TypeList, int? pUnboundTerms = UnboundTerms) => 
-		//	new StatsStudySetBase(pId, pBoundTerms, pCharacteristics, pDataPoints, pDesignCount, pDesignList, pDocumentSet, pDocumentSetId, pInterventions, pOutcomes, pOutcomesReported, pStat, pStatId, pStudies, pTypeCount, pTypeList, pUnboundTerms);
+        //Not ready until C# v8.?
+        //public StatsStudySetBase With(int? pId = Id, int? pBoundTerms = BoundTerms, int? pCharacteristics = Characteristics, int? pDataPoints = DataPoints, int? pDesignCount = DesignCount, string pDesignList = DesignList, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, int? pInterventions = Interventions, int? pOutcomes = Outcomes, int? pOutcomesReported = OutcomesReported, Reference pStat = Stat, int? pStatId = StatId, int? pStudies = Studies, int? pTypeCount = TypeCount, string pTypeList = TypeList, int? pUnboundTerms = UnboundTerms) => 
+        //	new StatsStudySetBase(pId, pBoundTerms, pCharacteristics, pDataPoints, pDesignCount, pDesignList, pDocumentSet, pDocumentSetId, pInterventions, pOutcomes, pOutcomesReported, pStat, pStatId, pStudies, pTypeCount, pTypeList, pUnboundTerms);
 
     }
 
@@ -174,7 +174,7 @@ namespace Services.Dto
         public StatsStudySet(int? id) : base(DocConvert.ToInt(id)) {}
         public StatsStudySet(int id) : base(id) {}
         public StatsStudySet(int? pId, int? pBoundTerms, int? pCharacteristics, int? pDataPoints, int? pDesignCount, string pDesignList, Reference pDocumentSet, int? pDocumentSetId, int? pInterventions, int? pOutcomes, int? pOutcomesReported, Reference pStat, int? pStatId, int? pStudies, int? pTypeCount, string pTypeList, int? pUnboundTerms) : 
-			base(pId, pBoundTerms, pCharacteristics, pDataPoints, pDesignCount, pDesignList, pDocumentSet, pDocumentSetId, pInterventions, pOutcomes, pOutcomesReported, pStat, pStatId, pStudies, pTypeCount, pTypeList, pUnboundTerms) { }
+            base(pId, pBoundTerms, pCharacteristics, pDataPoints, pDesignCount, pDesignList, pDocumentSet, pDocumentSetId, pInterventions, pOutcomes, pOutcomesReported, pStat, pStatId, pStudies, pTypeCount, pTypeList, pUnboundTerms) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -213,7 +213,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<StatsStudySet>();
+        public object Clone() => this.Copy<StatsStudySet>();
     }
     
     public partial class StatsStudySetSearchBase : Search<StatsStudySet>

@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public BackgroundTaskItemBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public BackgroundTaskItemBase(int? pId, int? pAttempts, Reference pAuditRecord, int? pAuditRecordId, JsonObject pData, string pDescription, DateTime? pEnded, int? pEntityId, string pExecutionTime, DateTime? pStarted, string pStatus, bool pSucceeded, Reference pTask, int? pTaskId, List<Reference> pTaskHistory, int? pTaskHistoryCount) : this(DocConvert.ToInt(pId)) 
-		{
+        public BackgroundTaskItemBase(int? pId, int? pAttempts, Reference pAuditRecord, int? pAuditRecordId, JsonObject pData, string pDescription, DateTime? pEnded, int? pEntityId, string pExecutionTime, DateTime? pStarted, string pStatus, bool pSucceeded, Reference pTask, int? pTaskId, List<Reference> pTaskHistory, int? pTaskHistoryCount) : this(DocConvert.ToInt(pId)) 
+        {
             Attempts = pAttempts;
             AuditRecord = pAuditRecord;
             AuditRecordId = pAuditRecordId;
@@ -73,7 +73,7 @@ namespace Services.Dto
             TaskId = pTaskId;
             TaskHistory = pTaskHistory;
             TaskHistoryCount = pTaskHistoryCount;
-		}
+        }
 
         [ApiMember(Name = nameof(Attempts), Description = "int?", IsRequired = false)]
         public int? Attempts { get; set; }
@@ -129,8 +129,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out int? pAttempts, out Reference pAuditRecord, out int? pAuditRecordId, out JsonObject pData, out string pDescription, out DateTime? pEnded, out int? pEntityId, out string pExecutionTime, out DateTime? pStarted, out string pStatus, out bool pSucceeded, out Reference pTask, out int? pTaskId, out List<Reference> pTaskHistory, out int? pTaskHistoryCount)
-		{
+        public void Deconstruct(out int? pAttempts, out Reference pAuditRecord, out int? pAuditRecordId, out JsonObject pData, out string pDescription, out DateTime? pEnded, out int? pEntityId, out string pExecutionTime, out DateTime? pStarted, out string pStatus, out bool pSucceeded, out Reference pTask, out int? pTaskId, out List<Reference> pTaskHistory, out int? pTaskHistoryCount)
+        {
             pAttempts = Attempts;
             pAuditRecord = AuditRecord;
             pAuditRecordId = AuditRecordId;
@@ -146,11 +146,11 @@ namespace Services.Dto
             pTaskId = TaskId;
             pTaskHistory = TaskHistory;
             pTaskHistoryCount = TaskHistoryCount;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public BackgroundTaskItemBase With(int? pId = Id, int? pAttempts = Attempts, Reference pAuditRecord = AuditRecord, int? pAuditRecordId = AuditRecordId, JsonObject pData = Data, string pDescription = Description, DateTime? pEnded = Ended, int? pEntityId = EntityId, string pExecutionTime = ExecutionTime, DateTime? pStarted = Started, string pStatus = Status, bool pSucceeded = Succeeded, Reference pTask = Task, int? pTaskId = TaskId, List<Reference> pTaskHistory = TaskHistory, int? pTaskHistoryCount = TaskHistoryCount) => 
-		//	new BackgroundTaskItemBase(pId, pAttempts, pAuditRecord, pAuditRecordId, pData, pDescription, pEnded, pEntityId, pExecutionTime, pStarted, pStatus, pSucceeded, pTask, pTaskId, pTaskHistory, pTaskHistoryCount);
+        //Not ready until C# v8.?
+        //public BackgroundTaskItemBase With(int? pId = Id, int? pAttempts = Attempts, Reference pAuditRecord = AuditRecord, int? pAuditRecordId = AuditRecordId, JsonObject pData = Data, string pDescription = Description, DateTime? pEnded = Ended, int? pEntityId = EntityId, string pExecutionTime = ExecutionTime, DateTime? pStarted = Started, string pStatus = Status, bool pSucceeded = Succeeded, Reference pTask = Task, int? pTaskId = TaskId, List<Reference> pTaskHistory = TaskHistory, int? pTaskHistoryCount = TaskHistoryCount) => 
+        //	new BackgroundTaskItemBase(pId, pAttempts, pAuditRecord, pAuditRecordId, pData, pDescription, pEnded, pEntityId, pExecutionTime, pStarted, pStatus, pSucceeded, pTask, pTaskId, pTaskHistory, pTaskHistoryCount);
 
     }
 
@@ -165,7 +165,7 @@ namespace Services.Dto
         public BackgroundTaskItem(int? id) : base(DocConvert.ToInt(id)) {}
         public BackgroundTaskItem(int id) : base(id) {}
         public BackgroundTaskItem(int? pId, int? pAttempts, Reference pAuditRecord, int? pAuditRecordId, JsonObject pData, string pDescription, DateTime? pEnded, int? pEntityId, string pExecutionTime, DateTime? pStarted, string pStatus, bool pSucceeded, Reference pTask, int? pTaskId, List<Reference> pTaskHistory, int? pTaskHistoryCount) : 
-			base(pId, pAttempts, pAuditRecord, pAuditRecordId, pData, pDescription, pEnded, pEntityId, pExecutionTime, pStarted, pStatus, pSucceeded, pTask, pTaskId, pTaskHistory, pTaskHistoryCount) { }
+            base(pId, pAttempts, pAuditRecord, pAuditRecordId, pData, pDescription, pEnded, pEntityId, pExecutionTime, pStarted, pStatus, pSucceeded, pTask, pTaskId, pTaskHistory, pTaskHistoryCount) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -206,7 +206,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<BackgroundTaskItem>();
+        public object Clone() => this.Copy<BackgroundTaskItem>();
     }
     
     public partial class BackgroundTaskItemSearchBase : Search<BackgroundTaskItem>

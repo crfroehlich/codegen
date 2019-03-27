@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public BackgroundTaskHistoryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public BackgroundTaskHistoryBase(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) : this(DocConvert.ToInt(pId)) 
-		{
+        public BackgroundTaskHistoryBase(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) : this(DocConvert.ToInt(pId)) 
+        {
             Completed = pCompleted;
             Data = pData;
             Ended = pEnded;
@@ -70,7 +70,7 @@ namespace Services.Dto
             Summary = pSummary;
             Task = pTask;
             TaskId = pTaskId;
-		}
+        }
 
         [ApiMember(Name = nameof(Completed), Description = "int?", IsRequired = false)]
         public int? Completed { get; set; }
@@ -116,8 +116,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out int? pCompleted, out string pData, out DateTime? pEnded, out string pErrors, out int? pFailed, out List<Reference> pItems, out int? pItemsCount, out string pLogs, out bool? pSucceeded, out string pSummary, out Reference pTask, out int? pTaskId)
-		{
+        public void Deconstruct(out int? pCompleted, out string pData, out DateTime? pEnded, out string pErrors, out int? pFailed, out List<Reference> pItems, out int? pItemsCount, out string pLogs, out bool? pSucceeded, out string pSummary, out Reference pTask, out int? pTaskId)
+        {
             pCompleted = Completed;
             pData = Data;
             pEnded = Ended;
@@ -130,11 +130,11 @@ namespace Services.Dto
             pSummary = Summary;
             pTask = Task;
             pTaskId = TaskId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public BackgroundTaskHistoryBase With(int? pId = Id, int? pCompleted = Completed, string pData = Data, DateTime? pEnded = Ended, string pErrors = Errors, int? pFailed = Failed, List<Reference> pItems = Items, int? pItemsCount = ItemsCount, string pLogs = Logs, bool? pSucceeded = Succeeded, string pSummary = Summary, Reference pTask = Task, int? pTaskId = TaskId) => 
-		//	new BackgroundTaskHistoryBase(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId);
+        //Not ready until C# v8.?
+        //public BackgroundTaskHistoryBase With(int? pId = Id, int? pCompleted = Completed, string pData = Data, DateTime? pEnded = Ended, string pErrors = Errors, int? pFailed = Failed, List<Reference> pItems = Items, int? pItemsCount = ItemsCount, string pLogs = Logs, bool? pSucceeded = Succeeded, string pSummary = Summary, Reference pTask = Task, int? pTaskId = TaskId) => 
+        //	new BackgroundTaskHistoryBase(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId);
 
     }
 
@@ -149,7 +149,7 @@ namespace Services.Dto
         public BackgroundTaskHistory(int? id) : base(DocConvert.ToInt(id)) {}
         public BackgroundTaskHistory(int id) : base(id) {}
         public BackgroundTaskHistory(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) : 
-			base(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId) { }
+            base(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -190,7 +190,7 @@ namespace Services.Dto
         };
         private List<string> collections { get { return _collections; } }
 
-		public object Clone() => this.Copy<BackgroundTaskHistory>();
+        public object Clone() => this.Copy<BackgroundTaskHistory>();
     }
     
     public partial class BackgroundTaskHistorySearchBase : Search<BackgroundTaskHistory>

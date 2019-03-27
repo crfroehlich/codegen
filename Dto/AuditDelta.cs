@@ -56,12 +56,12 @@ namespace Services.Dto
 
         public AuditDeltaBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public AuditDeltaBase(int? pId, Reference pAudit, int? pAuditId, string pDelta) : this(DocConvert.ToInt(pId)) 
-		{
+        public AuditDeltaBase(int? pId, Reference pAudit, int? pAuditId, string pDelta) : this(DocConvert.ToInt(pId)) 
+        {
             Audit = pAudit;
             AuditId = pAuditId;
             Delta = pDelta;
-		}
+        }
 
         [ApiMember(Name = nameof(Audit), Description = "AuditRecord", IsRequired = true)]
         public Reference Audit { get; set; }
@@ -74,16 +74,16 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pAudit, out int? pAuditId, out string pDelta)
-		{
+        public void Deconstruct(out Reference pAudit, out int? pAuditId, out string pDelta)
+        {
             pAudit = Audit;
             pAuditId = AuditId;
             pDelta = Delta;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public AuditDeltaBase With(int? pId = Id, Reference pAudit = Audit, int? pAuditId = AuditId, string pDelta = Delta) => 
-		//	new AuditDeltaBase(pId, pAudit, pAuditId, pDelta);
+        //Not ready until C# v8.?
+        //public AuditDeltaBase With(int? pId = Id, Reference pAudit = Audit, int? pAuditId = AuditId, string pDelta = Delta) => 
+        //	new AuditDeltaBase(pId, pAudit, pAuditId, pDelta);
 
     }
 
@@ -99,7 +99,7 @@ namespace Services.Dto
         public AuditDelta(int? id) : base(DocConvert.ToInt(id)) {}
         public AuditDelta(int id) : base(id) {}
         public AuditDelta(int? pId, Reference pAudit, int? pAuditId, string pDelta) : 
-			base(pId, pAudit, pAuditId, pDelta) { }
+            base(pId, pAudit, pAuditId, pDelta) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -135,10 +135,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<AuditDelta>();
+        public object Clone() => this.Copy<AuditDelta>();
     }
     
-    [Route("/AuditDelta/{Id}/copy", "POST")]
+    [Route("/auditdelta/{Id}/copy", "POST")]
     public partial class AuditDeltaCopy : AuditDelta {}
     public partial class AuditDeltaSearchBase : Search<AuditDelta>
     {

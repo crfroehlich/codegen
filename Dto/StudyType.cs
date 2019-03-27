@@ -56,11 +56,11 @@ namespace Services.Dto
 
         public StudyTypeBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public StudyTypeBase(int? pId, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
-		{
+        public StudyTypeBase(int? pId, Reference pType, int? pTypeId) : this(DocConvert.ToInt(pId)) 
+        {
             Type = pType;
             TypeId = pTypeId;
-		}
+        }
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Causation/Etiology",@"Diagnosis",@"Harm",@"Modeling",@"Other",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Therapy"})]
@@ -70,15 +70,15 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pType, out int? pTypeId)
-		{
+        public void Deconstruct(out Reference pType, out int? pTypeId)
+        {
             pType = Type;
             pTypeId = TypeId;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public StudyTypeBase With(int? pId = Id, Reference pType = Type, int? pTypeId = TypeId) => 
-		//	new StudyTypeBase(pId, pType, pTypeId);
+        //Not ready until C# v8.?
+        //public StudyTypeBase With(int? pId = Id, Reference pType = Type, int? pTypeId = TypeId) => 
+        //	new StudyTypeBase(pId, pType, pTypeId);
 
     }
 
@@ -92,7 +92,7 @@ namespace Services.Dto
         public StudyType(int? id) : base(DocConvert.ToInt(id)) {}
         public StudyType(int id) : base(id) {}
         public StudyType(int? pId, Reference pType, int? pTypeId) : 
-			base(pId, pType, pTypeId) { }
+            base(pId, pType, pTypeId) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -126,7 +126,7 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<StudyType>();
+        public object Clone() => this.Copy<StudyType>();
     }
     
     public partial class StudyTypeSearchBase : Search<StudyType>

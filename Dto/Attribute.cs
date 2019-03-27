@@ -56,8 +56,8 @@ namespace Services.Dto
 
         public AttributeBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-		public AttributeBase(int? pId, Reference pAttributeName, int? pAttributeNameId, Reference pAttributeType, int? pAttributeTypeId, AttributeInterval pInterval, int? pIntervalId, bool pIsCharacteristic, bool pIsOutcome, bool? pIsPositive, string pUniqueKey) : this(DocConvert.ToInt(pId)) 
-		{
+        public AttributeBase(int? pId, Reference pAttributeName, int? pAttributeNameId, Reference pAttributeType, int? pAttributeTypeId, AttributeInterval pInterval, int? pIntervalId, bool pIsCharacteristic, bool pIsOutcome, bool? pIsPositive, string pUniqueKey) : this(DocConvert.ToInt(pId)) 
+        {
             AttributeName = pAttributeName;
             AttributeNameId = pAttributeNameId;
             AttributeType = pAttributeType;
@@ -68,7 +68,7 @@ namespace Services.Dto
             IsOutcome = pIsOutcome;
             IsPositive = pIsPositive;
             UniqueKey = pUniqueKey;
-		}
+        }
 
         [ApiMember(Name = nameof(AttributeName), Description = "LookupTable", IsRequired = true)]
         public Reference AttributeName { get; set; }
@@ -106,8 +106,8 @@ namespace Services.Dto
 
 
 
-		public void Deconstruct(out Reference pAttributeName, out int? pAttributeNameId, out Reference pAttributeType, out int? pAttributeTypeId, out AttributeInterval pInterval, out int? pIntervalId, out bool pIsCharacteristic, out bool pIsOutcome, out bool? pIsPositive, out string pUniqueKey)
-		{
+        public void Deconstruct(out Reference pAttributeName, out int? pAttributeNameId, out Reference pAttributeType, out int? pAttributeTypeId, out AttributeInterval pInterval, out int? pIntervalId, out bool pIsCharacteristic, out bool pIsOutcome, out bool? pIsPositive, out string pUniqueKey)
+        {
             pAttributeName = AttributeName;
             pAttributeNameId = AttributeNameId;
             pAttributeType = AttributeType;
@@ -118,11 +118,11 @@ namespace Services.Dto
             pIsOutcome = IsOutcome;
             pIsPositive = IsPositive;
             pUniqueKey = UniqueKey;
-		}
+        }
 
-		//Not ready until C# v8.?
-		//public AttributeBase With(int? pId = Id, Reference pAttributeName = AttributeName, int? pAttributeNameId = AttributeNameId, Reference pAttributeType = AttributeType, int? pAttributeTypeId = AttributeTypeId, AttributeInterval pInterval = Interval, int? pIntervalId = IntervalId, bool pIsCharacteristic = IsCharacteristic, bool pIsOutcome = IsOutcome, bool? pIsPositive = IsPositive, string pUniqueKey = UniqueKey) => 
-		//	new AttributeBase(pId, pAttributeName, pAttributeNameId, pAttributeType, pAttributeTypeId, pInterval, pIntervalId, pIsCharacteristic, pIsOutcome, pIsPositive, pUniqueKey);
+        //Not ready until C# v8.?
+        //public AttributeBase With(int? pId = Id, Reference pAttributeName = AttributeName, int? pAttributeNameId = AttributeNameId, Reference pAttributeType = AttributeType, int? pAttributeTypeId = AttributeTypeId, AttributeInterval pInterval = Interval, int? pIntervalId = IntervalId, bool pIsCharacteristic = IsCharacteristic, bool pIsOutcome = IsOutcome, bool? pIsPositive = IsPositive, string pUniqueKey = UniqueKey) => 
+        //	new AttributeBase(pId, pAttributeName, pAttributeNameId, pAttributeType, pAttributeTypeId, pInterval, pIntervalId, pIsCharacteristic, pIsOutcome, pIsPositive, pUniqueKey);
 
     }
 
@@ -138,7 +138,7 @@ namespace Services.Dto
         public Attribute(int? id) : base(DocConvert.ToInt(id)) {}
         public Attribute(int id) : base(id) {}
         public Attribute(int? pId, Reference pAttributeName, int? pAttributeNameId, Reference pAttributeType, int? pAttributeTypeId, AttributeInterval pInterval, int? pIntervalId, bool pIsCharacteristic, bool pIsOutcome, bool? pIsPositive, string pUniqueKey) : 
-			base(pId, pAttributeName, pAttributeNameId, pAttributeType, pAttributeTypeId, pInterval, pIntervalId, pIsCharacteristic, pIsOutcome, pIsPositive, pUniqueKey) { }
+            base(pId, pAttributeName, pAttributeNameId, pAttributeType, pAttributeTypeId, pInterval, pIntervalId, pIsCharacteristic, pIsOutcome, pIsPositive, pUniqueKey) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -172,10 +172,10 @@ namespace Services.Dto
 
         #endregion Fields
 
-		public object Clone() => this.Copy<Attribute>();
+        public object Clone() => this.Copy<Attribute>();
     }
     
-    [Route("/Attribute/{Id}/copy", "POST")]
+    [Route("/attribute/{Id}/copy", "POST")]
     public partial class AttributeCopy : Attribute {}
     public partial class AttributeSearchBase : Search<Attribute>
     {
