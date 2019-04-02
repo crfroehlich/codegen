@@ -120,7 +120,18 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        public string Data { get; set; }
+        public byte[] DataCompressed { get; set; }
+
+        private string _Data;
+        public string Data
+        {
+            get => _Data ?? (_Data = DocZip.Unzip(DataCompressed));
+            set
+            {
+                _Data = value;
+                DataCompressed = DocZip.Zip(_Data);
+            }
+        }
 
 
         [Field]
@@ -128,7 +139,18 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        public string Errors { get; set; }
+        public byte[] ErrorsCompressed { get; set; }
+
+        private string _Errors;
+        public string Errors
+        {
+            get => _Errors ?? (_Errors = DocZip.Unzip(ErrorsCompressed));
+            set
+            {
+                _Errors = value;
+                ErrorsCompressed = DocZip.Zip(_Errors);
+            }
+        }
 
 
         [Field(DefaultValue = 0)]
@@ -144,7 +166,18 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        public string Logs { get; set; }
+        public byte[] LogsCompressed { get; set; }
+
+        private string _Logs;
+        public string Logs
+        {
+            get => _Logs ?? (_Logs = DocZip.Unzip(LogsCompressed));
+            set
+            {
+                _Logs = value;
+                LogsCompressed = DocZip.Zip(_Logs);
+            }
+        }
 
 
         [Field(DefaultValue = false)]
@@ -152,7 +185,18 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        public string Summary { get; set; }
+        public byte[] SummaryCompressed { get; set; }
+
+        private string _Summary;
+        public string Summary
+        {
+            get => _Summary ?? (_Summary = DocZip.Unzip(SummaryCompressed));
+            set
+            {
+                _Summary = value;
+                SummaryCompressed = DocZip.Zip(_Summary);
+            }
+        }
 
 
         [Field(Nullable = false)]

@@ -125,7 +125,18 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        public string Data { get; set; }
+        public byte[] DataCompressed { get; set; }
+
+        private string _Data;
+        public string Data
+        {
+            get => _Data ?? (_Data = DocZip.Unzip(DataCompressed));
+            set
+            {
+                _Data = value;
+                DataCompressed = DocZip.Zip(_Data);
+            }
+        }
 
 
         [Field]
