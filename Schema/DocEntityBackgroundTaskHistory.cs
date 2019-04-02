@@ -116,32 +116,26 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = 0)]
-        [FieldMapping(nameof(Completed))]
         public int? Completed { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Data))]
         public string Data { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Ended))]
+        [Field]
         public DateTime? Ended { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Errors))]
         public string Errors { get; set; }
 
 
         [Field(DefaultValue = 0)]
-        [FieldMapping(nameof(Failed))]
         public int? Failed { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Items))]
+        [Field]
         [Association(PairTo = nameof(DocEntityBackgroundTaskItem.TaskHistory), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityBackgroundTaskItem> Items { get; private set; }
 
@@ -150,28 +144,24 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Logs))]
         public string Logs { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Succeeded))]
         public bool? Succeeded { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Summary))]
         public string Summary { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Task))]
         public DocEntityBackgroundTask Task { get; set; }
         public int? TaskId { get { return Task?.Id; } private set { var noid = value; } }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -183,12 +173,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

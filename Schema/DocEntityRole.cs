@@ -115,32 +115,27 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(AdminTeam))]
+        [Field]
         public DocEntityTeam AdminTeam { get; set; }
         public int? AdminTeamId { get { return AdminTeam?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Apps))]
+        [Field]
         public DocEntitySet<DocEntityApp> Apps { get; private set; }
 
 
         public int? AppsCount { get { return Apps.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Features))]
         public string Features { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(FeatureSets))]
+        [Field]
         [Association(PairTo = nameof(DocEntityFeatureSet.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityFeatureSet> FeatureSets { get; private set; }
 
@@ -149,22 +144,18 @@ namespace Services.Schema
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(IsInternal))]
         public bool IsInternal { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(IsSuperAdmin))]
         public bool IsSuperAdmin { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Pages))]
+        [Field]
         public DocEntitySet<DocEntityPage> Pages { get; private set; }
 
 
@@ -172,12 +163,10 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Permissions))]
         public string Permissions { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Users))]
+        [Field]
         [Association(PairTo = nameof(DocEntityUser.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
@@ -186,7 +175,7 @@ namespace Services.Schema
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -198,12 +187,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

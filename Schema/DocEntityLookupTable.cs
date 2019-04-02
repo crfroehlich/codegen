@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Bindings))]
+        [Field]
         [Association(PairTo = nameof(DocEntityLookupTableBinding.LookupTable), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
@@ -124,16 +123,14 @@ namespace Services.Schema
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Categories))]
+        [Field]
         public DocEntitySet<DocEntityLookupCategory> Categories { get; private set; }
 
 
         public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Documents))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDocument.LookupTables), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
 
@@ -142,18 +139,16 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Enum))]
         public DocEntityLookupTableEnum Enum { get; set; }
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -165,12 +160,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

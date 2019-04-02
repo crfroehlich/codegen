@@ -116,18 +116,27 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Audit))]
         public DocEntityAuditRecord Audit { get; set; }
         public int? AuditId { get { return Audit?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, Length = int.MaxValue)]
-        [FieldMapping(nameof(Delta))]
-        public string Delta { get; set; }
+        public byte[] DeltaCompressed { get; set; }
+
+        private string _Delta;
+        public string Delta
+        {
+            get => _Delta ?? (_Delta = DocZip.Unzip(DeltaCompressed));
+            set
+            {
+                _Delta = value;
+                DeltaCompressed = DocZip.Zip(_Delta);
+            }
+        }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -139,12 +148,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

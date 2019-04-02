@@ -115,14 +115,12 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(App))]
+        [Field]
         public DocEntityApp App { get; set; }
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Bindings))]
+        [Field]
         [Association(PairTo = nameof(DocEntityLookupTableBinding.Scope), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
@@ -130,8 +128,7 @@ namespace Services.Schema
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Broadcasts))]
+        [Field]
         [Association(PairTo = nameof(DocEntityBroadcast.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityBroadcast> Broadcasts { get; private set; }
 
@@ -139,30 +136,25 @@ namespace Services.Schema
         public int? BroadcastsCount { get { return Broadcasts.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Client))]
+        [Field]
         public DocEntityClient Client { get; set; }
         public int? ClientId { get { return Client?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Delete))]
         public bool? Delete { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(DocumentSet))]
+        [Field]
         public DocEntityDocumentSet DocumentSet { get; set; }
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Edit))]
         public bool? Edit { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Help))]
+        [Field]
         [Association(PairTo = nameof(DocEntityHelp.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityHelp> Help { get; private set; }
 
@@ -170,13 +162,11 @@ namespace Services.Schema
         public int? HelpCount { get { return Help.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(IsGlobal))]
+        [Field]
         public bool? IsGlobal { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Synonyms))]
+        [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Scope), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
 
@@ -184,26 +174,22 @@ namespace Services.Schema
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Team))]
+        [Field]
         public DocEntityTeam Team { get; set; }
         public int? TeamId { get { return Team?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(User))]
+        [Field]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(VariableRules))]
+        [Field]
         [Association(PairTo = nameof(DocEntityVariableRule.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableRule> VariableRules { get; private set; }
 
@@ -212,12 +198,10 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(View))]
         public bool? View { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Workflows))]
+        [Field]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
 
 
@@ -225,7 +209,7 @@ namespace Services.Schema
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -237,12 +221,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties
