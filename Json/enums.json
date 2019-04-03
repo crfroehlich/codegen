@@ -424,9 +424,10 @@
     "PROCESS_UPDATES": "ProcessUpdates",
     "RUN_TIMECARD_RULES": "RunTimecardRules",
     "STUDYSET_HISTORY": "StudySetHistory",
+    "SYNC_DATA_SETS": "SyncDataSets",
+    "SYNC_DOCUMENT_WITH_PORTAL": "SyncDocumentWithPortal",
     "SYNC_LEGACY_STUDIES": "SyncLegacyStudies",
     "SYNC_LOOKUP_TABLES": "SyncLookupTables",
-    "SYNC_DATA_SETS": "SyncDataSets",
     "SYNC_USERS": "SyncUsers"
   },
   "JunctionType": {

@@ -56,7 +56,7 @@ namespace Services.Dto
 
         public DocumentBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public DocumentBase(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, string pLegacyModel, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, List<Reference> pNonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : this(DocConvert.ToInt(pId)) 
+        public DocumentBase(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, string pData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, List<Reference> pNonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : this(DocConvert.ToInt(pId)) 
         {
             Abstract = pAbstract;
             AccessionID = pAccessionID;
@@ -66,6 +66,7 @@ namespace Services.Dto
             CorporateAuthor = pCorporateAuthor;
             Country = pCountry;
             CustomData = pCustomData;
+            Data = pData;
             DatabaseType = pDatabaseType;
             DatabaseTypeId = pDatabaseTypeId;
             DocumentSets = pDocumentSets;
@@ -86,7 +87,6 @@ namespace Services.Dto
             ISSN = pISSN;
             Issue = pIssue;
             JournalTitle = pJournalTitle;
-            LegacyModel = pLegacyModel;
             LegacySync = pLegacySync;
             LookupTables = pLookupTables;
             LookupTablesCount = pLookupTablesCount;
@@ -143,6 +143,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(CustomData), Description = "string", IsRequired = false)]
         public string CustomData { get; set; }
+
+
+        [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
+        public string Data { get; set; }
 
 
         [ApiMember(Name = nameof(DatabaseType), Description = "LookupTable", IsRequired = false)]
@@ -215,10 +219,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(JournalTitle), Description = "string", IsRequired = false)]
         public string JournalTitle { get; set; }
-
-
-        [ApiMember(Name = nameof(LegacyModel), Description = "string", IsRequired = false)]
-        public string LegacyModel { get; set; }
 
 
         [ApiMember(Name = nameof(LegacySync), Description = "DateTime?", IsRequired = false)]
@@ -309,7 +309,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out string pAbstract, out string pAccessionID, out string pAcronym, out string pAuthors, out string pCochraneID, out string pCorporateAuthor, out string pCountry, out string pCustomData, out Reference pDatabaseType, out int? pDatabaseTypeId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out Reference pDocumentType, out int? pDocumentTypeId, out string pDOI, out string pEmbaseAccessionNumber, out string pEmtree, out string pErrataText, out string pFullText, out string pFullTextURL, out Reference pImport, out int? pImportId, out Reference pImportType, out int? pImportTypeId, out string pInstitution, out string pISSN, out string pIssue, out string pJournalTitle, out string pLegacyModel, out DateTime? pLegacySync, out List<Reference> pLookupTables, out int? pLookupTablesCount, out int? pMedlineID, out string pMeSH, out List<Reference> pNonDigitizedDocumentSets, out int? pNonDigitizedDocumentSetsCount, out string pPages, out char? pParentChildStatus, out int? pParentID, out string pPublicationDate, out int? pPublicationYear, out string pPubType, out int? pReferenceStudy, out string pSecondarySourceID, out string pSource, out string pStorageModel, out string pSupplementalFiles, out string pTaStudyDesign, out string pTitle, out short? pTrialOutcome, out List<Reference> pVariableData, out int? pVariableDataCount, out string pVolume)
+        public void Deconstruct(out string pAbstract, out string pAccessionID, out string pAcronym, out string pAuthors, out string pCochraneID, out string pCorporateAuthor, out string pCountry, out string pCustomData, out string pData, out Reference pDatabaseType, out int? pDatabaseTypeId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out Reference pDocumentType, out int? pDocumentTypeId, out string pDOI, out string pEmbaseAccessionNumber, out string pEmtree, out string pErrataText, out string pFullText, out string pFullTextURL, out Reference pImport, out int? pImportId, out Reference pImportType, out int? pImportTypeId, out string pInstitution, out string pISSN, out string pIssue, out string pJournalTitle, out DateTime? pLegacySync, out List<Reference> pLookupTables, out int? pLookupTablesCount, out int? pMedlineID, out string pMeSH, out List<Reference> pNonDigitizedDocumentSets, out int? pNonDigitizedDocumentSetsCount, out string pPages, out char? pParentChildStatus, out int? pParentID, out string pPublicationDate, out int? pPublicationYear, out string pPubType, out int? pReferenceStudy, out string pSecondarySourceID, out string pSource, out string pStorageModel, out string pSupplementalFiles, out string pTaStudyDesign, out string pTitle, out short? pTrialOutcome, out List<Reference> pVariableData, out int? pVariableDataCount, out string pVolume)
         {
             pAbstract = Abstract;
             pAccessionID = AccessionID;
@@ -319,6 +319,7 @@ namespace Services.Dto
             pCorporateAuthor = CorporateAuthor;
             pCountry = Country;
             pCustomData = CustomData;
+            pData = Data;
             pDatabaseType = DatabaseType;
             pDatabaseTypeId = DatabaseTypeId;
             pDocumentSets = DocumentSets;
@@ -339,7 +340,6 @@ namespace Services.Dto
             pISSN = ISSN;
             pIssue = Issue;
             pJournalTitle = JournalTitle;
-            pLegacyModel = LegacyModel;
             pLegacySync = LegacySync;
             pLookupTables = LookupTables;
             pLookupTablesCount = LookupTablesCount;
@@ -367,8 +367,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public DocumentBase With(int? pId = Id, string pAbstract = Abstract, string pAccessionID = AccessionID, string pAcronym = Acronym, string pAuthors = Authors, string pCochraneID = CochraneID, string pCorporateAuthor = CorporateAuthor, string pCountry = Country, string pCustomData = CustomData, Reference pDatabaseType = DatabaseType, int? pDatabaseTypeId = DatabaseTypeId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, Reference pDocumentType = DocumentType, int? pDocumentTypeId = DocumentTypeId, string pDOI = DOI, string pEmbaseAccessionNumber = EmbaseAccessionNumber, string pEmtree = Emtree, string pErrataText = ErrataText, string pFullText = FullText, string pFullTextURL = FullTextURL, Reference pImport = Import, int? pImportId = ImportId, Reference pImportType = ImportType, int? pImportTypeId = ImportTypeId, string pInstitution = Institution, string pISSN = ISSN, string pIssue = Issue, string pJournalTitle = JournalTitle, string pLegacyModel = LegacyModel, DateTime? pLegacySync = LegacySync, List<Reference> pLookupTables = LookupTables, int? pLookupTablesCount = LookupTablesCount, int? pMedlineID = MedlineID, string pMeSH = MeSH, List<Reference> pNonDigitizedDocumentSets = NonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount = NonDigitizedDocumentSetsCount, string pPages = Pages, char? pParentChildStatus = ParentChildStatus, int? pParentID = ParentID, string pPublicationDate = PublicationDate, int? pPublicationYear = PublicationYear, string pPubType = PubType, int? pReferenceStudy = ReferenceStudy, string pSecondarySourceID = SecondarySourceID, string pSource = Source, string pStorageModel = StorageModel, string pSupplementalFiles = SupplementalFiles, string pTaStudyDesign = TaStudyDesign, string pTitle = Title, short? pTrialOutcome = TrialOutcome, List<Reference> pVariableData = VariableData, int? pVariableDataCount = VariableDataCount, string pVolume = Volume) => 
-        //	new DocumentBase(pId, pAbstract, pAccessionID, pAcronym, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDatabaseTypeId, pDocumentSets, pDocumentSetsCount, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacyModel, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pNonDigitizedDocumentSets, pNonDigitizedDocumentSetsCount, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume);
+        //public DocumentBase With(int? pId = Id, string pAbstract = Abstract, string pAccessionID = AccessionID, string pAcronym = Acronym, string pAuthors = Authors, string pCochraneID = CochraneID, string pCorporateAuthor = CorporateAuthor, string pCountry = Country, string pCustomData = CustomData, string pData = Data, Reference pDatabaseType = DatabaseType, int? pDatabaseTypeId = DatabaseTypeId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, Reference pDocumentType = DocumentType, int? pDocumentTypeId = DocumentTypeId, string pDOI = DOI, string pEmbaseAccessionNumber = EmbaseAccessionNumber, string pEmtree = Emtree, string pErrataText = ErrataText, string pFullText = FullText, string pFullTextURL = FullTextURL, Reference pImport = Import, int? pImportId = ImportId, Reference pImportType = ImportType, int? pImportTypeId = ImportTypeId, string pInstitution = Institution, string pISSN = ISSN, string pIssue = Issue, string pJournalTitle = JournalTitle, DateTime? pLegacySync = LegacySync, List<Reference> pLookupTables = LookupTables, int? pLookupTablesCount = LookupTablesCount, int? pMedlineID = MedlineID, string pMeSH = MeSH, List<Reference> pNonDigitizedDocumentSets = NonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount = NonDigitizedDocumentSetsCount, string pPages = Pages, char? pParentChildStatus = ParentChildStatus, int? pParentID = ParentID, string pPublicationDate = PublicationDate, int? pPublicationYear = PublicationYear, string pPubType = PubType, int? pReferenceStudy = ReferenceStudy, string pSecondarySourceID = SecondarySourceID, string pSource = Source, string pStorageModel = StorageModel, string pSupplementalFiles = SupplementalFiles, string pTaStudyDesign = TaStudyDesign, string pTitle = Title, short? pTrialOutcome = TrialOutcome, List<Reference> pVariableData = VariableData, int? pVariableDataCount = VariableDataCount, string pVolume = Volume) => 
+        //	new DocumentBase(pId, pAbstract, pAccessionID, pAcronym, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pData, pDatabaseType, pDatabaseTypeId, pDocumentSets, pDocumentSetsCount, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pNonDigitizedDocumentSets, pNonDigitizedDocumentSetsCount, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume);
 
     }
 
@@ -383,8 +383,8 @@ namespace Services.Dto
 
         public Document(int? id) : base(DocConvert.ToInt(id)) {}
         public Document(int id) : base(id) {}
-        public Document(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, string pLegacyModel, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, List<Reference> pNonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : 
-            base(pId, pAbstract, pAccessionID, pAcronym, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDatabaseTypeId, pDocumentSets, pDocumentSetsCount, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacyModel, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pNonDigitizedDocumentSets, pNonDigitizedDocumentSetsCount, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume) { }
+        public Document(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, string pData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, List<Reference> pNonDigitizedDocumentSets, int? pNonDigitizedDocumentSetsCount, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : 
+            base(pId, pAbstract, pAccessionID, pAcronym, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pData, pDatabaseType, pDatabaseTypeId, pDocumentSets, pDocumentSetsCount, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pNonDigitizedDocumentSets, pNonDigitizedDocumentSetsCount, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume) { }
         #region Fields
         
         public bool? ShouldSerialize(string field)
@@ -398,7 +398,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Abstract),nameof(AccessionID),nameof(Acronym),nameof(Authors),nameof(CochraneID),nameof(CorporateAuthor),nameof(Country),nameof(Created),nameof(CreatorId),nameof(CustomData),nameof(DatabaseType),nameof(DatabaseTypeId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(DocumentType),nameof(DocumentTypeId),nameof(DOI),nameof(EmbaseAccessionNumber),nameof(Emtree),nameof(ErrataText),nameof(FullText),nameof(FullTextURL),nameof(Gestalt),nameof(Import),nameof(ImportId),nameof(ImportType),nameof(ImportTypeId),nameof(Institution),nameof(ISSN),nameof(Issue),nameof(JournalTitle),nameof(LegacyModel),nameof(LegacySync),nameof(Locked),nameof(LookupTables),nameof(LookupTablesCount),nameof(MedlineID),nameof(MeSH),nameof(NonDigitizedDocumentSets),nameof(NonDigitizedDocumentSetsCount),nameof(Pages),nameof(ParentChildStatus),nameof(ParentID),nameof(PublicationDate),nameof(PublicationYear),nameof(PubType),nameof(ReferenceStudy),nameof(SecondarySourceID),nameof(Source),nameof(StorageModel),nameof(SupplementalFiles),nameof(TaStudyDesign),nameof(Title),nameof(TrialOutcome),nameof(Updated),nameof(VariableData),nameof(VariableDataCount),nameof(VersionNo),nameof(Volume)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Abstract),nameof(AccessionID),nameof(Acronym),nameof(Authors),nameof(CochraneID),nameof(CorporateAuthor),nameof(Country),nameof(Created),nameof(CreatorId),nameof(CustomData),nameof(Data),nameof(DatabaseType),nameof(DatabaseTypeId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(DocumentType),nameof(DocumentTypeId),nameof(DOI),nameof(EmbaseAccessionNumber),nameof(Emtree),nameof(ErrataText),nameof(FullText),nameof(FullTextURL),nameof(Gestalt),nameof(Import),nameof(ImportId),nameof(ImportType),nameof(ImportTypeId),nameof(Institution),nameof(ISSN),nameof(Issue),nameof(JournalTitle),nameof(LegacySync),nameof(Locked),nameof(LookupTables),nameof(LookupTablesCount),nameof(MedlineID),nameof(MeSH),nameof(NonDigitizedDocumentSets),nameof(NonDigitizedDocumentSetsCount),nameof(Pages),nameof(ParentChildStatus),nameof(ParentID),nameof(PublicationDate),nameof(PublicationYear),nameof(PubType),nameof(ReferenceStudy),nameof(SecondarySourceID),nameof(Source),nameof(StorageModel),nameof(SupplementalFiles),nameof(TaStudyDesign),nameof(Title),nameof(TrialOutcome),nameof(Updated),nameof(VariableData),nameof(VariableDataCount),nameof(VersionNo),nameof(Volume)})]
         public new List<string> VisibleFields
         {
             get
@@ -441,6 +441,7 @@ namespace Services.Dto
         public string CorporateAuthor { get; set; }
         public string Country { get; set; }
         public string CustomData { get; set; }
+        public string Data { get; set; }
         public Reference DatabaseType { get; set; }
         public List<int> DatabaseTypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"ASCO",@"ClinicalTrials.gov",@"Cochrane",@"Embase",@"IOVS",@"Manual Entry",@"MEDLINE",@"Northern Light"})]
@@ -466,7 +467,6 @@ namespace Services.Dto
         public string ISSN { get; set; }
         public string Issue { get; set; }
         public string JournalTitle { get; set; }
-        public string LegacyModel { get; set; }
         public DateTime? LegacySync { get; set; }
         public DateTime? LegacySyncAfter { get; set; }
         public DateTime? LegacySyncBefore { get; set; }
@@ -521,6 +521,7 @@ namespace Services.Dto
         public bool doCorporateAuthor { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.CorporateAuthor))); }
         public bool doCountry { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Country))); }
         public bool doCustomData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.CustomData))); }
+        public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Data))); }
         public bool doDatabaseType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.DatabaseType))); }
         public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.DocumentSets))); }
         public bool doDocumentType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.DocumentType))); }
@@ -536,7 +537,6 @@ namespace Services.Dto
         public bool doISSN { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.ISSN))); }
         public bool doIssue { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Issue))); }
         public bool doJournalTitle { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.JournalTitle))); }
-        public bool doLegacyModel { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.LegacyModel))); }
         public bool doLegacySync { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.LegacySync))); }
         public bool doLookupTables { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.LookupTables))); }
         public bool doMedlineID { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.MedlineID))); }
