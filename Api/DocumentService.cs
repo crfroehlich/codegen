@@ -289,7 +289,6 @@ namespace Services.API
             var pCorporateAuthor = request.CorporateAuthor;
             var pCountry = request.Country;
             var pCustomData = request.CustomData;
-            var pData = request.Data;
             DocEntityLookupTable pDatabaseType = GetLookup(DocConstantLookupTable.DATABASETYPE, request.DatabaseType?.Name, request.DatabaseType?.Id);
             var pDocumentSets = request.DocumentSets?.ToList();
             DocEntityLookupTable pDocumentType = GetLookup(DocConstantLookupTable.DOCUMENTTYPE, request.DocumentType?.Name, request.DocumentType?.Id);
@@ -305,6 +304,7 @@ namespace Services.API
             var pISSN = request.ISSN;
             var pIssue = request.Issue;
             var pJournalTitle = request.JournalTitle;
+            var pLegacyModel = request.LegacyModel;
             var pLegacySync = request.LegacySync;
             var pLookupTables = request.LookupTables?.ToList();
             var pMedlineID = request.MedlineID;
@@ -430,17 +430,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pCustomData, nameof(request.CustomData)) && !request.VisibleFields.Matches(nameof(request.CustomData), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.CustomData));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pData, permission, DocConstantModelName.DOCUMENT, nameof(request.Data)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENT, nameof(request.Data)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pData) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENT, nameof(request.Data))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Data)} requires a value.");
-                    entity.Data = pData;
-                if(DocPermissionFactory.IsRequested<string>(request, pData, nameof(request.Data)) && !request.VisibleFields.Matches(nameof(request.Data), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Data));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pDatabaseType, permission, DocConstantModelName.DOCUMENT, nameof(request.DatabaseType)))
@@ -595,6 +584,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pJournalTitle, nameof(request.JournalTitle)) && !request.VisibleFields.Matches(nameof(request.JournalTitle), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.JournalTitle));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLegacyModel, permission, DocConstantModelName.DOCUMENT, nameof(request.LegacyModel)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pLegacyModel, entity.LegacyModel, nameof(request.LegacyModel)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENT, nameof(request.LegacyModel)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LegacyModel)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pLegacyModel) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENT, nameof(request.LegacyModel))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LegacyModel)} requires a value.");
+                    entity.LegacyModel = pLegacyModel;
+                if(DocPermissionFactory.IsRequested<string>(request, pLegacyModel, nameof(request.LegacyModel)) && !request.VisibleFields.Matches(nameof(request.LegacyModel), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.LegacyModel));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pLegacySync, permission, DocConstantModelName.DOCUMENT, nameof(request.LegacySync)))
@@ -1085,7 +1085,6 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pCountry))
                         pCountry += " (Copy)";
                     var pCustomData = entity.CustomData;
-                    var pData = entity.Data;
                     var pDatabaseType = entity.DatabaseType;
                     var pDocumentSets = entity.DocumentSets.ToList();
                     var pDocumentType = entity.DocumentType;
@@ -1121,6 +1120,7 @@ namespace Services.API
                     var pJournalTitle = entity.JournalTitle;
                     if(!DocTools.IsNullOrEmpty(pJournalTitle))
                         pJournalTitle += " (Copy)";
+                    var pLegacyModel = entity.LegacyModel;
                     var pLegacySync = entity.LegacySync;
                     var pLookupTables = entity.LookupTables.ToList();
                     var pMedlineID = entity.MedlineID;
@@ -1173,7 +1173,6 @@ namespace Services.API
                                 , CorporateAuthor = pCorporateAuthor
                                 , Country = pCountry
                                 , CustomData = pCustomData
-                                , Data = pData
                                 , DatabaseType = pDatabaseType
                                 , DocumentType = pDocumentType
                                 , DOI = pDOI
@@ -1188,6 +1187,7 @@ namespace Services.API
                                 , ISSN = pISSN
                                 , Issue = pIssue
                                 , JournalTitle = pJournalTitle
+                                , LegacyModel = pLegacyModel
                                 , LegacySync = pLegacySync
                                 , MedlineID = pMedlineID
                                 , MeSH = pMeSH

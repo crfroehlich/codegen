@@ -74,10 +74,8 @@ namespace Services.Enums
         DOC_EXTRACT_V3,
         [EnumMember(Value = DocConstantApp.DOC_LABEL)]
         DOC_LABEL,
-        [EnumMember(Value = DocConstantApp.DOC_LIBRARY_V1)]
-        DOC_LIBRARY_V1,
-        [EnumMember(Value = DocConstantApp.DOC_LIBRARY_V2)]
-        DOC_LIBRARY_V2,
+        [EnumMember(Value = DocConstantApp.DOC_LIBRARY)]
+        DOC_LIBRARY,
         [EnumMember(Value = DocConstantApp.DOC_NHANES)]
         DOC_NHANES,
         [EnumMember(Value = DocConstantApp.DOC_SEARCH)]
@@ -140,10 +138,8 @@ namespace Services.Enums
                     return DocConstantApp.DOC_EXTRACT_V3;
                 case AppEnm.DOC_LABEL:
                     return DocConstantApp.DOC_LABEL;
-                case AppEnm.DOC_LIBRARY_V1:
-                    return DocConstantApp.DOC_LIBRARY_V1;
-                case AppEnm.DOC_LIBRARY_V2:
-                    return DocConstantApp.DOC_LIBRARY_V2;
+                case AppEnm.DOC_LIBRARY:
+                    return DocConstantApp.DOC_LIBRARY;
                 case AppEnm.DOC_NHANES:
                     return DocConstantApp.DOC_NHANES;
                 case AppEnm.DOC_SEARCH:
@@ -193,8 +189,7 @@ namespace Services.Enums
         public const string DOC_EXTRACT_V2 = "Doc Extract 2.0";
         public const string DOC_EXTRACT_V3 = "Doc Extract 3.0";
         public const string DOC_LABEL = "DOC Label";
-        public const string DOC_LIBRARY_V1 = "DOC Library 1.0";
-        public const string DOC_LIBRARY_V2 = "DOC Library";
+        public const string DOC_LIBRARY = "DOC Library";
         public const string DOC_NHANES = "DOC NHANES";
         public const string DOC_SEARCH = "DOC Search";
         public const string DOC_TIMELY = "DOC Timely";

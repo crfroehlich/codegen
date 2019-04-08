@@ -147,21 +147,6 @@ namespace Services.Schema
         public string CustomData { get; set; }
 
 
-        [Field(Length = int.MaxValue)]
-        public byte[] DataCompressed { get; set; }
-
-        private string _Data;
-        public string Data
-        {
-            get => _Data ?? (_Data = DocZip.Unzip(DataCompressed));
-            set
-            {
-                _Data = value;
-                DataCompressed = DocZip.Zip(_Data);
-            }
-        }
-
-
         [Field]
         public DocEntityLookupTable DatabaseType { get; set; }
         public int? DatabaseTypeId { get { return DatabaseType?.Id; } private set { var noid = value; } }
@@ -227,6 +212,10 @@ namespace Services.Schema
 
         [Field]
         public string JournalTitle { get; set; }
+
+
+        [Field(Length = int.MaxValue)]
+        public string LegacyModel { get; set; }
 
 
         [Field]
@@ -497,7 +486,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.CorporateAuthor, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.CorporateAuthor))))
                 .ForMember(dest => dest.Country, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Country))))
                 .ForMember(dest => dest.CustomData, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.CustomData))))
-                .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Data))))
                 .ForMember(dest => dest.DatabaseType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DatabaseType))))
                 .ForMember(dest => dest.DatabaseTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DatabaseTypeId))))
                 .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DocumentSets))))
@@ -518,6 +506,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.ISSN, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.ISSN))))
                 .ForMember(dest => dest.Issue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Issue))))
                 .ForMember(dest => dest.JournalTitle, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.JournalTitle))))
+                .ForMember(dest => dest.LegacyModel, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LegacyModel))))
                 .ForMember(dest => dest.LegacySync, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LegacySync))))
                 .ForMember(dest => dest.LookupTables, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LookupTables))))
                 .ForMember(dest => dest.LookupTablesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LookupTablesCount))))

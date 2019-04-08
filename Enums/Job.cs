@@ -78,8 +78,6 @@ namespace Services.Enums
         STUDYSET_HISTORY,
         [EnumMember(Value = DocConstantJob.SYNC_DATA_SETS)]
         SYNC_DATA_SETS,
-        [EnumMember(Value = DocConstantJob.SYNC_DOCUMENT_WITH_PORTAL)]
-        SYNC_DOCUMENT_WITH_PORTAL,
         [EnumMember(Value = DocConstantJob.SYNC_LEGACY_STUDIES)]
         SYNC_LEGACY_STUDIES,
         [EnumMember(Value = DocConstantJob.SYNC_LOOKUP_TABLES)]
@@ -124,8 +122,6 @@ namespace Services.Enums
                     return DocConstantJob.STUDYSET_HISTORY;
                 case JobEnm.SYNC_DATA_SETS:
                     return DocConstantJob.SYNC_DATA_SETS;
-                case JobEnm.SYNC_DOCUMENT_WITH_PORTAL:
-                    return DocConstantJob.SYNC_DOCUMENT_WITH_PORTAL;
                 case JobEnm.SYNC_LEGACY_STUDIES:
                     return DocConstantJob.SYNC_LEGACY_STUDIES;
                 case JobEnm.SYNC_LOOKUP_TABLES:
@@ -155,7 +151,6 @@ namespace Services.Enums
         public const string RUN_TIMECARD_RULES = "RunTimecardRules";
         public const string STUDYSET_HISTORY = "StudySetHistory";
         public const string SYNC_DATA_SETS = "SyncDataSets";
-        public const string SYNC_DOCUMENT_WITH_PORTAL = "SyncDocumentWithPortal";
         public const string SYNC_LEGACY_STUDIES = "SyncLegacyStudies";
         public const string SYNC_LOOKUP_TABLES = "SyncLookupTables";
         public const string SYNC_USERS = "SyncUsers";
