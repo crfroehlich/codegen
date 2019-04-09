@@ -116,20 +116,17 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(AdditionalCriteria))]
         public string AdditionalCriteria { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Characteristics))]
+        [Field]
         public DocEntitySet<DocEntityCharacteristic> Characteristics { get; private set; }
 
 
         public int? CharacteristicsCount { get { return Characteristics.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Clients))]
+        [Field]
         [Association(PairTo = nameof(DocEntityClient.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityClient> Clients { get; private set; }
 
@@ -137,8 +134,7 @@ namespace Services.Schema
         public int? ClientsCount { get { return Clients.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Comparators))]
+        [Field]
         public DocEntitySet<DocEntityComparator> Comparators { get; private set; }
 
 
@@ -146,17 +142,14 @@ namespace Services.Schema
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(Confidential))]
         public bool Confidential { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(DataCollection))]
         public string DataCollection { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Divisions))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDivision.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDivision> Divisions { get; private set; }
 
@@ -164,8 +157,7 @@ namespace Services.Schema
         public int? DivisionsCount { get { return Divisions.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Documents))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDocument.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
 
@@ -173,8 +165,7 @@ namespace Services.Schema
         public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(DocumentSets))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDocumentSet.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
@@ -182,33 +173,27 @@ namespace Services.Schema
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(EvidencePortalId))]
+        [Field]
         public int? EvidencePortalId { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(ExtractionProtocol))]
         public string ExtractionProtocol { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(FqId))]
+        [Field]
         public int? FqId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(FramedQuestionId))]
+        [Field]
         public int? FramedQuestionId { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(GeneralScope))]
         public string GeneralScope { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Histories))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDocumentSetHistory.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocumentSetHistory> Histories { get; private set; }
 
@@ -217,12 +202,10 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = 9999)]
-        [FieldMapping(nameof(ImportPriority))]
         public int? ImportPriority { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Imports))]
+        [Field]
         [Association(PairTo = nameof(DocEntityImportData.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityImportData> Imports { get; private set; }
 
@@ -231,89 +214,73 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Indications))]
         public string Indications { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Interventions))]
+        [Field]
         public DocEntitySet<DocEntityIntervention> Interventions { get; private set; }
 
 
         public int? InterventionsCount { get { return Interventions.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(LibraryPackageId))]
+        [Field]
         public int? LibraryPackageId { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Notes))]
         public string Notes { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(OriginalComparators))]
         public string OriginalComparators { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(OriginalDatabase))]
+        [Field]
         public string OriginalDatabase { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(OriginalDesigns))]
         public string OriginalDesigns { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(OriginalInterventions))]
         public string OriginalInterventions { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(OriginalOutcomes))]
         public string OriginalOutcomes { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(OriginalSearch))]
         public string OriginalSearch { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Outcomes))]
+        [Field]
         public DocEntitySet<DocEntityOutcome> Outcomes { get; private set; }
 
 
         public int? OutcomesCount { get { return Outcomes.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Owner))]
+        [Field]
         public DocEntityDocumentSet Owner { get; set; }
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Participants))]
         public string Participants { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(PRISMA))]
+        [Field]
         public string PRISMA { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Projects))]
+        [Field]
         [Association(PairTo = nameof(DocEntityProject.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityProject> Projects { get; private set; }
 
@@ -321,24 +288,20 @@ namespace Services.Schema
         public int? ProjectsCount { get { return Projects.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(ProjectTeam))]
+        [Field]
         public DocEntityTeam ProjectTeam { get; set; }
         public int? ProjectTeamId { get { return ProjectTeam?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(ProtocolReferenceId))]
+        [Field]
         public int? ProtocolReferenceId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(QUOROM))]
+        [Field]
         public string QUOROM { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Scopes))]
+        [Field]
         [Association(PairTo = nameof(DocEntityScope.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
@@ -346,43 +309,35 @@ namespace Services.Schema
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(SearchEnd))]
+        [Field]
         public DateTime? SearchEnd { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(SearchStart))]
+        [Field]
         public DateTime? SearchStart { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(SearchStrategy))]
         public string SearchStrategy { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(SearchUpdated))]
+        [Field]
         public DateTime? SearchUpdated { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(SelectionCriteria))]
         public string SelectionCriteria { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Settings))]
         public string Settings { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(ShowEtw))]
         public bool ShowEtw { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Stats))]
+        [Field]
         [Association(PairTo = nameof(DocEntityStatsStudySet.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityStatsStudySet> Stats { get; private set; }
 
@@ -390,27 +345,23 @@ namespace Services.Schema
         public int? StatsCount { get { return Stats.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(StudyDesigns))]
+        [Field]
         public DocEntitySet<DocEntityStudyDesign> StudyDesigns { get; private set; }
 
 
         public int? StudyDesignsCount { get { return StudyDesigns.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Type))]
+        [Field]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(UpdateFrequency))]
+        [Field]
         public int? UpdateFrequency { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Users))]
+        [Field]
         [Association(PairTo = nameof(DocEntityUser.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
@@ -419,7 +370,7 @@ namespace Services.Schema
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -431,12 +382,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

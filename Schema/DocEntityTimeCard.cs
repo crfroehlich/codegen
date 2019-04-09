@@ -115,58 +115,49 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Document))]
+        [Field]
         public DocEntityDocument Document { get; set; }
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(End))]
         public DateTime End { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Project))]
+        [Field]
         public DocEntityProject Project { get; set; }
         public int? ProjectId { get { return Project?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(ReferenceId))]
+        [Field]
         public int? ReferenceId { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Start))]
         public DateTime Start { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Status))]
+        [Field]
         public DocEntityLookupTable Status { get; set; }
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(WorkType))]
+        [Field]
         public DocEntityLookupTable WorkType { get; set; }
         public int? WorkTypeId { get { return WorkType?.Id; } private set { var noid = value; } }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -178,12 +169,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

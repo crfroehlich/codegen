@@ -115,36 +115,30 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(ConfluenceId))]
+        [Field]
         public string ConfluenceId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
         [Field(DefaultValue = "fa fa-question-circle")]
-        [FieldMapping(nameof(Icon))]
         public string Icon { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Order))]
+        [Field]
         public int? Order { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Pages))]
+        [Field]
         public DocEntitySet<DocEntityPage> Pages { get; private set; }
 
 
         public int? PagesCount { get { return Pages.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Scopes))]
+        [Field]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
@@ -152,18 +146,16 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Title))]
         public string Title { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Type))]
+        [Field]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -175,12 +167,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties
