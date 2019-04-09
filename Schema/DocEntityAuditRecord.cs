@@ -115,39 +115,34 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Action))]
         public string Action { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(BackgroundTask))]
         public DocEntityBackgroundTask BackgroundTask { get; set; }
         public int? BackgroundTaskId { get { return BackgroundTask?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(ChangedOnDate))]
         public DateTime ChangedOnDate { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        public byte[] DataCompressed { get; set; }
-
-        private string _Data;
-        public string Data
-        {
-            get => _Data ?? (_Data = DocZip.Unzip(DataCompressed));
-            set
-            {
-                _Data = value;
-                DataCompressed = DocZip.Zip(_Data);
-            }
-        }
+        [FieldMapping(nameof(Data))]
+        public string Data { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DatabaseSessionId))]
         public string DatabaseSessionId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Deltas))]
         [Association(PairTo = nameof(DocEntityAuditDelta.Audit), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
         public DocEntitySet<DocEntityAuditDelta> Deltas { get; private set; }
 
@@ -155,19 +150,23 @@ namespace Services.Schema
         public int? DeltasCount { get { return Deltas.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(EntityId))]
         public int EntityId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(EntityType))]
         public string EntityType { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(EntityVersion))]
         public int? EntityVersion { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Events))]
         [Association(PairTo = nameof(DocEntityEvent.AuditRecord), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityEvent> Events { get; private set; }
 
@@ -175,35 +174,41 @@ namespace Services.Schema
         public int? EventsCount { get { return Events.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Impersonation))]
         public DocEntityImpersonation Impersonation { get; set; }
         public int? ImpersonationId { get { return Impersonation?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TargetId))]
         public int? TargetId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TargetType))]
         public string TargetType { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TargetVersion))]
         public int? TargetVersion { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(UserSession))]
         public DocEntityUserSession UserSession { get; set; }
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -215,10 +220,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

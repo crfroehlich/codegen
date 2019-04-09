@@ -115,32 +115,37 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(CalendarDateEnd))]
         public DocEntityDateTime CalendarDateEnd { get; set; }
         public int? CalendarDateEndId { get { return CalendarDateEnd?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(CalendarDateStart))]
         public DocEntityDateTime CalendarDateStart { get; set; }
         public int? CalendarDateStartId { get { return CalendarDateStart?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(CalendarType))]
         public string CalendarType { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(FollowUp))]
         public DocEntityTimePoint FollowUp { get; set; }
         public int? FollowUpId { get { return FollowUp?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TimeOfDay))]
         public DocEntityTimePoint TimeOfDay { get; set; }
         public int? TimeOfDayId { get { return TimeOfDay?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -152,10 +157,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

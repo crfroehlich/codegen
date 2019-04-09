@@ -115,24 +115,29 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(EqualityOperator))]
         public DocEntityLookupTable EqualityOperator { get; set; }
         public int? EqualityOperatorId { get { return EqualityOperator?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, DefaultValue = 1)]
+        [FieldMapping(nameof(Multiplier))]
         public int Multiplier { get; set; }
 
 
         [Field(Precision = 38, Scale = 6)]
+        [FieldMapping(nameof(Number))]
         public decimal? Number { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 1)]
+        [FieldMapping(nameof(Order))]
         public int Order { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Owners))]
         public DocEntitySet<DocEntityUnits> Owners { get; private set; }
 
 
@@ -140,12 +145,13 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Unit))]
         public DocEntityUnitOfMeasure Unit { get; set; }
         public int? UnitId { get { return Unit?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -157,10 +163,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

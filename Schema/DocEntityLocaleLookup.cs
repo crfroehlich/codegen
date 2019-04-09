@@ -116,20 +116,23 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(Data))]
         public string Data { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(IpAddress))]
         public string IpAddress { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Locale))]
         public DocEntityLocale Locale { get; set; }
         public int? LocaleId { get { return Locale?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -141,10 +144,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

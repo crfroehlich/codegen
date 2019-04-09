@@ -115,7 +115,8 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(AdminRoles))]
         [Association(PairTo = nameof(DocEntityRole.AdminTeam), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityRole> AdminRoles { get; private set; }
 
@@ -123,28 +124,34 @@ namespace Services.Schema
         public int? AdminRolesCount { get { return AdminRoles.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Description))]
         public string Description { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Email))]
         public string Email { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = false)]
+        [FieldMapping(nameof(IsInternal))]
         public bool IsInternal { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Owner))]
         public DocEntityUser Owner { get; set; }
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Scopes))]
         [Association(PairTo = nameof(DocEntityScope.Team), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
@@ -153,14 +160,17 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(Settings))]
         public string Settings { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Slack))]
         public string Slack { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Updates))]
         [Association(PairTo = nameof(DocEntityUpdate.Team), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUpdate> Updates { get; private set; }
 
@@ -168,7 +178,8 @@ namespace Services.Schema
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Users))]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
 
@@ -176,7 +187,7 @@ namespace Services.Schema
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -188,10 +199,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

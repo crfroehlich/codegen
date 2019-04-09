@@ -161,10 +161,6 @@ namespace Services.API
                     entities = entities.Where(en => request.LibraryPackageId.Value == en.LibraryPackageId);
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(true == request.NonDigitizedDocumentsIds?.Any())
-                {
-                    entities = entities.Where(en => en.NonDigitizedDocuments.Any(r => r.Id.In(request.NonDigitizedDocumentsIds)));
-                }
                 if(!DocTools.IsNullOrEmpty(request.Notes))
                     entities = entities.Where(en => en.Notes.Contains(request.Notes));
                 if(!DocTools.IsNullOrEmpty(request.OriginalComparators))
@@ -324,7 +320,6 @@ namespace Services.API
             var pInterventions = request.Interventions?.ToList();
             var pLibraryPackageId = request.LibraryPackageId;
             var pName = request.Name;
-            var pNonDigitizedDocuments = request.NonDigitizedDocuments?.ToList();
             var pNotes = request.Notes;
             var pOriginalComparators = request.OriginalComparators;
             var pOriginalDatabase = request.OriginalDatabase;
@@ -1122,50 +1117,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Interventions));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pNonDigitizedDocuments, permission, DocConstantModelName.DOCUMENTSET, nameof(request.NonDigitizedDocuments)))
-            {
-                if (true == pNonDigitizedDocuments?.Any() )
-                {
-                    var requestedNonDigitizedDocuments = pNonDigitizedDocuments.Select(p => p.Id).Distinct().ToList();
-                    var existsNonDigitizedDocuments = Execute.SelectAll<DocEntityDocument>().Where(e => e.Id.In(requestedNonDigitizedDocuments)).Select( e => e.Id ).ToList();
-                    if (existsNonDigitizedDocuments.Count != requestedNonDigitizedDocuments.Count)
-                    {
-                        var nonExists = requestedNonDigitizedDocuments.Where(id => existsNonDigitizedDocuments.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection NonDigitizedDocuments with objects that do not exist. No matching NonDigitizedDocuments(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedNonDigitizedDocuments.Where(id => entity.NonDigitizedDocuments.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityDocument.GetDocument(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.NonDigitizedDocuments)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.NonDigitizedDocuments)} to {nameof(DocumentSet)}");
-                        entity.NonDigitizedDocuments.Add(target);
-                    });
-                    var toRemove = entity.NonDigitizedDocuments.Where(e => requestedNonDigitizedDocuments.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDocument.GetDocument(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.NonDigitizedDocuments)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.NonDigitizedDocuments)} from {nameof(DocumentSet)}");
-                        entity.NonDigitizedDocuments.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.NonDigitizedDocuments.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDocument.GetDocument(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.NonDigitizedDocuments)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.NonDigitizedDocuments)} from {nameof(DocumentSet)}");
-                        entity.NonDigitizedDocuments.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pNonDigitizedDocuments, nameof(request.NonDigitizedDocuments)) && !request.VisibleFields.Matches(nameof(request.NonDigitizedDocuments), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.NonDigitizedDocuments));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pOutcomes, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Outcomes)))
             {
                 if (true == pOutcomes?.Any() )
@@ -1541,7 +1492,6 @@ namespace Services.API
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
-                    var pNonDigitizedDocuments = entity.NonDigitizedDocuments.ToList();
                     var pNotes = entity.Notes;
                     var pOriginalComparators = entity.OriginalComparators;
                     var pOriginalDatabase = entity.OriginalDatabase;
@@ -1655,11 +1605,6 @@ namespace Services.API
                             foreach(var item in pInterventions)
                             {
                                 entity.Interventions.Add(item);
-                            }
-
-                            foreach(var item in pNonDigitizedDocuments)
-                            {
-                                entity.NonDigitizedDocuments.Add(item);
                             }
 
                             foreach(var item in pOutcomes)
@@ -1873,8 +1818,6 @@ namespace Services.API
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityImportData, ImportData, ImportDataSearch>((int)request.Id, DocConstantModelName.IMPORTDATA, "Imports", request, (ss) => HostContext.ResolveService<ImportDataService>(Request)?.Get(ss));
                     case "intervention":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request, (ss) => HostContext.ResolveService<InterventionService>(Request)?.Get(ss));
-                    case "nondigitizeddocument":
-                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "NonDigitizedDocuments", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
                     case "outcome":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request, (ss) => HostContext.ResolveService<OutcomeService>(Request)?.Get(ss));
                     case "projectlink":
@@ -1909,8 +1852,6 @@ namespace Services.API
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "intervention":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request);
-                    case "nondigitizeddocument":
-                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "NonDigitizedDocuments", request);
                     case "outcome":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request);
                     case "scope":
@@ -1940,8 +1881,6 @@ namespace Services.API
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "intervention":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request);
-                    case "nondigitizeddocument":
-                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "NonDigitizedDocuments", request);
                     case "outcome":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request);
                     case "scope":

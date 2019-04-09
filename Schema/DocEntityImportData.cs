@@ -115,16 +115,19 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(CompletedOn))]
         public DateTime? CompletedOn { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Document))]
         public DocEntityDocument Document { get; set; }
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DocumentSets))]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
@@ -132,75 +135,91 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(ErrorData))]
         public string ErrorData { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ExtractUrl))]
         public string ExtractUrl { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(HighPriority))]
         public bool HighPriority { get; set; }
 
 
         [Field(DefaultValue = true)]
+        [FieldMapping(nameof(ImportFr))]
         public bool ImportFr { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ImportLocation))]
         public DocEntityLookupTable ImportLocation { get; set; }
         public int? ImportLocationId { get { return ImportLocation?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(ImportNewName))]
         public bool ImportNewName { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(ImportTable))]
         public bool ImportTable { get; set; }
 
 
         [Field(DefaultValue = true)]
+        [FieldMapping(nameof(ImportText))]
         public bool ImportText { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ImportType))]
         public DocEntityLookupTable ImportType { get; set; }
         public int? ImportTypeId { get { return ImportType?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, DefaultValue = false)]
+        [FieldMapping(nameof(IsLegacy))]
         public bool IsLegacy { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Order))]
         public int? Order { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(ReferenceId))]
         public int ReferenceId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(RequestedBy))]
         public DocEntityUser RequestedBy { get; set; }
         public int? RequestedById { get { return RequestedBy?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(RequestedOn))]
         public DateTime? RequestedOn { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(StartedOn))]
         public DateTime? StartedOn { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Status))]
         public DocEntityLookupTable Status { get; set; }
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -212,10 +231,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

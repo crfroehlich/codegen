@@ -172,6 +172,7 @@
     "THERAPEUTIC_AREA": "Therapeutic Area",
     "DISEASE_STATE": "Disease State",
     "DATA_SET": "Data Set",
+    "LIBRARY": "Library",
     "SERVE_PORTAL": "SERVE Portal"
   },
   "DocumentType": {
