@@ -225,6 +225,12 @@ namespace Services.API
                     entities = entities.Where(en => en.SearchStart >= request.SearchStartAfter);
                 if(!DocTools.IsNullOrEmpty(request.SearchStrategy))
                     entities = entities.Where(en => en.SearchStrategy.Contains(request.SearchStrategy));
+                if(!DocTools.IsNullOrEmpty(request.SearchUpdated))
+                    entities = entities.Where(en => null != en.SearchUpdated && request.SearchUpdated.Value.Date == en.SearchUpdated.Value.Date);
+                if(!DocTools.IsNullOrEmpty(request.SearchUpdatedBefore))
+                    entities = entities.Where(en => en.SearchUpdated <= request.SearchUpdatedBefore);
+                if(!DocTools.IsNullOrEmpty(request.SearchUpdatedAfter))
+                    entities = entities.Where(en => en.SearchUpdated >= request.SearchUpdatedAfter);
                 if(!DocTools.IsNullOrEmpty(request.SelectionCriteria))
                     entities = entities.Where(en => en.SelectionCriteria.Contains(request.SelectionCriteria));
                 if(true == request.ShowEtw?.Any())
@@ -256,6 +262,8 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
                 }
+                if(request.UpdateFrequency.HasValue)
+                    entities = entities.Where(en => request.UpdateFrequency.Value == en.UpdateFrequency);
                 if(true == request.UsersIds?.Any())
                 {
                     entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
@@ -339,12 +347,14 @@ namespace Services.API
             var pSearchEnd = request.SearchEnd;
             var pSearchStart = request.SearchStart;
             var pSearchStrategy = request.SearchStrategy;
+            var pSearchUpdated = request.SearchUpdated;
             var pSelectionCriteria = request.SelectionCriteria;
             var pSettings = request.Settings;
             var pShowEtw = request.ShowEtw;
             var pStats = request.Stats?.ToList();
             var pStudyDesigns = request.StudyDesigns?.ToList();
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.DOCUMENTSETTYPE, request.Type?.Name, request.Type?.Id);
+            var pUpdateFrequency = request.UpdateFrequency;
             var pUsers = request.Users?.ToList();
 
             DocEntityDocumentSet entity = null;
@@ -672,6 +682,17 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.SearchStrategy));
                 }
             }
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pSearchUpdated, permission, DocConstantModelName.DOCUMENTSET, nameof(request.SearchUpdated)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pSearchUpdated, entity.SearchUpdated, nameof(request.SearchUpdated)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.SearchUpdated)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SearchUpdated)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pSearchUpdated) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.SearchUpdated))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.SearchUpdated)} requires a value.");
+                    entity.SearchUpdated = pSearchUpdated;
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pSearchUpdated, nameof(request.SearchUpdated)) && !request.VisibleFields.Matches(nameof(request.SearchUpdated), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.SearchUpdated));
+                }
+            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSelectionCriteria, permission, DocConstantModelName.DOCUMENTSET, nameof(request.SelectionCriteria)))
             {
                 if(DocPermissionFactory.IsRequested(request, pSelectionCriteria, entity.SelectionCriteria, nameof(request.SelectionCriteria)))
@@ -714,6 +735,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Type));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pUpdateFrequency, permission, DocConstantModelName.DOCUMENTSET, nameof(request.UpdateFrequency)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pUpdateFrequency, entity.UpdateFrequency, nameof(request.UpdateFrequency)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.UpdateFrequency)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.UpdateFrequency)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pUpdateFrequency) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.UpdateFrequency))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.UpdateFrequency)} requires a value.");
+                    entity.UpdateFrequency = pUpdateFrequency;
+                if(DocPermissionFactory.IsRequested<int?>(request, pUpdateFrequency, nameof(request.UpdateFrequency)) && !request.VisibleFields.Matches(nameof(request.UpdateFrequency), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.UpdateFrequency));
                 }
             }
 
@@ -1517,12 +1549,14 @@ namespace Services.API
                     var pSearchEnd = entity.SearchEnd;
                     var pSearchStart = entity.SearchStart;
                     var pSearchStrategy = entity.SearchStrategy;
+                    var pSearchUpdated = entity.SearchUpdated;
                     var pSelectionCriteria = entity.SelectionCriteria;
                     var pSettings = entity.Settings;
                     var pShowEtw = entity.ShowEtw;
                     var pStats = entity.Stats.ToList();
                     var pStudyDesigns = entity.StudyDesigns.ToList();
                     var pType = entity.Type;
+                    var pUpdateFrequency = entity.UpdateFrequency;
                     var pUsers = entity.Users.ToList();
 					#region Custom Before copyDocumentSet
 					#endregion Custom Before copyDocumentSet
@@ -1557,10 +1591,12 @@ namespace Services.API
                                 , SearchEnd = pSearchEnd
                                 , SearchStart = pSearchStart
                                 , SearchStrategy = pSearchStrategy
+                                , SearchUpdated = pSearchUpdated
                                 , SelectionCriteria = pSelectionCriteria
                                 , Settings = pSettings
                                 , ShowEtw = pShowEtw
                                 , Type = pType
+                                , UpdateFrequency = pUpdateFrequency
 					};
                             foreach(var item in pCharacteristics)
                             {

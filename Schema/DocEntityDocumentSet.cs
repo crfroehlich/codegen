@@ -361,6 +361,11 @@ namespace Services.Schema
         public string SearchStrategy { get; set; }
 
 
+        [Field()]
+        [FieldMapping(nameof(SearchUpdated))]
+        public DateTime? SearchUpdated { get; set; }
+
+
         [Field(Length = int.MaxValue)]
         [FieldMapping(nameof(SelectionCriteria))]
         public string SelectionCriteria { get; set; }
@@ -397,6 +402,11 @@ namespace Services.Schema
         [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
+
+
+        [Field()]
+        [FieldMapping(nameof(UpdateFrequency))]
+        public int? UpdateFrequency { get; set; }
 
 
         [Field()]
@@ -634,6 +644,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.SearchEnd, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchEnd))))
                 .ForMember(dest => dest.SearchStart, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchStart))))
                 .ForMember(dest => dest.SearchStrategy, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchStrategy))))
+                .ForMember(dest => dest.SearchUpdated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchUpdated))))
                 .ForMember(dest => dest.SelectionCriteria, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SelectionCriteria))))
                 .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Settings))))
                 .ForMember(dest => dest.ShowEtw, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ShowEtw))))
@@ -643,6 +654,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.StudyDesignsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.StudyDesignsCount))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Type))))
                 .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.TypeId))))
+                .ForMember(dest => dest.UpdateFrequency, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.UpdateFrequency))))
                 .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Users))))
                 .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.UsersCount))))
                 .MaxDepth(2);
