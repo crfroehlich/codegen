@@ -54,20 +54,20 @@ namespace Services.Enums
         SALARY
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this UserPayrollTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case UserPayrollTypeEnm.HOURLY:
                     return DocConstantUserPayrollType.HOURLY;
                 case UserPayrollTypeEnm.SALARY:
                     return DocConstantUserPayrollType.SALARY;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantUserPayrollType : IEquatable<DocConstantUserPayrollType>, IEqualityComparer<DocConstantUserPayrollType>
@@ -105,8 +105,8 @@ namespace Services.Enums
         public bool Equals(DocConstantUserPayrollType obj) => this == obj;
 
         public static bool operator ==(DocConstantUserPayrollType x, DocConstantUserPayrollType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantUserPayrollType x, DocConstantUserPayrollType y) => x == y;
+        
+        public bool Equals(DocConstantUserPayrollType x, DocConstantUserPayrollType y) => x == y;
         
         public static bool operator !=(DocConstantUserPayrollType x, DocConstantUserPayrollType y) => !(x == y);
 
@@ -125,7 +125,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantUserPayrollType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

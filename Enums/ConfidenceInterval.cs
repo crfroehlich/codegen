@@ -60,12 +60,12 @@ namespace Services.Enums
         P99
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ConfidenceIntervalEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ConfidenceIntervalEnm.P90:
                     return DocConstantConfidenceInterval.P90;
                 case ConfidenceIntervalEnm.P92_5:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantConfidenceInterval.P97_5;
                 case ConfidenceIntervalEnm.P99:
                     return DocConstantConfidenceInterval.P99;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantConfidenceInterval : IEquatable<DocConstantConfidenceInterval>, IEqualityComparer<DocConstantConfidenceInterval>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantConfidenceInterval obj) => this == obj;
 
         public static bool operator ==(DocConstantConfidenceInterval x, DocConstantConfidenceInterval y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantConfidenceInterval x, DocConstantConfidenceInterval y) => x == y;
+        
+        public bool Equals(DocConstantConfidenceInterval x, DocConstantConfidenceInterval y) => x == y;
         
         public static bool operator !=(DocConstantConfidenceInterval x, DocConstantConfidenceInterval y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantConfidenceInterval obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<WorkflowTask, WorkflowTaskSearch>(request);
             IQueryable<DocEntityWorkflowTask> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityWorkflowTask>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityWorkflowTask>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowTaskFullTextSearch(request);
@@ -175,7 +175,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -339,16 +339,16 @@ namespace Services.API
 
             WorkflowTask ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "WorkflowTask")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "WorkflowTask")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -403,13 +403,13 @@ namespace Services.API
         {
             WorkflowTask ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityWorkflowTask.GetWorkflowTask(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityWorkflowTask.GetWorkflowTask(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pAssignee = entity.Assignee;
                     var pData = entity.Data;
@@ -421,11 +421,11 @@ namespace Services.API
                     var pStatus = entity.Status;
                     var pType = entity.Type;
                     var pWorkflow = entity.Workflow;
-					#region Custom Before copyWorkflowTask
-					#endregion Custom Before copyWorkflowTask
-					var copy = new DocEntityWorkflowTask(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyWorkflowTask
+                    #endregion Custom Before copyWorkflowTask
+                    var copy = new DocEntityWorkflowTask(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , Assignee = pAssignee
                                 , Data = pData
                                 , Description = pDescription
@@ -434,14 +434,14 @@ namespace Services.API
                                 , Status = pStatus
                                 , Type = pType
                                 , Workflow = pWorkflow
-					};
+                    };
 
-					#region Custom After copyWorkflowTask
-					#endregion Custom After copyWorkflowTask
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyWorkflowTask
+                    #endregion Custom After copyWorkflowTask
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -509,12 +509,12 @@ namespace Services.API
             
             WorkflowTask ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(WorkflowTaskBatch request)
@@ -564,34 +564,34 @@ namespace Services.API
         public void Delete(WorkflowTask request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.WORKFLOWTASK);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityWorkflowTask.GetWorkflowTask(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.WORKFLOWTASK);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityWorkflowTask.GetWorkflowTask(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowTask could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowTask could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(WorkflowTaskSearch request)
         {
             var matches = Get(request) as List<WorkflowTask>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         private WorkflowTask GetWorkflowTask(WorkflowTask request)
         {

@@ -58,12 +58,12 @@ namespace Services.Enums
         YES
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this PublicationPoolStudiesEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case PublicationPoolStudiesEnm.NO:
                     return DocConstantPublicationPoolStudies.NO;
                 case PublicationPoolStudiesEnm.NR:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantPublicationPoolStudies.UNSURE;
                 case PublicationPoolStudiesEnm.YES:
                     return DocConstantPublicationPoolStudies.YES;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantPublicationPoolStudies : IEquatable<DocConstantPublicationPoolStudies>, IEqualityComparer<DocConstantPublicationPoolStudies>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantPublicationPoolStudies obj) => this == obj;
 
         public static bool operator ==(DocConstantPublicationPoolStudies x, DocConstantPublicationPoolStudies y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantPublicationPoolStudies x, DocConstantPublicationPoolStudies y) => x == y;
+        
+        public bool Equals(DocConstantPublicationPoolStudies x, DocConstantPublicationPoolStudies y) => x == y;
         
         public static bool operator !=(DocConstantPublicationPoolStudies x, DocConstantPublicationPoolStudies y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantPublicationPoolStudies obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -116,44 +116,52 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
+        [FieldMapping(nameof(DestinationUnit))]
         public DocEntityUnitOfMeasure DestinationUnit { get; set; }
         public int? DestinationUnitId { get { return DestinationUnit?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(IsDefault))]
         public bool IsDefault { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(IsDestinationSi))]
         public bool IsDestinationSi { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ModifierTerm))]
         public DocEntityTermMaster ModifierTerm { get; set; }
         public int? ModifierTermId { get { return ModifierTerm?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, Precision = 38, Scale = 19)]
+        [FieldMapping(nameof(Multiplier))]
         public decimal Multiplier { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Parent))]
         public DocEntityLookupTable Parent { get; set; }
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(RootTerm))]
         public DocEntityTermMaster RootTerm { get; set; }
         public int? RootTermId { get { return RootTerm?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(SourceUnit))]
         public DocEntityUnitOfMeasure SourceUnit { get; set; }
         public int? SourceUnitId { get { return SourceUnit?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -165,10 +173,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

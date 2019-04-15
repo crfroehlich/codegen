@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Page, PageSearch>(request);
             IQueryable<DocEntityPage> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityPage>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityPage>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new PageFullTextSearch(request);
@@ -131,7 +131,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -402,16 +402,16 @@ namespace Services.API
 
             Page ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Page")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Page")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -466,13 +466,13 @@ namespace Services.API
         {
             Page ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityPage.GetPage(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityPage.GetPage(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pApps = entity.Apps.ToList();
                     var pDescription = entity.Description;
@@ -484,14 +484,14 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
                     var pRoles = entity.Roles.ToList();
-					#region Custom Before copyPage
-					#endregion Custom Before copyPage
-					var copy = new DocEntityPage(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyPage
+                    #endregion Custom Before copyPage
+                    var copy = new DocEntityPage(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , Description = pDescription
                                 , Name = pName
-					};
+                    };
                             foreach(var item in pApps)
                             {
                                 entity.Apps.Add(item);
@@ -512,12 +512,12 @@ namespace Services.API
                                 entity.Roles.Add(item);
                             }
 
-					#region Custom After copyPage
-					#endregion Custom After copyPage
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyPage
+                    #endregion Custom After copyPage
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -585,12 +585,12 @@ namespace Services.API
             
             Page ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(PageBatch request)
@@ -640,39 +640,39 @@ namespace Services.API
         public void Delete(Page request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.PAGE);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityPage.GetPage(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.PAGE);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityPage.GetPage(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Page could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Page could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(PageSearch request)
         {
             var matches = Get(request) as List<Page>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         public object Get(PageJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "app":
                         return GetJunctionSearchResult<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request, (ss) => HostContext.ResolveService<AppService>(Request)?.Get(ss));
                     case "glossary":
@@ -681,14 +681,14 @@ namespace Services.API
                         return GetJunctionSearchResult<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request, (ss) => HostContext.ResolveService<HelpService>(Request)?.Get(ss));
                     case "role":
                         return GetJunctionSearchResult<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(PageJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "app":
                         return AddJunction<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
                     case "glossary":
@@ -697,15 +697,15 @@ namespace Services.API
                         return AddJunction<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
                     case "role":
                         return AddJunction<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(PageJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "app":
                         return RemoveJunction<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
                     case "glossary":
@@ -714,10 +714,10 @@ namespace Services.API
                         return RemoveJunction<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
                     case "role":
                         return RemoveJunction<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private Page GetPage(Page request)
         {
             var id = request?.Id;

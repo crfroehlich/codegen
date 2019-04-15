@@ -80,12 +80,12 @@ namespace Services.Enums
         VARIES
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this TimepointTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case TimepointTypeEnm.AFTER:
                     return DocConstantTimepointType.AFTER;
                 case TimepointTypeEnm.AVERAGE:
@@ -116,10 +116,10 @@ namespace Services.Enums
                     return DocConstantTimepointType.TOTAL;
                 case TimepointTypeEnm.VARIES:
                     return DocConstantTimepointType.VARIES;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantTimepointType : IEquatable<DocConstantTimepointType>, IEqualityComparer<DocConstantTimepointType>
@@ -170,8 +170,8 @@ namespace Services.Enums
         public bool Equals(DocConstantTimepointType obj) => this == obj;
 
         public static bool operator ==(DocConstantTimepointType x, DocConstantTimepointType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantTimepointType x, DocConstantTimepointType y) => x == y;
+        
+        public bool Equals(DocConstantTimepointType x, DocConstantTimepointType y) => x == y;
         
         public static bool operator !=(DocConstantTimepointType x, DocConstantTimepointType y) => !(x == y);
 
@@ -190,7 +190,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantTimepointType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -62,12 +62,12 @@ namespace Services.Enums
         THIRD
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this InterventionLineOfTreatmentEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case InterventionLineOfTreatmentEnm.FIRST:
                     return DocConstantInterventionLineOfTreatment.FIRST;
                 case InterventionLineOfTreatmentEnm.MAINTENANCE:
@@ -80,10 +80,10 @@ namespace Services.Enums
                     return DocConstantInterventionLineOfTreatment.SECOND;
                 case InterventionLineOfTreatmentEnm.THIRD:
                     return DocConstantInterventionLineOfTreatment.THIRD;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantInterventionLineOfTreatment : IEquatable<DocConstantInterventionLineOfTreatment>, IEqualityComparer<DocConstantInterventionLineOfTreatment>
@@ -125,8 +125,8 @@ namespace Services.Enums
         public bool Equals(DocConstantInterventionLineOfTreatment obj) => this == obj;
 
         public static bool operator ==(DocConstantInterventionLineOfTreatment x, DocConstantInterventionLineOfTreatment y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantInterventionLineOfTreatment x, DocConstantInterventionLineOfTreatment y) => x == y;
+        
+        public bool Equals(DocConstantInterventionLineOfTreatment x, DocConstantInterventionLineOfTreatment y) => x == y;
         
         public static bool operator !=(DocConstantInterventionLineOfTreatment x, DocConstantInterventionLineOfTreatment y) => !(x == y);
 
@@ -145,7 +145,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantInterventionLineOfTreatment obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

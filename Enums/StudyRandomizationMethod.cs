@@ -60,12 +60,12 @@ namespace Services.Enums
         NR
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyRandomizationMethodEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyRandomizationMethodEnm.CLUSTER:
                     return DocConstantStudyRandomizationMethod.CLUSTER;
                 case StudyRandomizationMethodEnm.INDIVIDUAL:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantStudyRandomizationMethod.N_A;
                 case StudyRandomizationMethodEnm.NR:
                     return DocConstantStudyRandomizationMethod.NR;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyRandomizationMethod : IEquatable<DocConstantStudyRandomizationMethod>, IEqualityComparer<DocConstantStudyRandomizationMethod>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyRandomizationMethod obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyRandomizationMethod x, DocConstantStudyRandomizationMethod y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyRandomizationMethod x, DocConstantStudyRandomizationMethod y) => x == y;
+        
+        public bool Equals(DocConstantStudyRandomizationMethod x, DocConstantStudyRandomizationMethod y) => x == y;
         
         public static bool operator !=(DocConstantStudyRandomizationMethod x, DocConstantStudyRandomizationMethod y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyRandomizationMethod obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

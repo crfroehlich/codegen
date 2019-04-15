@@ -204,12 +204,12 @@ namespace Services.Enums
         WORKFLOWTASK
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ModelNameEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ModelNameEnm.APP:
                     return DocConstantModelName.APP;
                 case ModelNameEnm.ATTRIBUTE:
@@ -364,10 +364,10 @@ namespace Services.Enums
                     return DocConstantModelName.WORKFLOWCOMMENT;
                 case ModelNameEnm.WORKFLOWTASK:
                     return DocConstantModelName.WORKFLOWTASK;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantModelName : IEquatable<DocConstantModelName>, IEqualityComparer<DocConstantModelName>
@@ -480,8 +480,8 @@ namespace Services.Enums
         public bool Equals(DocConstantModelName obj) => this == obj;
 
         public static bool operator ==(DocConstantModelName x, DocConstantModelName y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantModelName x, DocConstantModelName y) => x == y;
+        
+        public bool Equals(DocConstantModelName x, DocConstantModelName y) => x == y;
         
         public static bool operator !=(DocConstantModelName x, DocConstantModelName y) => !(x == y);
 
@@ -500,7 +500,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantModelName obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

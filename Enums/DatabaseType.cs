@@ -66,12 +66,12 @@ namespace Services.Enums
         NORTHERN_LIGHT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DatabaseTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DatabaseTypeEnm.ASCO:
                     return DocConstantDatabaseType.ASCO;
                 case DatabaseTypeEnm.CLINICAL_TRIALS_GOV:
@@ -88,10 +88,10 @@ namespace Services.Enums
                     return DocConstantDatabaseType.MEDLINE;
                 case DatabaseTypeEnm.NORTHERN_LIGHT:
                     return DocConstantDatabaseType.NORTHERN_LIGHT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDatabaseType : IEquatable<DocConstantDatabaseType>, IEqualityComparer<DocConstantDatabaseType>
@@ -135,8 +135,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDatabaseType obj) => this == obj;
 
         public static bool operator ==(DocConstantDatabaseType x, DocConstantDatabaseType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDatabaseType x, DocConstantDatabaseType y) => x == y;
+        
+        public bool Equals(DocConstantDatabaseType x, DocConstantDatabaseType y) => x == y;
         
         public static bool operator !=(DocConstantDatabaseType x, DocConstantDatabaseType y) => !(x == y);
 
@@ -155,7 +155,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDatabaseType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

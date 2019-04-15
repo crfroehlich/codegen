@@ -58,12 +58,12 @@ namespace Services.Enums
         SINGLE_BLIND
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyBlindingMethodEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyBlindingMethodEnm.DOUBLE_BLIND:
                     return DocConstantStudyBlindingMethod.DOUBLE_BLIND;
                 case StudyBlindingMethodEnm.OPEN_BLINDED_ENDPOINT:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantStudyBlindingMethod.OPEN_NO_BLINDING;
                 case StudyBlindingMethodEnm.SINGLE_BLIND:
                     return DocConstantStudyBlindingMethod.SINGLE_BLIND;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyBlindingMethod : IEquatable<DocConstantStudyBlindingMethod>, IEqualityComparer<DocConstantStudyBlindingMethod>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyBlindingMethod obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyBlindingMethod x, DocConstantStudyBlindingMethod y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyBlindingMethod x, DocConstantStudyBlindingMethod y) => x == y;
+        
+        public bool Equals(DocConstantStudyBlindingMethod x, DocConstantStudyBlindingMethod y) => x == y;
         
         public static bool operator !=(DocConstantStudyBlindingMethod x, DocConstantStudyBlindingMethod y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyBlindingMethod obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

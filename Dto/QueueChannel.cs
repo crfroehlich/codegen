@@ -131,9 +131,13 @@ namespace Services.Dto
         public QueueChannel(int? pId, bool pAutoDelete, Reference pBackgroundTask, int? pBackgroundTaskId, string pDescription, bool pDurable, bool pEnabled, bool pExclusive, string pName) : 
             base(pId, pAutoDelete, pBackgroundTask, pBackgroundTaskId, pDescription, pDurable, pEnabled, pExclusive, pName) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

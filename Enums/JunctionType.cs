@@ -58,12 +58,12 @@ namespace Services.Enums
         RATING
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this JunctionTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case JunctionTypeEnm.APPROVAL:
                     return DocConstantJunctionType.APPROVAL;
                 case JunctionTypeEnm.COMMENT:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantJunctionType.FLAGGED_FOR_APPROVAL;
                 case JunctionTypeEnm.RATING:
                     return DocConstantJunctionType.RATING;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantJunctionType : IEquatable<DocConstantJunctionType>, IEqualityComparer<DocConstantJunctionType>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantJunctionType obj) => this == obj;
 
         public static bool operator ==(DocConstantJunctionType x, DocConstantJunctionType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantJunctionType x, DocConstantJunctionType y) => x == y;
+        
+        public bool Equals(DocConstantJunctionType x, DocConstantJunctionType y) => x == y;
         
         public static bool operator !=(DocConstantJunctionType x, DocConstantJunctionType y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantJunctionType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -116,63 +116,64 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = 0)]
+        [FieldMapping(nameof(Attempts))]
         public int? Attempts { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(AuditRecord))]
         public DocEntityAuditRecord AuditRecord { get; set; }
         public int? AuditRecordId { get { return AuditRecord?.Id; } private set { var noid = value; } }
 
 
         [Field(Length = int.MaxValue)]
-        public byte[] DataCompressed { get; set; }
-
-        private string _Data;
-        public string Data
-        {
-            get => _Data ?? (_Data = DocZip.Unzip(DataCompressed));
-            set
-            {
-                _Data = value;
-                DataCompressed = DocZip.Zip(_Data);
-            }
-        }
+        [FieldMapping(nameof(Data))]
+        public string Data { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Description))]
         public string Description { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Ended))]
         public DateTime? Ended { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(EntityId))]
         public int? EntityId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ExecutionTime))]
         public string ExecutionTime { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Started))]
         public DateTime? Started { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Status))]
         public string Status { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Succeeded))]
         public bool Succeeded { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Task))]
         public DocEntityBackgroundTask Task { get; set; }
         public int? TaskId { get { return Task?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TaskHistory))]
         public DocEntitySet<DocEntityBackgroundTaskHistory> TaskHistory { get; private set; }
 
 
@@ -180,7 +181,7 @@ namespace Services.Schema
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -192,10 +193,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

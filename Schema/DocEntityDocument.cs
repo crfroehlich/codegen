@@ -116,202 +116,235 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue, LazyLoad = true)]
+        [FieldMapping(nameof(Abstract))]
         public string Abstract { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(AccessionID))]
         public string AccessionID { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Acronym))]
         public string Acronym { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Authors))]
         public string Authors { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(CochraneID))]
         public string CochraneID { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(CorporateAuthor))]
         public string CorporateAuthor { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Country))]
         public string Country { get; set; }
 
 
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(CustomData))]
         public string CustomData { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DatabaseType))]
         public DocEntityLookupTable DatabaseType { get; set; }
         public int? DatabaseTypeId { get { return DatabaseType?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DocumentSets))]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DocumentType))]
         public DocEntityLookupTable DocumentType { get; set; }
         public int? DocumentTypeId { get { return DocumentType?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DOI))]
         public string DOI { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(EmbaseAccessionNumber))]
         public string EmbaseAccessionNumber { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Emtree))]
         public string Emtree { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ErrataText))]
         public string ErrataText { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(FullText))]
         public string FullText { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(FullTextURL))]
         public string FullTextURL { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Import))]
         public DocEntityImportData Import { get; set; }
         public int? ImportId { get { return Import?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ImportType))]
         public DocEntityLookupTable ImportType { get; set; }
         public int? ImportTypeId { get { return ImportType?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Institution))]
         public string Institution { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ISSN))]
         public string ISSN { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Issue))]
         public string Issue { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(JournalTitle))]
         public string JournalTitle { get; set; }
 
 
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(LegacyModel))]
         public string LegacyModel { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(LegacySync))]
         public DateTime? LegacySync { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(LookupTables))]
         public DocEntitySet<DocEntityLookupTable> LookupTables { get; private set; }
 
 
         public int? LookupTablesCount { get { return LookupTables.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(MedlineID))]
         public int? MedlineID { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(MeSH))]
         public string MeSH { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(NonDigitizedDocumentSets))]
         public DocEntitySet<DocEntityDocumentSet> NonDigitizedDocumentSets { get; private set; }
 
 
         public int? NonDigitizedDocumentSetsCount { get { return NonDigitizedDocumentSets.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Pages))]
         public string Pages { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ParentChildStatus))]
         public char? ParentChildStatus { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ParentID))]
         public int? ParentID { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(PublicationDate))]
         public string PublicationDate { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(PublicationYear))]
         public int? PublicationYear { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(PubType))]
         public string PubType { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ReferenceStudy))]
         public int ReferenceStudy { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(SecondarySourceID))]
         public string SecondarySourceID { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Source))]
         public string Source { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        public byte[] StorageModelCompressed { get; set; }
-
-        private string _StorageModel;
-        public string StorageModel
-        {
-            get => _StorageModel ?? (_StorageModel = DocZip.Unzip(StorageModelCompressed));
-            set
-            {
-                _StorageModel = value;
-                StorageModelCompressed = DocZip.Zip(_StorageModel);
-            }
-        }
+        [FieldMapping(nameof(StorageModel))]
+        public string StorageModel { get; set; }
 
 
         [Field(DefaultValue = "{}", Length = int.MaxValue)]
+        [FieldMapping(nameof(SupplementalFiles))]
         public string SupplementalFiles { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TaStudyDesign))]
         public string TaStudyDesign { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Title))]
         public string Title { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TrialOutcome))]
         public short? TrialOutcome { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(VariableData))]
         [Association(PairTo = nameof(DocEntityVariableInstance.Document), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableInstance> VariableData { get; private set; }
 
@@ -319,12 +352,13 @@ namespace Services.Schema
         public int? VariableDataCount { get { return VariableData.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Volume))]
         public string Volume { get; set; }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -336,10 +370,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

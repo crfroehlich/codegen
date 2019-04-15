@@ -58,20 +58,20 @@ namespace Services.Enums
         PERSONS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this AmPersonCountEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case AmPersonCountEnm.COUNT:
                     return DocConstantAmPersonCount.COUNT;
                 case AmPersonCountEnm.PERSONS:
                     return DocConstantAmPersonCount.PERSONS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantAmPersonCount : IEquatable<DocConstantAmPersonCount>, IEqualityComparer<DocConstantAmPersonCount>
@@ -109,8 +109,8 @@ namespace Services.Enums
         public bool Equals(DocConstantAmPersonCount obj) => this == obj;
 
         public static bool operator ==(DocConstantAmPersonCount x, DocConstantAmPersonCount y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantAmPersonCount x, DocConstantAmPersonCount y) => x == y;
+        
+        public bool Equals(DocConstantAmPersonCount x, DocConstantAmPersonCount y) => x == y;
         
         public static bool operator !=(DocConstantAmPersonCount x, DocConstantAmPersonCount y) => !(x == y);
 
@@ -129,7 +129,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantAmPersonCount obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

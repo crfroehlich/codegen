@@ -60,12 +60,12 @@ namespace Services.Enums
         STUDY
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ProtocolFilterOwnerEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ProtocolFilterOwnerEnm.ATTRIBUTE:
                     return DocConstantProtocolFilterOwner.ATTRIBUTE;
                 case ProtocolFilterOwnerEnm.DOSAGE_VALUE:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantProtocolFilterOwner.INTERVENTION;
                 case ProtocolFilterOwnerEnm.STUDY:
                     return DocConstantProtocolFilterOwner.STUDY;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantProtocolFilterOwner : IEquatable<DocConstantProtocolFilterOwner>, IEqualityComparer<DocConstantProtocolFilterOwner>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantProtocolFilterOwner obj) => this == obj;
 
         public static bool operator ==(DocConstantProtocolFilterOwner x, DocConstantProtocolFilterOwner y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantProtocolFilterOwner x, DocConstantProtocolFilterOwner y) => x == y;
+        
+        public bool Equals(DocConstantProtocolFilterOwner x, DocConstantProtocolFilterOwner y) => x == y;
         
         public static bool operator !=(DocConstantProtocolFilterOwner x, DocConstantProtocolFilterOwner y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantProtocolFilterOwner obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

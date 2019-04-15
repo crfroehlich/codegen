@@ -104,9 +104,13 @@ namespace Services.Dto
         public TermCategory(int? pId, Reference pParentCategory, int? pParentCategoryId, List<Reference> pTerms, int? pTermsCount) : 
             base(pId, pParentCategory, pParentCategoryId, pTerms, pTermsCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

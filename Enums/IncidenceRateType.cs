@@ -54,20 +54,20 @@ namespace Services.Enums
         PERSONS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this IncidenceRateTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case IncidenceRateTypeEnm.COUNT:
                     return DocConstantIncidenceRateType.COUNT;
                 case IncidenceRateTypeEnm.PERSONS:
                     return DocConstantIncidenceRateType.PERSONS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantIncidenceRateType : IEquatable<DocConstantIncidenceRateType>, IEqualityComparer<DocConstantIncidenceRateType>
@@ -105,8 +105,8 @@ namespace Services.Enums
         public bool Equals(DocConstantIncidenceRateType obj) => this == obj;
 
         public static bool operator ==(DocConstantIncidenceRateType x, DocConstantIncidenceRateType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantIncidenceRateType x, DocConstantIncidenceRateType y) => x == y;
+        
+        public bool Equals(DocConstantIncidenceRateType x, DocConstantIncidenceRateType y) => x == y;
         
         public static bool operator !=(DocConstantIncidenceRateType x, DocConstantIncidenceRateType y) => !(x == y);
 
@@ -125,7 +125,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantIncidenceRateType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -56,22 +56,22 @@ namespace Services.Enums
         YES
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this YesNoNaEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case YesNoNaEnm.NA:
                     return DocConstantYesNoNa.NA;
                 case YesNoNaEnm.NO:
                     return DocConstantYesNoNa.NO;
                 case YesNoNaEnm.YES:
                     return DocConstantYesNoNa.YES;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantYesNoNa : IEquatable<DocConstantYesNoNa>, IEqualityComparer<DocConstantYesNoNa>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantYesNoNa obj) => this == obj;
 
         public static bool operator ==(DocConstantYesNoNa x, DocConstantYesNoNa y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantYesNoNa x, DocConstantYesNoNa y) => x == y;
+        
+        public bool Equals(DocConstantYesNoNa x, DocConstantYesNoNa y) => x == y;
         
         public static bool operator !=(DocConstantYesNoNa x, DocConstantYesNoNa y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantYesNoNa obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

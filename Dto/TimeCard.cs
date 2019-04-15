@@ -160,9 +160,13 @@ namespace Services.Dto
         public TimeCard(int? pId, string pDescription, Reference pDocument, int? pDocumentId, DateTime? pEnd, Reference pProject, int? pProjectId, int? pReferenceId, DateTime? pStart, Reference pStatus, int? pStatusId, Reference pUser, int? pUserId, Reference pWorkType, int? pWorkTypeId) : 
             base(pId, pDescription, pDocument, pDocumentId, pEnd, pProject, pProjectId, pReferenceId, pStart, pStatus, pStatusId, pUser, pUserId, pWorkType, pWorkTypeId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

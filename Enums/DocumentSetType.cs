@@ -54,36 +54,32 @@ namespace Services.Enums
         DISEASE_STATE,
         [EnumMember(Value = DocConstantDocumentSetType.GLOBAL)]
         GLOBAL,
-        [EnumMember(Value = DocConstantDocumentSetType.LIBRARY)]
-        LIBRARY,
         [EnumMember(Value = DocConstantDocumentSetType.SERVE_PORTAL)]
         SERVE_PORTAL,
         [EnumMember(Value = DocConstantDocumentSetType.THERAPEUTIC_AREA)]
         THERAPEUTIC_AREA
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DocumentSetTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DocumentSetTypeEnm.DATA_SET:
                     return DocConstantDocumentSetType.DATA_SET;
                 case DocumentSetTypeEnm.DISEASE_STATE:
                     return DocConstantDocumentSetType.DISEASE_STATE;
                 case DocumentSetTypeEnm.GLOBAL:
                     return DocConstantDocumentSetType.GLOBAL;
-                case DocumentSetTypeEnm.LIBRARY:
-                    return DocConstantDocumentSetType.LIBRARY;
                 case DocumentSetTypeEnm.SERVE_PORTAL:
                     return DocConstantDocumentSetType.SERVE_PORTAL;
                 case DocumentSetTypeEnm.THERAPEUTIC_AREA:
                     return DocConstantDocumentSetType.THERAPEUTIC_AREA;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDocumentSetType : IEquatable<DocConstantDocumentSetType>, IEqualityComparer<DocConstantDocumentSetType>
@@ -91,7 +87,6 @@ namespace Services.Enums
         public const string DATA_SET = "Data Set";
         public const string DISEASE_STATE = "Disease State";
         public const string GLOBAL = "Global";
-        public const string LIBRARY = "Library";
         public const string SERVE_PORTAL = "SERVE Portal";
         public const string THERAPEUTIC_AREA = "Therapeutic Area";
         
@@ -125,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDocumentSetType obj) => this == obj;
 
         public static bool operator ==(DocConstantDocumentSetType x, DocConstantDocumentSetType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDocumentSetType x, DocConstantDocumentSetType y) => x == y;
+        
+        public bool Equals(DocConstantDocumentSetType x, DocConstantDocumentSetType y) => x == y;
         
         public static bool operator !=(DocConstantDocumentSetType x, DocConstantDocumentSetType y) => !(x == y);
 
@@ -145,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDocumentSetType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

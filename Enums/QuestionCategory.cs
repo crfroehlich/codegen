@@ -54,20 +54,20 @@ namespace Services.Enums
         PICO
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this QuestionCategoryEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case QuestionCategoryEnm.GENERAL:
                     return DocConstantQuestionCategory.GENERAL;
                 case QuestionCategoryEnm.PICO:
                     return DocConstantQuestionCategory.PICO;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantQuestionCategory : IEquatable<DocConstantQuestionCategory>, IEqualityComparer<DocConstantQuestionCategory>
@@ -105,8 +105,8 @@ namespace Services.Enums
         public bool Equals(DocConstantQuestionCategory obj) => this == obj;
 
         public static bool operator ==(DocConstantQuestionCategory x, DocConstantQuestionCategory y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantQuestionCategory x, DocConstantQuestionCategory y) => x == y;
+        
+        public bool Equals(DocConstantQuestionCategory x, DocConstantQuestionCategory y) => x == y;
         
         public static bool operator !=(DocConstantQuestionCategory x, DocConstantQuestionCategory y) => !(x == y);
 
@@ -125,7 +125,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantQuestionCategory obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -131,9 +131,13 @@ namespace Services.Dto
         public Interval(int? pId, DateTimeDto pCalendarDateEnd, int? pCalendarDateEndId, DateTimeDto pCalendarDateStart, int? pCalendarDateStartId, string pCalendarType, TimePoint pFollowUp, int? pFollowUpId, TimePoint pTimeOfDay, int? pTimeOfDayId) : 
             base(pId, pCalendarDateEnd, pCalendarDateEndId, pCalendarDateStart, pCalendarDateStartId, pCalendarType, pFollowUp, pFollowUpId, pTimeOfDay, pTimeOfDayId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

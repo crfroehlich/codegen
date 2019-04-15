@@ -92,12 +92,12 @@ namespace Services.Enums
         UNPAID_CAREGIVER
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this InterventionProviderEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case InterventionProviderEnm.ALLIED_HEALTH_CARE_PROVIDER:
                     return DocConstantInterventionProvider.ALLIED_HEALTH_CARE_PROVIDER;
                 case InterventionProviderEnm.CARE_PROVIDER:
@@ -140,10 +140,10 @@ namespace Services.Enums
                     return DocConstantInterventionProvider.THERAPIST;
                 case InterventionProviderEnm.UNPAID_CAREGIVER:
                     return DocConstantInterventionProvider.UNPAID_CAREGIVER;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantInterventionProvider : IEquatable<DocConstantInterventionProvider>, IEqualityComparer<DocConstantInterventionProvider>
@@ -200,8 +200,8 @@ namespace Services.Enums
         public bool Equals(DocConstantInterventionProvider obj) => this == obj;
 
         public static bool operator ==(DocConstantInterventionProvider x, DocConstantInterventionProvider y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantInterventionProvider x, DocConstantInterventionProvider y) => x == y;
+        
+        public bool Equals(DocConstantInterventionProvider x, DocConstantInterventionProvider y) => x == y;
         
         public static bool operator !=(DocConstantInterventionProvider x, DocConstantInterventionProvider y) => !(x == y);
 
@@ -220,7 +220,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantInterventionProvider obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

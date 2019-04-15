@@ -151,9 +151,13 @@ namespace Services.Dto
         public UserSession(int? pId, string pClientId, int? pHits, List<Reference> pImpersonations, int? pImpersonationsCount, string pIpAddress, List<Reference> pRequests, int? pRequestsCount, string pSessionId, string pTemporarySessionId, Reference pUser, int? pUserId, List<Reference> pUserHistory, int? pUserHistoryCount) : 
             base(pId, pClientId, pHits, pImpersonations, pImpersonationsCount, pIpAddress, pRequests, pRequestsCount, pSessionId, pTemporarySessionId, pUser, pUserId, pUserHistory, pUserHistoryCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

@@ -162,12 +162,12 @@ namespace Services.Enums
         UNCOLLECTEDOUTCOMEVARIABLES
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StatsRecordNameEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StatsRecordNameEnm.AMBISPECTIVE_OBSERVATIONAL:
                     return DocConstantStatsRecordName.AMBISPECTIVE_OBSERVATIONAL;
                 case StatsRecordNameEnm.BOUNDCHARACTERISTICVARIABLES:
@@ -280,10 +280,10 @@ namespace Services.Enums
                     return DocConstantStatsRecordName.UNCOLLECTEDMAINGROUPS;
                 case StatsRecordNameEnm.UNCOLLECTEDOUTCOMEVARIABLES:
                     return DocConstantStatsRecordName.UNCOLLECTEDOUTCOMEVARIABLES;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStatsRecordName : IEquatable<DocConstantStatsRecordName>, IEqualityComparer<DocConstantStatsRecordName>
@@ -375,8 +375,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStatsRecordName obj) => this == obj;
 
         public static bool operator ==(DocConstantStatsRecordName x, DocConstantStatsRecordName y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStatsRecordName x, DocConstantStatsRecordName y) => x == y;
+        
+        public bool Equals(DocConstantStatsRecordName x, DocConstantStatsRecordName y) => x == y;
         
         public static bool operator !=(DocConstantStatsRecordName x, DocConstantStatsRecordName y) => !(x == y);
 
@@ -395,7 +395,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStatsRecordName obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

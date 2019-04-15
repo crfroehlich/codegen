@@ -94,12 +94,12 @@ namespace Services.Enums
         PRE_PRANDIAL
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this InterventionScheduleEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case InterventionScheduleEnm.AFTERNOON:
                     return DocConstantInterventionSchedule.AFTERNOON;
                 case InterventionScheduleEnm.BEDTIME:
@@ -144,10 +144,10 @@ namespace Services.Enums
                     return DocConstantInterventionSchedule.PRE_POST_OP;
                 case InterventionScheduleEnm.PRE_PRANDIAL:
                     return DocConstantInterventionSchedule.PRE_PRANDIAL;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantInterventionSchedule : IEquatable<DocConstantInterventionSchedule>, IEqualityComparer<DocConstantInterventionSchedule>
@@ -205,8 +205,8 @@ namespace Services.Enums
         public bool Equals(DocConstantInterventionSchedule obj) => this == obj;
 
         public static bool operator ==(DocConstantInterventionSchedule x, DocConstantInterventionSchedule y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantInterventionSchedule x, DocConstantInterventionSchedule y) => x == y;
+        
+        public bool Equals(DocConstantInterventionSchedule x, DocConstantInterventionSchedule y) => x == y;
         
         public static bool operator !=(DocConstantInterventionSchedule x, DocConstantInterventionSchedule y) => !(x == y);
 
@@ -225,7 +225,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantInterventionSchedule obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

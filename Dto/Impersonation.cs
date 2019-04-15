@@ -114,9 +114,13 @@ namespace Services.Dto
         public Impersonation(int? pId, Reference pAuthenticatedUser, int? pAuthenticatedUserId, Reference pImpersonatedUser, int? pImpersonatedUserId, Reference pUserSession, int? pUserSessionId) : 
             base(pId, pAuthenticatedUser, pAuthenticatedUserId, pImpersonatedUser, pImpersonatedUserId, pUserSession, pUserSessionId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

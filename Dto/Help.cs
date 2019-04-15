@@ -144,9 +144,13 @@ namespace Services.Dto
         public Help(int? pId, string pConfluenceId, string pDescription, string pIcon, int? pOrder, List<Reference> pPages, int? pPagesCount, List<Reference> pScopes, int? pScopesCount, string pTitle, Reference pType, int? pTypeId) : 
             base(pId, pConfluenceId, pDescription, pIcon, pOrder, pPages, pPagesCount, pScopes, pScopesCount, pTitle, pType, pTypeId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

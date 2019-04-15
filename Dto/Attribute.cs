@@ -140,9 +140,13 @@ namespace Services.Dto
         public Attribute(int? pId, Reference pAttributeName, int? pAttributeNameId, Reference pAttributeType, int? pAttributeTypeId, AttributeInterval pInterval, int? pIntervalId, bool pIsCharacteristic, bool pIsOutcome, bool? pIsPositive, string pUniqueKey) : 
             base(pId, pAttributeName, pAttributeNameId, pAttributeType, pAttributeTypeId, pInterval, pIntervalId, pIsCharacteristic, pIsOutcome, pIsPositive, pUniqueKey) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Workflow, WorkflowSearch>(request);
             IQueryable<DocEntityWorkflow> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityWorkflow>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityWorkflow>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowFullTextSearch(request);
@@ -195,7 +195,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -706,16 +706,16 @@ namespace Services.API
 
             Workflow ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Workflow")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Workflow")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -770,13 +770,13 @@ namespace Services.API
         {
             Workflow ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityWorkflow.GetWorkflow(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityWorkflow.GetWorkflow(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pBindings = entity.Bindings.ToList();
                     var pComments = entity.Comments.ToList();
@@ -797,11 +797,11 @@ namespace Services.API
                     var pUser = entity.User;
                     var pVariables = entity.Variables.ToList();
                     var pWorkflows = entity.Workflows.ToList();
-					#region Custom Before copyWorkflow
-					#endregion Custom Before copyWorkflow
-					var copy = new DocEntityWorkflow(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyWorkflow
+                    #endregion Custom Before copyWorkflow
+                    var copy = new DocEntityWorkflow(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , Data = pData
                                 , Description = pDescription
                                 , Name = pName
@@ -809,7 +809,7 @@ namespace Services.API
                                 , Status = pStatus
                                 , Type = pType
                                 , User = pUser
-					};
+                    };
                             foreach(var item in pBindings)
                             {
                                 entity.Bindings.Add(item);
@@ -850,12 +850,12 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-					#region Custom After copyWorkflow
-					#endregion Custom After copyWorkflow
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyWorkflow
+                    #endregion Custom After copyWorkflow
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -923,18 +923,18 @@ namespace Services.API
             
             Workflow ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public object Get(WorkflowJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
                     case "workflowcomment":
@@ -951,14 +951,14 @@ namespace Services.API
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
                     case "workflow":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(WorkflowJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "lookuptablebinding":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     case "workflowcomment":
@@ -975,15 +975,15 @@ namespace Services.API
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request);
                     case "workflow":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(WorkflowJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "lookuptablebinding":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     case "workflowcomment":
@@ -1000,10 +1000,10 @@ namespace Services.API
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request);
                     case "workflow":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for workflow/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private Workflow GetWorkflow(Workflow request)
         {
             var id = request?.Id;

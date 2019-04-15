@@ -54,20 +54,20 @@ namespace Services.Enums
         OUTCOME
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this TermClassificationEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case TermClassificationEnm.CHARACTERISTIC:
                     return DocConstantTermClassification.CHARACTERISTIC;
                 case TermClassificationEnm.OUTCOME:
                     return DocConstantTermClassification.OUTCOME;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantTermClassification : IEquatable<DocConstantTermClassification>, IEqualityComparer<DocConstantTermClassification>
@@ -105,8 +105,8 @@ namespace Services.Enums
         public bool Equals(DocConstantTermClassification obj) => this == obj;
 
         public static bool operator ==(DocConstantTermClassification x, DocConstantTermClassification y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantTermClassification x, DocConstantTermClassification y) => x == y;
+        
+        public bool Equals(DocConstantTermClassification x, DocConstantTermClassification y) => x == y;
         
         public static bool operator !=(DocConstantTermClassification x, DocConstantTermClassification y) => !(x == y);
 
@@ -125,7 +125,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantTermClassification obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

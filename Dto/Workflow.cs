@@ -217,9 +217,13 @@ namespace Services.Dto
         public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pComments, int? pCommentsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, List<Reference> pTags, int? pTagsCount, List<Reference> pTasks, int? pTasksCount, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pBindings, pBindingsCount, pComments, pCommentsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pStatusId, pTags, pTagsCount, pTasks, pTasksCount, pType, pTypeId, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

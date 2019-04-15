@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<FeatureSet, FeatureSetSearch>(request);
             IQueryable<DocEntityFeatureSet> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityFeatureSet>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityFeatureSet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new FeatureSetFullTextSearch(request);
@@ -119,7 +119,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -324,45 +324,45 @@ namespace Services.API
             
             FeatureSet ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public object Get(FeatureSetJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "role":
                         return GetJunctionSearchResult<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(FeatureSetJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "role":
                         return AddJunction<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(FeatureSetJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "role":
                         return RemoveJunction<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private FeatureSet GetFeatureSet(FeatureSet request)
         {
             var id = request?.Id;

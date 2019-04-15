@@ -92,12 +92,12 @@ namespace Services.Enums
         TERTIARY_SAFETY_OUTCOME
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyObjectiveEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyObjectiveEnm.OTHERS:
                     return DocConstantStudyObjective.OTHERS;
                 case StudyObjectiveEnm.PRIMARY_EFFICACY_OUTCOME:
@@ -140,10 +140,10 @@ namespace Services.Enums
                     return DocConstantStudyObjective.TERTIARY_OBJECTIVE;
                 case StudyObjectiveEnm.TERTIARY_SAFETY_OUTCOME:
                     return DocConstantStudyObjective.TERTIARY_SAFETY_OUTCOME;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyObjective : IEquatable<DocConstantStudyObjective>, IEqualityComparer<DocConstantStudyObjective>
@@ -200,8 +200,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyObjective obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyObjective x, DocConstantStudyObjective y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyObjective x, DocConstantStudyObjective y) => x == y;
+        
+        public bool Equals(DocConstantStudyObjective x, DocConstantStudyObjective y) => x == y;
         
         public static bool operator !=(DocConstantStudyObjective x, DocConstantStudyObjective y) => !(x == y);
 
@@ -220,7 +220,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyObjective obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

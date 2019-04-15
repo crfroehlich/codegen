@@ -80,12 +80,12 @@ namespace Services.Enums
         WEIGHT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this UnitTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case UnitTypeEnm.AMOUNT:
                     return DocConstantUnitType.AMOUNT;
                 case UnitTypeEnm.AREA:
@@ -116,10 +116,10 @@ namespace Services.Enums
                     return DocConstantUnitType.VOLUME;
                 case UnitTypeEnm.WEIGHT:
                     return DocConstantUnitType.WEIGHT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantUnitType : IEquatable<DocConstantUnitType>, IEqualityComparer<DocConstantUnitType>
@@ -170,8 +170,8 @@ namespace Services.Enums
         public bool Equals(DocConstantUnitType obj) => this == obj;
 
         public static bool operator ==(DocConstantUnitType x, DocConstantUnitType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantUnitType x, DocConstantUnitType y) => x == y;
+        
+        public bool Equals(DocConstantUnitType x, DocConstantUnitType y) => x == y;
         
         public static bool operator !=(DocConstantUnitType x, DocConstantUnitType y) => !(x == y);
 
@@ -190,7 +190,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantUnitType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

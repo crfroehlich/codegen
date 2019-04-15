@@ -107,9 +107,13 @@ namespace Services.Dto
         public LocaleLookup(int? pId, IpData pData, string pIpAddress, Reference pLocale, int? pLocaleId) : 
             base(pId, pData, pIpAddress, pLocale, pLocaleId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

@@ -52,18 +52,18 @@ namespace Services.Enums
         EVIDENCE_ON_DEMAND
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this WorkflowTaskTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case WorkflowTaskTypeEnm.EVIDENCE_ON_DEMAND:
                     return DocConstantWorkflowTaskType.EVIDENCE_ON_DEMAND;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantWorkflowTaskType : IEquatable<DocConstantWorkflowTaskType>, IEqualityComparer<DocConstantWorkflowTaskType>
@@ -100,8 +100,8 @@ namespace Services.Enums
         public bool Equals(DocConstantWorkflowTaskType obj) => this == obj;
 
         public static bool operator ==(DocConstantWorkflowTaskType x, DocConstantWorkflowTaskType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantWorkflowTaskType x, DocConstantWorkflowTaskType y) => x == y;
+        
+        public bool Equals(DocConstantWorkflowTaskType x, DocConstantWorkflowTaskType y) => x == y;
         
         public static bool operator !=(DocConstantWorkflowTaskType x, DocConstantWorkflowTaskType y) => !(x == y);
 
@@ -120,7 +120,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantWorkflowTaskType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

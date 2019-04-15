@@ -115,43 +115,52 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(BioPortal))]
         public string BioPortal { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Categories))]
         public DocEntitySet<DocEntityTermCategory> Categories { get; private set; }
 
 
         public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(CUI))]
         public string CUI { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Enum))]
         public DocEntityLookupTableEnum Enum { get; set; }
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(MedDRA))]
         public string MedDRA { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(RxNorm))]
         public string RxNorm { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(SNOWMED))]
         public string SNOWMED { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Synonyms))]
         [Association(PairTo = nameof(DocEntityTermSynonym.Master), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
 
@@ -159,16 +168,18 @@ namespace Services.Schema
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TUI))]
         public string TUI { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(URI))]
         public string URI { get; set; }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -180,10 +191,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

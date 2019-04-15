@@ -58,12 +58,12 @@ namespace Services.Enums
         NOT_SPECIFIED
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyComplianceEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyComplianceEnm.DEMONSTRATED_COMPLIANCE:
                     return DocConstantStudyCompliance.DEMONSTRATED_COMPLIANCE;
                 case StudyComplianceEnm.EXCLUDED_NON_COMPLIANT:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantStudyCompliance.INCLUDED_NON_COMPLIANT;
                 case StudyComplianceEnm.NOT_SPECIFIED:
                     return DocConstantStudyCompliance.NOT_SPECIFIED;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyCompliance : IEquatable<DocConstantStudyCompliance>, IEqualityComparer<DocConstantStudyCompliance>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyCompliance obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyCompliance x, DocConstantStudyCompliance y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyCompliance x, DocConstantStudyCompliance y) => x == y;
+        
+        public bool Equals(DocConstantStudyCompliance x, DocConstantStudyCompliance y) => x == y;
         
         public static bool operator !=(DocConstantStudyCompliance x, DocConstantStudyCompliance y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyCompliance obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

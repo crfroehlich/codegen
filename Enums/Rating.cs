@@ -58,12 +58,12 @@ namespace Services.Enums
         RELEVANT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this RatingEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case RatingEnm.MAYBE_RELEVANT:
                     return DocConstantRating.MAYBE_RELEVANT;
                 case RatingEnm.NOT_RATED:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantRating.NOT_RELEVANT;
                 case RatingEnm.RELEVANT:
                     return DocConstantRating.RELEVANT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantRating : IEquatable<DocConstantRating>, IEqualityComparer<DocConstantRating>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantRating obj) => this == obj;
 
         public static bool operator ==(DocConstantRating x, DocConstantRating y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantRating x, DocConstantRating y) => x == y;
+        
+        public bool Equals(DocConstantRating x, DocConstantRating y) => x == y;
         
         public static bool operator !=(DocConstantRating x, DocConstantRating y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantRating obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

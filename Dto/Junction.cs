@@ -155,9 +155,13 @@ namespace Services.Dto
         public Junction(int? pId, List<Reference> pChildren, int? pChildrenCount, string pData, int? pOwnerId, string pOwnerType, Reference pParent, int? pParentId, int? pTargetId, string pTargetType, Reference pType, int? pTypeId, Reference pUser, int? pUserId) : 
             base(pId, pChildren, pChildrenCount, pData, pOwnerId, pOwnerType, pParent, pParentId, pTargetId, pTargetType, pType, pTypeId, pUser, pUserId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

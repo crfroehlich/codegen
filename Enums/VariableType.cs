@@ -56,22 +56,22 @@ namespace Services.Enums
         TEMPLATE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this VariableTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case VariableTypeEnm.APPLIED:
                     return DocConstantVariableType.APPLIED;
                 case VariableTypeEnm.OVERRIDE:
                     return DocConstantVariableType.OVERRIDE;
                 case VariableTypeEnm.TEMPLATE:
                     return DocConstantVariableType.TEMPLATE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantVariableType : IEquatable<DocConstantVariableType>, IEqualityComparer<DocConstantVariableType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantVariableType obj) => this == obj;
 
         public static bool operator ==(DocConstantVariableType x, DocConstantVariableType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantVariableType x, DocConstantVariableType y) => x == y;
+        
+        public bool Equals(DocConstantVariableType x, DocConstantVariableType y) => x == y;
         
         public static bool operator !=(DocConstantVariableType x, DocConstantVariableType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantVariableType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

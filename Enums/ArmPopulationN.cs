@@ -74,12 +74,12 @@ namespace Services.Enums
         SCREENED
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ArmPopulationNEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ArmPopulationNEnm.COMPLETED:
                     return DocConstantArmPopulationN.COMPLETED;
                 case ArmPopulationNEnm.CROSSOVER:
@@ -104,10 +104,10 @@ namespace Services.Enums
                     return DocConstantArmPopulationN.SAFETY;
                 case ArmPopulationNEnm.SCREENED:
                     return DocConstantArmPopulationN.SCREENED;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantArmPopulationN : IEquatable<DocConstantArmPopulationN>, IEqualityComparer<DocConstantArmPopulationN>
@@ -155,8 +155,8 @@ namespace Services.Enums
         public bool Equals(DocConstantArmPopulationN obj) => this == obj;
 
         public static bool operator ==(DocConstantArmPopulationN x, DocConstantArmPopulationN y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantArmPopulationN x, DocConstantArmPopulationN y) => x == y;
+        
+        public bool Equals(DocConstantArmPopulationN x, DocConstantArmPopulationN y) => x == y;
         
         public static bool operator !=(DocConstantArmPopulationN x, DocConstantArmPopulationN y) => !(x == y);
 
@@ -175,7 +175,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantArmPopulationN obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

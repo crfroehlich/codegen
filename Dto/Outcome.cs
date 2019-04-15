@@ -106,9 +106,13 @@ namespace Services.Dto
         public Outcome(int? pId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, string pURI) : 
             base(pId, pDocumentSets, pDocumentSetsCount, pName, pURI) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

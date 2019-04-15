@@ -60,12 +60,12 @@ namespace Services.Enums
         TERTIARY_ENDPOINT_OUTCOME
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this OutcomeTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case OutcomeTypeEnm.BINARY:
                     return DocConstantOutcomeType.BINARY;
                 case OutcomeTypeEnm.CONTINUOUS:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantOutcomeType.SECONDARY_ENDPOINT_OUTCOME;
                 case OutcomeTypeEnm.TERTIARY_ENDPOINT_OUTCOME:
                     return DocConstantOutcomeType.TERTIARY_ENDPOINT_OUTCOME;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantOutcomeType : IEquatable<DocConstantOutcomeType>, IEqualityComparer<DocConstantOutcomeType>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantOutcomeType obj) => this == obj;
 
         public static bool operator ==(DocConstantOutcomeType x, DocConstantOutcomeType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantOutcomeType x, DocConstantOutcomeType y) => x == y;
+        
+        public bool Equals(DocConstantOutcomeType x, DocConstantOutcomeType y) => x == y;
         
         public static bool operator !=(DocConstantOutcomeType x, DocConstantOutcomeType y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantOutcomeType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

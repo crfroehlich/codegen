@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Team, TeamSearch>(request);
             IQueryable<DocEntityTeam> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityTeam>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityTeam>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TeamFullTextSearch(request);
@@ -148,7 +148,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -479,16 +479,16 @@ namespace Services.API
 
             Team ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Team")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Team")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -543,13 +543,13 @@ namespace Services.API
         {
             Team ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityTeam.GetTeam(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityTeam.GetTeam(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pAdminRoles = entity.AdminRoles.ToList();
                     var pDescription = entity.Description;
@@ -570,11 +570,11 @@ namespace Services.API
                         pSlack += " (Copy)";
                     var pUpdates = entity.Updates.ToList();
                     var pUsers = entity.Users.ToList();
-					#region Custom Before copyTeam
-					#endregion Custom Before copyTeam
-					var copy = new DocEntityTeam(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyTeam
+                    #endregion Custom Before copyTeam
+                    var copy = new DocEntityTeam(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , Description = pDescription
                                 , Email = pEmail
                                 , IsInternal = pIsInternal
@@ -582,7 +582,7 @@ namespace Services.API
                                 , Owner = pOwner
                                 , Settings = pSettings
                                 , Slack = pSlack
-					};
+                    };
                             foreach(var item in pAdminRoles)
                             {
                                 entity.AdminRoles.Add(item);
@@ -603,12 +603,12 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-					#region Custom After copyTeam
-					#endregion Custom After copyTeam
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyTeam
+                    #endregion Custom After copyTeam
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -676,12 +676,12 @@ namespace Services.API
             
             Team ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(TeamBatch request)
@@ -731,39 +731,39 @@ namespace Services.API
         public void Delete(Team request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.TEAM);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityTeam.GetTeam(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.TEAM);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityTeam.GetTeam(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Team could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Team could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(TeamSearch request)
         {
             var matches = Get(request) as List<Team>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         public object Get(TeamJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "role":
                         return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
                     case "scope":
@@ -772,14 +772,14 @@ namespace Services.API
                         return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request, (ss) => HostContext.ResolveService<UpdateService>(Request)?.Get(ss));
                     case "user":
                         return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(TeamJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "role":
                         return AddJunction<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request);
                     case "scope":
@@ -788,15 +788,15 @@ namespace Services.API
                         return AddJunction<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
                     case "user":
                         return AddJunction<Team, DocEntityTeam, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(TeamJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "role":
                         return RemoveJunction<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request);
                     case "scope":
@@ -805,10 +805,10 @@ namespace Services.API
                         return RemoveJunction<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
                     case "user":
                         return RemoveJunction<Team, DocEntityTeam, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for team/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private Team GetTeam(Team request)
         {
             var id = request?.Id;

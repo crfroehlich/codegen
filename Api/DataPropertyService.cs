@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<DataProperty, DataPropertySearch>(request);
             IQueryable<DocEntityDataProperty> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityDataProperty>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityDataProperty>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DataPropertyFullTextSearch(request);
@@ -150,11 +150,6 @@ namespace Services.API
                 {
                     if(request.IsAudited.Any(v => v == null)) entities = entities.Where(en => en.IsAudited.In(request.IsAudited) || en.IsAudited == null);
                     else entities = entities.Where(en => en.IsAudited.In(request.IsAudited));
-                }
-                if(true == request.IsCompressed?.Any())
-                {
-                    if(request.IsCompressed.Any(v => v == null)) entities = entities.Where(en => en.IsCompressed.In(request.IsCompressed) || en.IsCompressed == null);
-                    else entities = entities.Where(en => en.IsCompressed.In(request.IsCompressed));
                 }
                 if(true == request.IsDisplayInForm?.Any())
                 {
@@ -289,7 +284,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -328,7 +323,6 @@ namespace Services.API
             var pIsAllowFreeText = request.IsAllowFreeText;
             var pIsAllowRemoveInForm = request.IsAllowRemoveInForm;
             var pIsAudited = request.IsAudited;
-            var pIsCompressed = request.IsCompressed;
             var pIsDisplayInForm = request.IsDisplayInForm;
             var pIsDisplayInGrid = request.IsDisplayInGrid;
             var pIsEditColumn = request.IsEditColumn;
@@ -483,17 +477,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsAudited, nameof(request.IsAudited)) && !request.VisibleFields.Matches(nameof(request.IsAudited), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.IsAudited));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsCompressed, permission, DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pIsCompressed, entity.IsCompressed, nameof(request.IsCompressed)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsCompressed)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pIsCompressed) && DocResources.Metadata.IsRequired(DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsCompressed)} requires a value.");
-                    entity.IsCompressed = pIsCompressed;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsCompressed, nameof(request.IsCompressed)) && !request.VisibleFields.Matches(nameof(request.IsCompressed), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.IsCompressed));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsDisplayInForm, permission, DocConstantModelName.DATAPROPERTY, nameof(request.IsDisplayInForm)))
@@ -928,45 +911,45 @@ namespace Services.API
             
             DataProperty ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public object Get(DataPropertyJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "dataproperty":
                         return GetJunctionSearchResult<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(DataPropertyJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "dataproperty":
                         return AddJunction<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(DataPropertyJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "dataproperty":
                         return RemoveJunction<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private DataProperty GetDataProperty(DataProperty request)
         {
             var id = request?.Id;

@@ -60,12 +60,12 @@ namespace Services.Enums
         PublishedLiterature
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DataHubSourceEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DataHubSourceEnm.AdditionalDataSources:
                     return DocConstantDataHubSource.AdditionalDataSources;
                 case DataHubSourceEnm.DigitizedData:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantDataHubSource.LabelingData;
                 case DataHubSourceEnm.PublishedLiterature:
                     return DocConstantDataHubSource.PublishedLiterature;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDataHubSource : IEquatable<DocConstantDataHubSource>, IEqualityComparer<DocConstantDataHubSource>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDataHubSource obj) => this == obj;
 
         public static bool operator ==(DocConstantDataHubSource x, DocConstantDataHubSource y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDataHubSource x, DocConstantDataHubSource y) => x == y;
+        
+        public bool Equals(DocConstantDataHubSource x, DocConstantDataHubSource y) => x == y;
         
         public static bool operator !=(DocConstantDataHubSource x, DocConstantDataHubSource y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDataHubSource obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

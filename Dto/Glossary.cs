@@ -127,9 +127,13 @@ namespace Services.Dto
         public Glossary(int? pId, string pDefinition, Reference pEnum, int? pEnumId, string pIcon, Reference pPage, int? pPageId, Reference pTerm, int? pTermId) : 
             base(pId, pDefinition, pEnum, pEnumId, pIcon, pPage, pPageId, pTerm, pTermId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

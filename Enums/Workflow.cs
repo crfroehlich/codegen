@@ -118,12 +118,12 @@ namespace Services.Enums
         VIEW
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this WorkflowEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case WorkflowEnm.AUDIT_ERROR:
                     return DocConstantWorkflow.AUDIT_ERROR;
                 case WorkflowEnm.BAYESIAN_ANALYSIS:
@@ -192,10 +192,10 @@ namespace Services.Enums
                     return DocConstantWorkflow.TAG;
                 case WorkflowEnm.VIEW:
                     return DocConstantWorkflow.VIEW;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantWorkflow : IEquatable<DocConstantWorkflow>, IEqualityComparer<DocConstantWorkflow>
@@ -265,8 +265,8 @@ namespace Services.Enums
         public bool Equals(DocConstantWorkflow obj) => this == obj;
 
         public static bool operator ==(DocConstantWorkflow x, DocConstantWorkflow y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantWorkflow x, DocConstantWorkflow y) => x == y;
+        
+        public bool Equals(DocConstantWorkflow x, DocConstantWorkflow y) => x == y;
         
         public static bool operator !=(DocConstantWorkflow x, DocConstantWorkflow y) => !(x == y);
 
@@ -285,7 +285,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantWorkflow obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -176,9 +176,13 @@ namespace Services.Dto
         public StatsStudySet(int? pId, int? pBoundTerms, int? pCharacteristics, int? pDataPoints, int? pDesignCount, string pDesignList, Reference pDocumentSet, int? pDocumentSetId, int? pInterventions, int? pOutcomes, int? pOutcomesReported, Reference pStat, int? pStatId, int? pStudies, int? pTypeCount, string pTypeList, int? pUnboundTerms) : 
             base(pId, pBoundTerms, pCharacteristics, pDataPoints, pDesignCount, pDesignList, pDocumentSet, pDocumentSetId, pInterventions, pOutcomes, pOutcomesReported, pStat, pStatId, pStudies, pTypeCount, pTypeList, pUnboundTerms) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

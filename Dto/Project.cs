@@ -228,9 +228,13 @@ namespace Services.Dto
         public Project(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pClient, int? pClientId, DateTime? pDatabaseDeadline, string pDatabaseName, Reference pDataset, int? pDatasetId, DateTime? pDeliverableDeadline, int? pFqId, int? pLegacyPackageId, int? pLibraryPackageId, string pLibraryPackageName, string pNumber, string pOperationsDeliverable, string pOpportunityId, string pOpportunityName, Reference pParent, int? pParentId, string pPICO, string pProjectId, string pProjectName, Reference pStatus, int? pStatusId, List<Reference> pTimeCards, int? pTimeCardsCount) : 
             base(pId, pChildren, pChildrenCount, pClient, pClientId, pDatabaseDeadline, pDatabaseName, pDataset, pDatasetId, pDeliverableDeadline, pFqId, pLegacyPackageId, pLibraryPackageId, pLibraryPackageName, pNumber, pOperationsDeliverable, pOpportunityId, pOpportunityName, pParent, pParentId, pPICO, pProjectId, pProjectName, pStatus, pStatusId, pTimeCards, pTimeCardsCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

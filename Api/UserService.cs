@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<User, UserSearch>(request);
             IQueryable<DocEntityUser> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityUser>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityUser>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserFullTextSearch(request);
@@ -240,7 +240,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -1033,16 +1033,16 @@ namespace Services.API
 
             User ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "User")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "User")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -1097,13 +1097,13 @@ namespace Services.API
         {
             User ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityUser.GetUser(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityUser.GetUser(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pClientDepartment = entity.ClientDepartment;
                     if(!DocTools.IsNullOrEmpty(pClientDepartment))
@@ -1154,11 +1154,11 @@ namespace Services.API
                     var pUpdates = entity.Updates.ToList();
                     var pUserType = entity.UserType;
                     var pWorkflows = entity.Workflows.ToList();
-					#region Custom Before copyUser
-					#endregion Custom Before copyUser
-					var copy = new DocEntityUser(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyUser
+                    #endregion Custom Before copyUser
+                    var copy = new DocEntityUser(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , ClientDepartment = pClientDepartment
                                 , Division = pDivision
                                 , Email = pEmail
@@ -1179,7 +1179,7 @@ namespace Services.API
                                 , StartDate = pStartDate
                                 , Status = pStatus
                                 , UserType = pUserType
-					};
+                    };
                             foreach(var item in pDocumentSets)
                             {
                                 entity.DocumentSets.Add(item);
@@ -1235,12 +1235,12 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-					#region Custom After copyUser
-					#endregion Custom After copyUser
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyUser
+                    #endregion Custom After copyUser
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -1308,18 +1308,18 @@ namespace Services.API
             
             User ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public object Get(UserJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "auditrecord":
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityAuditRecord, AuditRecord, AuditRecordSearch>((int)request.Id, DocConstantModelName.AUDITRECORD, "Audits", request, (ss) => HostContext.ResolveService<AuditRecordService>(Request)?.Get(ss));
                     case "lookuptablebinding":
@@ -1346,14 +1346,14 @@ namespace Services.API
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request, (ss) => HostContext.ResolveService<UpdateService>(Request)?.Get(ss));
                     case "workflow":
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(UserJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "documentset":
                         return AddJunction<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "role":
@@ -1362,15 +1362,15 @@ namespace Services.API
                         return AddJunction<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "update":
                         return AddJunction<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(UserJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "documentset":
                         return RemoveJunction<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "role":
@@ -1379,10 +1379,10 @@ namespace Services.API
                         return RemoveJunction<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "update":
                         return RemoveJunction<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for user/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private User GetUser(User request)
         {
             var id = request?.Id;

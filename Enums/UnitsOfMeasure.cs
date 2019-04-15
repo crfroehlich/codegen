@@ -324,12 +324,12 @@ namespace Services.Enums
         YEAR
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this UnitsOfMeasureEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case UnitsOfMeasureEnm.ARE:
                     return DocConstantUnitsOfMeasure.ARE;
                 case UnitsOfMeasureEnm.ATOMS:
@@ -604,10 +604,10 @@ namespace Services.Enums
                     return DocConstantUnitsOfMeasure.WEEK;
                 case UnitsOfMeasureEnm.YEAR:
                     return DocConstantUnitsOfMeasure.YEAR;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantUnitsOfMeasure : IEquatable<DocConstantUnitsOfMeasure>, IEqualityComparer<DocConstantUnitsOfMeasure>
@@ -780,8 +780,8 @@ namespace Services.Enums
         public bool Equals(DocConstantUnitsOfMeasure obj) => this == obj;
 
         public static bool operator ==(DocConstantUnitsOfMeasure x, DocConstantUnitsOfMeasure y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantUnitsOfMeasure x, DocConstantUnitsOfMeasure y) => x == y;
+        
+        public bool Equals(DocConstantUnitsOfMeasure x, DocConstantUnitsOfMeasure y) => x == y;
         
         public static bool operator !=(DocConstantUnitsOfMeasure x, DocConstantUnitsOfMeasure y) => !(x == y);
 
@@ -800,7 +800,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantUnitsOfMeasure obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

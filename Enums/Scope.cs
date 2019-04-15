@@ -64,12 +64,12 @@ namespace Services.Enums
         USER
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ScopeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ScopeEnm.APP:
                     return DocConstantScope.APP;
                 case ScopeEnm.CLIENT:
@@ -84,10 +84,10 @@ namespace Services.Enums
                     return DocConstantScope.TEAM;
                 case ScopeEnm.USER:
                     return DocConstantScope.USER;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantScope : IEquatable<DocConstantScope>, IEqualityComparer<DocConstantScope>
@@ -130,8 +130,8 @@ namespace Services.Enums
         public bool Equals(DocConstantScope obj) => this == obj;
 
         public static bool operator ==(DocConstantScope x, DocConstantScope y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantScope x, DocConstantScope y) => x == y;
+        
+        public bool Equals(DocConstantScope x, DocConstantScope y) => x == y;
         
         public static bool operator !=(DocConstantScope x, DocConstantScope y) => !(x == y);
 
@@ -150,7 +150,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantScope obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

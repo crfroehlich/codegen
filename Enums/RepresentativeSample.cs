@@ -58,12 +58,12 @@ namespace Services.Enums
         YES
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this RepresentativeSampleEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case RepresentativeSampleEnm.NA:
                     return DocConstantRepresentativeSample.NA;
                 case RepresentativeSampleEnm.NO:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantRepresentativeSample.NR;
                 case RepresentativeSampleEnm.YES:
                     return DocConstantRepresentativeSample.YES;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantRepresentativeSample : IEquatable<DocConstantRepresentativeSample>, IEqualityComparer<DocConstantRepresentativeSample>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantRepresentativeSample obj) => this == obj;
 
         public static bool operator ==(DocConstantRepresentativeSample x, DocConstantRepresentativeSample y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantRepresentativeSample x, DocConstantRepresentativeSample y) => x == y;
+        
+        public bool Equals(DocConstantRepresentativeSample x, DocConstantRepresentativeSample y) => x == y;
         
         public static bool operator !=(DocConstantRepresentativeSample x, DocConstantRepresentativeSample y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantRepresentativeSample obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

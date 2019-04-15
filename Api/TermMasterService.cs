@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<TermMaster, TermMasterSearch>(request);
             IQueryable<DocEntityTermMaster> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityTermMaster>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityTermMaster>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TermMasterFullTextSearch(request);
@@ -143,7 +143,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -408,16 +408,16 @@ namespace Services.API
 
             TermMaster ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermMaster")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "TermMaster")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -472,13 +472,13 @@ namespace Services.API
         {
             TermMaster ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityTermMaster.GetTermMaster(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityTermMaster.GetTermMaster(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pBioPortal = entity.BioPortal;
                     if(!DocTools.IsNullOrEmpty(pBioPortal))
@@ -507,11 +507,11 @@ namespace Services.API
                     var pURI = entity.URI;
                     if(!DocTools.IsNullOrEmpty(pURI))
                         pURI += " (Copy)";
-					#region Custom Before copyTermMaster
-					#endregion Custom Before copyTermMaster
-					var copy = new DocEntityTermMaster(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyTermMaster
+                    #endregion Custom Before copyTermMaster
+                    var copy = new DocEntityTermMaster(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , BioPortal = pBioPortal
                                 , CUI = pCUI
                                 , Enum = pEnum
@@ -521,7 +521,7 @@ namespace Services.API
                                 , SNOWMED = pSNOWMED
                                 , TUI = pTUI
                                 , URI = pURI
-					};
+                    };
                             foreach(var item in pCategories)
                             {
                                 entity.Categories.Add(item);
@@ -532,12 +532,12 @@ namespace Services.API
                                 entity.Synonyms.Add(item);
                             }
 
-					#region Custom After copyTermMaster
-					#endregion Custom After copyTermMaster
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyTermMaster
+                    #endregion Custom After copyTermMaster
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -605,12 +605,12 @@ namespace Services.API
             
             TermMaster ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(TermMasterBatch request)
@@ -660,72 +660,72 @@ namespace Services.API
         public void Delete(TermMaster request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.TERMMASTER);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityTermMaster.GetTermMaster(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.TERMMASTER);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityTermMaster.GetTermMaster(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TermMaster could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TermMaster could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(TermMasterSearch request)
         {
             var matches = Get(request) as List<TermMaster>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         public object Get(TermMasterJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "termcategory":
                         return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request, (ss) => HostContext.ResolveService<TermCategoryService>(Request)?.Get(ss));
                     case "termsynonym":
                         return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request, (ss) => HostContext.ResolveService<TermSynonymService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(TermMasterJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "termcategory":
                         return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
                     case "termsynonym":
                         return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(TermMasterJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "termcategory":
                         return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
                     case "termsynonym":
                         return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private TermMaster GetTermMaster(TermMaster request)
         {
             var id = request?.Id;

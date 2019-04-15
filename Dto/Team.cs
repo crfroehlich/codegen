@@ -167,9 +167,13 @@ namespace Services.Dto
         public Team(int? pId, List<Reference> pAdminRoles, int? pAdminRolesCount, string pDescription, string pEmail, bool pIsInternal, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, TeamSettings pSettings, string pSlack, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pAdminRoles, pAdminRolesCount, pDescription, pEmail, pIsInternal, pName, pOwner, pOwnerId, pScopes, pScopesCount, pSettings, pSlack, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

@@ -145,9 +145,13 @@ namespace Services.Dto
         public Division(int? pId, Reference pClient, int? pClientId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, Reference pRole, int? pRoleId, DivisionSettings pSettings, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pClient, pClientId, pDefaultLocale, pDefaultLocaleId, pDocumentSets, pDocumentSetsCount, pName, pRole, pRoleId, pSettings, pUsers, pUsersCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

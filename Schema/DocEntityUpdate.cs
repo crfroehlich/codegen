@@ -116,22 +116,27 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(Body))]
         public string Body { get; set; }
 
 
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(DeliveryStatus))]
         public string DeliveryStatus { get; set; }
 
 
         [Field(DefaultValue = 0)]
+        [FieldMapping(nameof(EmailAttempts))]
         public int EmailAttempts { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(EmailSent))]
         public DateTime? EmailSent { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Events))]
         [Association(PairTo = nameof(DocEntityEvent.Updates), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityEvent> Events { get; private set; }
 
@@ -139,38 +144,45 @@ namespace Services.Schema
         public int? EventsCount { get { return Events.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Link))]
         public string Link { get; set; }
 
 
         [Field(DefaultValue = 5)]
+        [FieldMapping(nameof(Priority))]
         public int Priority { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Read))]
         public DateTime? Read { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(SlackSent))]
         public DateTime? SlackSent { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Subject))]
         public string Subject { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Team))]
         public DocEntityTeam Team { get; set; }
         public int? TeamId { get { return Team?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -182,10 +194,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

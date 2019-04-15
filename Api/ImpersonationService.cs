@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Impersonation, ImpersonationSearch>(request);
             IQueryable<DocEntityImpersonation> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityImpersonation>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityImpersonation>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ImpersonationFullTextSearch(request);
@@ -135,7 +135,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 

@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<UserType, UserTypeSearch>(request);
             IQueryable<DocEntityUserType> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityUserType>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityUserType>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserTypeFullTextSearch(request);
@@ -163,7 +163,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -311,16 +311,16 @@ namespace Services.API
 
             UserType ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UserType")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UserType")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -375,38 +375,38 @@ namespace Services.API
         {
             UserType ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityUserType.GetUserType(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityUserType.GetUserType(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pPayrollStatus = entity.PayrollStatus;
                     var pPayrollType = entity.PayrollType;
                     var pType = entity.Type;
                     var pUsers = entity.Users.ToList();
-					#region Custom Before copyUserType
-					#endregion Custom Before copyUserType
-					var copy = new DocEntityUserType(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyUserType
+                    #endregion Custom Before copyUserType
+                    var copy = new DocEntityUserType(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , PayrollStatus = pPayrollStatus
                                 , PayrollType = pPayrollType
                                 , Type = pType
-					};
+                    };
                             foreach(var item in pUsers)
                             {
                                 entity.Users.Add(item);
                             }
 
-					#region Custom After copyUserType
-					#endregion Custom After copyUserType
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyUserType
+                    #endregion Custom After copyUserType
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -474,12 +474,12 @@ namespace Services.API
             
             UserType ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(UserTypeBatch request)
@@ -529,66 +529,66 @@ namespace Services.API
         public void Delete(UserType request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.USERTYPE);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityUserType.GetUserType(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.USERTYPE);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityUserType.GetUserType(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UserType could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UserType could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(UserTypeSearch request)
         {
             var matches = Get(request) as List<UserType>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         public object Get(UserTypeJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "user":
                         return GetJunctionSearchResult<UserType, DocEntityUserType, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for usertype/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for usertype/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(UserTypeJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "user":
                         return AddJunction<UserType, DocEntityUserType, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for usertype/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for usertype/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(UserTypeJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "user":
                         return RemoveJunction<UserType, DocEntityUserType, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for usertype/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for usertype/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private UserType GetUserType(UserType request)
         {
             var id = request?.Id;

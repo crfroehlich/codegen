@@ -288,12 +288,12 @@ namespace Services.Enums
         YESNONA
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this LookupTableEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case LookupTableEnm.AMPERSONCOUNT:
                     return DocConstantLookupTable.AMPERSONCOUNT;
                 case LookupTableEnm.APP:
@@ -532,10 +532,10 @@ namespace Services.Enums
                     return DocConstantLookupTable.WORKFLOWTASKTYPE;
                 case LookupTableEnm.YESNONA:
                     return DocConstantLookupTable.YESNONA;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantLookupTable : IEquatable<DocConstantLookupTable>, IEqualityComparer<DocConstantLookupTable>
@@ -690,8 +690,8 @@ namespace Services.Enums
         public bool Equals(DocConstantLookupTable obj) => this == obj;
 
         public static bool operator ==(DocConstantLookupTable x, DocConstantLookupTable y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantLookupTable x, DocConstantLookupTable y) => x == y;
+        
+        public bool Equals(DocConstantLookupTable x, DocConstantLookupTable y) => x == y;
         
         public static bool operator !=(DocConstantLookupTable x, DocConstantLookupTable y) => !(x == y);
 
@@ -710,7 +710,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantLookupTable obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

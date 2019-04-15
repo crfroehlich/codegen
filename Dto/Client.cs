@@ -159,9 +159,13 @@ namespace Services.Dto
         public Client(int? pId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, List<Reference> pProjects, int? pProjectsCount, Reference pRole, int? pRoleId, string pSalesforceAccountId, List<Reference> pScopes, int? pScopesCount, ClientSettings pSettings) : 
             base(pId, pDefaultLocale, pDefaultLocaleId, pDivisions, pDivisionsCount, pDocumentSets, pDocumentSetsCount, pName, pProjects, pProjectsCount, pRole, pRoleId, pSalesforceAccountId, pScopes, pScopesCount, pSettings) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

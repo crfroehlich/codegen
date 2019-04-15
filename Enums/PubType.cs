@@ -64,12 +64,12 @@ namespace Services.Enums
         REGULATORY_DOCUMENTS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this PubTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case PubTypeEnm.GUIDELINE_HTA:
                     return DocConstantPubType.GUIDELINE_HTA;
                 case PubTypeEnm.JOURNAL_ARTICLE:
@@ -84,10 +84,10 @@ namespace Services.Enums
                     return DocConstantPubType.OTHER;
                 case PubTypeEnm.REGULATORY_DOCUMENTS:
                     return DocConstantPubType.REGULATORY_DOCUMENTS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantPubType : IEquatable<DocConstantPubType>, IEqualityComparer<DocConstantPubType>
@@ -130,8 +130,8 @@ namespace Services.Enums
         public bool Equals(DocConstantPubType obj) => this == obj;
 
         public static bool operator ==(DocConstantPubType x, DocConstantPubType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantPubType x, DocConstantPubType y) => x == y;
+        
+        public bool Equals(DocConstantPubType x, DocConstantPubType y) => x == y;
         
         public static bool operator !=(DocConstantPubType x, DocConstantPubType y) => !(x == y);
 
@@ -150,7 +150,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantPubType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

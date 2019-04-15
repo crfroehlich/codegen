@@ -54,20 +54,20 @@ namespace Services.Enums
         AUTHOR_CALCULATED
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyGroupTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyGroupTypeEnm.ARM:
                     return DocConstantStudyGroupType.ARM;
                 case StudyGroupTypeEnm.AUTHOR_CALCULATED:
                     return DocConstantStudyGroupType.AUTHOR_CALCULATED;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyGroupType : IEquatable<DocConstantStudyGroupType>, IEqualityComparer<DocConstantStudyGroupType>
@@ -105,8 +105,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyGroupType obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyGroupType x, DocConstantStudyGroupType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyGroupType x, DocConstantStudyGroupType y) => x == y;
+        
+        public bool Equals(DocConstantStudyGroupType x, DocConstantStudyGroupType y) => x == y;
         
         public static bool operator !=(DocConstantStudyGroupType x, DocConstantStudyGroupType y) => !(x == y);
 
@@ -125,7 +125,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyGroupType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

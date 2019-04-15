@@ -60,12 +60,12 @@ namespace Services.Enums
         REQUESTED
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ValueStatusEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ValueStatusEnm.COLLECTED:
                     return DocConstantValueStatus.COLLECTED;
                 case ValueStatusEnm.NOT_AVAILABLE:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantValueStatus.NOT_REPORTED;
                 case ValueStatusEnm.REQUESTED:
                     return DocConstantValueStatus.REQUESTED;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantValueStatus : IEquatable<DocConstantValueStatus>, IEqualityComparer<DocConstantValueStatus>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantValueStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantValueStatus x, DocConstantValueStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantValueStatus x, DocConstantValueStatus y) => x == y;
+        
+        public bool Equals(DocConstantValueStatus x, DocConstantValueStatus y) => x == y;
         
         public static bool operator !=(DocConstantValueStatus x, DocConstantValueStatus y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantValueStatus obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

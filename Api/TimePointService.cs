@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<TimePoint, TimePointSearch>(request);
             IQueryable<DocEntityTimePoint> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityTimePoint>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityTimePoint>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new TimePointFullTextSearch(request);
@@ -132,7 +132,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 

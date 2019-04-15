@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<DatabaseVersion, DatabaseVersionSearch>(request);
             IQueryable<DocEntityDatabaseVersion> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityDatabaseVersion>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityDatabaseVersion>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DatabaseVersionFullTextSearch(request);
@@ -117,7 +117,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 

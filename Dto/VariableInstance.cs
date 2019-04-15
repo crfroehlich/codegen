@@ -120,9 +120,13 @@ namespace Services.Dto
         public VariableInstance(int? pId, string pData, Reference pDocument, int? pDocumentId, Reference pRule, int? pRuleId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pData, pDocument, pDocumentId, pRule, pRuleId, pWorkflows, pWorkflowsCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

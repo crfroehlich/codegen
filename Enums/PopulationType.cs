@@ -56,22 +56,22 @@ namespace Services.Enums
         PARTICIPANT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this PopulationTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case PopulationTypeEnm.BODY_SITE:
                     return DocConstantPopulationType.BODY_SITE;
                 case PopulationTypeEnm.CLUSTER:
                     return DocConstantPopulationType.CLUSTER;
                 case PopulationTypeEnm.PARTICIPANT:
                     return DocConstantPopulationType.PARTICIPANT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantPopulationType : IEquatable<DocConstantPopulationType>, IEqualityComparer<DocConstantPopulationType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantPopulationType obj) => this == obj;
 
         public static bool operator ==(DocConstantPopulationType x, DocConstantPopulationType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantPopulationType x, DocConstantPopulationType y) => x == y;
+        
+        public bool Equals(DocConstantPopulationType x, DocConstantPopulationType y) => x == y;
         
         public static bool operator !=(DocConstantPopulationType x, DocConstantPopulationType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantPopulationType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

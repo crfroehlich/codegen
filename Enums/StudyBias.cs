@@ -60,12 +60,12 @@ namespace Services.Enums
         ROB
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyBiasEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyBiasEnm.AHRQ:
                     return DocConstantStudyBias.AHRQ;
                 case StudyBiasEnm.COMPLIANCE:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantStudyBias.JADAD;
                 case StudyBiasEnm.ROB:
                     return DocConstantStudyBias.ROB;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyBias : IEquatable<DocConstantStudyBias>, IEqualityComparer<DocConstantStudyBias>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyBias obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyBias x, DocConstantStudyBias y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyBias x, DocConstantStudyBias y) => x == y;
+        
+        public bool Equals(DocConstantStudyBias x, DocConstantStudyBias y) => x == y;
         
         public static bool operator !=(DocConstantStudyBias x, DocConstantStudyBias y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyBias obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

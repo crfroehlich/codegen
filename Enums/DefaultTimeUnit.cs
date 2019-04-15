@@ -64,12 +64,12 @@ namespace Services.Enums
         YEARS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DefaultTimeUnitEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DefaultTimeUnitEnm.DAYS:
                     return DocConstantDefaultTimeUnit.DAYS;
                 case DefaultTimeUnitEnm.HOURS:
@@ -84,10 +84,10 @@ namespace Services.Enums
                     return DocConstantDefaultTimeUnit.WEEKS;
                 case DefaultTimeUnitEnm.YEARS:
                     return DocConstantDefaultTimeUnit.YEARS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDefaultTimeUnit : IEquatable<DocConstantDefaultTimeUnit>, IEqualityComparer<DocConstantDefaultTimeUnit>
@@ -130,8 +130,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDefaultTimeUnit obj) => this == obj;
 
         public static bool operator ==(DocConstantDefaultTimeUnit x, DocConstantDefaultTimeUnit y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDefaultTimeUnit x, DocConstantDefaultTimeUnit y) => x == y;
+        
+        public bool Equals(DocConstantDefaultTimeUnit x, DocConstantDefaultTimeUnit y) => x == y;
         
         public static bool operator !=(DocConstantDefaultTimeUnit x, DocConstantDefaultTimeUnit y) => !(x == y);
 
@@ -150,7 +150,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDefaultTimeUnit obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

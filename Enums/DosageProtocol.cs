@@ -54,20 +54,20 @@ namespace Services.Enums
         PROTOCOL
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DosageProtocolEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DosageProtocolEnm.ACTUAL:
                     return DocConstantDosageProtocol.ACTUAL;
                 case DosageProtocolEnm.PROTOCOL:
                     return DocConstantDosageProtocol.PROTOCOL;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDosageProtocol : IEquatable<DocConstantDosageProtocol>, IEqualityComparer<DocConstantDosageProtocol>
@@ -105,8 +105,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDosageProtocol obj) => this == obj;
 
         public static bool operator ==(DocConstantDosageProtocol x, DocConstantDosageProtocol y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDosageProtocol x, DocConstantDosageProtocol y) => x == y;
+        
+        public bool Equals(DocConstantDosageProtocol x, DocConstantDosageProtocol y) => x == y;
         
         public static bool operator !=(DocConstantDosageProtocol x, DocConstantDosageProtocol y) => !(x == y);
 
@@ -125,7 +125,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDosageProtocol obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

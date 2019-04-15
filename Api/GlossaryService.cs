@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Glossary, GlossarySearch>(request);
             IQueryable<DocEntityGlossary> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityGlossary>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityGlossary>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new GlossaryFullTextSearch(request);
@@ -139,7 +139,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -267,16 +267,16 @@ namespace Services.API
 
             Glossary ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Glossary")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Glossary")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -331,13 +331,13 @@ namespace Services.API
         {
             Glossary ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityGlossary.GetGlossary(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityGlossary.GetGlossary(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pDefinition = entity.Definition;
                     var pEnum = entity.Enum;
@@ -346,24 +346,24 @@ namespace Services.API
                         pIcon += " (Copy)";
                     var pPage = entity.Page;
                     var pTerm = entity.Term;
-					#region Custom Before copyGlossary
-					#endregion Custom Before copyGlossary
-					var copy = new DocEntityGlossary(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyGlossary
+                    #endregion Custom Before copyGlossary
+                    var copy = new DocEntityGlossary(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , Definition = pDefinition
                                 , Enum = pEnum
                                 , Icon = pIcon
                                 , Page = pPage
                                 , Term = pTerm
-					};
+                    };
 
-					#region Custom After copyGlossary
-					#endregion Custom After copyGlossary
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyGlossary
+                    #endregion Custom After copyGlossary
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -431,12 +431,12 @@ namespace Services.API
             
             Glossary ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(GlossaryBatch request)
@@ -486,34 +486,34 @@ namespace Services.API
         public void Delete(Glossary request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.GLOSSARY);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityGlossary.GetGlossary(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.GLOSSARY);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityGlossary.GetGlossary(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Glossary could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Glossary could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(GlossarySearch request)
         {
             var matches = Get(request) as List<Glossary>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         private Glossary GetGlossary(Glossary request)
         {

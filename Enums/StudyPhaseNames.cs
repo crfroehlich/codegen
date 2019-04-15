@@ -68,12 +68,12 @@ namespace Services.Enums
         WASH_OUT_PERIOD
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyPhaseNamesEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyPhaseNamesEnm.FOLLOW_UP_PERIOD:
                     return DocConstantStudyPhaseNames.FOLLOW_UP_PERIOD;
                 case StudyPhaseNamesEnm.NR:
@@ -92,10 +92,10 @@ namespace Services.Enums
                     return DocConstantStudyPhaseNames.TREATMENT_PERIOD;
                 case StudyPhaseNamesEnm.WASH_OUT_PERIOD:
                     return DocConstantStudyPhaseNames.WASH_OUT_PERIOD;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyPhaseNames : IEquatable<DocConstantStudyPhaseNames>, IEqualityComparer<DocConstantStudyPhaseNames>
@@ -140,8 +140,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyPhaseNames obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyPhaseNames x, DocConstantStudyPhaseNames y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyPhaseNames x, DocConstantStudyPhaseNames y) => x == y;
+        
+        public bool Equals(DocConstantStudyPhaseNames x, DocConstantStudyPhaseNames y) => x == y;
         
         public static bool operator !=(DocConstantStudyPhaseNames x, DocConstantStudyPhaseNames y) => !(x == y);
 
@@ -160,7 +160,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyPhaseNames obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

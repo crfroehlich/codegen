@@ -58,12 +58,12 @@ namespace Services.Enums
         SIDEBAR
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this HelpEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case HelpEnm.DIALOG:
                     return DocConstantHelp.DIALOG;
                 case HelpEnm.MANUAL:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantHelp.SECTION;
                 case HelpEnm.SIDEBAR:
                     return DocConstantHelp.SIDEBAR;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantHelp : IEquatable<DocConstantHelp>, IEqualityComparer<DocConstantHelp>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantHelp obj) => this == obj;
 
         public static bool operator ==(DocConstantHelp x, DocConstantHelp y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantHelp x, DocConstantHelp y) => x == y;
+        
+        public bool Equals(DocConstantHelp x, DocConstantHelp y) => x == y;
         
         public static bool operator !=(DocConstantHelp x, DocConstantHelp y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantHelp obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

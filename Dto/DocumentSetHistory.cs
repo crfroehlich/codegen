@@ -118,9 +118,13 @@ namespace Services.Dto
         public DocumentSetHistory(int? pId, Reference pDocumentSet, int? pDocumentSetId, int? pEvidencePortalID, int? pFqId, int? pStudyCount, int? pStudyCountFQ) : 
             base(pId, pDocumentSet, pDocumentSetId, pEvidencePortalID, pFqId, pStudyCount, pStudyCountFQ) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

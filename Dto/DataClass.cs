@@ -219,9 +219,13 @@ namespace Services.Dto
         public DataClass(int? pId, bool pAllowDelete, bool pAllVisibleFieldsByDefault, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : 
             base(pId, pAllowDelete, pAllVisibleFieldsByDefault, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;
@@ -239,13 +243,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<DataClass>("DataClass",exists);
             }
         }
 

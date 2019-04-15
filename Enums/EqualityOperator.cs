@@ -76,12 +76,12 @@ namespace Services.Enums
         NOT_EQUALS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this EqualityOperatorEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case EqualityOperatorEnm.APPROXIMATELY_EQUALS:
                     return DocConstantEqualityOperator.APPROXIMATELY_EQUALS;
                 case EqualityOperatorEnm.APPROXIMATELY_GREATER_THAN:
@@ -108,10 +108,10 @@ namespace Services.Enums
                     return DocConstantEqualityOperator.LESS_THAN_OR_EQUALS_ALIAS;
                 case EqualityOperatorEnm.NOT_EQUALS:
                     return DocConstantEqualityOperator.NOT_EQUALS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantEqualityOperator : IEquatable<DocConstantEqualityOperator>, IEqualityComparer<DocConstantEqualityOperator>
@@ -160,8 +160,8 @@ namespace Services.Enums
         public bool Equals(DocConstantEqualityOperator obj) => this == obj;
 
         public static bool operator ==(DocConstantEqualityOperator x, DocConstantEqualityOperator y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantEqualityOperator x, DocConstantEqualityOperator y) => x == y;
+        
+        public bool Equals(DocConstantEqualityOperator x, DocConstantEqualityOperator y) => x == y;
         
         public static bool operator !=(DocConstantEqualityOperator x, DocConstantEqualityOperator y) => !(x == y);
 
@@ -180,7 +180,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantEqualityOperator obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

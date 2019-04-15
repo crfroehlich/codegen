@@ -56,22 +56,22 @@ namespace Services.Enums
         YES
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this RiskOfBiasAssessmentEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case RiskOfBiasAssessmentEnm.NO:
                     return DocConstantRiskOfBiasAssessment.NO;
                 case RiskOfBiasAssessmentEnm.UNCLEAR:
                     return DocConstantRiskOfBiasAssessment.UNCLEAR;
                 case RiskOfBiasAssessmentEnm.YES:
                     return DocConstantRiskOfBiasAssessment.YES;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantRiskOfBiasAssessment : IEquatable<DocConstantRiskOfBiasAssessment>, IEqualityComparer<DocConstantRiskOfBiasAssessment>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantRiskOfBiasAssessment obj) => this == obj;
 
         public static bool operator ==(DocConstantRiskOfBiasAssessment x, DocConstantRiskOfBiasAssessment y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantRiskOfBiasAssessment x, DocConstantRiskOfBiasAssessment y) => x == y;
+        
+        public bool Equals(DocConstantRiskOfBiasAssessment x, DocConstantRiskOfBiasAssessment y) => x == y;
         
         public static bool operator !=(DocConstantRiskOfBiasAssessment x, DocConstantRiskOfBiasAssessment y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantRiskOfBiasAssessment obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -56,22 +56,22 @@ namespace Services.Enums
         PART_TIME
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this UserPayrollStatusEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case UserPayrollStatusEnm.CONTRACT:
                     return DocConstantUserPayrollStatus.CONTRACT;
                 case UserPayrollStatusEnm.FULL_TIME:
                     return DocConstantUserPayrollStatus.FULL_TIME;
                 case UserPayrollStatusEnm.PART_TIME:
                     return DocConstantUserPayrollStatus.PART_TIME;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantUserPayrollStatus : IEquatable<DocConstantUserPayrollStatus>, IEqualityComparer<DocConstantUserPayrollStatus>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantUserPayrollStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantUserPayrollStatus x, DocConstantUserPayrollStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantUserPayrollStatus x, DocConstantUserPayrollStatus y) => x == y;
+        
+        public bool Equals(DocConstantUserPayrollStatus x, DocConstantUserPayrollStatus y) => x == y;
         
         public static bool operator !=(DocConstantUserPayrollStatus x, DocConstantUserPayrollStatus y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantUserPayrollStatus obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

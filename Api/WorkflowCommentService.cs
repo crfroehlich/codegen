@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<WorkflowComment, WorkflowCommentSearch>(request);
             IQueryable<DocEntityWorkflowComment> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityWorkflowComment>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityWorkflowComment>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new WorkflowCommentFullTextSearch(request);
@@ -141,7 +141,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -301,16 +301,16 @@ namespace Services.API
 
             WorkflowComment ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "WorkflowComment")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "WorkflowComment")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -365,40 +365,40 @@ namespace Services.API
         {
             WorkflowComment ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityWorkflowComment.GetWorkflowComment(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityWorkflowComment.GetWorkflowComment(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pChildren = entity.Children.ToList();
                     var pParent = entity.Parent;
                     var pText = entity.Text;
                     var pUser = entity.User;
                     var pWorkflow = entity.Workflow;
-					#region Custom Before copyWorkflowComment
-					#endregion Custom Before copyWorkflowComment
-					var copy = new DocEntityWorkflowComment(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyWorkflowComment
+                    #endregion Custom Before copyWorkflowComment
+                    var copy = new DocEntityWorkflowComment(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , Parent = pParent
                                 , Text = pText
                                 , User = pUser
                                 , Workflow = pWorkflow
-					};
+                    };
                             foreach(var item in pChildren)
                             {
                                 entity.Children.Add(item);
                             }
 
-					#region Custom After copyWorkflowComment
-					#endregion Custom After copyWorkflowComment
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyWorkflowComment
+                    #endregion Custom After copyWorkflowComment
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -466,12 +466,12 @@ namespace Services.API
             
             WorkflowComment ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(WorkflowCommentBatch request)
@@ -521,66 +521,66 @@ namespace Services.API
         public void Delete(WorkflowComment request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.WORKFLOWCOMMENT);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityWorkflowComment.GetWorkflowComment(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.WORKFLOWCOMMENT);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityWorkflowComment.GetWorkflowComment(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowComment could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowComment could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(WorkflowCommentSearch request)
         {
             var matches = Get(request) as List<WorkflowComment>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         public object Get(WorkflowCommentJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "workflowcomment":
                         return GetJunctionSearchResult<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request, (ss) => HostContext.ResolveService<WorkflowCommentService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(WorkflowCommentJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "workflowcomment":
                         return AddJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(WorkflowCommentJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "workflowcomment":
                         return RemoveJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for workflowcomment/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private WorkflowComment GetWorkflowComment(WorkflowComment request)
         {
             var id = request?.Id;

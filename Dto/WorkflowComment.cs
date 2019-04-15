@@ -130,9 +130,13 @@ namespace Services.Dto
         public WorkflowComment(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pParent, int? pParentId, string pText, Reference pUser, int? pUserId, Reference pWorkflow, int? pWorkflowId) : 
             base(pId, pChildren, pChildrenCount, pParent, pParentId, pText, pUser, pUserId, pWorkflow, pWorkflowId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

@@ -116,22 +116,25 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
+        [FieldMapping(nameof(AuthenticatedUser))]
         public DocEntityUser AuthenticatedUser { get; set; }
         public int? AuthenticatedUserId { get { return AuthenticatedUser?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(ImpersonatedUser))]
         public DocEntityUser ImpersonatedUser { get; set; }
         public int? ImpersonatedUserId { get { return ImpersonatedUser?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(UserSession))]
         public DocEntityUserSession UserSession { get; set; }
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -143,10 +146,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

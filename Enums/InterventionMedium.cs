@@ -58,12 +58,12 @@ namespace Services.Enums
         WEBSITE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this InterventionMediumEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case InterventionMediumEnm.BOOKLET:
                     return DocConstantInterventionMedium.BOOKLET;
                 case InterventionMediumEnm.BROCHURE:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantInterventionMedium.VIDEO;
                 case InterventionMediumEnm.WEBSITE:
                     return DocConstantInterventionMedium.WEBSITE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantInterventionMedium : IEquatable<DocConstantInterventionMedium>, IEqualityComparer<DocConstantInterventionMedium>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantInterventionMedium obj) => this == obj;
 
         public static bool operator ==(DocConstantInterventionMedium x, DocConstantInterventionMedium y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantInterventionMedium x, DocConstantInterventionMedium y) => x == y;
+        
+        public bool Equals(DocConstantInterventionMedium x, DocConstantInterventionMedium y) => x == y;
         
         public static bool operator !=(DocConstantInterventionMedium x, DocConstantInterventionMedium y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantInterventionMedium obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

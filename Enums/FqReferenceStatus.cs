@@ -60,12 +60,12 @@ namespace Services.Enums
         UPLOADED
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this FqReferenceStatusEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case FqReferenceStatusEnm.ASSIGNED:
                     return DocConstantFqReferenceStatus.ASSIGNED;
                 case FqReferenceStatusEnm.HOLD:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantFqReferenceStatus.REVIEW;
                 case FqReferenceStatusEnm.UPLOADED:
                     return DocConstantFqReferenceStatus.UPLOADED;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantFqReferenceStatus : IEquatable<DocConstantFqReferenceStatus>, IEqualityComparer<DocConstantFqReferenceStatus>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantFqReferenceStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantFqReferenceStatus x, DocConstantFqReferenceStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantFqReferenceStatus x, DocConstantFqReferenceStatus y) => x == y;
+        
+        public bool Equals(DocConstantFqReferenceStatus x, DocConstantFqReferenceStatus y) => x == y;
         
         public static bool operator !=(DocConstantFqReferenceStatus x, DocConstantFqReferenceStatus y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantFqReferenceStatus obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

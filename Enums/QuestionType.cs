@@ -62,12 +62,12 @@ namespace Services.Enums
         YES_NO_NA
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this QuestionTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case QuestionTypeEnm.DATE:
                     return DocConstantQuestionType.DATE;
                 case QuestionTypeEnm.DATE_TIME:
@@ -80,10 +80,10 @@ namespace Services.Enums
                     return DocConstantQuestionType.YES_NO;
                 case QuestionTypeEnm.YES_NO_NA:
                     return DocConstantQuestionType.YES_NO_NA;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantQuestionType : IEquatable<DocConstantQuestionType>, IEqualityComparer<DocConstantQuestionType>
@@ -125,8 +125,8 @@ namespace Services.Enums
         public bool Equals(DocConstantQuestionType obj) => this == obj;
 
         public static bool operator ==(DocConstantQuestionType x, DocConstantQuestionType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantQuestionType x, DocConstantQuestionType y) => x == y;
+        
+        public bool Equals(DocConstantQuestionType x, DocConstantQuestionType y) => x == y;
         
         public static bool operator !=(DocConstantQuestionType x, DocConstantQuestionType y) => !(x == y);
 
@@ -145,7 +145,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantQuestionType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -64,12 +64,12 @@ namespace Services.Enums
         RATIO
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this MeanVariableTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case MeanVariableTypeEnm.AVERAGE:
                     return DocConstantMeanVariableType.AVERAGE;
                 case MeanVariableTypeEnm.ESTIMATED_PROPORTION:
@@ -84,10 +84,10 @@ namespace Services.Enums
                     return DocConstantMeanVariableType.MEDIAN;
                 case MeanVariableTypeEnm.RATIO:
                     return DocConstantMeanVariableType.RATIO;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantMeanVariableType : IEquatable<DocConstantMeanVariableType>, IEqualityComparer<DocConstantMeanVariableType>
@@ -130,8 +130,8 @@ namespace Services.Enums
         public bool Equals(DocConstantMeanVariableType obj) => this == obj;
 
         public static bool operator ==(DocConstantMeanVariableType x, DocConstantMeanVariableType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantMeanVariableType x, DocConstantMeanVariableType y) => x == y;
+        
+        public bool Equals(DocConstantMeanVariableType x, DocConstantMeanVariableType y) => x == y;
         
         public static bool operator !=(DocConstantMeanVariableType x, DocConstantMeanVariableType y) => !(x == y);
 
@@ -150,7 +150,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantMeanVariableType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

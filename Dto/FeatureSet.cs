@@ -111,9 +111,13 @@ namespace Services.Dto
         public FeatureSet(int? pId, string pDescription, string pName, string pPermissionTemplate, List<Reference> pRoles, int? pRolesCount) : 
             base(pId, pDescription, pName, pPermissionTemplate, pRoles, pRolesCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

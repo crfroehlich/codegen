@@ -112,9 +112,13 @@ namespace Services.Dto
         public DataTab(int? pId, Reference pClass, int? pClassId, string pDescription, string pName, int? pOrder) : 
             base(pId, pClass, pClassId, pDescription, pName, pOrder) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;
@@ -132,13 +136,15 @@ namespace Services.Dto
                 if(null == this) return new List<string>();
                 if(null == _VisibleFields)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
                 }
                 return _VisibleFields;
             }
             set
             {
-                _VisibleFields = Fields;
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<DataTab>("DataTab",exists);
             }
         }
 

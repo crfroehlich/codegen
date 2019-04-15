@@ -153,9 +153,13 @@ namespace Services.Dto
         public UnitConversionRules(int? pId, Reference pDestinationUnit, int? pDestinationUnitId, bool pIsDefault, bool pIsDestinationSi, Reference pModifierTerm, int? pModifierTermId, decimal pMultiplier, Reference pParent, int? pParentId, Reference pRootTerm, int? pRootTermId, Reference pSourceUnit, int? pSourceUnitId) : 
             base(pId, pDestinationUnit, pDestinationUnitId, pIsDefault, pIsDestinationSi, pModifierTerm, pModifierTermId, pMultiplier, pParent, pParentId, pRootTerm, pRootTermId, pSourceUnit, pSourceUnitId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

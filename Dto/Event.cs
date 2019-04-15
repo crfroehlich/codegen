@@ -139,9 +139,13 @@ namespace Services.Dto
         public Event(int? pId, Reference pAuditRecord, int? pAuditRecordId, string pDescription, DateTime? pProcessed, string pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pAuditRecord, pAuditRecordId, pDescription, pProcessed, pStatus, pTeams, pTeamsCount, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

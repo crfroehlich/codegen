@@ -58,12 +58,12 @@ namespace Services.Enums
         INACTIVE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StatusEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StatusEnm.ACTIVE:
                     return DocConstantStatus.ACTIVE;
                 case StatusEnm.ARCHIVED:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantStatus.DISABLED;
                 case StatusEnm.INACTIVE:
                     return DocConstantStatus.INACTIVE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStatus : IEquatable<DocConstantStatus>, IEqualityComparer<DocConstantStatus>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantStatus x, DocConstantStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStatus x, DocConstantStatus y) => x == y;
+        
+        public bool Equals(DocConstantStatus x, DocConstantStatus y) => x == y;
         
         public static bool operator !=(DocConstantStatus x, DocConstantStatus y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStatus obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

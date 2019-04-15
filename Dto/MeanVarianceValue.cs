@@ -121,9 +121,13 @@ namespace Services.Dto
         public MeanVarianceValue(int? pId, TypeUnits pMeanVariance, TypeUnitsRange pMeanVarianceRange, Reference pMeanVarianceType, int? pMeanVarianceTypeId, int? pOrder, List<MeanVariances> pOwners, int? pOwnersCount) : 
             base(pId, pMeanVariance, pMeanVarianceRange, pMeanVarianceType, pMeanVarianceTypeId, pOrder, pOwners, pOwnersCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

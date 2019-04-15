@@ -224,9 +224,13 @@ namespace Services.Dto
         public Scope(int? pId, Reference pApp, int? pAppId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pBroadcasts, int? pBroadcastsCount, Reference pClient, int? pClientId, bool? pDelete, Reference pDocumentSet, int? pDocumentSetId, bool? pEdit, List<Reference> pHelp, int? pHelpCount, bool? pIsGlobal, List<Reference> pSynonyms, int? pSynonymsCount, Reference pTeam, int? pTeamId, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariableRules, int? pVariableRulesCount, bool? pView, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pApp, pAppId, pBindings, pBindingsCount, pBroadcasts, pBroadcastsCount, pClient, pClientId, pDelete, pDocumentSet, pDocumentSetId, pEdit, pHelp, pHelpCount, pIsGlobal, pSynonyms, pSynonymsCount, pTeam, pTeamId, pType, pTypeId, pUser, pUserId, pVariableRules, pVariableRulesCount, pView, pWorkflows, pWorkflowsCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

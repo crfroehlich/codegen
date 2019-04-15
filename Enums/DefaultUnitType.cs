@@ -56,22 +56,22 @@ namespace Services.Enums
         US
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DefaultUnitTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DefaultUnitTypeEnm.SI:
                     return DocConstantDefaultUnitType.SI;
                 case DefaultUnitTypeEnm.STUDY_SET_DEFAULT:
                     return DocConstantDefaultUnitType.STUDY_SET_DEFAULT;
                 case DefaultUnitTypeEnm.US:
                     return DocConstantDefaultUnitType.US;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDefaultUnitType : IEquatable<DocConstantDefaultUnitType>, IEqualityComparer<DocConstantDefaultUnitType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDefaultUnitType obj) => this == obj;
 
         public static bool operator ==(DocConstantDefaultUnitType x, DocConstantDefaultUnitType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDefaultUnitType x, DocConstantDefaultUnitType y) => x == y;
+        
+        public bool Equals(DocConstantDefaultUnitType x, DocConstantDefaultUnitType y) => x == y;
         
         public static bool operator !=(DocConstantDefaultUnitType x, DocConstantDefaultUnitType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDefaultUnitType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

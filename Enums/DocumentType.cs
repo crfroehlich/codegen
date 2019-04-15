@@ -60,12 +60,12 @@ namespace Services.Enums
         PUBMED
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DocumentTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DocumentTypeEnm.CTG:
                     return DocConstantDocumentType.CTG;
                 case DocumentTypeEnm.DATA_HUB:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantDocumentType.DOC_LIBRARY;
                 case DocumentTypeEnm.PUBMED:
                     return DocConstantDocumentType.PUBMED;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDocumentType : IEquatable<DocConstantDocumentType>, IEqualityComparer<DocConstantDocumentType>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDocumentType obj) => this == obj;
 
         public static bool operator ==(DocConstantDocumentType x, DocConstantDocumentType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDocumentType x, DocConstantDocumentType y) => x == y;
+        
+        public bool Equals(DocConstantDocumentType x, DocConstantDocumentType y) => x == y;
         
         public static bool operator !=(DocConstantDocumentType x, DocConstantDocumentType y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDocumentType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

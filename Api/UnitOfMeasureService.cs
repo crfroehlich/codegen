@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<UnitOfMeasure, UnitOfMeasureSearch>(request);
             IQueryable<DocEntityUnitOfMeasure> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityUnitOfMeasure>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityUnitOfMeasure>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UnitOfMeasureFullTextSearch(request);
@@ -164,7 +164,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -280,16 +280,16 @@ namespace Services.API
 
             UnitOfMeasure ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UnitOfMeasure")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "UnitOfMeasure")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -344,35 +344,35 @@ namespace Services.API
         {
             UnitOfMeasure ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityUnitOfMeasure.GetUnitOfMeasure(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityUnitOfMeasure.GetUnitOfMeasure(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pIsSI = entity.IsSI;
                     var pName = entity.Name;
                     var pType = entity.Type;
                     var pUnit = entity.Unit;
-					#region Custom Before copyUnitOfMeasure
-					#endregion Custom Before copyUnitOfMeasure
-					var copy = new DocEntityUnitOfMeasure(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyUnitOfMeasure
+                    #endregion Custom Before copyUnitOfMeasure
+                    var copy = new DocEntityUnitOfMeasure(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , IsSI = pIsSI
                                 , Name = pName
                                 , Type = pType
                                 , Unit = pUnit
-					};
+                    };
 
-					#region Custom After copyUnitOfMeasure
-					#endregion Custom After copyUnitOfMeasure
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyUnitOfMeasure
+                    #endregion Custom After copyUnitOfMeasure
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -440,12 +440,12 @@ namespace Services.API
             
             UnitOfMeasure ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(UnitOfMeasureBatch request)
@@ -495,34 +495,34 @@ namespace Services.API
         public void Delete(UnitOfMeasure request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.UNITOFMEASURE);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityUnitOfMeasure.GetUnitOfMeasure(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.UNITOFMEASURE);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityUnitOfMeasure.GetUnitOfMeasure(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UnitOfMeasure could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UnitOfMeasure could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(UnitOfMeasureSearch request)
         {
             var matches = Get(request) as List<UnitOfMeasure>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         private UnitOfMeasure GetUnitOfMeasure(UnitOfMeasure request)
         {

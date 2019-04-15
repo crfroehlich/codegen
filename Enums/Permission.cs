@@ -62,12 +62,12 @@ namespace Services.Enums
         VIEW
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this PermissionEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case PermissionEnm.ADD:
                     return DocConstantPermission.ADD;
                 case PermissionEnm.DELETE:
@@ -80,10 +80,10 @@ namespace Services.Enums
                     return DocConstantPermission.UNLOCK;
                 case PermissionEnm.VIEW:
                     return DocConstantPermission.VIEW;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantPermission : IEquatable<DocConstantPermission>, IEqualityComparer<DocConstantPermission>
@@ -125,8 +125,8 @@ namespace Services.Enums
         public bool Equals(DocConstantPermission obj) => this == obj;
 
         public static bool operator ==(DocConstantPermission x, DocConstantPermission y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantPermission x, DocConstantPermission y) => x == y;
+        
+        public bool Equals(DocConstantPermission x, DocConstantPermission y) => x == y;
         
         public static bool operator !=(DocConstantPermission x, DocConstantPermission y) => !(x == y);
 
@@ -145,7 +145,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantPermission obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

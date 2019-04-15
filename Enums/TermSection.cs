@@ -60,12 +60,12 @@ namespace Services.Enums
         UNCOLLECTED_RESULTS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this TermSectionEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case TermSectionEnm.CHARACTERISTICS:
                     return DocConstantTermSection.CHARACTERISTICS;
                 case TermSectionEnm.OUTCOMES:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantTermSection.UNCOLLECTED_OUTCOMES;
                 case TermSectionEnm.UNCOLLECTED_RESULTS:
                     return DocConstantTermSection.UNCOLLECTED_RESULTS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantTermSection : IEquatable<DocConstantTermSection>, IEqualityComparer<DocConstantTermSection>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantTermSection obj) => this == obj;
 
         public static bool operator ==(DocConstantTermSection x, DocConstantTermSection y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantTermSection x, DocConstantTermSection y) => x == y;
+        
+        public bool Equals(DocConstantTermSection x, DocConstantTermSection y) => x == y;
         
         public static bool operator !=(DocConstantTermSection x, DocConstantTermSection y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantTermSection obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

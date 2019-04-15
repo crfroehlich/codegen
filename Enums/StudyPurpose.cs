@@ -58,12 +58,12 @@ namespace Services.Enums
         TREATMENT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyPurposeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyPurposeEnm.BOTH:
                     return DocConstantStudyPurpose.BOTH;
                 case StudyPurposeEnm.NA:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantStudyPurpose.PREVENTION;
                 case StudyPurposeEnm.TREATMENT:
                     return DocConstantStudyPurpose.TREATMENT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyPurpose : IEquatable<DocConstantStudyPurpose>, IEqualityComparer<DocConstantStudyPurpose>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyPurpose obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyPurpose x, DocConstantStudyPurpose y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyPurpose x, DocConstantStudyPurpose y) => x == y;
+        
+        public bool Equals(DocConstantStudyPurpose x, DocConstantStudyPurpose y) => x == y;
         
         public static bool operator !=(DocConstantStudyPurpose x, DocConstantStudyPurpose y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyPurpose obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -132,9 +132,13 @@ namespace Services.Dto
         public TermSynonym(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) : 
             base(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

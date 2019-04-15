@@ -119,9 +119,13 @@ namespace Services.Dto
         public TimePoint(int? pId, bool pIsAbsolute, TypeMeanBase pMeanValue, TypeUnitValue pSingleValue, TypeUnitRange pTotalValue, Reference pType, int? pTypeId) : 
             base(pId, pIsAbsolute, pMeanValue, pSingleValue, pTotalValue, pType, pTypeId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

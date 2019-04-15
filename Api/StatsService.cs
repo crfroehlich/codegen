@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Stats, StatsSearch>(request);
             IQueryable<DocEntityStats> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityStats>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityStats>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new StatsFullTextSearch(request);
@@ -135,7 +135,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 

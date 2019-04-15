@@ -128,9 +128,13 @@ namespace Services.Dto
         public LookupTable(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pCategories, int? pCategoriesCount, List<Reference> pDocuments, int? pDocumentsCount, Reference pEnum, int? pEnumId, string pName) : 
             base(pId, pBindings, pBindingsCount, pCategories, pCategoriesCount, pDocuments, pDocumentsCount, pEnum, pEnumId, pName) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

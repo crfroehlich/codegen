@@ -56,22 +56,22 @@ namespace Services.Enums
         PRE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this RandomizationEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case RandomizationEnm.NR:
                     return DocConstantRandomization.NR;
                 case RandomizationEnm.POST:
                     return DocConstantRandomization.POST;
                 case RandomizationEnm.PRE:
                     return DocConstantRandomization.PRE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantRandomization : IEquatable<DocConstantRandomization>, IEqualityComparer<DocConstantRandomization>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantRandomization obj) => this == obj;
 
         public static bool operator ==(DocConstantRandomization x, DocConstantRandomization y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantRandomization x, DocConstantRandomization y) => x == y;
+        
+        public bool Equals(DocConstantRandomization x, DocConstantRandomization y) => x == y;
         
         public static bool operator !=(DocConstantRandomization x, DocConstantRandomization y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantRandomization obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -60,12 +60,12 @@ namespace Services.Enums
         UNKNOWN
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StatisticalSignificanceEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StatisticalSignificanceEnm.NS:
                     return DocConstantStatisticalSignificance.NS;
                 case StatisticalSignificanceEnm.NSS:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantStatisticalSignificance.SS;
                 case StatisticalSignificanceEnm.UNKNOWN:
                     return DocConstantStatisticalSignificance.UNKNOWN;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStatisticalSignificance : IEquatable<DocConstantStatisticalSignificance>, IEqualityComparer<DocConstantStatisticalSignificance>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStatisticalSignificance obj) => this == obj;
 
         public static bool operator ==(DocConstantStatisticalSignificance x, DocConstantStatisticalSignificance y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStatisticalSignificance x, DocConstantStatisticalSignificance y) => x == y;
+        
+        public bool Equals(DocConstantStatisticalSignificance x, DocConstantStatisticalSignificance y) => x == y;
         
         public static bool operator !=(DocConstantStatisticalSignificance x, DocConstantStatisticalSignificance y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStatisticalSignificance obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

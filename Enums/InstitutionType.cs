@@ -60,12 +60,12 @@ namespace Services.Enums
         UNKNOWN
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this InstitutionTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case InstitutionTypeEnm.ACADEMIC:
                     return DocConstantInstitutionType.ACADEMIC;
                 case InstitutionTypeEnm.COMMERCIAL:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantInstitutionType.NON_PROFIT;
                 case InstitutionTypeEnm.UNKNOWN:
                     return DocConstantInstitutionType.UNKNOWN;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantInstitutionType : IEquatable<DocConstantInstitutionType>, IEqualityComparer<DocConstantInstitutionType>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantInstitutionType obj) => this == obj;
 
         public static bool operator ==(DocConstantInstitutionType x, DocConstantInstitutionType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantInstitutionType x, DocConstantInstitutionType y) => x == y;
+        
+        public bool Equals(DocConstantInstitutionType x, DocConstantInstitutionType y) => x == y;
         
         public static bool operator !=(DocConstantInstitutionType x, DocConstantInstitutionType y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantInstitutionType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

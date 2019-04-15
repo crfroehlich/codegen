@@ -52,18 +52,18 @@ namespace Services.Enums
         SALESFORCE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this IntegrationNameEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case IntegrationNameEnm.SALESFORCE:
                     return DocConstantIntegrationName.SALESFORCE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantIntegrationName : IEquatable<DocConstantIntegrationName>, IEqualityComparer<DocConstantIntegrationName>
@@ -100,8 +100,8 @@ namespace Services.Enums
         public bool Equals(DocConstantIntegrationName obj) => this == obj;
 
         public static bool operator ==(DocConstantIntegrationName x, DocConstantIntegrationName y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantIntegrationName x, DocConstantIntegrationName y) => x == y;
+        
+        public bool Equals(DocConstantIntegrationName x, DocConstantIntegrationName y) => x == y;
         
         public static bool operator !=(DocConstantIntegrationName x, DocConstantIntegrationName y) => !(x == y);
 
@@ -120,7 +120,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantIntegrationName obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

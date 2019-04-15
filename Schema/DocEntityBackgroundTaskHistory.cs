@@ -116,48 +116,32 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = 0)]
+        [FieldMapping(nameof(Completed))]
         public int? Completed { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        public byte[] DataCompressed { get; set; }
-
-        private string _Data;
-        public string Data
-        {
-            get => _Data ?? (_Data = DocZip.Unzip(DataCompressed));
-            set
-            {
-                _Data = value;
-                DataCompressed = DocZip.Zip(_Data);
-            }
-        }
+        [FieldMapping(nameof(Data))]
+        public string Data { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Ended))]
         public DateTime? Ended { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        public byte[] ErrorsCompressed { get; set; }
-
-        private string _Errors;
-        public string Errors
-        {
-            get => _Errors ?? (_Errors = DocZip.Unzip(ErrorsCompressed));
-            set
-            {
-                _Errors = value;
-                ErrorsCompressed = DocZip.Zip(_Errors);
-            }
-        }
+        [FieldMapping(nameof(Errors))]
+        public string Errors { get; set; }
 
 
         [Field(DefaultValue = 0)]
+        [FieldMapping(nameof(Failed))]
         public int? Failed { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Items))]
         [Association(PairTo = nameof(DocEntityBackgroundTaskItem.TaskHistory), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityBackgroundTaskItem> Items { get; private set; }
 
@@ -166,46 +150,28 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        public byte[] LogsCompressed { get; set; }
-
-        private string _Logs;
-        public string Logs
-        {
-            get => _Logs ?? (_Logs = DocZip.Unzip(LogsCompressed));
-            set
-            {
-                _Logs = value;
-                LogsCompressed = DocZip.Zip(_Logs);
-            }
-        }
+        [FieldMapping(nameof(Logs))]
+        public string Logs { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Succeeded))]
         public bool? Succeeded { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        public byte[] SummaryCompressed { get; set; }
-
-        private string _Summary;
-        public string Summary
-        {
-            get => _Summary ?? (_Summary = DocZip.Unzip(SummaryCompressed));
-            set
-            {
-                _Summary = value;
-                SummaryCompressed = DocZip.Zip(_Summary);
-            }
-        }
+        [FieldMapping(nameof(Summary))]
+        public string Summary { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Task))]
         public DocEntityBackgroundTask Task { get; set; }
         public int? TaskId { get { return Task?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -217,10 +183,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

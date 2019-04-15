@@ -54,20 +54,20 @@ namespace Services.Enums
         NEO_ADJUVANT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this InterventionStageSettingEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case InterventionStageSettingEnm.ADJUVANT:
                     return DocConstantInterventionStageSetting.ADJUVANT;
                 case InterventionStageSettingEnm.NEO_ADJUVANT:
                     return DocConstantInterventionStageSetting.NEO_ADJUVANT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantInterventionStageSetting : IEquatable<DocConstantInterventionStageSetting>, IEqualityComparer<DocConstantInterventionStageSetting>
@@ -105,8 +105,8 @@ namespace Services.Enums
         public bool Equals(DocConstantInterventionStageSetting obj) => this == obj;
 
         public static bool operator ==(DocConstantInterventionStageSetting x, DocConstantInterventionStageSetting y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantInterventionStageSetting x, DocConstantInterventionStageSetting y) => x == y;
+        
+        public bool Equals(DocConstantInterventionStageSetting x, DocConstantInterventionStageSetting y) => x == y;
         
         public static bool operator !=(DocConstantInterventionStageSetting x, DocConstantInterventionStageSetting y) => !(x == y);
 
@@ -125,7 +125,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantInterventionStageSetting obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

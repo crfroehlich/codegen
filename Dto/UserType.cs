@@ -127,9 +127,13 @@ namespace Services.Dto
         public UserType(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

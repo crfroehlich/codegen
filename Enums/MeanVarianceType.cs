@@ -62,12 +62,12 @@ namespace Services.Enums
         UNKNOWN
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this MeanVarianceTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case MeanVarianceTypeEnm.CV:
                     return DocConstantMeanVarianceType.CV;
                 case MeanVarianceTypeEnm.IQR_DIFFERENCE:
@@ -80,10 +80,10 @@ namespace Services.Enums
                     return DocConstantMeanVarianceType.SEMI_IQR;
                 case MeanVarianceTypeEnm.UNKNOWN:
                     return DocConstantMeanVarianceType.UNKNOWN;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantMeanVarianceType : IEquatable<DocConstantMeanVarianceType>, IEqualityComparer<DocConstantMeanVarianceType>
@@ -125,8 +125,8 @@ namespace Services.Enums
         public bool Equals(DocConstantMeanVarianceType obj) => this == obj;
 
         public static bool operator ==(DocConstantMeanVarianceType x, DocConstantMeanVarianceType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantMeanVarianceType x, DocConstantMeanVarianceType y) => x == y;
+        
+        public bool Equals(DocConstantMeanVarianceType x, DocConstantMeanVarianceType y) => x == y;
         
         public static bool operator !=(DocConstantMeanVarianceType x, DocConstantMeanVarianceType y) => !(x == y);
 
@@ -145,7 +145,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantMeanVarianceType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

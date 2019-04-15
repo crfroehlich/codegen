@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<UserSession, UserSessionSearch>(request);
             IQueryable<DocEntityUserSession> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityUserSession>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityUserSession>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserSessionFullTextSearch(request);
@@ -141,7 +141,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -153,18 +153,18 @@ namespace Services.API
 
         public object Get(UserSessionJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "impersonation":
                         return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request, (ss) => HostContext.ResolveService<ImpersonationService>(Request)?.Get(ss));
                     case "request":
                         return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityUserRequest, UserRequest, UserRequestSearch>((int)request.Id, DocConstantModelName.USERREQUEST, "Requests", request, (ss) => HostContext.ResolveService<UserRequestService>(Request)?.Get(ss));
                     case "history":
                         return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "UserHistory", request, (ss) => HostContext.ResolveService<HistoryService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for usersession/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private UserSession GetUserSession(UserSession request)
         {
             var id = request?.Id;

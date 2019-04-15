@@ -62,12 +62,12 @@ namespace Services.Enums
         STUDY_TYPE_ID
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ExternalKeyEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ExternalKeyEnm.ATTRIBUTE_NAME_ID:
                     return DocConstantExternalKey.ATTRIBUTE_NAME_ID;
                 case ExternalKeyEnm.FILTER:
@@ -80,10 +80,10 @@ namespace Services.Enums
                     return DocConstantExternalKey.STUDY_DESIGN_ID;
                 case ExternalKeyEnm.STUDY_TYPE_ID:
                     return DocConstantExternalKey.STUDY_TYPE_ID;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantExternalKey : IEquatable<DocConstantExternalKey>, IEqualityComparer<DocConstantExternalKey>
@@ -125,8 +125,8 @@ namespace Services.Enums
         public bool Equals(DocConstantExternalKey obj) => this == obj;
 
         public static bool operator ==(DocConstantExternalKey x, DocConstantExternalKey y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantExternalKey x, DocConstantExternalKey y) => x == y;
+        
+        public bool Equals(DocConstantExternalKey x, DocConstantExternalKey y) => x == y;
         
         public static bool operator !=(DocConstantExternalKey x, DocConstantExternalKey y) => !(x == y);
 
@@ -145,7 +145,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantExternalKey obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

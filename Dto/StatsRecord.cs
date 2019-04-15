@@ -113,9 +113,13 @@ namespace Services.Dto
         public StatsRecord(int? pId, Reference pName, int? pNameId, int? pOwnerId, string pOwnerType, decimal pValue) : 
             base(pId, pName, pNameId, pOwnerId, pOwnerType, pValue) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

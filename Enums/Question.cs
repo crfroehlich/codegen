@@ -52,18 +52,18 @@ namespace Services.Enums
         INCLUDE_MIXED_POPULATIONS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this QuestionEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case QuestionEnm.INCLUDE_MIXED_POPULATIONS:
                     return DocConstantQuestion.INCLUDE_MIXED_POPULATIONS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantQuestion : IEquatable<DocConstantQuestion>, IEqualityComparer<DocConstantQuestion>
@@ -100,8 +100,8 @@ namespace Services.Enums
         public bool Equals(DocConstantQuestion obj) => this == obj;
 
         public static bool operator ==(DocConstantQuestion x, DocConstantQuestion y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantQuestion x, DocConstantQuestion y) => x == y;
+        
+        public bool Equals(DocConstantQuestion x, DocConstantQuestion y) => x == y;
         
         public static bool operator !=(DocConstantQuestion x, DocConstantQuestion y) => !(x == y);
 
@@ -120,7 +120,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantQuestion obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

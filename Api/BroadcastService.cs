@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Broadcast, BroadcastSearch>(request);
             IQueryable<DocEntityBroadcast> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityBroadcast>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityBroadcast>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BroadcastFullTextSearch(request);
@@ -170,7 +170,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -366,16 +366,16 @@ namespace Services.API
 
             Broadcast ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Broadcast")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Broadcast")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -430,13 +430,13 @@ namespace Services.API
         {
             Broadcast ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityBroadcast.GetBroadcast(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityBroadcast.GetBroadcast(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pApp = entity.App;
                     var pConfluenceId = entity.ConfluenceId;
@@ -450,11 +450,11 @@ namespace Services.API
                     var pScopes = entity.Scopes.ToList();
                     var pStatus = entity.Status;
                     var pType = entity.Type;
-					#region Custom Before copyBroadcast
-					#endregion Custom Before copyBroadcast
-					var copy = new DocEntityBroadcast(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyBroadcast
+                    #endregion Custom Before copyBroadcast
+                    var copy = new DocEntityBroadcast(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , App = pApp
                                 , ConfluenceId = pConfluenceId
                                 , Name = pName
@@ -462,18 +462,18 @@ namespace Services.API
                                 , Reprocessed = pReprocessed
                                 , Status = pStatus
                                 , Type = pType
-					};
+                    };
                             foreach(var item in pScopes)
                             {
                                 entity.Scopes.Add(item);
                             }
 
-					#region Custom After copyBroadcast
-					#endregion Custom After copyBroadcast
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyBroadcast
+                    #endregion Custom After copyBroadcast
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -541,12 +541,12 @@ namespace Services.API
             
             Broadcast ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(BroadcastBatch request)
@@ -596,66 +596,66 @@ namespace Services.API
         public void Delete(Broadcast request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.BROADCAST);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityBroadcast.GetBroadcast(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.BROADCAST);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityBroadcast.GetBroadcast(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Broadcast could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Broadcast could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(BroadcastSearch request)
         {
             var matches = Get(request) as List<Broadcast>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         public object Get(BroadcastJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "scope":
                         return GetJunctionSearchResult<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(BroadcastJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "scope":
                         return AddJunction<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(BroadcastJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "scope":
                         return RemoveJunction<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private Broadcast GetBroadcast(Broadcast request)
         {
             var id = request?.Id;

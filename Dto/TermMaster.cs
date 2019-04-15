@@ -161,9 +161,13 @@ namespace Services.Dto
         public TermMaster(int? pId, string pBioPortal, List<TermCategory> pCategories, int? pCategoriesCount, string pCUI, Reference pEnum, int? pEnumId, string pMedDRA, string pName, string pRxNorm, string pSNOWMED, List<Reference> pSynonyms, int? pSynonymsCount, string pTUI, string pURI) : 
             base(pId, pBioPortal, pCategories, pCategoriesCount, pCUI, pEnum, pEnumId, pMedDRA, pName, pRxNorm, pSNOWMED, pSynonyms, pSynonymsCount, pTUI, pURI) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

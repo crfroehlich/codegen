@@ -72,12 +72,12 @@ namespace Services.Enums
         UNCLEAR
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this SettingTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case SettingTypeEnm.CRIMINAL_JUSTICE_SYSTEM:
                     return DocConstantSettingType.CRIMINAL_JUSTICE_SYSTEM;
                 case SettingTypeEnm.EDUCATION_SYSTEM:
@@ -100,10 +100,10 @@ namespace Services.Enums
                     return DocConstantSettingType.SURVEY;
                 case SettingTypeEnm.UNCLEAR:
                     return DocConstantSettingType.UNCLEAR;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantSettingType : IEquatable<DocConstantSettingType>, IEqualityComparer<DocConstantSettingType>
@@ -150,8 +150,8 @@ namespace Services.Enums
         public bool Equals(DocConstantSettingType obj) => this == obj;
 
         public static bool operator ==(DocConstantSettingType x, DocConstantSettingType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantSettingType x, DocConstantSettingType y) => x == y;
+        
+        public bool Equals(DocConstantSettingType x, DocConstantSettingType y) => x == y;
         
         public static bool operator !=(DocConstantSettingType x, DocConstantSettingType y) => !(x == y);
 
@@ -170,7 +170,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantSettingType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

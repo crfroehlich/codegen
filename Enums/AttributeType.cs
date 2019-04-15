@@ -64,12 +64,12 @@ namespace Services.Enums
         TIME_TO
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this AttributeTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case AttributeTypeEnm.CHANGE:
                     return DocConstantAttributeType.CHANGE;
                 case AttributeTypeEnm.DURATION:
@@ -84,10 +84,10 @@ namespace Services.Enums
                     return DocConstantAttributeType.TIME_SINCE;
                 case AttributeTypeEnm.TIME_TO:
                     return DocConstantAttributeType.TIME_TO;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantAttributeType : IEquatable<DocConstantAttributeType>, IEqualityComparer<DocConstantAttributeType>
@@ -130,8 +130,8 @@ namespace Services.Enums
         public bool Equals(DocConstantAttributeType obj) => this == obj;
 
         public static bool operator ==(DocConstantAttributeType x, DocConstantAttributeType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantAttributeType x, DocConstantAttributeType y) => x == y;
+        
+        public bool Equals(DocConstantAttributeType x, DocConstantAttributeType y) => x == y;
         
         public static bool operator !=(DocConstantAttributeType x, DocConstantAttributeType y) => !(x == y);
 
@@ -150,7 +150,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantAttributeType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

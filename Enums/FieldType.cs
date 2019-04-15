@@ -66,12 +66,12 @@ namespace Services.Enums
         YES_NO_NA
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this FieldTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case FieldTypeEnm.BINARY:
                     return DocConstantFieldType.BINARY;
                 case FieldTypeEnm.CONTINUOUS:
@@ -88,10 +88,10 @@ namespace Services.Enums
                     return DocConstantFieldType.RATE;
                 case FieldTypeEnm.YES_NO_NA:
                     return DocConstantFieldType.YES_NO_NA;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantFieldType : IEquatable<DocConstantFieldType>, IEqualityComparer<DocConstantFieldType>
@@ -135,8 +135,8 @@ namespace Services.Enums
         public bool Equals(DocConstantFieldType obj) => this == obj;
 
         public static bool operator ==(DocConstantFieldType x, DocConstantFieldType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantFieldType x, DocConstantFieldType y) => x == y;
+        
+        public bool Equals(DocConstantFieldType x, DocConstantFieldType y) => x == y;
         
         public static bool operator !=(DocConstantFieldType x, DocConstantFieldType y) => !(x == y);
 
@@ -155,7 +155,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantFieldType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

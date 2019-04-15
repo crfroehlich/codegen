@@ -125,9 +125,13 @@ namespace Services.Dto
         public Default(int? pId, Reference pDiseaseState, int? pDiseaseStateId, Reference pRole, int? pRoleId, Reference pScope, int? pScopeId, Reference pTherapeuticArea, int? pTherapeuticAreaId) : 
             base(pId, pDiseaseState, pDiseaseStateId, pRole, pRoleId, pScope, pScopeId, pTherapeuticArea, pTherapeuticAreaId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

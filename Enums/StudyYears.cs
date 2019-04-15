@@ -58,12 +58,12 @@ namespace Services.Enums
         RECRUITMENT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyYearsEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyYearsEnm.ANALYZED:
                     return DocConstantStudyYears.ANALYZED;
                 case StudyYearsEnm.CONDUCTED:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantStudyYears.ENROLLMENT;
                 case StudyYearsEnm.RECRUITMENT:
                     return DocConstantStudyYears.RECRUITMENT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyYears : IEquatable<DocConstantStudyYears>, IEqualityComparer<DocConstantStudyYears>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyYears obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyYears x, DocConstantStudyYears y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyYears x, DocConstantStudyYears y) => x == y;
+        
+        public bool Equals(DocConstantStudyYears x, DocConstantStudyYears y) => x == y;
         
         public static bool operator !=(DocConstantStudyYears x, DocConstantStudyYears y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyYears obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

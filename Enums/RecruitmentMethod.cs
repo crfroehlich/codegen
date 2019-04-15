@@ -60,12 +60,12 @@ namespace Services.Enums
         REGISTRY
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this RecruitmentMethodEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case RecruitmentMethodEnm.EMAIL:
                     return DocConstantRecruitmentMethod.EMAIL;
                 case RecruitmentMethodEnm.FLYER:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantRecruitmentMethod.REFERRAL;
                 case RecruitmentMethodEnm.REGISTRY:
                     return DocConstantRecruitmentMethod.REGISTRY;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantRecruitmentMethod : IEquatable<DocConstantRecruitmentMethod>, IEqualityComparer<DocConstantRecruitmentMethod>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantRecruitmentMethod obj) => this == obj;
 
         public static bool operator ==(DocConstantRecruitmentMethod x, DocConstantRecruitmentMethod y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantRecruitmentMethod x, DocConstantRecruitmentMethod y) => x == y;
+        
+        public bool Equals(DocConstantRecruitmentMethod x, DocConstantRecruitmentMethod y) => x == y;
         
         public static bool operator !=(DocConstantRecruitmentMethod x, DocConstantRecruitmentMethod y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantRecruitmentMethod obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

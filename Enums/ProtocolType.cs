@@ -56,22 +56,22 @@ namespace Services.Enums
         SEARCH
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ProtocolTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ProtocolTypeEnm.DATA:
                     return DocConstantProtocolType.DATA;
                 case ProtocolTypeEnm.FULL:
                     return DocConstantProtocolType.FULL;
                 case ProtocolTypeEnm.SEARCH:
                     return DocConstantProtocolType.SEARCH;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantProtocolType : IEquatable<DocConstantProtocolType>, IEqualityComparer<DocConstantProtocolType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantProtocolType obj) => this == obj;
 
         public static bool operator ==(DocConstantProtocolType x, DocConstantProtocolType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantProtocolType x, DocConstantProtocolType y) => x == y;
+        
+        public bool Equals(DocConstantProtocolType x, DocConstantProtocolType y) => x == y;
         
         public static bool operator !=(DocConstantProtocolType x, DocConstantProtocolType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantProtocolType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

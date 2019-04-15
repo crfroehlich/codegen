@@ -225,9 +225,13 @@ namespace Services.Dto
         public ImportData(int? pId, DateTime? pCompletedOn, Reference pDocument, int? pDocumentId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : 
             base(pId, pCompletedOn, pDocument, pDocumentId, pDocumentSets, pDocumentSetsCount, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

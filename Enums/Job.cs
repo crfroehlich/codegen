@@ -72,6 +72,8 @@ namespace Services.Enums
         PROCESS_STATS,
         [EnumMember(Value = DocConstantJob.PROCESS_UPDATES)]
         PROCESS_UPDATES,
+        [EnumMember(Value = DocConstantJob.REASSIGN_ARCHIVED_USERS)]
+        REASSIGN_ARCHIVED_USERS,
         [EnumMember(Value = DocConstantJob.RUN_TIMECARD_RULES)]
         RUN_TIMECARD_RULES,
         [EnumMember(Value = DocConstantJob.STUDYSET_HISTORY)]
@@ -86,12 +88,12 @@ namespace Services.Enums
         SYNC_USERS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this JobEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case JobEnm.CLEANUP_HISTORY:
                     return DocConstantJob.CLEANUP_HISTORY;
                 case JobEnm.CREATE_ALL_APPS:
@@ -116,6 +118,8 @@ namespace Services.Enums
                     return DocConstantJob.PROCESS_STATS;
                 case JobEnm.PROCESS_UPDATES:
                     return DocConstantJob.PROCESS_UPDATES;
+                case JobEnm.REASSIGN_ARCHIVED_USERS:
+                    return DocConstantJob.REASSIGN_ARCHIVED_USERS;
                 case JobEnm.RUN_TIMECARD_RULES:
                     return DocConstantJob.RUN_TIMECARD_RULES;
                 case JobEnm.STUDYSET_HISTORY:
@@ -128,10 +132,10 @@ namespace Services.Enums
                     return DocConstantJob.SYNC_LOOKUP_TABLES;
                 case JobEnm.SYNC_USERS:
                     return DocConstantJob.SYNC_USERS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantJob : IEquatable<DocConstantJob>, IEqualityComparer<DocConstantJob>
@@ -148,6 +152,7 @@ namespace Services.Enums
         public const string PROCESS_EVENTS = "ProcessEvents";
         public const string PROCESS_STATS = "ProcessStats";
         public const string PROCESS_UPDATES = "ProcessUpdates";
+        public const string REASSIGN_ARCHIVED_USERS = "ReassignArchivedUsers";
         public const string RUN_TIMECARD_RULES = "RunTimecardRules";
         public const string STUDYSET_HISTORY = "StudySetHistory";
         public const string SYNC_DATA_SETS = "SyncDataSets";
@@ -185,8 +190,8 @@ namespace Services.Enums
         public bool Equals(DocConstantJob obj) => this == obj;
 
         public static bool operator ==(DocConstantJob x, DocConstantJob y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantJob x, DocConstantJob y) => x == y;
+        
+        public bool Equals(DocConstantJob x, DocConstantJob y) => x == y;
         
         public static bool operator !=(DocConstantJob x, DocConstantJob y) => !(x == y);
 
@@ -205,7 +210,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantJob obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

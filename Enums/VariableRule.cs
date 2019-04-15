@@ -66,12 +66,12 @@ namespace Services.Enums
         STUDY_EDIT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this VariableRuleEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case VariableRuleEnm.ADDITION:
                     return DocConstantVariableRule.ADDITION;
                 case VariableRuleEnm.AGGREGATION:
@@ -88,10 +88,10 @@ namespace Services.Enums
                     return DocConstantVariableRule.NORMALIZATION;
                 case VariableRuleEnm.STUDY_EDIT:
                     return DocConstantVariableRule.STUDY_EDIT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantVariableRule : IEquatable<DocConstantVariableRule>, IEqualityComparer<DocConstantVariableRule>
@@ -135,8 +135,8 @@ namespace Services.Enums
         public bool Equals(DocConstantVariableRule obj) => this == obj;
 
         public static bool operator ==(DocConstantVariableRule x, DocConstantVariableRule y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantVariableRule x, DocConstantVariableRule y) => x == y;
+        
+        public bool Equals(DocConstantVariableRule x, DocConstantVariableRule y) => x == y;
         
         public static bool operator !=(DocConstantVariableRule x, DocConstantVariableRule y) => !(x == y);
 
@@ -155,7 +155,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantVariableRule obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

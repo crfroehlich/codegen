@@ -202,9 +202,13 @@ namespace Services.Dto
         public AuditRecord(int? pId, string pAction, Reference pBackgroundTask, int? pBackgroundTaskId, DateTime? pChangedOnDate, string pData, string pDatabaseSessionId, List<Reference> pDeltas, int? pDeltasCount, int? pEntityId, string pEntityType, int? pEntityVersion, List<Reference> pEvents, int? pEventsCount, Reference pImpersonation, int? pImpersonationId, int? pTargetId, string pTargetType, int? pTargetVersion, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId) : 
             base(pId, pAction, pBackgroundTask, pBackgroundTaskId, pChangedOnDate, pData, pDatabaseSessionId, pDeltas, pDeltasCount, pEntityId, pEntityType, pEntityVersion, pEvents, pEventsCount, pImpersonation, pImpersonationId, pTargetId, pTargetType, pTargetVersion, pUser, pUserId, pUserSession, pUserSessionId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

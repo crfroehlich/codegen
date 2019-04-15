@@ -64,12 +64,12 @@ namespace Services.Enums
         SUCCEEDED
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ImportStatusEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ImportStatusEnm.ALREADY_IMPORTED:
                     return DocConstantImportStatus.ALREADY_IMPORTED;
                 case ImportStatusEnm.CANCELLED:
@@ -84,10 +84,10 @@ namespace Services.Enums
                     return DocConstantImportStatus.QUEUED;
                 case ImportStatusEnm.SUCCEEDED:
                     return DocConstantImportStatus.SUCCEEDED;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantImportStatus : IEquatable<DocConstantImportStatus>, IEqualityComparer<DocConstantImportStatus>
@@ -130,8 +130,8 @@ namespace Services.Enums
         public bool Equals(DocConstantImportStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantImportStatus x, DocConstantImportStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantImportStatus x, DocConstantImportStatus y) => x == y;
+        
+        public bool Equals(DocConstantImportStatus x, DocConstantImportStatus y) => x == y;
         
         public static bool operator !=(DocConstantImportStatus x, DocConstantImportStatus y) => !(x == y);
 
@@ -150,7 +150,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantImportStatus obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

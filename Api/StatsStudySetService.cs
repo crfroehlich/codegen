@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<StatsStudySet, StatsStudySetSearch>(request);
             IQueryable<DocEntityStatsStudySet> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityStatsStudySet>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityStatsStudySet>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new StatsStudySetFullTextSearch(request);
@@ -155,7 +155,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -167,14 +167,14 @@ namespace Services.API
 
         public object Get(StatsStudySetJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "statsrecord":
                         return GetJunctionSearchResult<StatsStudySet, DocEntityStatsStudySet, DocEntityStatsRecord, StatsRecord, StatsRecordSearch>((int)request.Id, DocConstantModelName.STATSRECORD, "Records", request, (ss) => HostContext.ResolveService<StatsRecordService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for statsstudyset/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for statsstudyset/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private StatsStudySet GetStatsStudySet(StatsStudySet request)
         {
             var id = request?.Id;

@@ -58,12 +58,12 @@ namespace Services.Enums
         RISK
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyTypeHarmEtiologyEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyTypeHarmEtiologyEnm.CAUSATION:
                     return DocConstantStudyTypeHarmEtiology.CAUSATION;
                 case StudyTypeHarmEtiologyEnm.ETIOLOGY:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantStudyTypeHarmEtiology.HARM;
                 case StudyTypeHarmEtiologyEnm.RISK:
                     return DocConstantStudyTypeHarmEtiology.RISK;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyTypeHarmEtiology : IEquatable<DocConstantStudyTypeHarmEtiology>, IEqualityComparer<DocConstantStudyTypeHarmEtiology>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyTypeHarmEtiology obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyTypeHarmEtiology x, DocConstantStudyTypeHarmEtiology y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyTypeHarmEtiology x, DocConstantStudyTypeHarmEtiology y) => x == y;
+        
+        public bool Equals(DocConstantStudyTypeHarmEtiology x, DocConstantStudyTypeHarmEtiology y) => x == y;
         
         public static bool operator !=(DocConstantStudyTypeHarmEtiology x, DocConstantStudyTypeHarmEtiology y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyTypeHarmEtiology obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

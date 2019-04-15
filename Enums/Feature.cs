@@ -106,12 +106,12 @@ namespace Services.Enums
         WORKFLOW_ACCESS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this FeatureEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case FeatureEnm.ACCESS_BACKEND:
                     return DocConstantFeature.ACCESS_BACKEND;
                 case FeatureEnm.ALL_ENTITIES:
@@ -168,10 +168,10 @@ namespace Services.Enums
                     return DocConstantFeature.TERMS_ADMIN;
                 case FeatureEnm.WORKFLOW_ACCESS:
                     return DocConstantFeature.WORKFLOW_ACCESS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantFeature : IEquatable<DocConstantFeature>, IEqualityComparer<DocConstantFeature>
@@ -235,8 +235,8 @@ namespace Services.Enums
         public bool Equals(DocConstantFeature obj) => this == obj;
 
         public static bool operator ==(DocConstantFeature x, DocConstantFeature y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantFeature x, DocConstantFeature y) => x == y;
+        
+        public bool Equals(DocConstantFeature x, DocConstantFeature y) => x == y;
         
         public static bool operator !=(DocConstantFeature x, DocConstantFeature y) => !(x == y);
 
@@ -255,7 +255,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantFeature obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

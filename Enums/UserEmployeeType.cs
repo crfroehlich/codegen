@@ -58,12 +58,12 @@ namespace Services.Enums
         VENDOR
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this UserEmployeeTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case UserEmployeeTypeEnm.CLIENT:
                     return DocConstantUserEmployeeType.CLIENT;
                 case UserEmployeeTypeEnm.CONTRACTOR:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantUserEmployeeType.EMPLOYEE;
                 case UserEmployeeTypeEnm.VENDOR:
                     return DocConstantUserEmployeeType.VENDOR;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantUserEmployeeType : IEquatable<DocConstantUserEmployeeType>, IEqualityComparer<DocConstantUserEmployeeType>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantUserEmployeeType obj) => this == obj;
 
         public static bool operator ==(DocConstantUserEmployeeType x, DocConstantUserEmployeeType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantUserEmployeeType x, DocConstantUserEmployeeType y) => x == y;
+        
+        public bool Equals(DocConstantUserEmployeeType x, DocConstantUserEmployeeType y) => x == y;
         
         public static bool operator !=(DocConstantUserEmployeeType x, DocConstantUserEmployeeType y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantUserEmployeeType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

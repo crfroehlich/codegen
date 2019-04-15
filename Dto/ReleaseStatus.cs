@@ -115,9 +115,13 @@ namespace Services.Dto
         public ReleaseStatus(int? pId, string pBranch, string pRelease, string pServer, string pURL, string pVersion) : 
             base(pId, pBranch, pRelease, pServer, pURL, pVersion) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

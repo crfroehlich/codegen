@@ -172,7 +172,6 @@
     "THERAPEUTIC_AREA": "Therapeutic Area",
     "DISEASE_STATE": "Disease State",
     "DATA_SET": "Data Set",
-    "LIBRARY": "Library",
     "SERVE_PORTAL": "SERVE Portal"
   },
   "DocumentType": {
@@ -422,11 +421,12 @@
     "PROCESS_EVENTS": "ProcessEvents",
     "PROCESS_STATS": "ProcessStats",
     "PROCESS_UPDATES": "ProcessUpdates",
+    "REASSIGN_ARCHIVED_USERS": "ReassignArchivedUsers",
     "RUN_TIMECARD_RULES": "RunTimecardRules",
     "STUDYSET_HISTORY": "StudySetHistory",
+    "SYNC_DATA_SETS": "SyncDataSets",
     "SYNC_LEGACY_STUDIES": "SyncLegacyStudies",
     "SYNC_LOOKUP_TABLES": "SyncLookupTables",
-    "SYNC_DATA_SETS": "SyncDataSets",
     "SYNC_USERS": "SyncUsers"
   },
   "JunctionType": {

@@ -72,12 +72,12 @@ namespace Services.Enums
         VITAMINS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this InterventionTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case InterventionTypeEnm.ACCURACY_OUTCOMES:
                     return DocConstantInterventionType.ACCURACY_OUTCOMES;
                 case InterventionTypeEnm.CLINICAL_OUTCOMES:
@@ -100,10 +100,10 @@ namespace Services.Enums
                     return DocConstantInterventionType.STEM_CELL;
                 case InterventionTypeEnm.VITAMINS:
                     return DocConstantInterventionType.VITAMINS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantInterventionType : IEquatable<DocConstantInterventionType>, IEqualityComparer<DocConstantInterventionType>
@@ -150,8 +150,8 @@ namespace Services.Enums
         public bool Equals(DocConstantInterventionType obj) => this == obj;
 
         public static bool operator ==(DocConstantInterventionType x, DocConstantInterventionType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantInterventionType x, DocConstantInterventionType y) => x == y;
+        
+        public bool Equals(DocConstantInterventionType x, DocConstantInterventionType y) => x == y;
         
         public static bool operator !=(DocConstantInterventionType x, DocConstantInterventionType y) => !(x == y);
 
@@ -170,7 +170,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantInterventionType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

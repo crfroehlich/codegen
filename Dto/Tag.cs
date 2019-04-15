@@ -100,9 +100,13 @@ namespace Services.Dto
         public Tag(int? pId, string pName, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pName, pWorkflows, pWorkflowsCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

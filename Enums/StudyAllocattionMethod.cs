@@ -58,12 +58,12 @@ namespace Services.Enums
         SEQUENCE_ALLOCATION
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyAllocattionMethodEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyAllocattionMethodEnm.OPAQUE_ENVELOPES:
                     return DocConstantStudyAllocattionMethod.OPAQUE_ENVELOPES;
                 case StudyAllocattionMethodEnm.RANDOM_NUMBER_GENERATOR:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantStudyAllocattionMethod.ROLLING_DICE;
                 case StudyAllocattionMethodEnm.SEQUENCE_ALLOCATION:
                     return DocConstantStudyAllocattionMethod.SEQUENCE_ALLOCATION;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyAllocattionMethod : IEquatable<DocConstantStudyAllocattionMethod>, IEqualityComparer<DocConstantStudyAllocattionMethod>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyAllocattionMethod obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyAllocattionMethod x, DocConstantStudyAllocattionMethod y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyAllocattionMethod x, DocConstantStudyAllocattionMethod y) => x == y;
+        
+        public bool Equals(DocConstantStudyAllocattionMethod x, DocConstantStudyAllocattionMethod y) => x == y;
         
         public static bool operator !=(DocConstantStudyAllocattionMethod x, DocConstantStudyAllocattionMethod y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyAllocattionMethod obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

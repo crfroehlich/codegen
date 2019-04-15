@@ -109,9 +109,13 @@ namespace Services.Dto
         public DateTimeDto(int? pId, int? pDateDay, int? pDateMonth, DateTime? pDateTime, int? pDateYear) : 
             base(pId, pDateDay, pDateMonth, pDateTime, pDateYear) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

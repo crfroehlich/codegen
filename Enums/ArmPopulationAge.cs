@@ -62,12 +62,12 @@ namespace Services.Enums
         MEDIAN_SE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ArmPopulationAgeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ArmPopulationAgeEnm.MEAN_RANGE:
                     return DocConstantArmPopulationAge.MEAN_RANGE;
                 case ArmPopulationAgeEnm.MEAN_SD:
@@ -80,10 +80,10 @@ namespace Services.Enums
                     return DocConstantArmPopulationAge.MEDIAN_SD;
                 case ArmPopulationAgeEnm.MEDIAN_SE:
                     return DocConstantArmPopulationAge.MEDIAN_SE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantArmPopulationAge : IEquatable<DocConstantArmPopulationAge>, IEqualityComparer<DocConstantArmPopulationAge>
@@ -125,8 +125,8 @@ namespace Services.Enums
         public bool Equals(DocConstantArmPopulationAge obj) => this == obj;
 
         public static bool operator ==(DocConstantArmPopulationAge x, DocConstantArmPopulationAge y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantArmPopulationAge x, DocConstantArmPopulationAge y) => x == y;
+        
+        public bool Equals(DocConstantArmPopulationAge x, DocConstantArmPopulationAge y) => x == y;
         
         public static bool operator !=(DocConstantArmPopulationAge x, DocConstantArmPopulationAge y) => !(x == y);
 
@@ -145,7 +145,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantArmPopulationAge obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

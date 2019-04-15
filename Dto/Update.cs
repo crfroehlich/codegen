@@ -168,9 +168,13 @@ namespace Services.Dto
         public Update(int? pId, string pBody, string pDeliveryStatus, int? pEmailAttempts, DateTime? pEmailSent, List<Reference> pEvents, int? pEventsCount, string pLink, int? pPriority, DateTime? pRead, DateTime? pSlackSent, string pSubject, Reference pTeam, int? pTeamId, Reference pUser, int? pUserId) : 
             base(pId, pBody, pDeliveryStatus, pEmailAttempts, pEmailSent, pEvents, pEventsCount, pLink, pPriority, pRead, pSlackSent, pSubject, pTeam, pTeamId, pUser, pUserId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

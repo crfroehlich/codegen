@@ -188,9 +188,13 @@ namespace Services.Dto
         public BackgroundTask(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : 
             base(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

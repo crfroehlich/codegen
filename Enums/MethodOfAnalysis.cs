@@ -56,22 +56,22 @@ namespace Services.Enums
         UNCLEAR_DRE_ASSUMPTION
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this MethodOfAnalysisEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case MethodOfAnalysisEnm.AUTHOR_CLARIFICATION:
                     return DocConstantMethodOfAnalysis.AUTHOR_CLARIFICATION;
                 case MethodOfAnalysisEnm.POSSIBLE_AUTHOR_ERROR:
                     return DocConstantMethodOfAnalysis.POSSIBLE_AUTHOR_ERROR;
                 case MethodOfAnalysisEnm.UNCLEAR_DRE_ASSUMPTION:
                     return DocConstantMethodOfAnalysis.UNCLEAR_DRE_ASSUMPTION;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantMethodOfAnalysis : IEquatable<DocConstantMethodOfAnalysis>, IEqualityComparer<DocConstantMethodOfAnalysis>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantMethodOfAnalysis obj) => this == obj;
 
         public static bool operator ==(DocConstantMethodOfAnalysis x, DocConstantMethodOfAnalysis y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantMethodOfAnalysis x, DocConstantMethodOfAnalysis y) => x == y;
+        
+        public bool Equals(DocConstantMethodOfAnalysis x, DocConstantMethodOfAnalysis y) => x == y;
         
         public static bool operator !=(DocConstantMethodOfAnalysis x, DocConstantMethodOfAnalysis y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantMethodOfAnalysis obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

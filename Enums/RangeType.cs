@@ -56,22 +56,22 @@ namespace Services.Enums
         UNIT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this RangeTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case RangeTypeEnm.AGE:
                     return DocConstantRangeType.AGE;
                 case RangeTypeEnm.TIME:
                     return DocConstantRangeType.TIME;
                 case RangeTypeEnm.UNIT:
                     return DocConstantRangeType.UNIT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantRangeType : IEquatable<DocConstantRangeType>, IEqualityComparer<DocConstantRangeType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantRangeType obj) => this == obj;
 
         public static bool operator ==(DocConstantRangeType x, DocConstantRangeType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantRangeType x, DocConstantRangeType y) => x == y;
+        
+        public bool Equals(DocConstantRangeType x, DocConstantRangeType y) => x == y;
         
         public static bool operator !=(DocConstantRangeType x, DocConstantRangeType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantRangeType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

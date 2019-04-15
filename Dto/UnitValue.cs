@@ -122,9 +122,13 @@ namespace Services.Dto
         public UnitValue(int? pId, Reference pEqualityOperator, int? pEqualityOperatorId, int? pMultiplier, decimal? pNumber, int? pOrder, UnitOfMeasure pUnit, int? pUnitId) : 
             base(pId, pEqualityOperator, pEqualityOperatorId, pMultiplier, pNumber, pOrder, pUnit, pUnitId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

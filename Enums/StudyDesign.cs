@@ -100,12 +100,12 @@ namespace Services.Enums
         SUB_GROUP_ANALYSIS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyDesignEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyDesignEnm.BEFORE_AND_AFTER_TRIAL:
                     return DocConstantStudyDesign.BEFORE_AND_AFTER_TRIAL;
                 case StudyDesignEnm.CASE_CONTROL:
@@ -156,10 +156,10 @@ namespace Services.Enums
                     return DocConstantStudyDesign.RETROSPECTIVE_COHORT_STUDY;
                 case StudyDesignEnm.SUB_GROUP_ANALYSIS:
                     return DocConstantStudyDesign.SUB_GROUP_ANALYSIS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyDesign : IEquatable<DocConstantStudyDesign>, IEqualityComparer<DocConstantStudyDesign>
@@ -220,8 +220,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyDesign obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyDesign x, DocConstantStudyDesign y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyDesign x, DocConstantStudyDesign y) => x == y;
+        
+        public bool Equals(DocConstantStudyDesign x, DocConstantStudyDesign y) => x == y;
         
         public static bool operator !=(DocConstantStudyDesign x, DocConstantStudyDesign y) => !(x == y);
 
@@ -240,7 +240,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyDesign obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

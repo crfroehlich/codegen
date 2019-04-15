@@ -82,12 +82,12 @@ namespace Services.Enums
         WILCOXON_SIGNED_RANKS_TEST
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StatisticalTestEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StatisticalTestEnm.BINOMIAL_TEST:
                     return DocConstantStatisticalTest.BINOMIAL_TEST;
                 case StatisticalTestEnm.CHI_SQUARE_GOODNESS_OF_FIT:
@@ -120,10 +120,10 @@ namespace Services.Enums
                     return DocConstantStatisticalTest.WILCOXON_MANN_WHITNEY_TEST;
                 case StatisticalTestEnm.WILCOXON_SIGNED_RANKS_TEST:
                     return DocConstantStatisticalTest.WILCOXON_SIGNED_RANKS_TEST;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStatisticalTest : IEquatable<DocConstantStatisticalTest>, IEqualityComparer<DocConstantStatisticalTest>
@@ -175,8 +175,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStatisticalTest obj) => this == obj;
 
         public static bool operator ==(DocConstantStatisticalTest x, DocConstantStatisticalTest y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStatisticalTest x, DocConstantStatisticalTest y) => x == y;
+        
+        public bool Equals(DocConstantStatisticalTest x, DocConstantStatisticalTest y) => x == y;
         
         public static bool operator !=(DocConstantStatisticalTest x, DocConstantStatisticalTest y) => !(x == y);
 
@@ -195,7 +195,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStatisticalTest obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

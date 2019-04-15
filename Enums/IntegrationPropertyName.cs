@@ -56,22 +56,22 @@ namespace Services.Enums
         PROJECT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this IntegrationPropertyNameEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case IntegrationPropertyNameEnm.ACCOUNT:
                     return DocConstantIntegrationPropertyName.ACCOUNT;
                 case IntegrationPropertyNameEnm.OPPORTUNITY:
                     return DocConstantIntegrationPropertyName.OPPORTUNITY;
                 case IntegrationPropertyNameEnm.PROJECT:
                     return DocConstantIntegrationPropertyName.PROJECT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantIntegrationPropertyName : IEquatable<DocConstantIntegrationPropertyName>, IEqualityComparer<DocConstantIntegrationPropertyName>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantIntegrationPropertyName obj) => this == obj;
 
         public static bool operator ==(DocConstantIntegrationPropertyName x, DocConstantIntegrationPropertyName y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantIntegrationPropertyName x, DocConstantIntegrationPropertyName y) => x == y;
+        
+        public bool Equals(DocConstantIntegrationPropertyName x, DocConstantIntegrationPropertyName y) => x == y;
         
         public static bool operator !=(DocConstantIntegrationPropertyName x, DocConstantIntegrationPropertyName y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantIntegrationPropertyName obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

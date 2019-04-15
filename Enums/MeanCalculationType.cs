@@ -56,22 +56,22 @@ namespace Services.Enums
         LEAST_SQUARES_MEAN
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this MeanCalculationTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case MeanCalculationTypeEnm.ARITHMETIC:
                     return DocConstantMeanCalculationType.ARITHMETIC;
                 case MeanCalculationTypeEnm.GEOMETRIC:
                     return DocConstantMeanCalculationType.GEOMETRIC;
                 case MeanCalculationTypeEnm.LEAST_SQUARES_MEAN:
                     return DocConstantMeanCalculationType.LEAST_SQUARES_MEAN;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantMeanCalculationType : IEquatable<DocConstantMeanCalculationType>, IEqualityComparer<DocConstantMeanCalculationType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantMeanCalculationType obj) => this == obj;
 
         public static bool operator ==(DocConstantMeanCalculationType x, DocConstantMeanCalculationType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantMeanCalculationType x, DocConstantMeanCalculationType y) => x == y;
+        
+        public bool Equals(DocConstantMeanCalculationType x, DocConstantMeanCalculationType y) => x == y;
         
         public static bool operator !=(DocConstantMeanCalculationType x, DocConstantMeanCalculationType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantMeanCalculationType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

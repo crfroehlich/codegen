@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Help, HelpSearch>(request);
             IQueryable<DocEntityHelp> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityHelp>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityHelp>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new HelpFullTextSearch(request);
@@ -145,7 +145,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -374,16 +374,16 @@ namespace Services.API
 
             Help ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Help")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Help")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -438,13 +438,13 @@ namespace Services.API
         {
             Help ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityHelp.GetHelp(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityHelp.GetHelp(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pConfluenceId = entity.ConfluenceId;
                     if(!DocTools.IsNullOrEmpty(pConfluenceId))
@@ -462,18 +462,18 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pTitle))
                         pTitle += " (Copy)";
                     var pType = entity.Type;
-					#region Custom Before copyHelp
-					#endregion Custom Before copyHelp
-					var copy = new DocEntityHelp(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyHelp
+                    #endregion Custom Before copyHelp
+                    var copy = new DocEntityHelp(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , ConfluenceId = pConfluenceId
                                 , Description = pDescription
                                 , Icon = pIcon
                                 , Order = pOrder
                                 , Title = pTitle
                                 , Type = pType
-					};
+                    };
                             foreach(var item in pPages)
                             {
                                 entity.Pages.Add(item);
@@ -484,12 +484,12 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-					#region Custom After copyHelp
-					#endregion Custom After copyHelp
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyHelp
+                    #endregion Custom After copyHelp
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -557,12 +557,12 @@ namespace Services.API
             
             Help ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(HelpBatch request)
@@ -612,72 +612,72 @@ namespace Services.API
         public void Delete(Help request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.HELP);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityHelp.GetHelp(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.HELP);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityHelp.GetHelp(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Help could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Help could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(HelpSearch request)
         {
             var matches = Get(request) as List<Help>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         public object Get(HelpJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "page":
                         return GetJunctionSearchResult<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<Help, DocEntityHelp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(HelpJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "page":
                         return AddJunction<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
                     case "scope":
                         return AddJunction<Help, DocEntityHelp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(HelpJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "page":
                         return RemoveJunction<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
                     case "scope":
                         return RemoveJunction<Help, DocEntityHelp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for help/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private Help GetHelp(Help request)
         {
             var id = request?.Id;

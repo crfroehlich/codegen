@@ -74,12 +74,12 @@ namespace Services.Enums
         WITHDRAWAL_DRUG_DISCONTINUATION
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ResultsCategoryEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ResultsCategoryEnm.ADVERSE_EVENT:
                     return DocConstantResultsCategory.ADVERSE_EVENT;
                 case ResultsCategoryEnm.CLINICAL_OUTCOME:
@@ -104,10 +104,10 @@ namespace Services.Enums
                     return DocConstantResultsCategory.THERAPIES;
                 case ResultsCategoryEnm.WITHDRAWAL_DRUG_DISCONTINUATION:
                     return DocConstantResultsCategory.WITHDRAWAL_DRUG_DISCONTINUATION;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantResultsCategory : IEquatable<DocConstantResultsCategory>, IEqualityComparer<DocConstantResultsCategory>
@@ -155,8 +155,8 @@ namespace Services.Enums
         public bool Equals(DocConstantResultsCategory obj) => this == obj;
 
         public static bool operator ==(DocConstantResultsCategory x, DocConstantResultsCategory y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantResultsCategory x, DocConstantResultsCategory y) => x == y;
+        
+        public bool Equals(DocConstantResultsCategory x, DocConstantResultsCategory y) => x == y;
         
         public static bool operator !=(DocConstantResultsCategory x, DocConstantResultsCategory y) => !(x == y);
 
@@ -175,7 +175,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantResultsCategory obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

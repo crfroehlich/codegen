@@ -56,22 +56,22 @@ namespace Services.Enums
         LEGACY
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyImportTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyImportTypeEnm.CLINICAL_TRIALS_GOV:
                     return DocConstantStudyImportType.CLINICAL_TRIALS_GOV;
                 case StudyImportTypeEnm.EXTRACT:
                     return DocConstantStudyImportType.EXTRACT;
                 case StudyImportTypeEnm.LEGACY:
                     return DocConstantStudyImportType.LEGACY;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyImportType : IEquatable<DocConstantStudyImportType>, IEqualityComparer<DocConstantStudyImportType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyImportType obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyImportType x, DocConstantStudyImportType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyImportType x, DocConstantStudyImportType y) => x == y;
+        
+        public bool Equals(DocConstantStudyImportType x, DocConstantStudyImportType y) => x == y;
         
         public static bool operator !=(DocConstantStudyImportType x, DocConstantStudyImportType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyImportType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

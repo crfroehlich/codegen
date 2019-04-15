@@ -150,9 +150,13 @@ namespace Services.Dto
         public Broadcast(int? pId, Reference pApp, int? pAppId, string pConfluenceId, string pName, bool pReprocess, DateTime? pReprocessed, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId) : 
             base(pId, pApp, pAppId, pConfluenceId, pName, pReprocess, pReprocessed, pScopes, pScopesCount, pStatus, pStatusId, pType, pTypeId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

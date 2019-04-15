@@ -60,12 +60,12 @@ namespace Services.Enums
         UNAVAILABLE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this WorkflowStatusEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case WorkflowStatusEnm.ACCEPTED:
                     return DocConstantWorkflowStatus.ACCEPTED;
                 case WorkflowStatusEnm.COLLECTED:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantWorkflowStatus.REQUESTED;
                 case WorkflowStatusEnm.UNAVAILABLE:
                     return DocConstantWorkflowStatus.UNAVAILABLE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantWorkflowStatus : IEquatable<DocConstantWorkflowStatus>, IEqualityComparer<DocConstantWorkflowStatus>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantWorkflowStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => x == y;
+        
+        public bool Equals(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => x == y;
         
         public static bool operator !=(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantWorkflowStatus obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

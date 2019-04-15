@@ -64,12 +64,12 @@ namespace Services.Enums
         THERAPEUTIC_DOSE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DosageTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DosageTypeEnm.BASAL:
                     return DocConstantDosageType.BASAL;
                 case DosageTypeEnm.BOLUS:
@@ -84,10 +84,10 @@ namespace Services.Enums
                     return DocConstantDosageType.STARTING_DOSE;
                 case DosageTypeEnm.THERAPEUTIC_DOSE:
                     return DocConstantDosageType.THERAPEUTIC_DOSE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDosageType : IEquatable<DocConstantDosageType>, IEqualityComparer<DocConstantDosageType>
@@ -130,8 +130,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDosageType obj) => this == obj;
 
         public static bool operator ==(DocConstantDosageType x, DocConstantDosageType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDosageType x, DocConstantDosageType y) => x == y;
+        
+        public bool Equals(DocConstantDosageType x, DocConstantDosageType y) => x == y;
         
         public static bool operator !=(DocConstantDosageType x, DocConstantDosageType y) => !(x == y);
 
@@ -150,7 +150,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDosageType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

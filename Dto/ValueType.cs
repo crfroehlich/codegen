@@ -106,9 +106,13 @@ namespace Services.Dto
         public ValueType(int? pId, Reference pFieldType, int? pFieldTypeId, Reference pName, int? pNameId) : 
             base(pId, pFieldType, pFieldTypeId, pName, pNameId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

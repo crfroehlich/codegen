@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<UserRequest, UserRequestSearch>(request);
             IQueryable<DocEntityUserRequest> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityUserRequest>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityUserRequest>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new UserRequestFullTextSearch(request);
@@ -141,7 +141,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 

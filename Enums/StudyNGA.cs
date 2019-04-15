@@ -74,12 +74,12 @@ namespace Services.Enums
         STUDY_WITHDRAWALS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyNGAEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyNGAEnm.COMPLETED_FINISHED:
                     return DocConstantStudyNGA.COMPLETED_FINISHED;
                 case StudyNGAEnm.CROSSOVER:
@@ -104,10 +104,10 @@ namespace Services.Enums
                     return DocConstantStudyNGA.SCREENED;
                 case StudyNGAEnm.STUDY_WITHDRAWALS:
                     return DocConstantStudyNGA.STUDY_WITHDRAWALS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyNGA : IEquatable<DocConstantStudyNGA>, IEqualityComparer<DocConstantStudyNGA>
@@ -155,8 +155,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyNGA obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyNGA x, DocConstantStudyNGA y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyNGA x, DocConstantStudyNGA y) => x == y;
+        
+        public bool Equals(DocConstantStudyNGA x, DocConstantStudyNGA y) => x == y;
         
         public static bool operator !=(DocConstantStudyNGA x, DocConstantStudyNGA y) => !(x == y);
 
@@ -175,7 +175,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyNGA obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -112,12 +112,12 @@ namespace Services.Enums
         SERVICES_USER_UPDATE_TEAMS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this QueueChannelEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case QueueChannelEnm.PORTAL_AUDIT:
                     return DocConstantQueueChannel.PORTAL_AUDIT;
                 case QueueChannelEnm.PORTAL_BACKGROUND_TASK:
@@ -180,10 +180,10 @@ namespace Services.Enums
                     return DocConstantQueueChannel.SERVICES_USER_UPDATE_SHARING;
                 case QueueChannelEnm.SERVICES_USER_UPDATE_TEAMS:
                     return DocConstantQueueChannel.SERVICES_USER_UPDATE_TEAMS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantQueueChannel : IEquatable<DocConstantQueueChannel>, IEqualityComparer<DocConstantQueueChannel>
@@ -250,8 +250,8 @@ namespace Services.Enums
         public bool Equals(DocConstantQueueChannel obj) => this == obj;
 
         public static bool operator ==(DocConstantQueueChannel x, DocConstantQueueChannel y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantQueueChannel x, DocConstantQueueChannel y) => x == y;
+        
+        public bool Equals(DocConstantQueueChannel x, DocConstantQueueChannel y) => x == y;
         
         public static bool operator !=(DocConstantQueueChannel x, DocConstantQueueChannel y) => !(x == y);
 
@@ -270,7 +270,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantQueueChannel obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

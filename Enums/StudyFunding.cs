@@ -68,12 +68,12 @@ namespace Services.Enums
         UNCLEAR
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this StudyFundingEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case StudyFundingEnm.ACKNOWLEDGEMENT:
                     return DocConstantStudyFunding.ACKNOWLEDGEMENT;
                 case StudyFundingEnm.AUTHOR_EMPLOYMENT:
@@ -92,10 +92,10 @@ namespace Services.Enums
                     return DocConstantStudyFunding.SUPPORTED_BY;
                 case StudyFundingEnm.UNCLEAR:
                     return DocConstantStudyFunding.UNCLEAR;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantStudyFunding : IEquatable<DocConstantStudyFunding>, IEqualityComparer<DocConstantStudyFunding>
@@ -140,8 +140,8 @@ namespace Services.Enums
         public bool Equals(DocConstantStudyFunding obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyFunding x, DocConstantStudyFunding y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantStudyFunding x, DocConstantStudyFunding y) => x == y;
+        
+        public bool Equals(DocConstantStudyFunding x, DocConstantStudyFunding y) => x == y;
         
         public static bool operator !=(DocConstantStudyFunding x, DocConstantStudyFunding y) => !(x == y);
 
@@ -160,7 +160,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantStudyFunding obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

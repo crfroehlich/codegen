@@ -116,30 +116,35 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(Definition))]
         public string Definition { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Enum))]
         public DocEntityLookupTableEnum Enum { get; set; }
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = "fa fa-info-circle")]
+        [FieldMapping(nameof(Icon))]
         public string Icon { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Page))]
         public DocEntityPage Page { get; set; }
         public int? PageId { get { return Page?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Term))]
         public DocEntityTermMaster Term { get; set; }
         public int? TermId { get { return Term?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -151,10 +156,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

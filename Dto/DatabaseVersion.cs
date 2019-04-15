@@ -108,9 +108,13 @@ namespace Services.Dto
         public DatabaseVersion(int? pId, string pDatabaseState, string pDescription, string pRelease, string pVersionName) : 
             base(pId, pDatabaseState, pDescription, pRelease, pVersionName) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

@@ -56,22 +56,22 @@ namespace Services.Enums
         POS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DirectionalityEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DirectionalityEnm.NA:
                     return DocConstantDirectionality.NA;
                 case DirectionalityEnm.NEG:
                     return DocConstantDirectionality.NEG;
                 case DirectionalityEnm.POS:
                     return DocConstantDirectionality.POS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDirectionality : IEquatable<DocConstantDirectionality>, IEqualityComparer<DocConstantDirectionality>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDirectionality obj) => this == obj;
 
         public static bool operator ==(DocConstantDirectionality x, DocConstantDirectionality y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDirectionality x, DocConstantDirectionality y) => x == y;
+        
+        public bool Equals(DocConstantDirectionality x, DocConstantDirectionality y) => x == y;
         
         public static bool operator !=(DocConstantDirectionality x, DocConstantDirectionality y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDirectionality obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -66,12 +66,12 @@ namespace Services.Enums
         WITH_WITHOUT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ConjunctionEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ConjunctionEnm.AND:
                     return DocConstantConjunction.AND;
                 case ConjunctionEnm.AND_NOT:
@@ -88,10 +88,10 @@ namespace Services.Enums
                     return DocConstantConjunction.OR_NOT;
                 case ConjunctionEnm.WITH_WITHOUT:
                     return DocConstantConjunction.WITH_WITHOUT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantConjunction : IEquatable<DocConstantConjunction>, IEqualityComparer<DocConstantConjunction>
@@ -135,8 +135,8 @@ namespace Services.Enums
         public bool Equals(DocConstantConjunction obj) => this == obj;
 
         public static bool operator ==(DocConstantConjunction x, DocConstantConjunction y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantConjunction x, DocConstantConjunction y) => x == y;
+        
+        public bool Equals(DocConstantConjunction x, DocConstantConjunction y) => x == y;
         
         public static bool operator !=(DocConstantConjunction x, DocConstantConjunction y) => !(x == y);
 
@@ -155,7 +155,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantConjunction obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

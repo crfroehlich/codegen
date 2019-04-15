@@ -127,9 +127,13 @@ namespace Services.Dto
         public App(int? pId, string pDescription, string pName, List<Reference> pPages, int? pPagesCount, List<Reference> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount) : 
             base(pId, pDescription, pName, pPages, pPagesCount, pRoles, pRolesCount, pScopes, pScopesCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

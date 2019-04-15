@@ -58,12 +58,12 @@ namespace Services.Enums
         TERMS_OF_SERVICE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this BroadcastTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case BroadcastTypeEnm.CHANGE_LOG:
                     return DocConstantBroadcastType.CHANGE_LOG;
                 case BroadcastTypeEnm.SCOPE_SPECIFIC:
@@ -72,10 +72,10 @@ namespace Services.Enums
                     return DocConstantBroadcastType.SYSTEM_ALERT;
                 case BroadcastTypeEnm.TERMS_OF_SERVICE:
                     return DocConstantBroadcastType.TERMS_OF_SERVICE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantBroadcastType : IEquatable<DocConstantBroadcastType>, IEqualityComparer<DocConstantBroadcastType>
@@ -115,8 +115,8 @@ namespace Services.Enums
         public bool Equals(DocConstantBroadcastType obj) => this == obj;
 
         public static bool operator ==(DocConstantBroadcastType x, DocConstantBroadcastType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantBroadcastType x, DocConstantBroadcastType y) => x == y;
+        
+        public bool Equals(DocConstantBroadcastType x, DocConstantBroadcastType y) => x == y;
         
         public static bool operator !=(DocConstantBroadcastType x, DocConstantBroadcastType y) => !(x == y);
 
@@ -135,7 +135,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantBroadcastType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

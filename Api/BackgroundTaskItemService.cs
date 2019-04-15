@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<BackgroundTaskItem, BackgroundTaskItemSearch>(request);
             IQueryable<DocEntityBackgroundTaskItem> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityBackgroundTaskItem>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityBackgroundTaskItem>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new BackgroundTaskItemFullTextSearch(request);
@@ -158,7 +158,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -170,14 +170,14 @@ namespace Services.API
 
         public object Get(BackgroundTaskItemJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "backgroundtaskhistory":
                         return GetJunctionSearchResult<BackgroundTaskItem, DocEntityBackgroundTaskItem, DocEntityBackgroundTaskHistory, BackgroundTaskHistory, BackgroundTaskHistorySearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKHISTORY, "TaskHistory", request, (ss) => HostContext.ResolveService<BackgroundTaskHistoryService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtaskitem/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtaskitem/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private BackgroundTaskItem GetBackgroundTaskItem(BackgroundTaskItem request)
         {
             var id = request?.Id;

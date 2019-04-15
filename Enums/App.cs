@@ -106,12 +106,12 @@ namespace Services.Enums
         SERVE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this AppEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case AppEnm.BAMBOO:
                     return DocConstantApp.BAMBOO;
                 case AppEnm.BITBUCKET:
@@ -168,10 +168,10 @@ namespace Services.Enums
                     return DocConstantApp.REPORTS;
                 case AppEnm.SERVE:
                     return DocConstantApp.SERVE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantApp : IEquatable<DocConstantApp>, IEqualityComparer<DocConstantApp>
@@ -235,8 +235,8 @@ namespace Services.Enums
         public bool Equals(DocConstantApp obj) => this == obj;
 
         public static bool operator ==(DocConstantApp x, DocConstantApp y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantApp x, DocConstantApp y) => x == y;
+        
+        public bool Equals(DocConstantApp x, DocConstantApp y) => x == y;
         
         public static bool operator !=(DocConstantApp x, DocConstantApp y) => !(x == y);
 
@@ -255,7 +255,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantApp obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

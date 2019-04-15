@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<DataTab, DataTabSearch>(request);
             IQueryable<DocEntityDataTab> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityDataTab>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityDataTab>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new DataTabFullTextSearch(request);
@@ -125,7 +125,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -299,12 +299,12 @@ namespace Services.API
             
             DataTab ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         private DataTab GetDataTab(DataTab request)

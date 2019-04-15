@@ -156,9 +156,13 @@ namespace Services.Dto
         public VariableRule(int? pId, List<Reference> pChildren, int? pChildrenCount, string pDefinition, List<Reference> pInstances, int? pInstancesCount, string pName, Reference pOwner, int? pOwnerId, Reference pRule, int? pRuleId, List<Reference> pScopes, int? pScopesCount, Reference pType, int? pTypeId) : 
             base(pId, pChildren, pChildrenCount, pDefinition, pInstances, pInstancesCount, pName, pOwner, pOwnerId, pRule, pRuleId, pScopes, pScopesCount, pType, pTypeId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

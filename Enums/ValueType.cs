@@ -130,12 +130,12 @@ namespace Services.Enums
         YESNONA
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ValueTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ValueTypeEnm.ASSOCIATIONMEASURE:
                     return DocConstantValueType.ASSOCIATIONMEASURE;
                 case ValueTypeEnm.BOOLEAN:
@@ -216,10 +216,10 @@ namespace Services.Enums
                     return DocConstantValueType.UNITVALUE;
                 case ValueTypeEnm.YESNONA:
                     return DocConstantValueType.YESNONA;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantValueType : IEquatable<DocConstantValueType>, IEqualityComparer<DocConstantValueType>
@@ -295,8 +295,8 @@ namespace Services.Enums
         public bool Equals(DocConstantValueType obj) => this == obj;
 
         public static bool operator ==(DocConstantValueType x, DocConstantValueType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantValueType x, DocConstantValueType y) => x == y;
+        
+        public bool Equals(DocConstantValueType x, DocConstantValueType y) => x == y;
         
         public static bool operator !=(DocConstantValueType x, DocConstantValueType y) => !(x == y);
 
@@ -315,7 +315,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantValueType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

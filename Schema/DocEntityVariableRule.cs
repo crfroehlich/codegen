@@ -115,7 +115,8 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Children))]
         [Association(PairTo = nameof(DocEntityVariableRule.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableRule> Children { get; private set; }
 
@@ -124,10 +125,12 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(Definition))]
         public string Definition { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Instances))]
         [Association(PairTo = nameof(DocEntityVariableInstance.Rule), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableInstance> Instances { get; private set; }
 
@@ -136,20 +139,24 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Owner))]
         public DocEntityVariableRule Owner { get; set; }
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Rule))]
         public DocEntityLookupTable Rule { get; set; }
         public int? RuleId { get { return Rule?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Scopes))]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
@@ -157,12 +164,13 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -174,10 +182,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

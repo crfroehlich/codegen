@@ -98,12 +98,12 @@ namespace Services.Enums
         WRONG_STUDY_DESIGN
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ReasonRejectedEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ReasonRejectedEnm.ABSTRACT_INSUFFICIENT_INFORMATION:
                     return DocConstantReasonRejected.ABSTRACT_INSUFFICIENT_INFORMATION;
                 case ReasonRejectedEnm.ANIMAL_STUDY:
@@ -152,10 +152,10 @@ namespace Services.Enums
                     return DocConstantReasonRejected.WRONG_PUBLICATION_DATE_CUTOFF;
                 case ReasonRejectedEnm.WRONG_STUDY_DESIGN:
                     return DocConstantReasonRejected.WRONG_STUDY_DESIGN;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantReasonRejected : IEquatable<DocConstantReasonRejected>, IEqualityComparer<DocConstantReasonRejected>
@@ -215,8 +215,8 @@ namespace Services.Enums
         public bool Equals(DocConstantReasonRejected obj) => this == obj;
 
         public static bool operator ==(DocConstantReasonRejected x, DocConstantReasonRejected y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantReasonRejected x, DocConstantReasonRejected y) => x == y;
+        
+        public bool Equals(DocConstantReasonRejected x, DocConstantReasonRejected y) => x == y;
         
         public static bool operator !=(DocConstantReasonRejected x, DocConstantReasonRejected y) => !(x == y);
 
@@ -235,7 +235,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantReasonRejected obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -56,22 +56,22 @@ namespace Services.Enums
         FIRST_CLASS
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ProtocolFilterTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ProtocolFilterTypeEnm.ATTRIBUTE:
                     return DocConstantProtocolFilterType.ATTRIBUTE;
                 case ProtocolFilterTypeEnm.ATTRIBUTE_LABEL:
                     return DocConstantProtocolFilterType.ATTRIBUTE_LABEL;
                 case ProtocolFilterTypeEnm.FIRST_CLASS:
                     return DocConstantProtocolFilterType.FIRST_CLASS;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantProtocolFilterType : IEquatable<DocConstantProtocolFilterType>, IEqualityComparer<DocConstantProtocolFilterType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantProtocolFilterType obj) => this == obj;
 
         public static bool operator ==(DocConstantProtocolFilterType x, DocConstantProtocolFilterType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantProtocolFilterType x, DocConstantProtocolFilterType y) => x == y;
+        
+        public bool Equals(DocConstantProtocolFilterType x, DocConstantProtocolFilterType y) => x == y;
         
         public static bool operator !=(DocConstantProtocolFilterType x, DocConstantProtocolFilterType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantProtocolFilterType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

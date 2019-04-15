@@ -161,9 +161,13 @@ namespace Services.Dto
         public History(int? pId, Reference pApp, int? pAppId, Reference pDocumentSet, int? pDocumentSetId, Reference pImpersonation, int? pImpersonationId, Reference pPage, int? pPageId, string pURL, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId, Reference pWorkflow, int? pWorkflowId) : 
             base(pId, pApp, pAppId, pDocumentSet, pDocumentSetId, pImpersonation, pImpersonationId, pPage, pPageId, pURL, pUser, pUserId, pUserSession, pUserSessionId, pWorkflow, pWorkflowId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

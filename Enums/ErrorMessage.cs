@@ -52,18 +52,18 @@ namespace Services.Enums
         ORNY
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ErrorMessageEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ErrorMessageEnm.ORNY:
                     return DocConstantErrorMessage.ORNY;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantErrorMessage : IEquatable<DocConstantErrorMessage>, IEqualityComparer<DocConstantErrorMessage>
@@ -100,8 +100,8 @@ namespace Services.Enums
         public bool Equals(DocConstantErrorMessage obj) => this == obj;
 
         public static bool operator ==(DocConstantErrorMessage x, DocConstantErrorMessage y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantErrorMessage x, DocConstantErrorMessage y) => x == y;
+        
+        public bool Equals(DocConstantErrorMessage x, DocConstantErrorMessage y) => x == y;
         
         public static bool operator !=(DocConstantErrorMessage x, DocConstantErrorMessage y) => !(x == y);
 
@@ -120,7 +120,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantErrorMessage obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -151,9 +151,13 @@ namespace Services.Dto
         public BackgroundTaskHistory(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) : 
             base(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

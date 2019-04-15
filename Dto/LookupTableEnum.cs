@@ -103,9 +103,13 @@ namespace Services.Dto
         public LookupTableEnum(int? pId, bool pIsBindable, bool pIsGlobal, string pName) : 
             base(pId, pIsBindable, pIsGlobal, pName) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

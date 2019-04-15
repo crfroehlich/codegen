@@ -60,12 +60,12 @@ namespace Services.Enums
         YES
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ManualizedTreatmentEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ManualizedTreatmentEnm.NA:
                     return DocConstantManualizedTreatment.NA;
                 case ManualizedTreatmentEnm.NO:
@@ -76,10 +76,10 @@ namespace Services.Enums
                     return DocConstantManualizedTreatment.UNCLEAR;
                 case ManualizedTreatmentEnm.YES:
                     return DocConstantManualizedTreatment.YES;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantManualizedTreatment : IEquatable<DocConstantManualizedTreatment>, IEqualityComparer<DocConstantManualizedTreatment>
@@ -120,8 +120,8 @@ namespace Services.Enums
         public bool Equals(DocConstantManualizedTreatment obj) => this == obj;
 
         public static bool operator ==(DocConstantManualizedTreatment x, DocConstantManualizedTreatment y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantManualizedTreatment x, DocConstantManualizedTreatment y) => x == y;
+        
+        public bool Equals(DocConstantManualizedTreatment x, DocConstantManualizedTreatment y) => x == y;
         
         public static bool operator !=(DocConstantManualizedTreatment x, DocConstantManualizedTreatment y) => !(x == y);
 
@@ -140,7 +140,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantManualizedTreatment obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

@@ -56,22 +56,22 @@ namespace Services.Enums
         POINT
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this PrevalenceTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case PrevalenceTypeEnm.LIFETIME:
                     return DocConstantPrevalenceType.LIFETIME;
                 case PrevalenceTypeEnm.PERIOD:
                     return DocConstantPrevalenceType.PERIOD;
                 case PrevalenceTypeEnm.POINT:
                     return DocConstantPrevalenceType.POINT;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantPrevalenceType : IEquatable<DocConstantPrevalenceType>, IEqualityComparer<DocConstantPrevalenceType>
@@ -110,8 +110,8 @@ namespace Services.Enums
         public bool Equals(DocConstantPrevalenceType obj) => this == obj;
 
         public static bool operator ==(DocConstantPrevalenceType x, DocConstantPrevalenceType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantPrevalenceType x, DocConstantPrevalenceType y) => x == y;
+        
+        public bool Equals(DocConstantPrevalenceType x, DocConstantPrevalenceType y) => x == y;
         
         public static bool operator !=(DocConstantPrevalenceType x, DocConstantPrevalenceType y) => !(x == y);
 
@@ -130,7 +130,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantPrevalenceType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

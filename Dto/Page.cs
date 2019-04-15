@@ -133,9 +133,13 @@ namespace Services.Dto
         public Page(int? pId, List<Reference> pApps, int? pAppsCount, string pDescription, List<Reference> pGlossary, int? pGlossaryCount, List<Reference> pHelp, int? pHelpCount, string pName, List<Reference> pRoles, int? pRolesCount) : 
             base(pId, pApps, pAppsCount, pDescription, pGlossary, pGlossaryCount, pHelp, pHelpCount, pName, pRoles, pRolesCount) { }
         #region Fields
-        
+
         public bool? ShouldSerialize(string field)
         {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
             if (IgnoredVisibleFields.Matches(field, true)) return false;
             var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
             return ret;

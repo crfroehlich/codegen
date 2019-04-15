@@ -68,12 +68,12 @@ namespace Services.Enums
         UsProductLabels
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this DataHubSearchCategoryEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case DataHubSearchCategoryEnm.CharacteristicVariables:
                     return DocConstantDataHubSearchCategory.CharacteristicVariables;
                 case DataHubSearchCategoryEnm.InterventionalStudies:
@@ -92,10 +92,10 @@ namespace Services.Enums
                     return DocConstantDataHubSearchCategory.UkProductLabels;
                 case DataHubSearchCategoryEnm.UsProductLabels:
                     return DocConstantDataHubSearchCategory.UsProductLabels;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantDataHubSearchCategory : IEquatable<DocConstantDataHubSearchCategory>, IEqualityComparer<DocConstantDataHubSearchCategory>
@@ -140,8 +140,8 @@ namespace Services.Enums
         public bool Equals(DocConstantDataHubSearchCategory obj) => this == obj;
 
         public static bool operator ==(DocConstantDataHubSearchCategory x, DocConstantDataHubSearchCategory y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantDataHubSearchCategory x, DocConstantDataHubSearchCategory y) => x == y;
+        
+        public bool Equals(DocConstantDataHubSearchCategory x, DocConstantDataHubSearchCategory y) => x == y;
         
         public static bool operator !=(DocConstantDataHubSearchCategory x, DocConstantDataHubSearchCategory y) => !(x == y);
 
@@ -160,7 +160,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantDataHubSearchCategory obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

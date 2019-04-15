@@ -94,12 +94,12 @@ namespace Services.Enums
         TRANSDERMAL
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this InterventionRouteEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case InterventionRouteEnm.GROUP_THERAPY:
                     return DocConstantInterventionRoute.GROUP_THERAPY;
                 case InterventionRouteEnm.HAI:
@@ -144,10 +144,10 @@ namespace Services.Enums
                     return DocConstantInterventionRoute.TOPICAL;
                 case InterventionRouteEnm.TRANSDERMAL:
                     return DocConstantInterventionRoute.TRANSDERMAL;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantInterventionRoute : IEquatable<DocConstantInterventionRoute>, IEqualityComparer<DocConstantInterventionRoute>
@@ -205,8 +205,8 @@ namespace Services.Enums
         public bool Equals(DocConstantInterventionRoute obj) => this == obj;
 
         public static bool operator ==(DocConstantInterventionRoute x, DocConstantInterventionRoute y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantInterventionRoute x, DocConstantInterventionRoute y) => x == y;
+        
+        public bool Equals(DocConstantInterventionRoute x, DocConstantInterventionRoute y) => x == y;
         
         public static bool operator !=(DocConstantInterventionRoute x, DocConstantInterventionRoute y) => !(x == y);
 
@@ -225,7 +225,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantInterventionRoute obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

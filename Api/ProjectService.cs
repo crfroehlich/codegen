@@ -51,9 +51,9 @@ namespace Services.API
         {
             request = InitSearch<Project, ProjectSearch>(request);
             IQueryable<DocEntityProject> entities = null;
-			query.Run( session => 
-			{
-				entities = query.SelectAll<DocEntityProject>();
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityProject>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
                     var fts = new ProjectFullTextSearch(request);
@@ -195,7 +195,7 @@ namespace Services.API
                     entities = entities.OrderBy(request.OrderBy);
                 if(true == request?.OrderByDesc?.Any())
                     entities = entities.OrderByDescending(request.OrderByDesc);
-			});
+            });
             return entities;
         }
 
@@ -568,16 +568,16 @@ namespace Services.API
 
             Project ret = null;
 
-			using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Project")) 
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            using(Execute)
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Project")) 
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-					ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
-				});
-			}
+                    ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
+                });
+            }
             return ret;
         }
    
@@ -632,13 +632,13 @@ namespace Services.API
         {
             Project ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					var entity = DocEntityProject.GetProject(request?.Id);
-					if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-					if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
+            {
+                Execute.Run(ssn =>
+                {
+                    var entity = DocEntityProject.GetProject(request?.Id);
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pChildren = entity.Children.ToList();
                     var pClient = entity.Client;
@@ -678,11 +678,11 @@ namespace Services.API
                         pProjectName += " (Copy)";
                     var pStatus = entity.Status;
                     var pTimeCards = entity.TimeCards.ToList();
-					#region Custom Before copyProject
-					#endregion Custom Before copyProject
-					var copy = new DocEntityProject(ssn)
-					{
-						Hash = Guid.NewGuid()
+                    #region Custom Before copyProject
+                    #endregion Custom Before copyProject
+                    var copy = new DocEntityProject(ssn)
+                    {
+                        Hash = Guid.NewGuid()
                                 , Client = pClient
                                 , DatabaseDeadline = pDatabaseDeadline
                                 , DatabaseName = pDatabaseName
@@ -701,7 +701,7 @@ namespace Services.API
                                 , ProjectId = pProjectId
                                 , ProjectName = pProjectName
                                 , Status = pStatus
-					};
+                    };
                             foreach(var item in pChildren)
                             {
                                 entity.Children.Add(item);
@@ -712,12 +712,12 @@ namespace Services.API
                                 entity.TimeCards.Add(item);
                             }
 
-					#region Custom After copyProject
-					#endregion Custom After copyProject
-					copy.SaveChanges(DocConstantPermission.ADD);
-					ret = copy.ToDto();
-				});
-			}
+                    #region Custom After copyProject
+                    #endregion Custom After copyProject
+                    copy.SaveChanges(DocConstantPermission.ADD);
+                    ret = copy.ToDto();
+                });
+            }
             return ret;
         }
 
@@ -785,12 +785,12 @@ namespace Services.API
             
             Project ret = null;
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
-				});
-			}
+            {
+                Execute.Run(ssn =>
+                {
+                    ret = _AssignValues(request, DocConstantPermission.EDIT, ssn);
+                });
+            }
             return ret;
         }
         public void Delete(ProjectBatch request)
@@ -840,68 +840,68 @@ namespace Services.API
         public void Delete(Project request)
         {
             using(Execute)
-			{
-				Execute.Run(ssn =>
-				{
-					if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+            {
+                Execute.Run(ssn =>
+                {
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-					DocCacheClient.RemoveSearch(DocConstantModelName.PROJECT);
-					DocCacheClient.RemoveById(request.Id);
-					var en = DocEntityProject.GetProject(request?.Id);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.PROJECT);
+                    DocCacheClient.RemoveById(request.Id);
+                    var en = DocEntityProject.GetProject(request?.Id);
 
-					if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Project could be found for Id {request?.Id}.");
-					if(en.IsRemoved) return;
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Project could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
                 
-					if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
-						throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                        throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
-					en.Remove();
-				});
-			}
+                    en.Remove();
+                });
+            }
         }
 
         public void Delete(ProjectSearch request)
         {
             var matches = Get(request) as List<Project>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
-			matches.ForEach(match =>
-			{
-				Delete(match);
-			});
+            matches.ForEach(match =>
+            {
+                Delete(match);
+            });
         }
         public object Get(ProjectJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "project":
                         return GetJunctionSearchResult<Project, DocEntityProject, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Children", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
                     case "timecard":
                         return GetJunctionSearchResult<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request, (ss) => HostContext.ResolveService<TimeCardService>(Request)?.Get(ss));
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
+            }
+        }
         public object Post(ProjectJunction request)
         {
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "timecard":
                         return AddJunction<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
+            }
+        }
 
         public object Delete(ProjectJunction request)
         {    
-			switch(request.Junction.ToLower().TrimAndPruneSpaces())
-			{
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
                     case "timecard":
                         return RemoveJunction<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request);
-				default:
-					throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
-			}
-		}
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for project/{request.Id}/{request.Junction} was not found");
+            }
+        }
         private Project GetProject(Project request)
         {
             var id = request?.Id;

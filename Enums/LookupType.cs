@@ -62,12 +62,12 @@ namespace Services.Enums
         STUDY_TYPE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this LookupTypeEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case LookupTypeEnm.CHARACTERISTIC:
                     return DocConstantLookupType.CHARACTERISTIC;
                 case LookupTypeEnm.COMPARATOR:
@@ -80,10 +80,10 @@ namespace Services.Enums
                     return DocConstantLookupType.STUDY_DESIGN;
                 case LookupTypeEnm.STUDY_TYPE:
                     return DocConstantLookupType.STUDY_TYPE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantLookupType : IEquatable<DocConstantLookupType>, IEqualityComparer<DocConstantLookupType>
@@ -125,8 +125,8 @@ namespace Services.Enums
         public bool Equals(DocConstantLookupType obj) => this == obj;
 
         public static bool operator ==(DocConstantLookupType x, DocConstantLookupType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantLookupType x, DocConstantLookupType y) => x == y;
+        
+        public bool Equals(DocConstantLookupType x, DocConstantLookupType y) => x == y;
         
         public static bool operator !=(DocConstantLookupType x, DocConstantLookupType y) => !(x == y);
 
@@ -145,7 +145,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantLookupType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

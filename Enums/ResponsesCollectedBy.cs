@@ -76,12 +76,12 @@ namespace Services.Enums
         UNPAID_CAREGIVER_FAMILY
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this ResponsesCollectedByEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case ResponsesCollectedByEnm.CLINICAL_CARE_PROVIDER:
                     return DocConstantResponsesCollectedBy.CLINICAL_CARE_PROVIDER;
                 case ResponsesCollectedByEnm.LABORATORY_TECH:
@@ -108,10 +108,10 @@ namespace Services.Enums
                     return DocConstantResponsesCollectedBy.UNCLEAR;
                 case ResponsesCollectedByEnm.UNPAID_CAREGIVER_FAMILY:
                     return DocConstantResponsesCollectedBy.UNPAID_CAREGIVER_FAMILY;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantResponsesCollectedBy : IEquatable<DocConstantResponsesCollectedBy>, IEqualityComparer<DocConstantResponsesCollectedBy>
@@ -160,8 +160,8 @@ namespace Services.Enums
         public bool Equals(DocConstantResponsesCollectedBy obj) => this == obj;
 
         public static bool operator ==(DocConstantResponsesCollectedBy x, DocConstantResponsesCollectedBy y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantResponsesCollectedBy x, DocConstantResponsesCollectedBy y) => x == y;
+        
+        public bool Equals(DocConstantResponsesCollectedBy x, DocConstantResponsesCollectedBy y) => x == y;
         
         public static bool operator !=(DocConstantResponsesCollectedBy x, DocConstantResponsesCollectedBy y) => !(x == y);
 
@@ -180,7 +180,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantResponsesCollectedBy obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable

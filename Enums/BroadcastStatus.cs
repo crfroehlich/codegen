@@ -54,20 +54,20 @@ namespace Services.Enums
         RELEASE
     }
     
-	public static partial class EnumExtensions
+    public static partial class EnumExtensions
     {
         public static string ToEnumString(this BroadcastStatusEnm instance)
-		{
-			switch(instance) 
-			{
+        {
+            switch(instance) 
+            {
                 case BroadcastStatusEnm.DRAFT:
                     return DocConstantBroadcastStatus.DRAFT;
                 case BroadcastStatusEnm.RELEASE:
                     return DocConstantBroadcastStatus.RELEASE;
-				default:
-					return string.Empty;
-			}
-		}
+                default:
+                    return string.Empty;
+            }
+        }
     }
 
     public sealed partial class DocConstantBroadcastStatus : IEquatable<DocConstantBroadcastStatus>, IEqualityComparer<DocConstantBroadcastStatus>
@@ -105,8 +105,8 @@ namespace Services.Enums
         public bool Equals(DocConstantBroadcastStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantBroadcastStatus x, DocConstantBroadcastStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
-		
-		public bool Equals(DocConstantBroadcastStatus x, DocConstantBroadcastStatus y) => x == y;
+        
+        public bool Equals(DocConstantBroadcastStatus x, DocConstantBroadcastStatus y) => x == y;
         
         public static bool operator !=(DocConstantBroadcastStatus x, DocConstantBroadcastStatus y) => !(x == y);
 
@@ -125,7 +125,7 @@ namespace Services.Enums
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
-				
+                
         public int GetHashCode(DocConstantBroadcastStatus obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
