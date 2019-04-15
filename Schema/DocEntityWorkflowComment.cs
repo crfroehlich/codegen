@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Children))]
+        [Field]
         [Association(PairTo = nameof(DocEntityWorkflowComment.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflowComment> Children { get; private set; }
 
@@ -124,31 +123,27 @@ namespace Services.Schema
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Parent))]
+        [Field]
         public DocEntityWorkflowComment Parent { get; set; }
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Text))]
         public string Text { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Workflow))]
         public DocEntityWorkflow Workflow { get; set; }
         public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -160,12 +155,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

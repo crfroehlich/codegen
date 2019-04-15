@@ -115,29 +115,24 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(MeanVariance))]
+        [Field]
         public DocStructureUnits MeanVariance { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(MeanVarianceRange))]
+        [Field]
         public DocStructureUnitsRange MeanVarianceRange { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(MeanVarianceType))]
         public DocEntityLookupTable MeanVarianceType { get; set; }
         public int? MeanVarianceTypeId { get { return MeanVarianceType?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(Order))]
         public int Order { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Owners))]
+        [Field]
         public DocEntitySet<DocEntityMeanVariances> Owners { get; private set; }
 
 
@@ -145,7 +140,7 @@ namespace Services.Schema
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -157,12 +152,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

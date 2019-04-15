@@ -115,18 +115,15 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(ClientId))]
+        [Field]
         public string ClientId { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(Hits))]
         public int Hits { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Impersonations))]
+        [Field]
         [Association(PairTo = nameof(DocEntityImpersonation.UserSession), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
         public DocEntitySet<DocEntityImpersonation> Impersonations { get; private set; }
 
@@ -134,13 +131,11 @@ namespace Services.Schema
         public int? ImpersonationsCount { get { return Impersonations.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(IpAddress))]
+        [Field]
         public string IpAddress { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Requests))]
+        [Field]
         [Association(PairTo = nameof(DocEntityUserRequest.UserSession), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
         public DocEntitySet<DocEntityUserRequest> Requests { get; private set; }
 
@@ -148,24 +143,20 @@ namespace Services.Schema
         public int? RequestsCount { get { return Requests.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(SessionId))]
+        [Field]
         public string SessionId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(TemporarySessionId))]
+        [Field]
         public string TemporarySessionId { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(UserHistory))]
+        [Field]
         [Association(PairTo = nameof(DocEntityHistory.UserSession), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
         public DocEntitySet<DocEntityHistory> UserHistory { get; private set; }
 
@@ -174,7 +165,7 @@ namespace Services.Schema
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -186,12 +177,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

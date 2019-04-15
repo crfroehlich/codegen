@@ -116,39 +116,32 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(App))]
         public DocEntityApp App { get; set; }
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Channel))]
+        [Field]
         public DocEntityQueueChannel Channel { get; set; }
         public int? ChannelId { get { return Channel?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = true)]
-        [FieldMapping(nameof(Enabled))]
         public bool Enabled { get; set; }
 
 
         [Field(DefaultValue = 60)]
-        [FieldMapping(nameof(Frequency))]
         public int Frequency { get; set; }
 
 
         [Field(DefaultValue = 15)]
-        [FieldMapping(nameof(HistoryRetention))]
         public int? HistoryRetention { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Items))]
+        [Field]
         [Association(PairTo = nameof(DocEntityBackgroundTaskItem.Task), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityBackgroundTaskItem> Items { get; private set; }
 
@@ -156,43 +149,35 @@ namespace Services.Schema
         public int? ItemsCount { get { return Items.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(LastRunVersion))]
+        [Field]
         public string LastRunVersion { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = true)]
-        [FieldMapping(nameof(LogError))]
         public bool LogError { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(LogInfo))]
         public bool LogInfo { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(RowsToProcessPerIteration))]
+        [Field]
         public int RowsToProcessPerIteration { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(RunNow))]
         public bool RunNow { get; set; }
 
 
         [Field(DefaultValue = "midnight")]
-        [FieldMapping(nameof(StartAt))]
         public string StartAt { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(TaskHistory))]
+        [Field]
         [Association(PairTo = nameof(DocEntityBackgroundTaskHistory.Task), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityBackgroundTaskHistory> TaskHistory { get; private set; }
 
@@ -201,7 +186,7 @@ namespace Services.Schema
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -213,12 +198,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

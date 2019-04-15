@@ -116,12 +116,10 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(AutoCreateMissing))]
         public bool AutoCreateMissing { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Children))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDataProperty.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDataProperty> Children { get; private set; }
 
@@ -130,198 +128,165 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Class))]
         public DocEntityDataClass Class { get; set; }
         public int? ClassId { get { return Class?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(DisplayName))]
+        [Field]
         public string DisplayName { get; set; }
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(IsAllowAddInForm))]
         public bool IsAllowAddInForm { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsAllowCreateInForm))]
         public bool IsAllowCreateInForm { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsAllowEditInForm))]
         public bool IsAllowEditInForm { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsAllowFreeText))]
         public bool IsAllowFreeText { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsAllowRemoveInForm))]
         public bool IsAllowRemoveInForm { get; set; }
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(IsAudited))]
         public bool IsAudited { get; set; }
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(IsDisplayInForm))]
+        public bool IsCompressed { get; set; }
+
+
+        [Field(DefaultValue = true)]
         public bool IsDisplayInForm { get; set; }
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(IsDisplayInGrid))]
         public bool IsDisplayInGrid { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsEditColumn))]
         public bool IsEditColumn { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsInsertOnly))]
         public bool IsInsertOnly { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsJSON))]
         public bool IsJSON { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsLazy))]
         public bool IsLazy { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsNullOnUpgrade))]
         public bool IsNullOnUpgrade { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsReadOnly))]
         public bool IsReadOnly { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsRelationship))]
         public bool IsRelationship { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsRequired))]
         public bool IsRequired { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsRequiredInForm))]
         public bool IsRequiredInForm { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(IsVirtual))]
+        [Field]
         public bool IsVirtual { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(JsonType))]
+        [Field]
         public string JsonType { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(LookupTableEnum))]
+        [Field]
         public DocEntityLookupTableEnum LookupTableEnum { get; set; }
         public int? LookupTableEnumId { get { return LookupTableEnum?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
         [Field(DefaultValue = 0)]
-        [FieldMapping(nameof(Order))]
         public int Order { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Owner))]
+        [Field]
         public DocEntityDataProperty Owner { get; set; }
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Precision))]
+        [Field]
         public int? Precision { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(RelationshipOnOwnerRemove))]
+        [Field]
         public OnRemoveAction? RelationshipOnOwnerRemove { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(RelationshipOnTargetRemove))]
+        [Field]
         public OnRemoveAction? RelationshipOnTargetRemove { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(RelationshipPairTo))]
+        [Field]
         public DocEntityDataProperty RelationshipPairTo { get; set; }
         public int? RelationshipPairToId { get { return RelationshipPairTo?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Scale))]
+        [Field]
         public int? Scale { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(SetDefaultValue))]
+        [Field]
         public string SetDefaultValue { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Tab))]
+        [Field]
         public DocEntityDataTab Tab { get; set; }
         public int? TabId { get { return Tab?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Target))]
+        [Field]
         public DocEntityDataClass Target { get; set; }
         public int? TargetId { get { return Target?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(TargetAlias))]
+        [Field]
         public string TargetAlias { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Type))]
+        [Field]
         public DataType Type { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(UIType))]
+        [Field]
         public UiType? UIType { get; set; }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -333,12 +298,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties
@@ -473,6 +436,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.IsAllowFreeText, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowFreeText))))
                 .ForMember(dest => dest.IsAllowRemoveInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowRemoveInForm))))
                 .ForMember(dest => dest.IsAudited, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAudited))))
+                .ForMember(dest => dest.IsCompressed, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsCompressed))))
                 .ForMember(dest => dest.IsDisplayInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsDisplayInForm))))
                 .ForMember(dest => dest.IsDisplayInGrid, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsDisplayInGrid))))
                 .ForMember(dest => dest.IsEditColumn, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsEditColumn))))

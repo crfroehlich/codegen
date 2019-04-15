@@ -115,13 +115,11 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Approved))]
+        [Field]
         public bool Approved { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Bindings))]
+        [Field]
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
 
@@ -129,29 +127,25 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Master))]
         public DocEntityTermMaster Master { get; set; }
         public int? MasterId { get { return Master?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Preferred))]
+        [Field]
         public bool Preferred { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Scope))]
+        [Field]
         public DocEntityScope Scope { get; set; }
         public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Synonym))]
         public string Synonym { get; set; }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -163,12 +157,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

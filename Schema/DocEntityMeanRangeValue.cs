@@ -115,24 +115,20 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(MeanVarianceType))]
+        [Field]
         public DocEntityLookupTable MeanVarianceType { get; set; }
         public int? MeanVarianceTypeId { get { return MeanVarianceType?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(MidSpread))]
+        [Field]
         public DocStructureUnits MidSpread { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(Order))]
         public int Order { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Owners))]
+        [Field]
         public DocEntitySet<DocEntityMeanRanges> Owners { get; private set; }
 
 
@@ -140,28 +136,24 @@ namespace Services.Schema
 
 
         [Field(Precision = 16, Scale = 6)]
-        [FieldMapping(nameof(Percent))]
         public decimal? Percent { get; set; }
 
 
         [Field(Precision = 16, Scale = 6)]
-        [FieldMapping(nameof(PercentLow))]
         public decimal? PercentLow { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Range))]
+        [Field]
         public DocStructureUnitsRange Range { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -173,12 +165,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

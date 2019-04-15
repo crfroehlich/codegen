@@ -115,14 +115,12 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(DefaultLocale))]
+        [Field]
         public DocEntityLocale DefaultLocale { get; set; }
         public int? DefaultLocaleId { get { return DefaultLocale?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Divisions))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDivision.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDivision> Divisions { get; private set; }
 
@@ -130,8 +128,7 @@ namespace Services.Schema
         public int? DivisionsCount { get { return Divisions.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(DocumentSets))]
+        [Field]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
@@ -139,12 +136,10 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Projects))]
+        [Field]
         [Association(PairTo = nameof(DocEntityProject.Client), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityProject> Projects { get; private set; }
 
@@ -153,18 +148,15 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Role))]
         public DocEntityRole Role { get; set; }
         public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(SalesforceAccountId))]
+        [Field]
         public string SalesforceAccountId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Scopes))]
+        [Field]
         [Association(PairTo = nameof(DocEntityScope.Client), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
@@ -173,12 +165,11 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Settings))]
         public string Settings { get; set; }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -190,12 +181,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

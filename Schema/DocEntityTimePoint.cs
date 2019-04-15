@@ -116,33 +116,28 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(IsAbsolute))]
         public bool IsAbsolute { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(MeanValue))]
+        [Field]
         public DocStructureMeanBase MeanValue { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(SingleValue))]
+        [Field]
         public DocStructureUnitValue SingleValue { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(TotalValue))]
+        [Field]
         public DocStructureUnitRange TotalValue { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Type))]
+        [Field]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -154,12 +149,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

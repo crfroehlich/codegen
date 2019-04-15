@@ -116,33 +116,28 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(DocumentSet))]
         public DocEntityDocumentSet DocumentSet { get; set; }
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(EvidencePortalID))]
+        [Field]
         public int EvidencePortalID { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(FqId))]
+        [Field]
         public int? FqId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(StudyCount))]
+        [Field]
         public int? StudyCount { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(StudyCountFQ))]
+        [Field]
         public int? StudyCountFQ { get; set; }
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -154,12 +149,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties
