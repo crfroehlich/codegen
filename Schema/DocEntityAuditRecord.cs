@@ -253,6 +253,7 @@ namespace Services.Schema
                 throw new DocException("Failed to delete AuditRecord in Events delete", ex);
             }
             base.OnRemoving();
+            FlushCache();
         }
 
         /// <summary>
@@ -266,22 +267,21 @@ namespace Services.Schema
             }
 
             base.OnValidate();
-
-            FlushCache();
-
             _validated = true;
-
-
         }
 
-        public override IDocEntity SaveChanges(DocConstantPermission permission = null)
+        public override IDocEntity SaveChanges(bool ignoreCache, DocConstantPermission permission)
         {
             Action = Action?.TrimAndPruneSpaces();
             DatabaseSessionId = DatabaseSessionId?.TrimAndPruneSpaces();
             EntityType = EntityType?.TrimAndPruneSpaces();
             TargetType = TargetType?.TrimAndPruneSpaces();
-            return base.SaveChanges(permission);
+            return base.SaveChanges(ignoreCache, permission);
         }
+
+        public override IDocEntity SaveChanges(bool ignoreCache) => SaveChanges(ignoreCache, DocConstantPermission.EDIT);
+        public override IDocEntity SaveChanges(DocConstantPermission permission) => SaveChanges(false, DocConstantPermission.EDIT);
+        public override IDocEntity SaveChanges() => SaveChanges(DocConstantPermission.EDIT);
 
         public override void FlushCache()
         {

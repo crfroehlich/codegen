@@ -206,6 +206,7 @@ namespace Services.Schema
                 throw new DocException("Failed to delete Division in Users delete", ex);
             }
             base.OnRemoving();
+            FlushCache();
         }
 
         /// <summary>
@@ -219,19 +220,18 @@ namespace Services.Schema
             }
 
             base.OnValidate();
-
-            FlushCache();
-
             _validated = true;
-
-
         }
 
-        public override IDocEntity SaveChanges(DocConstantPermission permission = null)
+        public override IDocEntity SaveChanges(bool ignoreCache, DocConstantPermission permission)
         {
             Name = Name?.TrimAndPruneSpaces();
-            return base.SaveChanges(permission);
+            return base.SaveChanges(ignoreCache, permission);
         }
+
+        public override IDocEntity SaveChanges(bool ignoreCache) => SaveChanges(ignoreCache, DocConstantPermission.EDIT);
+        public override IDocEntity SaveChanges(DocConstantPermission permission) => SaveChanges(false, DocConstantPermission.EDIT);
+        public override IDocEntity SaveChanges() => SaveChanges(DocConstantPermission.EDIT);
 
         public override void FlushCache()
         {
