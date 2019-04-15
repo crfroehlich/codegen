@@ -124,6 +124,14 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.ParentCategory.Id.In(request.ParentCategoryIds));
                 }
+                if(!DocTools.IsNullOrEmpty(request.Scope) && !DocTools.IsNullOrEmpty(request.Scope.Id))
+                {
+                    entities = entities.Where(en => en.Scope.Id == request.Scope.Id );
+                }
+                if(true == request.ScopeIds?.Any())
+                {
+                    entities = entities.Where(en => en.Scope.Id.In(request.ScopeIds));
+                }
                 if(true == request.TermsIds?.Any())
                 {
                     entities = entities.Where(en => en.Terms.Any(r => r.Id.In(request.TermsIds)));
@@ -169,6 +177,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             DocEntityLookupTable pName = GetLookup(DocConstantLookupTable.TERMCATEGORY, request.Name?.Name, request.Name?.Id);
             var pParentCategory = (request.ParentCategory?.Id > 0) ? DocEntityTermCategory.GetTermCategory(request.ParentCategory.Id) : null;
+            var pScope = (request.Scope?.Id > 0) ? DocEntityScope.GetScope(request.Scope.Id) : null;
             var pTerms = request.Terms?.ToList();
 
             DocEntityTermCategory entity = null;
@@ -208,6 +217,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityTermCategory>(request, pParentCategory, nameof(request.ParentCategory)) && !request.VisibleFields.Matches(nameof(request.ParentCategory), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.ParentCategory));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityScope>(currentUser, request, pScope, permission, DocConstantModelName.TERMCATEGORY, nameof(request.Scope)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pScope, entity.Scope, nameof(request.Scope)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TERMCATEGORY, nameof(request.Scope)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Scope)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pScope) && DocResources.Metadata.IsRequired(DocConstantModelName.TERMCATEGORY, nameof(request.Scope))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Scope)} requires a value.");
+                    entity.Scope = pScope;
+                if(DocPermissionFactory.IsRequested<DocEntityScope>(request, pScope, nameof(request.Scope)) && !request.VisibleFields.Matches(nameof(request.Scope), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Scope));
                 }
             }
 
@@ -349,6 +369,7 @@ namespace Services.API
 
                     var pName = entity.Name;
                     var pParentCategory = entity.ParentCategory;
+                    var pScope = entity.Scope;
                     var pTerms = entity.Terms.ToList();
                     #region Custom Before copyTermCategory
                     #endregion Custom Before copyTermCategory
@@ -357,6 +378,7 @@ namespace Services.API
                         Hash = Guid.NewGuid()
                                 , Name = pName
                                 , ParentCategory = pParentCategory
+                                , Scope = pScope
                     };
                             foreach(var item in pTerms)
                             {

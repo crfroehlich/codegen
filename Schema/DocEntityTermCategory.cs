@@ -127,6 +127,12 @@ namespace Services.Schema
         public int? ParentCategoryId { get { return ParentCategory?.Id; } private set { var noid = value; } }
 
 
+        [Field(NullableOnUpgrade = true)]
+        [FieldMapping(nameof(Scope))]
+        public DocEntityScope Scope { get; set; }
+        public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
+
+
         [Field()]
         [FieldMapping(nameof(Terms))]
         [Association(PairTo = nameof(DocEntityTermMaster.Categories), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
@@ -271,6 +277,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.NameId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.NameId))))
                 .ForMember(dest => dest.ParentCategory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ParentCategory))))
                 .ForMember(dest => dest.ParentCategoryId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ParentCategoryId))))
+                .ForMember(dest => dest.Scope, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.Scope))))
+                .ForMember(dest => dest.ScopeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ScopeId))))
                 .ForMember(dest => dest.Terms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.Terms))))
                 .ForMember(dest => dest.TermsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.TermsCount))))
                 .MaxDepth(2);

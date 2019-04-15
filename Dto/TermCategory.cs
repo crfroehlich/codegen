@@ -56,10 +56,12 @@ namespace Services.Dto
 
         public TermCategoryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public TermCategoryBase(int? pId, Reference pParentCategory, int? pParentCategoryId, List<Reference> pTerms, int? pTermsCount) : this(DocConvert.ToInt(pId)) 
+        public TermCategoryBase(int? pId, Reference pParentCategory, int? pParentCategoryId, Reference pScope, int? pScopeId, List<Reference> pTerms, int? pTermsCount) : this(DocConvert.ToInt(pId)) 
         {
             ParentCategory = pParentCategory;
             ParentCategoryId = pParentCategoryId;
+            Scope = pScope;
+            ScopeId = pScopeId;
             Terms = pTerms;
             TermsCount = pTermsCount;
         }
@@ -70,23 +72,31 @@ namespace Services.Dto
         public int? ParentCategoryId { get; set; }
 
 
+        [ApiMember(Name = nameof(Scope), Description = "Scope", IsRequired = false)]
+        public Reference Scope { get; set; }
+        [ApiMember(Name = nameof(ScopeId), Description = "Primary Key of Scope", IsRequired = false)]
+        public int? ScopeId { get; set; }
+
+
         [ApiMember(Name = nameof(Terms), Description = "TermMaster", IsRequired = false)]
         public List<Reference> Terms { get; set; }
         public int? TermsCount { get; set; }
 
 
 
-        public void Deconstruct(out Reference pParentCategory, out int? pParentCategoryId, out List<Reference> pTerms, out int? pTermsCount)
+        public void Deconstruct(out Reference pParentCategory, out int? pParentCategoryId, out Reference pScope, out int? pScopeId, out List<Reference> pTerms, out int? pTermsCount)
         {
             pParentCategory = ParentCategory;
             pParentCategoryId = ParentCategoryId;
+            pScope = Scope;
+            pScopeId = ScopeId;
             pTerms = Terms;
             pTermsCount = TermsCount;
         }
 
         //Not ready until C# v8.?
-        //public TermCategoryBase With(int? pId = Id, Reference pParentCategory = ParentCategory, int? pParentCategoryId = ParentCategoryId, List<Reference> pTerms = Terms, int? pTermsCount = TermsCount) => 
-        //	new TermCategoryBase(pId, pParentCategory, pParentCategoryId, pTerms, pTermsCount);
+        //public TermCategoryBase With(int? pId = Id, Reference pParentCategory = ParentCategory, int? pParentCategoryId = ParentCategoryId, Reference pScope = Scope, int? pScopeId = ScopeId, List<Reference> pTerms = Terms, int? pTermsCount = TermsCount) => 
+        //	new TermCategoryBase(pId, pParentCategory, pParentCategoryId, pScope, pScopeId, pTerms, pTermsCount);
 
     }
 
@@ -101,8 +111,8 @@ namespace Services.Dto
 
         public TermCategory(int? id) : base(DocConvert.ToInt(id)) {}
         public TermCategory(int id) : base(id) {}
-        public TermCategory(int? pId, Reference pParentCategory, int? pParentCategoryId, List<Reference> pTerms, int? pTermsCount) : 
-            base(pId, pParentCategory, pParentCategoryId, pTerms, pTermsCount) { }
+        public TermCategory(int? pId, Reference pParentCategory, int? pParentCategoryId, Reference pScope, int? pScopeId, List<Reference> pTerms, int? pTermsCount) : 
+            base(pId, pParentCategory, pParentCategoryId, pScope, pScopeId, pTerms, pTermsCount) { }
         #region Fields
 
         public bool? ShouldSerialize(string field)
@@ -120,7 +130,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(ParentCategory),nameof(ParentCategoryId),nameof(Terms),nameof(TermsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(ParentCategory),nameof(ParentCategoryId),nameof(Scope),nameof(ScopeId),nameof(Terms),nameof(TermsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -155,6 +165,8 @@ namespace Services.Dto
         public int? Id { get; set; }
         public Reference ParentCategory { get; set; }
         public List<int> ParentCategoryIds { get; set; }
+        public Reference Scope { get; set; }
+        public List<int> ScopeIds { get; set; }
         public List<int> TermsIds { get; set; }
     }
 
@@ -181,6 +193,7 @@ namespace Services.Dto
 
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Name))); }
         public bool doParentCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.ParentCategory))); }
+        public bool doScope { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Scope))); }
         public bool doTerms { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermCategory.Terms))); }
     }
 
