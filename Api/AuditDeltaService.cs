@@ -167,6 +167,20 @@ namespace Services.API
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
+            //Special case for Archived
+            var pArchived = true == request.Archived;
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.AUDITDELTA, nameof(request.Archived)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
+                    entity.Archived = pArchived;
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Archived));
+                }
+            }
+
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityAuditRecord>(currentUser, request, pAudit, permission, DocConstantModelName.AUDITDELTA, nameof(request.Audit)))
             {
                 if(DocPermissionFactory.IsRequested(request, pAudit, entity.Audit, nameof(request.Audit)))

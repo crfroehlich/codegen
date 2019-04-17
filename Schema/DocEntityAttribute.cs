@@ -116,43 +116,51 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
+        [FieldMapping(nameof(AttributeName))]
         public DocEntityLookupTable AttributeName { get; set; }
         public int? AttributeNameId { get { return AttributeName?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(AttributeType))]
         public DocEntityLookupTable AttributeType { get; set; }
         public int? AttributeTypeId { get { return AttributeType?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Interval))]
         public DocEntityAttributeInterval Interval { get; set; }
         public int? IntervalId { get { return Interval?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, DefaultValue = false)]
+        [FieldMapping(nameof(IsCharacteristic))]
         public bool IsCharacteristic { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = false)]
+        [FieldMapping(nameof(IsOutcome))]
         public bool IsOutcome { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(IsPositive))]
         public bool? IsPositive { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(UniqueKey))]
         public string UniqueKey { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(ValueType))]
         public DocEntityValueType ValueType { get; set; }
         public int? ValueTypeId { get { return ValueType?.Id; } private set { var noid = value; } }
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -164,10 +172,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

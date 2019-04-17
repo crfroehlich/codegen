@@ -151,11 +151,6 @@ namespace Services.API
                     if(request.IsAudited.Any(v => v == null)) entities = entities.Where(en => en.IsAudited.In(request.IsAudited) || en.IsAudited == null);
                     else entities = entities.Where(en => en.IsAudited.In(request.IsAudited));
                 }
-                if(true == request.IsCompressed?.Any())
-                {
-                    if(request.IsCompressed.Any(v => v == null)) entities = entities.Where(en => en.IsCompressed.In(request.IsCompressed) || en.IsCompressed == null);
-                    else entities = entities.Where(en => en.IsCompressed.In(request.IsCompressed));
-                }
                 if(true == request.IsDisplayInForm?.Any())
                 {
                     if(request.IsDisplayInForm.Any(v => v == null)) entities = entities.Where(en => en.IsDisplayInForm.In(request.IsDisplayInForm) || en.IsDisplayInForm == null);
@@ -328,7 +323,6 @@ namespace Services.API
             var pIsAllowFreeText = request.IsAllowFreeText;
             var pIsAllowRemoveInForm = request.IsAllowRemoveInForm;
             var pIsAudited = request.IsAudited;
-            var pIsCompressed = request.IsCompressed;
             var pIsDisplayInForm = request.IsDisplayInForm;
             var pIsDisplayInGrid = request.IsDisplayInGrid;
             var pIsEditColumn = request.IsEditColumn;
@@ -373,6 +367,20 @@ namespace Services.API
                 entity = DocEntityDataProperty.GetDataProperty(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
+            }
+
+            //Special case for Archived
+            var pArchived = true == request.Archived;
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.DATAPROPERTY, nameof(request.Archived)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATAPROPERTY, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.DATAPROPERTY, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
+                    entity.Archived = pArchived;
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Archived));
+                }
             }
 
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pAutoCreateMissing, permission, DocConstantModelName.DATAPROPERTY, nameof(request.AutoCreateMissing)))
@@ -483,17 +491,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsAudited, nameof(request.IsAudited)) && !request.VisibleFields.Matches(nameof(request.IsAudited), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.IsAudited));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsCompressed, permission, DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pIsCompressed, entity.IsCompressed, nameof(request.IsCompressed)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsCompressed)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pIsCompressed) && DocResources.Metadata.IsRequired(DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsCompressed)} requires a value.");
-                    entity.IsCompressed = pIsCompressed;
-                if(DocPermissionFactory.IsRequested<bool>(request, pIsCompressed, nameof(request.IsCompressed)) && !request.VisibleFields.Matches(nameof(request.IsCompressed), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.IsCompressed));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsDisplayInForm, permission, DocConstantModelName.DATAPROPERTY, nameof(request.IsDisplayInForm)))

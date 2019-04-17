@@ -115,7 +115,8 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Children))]
         [Association(PairTo = nameof(DocEntityProject.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityProject> Children { get; private set; }
 
@@ -123,83 +124,102 @@ namespace Services.Schema
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Client))]
         public DocEntityClient Client { get; set; }
         public int? ClientId { get { return Client?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DatabaseDeadline))]
         public DateTime? DatabaseDeadline { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DatabaseName))]
         public string DatabaseName { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Dataset))]
         public DocEntityDocumentSet Dataset { get; set; }
         public int? DatasetId { get { return Dataset?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DeliverableDeadline))]
         public DateTime? DeliverableDeadline { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(FqId))]
         public int? FqId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(LegacyPackageId))]
         public int? LegacyPackageId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(LibraryPackageId))]
         public int? LibraryPackageId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(LibraryPackageName))]
         public string LibraryPackageName { get; set; }
 
 
         [Field(DefaultValue = "001")]
+        [FieldMapping(nameof(Number))]
         public string Number { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(OperationsDeliverable))]
         public string OperationsDeliverable { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(OpportunityId))]
         public string OpportunityId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(OpportunityName))]
         public string OpportunityName { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Parent))]
         public DocEntityProject Parent { get; set; }
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(PICO))]
         public string PICO { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ProjectId))]
         public string ProjectId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ProjectName))]
         public string ProjectName { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Status))]
         public DocEntityLookupTable Status { get; set; }
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TimeCards))]
         [Association(PairTo = nameof(DocEntityTimeCard.Project), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTimeCard> TimeCards { get; private set; }
 
@@ -208,7 +228,7 @@ namespace Services.Schema
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -220,10 +240,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

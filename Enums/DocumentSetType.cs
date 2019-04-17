@@ -54,8 +54,6 @@ namespace Services.Enums
         DISEASE_STATE,
         [EnumMember(Value = DocConstantDocumentSetType.GLOBAL)]
         GLOBAL,
-        [EnumMember(Value = DocConstantDocumentSetType.LIBRARY)]
-        LIBRARY,
         [EnumMember(Value = DocConstantDocumentSetType.SERVE_PORTAL)]
         SERVE_PORTAL,
         [EnumMember(Value = DocConstantDocumentSetType.THERAPEUTIC_AREA)]
@@ -74,8 +72,6 @@ namespace Services.Enums
                     return DocConstantDocumentSetType.DISEASE_STATE;
                 case DocumentSetTypeEnm.GLOBAL:
                     return DocConstantDocumentSetType.GLOBAL;
-                case DocumentSetTypeEnm.LIBRARY:
-                    return DocConstantDocumentSetType.LIBRARY;
                 case DocumentSetTypeEnm.SERVE_PORTAL:
                     return DocConstantDocumentSetType.SERVE_PORTAL;
                 case DocumentSetTypeEnm.THERAPEUTIC_AREA:
@@ -91,7 +87,6 @@ namespace Services.Enums
         public const string DATA_SET = "Data Set";
         public const string DISEASE_STATE = "Disease State";
         public const string GLOBAL = "Global";
-        public const string LIBRARY = "Library";
         public const string SERVE_PORTAL = "SERVE Portal";
         public const string THERAPEUTIC_AREA = "Therapeutic Area";
         

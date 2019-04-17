@@ -56,7 +56,7 @@ namespace Services.Dto
 
         public DocumentSetBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public DocumentSetBase(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pClients, int? pClientsCount, List<Reference> pComparators, int? pComparatorsCount, bool pConfidential, string pDataCollection, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pHistories, int? pHistoriesCount, int? pImportPriority, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, int? pLibraryPackageId, string pName, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, string pOriginalSearch, List<Reference> pOutcomes, int? pOutcomesCount, Reference pOwner, int? pOwnerId, string pParticipants, string pPRISMA, List<Reference> pProjects, int? pProjectsCount, Reference pProjectTeam, int? pProjectTeamId, int? pProtocolReferenceId, string pQUOROM, List<Reference> pScopes, int? pScopesCount, DateTime? pSearchEnd, DateTime? pSearchStart, string pSearchStrategy, DateTime? pSearchUpdated, string pSelectionCriteria, string pSettings, bool pShowEtw, List<Reference> pStats, int? pStatsCount, List<Reference> pStudyDesigns, int? pStudyDesignsCount, Reference pType, int? pTypeId, int? pUpdateFrequency, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+        public DocumentSetBase(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pClients, int? pClientsCount, List<Reference> pComparators, int? pComparatorsCount, bool pConfidential, string pDataCollection, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pHistories, int? pHistoriesCount, int? pImportPriority, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, int? pLibraryPackageId, string pName, List<Reference> pNonDigitizedDocuments, int? pNonDigitizedDocumentsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, string pOriginalSearch, List<Reference> pOutcomes, int? pOutcomesCount, Reference pOwner, int? pOwnerId, string pParticipants, string pPRISMA, List<Reference> pProjects, int? pProjectsCount, Reference pProjectTeam, int? pProjectTeamId, int? pProtocolReferenceId, string pQUOROM, List<Reference> pScopes, int? pScopesCount, DateTime? pSearchEnd, DateTime? pSearchStart, string pSearchStrategy, string pSelectionCriteria, string pSettings, bool pShowEtw, List<Reference> pStats, int? pStatsCount, List<Reference> pStudyDesigns, int? pStudyDesignsCount, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
         {
             AdditionalCriteria = pAdditionalCriteria;
             Characteristics = pCharacteristics;
@@ -88,6 +88,8 @@ namespace Services.Dto
             InterventionsCount = pInterventionsCount;
             LibraryPackageId = pLibraryPackageId;
             Name = pName;
+            NonDigitizedDocuments = pNonDigitizedDocuments;
+            NonDigitizedDocumentsCount = pNonDigitizedDocumentsCount;
             Notes = pNotes;
             OriginalComparators = pOriginalComparators;
             OriginalDatabase = pOriginalDatabase;
@@ -112,7 +114,6 @@ namespace Services.Dto
             SearchEnd = pSearchEnd;
             SearchStart = pSearchStart;
             SearchStrategy = pSearchStrategy;
-            SearchUpdated = pSearchUpdated;
             SelectionCriteria = pSelectionCriteria;
             Settings = pSettings;
             ShowEtw = pShowEtw;
@@ -122,7 +123,6 @@ namespace Services.Dto
             StudyDesignsCount = pStudyDesignsCount;
             Type = pType;
             TypeId = pTypeId;
-            UpdateFrequency = pUpdateFrequency;
             Users = pUsers;
             UsersCount = pUsersCount;
         }
@@ -220,6 +220,11 @@ namespace Services.Dto
         public string Name { get; set; }
 
 
+        [ApiMember(Name = nameof(NonDigitizedDocuments), Description = "Document", IsRequired = false)]
+        public List<Reference> NonDigitizedDocuments { get; set; }
+        public int? NonDigitizedDocumentsCount { get; set; }
+
+
         [ApiMember(Name = nameof(Notes), Description = "string", IsRequired = false)]
         public string Notes { get; set; }
 
@@ -303,10 +308,6 @@ namespace Services.Dto
         public string SearchStrategy { get; set; }
 
 
-        [ApiMember(Name = nameof(SearchUpdated), Description = "DateTime?", IsRequired = false)]
-        public DateTime? SearchUpdated { get; set; }
-
-
         [ApiMember(Name = nameof(SelectionCriteria), Description = "string", IsRequired = false)]
         public string SelectionCriteria { get; set; }
 
@@ -330,14 +331,10 @@ namespace Services.Dto
 
 
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"Library",@"SERVE Portal",@"Therapeutic Area"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"SERVE Portal",@"Therapeutic Area"})]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }
-
-
-        [ApiMember(Name = nameof(UpdateFrequency), Description = "int?", IsRequired = false)]
-        public int? UpdateFrequency { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
@@ -346,7 +343,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out string pAdditionalCriteria, out List<Reference> pCharacteristics, out int? pCharacteristicsCount, out List<Reference> pClients, out int? pClientsCount, out List<Reference> pComparators, out int? pComparatorsCount, out bool pConfidential, out string pDataCollection, out List<Reference> pDivisions, out int? pDivisionsCount, out List<Reference> pDocuments, out int? pDocumentsCount, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out int? pEvidencePortalId, out string pExtractionProtocol, out int? pFqId, out int? pFramedQuestionId, out string pGeneralScope, out List<Reference> pHistories, out int? pHistoriesCount, out int? pImportPriority, out List<Reference> pImports, out int? pImportsCount, out string pIndications, out List<Reference> pInterventions, out int? pInterventionsCount, out int? pLibraryPackageId, out string pName, out string pNotes, out string pOriginalComparators, out string pOriginalDatabase, out string pOriginalDesigns, out string pOriginalInterventions, out string pOriginalOutcomes, out string pOriginalSearch, out List<Reference> pOutcomes, out int? pOutcomesCount, out Reference pOwner, out int? pOwnerId, out string pParticipants, out string pPRISMA, out List<Reference> pProjects, out int? pProjectsCount, out Reference pProjectTeam, out int? pProjectTeamId, out int? pProtocolReferenceId, out string pQUOROM, out List<Reference> pScopes, out int? pScopesCount, out DateTime? pSearchEnd, out DateTime? pSearchStart, out string pSearchStrategy, out DateTime? pSearchUpdated, out string pSelectionCriteria, out string pSettings, out bool pShowEtw, out List<Reference> pStats, out int? pStatsCount, out List<Reference> pStudyDesigns, out int? pStudyDesignsCount, out Reference pType, out int? pTypeId, out int? pUpdateFrequency, out List<Reference> pUsers, out int? pUsersCount)
+        public void Deconstruct(out string pAdditionalCriteria, out List<Reference> pCharacteristics, out int? pCharacteristicsCount, out List<Reference> pClients, out int? pClientsCount, out List<Reference> pComparators, out int? pComparatorsCount, out bool pConfidential, out string pDataCollection, out List<Reference> pDivisions, out int? pDivisionsCount, out List<Reference> pDocuments, out int? pDocumentsCount, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out int? pEvidencePortalId, out string pExtractionProtocol, out int? pFqId, out int? pFramedQuestionId, out string pGeneralScope, out List<Reference> pHistories, out int? pHistoriesCount, out int? pImportPriority, out List<Reference> pImports, out int? pImportsCount, out string pIndications, out List<Reference> pInterventions, out int? pInterventionsCount, out int? pLibraryPackageId, out string pName, out List<Reference> pNonDigitizedDocuments, out int? pNonDigitizedDocumentsCount, out string pNotes, out string pOriginalComparators, out string pOriginalDatabase, out string pOriginalDesigns, out string pOriginalInterventions, out string pOriginalOutcomes, out string pOriginalSearch, out List<Reference> pOutcomes, out int? pOutcomesCount, out Reference pOwner, out int? pOwnerId, out string pParticipants, out string pPRISMA, out List<Reference> pProjects, out int? pProjectsCount, out Reference pProjectTeam, out int? pProjectTeamId, out int? pProtocolReferenceId, out string pQUOROM, out List<Reference> pScopes, out int? pScopesCount, out DateTime? pSearchEnd, out DateTime? pSearchStart, out string pSearchStrategy, out string pSelectionCriteria, out string pSettings, out bool pShowEtw, out List<Reference> pStats, out int? pStatsCount, out List<Reference> pStudyDesigns, out int? pStudyDesignsCount, out Reference pType, out int? pTypeId, out List<Reference> pUsers, out int? pUsersCount)
         {
             pAdditionalCriteria = AdditionalCriteria;
             pCharacteristics = Characteristics;
@@ -378,6 +375,8 @@ namespace Services.Dto
             pInterventionsCount = InterventionsCount;
             pLibraryPackageId = LibraryPackageId;
             pName = Name;
+            pNonDigitizedDocuments = NonDigitizedDocuments;
+            pNonDigitizedDocumentsCount = NonDigitizedDocumentsCount;
             pNotes = Notes;
             pOriginalComparators = OriginalComparators;
             pOriginalDatabase = OriginalDatabase;
@@ -402,7 +401,6 @@ namespace Services.Dto
             pSearchEnd = SearchEnd;
             pSearchStart = SearchStart;
             pSearchStrategy = SearchStrategy;
-            pSearchUpdated = SearchUpdated;
             pSelectionCriteria = SelectionCriteria;
             pSettings = Settings;
             pShowEtw = ShowEtw;
@@ -412,14 +410,13 @@ namespace Services.Dto
             pStudyDesignsCount = StudyDesignsCount;
             pType = Type;
             pTypeId = TypeId;
-            pUpdateFrequency = UpdateFrequency;
             pUsers = Users;
             pUsersCount = UsersCount;
         }
 
         //Not ready until C# v8.?
-        //public DocumentSetBase With(int? pId = Id, string pAdditionalCriteria = AdditionalCriteria, List<Reference> pCharacteristics = Characteristics, int? pCharacteristicsCount = CharacteristicsCount, List<Reference> pClients = Clients, int? pClientsCount = ClientsCount, List<Reference> pComparators = Comparators, int? pComparatorsCount = ComparatorsCount, bool pConfidential = Confidential, string pDataCollection = DataCollection, List<Reference> pDivisions = Divisions, int? pDivisionsCount = DivisionsCount, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, int? pEvidencePortalId = EvidencePortalId, string pExtractionProtocol = ExtractionProtocol, int? pFqId = FqId, int? pFramedQuestionId = FramedQuestionId, string pGeneralScope = GeneralScope, List<Reference> pHistories = Histories, int? pHistoriesCount = HistoriesCount, int? pImportPriority = ImportPriority, List<Reference> pImports = Imports, int? pImportsCount = ImportsCount, string pIndications = Indications, List<Reference> pInterventions = Interventions, int? pInterventionsCount = InterventionsCount, int? pLibraryPackageId = LibraryPackageId, string pName = Name, string pNotes = Notes, string pOriginalComparators = OriginalComparators, string pOriginalDatabase = OriginalDatabase, string pOriginalDesigns = OriginalDesigns, string pOriginalInterventions = OriginalInterventions, string pOriginalOutcomes = OriginalOutcomes, string pOriginalSearch = OriginalSearch, List<Reference> pOutcomes = Outcomes, int? pOutcomesCount = OutcomesCount, Reference pOwner = Owner, int? pOwnerId = OwnerId, string pParticipants = Participants, string pPRISMA = PRISMA, List<Reference> pProjects = Projects, int? pProjectsCount = ProjectsCount, Reference pProjectTeam = ProjectTeam, int? pProjectTeamId = ProjectTeamId, int? pProtocolReferenceId = ProtocolReferenceId, string pQUOROM = QUOROM, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, DateTime? pSearchEnd = SearchEnd, DateTime? pSearchStart = SearchStart, string pSearchStrategy = SearchStrategy, DateTime? pSearchUpdated = SearchUpdated, string pSelectionCriteria = SelectionCriteria, string pSettings = Settings, bool pShowEtw = ShowEtw, List<Reference> pStats = Stats, int? pStatsCount = StatsCount, List<Reference> pStudyDesigns = StudyDesigns, int? pStudyDesignsCount = StudyDesignsCount, Reference pType = Type, int? pTypeId = TypeId, int? pUpdateFrequency = UpdateFrequency, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
-        //	new DocumentSetBase(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pClients, pClientsCount, pComparators, pComparatorsCount, pConfidential, pDataCollection, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pHistories, pHistoriesCount, pImportPriority, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pLibraryPackageId, pName, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOriginalSearch, pOutcomes, pOutcomesCount, pOwner, pOwnerId, pParticipants, pPRISMA, pProjects, pProjectsCount, pProjectTeam, pProjectTeamId, pProtocolReferenceId, pQUOROM, pScopes, pScopesCount, pSearchEnd, pSearchStart, pSearchStrategy, pSearchUpdated, pSelectionCriteria, pSettings, pShowEtw, pStats, pStatsCount, pStudyDesigns, pStudyDesignsCount, pType, pTypeId, pUpdateFrequency, pUsers, pUsersCount);
+        //public DocumentSetBase With(int? pId = Id, string pAdditionalCriteria = AdditionalCriteria, List<Reference> pCharacteristics = Characteristics, int? pCharacteristicsCount = CharacteristicsCount, List<Reference> pClients = Clients, int? pClientsCount = ClientsCount, List<Reference> pComparators = Comparators, int? pComparatorsCount = ComparatorsCount, bool pConfidential = Confidential, string pDataCollection = DataCollection, List<Reference> pDivisions = Divisions, int? pDivisionsCount = DivisionsCount, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, int? pEvidencePortalId = EvidencePortalId, string pExtractionProtocol = ExtractionProtocol, int? pFqId = FqId, int? pFramedQuestionId = FramedQuestionId, string pGeneralScope = GeneralScope, List<Reference> pHistories = Histories, int? pHistoriesCount = HistoriesCount, int? pImportPriority = ImportPriority, List<Reference> pImports = Imports, int? pImportsCount = ImportsCount, string pIndications = Indications, List<Reference> pInterventions = Interventions, int? pInterventionsCount = InterventionsCount, int? pLibraryPackageId = LibraryPackageId, string pName = Name, List<Reference> pNonDigitizedDocuments = NonDigitizedDocuments, int? pNonDigitizedDocumentsCount = NonDigitizedDocumentsCount, string pNotes = Notes, string pOriginalComparators = OriginalComparators, string pOriginalDatabase = OriginalDatabase, string pOriginalDesigns = OriginalDesigns, string pOriginalInterventions = OriginalInterventions, string pOriginalOutcomes = OriginalOutcomes, string pOriginalSearch = OriginalSearch, List<Reference> pOutcomes = Outcomes, int? pOutcomesCount = OutcomesCount, Reference pOwner = Owner, int? pOwnerId = OwnerId, string pParticipants = Participants, string pPRISMA = PRISMA, List<Reference> pProjects = Projects, int? pProjectsCount = ProjectsCount, Reference pProjectTeam = ProjectTeam, int? pProjectTeamId = ProjectTeamId, int? pProtocolReferenceId = ProtocolReferenceId, string pQUOROM = QUOROM, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, DateTime? pSearchEnd = SearchEnd, DateTime? pSearchStart = SearchStart, string pSearchStrategy = SearchStrategy, string pSelectionCriteria = SelectionCriteria, string pSettings = Settings, bool pShowEtw = ShowEtw, List<Reference> pStats = Stats, int? pStatsCount = StatsCount, List<Reference> pStudyDesigns = StudyDesigns, int? pStudyDesignsCount = StudyDesignsCount, Reference pType = Type, int? pTypeId = TypeId, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+        //	new DocumentSetBase(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pClients, pClientsCount, pComparators, pComparatorsCount, pConfidential, pDataCollection, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pHistories, pHistoriesCount, pImportPriority, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pLibraryPackageId, pName, pNonDigitizedDocuments, pNonDigitizedDocumentsCount, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOriginalSearch, pOutcomes, pOutcomesCount, pOwner, pOwnerId, pParticipants, pPRISMA, pProjects, pProjectsCount, pProjectTeam, pProjectTeamId, pProtocolReferenceId, pQUOROM, pScopes, pScopesCount, pSearchEnd, pSearchStart, pSearchStrategy, pSelectionCriteria, pSettings, pShowEtw, pStats, pStatsCount, pStudyDesigns, pStudyDesignsCount, pType, pTypeId, pUsers, pUsersCount);
 
     }
 
@@ -434,8 +431,8 @@ namespace Services.Dto
 
         public DocumentSet(int? id) : base(DocConvert.ToInt(id)) {}
         public DocumentSet(int id) : base(id) {}
-        public DocumentSet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pClients, int? pClientsCount, List<Reference> pComparators, int? pComparatorsCount, bool pConfidential, string pDataCollection, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pHistories, int? pHistoriesCount, int? pImportPriority, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, int? pLibraryPackageId, string pName, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, string pOriginalSearch, List<Reference> pOutcomes, int? pOutcomesCount, Reference pOwner, int? pOwnerId, string pParticipants, string pPRISMA, List<Reference> pProjects, int? pProjectsCount, Reference pProjectTeam, int? pProjectTeamId, int? pProtocolReferenceId, string pQUOROM, List<Reference> pScopes, int? pScopesCount, DateTime? pSearchEnd, DateTime? pSearchStart, string pSearchStrategy, DateTime? pSearchUpdated, string pSelectionCriteria, string pSettings, bool pShowEtw, List<Reference> pStats, int? pStatsCount, List<Reference> pStudyDesigns, int? pStudyDesignsCount, Reference pType, int? pTypeId, int? pUpdateFrequency, List<Reference> pUsers, int? pUsersCount) : 
-            base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pClients, pClientsCount, pComparators, pComparatorsCount, pConfidential, pDataCollection, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pHistories, pHistoriesCount, pImportPriority, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pLibraryPackageId, pName, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOriginalSearch, pOutcomes, pOutcomesCount, pOwner, pOwnerId, pParticipants, pPRISMA, pProjects, pProjectsCount, pProjectTeam, pProjectTeamId, pProtocolReferenceId, pQUOROM, pScopes, pScopesCount, pSearchEnd, pSearchStart, pSearchStrategy, pSearchUpdated, pSelectionCriteria, pSettings, pShowEtw, pStats, pStatsCount, pStudyDesigns, pStudyDesignsCount, pType, pTypeId, pUpdateFrequency, pUsers, pUsersCount) { }
+        public DocumentSet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pClients, int? pClientsCount, List<Reference> pComparators, int? pComparatorsCount, bool pConfidential, string pDataCollection, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pHistories, int? pHistoriesCount, int? pImportPriority, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, int? pLibraryPackageId, string pName, List<Reference> pNonDigitizedDocuments, int? pNonDigitizedDocumentsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, string pOriginalSearch, List<Reference> pOutcomes, int? pOutcomesCount, Reference pOwner, int? pOwnerId, string pParticipants, string pPRISMA, List<Reference> pProjects, int? pProjectsCount, Reference pProjectTeam, int? pProjectTeamId, int? pProtocolReferenceId, string pQUOROM, List<Reference> pScopes, int? pScopesCount, DateTime? pSearchEnd, DateTime? pSearchStart, string pSearchStrategy, string pSelectionCriteria, string pSettings, bool pShowEtw, List<Reference> pStats, int? pStatsCount, List<Reference> pStudyDesigns, int? pStudyDesignsCount, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : 
+            base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pClients, pClientsCount, pComparators, pComparatorsCount, pConfidential, pDataCollection, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pHistories, pHistoriesCount, pImportPriority, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pLibraryPackageId, pName, pNonDigitizedDocuments, pNonDigitizedDocumentsCount, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOriginalSearch, pOutcomes, pOutcomesCount, pOwner, pOwnerId, pParticipants, pPRISMA, pProjects, pProjectsCount, pProjectTeam, pProjectTeamId, pProtocolReferenceId, pQUOROM, pScopes, pScopesCount, pSearchEnd, pSearchStart, pSearchStrategy, pSelectionCriteria, pSettings, pShowEtw, pStats, pStatsCount, pStudyDesigns, pStudyDesignsCount, pType, pTypeId, pUsers, pUsersCount) { }
         #region Fields
 
         public bool? ShouldSerialize(string field)
@@ -453,7 +450,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Participants),nameof(PRISMA),nameof(Projects),nameof(ProjectsCount),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SearchUpdated),nameof(SelectionCriteria),nameof(Settings),nameof(ShowEtw),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(UpdateFrequency),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(NonDigitizedDocuments),nameof(NonDigitizedDocumentsCount),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Participants),nameof(PRISMA),nameof(Projects),nameof(ProjectsCount),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SelectionCriteria),nameof(Settings),nameof(ShowEtw),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -476,7 +473,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Projects), nameof(ProjectsCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
+            nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(NonDigitizedDocuments), nameof(NonDigitizedDocumentsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Projects), nameof(ProjectsCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
 
@@ -510,6 +507,7 @@ namespace Services.Dto
         public List<int> InterventionsIds { get; set; }
         public int? LibraryPackageId { get; set; }
         public string Name { get; set; }
+        public List<int> NonDigitizedDocumentsIds { get; set; }
         public string Notes { get; set; }
         public string OriginalComparators { get; set; }
         public string OriginalDatabase { get; set; }
@@ -535,9 +533,6 @@ namespace Services.Dto
         public DateTime? SearchStartAfter { get; set; }
         public DateTime? SearchStartBefore { get; set; }
         public string SearchStrategy { get; set; }
-        public DateTime? SearchUpdated { get; set; }
-        public DateTime? SearchUpdatedAfter { get; set; }
-        public DateTime? SearchUpdatedBefore { get; set; }
         public string SelectionCriteria { get; set; }
         public string Settings { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -546,9 +541,8 @@ namespace Services.Dto
         public List<int> StudyDesignsIds { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"Library",@"SERVE Portal",@"Therapeutic Area"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"SERVE Portal",@"Therapeutic Area"})]
         public List<string> TypeNames { get; set; }
-        public int? UpdateFrequency { get; set; }
         public List<int> UsersIds { get; set; }
     }
 
@@ -594,6 +588,7 @@ namespace Services.Dto
         public bool doInterventions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Interventions))); }
         public bool doLibraryPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.LibraryPackageId))); }
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Name))); }
+        public bool doNonDigitizedDocuments { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.NonDigitizedDocuments))); }
         public bool doNotes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Notes))); }
         public bool doOriginalComparators { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalComparators))); }
         public bool doOriginalDatabase { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalDatabase))); }
@@ -613,14 +608,12 @@ namespace Services.Dto
         public bool doSearchEnd { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchEnd))); }
         public bool doSearchStart { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchStart))); }
         public bool doSearchStrategy { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchStrategy))); }
-        public bool doSearchUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchUpdated))); }
         public bool doSelectionCriteria { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SelectionCriteria))); }
         public bool doSettings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Settings))); }
         public bool doShowEtw { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ShowEtw))); }
         public bool doStats { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Stats))); }
         public bool doStudyDesigns { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.StudyDesigns))); }
         public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Type))); }
-        public bool doUpdateFrequency { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.UpdateFrequency))); }
         public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Users))); }
     }
 

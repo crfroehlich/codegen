@@ -115,43 +115,52 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ClientDepartment))]
         public string ClientDepartment { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Division))]
         public DocEntityDivision Division { get; set; }
         public int? DivisionId { get { return Division?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DocumentSets))]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Email))]
         public string Email { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(ExpireDate))]
         public DateTime? ExpireDate { get; set; }
 
 
         [Field(DefaultValue = 0)]
+        [FieldMapping(nameof(FailedLoginCount))]
         public int FailedLoginCount { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(FirstName))]
         public string FirstName { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Gravatar))]
         public string Gravatar { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(History))]
         [Association(PairTo = nameof(DocEntityHistory.User), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityHistory> History { get; private set; }
 
@@ -159,7 +168,8 @@ namespace Services.Schema
         public int? HistoryCount { get { return History.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Impersonated))]
         [Association(PairTo = nameof(DocEntityImpersonation.ImpersonatedUser), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityImpersonation> Impersonated { get; private set; }
 
@@ -167,7 +177,8 @@ namespace Services.Schema
         public int? ImpersonatedCount { get { return Impersonated.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Impersonating))]
         [Association(PairTo = nameof(DocEntityImpersonation.AuthenticatedUser), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityImpersonation> Impersonating { get; private set; }
 
@@ -176,46 +187,56 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(IsSystemUser))]
         public bool? IsSystemUser { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(JobTitle))]
         public string JobTitle { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(LastLogin))]
         public DateTime? LastLogin { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(LastName))]
         public string LastName { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(LegacyUsername))]
         public string LegacyUsername { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Locale))]
         public DocEntityLocale Locale { get; set; }
         public int? LocaleId { get { return Locale?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = 0)]
+        [FieldMapping(nameof(LoginCount))]
         public int LoginCount { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Roles))]
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
 
 
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Scopes))]
         [Association(PairTo = nameof(DocEntityScope.User), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
@@ -223,7 +244,8 @@ namespace Services.Schema
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Sessions))]
         [Association(PairTo = nameof(DocEntityUserSession.User), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUserSession> Sessions { get; private set; }
 
@@ -232,23 +254,28 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
+        [FieldMapping(nameof(Settings))]
         public string Settings { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Slack))]
         public string Slack { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(StartDate))]
         public DateTime? StartDate { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Status))]
         public DocEntityLookupTable Status { get; set; }
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Teams))]
         [Association(PairTo = nameof(DocEntityTeam.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTeam> Teams { get; private set; }
 
@@ -256,7 +283,8 @@ namespace Services.Schema
         public int? TeamsCount { get { return Teams.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(TimeCards))]
         [Association(PairTo = nameof(DocEntityTimeCard.User), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTimeCard> TimeCards { get; private set; }
 
@@ -264,7 +292,8 @@ namespace Services.Schema
         public int? TimeCardsCount { get { return TimeCards.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Updates))]
         [Association(PairTo = nameof(DocEntityUpdate.User), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUpdate> Updates { get; private set; }
 
@@ -272,12 +301,14 @@ namespace Services.Schema
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(UserType))]
         public DocEntityUserType UserType { get; set; }
         public int? UserTypeId { get { return UserType?.Id; } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Workflows))]
         [Association(PairTo = nameof(DocEntityWorkflow.User), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
 
@@ -286,7 +317,7 @@ namespace Services.Schema
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -298,10 +329,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties

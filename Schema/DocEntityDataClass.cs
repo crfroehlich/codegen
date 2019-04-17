@@ -116,22 +116,27 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = true)]
+        [FieldMapping(nameof(AllowDelete))]
         public bool AllowDelete { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(AllVisibleFieldsByDefault))]
         public bool AllVisibleFieldsByDefault { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 5)]
+        [FieldMapping(nameof(CacheDuration))]
         public int CacheDuration { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(ClassId))]
         public int ClassId { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(CustomCollections))]
         public DocEntitySet<DocEntityDataProperty> CustomCollections { get; private set; }
 
 
@@ -139,33 +144,40 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(DELETE))]
         public bool DELETE { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Description))]
         public string Description { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DontFlattenProperties))]
         public DocEntitySet<DocEntityDataProperty> DontFlattenProperties { get; private set; }
 
 
         public int? DontFlattenPropertiesCount { get { return DontFlattenProperties.Count(); } private set { var noid = value; } }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(DtoSuffix))]
         public string DtoSuffix { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(FlattenReferences))]
         public bool FlattenReferences { get; set; }
 
 
         [Field(DefaultValue = true)]
+        [FieldMapping(nameof(GET))]
         public bool GET { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(IgnoreProps))]
         public DocEntitySet<DocEntityDataProperty> IgnoreProps { get; private set; }
 
 
@@ -173,26 +185,32 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(IsInsertOnly))]
         public bool IsInsertOnly { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(IsReadOnly))]
         public bool IsReadOnly { get; set; }
 
 
         [Field(Nullable = false)]
+        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(PATCH))]
         public bool PATCH { get; set; }
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(POST))]
         public bool POST { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Properties))]
         [Association(PairTo = nameof(DocEntityDataProperty.Class), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDataProperty> Properties { get; private set; }
 
@@ -201,10 +219,12 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
+        [FieldMapping(nameof(PUT))]
         public bool PUT { get; set; }
 
 
-        [Field]
+        [Field()]
+        [FieldMapping(nameof(Tabs))]
         [Association(PairTo = nameof(DocEntityDataTab.Class), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDataTab> Tabs { get; private set; }
 
@@ -213,7 +233,7 @@ namespace Services.Schema
 
 
 
-        [Field]
+        [Field(LazyLoad = false, Length = Int32.MaxValue)]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -225,10 +245,12 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false)]
+        [FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties
