@@ -548,10 +548,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    DocCacheClient.RemoveSearch(DocConstantModelName.USERTYPE);
-                    DocCacheClient.RemoveById(request.Id);
                     var en = DocEntityUserType.GetUserType(request?.Id);
-
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UserType could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -559,6 +556,9 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
                 
                     en.Remove();
+
+                    DocCacheClient.RemoveSearch(DocConstantModelName.USERTYPE);
+                    DocCacheClient.RemoveById(request.Id);
                 });
             }
         }

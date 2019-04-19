@@ -223,6 +223,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 AdminRoles.Clear(); //foreach thing in AdminRoles en.Remove();
@@ -247,7 +248,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete Team in Updates delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

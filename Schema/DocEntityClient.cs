@@ -214,6 +214,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Divisions.Clear(); //foreach thing in Divisions en.Remove();
@@ -230,7 +231,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete Client in Projects delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

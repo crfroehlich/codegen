@@ -454,6 +454,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 DocumentSets.Clear(); //foreach thing in DocumentSets en.Remove();
@@ -486,7 +487,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete DocumentSet in Stats delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

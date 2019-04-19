@@ -197,6 +197,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Users.Clear(); //foreach thing in Users en.Remove();
@@ -205,7 +206,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete Division in Users delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

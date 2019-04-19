@@ -215,6 +215,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Synonyms.Clear(); //foreach thing in Synonyms en.Remove();
@@ -223,7 +224,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete TermMaster in Synonyms delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

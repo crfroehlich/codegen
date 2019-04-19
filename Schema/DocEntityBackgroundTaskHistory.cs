@@ -207,6 +207,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Items.Clear(); //foreach thing in Items en.Remove();
@@ -215,7 +216,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete BackgroundTaskHistory in Items delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

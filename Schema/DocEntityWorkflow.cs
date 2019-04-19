@@ -259,6 +259,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Comments.Clear(); //foreach thing in Comments en.Remove();
@@ -275,7 +276,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete Workflow in Tasks delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

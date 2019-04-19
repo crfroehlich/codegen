@@ -269,6 +269,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Properties.Clear(); //foreach thing in Properties en.Remove();
@@ -285,7 +286,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete DataClass in Tabs delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

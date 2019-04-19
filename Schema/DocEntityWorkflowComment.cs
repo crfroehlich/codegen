@@ -184,6 +184,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Children.Clear(); //foreach thing in Children en.Remove();
@@ -192,7 +193,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete WorkflowComment in Children delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

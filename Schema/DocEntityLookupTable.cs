@@ -189,6 +189,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Bindings.Clear(); //foreach thing in Bindings en.Remove();
@@ -197,7 +198,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete LookupTable in Bindings delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 

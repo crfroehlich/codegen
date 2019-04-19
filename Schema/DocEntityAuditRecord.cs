@@ -244,6 +244,7 @@ namespace Services.Schema
         /// </summary>
         protected override void OnRemoving()
         {
+            base.OnRemoving();
             try
             {
                 Events.Clear(); //foreach thing in Events en.Remove();
@@ -252,7 +253,6 @@ namespace Services.Schema
             {
                 throw new DocException("Failed to delete AuditRecord in Events delete", ex);
             }
-            base.OnRemoving();
             FlushCache();
         }
 
