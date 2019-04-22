@@ -253,15 +253,6 @@ namespace Services.Schema
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(NonDigitizedDocuments))]
-        [Association(PairTo = nameof(DocEntityDocument.NonDigitizedDocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
-        public DocEntitySet<DocEntityDocument> NonDigitizedDocuments { get; private set; }
-
-
-        public int? NonDigitizedDocumentsCount { get { return NonDigitizedDocuments.Count(); } private set { var noid = value; } }
-
-
         [Field(Length = int.MaxValue)]
         [FieldMapping(nameof(Notes))]
         public string Notes { get; set; }
@@ -370,6 +361,11 @@ namespace Services.Schema
         public string SearchStrategy { get; set; }
 
 
+        [Field()]
+        [FieldMapping(nameof(SearchUpdated))]
+        public DateTime? SearchUpdated { get; set; }
+
+
         [Field(Length = int.MaxValue)]
         [FieldMapping(nameof(SelectionCriteria))]
         public string SelectionCriteria { get; set; }
@@ -409,6 +405,11 @@ namespace Services.Schema
 
 
         [Field()]
+        [FieldMapping(nameof(UpdateFrequency))]
+        public int? UpdateFrequency { get; set; }
+
+
+        [Field()]
         [FieldMapping(nameof(Users))]
         [Association(PairTo = nameof(DocEntityUser.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
@@ -418,7 +419,7 @@ namespace Services.Schema
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -430,12 +431,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties
@@ -619,8 +618,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.InterventionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.InterventionsCount))))
                 .ForMember(dest => dest.LibraryPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.LibraryPackageId))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Name))))
-                .ForMember(dest => dest.NonDigitizedDocuments, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.NonDigitizedDocuments))))
-                .ForMember(dest => dest.NonDigitizedDocumentsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.NonDigitizedDocumentsCount))))
                 .ForMember(dest => dest.Notes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Notes))))
                 .ForMember(dest => dest.OriginalComparators, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.OriginalComparators))))
                 .ForMember(dest => dest.OriginalDatabase, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.OriginalDatabase))))
@@ -645,6 +642,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.SearchEnd, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchEnd))))
                 .ForMember(dest => dest.SearchStart, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchStart))))
                 .ForMember(dest => dest.SearchStrategy, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchStrategy))))
+                .ForMember(dest => dest.SearchUpdated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SearchUpdated))))
                 .ForMember(dest => dest.SelectionCriteria, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.SelectionCriteria))))
                 .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Settings))))
                 .ForMember(dest => dest.ShowEtw, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.ShowEtw))))
@@ -654,6 +652,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.StudyDesignsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.StudyDesignsCount))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Type))))
                 .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.TypeId))))
+                .ForMember(dest => dest.UpdateFrequency, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.UpdateFrequency))))
                 .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Users))))
                 .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.UsersCount))))
                 .MaxDepth(2);

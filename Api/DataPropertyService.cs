@@ -151,6 +151,11 @@ namespace Services.API
                     if(request.IsAudited.Any(v => v == null)) entities = entities.Where(en => en.IsAudited.In(request.IsAudited) || en.IsAudited == null);
                     else entities = entities.Where(en => en.IsAudited.In(request.IsAudited));
                 }
+                if(true == request.IsCompressed?.Any())
+                {
+                    if(request.IsCompressed.Any(v => v == null)) entities = entities.Where(en => en.IsCompressed.In(request.IsCompressed) || en.IsCompressed == null);
+                    else entities = entities.Where(en => en.IsCompressed.In(request.IsCompressed));
+                }
                 if(true == request.IsDisplayInForm?.Any())
                 {
                     if(request.IsDisplayInForm.Any(v => v == null)) entities = entities.Where(en => en.IsDisplayInForm.In(request.IsDisplayInForm) || en.IsDisplayInForm == null);
@@ -323,6 +328,7 @@ namespace Services.API
             var pIsAllowFreeText = request.IsAllowFreeText;
             var pIsAllowRemoveInForm = request.IsAllowRemoveInForm;
             var pIsAudited = request.IsAudited;
+            var pIsCompressed = request.IsCompressed;
             var pIsDisplayInForm = request.IsDisplayInForm;
             var pIsDisplayInGrid = request.IsDisplayInGrid;
             var pIsEditColumn = request.IsEditColumn;
@@ -491,6 +497,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pIsAudited, nameof(request.IsAudited)) && !request.VisibleFields.Matches(nameof(request.IsAudited), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.IsAudited));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsCompressed, permission, DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pIsCompressed, entity.IsCompressed, nameof(request.IsCompressed)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsCompressed)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pIsCompressed) && DocResources.Metadata.IsRequired(DocConstantModelName.DATAPROPERTY, nameof(request.IsCompressed))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsCompressed)} requires a value.");
+                    entity.IsCompressed = pIsCompressed;
+                if(DocPermissionFactory.IsRequested<bool>(request, pIsCompressed, nameof(request.IsCompressed)) && !request.VisibleFields.Matches(nameof(request.IsCompressed), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.IsCompressed));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsDisplayInForm, permission, DocConstantModelName.DATAPROPERTY, nameof(request.IsDisplayInForm)))

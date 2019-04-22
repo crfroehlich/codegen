@@ -176,6 +176,11 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = true)]
+        [FieldMapping(nameof(IsCompressed))]
+        public bool IsCompressed { get; set; }
+
+
+        [Field(DefaultValue = true)]
         [FieldMapping(nameof(IsDisplayInForm))]
         public bool IsDisplayInForm { get; set; }
 
@@ -321,7 +326,7 @@ namespace Services.Schema
 
 
 
-        [Field(LazyLoad = false, Length = Int32.MaxValue)]
+        [Field]
         public override string Gestalt { get; set; }
 
         [Field(DefaultValue = 0), Version(VersionMode.Manual)]
@@ -333,12 +338,10 @@ namespace Services.Schema
         [Field]
         public override DateTime? Updated { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Locked))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
         public override bool Locked { get; set; }
 
-        [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Archived))]
+        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
         #endregion Properties
@@ -473,6 +476,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.IsAllowFreeText, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowFreeText))))
                 .ForMember(dest => dest.IsAllowRemoveInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowRemoveInForm))))
                 .ForMember(dest => dest.IsAudited, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAudited))))
+                .ForMember(dest => dest.IsCompressed, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsCompressed))))
                 .ForMember(dest => dest.IsDisplayInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsDisplayInForm))))
                 .ForMember(dest => dest.IsDisplayInGrid, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsDisplayInGrid))))
                 .ForMember(dest => dest.IsEditColumn, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsEditColumn))))
