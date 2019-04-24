@@ -770,6 +770,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request, (ss) => HostContext.ResolveService<FeatureSetService>(Request)?.Get(ss));
                     case "page":
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "user":
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                 default:
@@ -786,6 +788,8 @@ namespace Services.API
                         return AddJunction<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request);
                     case "page":
                         return AddJunction<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
+                    case "tag":
+                        return AddJunction<Role, DocEntityRole, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "user":
                         return AddJunction<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
@@ -803,6 +807,8 @@ namespace Services.API
                         return RemoveJunction<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request);
                     case "page":
                         return RemoveJunction<Role, DocEntityRole, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
+                    case "tag":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "user":
                         return RemoveJunction<Role, DocEntityRole, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:

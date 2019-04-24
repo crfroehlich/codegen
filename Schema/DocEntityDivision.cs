@@ -116,19 +116,16 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Client))]
         public DocEntityClient Client { get; set; }
         public int? ClientId { get { return Client?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(DefaultLocale))]
+        [Field]
         public DocEntityLocale DefaultLocale { get; set; }
         public int? DefaultLocaleId { get { return DefaultLocale?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(DocumentSets))]
+        [Field]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
@@ -136,23 +133,19 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Role))]
         public DocEntityRole Role { get; set; }
         public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Settings))]
         public string Settings { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Users))]
+        [Field]
         [Association(PairTo = nameof(DocEntityUser.Division), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 

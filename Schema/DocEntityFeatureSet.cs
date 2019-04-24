@@ -115,23 +115,19 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(PermissionTemplate))]
         public string PermissionTemplate { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Roles))]
+        [Field]
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
 
 

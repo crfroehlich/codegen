@@ -352,7 +352,7 @@ namespace Services.Dto
             base(pId, pAutoCreateMissing, pChildren, pChildrenCount, pClass, pClassId, pDescription, pDisplayName, pIsAllowAddInForm, pIsAllowCreateInForm, pIsAllowEditInForm, pIsAllowFreeText, pIsAllowRemoveInForm, pIsAudited, pIsCompressed, pIsDisplayInForm, pIsDisplayInGrid, pIsEditColumn, pIsInsertOnly, pIsJSON, pIsLazy, pIsNullOnUpgrade, pIsReadOnly, pIsRelationship, pIsRequired, pIsRequiredInForm, pIsVirtual, pJsonType, pLookupTableEnum, pLookupTableEnumId, pName, pOrder, pOwner, pOwnerId, pPrecision, pRelationshipOnOwnerRemove, pRelationshipOnTargetRemove, pRelationshipPairTo, pRelationshipPairToId, pScale, pSetDefaultValue, pTab, pTabId, pTarget, pTargetId, pTargetAlias, pType, pUIType) { }
         #region Fields
 
-        public bool? ShouldSerialize(string field)
+        public new bool? ShouldSerialize(string field)
         {
             //Allow individual classes to specify their own logic
             var manualOverride = _ShouldSerialize(field);

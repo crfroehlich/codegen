@@ -115,23 +115,19 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(DateDay))]
+        [Field]
         public int? DateDay { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(DateMonth))]
+        [Field]
         public int? DateMonth { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(DateTime))]
+        [Field]
         public DateTime? DateTime { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(DateYear))]
+        [Field]
         public int? DateYear { get; set; }
 
 

@@ -545,6 +545,8 @@ namespace Services.API
             {
                     case "event":
                         return GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request, (ss) => HostContext.ResolveService<EventService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for update/{request.Id}/{request.Junction} was not found");
             }

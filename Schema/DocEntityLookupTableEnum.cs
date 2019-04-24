@@ -116,17 +116,14 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false, DefaultValue = true)]
-        [FieldMapping(nameof(IsBindable))]
         public bool IsBindable { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = true)]
-        [FieldMapping(nameof(IsGlobal))]
         public bool IsGlobal { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 

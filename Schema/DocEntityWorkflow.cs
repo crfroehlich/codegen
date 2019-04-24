@@ -115,16 +115,14 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Bindings))]
+        [Field]
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
 
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Comments))]
+        [Field]
         [Association(PairTo = nameof(DocEntityWorkflowComment.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflowComment> Comments { get; private set; }
 
@@ -132,18 +130,15 @@ namespace Services.Schema
         public int? CommentsCount { get { return Comments.Count(); } private set { var noid = value; } }
 
 
-        [Field(DefaultValue = "{}", Length = int.MaxValue, NullableOnUpgrade = true)]
-        [FieldMapping(nameof(Data))]
+        [Field(Length = int.MaxValue, NullableOnUpgrade = true)]
         public string Data { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Documents))]
+        [Field]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
 
 
@@ -151,18 +146,15 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Owner))]
+        [Field]
         public DocEntityWorkflow Owner { get; set; }
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Scopes))]
+        [Field]
         [Association(PairTo = nameof(DocEntityScope.Workflows), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
@@ -170,22 +162,12 @@ namespace Services.Schema
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Status))]
+        [Field]
         public DocEntityLookupTable Status { get; set; }
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Tags))]
-        public DocEntitySet<DocEntityTag> Tags { get; private set; }
-
-
-        public int? TagsCount { get { return Tags.Count(); } private set { var noid = value; } }
-
-
-        [Field()]
-        [FieldMapping(nameof(Tasks))]
+        [Field]
         [Association(PairTo = nameof(DocEntityWorkflowTask.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflowTask> Tasks { get; private set; }
 
@@ -194,27 +176,23 @@ namespace Services.Schema
 
 
         [Field(Nullable = false, NullableOnUpgrade = true)]
-        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, NullableOnUpgrade = true)]
-        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Variables))]
+        [Field]
         public DocEntitySet<DocEntityVariableInstance> Variables { get; private set; }
 
 
         public int? VariablesCount { get { return Variables.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Workflows))]
+        [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.Owner), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
 
@@ -397,8 +375,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.ScopesCount))))
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Status))))
                 .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.StatusId))))
-                .ForMember(dest => dest.Tags, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Tags))))
-                .ForMember(dest => dest.TagsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.TagsCount))))
                 .ForMember(dest => dest.Tasks, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Tasks))))
                 .ForMember(dest => dest.TasksCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.TasksCount))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Type))))

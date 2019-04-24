@@ -889,6 +889,8 @@ namespace Services.API
             {
                     case "project":
                         return GetJunctionSearchResult<Project, DocEntityProject, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Children", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Project, DocEntityProject, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "timecard":
                         return GetJunctionSearchResult<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request, (ss) => HostContext.ResolveService<TimeCardService>(Request)?.Get(ss));
                 default:
@@ -899,6 +901,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "tag":
+                        return AddJunction<Project, DocEntityProject, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "timecard":
                         return AddJunction<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request);
                 default:
@@ -910,6 +914,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "tag":
+                        return RemoveJunction<Project, DocEntityProject, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "timecard":
                         return RemoveJunction<Project, DocEntityProject, DocEntityTimeCard, TimeCard, TimeCardSearch>((int)request.Id, DocConstantModelName.TIMECARD, "TimeCards", request);
                 default:

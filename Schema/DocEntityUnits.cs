@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Units))]
+        [Field]
         [Association(PairTo = nameof(DocEntityUnitValue.Owners), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUnitValue> Units { get; private set; }
 

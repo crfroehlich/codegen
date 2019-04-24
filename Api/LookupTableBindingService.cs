@@ -627,6 +627,8 @@ namespace Services.API
             {
                     case "termsynonym":
                         return GetJunctionSearchResult<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request, (ss) => HostContext.ResolveService<TermSynonymService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "workflow":
                         return GetJunctionSearchResult<LookupTableBinding, DocEntityLookupTableBinding, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
                 default:
@@ -639,6 +641,8 @@ namespace Services.API
             {
                     case "termsynonym":
                         return AddJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
+                    case "tag":
+                        return AddJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "workflow":
                         return AddJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
                 default:
@@ -652,6 +656,8 @@ namespace Services.API
             {
                     case "termsynonym":
                         return RemoveJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
+                    case "tag":
+                        return RemoveJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "workflow":
                         return RemoveJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
                 default:

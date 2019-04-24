@@ -116,29 +116,24 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Definition))]
         public string Definition { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Enum))]
         public DocEntityLookupTableEnum Enum { get; set; }
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = "fa fa-info-circle")]
-        [FieldMapping(nameof(Icon))]
         public string Icon { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Page))]
+        [Field]
         public DocEntityPage Page { get; set; }
         public int? PageId { get { return Page?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Term))]
         public DocEntityTermMaster Term { get; set; }
         public int? TermId { get { return Term?.Id; } private set { var noid = value; } }
 

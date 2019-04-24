@@ -116,18 +116,15 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Category))]
         public string Category { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Enum))]
         public DocEntityLookupTableEnum Enum { get; set; }
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Lookups))]
+        [Field]
         [Association(PairTo = nameof(DocEntityLookupTable.Categories), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityLookupTable> Lookups { get; private set; }
 

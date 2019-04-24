@@ -119,18 +119,15 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Pages))]
+        [Field]
         [Association(PairTo = nameof(DocEntityPage.Apps), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityPage> Pages { get; private set; }
 
@@ -138,8 +135,7 @@ namespace Services.Schema
         public int? PagesCount { get { return Pages.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Roles))]
+        [Field]
         [Association(PairTo = nameof(DocEntityRole.Apps), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
 
@@ -147,8 +143,7 @@ namespace Services.Schema
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Scopes))]
+        [Field]
         [Association(PairTo = nameof(DocEntityScope.App), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 

@@ -115,52 +115,43 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(BioPortal))]
+        [Field]
         public string BioPortal { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Categories))]
+        [Field]
         public DocEntitySet<DocEntityTermCategory> Categories { get; private set; }
 
 
         public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(CUI))]
+        [Field]
         public string CUI { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Enum))]
         public DocEntityLookupTableEnum Enum { get; set; }
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(MedDRA))]
+        [Field]
         public string MedDRA { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(RxNorm))]
+        [Field]
         public string RxNorm { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(SNOWMED))]
+        [Field]
         public string SNOWMED { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Synonyms))]
+        [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Master), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
 
@@ -168,13 +159,11 @@ namespace Services.Schema
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(TUI))]
+        [Field]
         public string TUI { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(URI))]
+        [Field]
         public string URI { get; set; }
 
 

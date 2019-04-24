@@ -171,6 +171,8 @@ namespace Services.API
             {
                     case "statsrecord":
                         return GetJunctionSearchResult<StatsStudySet, DocEntityStatsStudySet, DocEntityStatsRecord, StatsRecord, StatsRecordSearch>((int)request.Id, DocConstantModelName.STATSRECORD, "Records", request, (ss) => HostContext.ResolveService<StatsRecordService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<StatsStudySet, DocEntityStatsStudySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for statsstudyset/{request.Id}/{request.Junction} was not found");
             }

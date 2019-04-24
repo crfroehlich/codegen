@@ -116,7 +116,6 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Design))]
         public DocEntityLookupTable Design { get; set; }
         public int? DesignId { get { return Design?.Id; } private set { var noid = value; } }
 

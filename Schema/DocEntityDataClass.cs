@@ -116,27 +116,22 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(AllowDelete))]
         public bool AllowDelete { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(AllVisibleFieldsByDefault))]
         public bool AllVisibleFieldsByDefault { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 5)]
-        [FieldMapping(nameof(CacheDuration))]
         public int CacheDuration { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(ClassId))]
         public int ClassId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(CustomCollections))]
+        [Field]
         public DocEntitySet<DocEntityDataProperty> CustomCollections { get; private set; }
 
 
@@ -144,40 +139,33 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(DELETE))]
         public bool DELETE { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(DontFlattenProperties))]
+        [Field]
         public DocEntitySet<DocEntityDataProperty> DontFlattenProperties { get; private set; }
 
 
         public int? DontFlattenPropertiesCount { get { return DontFlattenProperties.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(DtoSuffix))]
+        [Field]
         public string DtoSuffix { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(FlattenReferences))]
         public bool FlattenReferences { get; set; }
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(GET))]
         public bool GET { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(IgnoreProps))]
+        [Field]
         public DocEntitySet<DocEntityDataProperty> IgnoreProps { get; private set; }
 
 
@@ -185,32 +173,26 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsInsertOnly))]
         public bool IsInsertOnly { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsReadOnly))]
         public bool IsReadOnly { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(PATCH))]
         public bool PATCH { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(POST))]
         public bool POST { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Properties))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDataProperty.Class), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDataProperty> Properties { get; private set; }
 
@@ -219,12 +201,10 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(PUT))]
         public bool PUT { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Tabs))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDataTab.Class), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDataTab> Tabs { get; private set; }
 

@@ -524,6 +524,8 @@ namespace Services.API
             {
                     case "documentset":
                         return GetJunctionSearchResult<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Outcome, DocEntityOutcome, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for outcome/{request.Id}/{request.Junction} was not found");
             }
@@ -534,6 +536,8 @@ namespace Services.API
             {
                     case "documentset":
                         return AddJunction<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "tag":
+                        return AddJunction<Outcome, DocEntityOutcome, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for outcome/{request.Id}/{request.Junction} was not found");
             }
@@ -545,6 +549,8 @@ namespace Services.API
             {
                     case "documentset":
                         return RemoveJunction<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "tag":
+                        return RemoveJunction<Outcome, DocEntityOutcome, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for outcome/{request.Id}/{request.Junction} was not found");
             }

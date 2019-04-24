@@ -152,7 +152,7 @@ namespace Services.Dto
             base(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId) { }
         #region Fields
 
-        public bool? ShouldSerialize(string field)
+        public new bool? ShouldSerialize(string field)
         {
             //Allow individual classes to specify their own logic
             var manualOverride = _ShouldSerialize(field);

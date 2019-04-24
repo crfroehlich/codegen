@@ -116,64 +116,63 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = 0)]
-        [FieldMapping(nameof(Attempts))]
         public int? Attempts { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(AuditRecord))]
+        [Field]
         public DocEntityAuditRecord AuditRecord { get; set; }
         public int? AuditRecordId { get { return AuditRecord?.Id; } private set { var noid = value; } }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Data))]
-        public string Data { get; set; }
+        public byte[] DataCompressed { get; set; }
+
+        private string _Data;
+        public string Data
+        {
+            get => _Data ?? (_Data = DocZip.Unzip(DataCompressed));
+            set
+            {
+                _Data = value;
+                DataCompressed = DocZip.Zip(_Data);
+            }
+        }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Ended))]
+        [Field]
         public DateTime? Ended { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(EntityId))]
+        [Field]
         public int? EntityId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(ExecutionTime))]
+        [Field]
         public string ExecutionTime { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Started))]
+        [Field]
         public DateTime? Started { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Status))]
+        [Field]
         public string Status { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Succeeded))]
         public bool Succeeded { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Task))]
         public DocEntityBackgroundTask Task { get; set; }
         public int? TaskId { get { return Task?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(TaskHistory))]
+        [Field]
         public DocEntitySet<DocEntityBackgroundTaskHistory> TaskHistory { get; private set; }
 
 

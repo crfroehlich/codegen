@@ -116,53 +116,43 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(BoundTerms))]
         public int BoundTerms { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(Characteristics))]
         public int Characteristics { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(DataPoints))]
         public int DataPoints { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(DesignCount))]
         public int DesignCount { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(DesignList))]
+        [Field]
         public string DesignList { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(DocumentSet))]
         public DocEntityDocumentSet DocumentSet { get; set; }
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(Interventions))]
         public int Interventions { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(Outcomes))]
         public int Outcomes { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(OutcomesReported))]
         public int OutcomesReported { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Records))]
+        [Field]
         public DocEntitySet<DocEntityStatsRecord> Records { get; private set; }
 
 
@@ -170,28 +160,23 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Stat))]
         public DocEntityStats Stat { get; set; }
         public int? StatId { get { return Stat?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Studies))]
+        [Field]
         public int Studies { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(TypeCount))]
         public int TypeCount { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(TypeList))]
+        [Field]
         public string TypeList { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 0)]
-        [FieldMapping(nameof(UnboundTerms))]
         public int UnboundTerms { get; set; }
 
 

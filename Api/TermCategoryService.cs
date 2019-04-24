@@ -560,6 +560,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "tag":
+                        return GetJunctionSearchResult<TermCategory, DocEntityTermCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "termmaster":
                         return GetJunctionSearchResult<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request, (ss) => HostContext.ResolveService<TermMasterService>(Request)?.Get(ss));
                 default:
@@ -570,6 +572,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "tag":
+                        return AddJunction<TermCategory, DocEntityTermCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "termmaster":
                         return AddJunction<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request);
                 default:
@@ -581,6 +585,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "tag":
+                        return RemoveJunction<TermCategory, DocEntityTermCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "termmaster":
                         return RemoveJunction<TermCategory, DocEntityTermCategory, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Terms", request);
                 default:

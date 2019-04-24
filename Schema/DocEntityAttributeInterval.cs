@@ -116,7 +116,6 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Interval))]
         public DocStructureInterval Interval { get; set; }
 
 

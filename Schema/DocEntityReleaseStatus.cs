@@ -116,27 +116,22 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Branch))]
         public string Branch { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Release))]
         public string Release { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Server))]
         public string Server { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(URL))]
         public string URL { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Version))]
         public string Version { get; set; }
 
 

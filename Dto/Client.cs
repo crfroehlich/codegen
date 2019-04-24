@@ -160,7 +160,7 @@ namespace Services.Dto
             base(pId, pDefaultLocale, pDefaultLocaleId, pDivisions, pDivisionsCount, pDocumentSets, pDocumentSetsCount, pName, pProjects, pProjectsCount, pRole, pRoleId, pSalesforceAccountId, pScopes, pScopesCount, pSettings) { }
         #region Fields
 
-        public bool? ShouldSerialize(string field)
+        public new bool? ShouldSerialize(string field)
         {
             //Allow individual classes to specify their own logic
             var manualOverride = _ShouldSerialize(field);

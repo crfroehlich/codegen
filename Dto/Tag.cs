@@ -56,33 +56,39 @@ namespace Services.Dto
 
         public TagBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public TagBase(int? pId, string pName, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+        public TagBase(int? pId, string pName, List<Reference> pScopes, int? pScopesCount, string pURI) : this(DocConvert.ToInt(pId)) 
         {
             Name = pName;
-            Workflows = pWorkflows;
-            WorkflowsCount = pWorkflowsCount;
+            Scopes = pScopes;
+            ScopesCount = pScopesCount;
+            URI = pURI;
         }
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
 
 
-        [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
-        public List<Reference> Workflows { get; set; }
-        public int? WorkflowsCount { get; set; }
+        [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
+        public List<Reference> Scopes { get; set; }
+        public int? ScopesCount { get; set; }
+
+
+        [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
+        public string URI { get; set; }
 
 
 
-        public void Deconstruct(out string pName, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+        public void Deconstruct(out string pName, out List<Reference> pScopes, out int? pScopesCount, out string pURI)
         {
             pName = Name;
-            pWorkflows = Workflows;
-            pWorkflowsCount = WorkflowsCount;
+            pScopes = Scopes;
+            pScopesCount = ScopesCount;
+            pURI = URI;
         }
 
         //Not ready until C# v8.?
-        //public TagBase With(int? pId = Id, string pName = Name, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
-        //	new TagBase(pId, pName, pWorkflows, pWorkflowsCount);
+        //public TagBase With(int? pId = Id, string pName = Name, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, string pURI = URI) => 
+        //	new TagBase(pId, pName, pScopes, pScopesCount, pURI);
 
     }
 
@@ -97,11 +103,11 @@ namespace Services.Dto
 
         public Tag(int? id) : base(DocConvert.ToInt(id)) {}
         public Tag(int id) : base(id) {}
-        public Tag(int? pId, string pName, List<Reference> pWorkflows, int? pWorkflowsCount) : 
-            base(pId, pName, pWorkflows, pWorkflowsCount) { }
+        public Tag(int? pId, string pName, List<Reference> pScopes, int? pScopesCount, string pURI) : 
+            base(pId, pName, pScopes, pScopesCount, pURI) { }
         #region Fields
 
-        public bool? ShouldSerialize(string field)
+        public new bool? ShouldSerialize(string field)
         {
             //Allow individual classes to specify their own logic
             var manualOverride = _ShouldSerialize(field);
@@ -116,7 +122,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Updated),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Scopes),nameof(ScopesCount),nameof(Updated),nameof(URI),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -139,7 +145,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Workflows), nameof(WorkflowsCount)
+            nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
 
@@ -152,7 +158,8 @@ namespace Services.Dto
     {
         public int? Id { get; set; }
         public string Name { get; set; }
-        public List<int> WorkflowsIds { get; set; }
+        public List<int> ScopesIds { get; set; }
+        public string URI { get; set; }
     }
 
     [Route("/tag", "GET")]
@@ -177,7 +184,8 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Tag.Updated))); }
 
         public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Tag.Name))); }
-        public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Tag.Workflows))); }
+        public bool doScopes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Tag.Scopes))); }
+        public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Tag.URI))); }
     }
 
     [Route("/tag/batch", "DELETE, PATCH, POST, PUT")]

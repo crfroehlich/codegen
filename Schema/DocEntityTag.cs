@@ -116,17 +116,19 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Workflows))]
-        [Association(PairTo = nameof(DocEntityWorkflow.Tags), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
-        public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
+        [Field]
+        [Association(PairTo = nameof(DocEntityScope.Tags), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
-        public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }
+        public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
+
+
+        [Field]
+        public string URI { get; set; }
 
 
 
@@ -186,6 +188,7 @@ namespace Services.Schema
         public override IDocEntity SaveChanges(bool ignoreCache, DocConstantPermission permission)
         {
             Name = Name?.TrimAndPruneSpaces();
+            URI = URI?.TrimAndPruneSpaces();
             return base.SaveChanges(ignoreCache, permission);
         }
 
@@ -251,8 +254,9 @@ namespace Services.Schema
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, "Updated")))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.Name))))
-                .ForMember(dest => dest.Workflows, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.Workflows))))
-                .ForMember(dest => dest.WorkflowsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.WorkflowsCount))))
+                .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.Scopes))))
+                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.ScopesCount))))
+                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.URI))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Tag,DocEntityTag>()
                 .MaxDepth(2);

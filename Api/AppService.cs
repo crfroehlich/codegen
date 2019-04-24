@@ -446,6 +446,8 @@ namespace Services.API
                         return GetJunctionSearchResult<App, DocEntityApp, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<App, DocEntityApp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<App, DocEntityApp, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
             }
@@ -460,6 +462,8 @@ namespace Services.API
                         return AddJunction<App, DocEntityApp, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
                     case "scope":
                         return AddJunction<App, DocEntityApp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<App, DocEntityApp, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
             }
@@ -475,6 +479,8 @@ namespace Services.API
                         return RemoveJunction<App, DocEntityApp, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
                     case "scope":
                         return RemoveJunction<App, DocEntityApp, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<App, DocEntityApp, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for app/{request.Id}/{request.Junction} was not found");
             }

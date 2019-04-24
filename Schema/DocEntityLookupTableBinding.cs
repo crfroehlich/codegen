@@ -116,29 +116,24 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = "{}", Length = int.MaxValue)]
-        [FieldMapping(nameof(Binding))]
         public string Binding { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(BoundName))]
+        [Field]
         public string BoundName { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(LookupTable))]
         public DocEntityLookupTable LookupTable { get; set; }
         public int? LookupTableId { get { return LookupTable?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Scope))]
         public DocEntityScope Scope { get; set; }
         public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Synonyms))]
+        [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Bindings), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
 
@@ -146,8 +141,7 @@ namespace Services.Schema
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Workflows))]
+        [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.Bindings), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
 

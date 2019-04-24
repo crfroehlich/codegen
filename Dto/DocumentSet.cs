@@ -438,7 +438,7 @@ namespace Services.Dto
             base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pClients, pClientsCount, pComparators, pComparatorsCount, pConfidential, pDataCollection, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pHistories, pHistoriesCount, pImportPriority, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pLibraryPackageId, pName, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOriginalSearch, pOutcomes, pOutcomesCount, pOwner, pOwnerId, pParticipants, pPRISMA, pProjects, pProjectsCount, pProjectTeam, pProjectTeamId, pProtocolReferenceId, pQUOROM, pScopes, pScopesCount, pSearchEnd, pSearchStart, pSearchStrategy, pSearchUpdated, pSelectionCriteria, pSettings, pShowEtw, pStats, pStatsCount, pStudyDesigns, pStudyDesignsCount, pType, pTypeId, pUpdateFrequency, pUsers, pUsersCount) { }
         #region Fields
 
-        public bool? ShouldSerialize(string field)
+        public new bool? ShouldSerialize(string field)
         {
             //Allow individual classes to specify their own logic
             var manualOverride = _ShouldSerialize(field);

@@ -155,6 +155,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "tag":
+                        return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "team":
                         return GetJunctionSearchResult<Event, DocEntityEvent, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request, (ss) => HostContext.ResolveService<TeamService>(Request)?.Get(ss));
                     case "update":

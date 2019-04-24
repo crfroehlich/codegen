@@ -115,31 +115,26 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(CalendarDateEnd))]
+        [Field]
         public DocEntityDateTime CalendarDateEnd { get; set; }
         public int? CalendarDateEndId { get { return CalendarDateEnd?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(CalendarDateStart))]
+        [Field]
         public DocEntityDateTime CalendarDateStart { get; set; }
         public int? CalendarDateStartId { get { return CalendarDateStart?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(CalendarType))]
+        [Field]
         public string CalendarType { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(FollowUp))]
+        [Field]
         public DocEntityTimePoint FollowUp { get; set; }
         public int? FollowUpId { get { return FollowUp?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(TimeOfDay))]
+        [Field]
         public DocEntityTimePoint TimeOfDay { get; set; }
         public int? TimeOfDayId { get { return TimeOfDay?.Id; } private set { var noid = value; } }
 

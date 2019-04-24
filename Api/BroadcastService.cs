@@ -645,6 +645,8 @@ namespace Services.API
             {
                     case "scope":
                         return GetJunctionSearchResult<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Broadcast, DocEntityBroadcast, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
             }
@@ -655,6 +657,8 @@ namespace Services.API
             {
                     case "scope":
                         return AddJunction<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<Broadcast, DocEntityBroadcast, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
             }
@@ -666,6 +670,8 @@ namespace Services.API
             {
                     case "scope":
                         return RemoveJunction<Broadcast, DocEntityBroadcast, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<Broadcast, DocEntityBroadcast, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for broadcast/{request.Id}/{request.Junction} was not found");
             }

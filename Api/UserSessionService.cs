@@ -159,6 +159,8 @@ namespace Services.API
                         return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request, (ss) => HostContext.ResolveService<ImpersonationService>(Request)?.Get(ss));
                     case "request":
                         return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityUserRequest, UserRequest, UserRequestSearch>((int)request.Id, DocConstantModelName.USERREQUEST, "Requests", request, (ss) => HostContext.ResolveService<UserRequestService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "history":
                         return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "UserHistory", request, (ss) => HostContext.ResolveService<HistoryService>(Request)?.Get(ss));
                 default:

@@ -115,35 +115,29 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(App))]
+        [Field]
         public DocEntityApp App { get; set; }
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Method))]
+        [Field]
         public string Method { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Page))]
+        [Field]
         public DocEntityPage Page { get; set; }
         public int? PageId { get { return Page?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Path))]
+        [Field]
         public string Path { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(URL))]
+        [Field]
         public string URL { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(UserSession))]
         public DocEntityUserSession UserSession { get; set; }
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
 

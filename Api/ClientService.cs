@@ -755,6 +755,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Client, DocEntityClient, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Projects", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<Client, DocEntityClient, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "user":
                         return GetJunctionSearchResult<Client, DocEntityClient, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                     case "workflow":
@@ -773,6 +775,8 @@ namespace Services.API
                         return AddJunction<Client, DocEntityClient, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "scope":
                         return AddJunction<Client, DocEntityClient, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<Client, DocEntityClient, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for client/{request.Id}/{request.Junction} was not found");
             }
@@ -788,6 +792,8 @@ namespace Services.API
                         return RemoveJunction<Client, DocEntityClient, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "scope":
                         return RemoveJunction<Client, DocEntityClient, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<Client, DocEntityClient, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for client/{request.Id}/{request.Junction} was not found");
             }

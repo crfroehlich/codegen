@@ -116,38 +116,31 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(AutoDelete))]
         public bool AutoDelete { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(BackgroundTask))]
+        [Field]
         public DocEntityBackgroundTask BackgroundTask { get; set; }
         public int? BackgroundTaskId { get { return BackgroundTask?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = true)]
-        [FieldMapping(nameof(Durable))]
         public bool Durable { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = true)]
-        [FieldMapping(nameof(Enabled))]
         public bool Enabled { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = true)]
-        [FieldMapping(nameof(Exclusive))]
         public bool Exclusive { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 

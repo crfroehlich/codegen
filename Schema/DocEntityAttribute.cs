@@ -116,45 +116,37 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(AttributeName))]
         public DocEntityLookupTable AttributeName { get; set; }
         public int? AttributeNameId { get { return AttributeName?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(AttributeType))]
+        [Field]
         public DocEntityLookupTable AttributeType { get; set; }
         public int? AttributeTypeId { get { return AttributeType?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Interval))]
         public DocEntityAttributeInterval Interval { get; set; }
         public int? IntervalId { get { return Interval?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(IsCharacteristic))]
         public bool IsCharacteristic { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(IsOutcome))]
         public bool IsOutcome { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(IsPositive))]
         public bool? IsPositive { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(UniqueKey))]
+        [Field]
         public string UniqueKey { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(ValueType))]
         public DocEntityValueType ValueType { get; set; }
         public int? ValueTypeId { get { return ValueType?.Id; } private set { var noid = value; } }
 

@@ -116,23 +116,19 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public DocEntityLookupTable Name { get; set; }
         public int? NameId { get { return Name?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(OwnerId))]
         public int OwnerId { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(OwnerType))]
         public string OwnerType { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Value))]
         public decimal Value { get; set; }
 
 

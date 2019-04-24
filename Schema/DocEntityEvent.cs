@@ -116,44 +116,37 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(AuditRecord))]
         public DocEntityAuditRecord AuditRecord { get; set; }
         public int? AuditRecordId { get { return AuditRecord?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Processed))]
+        [Field]
         public DateTime? Processed { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Status))]
+        [Field]
         public string Status { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Teams))]
+        [Field]
         public DocEntitySet<DocEntityTeam> Teams { get; private set; }
 
 
         public int? TeamsCount { get { return Teams.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Updates))]
+        [Field]
         public DocEntitySet<DocEntityUpdate> Updates { get; private set; }
 
 
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Users))]
+        [Field]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
 

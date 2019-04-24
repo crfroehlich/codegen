@@ -116,28 +116,23 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(DocumentSet))]
         public DocEntityDocumentSet DocumentSet { get; set; }
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(EvidencePortalID))]
+        [Field]
         public int EvidencePortalID { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(FqId))]
+        [Field]
         public int? FqId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(StudyCount))]
+        [Field]
         public int? StudyCount { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(StudyCountFQ))]
+        [Field]
         public int? StudyCountFQ { get; set; }
 
 

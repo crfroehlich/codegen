@@ -524,6 +524,8 @@ namespace Services.API
             {
                     case "documentset":
                         return GetJunctionSearchResult<Comparator, DocEntityComparator, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Comparator, DocEntityComparator, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for comparator/{request.Id}/{request.Junction} was not found");
             }
@@ -534,6 +536,8 @@ namespace Services.API
             {
                     case "documentset":
                         return AddJunction<Comparator, DocEntityComparator, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "tag":
+                        return AddJunction<Comparator, DocEntityComparator, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for comparator/{request.Id}/{request.Junction} was not found");
             }
@@ -545,6 +549,8 @@ namespace Services.API
             {
                     case "documentset":
                         return RemoveJunction<Comparator, DocEntityComparator, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "tag":
+                        return RemoveJunction<Comparator, DocEntityComparator, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for comparator/{request.Id}/{request.Junction} was not found");
             }

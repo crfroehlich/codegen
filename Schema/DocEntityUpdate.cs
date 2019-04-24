@@ -116,27 +116,22 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Body))]
         public string Body { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(DeliveryStatus))]
         public string DeliveryStatus { get; set; }
 
 
         [Field(DefaultValue = 0)]
-        [FieldMapping(nameof(EmailAttempts))]
         public int EmailAttempts { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(EmailSent))]
+        [Field]
         public DateTime? EmailSent { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Events))]
+        [Field]
         [Association(PairTo = nameof(DocEntityEvent.Updates), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityEvent> Events { get; private set; }
 
@@ -144,39 +139,32 @@ namespace Services.Schema
         public int? EventsCount { get { return Events.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Link))]
+        [Field]
         public string Link { get; set; }
 
 
         [Field(DefaultValue = 5)]
-        [FieldMapping(nameof(Priority))]
         public int Priority { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Read))]
+        [Field]
         public DateTime? Read { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(SlackSent))]
+        [Field]
         public DateTime? SlackSent { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Subject))]
+        [Field]
         public string Subject { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Team))]
+        [Field]
         public DocEntityTeam Team { get; set; }
         public int? TeamId { get { return Team?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(User))]
+        [Field]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 

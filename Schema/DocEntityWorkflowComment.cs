@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Children))]
+        [Field]
         [Association(PairTo = nameof(DocEntityWorkflowComment.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflowComment> Children { get; private set; }
 
@@ -124,25 +123,21 @@ namespace Services.Schema
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Parent))]
+        [Field]
         public DocEntityWorkflowComment Parent { get; set; }
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Text))]
         public string Text { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Workflow))]
         public DocEntityWorkflow Workflow { get; set; }
         public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
 

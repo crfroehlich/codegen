@@ -642,6 +642,8 @@ namespace Services.API
                         return GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityLookupCategory, LookupCategory, LookupCategorySearch>((int)request.Id, DocConstantModelName.LOOKUPCATEGORY, "Categories", request, (ss) => HostContext.ResolveService<LookupCategoryService>(Request)?.Get(ss));
                     case "document":
                         return GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptable/{request.Id}/{request.Junction} was not found");
             }
@@ -656,6 +658,8 @@ namespace Services.API
                         return AddJunction<LookupTable, DocEntityLookupTable, DocEntityLookupCategory, LookupCategory, LookupCategorySearch>((int)request.Id, DocConstantModelName.LOOKUPCATEGORY, "Categories", request);
                     case "document":
                         return AddJunction<LookupTable, DocEntityLookupTable, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "tag":
+                        return AddJunction<LookupTable, DocEntityLookupTable, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptable/{request.Id}/{request.Junction} was not found");
             }
@@ -671,6 +675,8 @@ namespace Services.API
                         return RemoveJunction<LookupTable, DocEntityLookupTable, DocEntityLookupCategory, LookupCategory, LookupCategorySearch>((int)request.Id, DocConstantModelName.LOOKUPCATEGORY, "Categories", request);
                     case "document":
                         return RemoveJunction<LookupTable, DocEntityLookupTable, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "tag":
+                        return RemoveJunction<LookupTable, DocEntityLookupTable, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for lookuptable/{request.Id}/{request.Junction} was not found");
             }

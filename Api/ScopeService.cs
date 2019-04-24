@@ -155,6 +155,10 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Synonyms.Any(r => r.Id.In(request.SynonymsIds)));
                 }
+                if(true == request.TagsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Tags.Any(r => r.Id.In(request.TagsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Team) && !DocTools.IsNullOrEmpty(request.Team.Id))
                 {
                     entities = entities.Where(en => en.Team.Id == request.Team.Id );
@@ -249,6 +253,7 @@ namespace Services.API
             var pHelp = request.Help?.ToList();
             var pIsGlobal = request.IsGlobal;
             var pSynonyms = request.Synonyms?.ToList();
+            var pTags = request.Tags?.ToList();
             var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.GetTeam(request.Team.Id) : null;
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.SCOPE, request.Type?.Name, request.Type?.Id);
             var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
@@ -578,6 +583,50 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Synonyms));
                 }
             }
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTags, permission, DocConstantModelName.SCOPE, nameof(request.Tags)))
+            {
+                if (true == pTags?.Any() )
+                {
+                    var requestedTags = pTags.Select(p => p.Id).Distinct().ToList();
+                    var existsTags = Execute.SelectAll<DocEntityTag>().Where(e => e.Id.In(requestedTags)).Select( e => e.Id ).ToList();
+                    if (existsTags.Count != requestedTags.Count)
+                    {
+                        var nonExists = requestedTags.Where(id => existsTags.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Tags with objects that do not exist. No matching Tags(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedTags.Where(id => entity.Tags.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityTag.GetTag(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.Tags)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Tags)} to {nameof(Scope)}");
+                        entity.Tags.Add(target);
+                    });
+                    var toRemove = entity.Tags.Where(e => requestedTags.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityTag.GetTag(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.Tags)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Tags)} from {nameof(Scope)}");
+                        entity.Tags.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.Tags.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityTag.GetTag(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Scope), columnName: nameof(request.Tags)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Tags)} from {nameof(Scope)}");
+                        entity.Tags.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pTags, nameof(request.Tags)) && !request.VisibleFields.Matches(nameof(request.Tags), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Tags));
+                }
+            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pVariableRules, permission, DocConstantModelName.SCOPE, nameof(request.VariableRules)))
             {
                 if (true == pVariableRules?.Any() )
@@ -764,6 +813,7 @@ namespace Services.API
                     var pHelp = entity.Help.ToList();
                     var pIsGlobal = entity.IsGlobal;
                     var pSynonyms = entity.Synonyms.ToList();
+                    var pTags = entity.Tags.ToList();
                     var pTeam = entity.Team;
                     var pType = entity.Type;
                     var pUser = entity.User;
@@ -804,6 +854,11 @@ namespace Services.API
                             foreach(var item in pSynonyms)
                             {
                                 entity.Synonyms.Add(item);
+                            }
+
+                            foreach(var item in pTags)
+                            {
+                                entity.Tags.Add(item);
                             }
 
                             foreach(var item in pVariableRules)
@@ -985,6 +1040,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request, (ss) => HostContext.ResolveService<HelpService>(Request)?.Get(ss));
                     case "termsynonym":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request, (ss) => HostContext.ResolveService<TermSynonymService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "variablerule":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request, (ss) => HostContext.ResolveService<VariableRuleService>(Request)?.Get(ss));
                     case "workflow":
@@ -1005,6 +1062,8 @@ namespace Services.API
                         return AddJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
                     case "termsynonym":
                         return AddJunction<Scope, DocEntityScope, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
+                    case "tag":
+                        return AddJunction<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "variablerule":
                         return AddJunction<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request);
                     case "workflow":
@@ -1026,6 +1085,8 @@ namespace Services.API
                         return RemoveJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
                     case "termsynonym":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
+                    case "tag":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "variablerule":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "VariableRules", request);
                     case "workflow":

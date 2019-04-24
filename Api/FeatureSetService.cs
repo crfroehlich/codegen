@@ -352,6 +352,8 @@ namespace Services.API
             {
                     case "role":
                         return GetJunctionSearchResult<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<FeatureSet, DocEntityFeatureSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
             }
@@ -362,6 +364,8 @@ namespace Services.API
             {
                     case "role":
                         return AddJunction<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
+                    case "tag":
+                        return AddJunction<FeatureSet, DocEntityFeatureSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
             }
@@ -373,6 +377,8 @@ namespace Services.API
             {
                     case "role":
                         return RemoveJunction<FeatureSet, DocEntityFeatureSet, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
+                    case "tag":
+                        return RemoveJunction<FeatureSet, DocEntityFeatureSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for featureset/{request.Id}/{request.Junction} was not found");
             }

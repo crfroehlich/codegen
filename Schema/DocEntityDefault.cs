@@ -116,25 +116,21 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(DiseaseState))]
         public DocEntityDocumentSet DiseaseState { get; set; }
         public int? DiseaseStateId { get { return DiseaseState?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Role))]
+        [Field]
         public DocEntityRole Role { get; set; }
         public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Scope))]
         public DocEntityScope Scope { get; set; }
         public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(TherapeuticArea))]
         public DocEntityDocumentSet TherapeuticArea { get; set; }
         public int? TherapeuticAreaId { get { return TherapeuticArea?.Id; } private set { var noid = value; } }
 

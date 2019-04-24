@@ -154,6 +154,8 @@ namespace Services.API
             {
                     case "backgroundtaskitem":
                         return GetJunctionSearchResult<BackgroundTaskHistory, DocEntityBackgroundTaskHistory, DocEntityBackgroundTaskItem, BackgroundTaskItem, BackgroundTaskItemSearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKITEM, "Items", request, (ss) => HostContext.ResolveService<BackgroundTaskItemService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<BackgroundTaskHistory, DocEntityBackgroundTaskHistory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for backgroundtaskhistory/{request.Id}/{request.Junction} was not found");
             }

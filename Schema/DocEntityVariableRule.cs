@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Children))]
+        [Field]
         [Association(PairTo = nameof(DocEntityVariableRule.Owner), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableRule> Children { get; private set; }
 
@@ -125,12 +124,10 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Definition))]
         public string Definition { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Instances))]
+        [Field]
         [Association(PairTo = nameof(DocEntityVariableInstance.Rule), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableInstance> Instances { get; private set; }
 
@@ -139,24 +136,20 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Owner))]
+        [Field]
         public DocEntityVariableRule Owner { get; set; }
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Rule))]
         public DocEntityLookupTable Rule { get; set; }
         public int? RuleId { get { return Rule?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Scopes))]
+        [Field]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
@@ -164,7 +157,6 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 

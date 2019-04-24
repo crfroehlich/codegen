@@ -116,22 +116,18 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(DatabaseState))]
         public string DatabaseState { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Release))]
+        [Field]
         public string Release { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(VersionName))]
         public string VersionName { get; set; }
 
 

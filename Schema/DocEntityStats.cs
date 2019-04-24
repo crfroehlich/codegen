@@ -116,33 +116,27 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(App))]
         public DocEntityApp App { get; set; }
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(ExternalId))]
+        [Field]
         public int ExternalId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(ExternalType))]
+        [Field]
         public string ExternalType { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(ObjectId))]
         public int ObjectId { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(ObjectType))]
         public string ObjectType { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(StudySetStats))]
+        [Field]
         public DocEntityStatsStudySet StudySetStats { get; set; }
         public int? StudySetStatsId { get { return StudySetStats?.Id; } private set { var noid = value; } }
 

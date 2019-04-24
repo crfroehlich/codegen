@@ -208,10 +208,6 @@ namespace Services.API
                     entities = entities.Where(en => request.MedlineID.Value == en.MedlineID);
                 if(!DocTools.IsNullOrEmpty(request.MeSH))
                     entities = entities.Where(en => en.MeSH.Contains(request.MeSH));
-                if(true == request.NonDigitizedDocumentSetsIds?.Any())
-                {
-                    entities = entities.Where(en => en.NonDigitizedDocumentSets.Any(r => r.Id.In(request.NonDigitizedDocumentSetsIds)));
-                }
                 if(!DocTools.IsNullOrEmpty(request.Pages))
                     entities = entities.Where(en => en.Pages.Contains(request.Pages));
                 if(request.ParentChildStatus.HasValue)
@@ -309,7 +305,6 @@ namespace Services.API
             var pLookupTables = request.LookupTables?.ToList();
             var pMedlineID = request.MedlineID;
             var pMeSH = request.MeSH;
-            var pNonDigitizedDocumentSets = request.NonDigitizedDocumentSets?.ToList();
             var pPages = request.Pages;
             var pParentChildStatus = request.ParentChildStatus;
             var pParentID = request.ParentID;
@@ -903,50 +898,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.LookupTables));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pNonDigitizedDocumentSets, permission, DocConstantModelName.DOCUMENT, nameof(request.NonDigitizedDocumentSets)))
-            {
-                if (true == pNonDigitizedDocumentSets?.Any() )
-                {
-                    var requestedNonDigitizedDocumentSets = pNonDigitizedDocumentSets.Select(p => p.Id).Distinct().ToList();
-                    var existsNonDigitizedDocumentSets = Execute.SelectAll<DocEntityDocumentSet>().Where(e => e.Id.In(requestedNonDigitizedDocumentSets)).Select( e => e.Id ).ToList();
-                    if (existsNonDigitizedDocumentSets.Count != requestedNonDigitizedDocumentSets.Count)
-                    {
-                        var nonExists = requestedNonDigitizedDocumentSets.Where(id => existsNonDigitizedDocumentSets.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection NonDigitizedDocumentSets with objects that do not exist. No matching NonDigitizedDocumentSets(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedNonDigitizedDocumentSets.Where(id => entity.NonDigitizedDocumentSets.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.NonDigitizedDocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.NonDigitizedDocumentSets)} to {nameof(Document)}");
-                        entity.NonDigitizedDocumentSets.Add(target);
-                    });
-                    var toRemove = entity.NonDigitizedDocumentSets.Where(e => requestedNonDigitizedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.NonDigitizedDocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.NonDigitizedDocumentSets)} from {nameof(Document)}");
-                        entity.NonDigitizedDocumentSets.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.NonDigitizedDocumentSets.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityDocumentSet.GetDocumentSet(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Document), columnName: nameof(request.NonDigitizedDocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.NonDigitizedDocumentSets)} from {nameof(Document)}");
-                        entity.NonDigitizedDocumentSets.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pNonDigitizedDocumentSets, nameof(request.NonDigitizedDocumentSets)) && !request.VisibleFields.Matches(nameof(request.NonDigitizedDocumentSets), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.NonDigitizedDocumentSets));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pVariableData, permission, DocConstantModelName.DOCUMENT, nameof(request.VariableData)))
             {
                 if (true == pVariableData?.Any() )
@@ -1141,7 +1092,6 @@ namespace Services.API
                     var pMeSH = entity.MeSH;
                     if(!DocTools.IsNullOrEmpty(pMeSH))
                         pMeSH += " (Copy)";
-                    var pNonDigitizedDocumentSets = entity.NonDigitizedDocumentSets.ToList();
                     var pPages = entity.Pages;
                     if(!DocTools.IsNullOrEmpty(pPages))
                         pPages += " (Copy)";
@@ -1229,11 +1179,6 @@ namespace Services.API
                             foreach(var item in pLookupTables)
                             {
                                 entity.LookupTables.Add(item);
-                            }
-
-                            foreach(var item in pNonDigitizedDocumentSets)
-                            {
-                                entity.NonDigitizedDocumentSets.Add(item);
                             }
 
                             foreach(var item in pVariableData)
@@ -1406,8 +1351,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
                     case "lookuptable":
                         return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
-                    case "nondigitizeddocumentset":
-                        return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "NonDigitizedDocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "variableinstance":
                         return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
                 default:
@@ -1422,8 +1367,8 @@ namespace Services.API
                         return AddJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "lookuptable":
                         return AddJunction<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request);
-                    case "nondigitizeddocumentset":
-                        return AddJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "NonDigitizedDocumentSets", request);
+                    case "tag":
+                        return AddJunction<Document, DocEntityDocument, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "variableinstance":
                         return AddJunction<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request);
                 default:
@@ -1439,8 +1384,8 @@ namespace Services.API
                         return RemoveJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "lookuptable":
                         return RemoveJunction<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request);
-                    case "nondigitizeddocumentset":
-                        return RemoveJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "NonDigitizedDocumentSets", request);
+                    case "tag":
+                        return RemoveJunction<Document, DocEntityDocument, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "variableinstance":
                         return RemoveJunction<Document, DocEntityDocument, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "VariableData", request);
                 default:

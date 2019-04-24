@@ -115,49 +115,41 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(App))]
+        [Field]
         public DocEntityApp App { get; set; }
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(DocumentSet))]
+        [Field]
         public DocEntityDocumentSet DocumentSet { get; set; }
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Impersonation))]
+        [Field]
         public DocEntityImpersonation Impersonation { get; set; }
         public int? ImpersonationId { get { return Impersonation?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Page))]
+        [Field]
         public DocEntityPage Page { get; set; }
         public int? PageId { get { return Page?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(URL))]
+        [Field]
         public string URL { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(UserSession))]
+        [Field]
         public DocEntityUserSession UserSession { get; set; }
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Workflow))]
+        [Field]
         public DocEntityWorkflow Workflow { get; set; }
         public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
 

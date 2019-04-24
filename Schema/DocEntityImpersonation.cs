@@ -116,19 +116,16 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(AuthenticatedUser))]
         public DocEntityUser AuthenticatedUser { get; set; }
         public int? AuthenticatedUserId { get { return AuthenticatedUser?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(ImpersonatedUser))]
         public DocEntityUser ImpersonatedUser { get; set; }
         public int? ImpersonatedUserId { get { return ImpersonatedUser?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(UserSession))]
+        [Field]
         public DocEntityUserSession UserSession { get; set; }
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
 

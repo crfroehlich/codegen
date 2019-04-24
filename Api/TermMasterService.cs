@@ -711,6 +711,8 @@ namespace Services.API
                         return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request, (ss) => HostContext.ResolveService<TermCategoryService>(Request)?.Get(ss));
                     case "termsynonym":
                         return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request, (ss) => HostContext.ResolveService<TermSynonymService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
             }
@@ -723,6 +725,8 @@ namespace Services.API
                         return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
                     case "termsynonym":
                         return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
+                    case "tag":
+                        return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
             }
@@ -736,6 +740,8 @@ namespace Services.API
                         return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
                     case "termsynonym":
                         return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
+                    case "tag":
+                        return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for termmaster/{request.Id}/{request.Junction} was not found");
             }

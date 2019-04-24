@@ -716,6 +716,8 @@ namespace Services.API
                         return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
             }
@@ -730,6 +732,8 @@ namespace Services.API
                         return AddJunction<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request);
                     case "scope":
                         return AddJunction<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<VariableRule, DocEntityVariableRule, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
             }
@@ -745,6 +749,8 @@ namespace Services.API
                         return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Instances", request);
                     case "scope":
                         return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for variablerule/{request.Id}/{request.Junction} was not found");
             }

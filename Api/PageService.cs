@@ -695,6 +695,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request, (ss) => HostContext.ResolveService<HelpService>(Request)?.Get(ss));
                     case "role":
                         return GetJunctionSearchResult<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Page, DocEntityPage, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
             }
@@ -711,6 +713,8 @@ namespace Services.API
                         return AddJunction<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
                     case "role":
                         return AddJunction<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
+                    case "tag":
+                        return AddJunction<Page, DocEntityPage, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
             }
@@ -728,6 +732,8 @@ namespace Services.API
                         return RemoveJunction<Page, DocEntityPage, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
                     case "role":
                         return RemoveJunction<Page, DocEntityPage, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
+                    case "tag":
+                        return RemoveJunction<Page, DocEntityPage, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for page/{request.Id}/{request.Junction} was not found");
             }

@@ -116,25 +116,21 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public DocEntityLookupTable Name { get; set; }
         public int? NameId { get { return Name?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(ParentCategory))]
+        [Field]
         public DocEntityTermCategory ParentCategory { get; set; }
         public int? ParentCategoryId { get { return ParentCategory?.Id; } private set { var noid = value; } }
 
 
         [Field(NullableOnUpgrade = true)]
-        [FieldMapping(nameof(Scope))]
         public DocEntityScope Scope { get; set; }
         public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Terms))]
+        [Field]
         [Association(PairTo = nameof(DocEntityTermMaster.Categories), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermMaster> Terms { get; private set; }
 

@@ -115,14 +115,12 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(App))]
+        [Field]
         public DocEntityApp App { get; set; }
         public int? AppId { get { return App?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Bindings))]
+        [Field]
         [Association(PairTo = nameof(DocEntityLookupTableBinding.Scope), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
@@ -130,8 +128,7 @@ namespace Services.Schema
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Broadcasts))]
+        [Field]
         [Association(PairTo = nameof(DocEntityBroadcast.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityBroadcast> Broadcasts { get; private set; }
 
@@ -139,30 +136,25 @@ namespace Services.Schema
         public int? BroadcastsCount { get { return Broadcasts.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Client))]
+        [Field]
         public DocEntityClient Client { get; set; }
         public int? ClientId { get { return Client?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Delete))]
         public bool? Delete { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(DocumentSet))]
+        [Field]
         public DocEntityDocumentSet DocumentSet { get; set; }
         public int? DocumentSetId { get { return DocumentSet?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(Edit))]
         public bool? Edit { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Help))]
+        [Field]
         [Association(PairTo = nameof(DocEntityHelp.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityHelp> Help { get; private set; }
 
@@ -170,13 +162,11 @@ namespace Services.Schema
         public int? HelpCount { get { return Help.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(IsGlobal))]
+        [Field]
         public bool? IsGlobal { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Synonyms))]
+        [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Scope), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
 
@@ -184,26 +174,29 @@ namespace Services.Schema
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Team))]
+        [Field]
+        public DocEntitySet<DocEntityTag> Tags { get; private set; }
+
+
+        public int? TagsCount { get { return Tags.Count(); } private set { var noid = value; } }
+
+
+        [Field]
         public DocEntityTeam Team { get; set; }
         public int? TeamId { get { return Team?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(User))]
+        [Field]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(VariableRules))]
+        [Field]
         [Association(PairTo = nameof(DocEntityVariableRule.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableRule> VariableRules { get; private set; }
 
@@ -212,12 +205,10 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(View))]
         public bool? View { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Workflows))]
+        [Field]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
 
 
@@ -370,6 +361,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.IsGlobal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.IsGlobal))))
                 .ForMember(dest => dest.Synonyms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.Synonyms))))
                 .ForMember(dest => dest.SynonymsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.SynonymsCount))))
+                .ForMember(dest => dest.Tags, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.Tags))))
+                .ForMember(dest => dest.TagsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.TagsCount))))
                 .ForMember(dest => dest.Team, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.Team))))
                 .ForMember(dest => dest.TeamId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.TeamId))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Scope>(c, nameof(DocEntityScope.Type))))

@@ -226,7 +226,7 @@ namespace Services.Dto
             base(pId, pCompletedOn, pDocument, pDocumentId, pDocumentSets, pDocumentSetsCount, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId) { }
         #region Fields
 
-        public bool? ShouldSerialize(string field)
+        public new bool? ShouldSerialize(string field)
         {
             //Allow individual classes to specify their own logic
             var manualOverride = _ShouldSerialize(field);

@@ -115,14 +115,12 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(FieldType))]
+        [Field]
         public DocEntityLookupTable FieldType { get; set; }
         public int? FieldTypeId { get { return FieldType?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public DocEntityLookupTable Name { get; set; }
         public int? NameId { get { return Name?.Id; } private set { var noid = value; } }
 

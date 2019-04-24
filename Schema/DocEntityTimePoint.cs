@@ -116,27 +116,22 @@ namespace Services.Schema
 
         #region Properties
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(IsAbsolute))]
         public bool IsAbsolute { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(MeanValue))]
+        [Field]
         public DocStructureMeanBase MeanValue { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(SingleValue))]
+        [Field]
         public DocStructureUnitValue SingleValue { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(TotalValue))]
+        [Field]
         public DocStructureUnitRange TotalValue { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Type))]
+        [Field]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 

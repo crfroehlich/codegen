@@ -102,10 +102,12 @@ namespace Services.API
 
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
-                if(true == request.WorkflowsIds?.Any())
+                if(true == request.ScopesIds?.Any())
                 {
-                    entities = entities.Where(en => en.Workflows.Any(r => r.Id.In(request.WorkflowsIds)));
+                    entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
                 }
+                if(!DocTools.IsNullOrEmpty(request.URI))
+                    entities = entities.Where(en => en.URI.Contains(request.URI));
 
                 entities = ApplyFilters<DocEntityTag,TagSearch>(request, entities);
 
@@ -146,7 +148,8 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pName = request.Name;
-            var pWorkflows = request.Workflows?.ToList();
+            var pScopes = request.Scopes?.ToList();
+            var pURI = request.URI;
 
             DocEntityTag entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -190,53 +193,64 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Name));
                 }
             }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.TAG, nameof(request.URI)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pURI, entity.URI, nameof(request.URI)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TAG, nameof(request.URI)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.URI)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pURI) && DocResources.Metadata.IsRequired(DocConstantModelName.TAG, nameof(request.URI))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.URI)} requires a value.");
+                    entity.URI = pURI;
+                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.URI));
+                }
+            }
 
             if (request.Locked) entity.Locked = request.Locked;
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pWorkflows, permission, DocConstantModelName.TAG, nameof(request.Workflows)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.TAG, nameof(request.Scopes)))
             {
-                if (true == pWorkflows?.Any() )
+                if (true == pScopes?.Any() )
                 {
-                    var requestedWorkflows = pWorkflows.Select(p => p.Id).Distinct().ToList();
-                    var existsWorkflows = Execute.SelectAll<DocEntityWorkflow>().Where(e => e.Id.In(requestedWorkflows)).Select( e => e.Id ).ToList();
-                    if (existsWorkflows.Count != requestedWorkflows.Count)
+                    var requestedScopes = pScopes.Select(p => p.Id).Distinct().ToList();
+                    var existsScopes = Execute.SelectAll<DocEntityScope>().Where(e => e.Id.In(requestedScopes)).Select( e => e.Id ).ToList();
+                    if (existsScopes.Count != requestedScopes.Count)
                     {
-                        var nonExists = requestedWorkflows.Where(id => existsWorkflows.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Workflows with objects that do not exist. No matching Workflows(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                        var nonExists = requestedScopes.Where(id => existsScopes.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Scopes with objects that do not exist. No matching Scopes(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedWorkflows.Where(id => entity.Workflows.All(e => e.Id != id)).ToList(); 
+                    var toAdd = requestedScopes.Where(id => entity.Scopes.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Tag), columnName: nameof(request.Workflows)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Workflows)} to {nameof(Tag)}");
-                        entity.Workflows.Add(target);
+                        var target = DocEntityScope.GetScope(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Tag), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(Tag)}");
+                        entity.Scopes.Add(target);
                     });
-                    var toRemove = entity.Workflows.Where(e => requestedWorkflows.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Tag), columnName: nameof(request.Workflows)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Workflows)} from {nameof(Tag)}");
-                        entity.Workflows.Remove(target);
+                        var target = DocEntityScope.GetScope(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Tag), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Tag)}");
+                        entity.Scopes.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Workflows.Select(e => e.Id).ToList(); 
+                    var toRemove = entity.Scopes.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Tag), columnName: nameof(request.Workflows)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Workflows)} from {nameof(Tag)}");
-                        entity.Workflows.Remove(target);
+                        var target = DocEntityScope.GetScope(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Tag), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Tag)}");
+                        entity.Scopes.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pWorkflows, nameof(request.Workflows)) && !request.VisibleFields.Matches(nameof(request.Workflows), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopes, nameof(request.Scopes)) && !request.VisibleFields.Matches(nameof(request.Scopes), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Workflows));
+                    request.VisibleFields.Add(nameof(request.Scopes));
                 }
             }
             DocPermissionFactory.SetVisibleFields<Tag>(currentUser, nameof(Tag), request.VisibleFields);
@@ -330,17 +344,21 @@ namespace Services.API
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
-                    var pWorkflows = entity.Workflows.ToList();
+                    var pScopes = entity.Scopes.ToList();
+                    var pURI = entity.URI;
+                    if(!DocTools.IsNullOrEmpty(pURI))
+                        pURI += " (Copy)";
                     #region Custom Before copyTag
                     #endregion Custom Before copyTag
                     var copy = new DocEntityTag(ssn)
                     {
                         Hash = Guid.NewGuid()
                                 , Name = pName
+                                , URI = pURI
                     };
-                            foreach(var item in pWorkflows)
+                            foreach(var item in pScopes)
                             {
-                                entity.Workflows.Add(item);
+                                entity.Scopes.Add(item);
                             }
 
                     #region Custom After copyTag
@@ -431,8 +449,10 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                    case "workflow":
-                        return GetJunctionSearchResult<Tag, DocEntityTag, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<Tag, DocEntityTag, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Tag, DocEntityTag, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
             }
@@ -441,8 +461,10 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                    case "workflow":
-                        return AddJunction<Tag, DocEntityTag, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
+                    case "scope":
+                        return AddJunction<Tag, DocEntityTag, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<Tag, DocEntityTag, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
             }
@@ -452,8 +474,10 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                    case "workflow":
-                        return RemoveJunction<Tag, DocEntityTag, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request);
+                    case "scope":
+                        return RemoveJunction<Tag, DocEntityTag, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<Tag, DocEntityTag, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for tag/{request.Id}/{request.Junction} was not found");
             }

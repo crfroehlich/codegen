@@ -115,32 +115,27 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(AdminTeam))]
+        [Field]
         public DocEntityTeam AdminTeam { get; set; }
         public int? AdminTeamId { get { return AdminTeam?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Apps))]
+        [Field]
         public DocEntitySet<DocEntityApp> Apps { get; private set; }
 
 
         public int? AppsCount { get { return Apps.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Features))]
         public string Features { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(FeatureSets))]
+        [Field]
         [Association(PairTo = nameof(DocEntityFeatureSet.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityFeatureSet> FeatureSets { get; private set; }
 
@@ -149,22 +144,18 @@ namespace Services.Schema
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(IsInternal))]
         public bool IsInternal { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(IsSuperAdmin))]
         public bool IsSuperAdmin { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Pages))]
+        [Field]
         public DocEntitySet<DocEntityPage> Pages { get; private set; }
 
 
@@ -172,12 +163,10 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Permissions))]
         public string Permissions { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Users))]
+        [Field]
         [Association(PairTo = nameof(DocEntityUser.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 

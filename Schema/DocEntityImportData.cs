@@ -115,19 +115,16 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(CompletedOn))]
+        [Field]
         public DateTime? CompletedOn { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Document))]
+        [Field]
         public DocEntityDocument Document { get; set; }
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(DocumentSets))]
+        [Field]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
@@ -135,85 +132,69 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(ErrorData))]
         public string ErrorData { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(ExtractUrl))]
+        [Field]
         public string ExtractUrl { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(HighPriority))]
         public bool HighPriority { get; set; }
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(ImportFr))]
         public bool ImportFr { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(ImportLocation))]
+        [Field]
         public DocEntityLookupTable ImportLocation { get; set; }
         public int? ImportLocationId { get { return ImportLocation?.Id; } private set { var noid = value; } }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(ImportNewName))]
         public bool ImportNewName { get; set; }
 
 
         [Field(DefaultValue = false)]
-        [FieldMapping(nameof(ImportTable))]
         public bool ImportTable { get; set; }
 
 
         [Field(DefaultValue = true)]
-        [FieldMapping(nameof(ImportText))]
         public bool ImportText { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(ImportType))]
+        [Field]
         public DocEntityLookupTable ImportType { get; set; }
         public int? ImportTypeId { get { return ImportType?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(IsLegacy))]
         public bool IsLegacy { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Order))]
+        [Field]
         public int? Order { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(ReferenceId))]
         public int ReferenceId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(RequestedBy))]
+        [Field]
         public DocEntityUser RequestedBy { get; set; }
         public int? RequestedById { get { return RequestedBy?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(RequestedOn))]
+        [Field]
         public DateTime? RequestedOn { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(StartedOn))]
+        [Field]
         public DateTime? StartedOn { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Status))]
         public DocEntityLookupTable Status { get; set; }
         public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 

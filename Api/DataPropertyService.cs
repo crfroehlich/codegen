@@ -956,6 +956,8 @@ namespace Services.API
             {
                     case "dataproperty":
                         return GetJunctionSearchResult<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<DataProperty, DocEntityDataProperty, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
             }
@@ -966,6 +968,8 @@ namespace Services.API
             {
                     case "dataproperty":
                         return AddJunction<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request);
+                    case "tag":
+                        return AddJunction<DataProperty, DocEntityDataProperty, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
             }
@@ -977,6 +981,8 @@ namespace Services.API
             {
                     case "dataproperty":
                         return RemoveJunction<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request);
+                    case "tag":
+                        return RemoveJunction<DataProperty, DocEntityDataProperty, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataproperty/{request.Id}/{request.Junction} was not found");
             }

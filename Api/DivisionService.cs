@@ -641,6 +641,8 @@ namespace Services.API
             {
                     case "documentset":
                         return GetJunctionSearchResult<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Division, DocEntityDivision, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "user":
                         return GetJunctionSearchResult<Division, DocEntityDivision, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                 default:
@@ -653,6 +655,8 @@ namespace Services.API
             {
                     case "documentset":
                         return AddJunction<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "tag":
+                        return AddJunction<Division, DocEntityDivision, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "user":
                         return AddJunction<Division, DocEntityDivision, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
@@ -666,6 +670,8 @@ namespace Services.API
             {
                     case "documentset":
                         return RemoveJunction<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "tag":
+                        return RemoveJunction<Division, DocEntityDivision, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "user":
                         return RemoveJunction<Division, DocEntityDivision, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:

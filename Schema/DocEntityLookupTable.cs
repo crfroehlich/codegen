@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Bindings))]
+        [Field]
         [Association(PairTo = nameof(DocEntityLookupTableBinding.LookupTable), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
@@ -124,16 +123,14 @@ namespace Services.Schema
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Categories))]
+        [Field]
         public DocEntitySet<DocEntityLookupCategory> Categories { get; private set; }
 
 
         public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Documents))]
+        [Field]
         [Association(PairTo = nameof(DocEntityDocument.LookupTables), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
 
@@ -142,13 +139,11 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Enum))]
         public DocEntityLookupTableEnum Enum { get; set; }
         public int? EnumId { get { return Enum?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 

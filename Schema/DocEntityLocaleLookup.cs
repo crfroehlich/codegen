@@ -116,17 +116,14 @@ namespace Services.Schema
 
         #region Properties
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Data))]
         public string Data { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(IpAddress))]
         public string IpAddress { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Locale))]
         public DocEntityLocale Locale { get; set; }
         public int? LocaleId { get { return Locale?.Id; } private set { var noid = value; } }
 

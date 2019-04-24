@@ -782,6 +782,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "update":
                         return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request, (ss) => HostContext.ResolveService<UpdateService>(Request)?.Get(ss));
                     case "user":
@@ -798,6 +800,8 @@ namespace Services.API
                         return AddJunction<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request);
                     case "scope":
                         return AddJunction<Team, DocEntityTeam, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<Team, DocEntityTeam, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "update":
                         return AddJunction<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
                     case "user":
@@ -815,6 +819,8 @@ namespace Services.API
                         return RemoveJunction<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request);
                     case "scope":
                         return RemoveJunction<Team, DocEntityTeam, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<Team, DocEntityTeam, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "update":
                         return RemoveJunction<Team, DocEntityTeam, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
                     case "user":

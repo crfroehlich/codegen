@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Variances))]
+        [Field]
         [Association(PairTo = nameof(DocEntityMeanVarianceValue.Owners), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityMeanVarianceValue> Variances { get; private set; }
 

@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Ranges))]
+        [Field]
         [Association(PairTo = nameof(DocEntityMeanRangeValue.Owners), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityMeanRangeValue> Ranges { get; private set; }
 

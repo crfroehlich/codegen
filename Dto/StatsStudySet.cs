@@ -177,7 +177,7 @@ namespace Services.Dto
             base(pId, pBoundTerms, pCharacteristics, pDataPoints, pDesignCount, pDesignList, pDocumentSet, pDocumentSetId, pInterventions, pOutcomes, pOutcomesReported, pStat, pStatId, pStudies, pTypeCount, pTypeList, pUnboundTerms) { }
         #region Fields
 
-        public bool? ShouldSerialize(string field)
+        public new bool? ShouldSerialize(string field)
         {
             //Allow individual classes to specify their own logic
             var manualOverride = _ShouldSerialize(field);

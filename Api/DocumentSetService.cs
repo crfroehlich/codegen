@@ -1878,6 +1878,8 @@ namespace Services.API
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
                     case "statsstudyset":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityStatsStudySet, StatsStudySet, StatsStudySetSearch>((int)request.Id, DocConstantModelName.STATSSTUDYSET, "Stats", request, (ss) => HostContext.ResolveService<StatsStudySetService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "user":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                     case "workflow":
@@ -1908,6 +1910,8 @@ namespace Services.API
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "studydesign":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
+                    case "tag":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "user":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
@@ -1937,6 +1941,8 @@ namespace Services.API
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "studydesign":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
+                    case "tag":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "user":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:

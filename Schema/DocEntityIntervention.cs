@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(DocumentSets))]
+        [Field]
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
@@ -124,12 +123,10 @@ namespace Services.Schema
 
 
         [Field(Nullable = false, NullableOnUpgrade = true)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(URI))]
+        [Field]
         public string URI { get; set; }
 
 

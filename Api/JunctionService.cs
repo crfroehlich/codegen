@@ -644,6 +644,8 @@ namespace Services.API
             {
                     case "junction":
                         return GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request, (ss) => HostContext.ResolveService<JunctionService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
             }
@@ -654,6 +656,8 @@ namespace Services.API
             {
                     case "junction":
                         return AddJunction<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request);
+                    case "tag":
+                        return AddJunction<Junction, DocEntityJunction, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
             }
@@ -665,6 +669,8 @@ namespace Services.API
             {
                     case "junction":
                         return RemoveJunction<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request);
+                    case "tag":
+                        return RemoveJunction<Junction, DocEntityJunction, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for junction/{request.Id}/{request.Junction} was not found");
             }

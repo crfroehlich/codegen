@@ -758,6 +758,8 @@ namespace Services.API
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "datatab":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataTab, DataTab, DataTabSearch>((int)request.Id, DocConstantModelName.DATATAB, "Tabs", request, (ss) => HostContext.ResolveService<DataTabService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
             }
@@ -776,6 +778,8 @@ namespace Services.API
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request);
                     case "datatab":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataTab, DataTab, DataTabSearch>((int)request.Id, DocConstantModelName.DATATAB, "Tabs", request);
+                    case "tag":
+                        return AddJunction<DataClass, DocEntityDataClass, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
             }
@@ -795,6 +799,8 @@ namespace Services.API
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Properties", request);
                     case "datatab":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataTab, DataTab, DataTabSearch>((int)request.Id, DocConstantModelName.DATATAB, "Tabs", request);
+                    case "tag":
+                        return RemoveJunction<DataClass, DocEntityDataClass, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataclass/{request.Id}/{request.Junction} was not found");
             }

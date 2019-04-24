@@ -115,21 +115,18 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Apps))]
+        [Field]
         public DocEntitySet<DocEntityApp> Apps { get; private set; }
 
 
         public int? AppsCount { get { return Apps.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Description))]
+        [Field]
         public string Description { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Glossary))]
+        [Field]
         [Association(PairTo = nameof(DocEntityGlossary.Page), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityGlossary> Glossary { get; private set; }
 
@@ -137,8 +134,7 @@ namespace Services.Schema
         public int? GlossaryCount { get { return Glossary.Count(); } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Help))]
+        [Field]
         [Association(PairTo = nameof(DocEntityHelp.Pages), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityHelp> Help { get; private set; }
 
@@ -147,12 +143,10 @@ namespace Services.Schema
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public string Name { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Roles))]
+        [Field]
         [Association(PairTo = nameof(DocEntityRole.Pages), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
 

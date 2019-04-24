@@ -144,10 +144,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
                 }
-                if(true == request.TagsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Tags.Any(r => r.Id.In(request.TagsIds)));
-                }
                 if(true == request.TasksIds?.Any())
                 {
                     entities = entities.Where(en => en.Tasks.Any(r => r.Id.In(request.TasksIds)));
@@ -232,7 +228,6 @@ namespace Services.API
             var pOwner = (request.Owner?.Id > 0) ? DocEntityWorkflow.GetWorkflow(request.Owner.Id) : null;
             var pScopes = request.Scopes?.ToList();
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.WORKFLOWSTATUS, request.Status?.Name, request.Status?.Id);
-            var pTags = request.Tags?.ToList();
             var pTasks = request.Tasks?.ToList();
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.WORKFLOW, request.Type?.Name, request.Type?.Id);
             var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
@@ -528,50 +523,6 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Scopes));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTags, permission, DocConstantModelName.WORKFLOW, nameof(request.Tags)))
-            {
-                if (true == pTags?.Any() )
-                {
-                    var requestedTags = pTags.Select(p => p.Id).Distinct().ToList();
-                    var existsTags = Execute.SelectAll<DocEntityTag>().Where(e => e.Id.In(requestedTags)).Select( e => e.Id ).ToList();
-                    if (existsTags.Count != requestedTags.Count)
-                    {
-                        var nonExists = requestedTags.Where(id => existsTags.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Tags with objects that do not exist. No matching Tags(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedTags.Where(id => entity.Tags.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityTag.GetTag(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Tags)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Tags)} to {nameof(Workflow)}");
-                        entity.Tags.Add(target);
-                    });
-                    var toRemove = entity.Tags.Where(e => requestedTags.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTag.GetTag(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Tags)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Tags)} from {nameof(Workflow)}");
-                        entity.Tags.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Tags.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityTag.GetTag(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Tags)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Tags)} from {nameof(Workflow)}");
-                        entity.Tags.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pTags, nameof(request.Tags)) && !request.VisibleFields.Matches(nameof(request.Tags), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Tags));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pTasks, permission, DocConstantModelName.WORKFLOW, nameof(request.Tasks)))
             {
                 if (true == pTasks?.Any() )
@@ -805,7 +756,6 @@ namespace Services.API
                     var pOwner = entity.Owner;
                     var pScopes = entity.Scopes.ToList();
                     var pStatus = entity.Status;
-                    var pTags = entity.Tags.ToList();
                     var pTasks = entity.Tasks.ToList();
                     var pType = entity.Type;
                     var pUser = entity.User;
@@ -842,11 +792,6 @@ namespace Services.API
                             foreach(var item in pScopes)
                             {
                                 entity.Scopes.Add(item);
-                            }
-
-                            foreach(var item in pTags)
-                            {
-                                entity.Tags.Add(item);
                             }
 
                             foreach(var item in pTasks)

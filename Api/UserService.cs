@@ -1352,6 +1352,8 @@ namespace Services.API
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
                     case "session":
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityUserSession, UserSession, UserSessionSearch>((int)request.Id, DocConstantModelName.USERSESSION, "Sessions", request, (ss) => HostContext.ResolveService<UserSessionService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "team":
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityTeam, Team, TeamSearch>((int)request.Id, DocConstantModelName.TEAM, "Teams", request, (ss) => HostContext.ResolveService<TeamService>(Request)?.Get(ss));
                     case "timecard":
@@ -1374,6 +1376,8 @@ namespace Services.API
                         return AddJunction<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
                     case "scope":
                         return AddJunction<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<User, DocEntityUser, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "update":
                         return AddJunction<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
                 default:
@@ -1391,6 +1395,8 @@ namespace Services.API
                         return RemoveJunction<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
                     case "scope":
                         return RemoveJunction<User, DocEntityUser, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<User, DocEntityUser, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "update":
                         return RemoveJunction<User, DocEntityUser, DocEntityUpdate, Update, UpdateSearch>((int)request.Id, DocConstantModelName.UPDATE, "Updates", request);
                 default:

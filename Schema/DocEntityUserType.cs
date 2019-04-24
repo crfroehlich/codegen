@@ -115,26 +115,22 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(PayrollStatus))]
+        [Field]
         public DocEntityLookupTable PayrollStatus { get; set; }
         public int? PayrollStatusId { get { return PayrollStatus?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(PayrollType))]
+        [Field]
         public DocEntityLookupTable PayrollType { get; set; }
         public int? PayrollTypeId { get { return PayrollType?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Users))]
+        [Field]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
 

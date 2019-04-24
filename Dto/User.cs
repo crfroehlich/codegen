@@ -322,7 +322,7 @@ namespace Services.Dto
             base(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pStatusId, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount) { }
         #region Fields
 
-        public bool? ShouldSerialize(string field)
+        public new bool? ShouldSerialize(string field)
         {
             //Allow individual classes to specify their own logic
             var manualOverride = _ShouldSerialize(field);

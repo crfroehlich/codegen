@@ -116,17 +116,14 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Country))]
         public string Country { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Language))]
         public string Language { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(TimeZone))]
         public string TimeZone { get; set; }
 
 

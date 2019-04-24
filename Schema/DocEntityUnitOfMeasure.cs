@@ -116,24 +116,20 @@ namespace Services.Schema
 
         #region Properties
         [Field(Nullable = false, DefaultValue = false)]
-        [FieldMapping(nameof(IsSI))]
         public bool IsSI { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Name))]
         public DocEntityLookupTable Name { get; set; }
         public int? NameId { get { return Name?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(Unit))]
+        [Field]
         public DocEntityLookupTable Unit { get; set; }
         public int? UnitId { get { return Unit?.Id; } private set { var noid = value; } }
 

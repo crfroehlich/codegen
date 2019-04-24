@@ -528,6 +528,8 @@ namespace Services.API
             {
                     case "lookuptable":
                         return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
             }
@@ -538,6 +540,8 @@ namespace Services.API
             {
                     case "lookuptable":
                         return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
+                    case "tag":
+                        return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
             }
@@ -549,6 +553,8 @@ namespace Services.API
             {
                     case "lookuptable":
                         return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
+                    case "tag":
+                        return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for lookupcategory/{request.Id}/{request.Junction} was not found");
             }

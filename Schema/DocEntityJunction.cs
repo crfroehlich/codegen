@@ -115,8 +115,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field()]
-        [FieldMapping(nameof(Children))]
+        [Field]
         [Association(PairTo = nameof(DocEntityJunction.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityJunction> Children { get; private set; }
 
@@ -125,44 +124,36 @@ namespace Services.Schema
 
 
         [Field(Length = int.MaxValue)]
-        [FieldMapping(nameof(Data))]
         public string Data { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(OwnerId))]
+        [Field]
         public int? OwnerId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(OwnerType))]
+        [Field]
         public string OwnerType { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(Parent))]
+        [Field]
         public DocEntityJunction Parent { get; set; }
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
 
-        [Field()]
-        [FieldMapping(nameof(TargetId))]
+        [Field]
         public int? TargetId { get; set; }
 
 
-        [Field()]
-        [FieldMapping(nameof(TargetType))]
+        [Field]
         public string TargetType { get; set; }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(Type))]
         public DocEntityLookupTable Type { get; set; }
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false)]
-        [FieldMapping(nameof(User))]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
