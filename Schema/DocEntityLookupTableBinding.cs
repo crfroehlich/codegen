@@ -42,7 +42,6 @@ using Xtensive.Orm.Model;
 using Attribute = Services.Dto.Attribute;
 using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
-
 namespace Services.Schema
 {
     [TableMapping(DocConstantModelName.LOOKUPTABLEBINDING)]
