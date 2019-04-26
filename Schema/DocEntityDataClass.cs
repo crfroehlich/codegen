@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityDataClass() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new DataClass());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DataClass()));
 
         #region Static Members
         public static DocEntityDataClass GetDataClass(Reference reference)
@@ -211,7 +197,6 @@ namespace Services.Schema
         public int? TabsCount { get { return Tabs.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -229,7 +214,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -335,59 +319,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityDataClass, bool>> DataClassIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class DataClassMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityDataClass,DataClass> _EntityToDto;
-        protected IMappingExpression<DataClass,DocEntityDataClass> _DtoToEntity;
-
-        public DataClassMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityDataClass>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityDataClass,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityDataClass>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDataClass.GetDataClass(c));
-            _EntityToDto = CreateMap<DocEntityDataClass,DataClass>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, "Updated")))
-                .ForMember(dest => dest.AllowDelete, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.AllowDelete))))
-                .ForMember(dest => dest.AllVisibleFieldsByDefault, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.AllVisibleFieldsByDefault))))
-                .ForMember(dest => dest.CacheDuration, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CacheDuration))))
-                .ForMember(dest => dest.ClassId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.ClassId))))
-                .ForMember(dest => dest.CustomCollections, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomCollections))))
-                .ForMember(dest => dest.CustomCollectionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.CustomCollectionsCount))))
-                .ForMember(dest => dest.DELETE, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DELETE))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Description))))
-                .ForMember(dest => dest.DontFlattenProperties, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DontFlattenProperties))))
-                .ForMember(dest => dest.DontFlattenPropertiesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DontFlattenPropertiesCount))))
-                .ForMember(dest => dest.DtoSuffix, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.DtoSuffix))))
-                .ForMember(dest => dest.FlattenReferences, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.FlattenReferences))))
-                .ForMember(dest => dest.GET, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.GET))))
-                .ForMember(dest => dest.IgnoreProps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnoreProps))))
-                .ForMember(dest => dest.IgnorePropsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IgnorePropsCount))))
-                .ForMember(dest => dest.IsInsertOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsInsertOnly))))
-                .ForMember(dest => dest.IsReadOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.IsReadOnly))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Name))))
-                .ForMember(dest => dest.PATCH, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.PATCH))))
-                .ForMember(dest => dest.POST, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.POST))))
-                .ForMember(dest => dest.Properties, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Properties))))
-                .ForMember(dest => dest.PropertiesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.PropertiesCount))))
-                .ForMember(dest => dest.PUT, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.PUT))))
-                .ForMember(dest => dest.Tabs, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.Tabs))))
-                .ForMember(dest => dest.TabsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataClass>(c, nameof(DocEntityDataClass.TabsCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<DataClass,DocEntityDataClass>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

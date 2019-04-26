@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityAttribute() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Attribute());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Attribute()));
 
         #region Static Members
         public static DocEntityAttribute GetAttribute(Reference reference)
@@ -150,7 +136,6 @@ namespace Services.Schema
         public int? ValueTypeId { get { return ValueType?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -168,7 +153,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -280,46 +264,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityAttribute, bool>> AttributeIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class AttributeMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityAttribute,Attribute> _EntityToDto;
-        protected IMappingExpression<Attribute,DocEntityAttribute> _DtoToEntity;
-
-        public AttributeMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityAttribute>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityAttribute,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityAttribute>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityAttribute.GetAttribute(c));
-            _EntityToDto = CreateMap<DocEntityAttribute,Attribute>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, "Updated")))
-                .ForMember(dest => dest.AttributeName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.AttributeName))))
-                .ForMember(dest => dest.AttributeNameId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.AttributeNameId))))
-                .ForMember(dest => dest.AttributeType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.AttributeType))))
-                .ForMember(dest => dest.AttributeTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.AttributeTypeId))))
-                .ForMember(dest => dest.Interval, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.Interval))))
-                .ForMember(dest => dest.IntervalId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.IntervalId))))
-                .ForMember(dest => dest.IsCharacteristic, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.IsCharacteristic))))
-                .ForMember(dest => dest.IsOutcome, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.IsOutcome))))
-                .ForMember(dest => dest.IsPositive, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.IsPositive))))
-                .ForMember(dest => dest.UniqueKey, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.UniqueKey))))
-                .ForMember(dest => dest.ValueType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.ValueType))))
-                .ForMember(dest => dest.ValueTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Attribute>(c, nameof(DocEntityAttribute.ValueTypeId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Attribute,DocEntityAttribute>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

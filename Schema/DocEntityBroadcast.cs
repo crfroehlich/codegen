@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityBroadcast() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Broadcast());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Broadcast()));
 
         #region Static Members
         public static DocEntityBroadcast GetBroadcast(Reference reference)
@@ -152,7 +138,6 @@ namespace Services.Schema
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -170,7 +155,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -278,46 +262,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityBroadcast, bool>> BroadcastIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class BroadcastMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityBroadcast,Broadcast> _EntityToDto;
-        protected IMappingExpression<Broadcast,DocEntityBroadcast> _DtoToEntity;
-
-        public BroadcastMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityBroadcast>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityBroadcast,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityBroadcast>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityBroadcast.GetBroadcast(c));
-            _EntityToDto = CreateMap<DocEntityBroadcast,Broadcast>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, "Updated")))
-                .ForMember(dest => dest.App, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.App))))
-                .ForMember(dest => dest.AppId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.AppId))))
-                .ForMember(dest => dest.ConfluenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.ConfluenceId))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Name))))
-                .ForMember(dest => dest.Reprocess, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Reprocess))))
-                .ForMember(dest => dest.Reprocessed, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Reprocessed))))
-                .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Scopes))))
-                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.ScopesCount))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Status))))
-                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.StatusId))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.TypeId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Broadcast,DocEntityBroadcast>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityDataTab() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new DataTab());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DataTab()));
 
         #region Static Members
         public static DocEntityDataTab GetDataTab(Reference reference)
@@ -131,7 +117,6 @@ namespace Services.Schema
         public int Order { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -149,7 +134,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -234,39 +218,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityDataTab, bool>> DataTabIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class DataTabMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityDataTab,DataTab> _EntityToDto;
-        protected IMappingExpression<DataTab,DocEntityDataTab> _DtoToEntity;
-
-        public DataTabMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityDataTab>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityDataTab,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityDataTab>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDataTab.GetDataTab(c));
-            _EntityToDto = CreateMap<DocEntityDataTab,DataTab>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataTab>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataTab>(c, "Updated")))
-                .ForMember(dest => dest.Class, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataTab>(c, nameof(DocEntityDataTab.Class))))
-                .ForMember(dest => dest.ClassId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataTab>(c, nameof(DocEntityDataTab.ClassId))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataTab>(c, nameof(DocEntityDataTab.Description))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataTab>(c, nameof(DocEntityDataTab.Name))))
-                .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataTab>(c, nameof(DocEntityDataTab.Order))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<DataTab,DocEntityDataTab>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

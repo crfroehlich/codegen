@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityUser() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new User());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new User()));
 
         #region Static Members
         public static DocEntityUser GetUser(Reference reference)
@@ -284,7 +270,6 @@ namespace Services.Schema
         public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -302,7 +287,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -430,80 +414,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityUser, bool>> UserIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class UserMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityUser,User> _EntityToDto;
-        protected IMappingExpression<User,DocEntityUser> _DtoToEntity;
-
-        public UserMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityUser>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityUser,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityUser>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityUser.GetUser(c));
-            _EntityToDto = CreateMap<DocEntityUser,User>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, "Updated")))
-                .ForMember(dest => dest.ClientDepartment, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.ClientDepartment))))
-                .ForMember(dest => dest.Division, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Division))))
-                .ForMember(dest => dest.DivisionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.DivisionId))))
-                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.DocumentSets))))
-                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.DocumentSetsCount))))
-                .ForMember(dest => dest.Email, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Email))))
-                .ForMember(dest => dest.ExpireDate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.ExpireDate))))
-                .ForMember(dest => dest.FailedLoginCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.FailedLoginCount))))
-                .ForMember(dest => dest.FirstName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.FirstName))))
-                .ForMember(dest => dest.Gravatar, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Gravatar))))
-                .ForMember(dest => dest.History, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.History))))
-                .ForMember(dest => dest.HistoryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.HistoryCount))))
-                .ForMember(dest => dest.Impersonated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Impersonated))))
-                .ForMember(dest => dest.ImpersonatedCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.ImpersonatedCount))))
-                .ForMember(dest => dest.Impersonating, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Impersonating))))
-                .ForMember(dest => dest.ImpersonatingCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.ImpersonatingCount))))
-                .ForMember(dest => dest.IsSystemUser, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.IsSystemUser))))
-                .ForMember(dest => dest.JobTitle, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.JobTitle))))
-                .ForMember(dest => dest.LastLogin, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.LastLogin))))
-                .ForMember(dest => dest.LastName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.LastName))))
-                .ForMember(dest => dest.LegacyUsername, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.LegacyUsername))))
-                .ForMember(dest => dest.Locale, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Locale))))
-                .ForMember(dest => dest.LocaleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.LocaleId))))
-                .ForMember(dest => dest.LoginCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.LoginCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Name))))
-                .ForMember(dest => dest.Roles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Roles))))
-                .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.RolesCount))))
-                .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Scopes))))
-                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.ScopesCount))))
-                .ForMember(dest => dest.Sessions, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Sessions))))
-                .ForMember(dest => dest.SessionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.SessionsCount))))
-                .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Settings))))
-                .ForMember(dest => dest.Slack, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Slack))))
-                .ForMember(dest => dest.StartDate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.StartDate))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Status))))
-                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.StatusId))))
-                .ForMember(dest => dest.Teams, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Teams))))
-                .ForMember(dest => dest.TeamsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.TeamsCount))))
-                .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.TimeCards))))
-                .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.TimeCardsCount))))
-                .ForMember(dest => dest.Updates, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Updates))))
-                .ForMember(dest => dest.UpdatesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.UpdatesCount))))
-                .ForMember(dest => dest.UserType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.UserType))))
-                .ForMember(dest => dest.UserTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.UserTypeId))))
-                .ForMember(dest => dest.Workflows, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Workflows))))
-                .ForMember(dest => dest.WorkflowsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.WorkflowsCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<User,DocEntityUser>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

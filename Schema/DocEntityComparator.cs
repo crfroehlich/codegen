@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityComparator() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Comparator());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Comparator()));
 
         #region Static Members
         public static DocEntityComparator GetComparator(Reference reference)
@@ -129,7 +115,6 @@ namespace Services.Schema
         public string URI { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -147,7 +132,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -227,38 +211,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityComparator, bool>> ComparatorIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class ComparatorMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityComparator,Comparator> _EntityToDto;
-        protected IMappingExpression<Comparator,DocEntityComparator> _DtoToEntity;
-
-        public ComparatorMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityComparator>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityComparator,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityComparator>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityComparator.GetComparator(c));
-            _EntityToDto = CreateMap<DocEntityComparator,Comparator>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, "Updated")))
-                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, nameof(DocEntityComparator.DocumentSets))))
-                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, nameof(DocEntityComparator.DocumentSetsCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, nameof(DocEntityComparator.Name))))
-                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Comparator>(c, nameof(DocEntityComparator.URI))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Comparator,DocEntityComparator>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

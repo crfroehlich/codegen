@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityInterval() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Interval());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Interval()));
 
         #region Static Members
         public static DocEntityInterval GetInterval(Reference reference)
@@ -138,7 +124,6 @@ namespace Services.Schema
         public int? TimeOfDayId { get { return TimeOfDay?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -156,7 +141,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -231,43 +215,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityInterval, bool>> IntervalIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class IntervalMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityInterval,Interval> _EntityToDto;
-        protected IMappingExpression<Interval,DocEntityInterval> _DtoToEntity;
-
-        public IntervalMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityInterval>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityInterval,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityInterval>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityInterval.GetInterval(c));
-            _EntityToDto = CreateMap<DocEntityInterval,Interval>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, "Updated")))
-                .ForMember(dest => dest.CalendarDateEnd, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.CalendarDateEnd))))
-                .ForMember(dest => dest.CalendarDateEndId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.CalendarDateEndId))))
-                .ForMember(dest => dest.CalendarDateStart, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.CalendarDateStart))))
-                .ForMember(dest => dest.CalendarDateStartId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.CalendarDateStartId))))
-                .ForMember(dest => dest.CalendarType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.CalendarType))))
-                .ForMember(dest => dest.FollowUp, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.FollowUp))))
-                .ForMember(dest => dest.FollowUpId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.FollowUpId))))
-                .ForMember(dest => dest.TimeOfDay, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.TimeOfDay))))
-                .ForMember(dest => dest.TimeOfDayId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Interval>(c, nameof(DocEntityInterval.TimeOfDayId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Interval,DocEntityInterval>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

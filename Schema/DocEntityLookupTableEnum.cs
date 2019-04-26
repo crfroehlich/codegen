@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityLookupTableEnum() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new LookupTableEnum());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new LookupTableEnum()));
 
         #region Static Members
         public static DocEntityLookupTableEnum GetLookupTableEnum(Reference reference)
@@ -126,7 +112,6 @@ namespace Services.Schema
         public string Name { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -144,7 +129,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -233,37 +217,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityLookupTableEnum, bool>> LookupTableEnumIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class LookupTableEnumMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityLookupTableEnum,LookupTableEnum> _EntityToDto;
-        protected IMappingExpression<LookupTableEnum,DocEntityLookupTableEnum> _DtoToEntity;
-
-        public LookupTableEnumMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityLookupTableEnum>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityLookupTableEnum,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityLookupTableEnum>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityLookupTableEnum.GetLookupTableEnum(c));
-            _EntityToDto = CreateMap<DocEntityLookupTableEnum,LookupTableEnum>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableEnum>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableEnum>(c, "Updated")))
-                .ForMember(dest => dest.IsBindable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableEnum>(c, nameof(DocEntityLookupTableEnum.IsBindable))))
-                .ForMember(dest => dest.IsGlobal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableEnum>(c, nameof(DocEntityLookupTableEnum.IsGlobal))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableEnum>(c, nameof(DocEntityLookupTableEnum.Name))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<LookupTableEnum,DocEntityLookupTableEnum>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityStudyDesign() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new StudyDesign());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new StudyDesign()));
 
         #region Static Members
         public static DocEntityStudyDesign GetStudyDesign(Reference reference)
@@ -119,7 +105,6 @@ namespace Services.Schema
         public int? DesignId { get { return Design?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -137,7 +122,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -224,36 +208,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityStudyDesign, bool>> StudyDesignIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class StudyDesignMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityStudyDesign,StudyDesign> _EntityToDto;
-        protected IMappingExpression<StudyDesign,DocEntityStudyDesign> _DtoToEntity;
-
-        public StudyDesignMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityStudyDesign>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityStudyDesign,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityStudyDesign>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityStudyDesign.GetStudyDesign(c));
-            _EntityToDto = CreateMap<DocEntityStudyDesign,StudyDesign>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StudyDesign>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StudyDesign>(c, "Updated")))
-                .ForMember(dest => dest.Design, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StudyDesign>(c, nameof(DocEntityStudyDesign.Design))))
-                .ForMember(dest => dest.DesignId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StudyDesign>(c, nameof(DocEntityStudyDesign.DesignId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<StudyDesign,DocEntityStudyDesign>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

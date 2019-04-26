@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityMeanVariances() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new MeanVariances());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new MeanVariances()));
 
         #region Static Members
         public static DocEntityMeanVariances GetMeanVariances(Reference reference)
@@ -122,7 +108,6 @@ namespace Services.Schema
         public int? VariancesCount { get { return Variances.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -140,7 +125,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -215,36 +199,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityMeanVariances, bool>> MeanVariancesIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class MeanVariancesMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityMeanVariances,MeanVariances> _EntityToDto;
-        protected IMappingExpression<MeanVariances,DocEntityMeanVariances> _DtoToEntity;
-
-        public MeanVariancesMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityMeanVariances>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityMeanVariances,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityMeanVariances>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityMeanVariances.GetMeanVariances(c));
-            _EntityToDto = CreateMap<DocEntityMeanVariances,MeanVariances>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVariances>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVariances>(c, "Updated")))
-                .ForMember(dest => dest.Variances, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVariances>(c, nameof(DocEntityMeanVariances.Variances))))
-                .ForMember(dest => dest.VariancesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVariances>(c, nameof(DocEntityMeanVariances.VariancesCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<MeanVariances,DocEntityMeanVariances>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

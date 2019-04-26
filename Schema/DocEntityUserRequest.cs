@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityUserRequest() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new UserRequest());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UserRequest()));
 
         #region Static Members
         public static DocEntityUserRequest GetUserRequest(Reference reference)
@@ -141,7 +127,6 @@ namespace Services.Schema
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -159,7 +144,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -240,43 +224,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityUserRequest, bool>> UserRequestIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class UserRequestMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityUserRequest,UserRequest> _EntityToDto;
-        protected IMappingExpression<UserRequest,DocEntityUserRequest> _DtoToEntity;
-
-        public UserRequestMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityUserRequest>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityUserRequest,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityUserRequest>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityUserRequest.GetUserRequest(c));
-            _EntityToDto = CreateMap<DocEntityUserRequest,UserRequest>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, "Updated")))
-                .ForMember(dest => dest.App, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.App))))
-                .ForMember(dest => dest.AppId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.AppId))))
-                .ForMember(dest => dest.Method, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.Method))))
-                .ForMember(dest => dest.Page, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.Page))))
-                .ForMember(dest => dest.PageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.PageId))))
-                .ForMember(dest => dest.Path, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.Path))))
-                .ForMember(dest => dest.URL, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.URL))))
-                .ForMember(dest => dest.UserSession, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.UserSession))))
-                .ForMember(dest => dest.UserSessionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserRequest>(c, nameof(DocEntityUserRequest.UserSessionId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<UserRequest,DocEntityUserRequest>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

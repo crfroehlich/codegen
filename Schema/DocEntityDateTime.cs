@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityDateTime() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new DateTimeDto());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DateTimeDto()));
 
         #region Static Members
         public static DocEntityDateTime GetDateTime(Reference reference)
@@ -130,7 +116,6 @@ namespace Services.Schema
         public int? DateYear { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -148,7 +133,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -223,38 +207,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityDateTime, bool>> DateTimeIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class DateTimeDtoMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityDateTime,DateTimeDto> _EntityToDto;
-        protected IMappingExpression<DateTimeDto,DocEntityDateTime> _DtoToEntity;
-
-        public DateTimeDtoMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityDateTime>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityDateTime,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityDateTime>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDateTime.GetDateTime(c));
-            _EntityToDto = CreateMap<DocEntityDateTime,DateTimeDto>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, "Updated")))
-                .ForMember(dest => dest.DateDay, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, nameof(DocEntityDateTime.DateDay))))
-                .ForMember(dest => dest.DateMonth, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, nameof(DocEntityDateTime.DateMonth))))
-                .ForMember(dest => dest.DateTime, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, nameof(DocEntityDateTime.DateTime))))
-                .ForMember(dest => dest.DateYear, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, nameof(DocEntityDateTime.DateYear))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<DateTimeDto,DocEntityDateTime>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

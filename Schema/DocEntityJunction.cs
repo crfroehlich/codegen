@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityJunction() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Junction());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Junction()));
 
         #region Static Members
         public static DocEntityJunction GetJunction(Reference reference)
@@ -157,7 +143,6 @@ namespace Services.Schema
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -175,7 +160,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -275,47 +259,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityJunction, bool>> JunctionIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class JunctionMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityJunction,Junction> _EntityToDto;
-        protected IMappingExpression<Junction,DocEntityJunction> _DtoToEntity;
-
-        public JunctionMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityJunction>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityJunction,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityJunction>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityJunction.GetJunction(c));
-            _EntityToDto = CreateMap<DocEntityJunction,Junction>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, "Updated")))
-                .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.Children))))
-                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.ChildrenCount))))
-                .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.Data))))
-                .ForMember(dest => dest.OwnerId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.OwnerId))))
-                .ForMember(dest => dest.OwnerType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.OwnerType))))
-                .ForMember(dest => dest.Parent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.Parent))))
-                .ForMember(dest => dest.ParentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.ParentId))))
-                .ForMember(dest => dest.TargetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.TargetId))))
-                .ForMember(dest => dest.TargetType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.TargetType))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.TypeId))))
-                .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.User))))
-                .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.UserId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Junction,DocEntityJunction>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

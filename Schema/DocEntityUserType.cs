@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityUserType() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new UserType());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UserType()));
 
         #region Static Members
         public static DocEntityUserType GetUserType(Reference reference)
@@ -136,7 +122,6 @@ namespace Services.Schema
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -154,7 +139,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -251,42 +235,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityUserType, bool>> UserTypeIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class UserTypeMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityUserType,UserType> _EntityToDto;
-        protected IMappingExpression<UserType,DocEntityUserType> _DtoToEntity;
-
-        public UserTypeMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityUserType>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityUserType,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityUserType>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityUserType.GetUserType(c));
-            _EntityToDto = CreateMap<DocEntityUserType,UserType>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, "Updated")))
-                .ForMember(dest => dest.PayrollStatus, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.PayrollStatus))))
-                .ForMember(dest => dest.PayrollStatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.PayrollStatusId))))
-                .ForMember(dest => dest.PayrollType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.PayrollType))))
-                .ForMember(dest => dest.PayrollTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.PayrollTypeId))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.TypeId))))
-                .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.Users))))
-                .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UserType>(c, nameof(DocEntityUserType.UsersCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<UserType,DocEntityUserType>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

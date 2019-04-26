@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityStats() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Stats());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Stats()));
 
         #region Static Members
         public static DocEntityStats GetStats(Reference reference)
@@ -140,7 +126,6 @@ namespace Services.Schema
         public int? StudySetStatsId { get { return StudySetStats?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -158,7 +143,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -248,42 +232,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityStats, bool>> StatsIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class StatsMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityStats,Stats> _EntityToDto;
-        protected IMappingExpression<Stats,DocEntityStats> _DtoToEntity;
-
-        public StatsMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityStats>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityStats,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityStats>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityStats.GetStats(c));
-            _EntityToDto = CreateMap<DocEntityStats,Stats>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, "Updated")))
-                .ForMember(dest => dest.App, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, nameof(DocEntityStats.App))))
-                .ForMember(dest => dest.AppId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, nameof(DocEntityStats.AppId))))
-                .ForMember(dest => dest.ExternalId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, nameof(DocEntityStats.ExternalId))))
-                .ForMember(dest => dest.ExternalType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, nameof(DocEntityStats.ExternalType))))
-                .ForMember(dest => dest.ObjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, nameof(DocEntityStats.ObjectId))))
-                .ForMember(dest => dest.ObjectType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, nameof(DocEntityStats.ObjectType))))
-                .ForMember(dest => dest.StudySetStats, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, nameof(DocEntityStats.StudySetStats))))
-                .ForMember(dest => dest.StudySetStatsId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Stats>(c, nameof(DocEntityStats.StudySetStatsId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Stats,DocEntityStats>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

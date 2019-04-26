@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityValueType() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new ValueType());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new ValueType()));
 
         #region Static Members
         public static DocEntityValueType GetValueType(Reference reference)
@@ -124,7 +110,6 @@ namespace Services.Schema
         public int? NameId { get { return Name?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -142,7 +127,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -234,38 +218,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityValueType, bool>> ValueTypeIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class ValueTypeMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityValueType,ValueType> _EntityToDto;
-        protected IMappingExpression<ValueType,DocEntityValueType> _DtoToEntity;
-
-        public ValueTypeMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityValueType>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityValueType,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityValueType>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityValueType.GetValueType(c));
-            _EntityToDto = CreateMap<DocEntityValueType,ValueType>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ValueType>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ValueType>(c, "Updated")))
-                .ForMember(dest => dest.FieldType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ValueType>(c, nameof(DocEntityValueType.FieldType))))
-                .ForMember(dest => dest.FieldTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ValueType>(c, nameof(DocEntityValueType.FieldTypeId))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ValueType>(c, nameof(DocEntityValueType.Name))))
-                .ForMember(dest => dest.NameId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ValueType>(c, nameof(DocEntityValueType.NameId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<ValueType,DocEntityValueType>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

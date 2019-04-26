@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityOutcome() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Outcome());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Outcome()));
 
         #region Static Members
         public static DocEntityOutcome GetOutcome(Reference reference)
@@ -129,7 +115,6 @@ namespace Services.Schema
         public string URI { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -147,7 +132,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -227,38 +211,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityOutcome, bool>> OutcomeIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class OutcomeMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityOutcome,Outcome> _EntityToDto;
-        protected IMappingExpression<Outcome,DocEntityOutcome> _DtoToEntity;
-
-        public OutcomeMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityOutcome>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityOutcome,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityOutcome>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityOutcome.GetOutcome(c));
-            _EntityToDto = CreateMap<DocEntityOutcome,Outcome>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, "Updated")))
-                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.DocumentSets))))
-                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.DocumentSetsCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.Name))))
-                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Outcome>(c, nameof(DocEntityOutcome.URI))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Outcome,DocEntityOutcome>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

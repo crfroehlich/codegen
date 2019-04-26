@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityLookupTableBinding() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new LookupTableBinding());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new LookupTableBinding()));
 
         #region Static Members
         public static DocEntityLookupTableBinding GetLookupTableBinding(Reference reference)
@@ -148,7 +134,6 @@ namespace Services.Schema
         public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -166,7 +151,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -258,44 +242,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityLookupTableBinding, bool>> LookupTableBindingIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class LookupTableBindingMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityLookupTableBinding,LookupTableBinding> _EntityToDto;
-        protected IMappingExpression<LookupTableBinding,DocEntityLookupTableBinding> _DtoToEntity;
-
-        public LookupTableBindingMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityLookupTableBinding>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityLookupTableBinding,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityLookupTableBinding>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityLookupTableBinding.GetLookupTableBinding(c));
-            _EntityToDto = CreateMap<DocEntityLookupTableBinding,LookupTableBinding>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, "Updated")))
-                .ForMember(dest => dest.Binding, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.Binding))))
-                .ForMember(dest => dest.BoundName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.BoundName))))
-                .ForMember(dest => dest.LookupTable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.LookupTable))))
-                .ForMember(dest => dest.LookupTableId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.LookupTableId))))
-                .ForMember(dest => dest.Scope, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.Scope))))
-                .ForMember(dest => dest.ScopeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.ScopeId))))
-                .ForMember(dest => dest.Synonyms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.Synonyms))))
-                .ForMember(dest => dest.SynonymsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.SynonymsCount))))
-                .ForMember(dest => dest.Workflows, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.Workflows))))
-                .ForMember(dest => dest.WorkflowsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, nameof(DocEntityLookupTableBinding.WorkflowsCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<LookupTableBinding,DocEntityLookupTableBinding>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

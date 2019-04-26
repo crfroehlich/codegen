@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityTermMaster() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new TermMaster());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TermMaster()));
 
         #region Static Members
         public static DocEntityTermMaster GetTermMaster(Reference reference)
@@ -166,7 +152,6 @@ namespace Services.Schema
         public string URI { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -184,7 +169,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -282,48 +266,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityTermMaster, bool>> TermMasterIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class TermMasterMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityTermMaster,TermMaster> _EntityToDto;
-        protected IMappingExpression<TermMaster,DocEntityTermMaster> _DtoToEntity;
-
-        public TermMasterMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityTermMaster>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityTermMaster,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityTermMaster>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityTermMaster.GetTermMaster(c));
-            _EntityToDto = CreateMap<DocEntityTermMaster,TermMaster>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, "Updated")))
-                .ForMember(dest => dest.BioPortal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.BioPortal))))
-                .ForMember(dest => dest.Categories, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.Categories))))
-                .ForMember(dest => dest.CategoriesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.CategoriesCount))))
-                .ForMember(dest => dest.CUI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.CUI))))
-                .ForMember(dest => dest.Enum, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.Enum))))
-                .ForMember(dest => dest.EnumId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.EnumId))))
-                .ForMember(dest => dest.MedDRA, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.MedDRA))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.Name))))
-                .ForMember(dest => dest.RxNorm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.RxNorm))))
-                .ForMember(dest => dest.SNOWMED, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.SNOWMED))))
-                .ForMember(dest => dest.Synonyms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.Synonyms))))
-                .ForMember(dest => dest.SynonymsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.SynonymsCount))))
-                .ForMember(dest => dest.TUI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.TUI))))
-                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermMaster>(c, nameof(DocEntityTermMaster.URI))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<TermMaster,DocEntityTermMaster>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

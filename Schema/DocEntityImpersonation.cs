@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityImpersonation() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Impersonation());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Impersonation()));
 
         #region Static Members
         public static DocEntityImpersonation GetImpersonation(Reference reference)
@@ -129,7 +115,6 @@ namespace Services.Schema
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -147,7 +132,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -231,40 +215,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityImpersonation, bool>> ImpersonationIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class ImpersonationMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityImpersonation,Impersonation> _EntityToDto;
-        protected IMappingExpression<Impersonation,DocEntityImpersonation> _DtoToEntity;
-
-        public ImpersonationMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityImpersonation>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityImpersonation,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityImpersonation>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityImpersonation.GetImpersonation(c));
-            _EntityToDto = CreateMap<DocEntityImpersonation,Impersonation>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, "Updated")))
-                .ForMember(dest => dest.AuthenticatedUser, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, nameof(DocEntityImpersonation.AuthenticatedUser))))
-                .ForMember(dest => dest.AuthenticatedUserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, nameof(DocEntityImpersonation.AuthenticatedUserId))))
-                .ForMember(dest => dest.ImpersonatedUser, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, nameof(DocEntityImpersonation.ImpersonatedUser))))
-                .ForMember(dest => dest.ImpersonatedUserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, nameof(DocEntityImpersonation.ImpersonatedUserId))))
-                .ForMember(dest => dest.UserSession, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, nameof(DocEntityImpersonation.UserSession))))
-                .ForMember(dest => dest.UserSessionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, nameof(DocEntityImpersonation.UserSessionId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Impersonation,DocEntityImpersonation>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

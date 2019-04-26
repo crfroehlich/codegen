@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityWorkflowComment() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new WorkflowComment());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new WorkflowComment()));
 
         #region Static Members
         public static DocEntityWorkflowComment GetWorkflowComment(Reference reference)
@@ -141,7 +127,6 @@ namespace Services.Schema
         public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -159,7 +144,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -250,43 +234,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityWorkflowComment, bool>> WorkflowCommentIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class WorkflowCommentMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityWorkflowComment,WorkflowComment> _EntityToDto;
-        protected IMappingExpression<WorkflowComment,DocEntityWorkflowComment> _DtoToEntity;
-
-        public WorkflowCommentMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityWorkflowComment>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityWorkflowComment,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityWorkflowComment>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityWorkflowComment.GetWorkflowComment(c));
-            _EntityToDto = CreateMap<DocEntityWorkflowComment,WorkflowComment>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, "Updated")))
-                .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.Children))))
-                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.ChildrenCount))))
-                .ForMember(dest => dest.Parent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.Parent))))
-                .ForMember(dest => dest.ParentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.ParentId))))
-                .ForMember(dest => dest.Text, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.Text))))
-                .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.User))))
-                .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.UserId))))
-                .ForMember(dest => dest.Workflow, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.Workflow))))
-                .ForMember(dest => dest.WorkflowId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowComment>(c, nameof(DocEntityWorkflowComment.WorkflowId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<WorkflowComment,DocEntityWorkflowComment>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

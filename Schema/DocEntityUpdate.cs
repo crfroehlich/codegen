@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityUpdate() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Update());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Update()));
 
         #region Static Members
         public static DocEntityUpdate GetUpdate(Reference reference)
@@ -168,7 +154,6 @@ namespace Services.Schema
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -186,7 +171,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -262,49 +246,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityUpdate, bool>> UpdateIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class UpdateMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityUpdate,Update> _EntityToDto;
-        protected IMappingExpression<Update,DocEntityUpdate> _DtoToEntity;
-
-        public UpdateMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityUpdate>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityUpdate,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityUpdate>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityUpdate.GetUpdate(c));
-            _EntityToDto = CreateMap<DocEntityUpdate,Update>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, "Updated")))
-                .ForMember(dest => dest.Body, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Body))))
-                .ForMember(dest => dest.DeliveryStatus, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.DeliveryStatus))))
-                .ForMember(dest => dest.EmailAttempts, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.EmailAttempts))))
-                .ForMember(dest => dest.EmailSent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.EmailSent))))
-                .ForMember(dest => dest.Events, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Events))))
-                .ForMember(dest => dest.EventsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.EventsCount))))
-                .ForMember(dest => dest.Link, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Link))))
-                .ForMember(dest => dest.Priority, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Priority))))
-                .ForMember(dest => dest.Read, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Read))))
-                .ForMember(dest => dest.SlackSent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.SlackSent))))
-                .ForMember(dest => dest.Subject, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Subject))))
-                .ForMember(dest => dest.Team, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Team))))
-                .ForMember(dest => dest.TeamId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.TeamId))))
-                .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.User))))
-                .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.UserId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Update,DocEntityUpdate>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

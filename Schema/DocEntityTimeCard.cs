@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityTimeCard() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new TimeCard());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TimeCard()));
 
         #region Static Members
         public static DocEntityTimeCard GetTimeCard(Reference reference)
@@ -155,7 +141,6 @@ namespace Services.Schema
         public int? WorkTypeId { get { return WorkType?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -173,7 +158,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -272,48 +256,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityTimeCard, bool>> TimeCardIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class TimeCardMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityTimeCard,TimeCard> _EntityToDto;
-        protected IMappingExpression<TimeCard,DocEntityTimeCard> _DtoToEntity;
-
-        public TimeCardMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityTimeCard>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityTimeCard,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityTimeCard>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityTimeCard.GetTimeCard(c));
-            _EntityToDto = CreateMap<DocEntityTimeCard,TimeCard>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, "Updated")))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Description))))
-                .ForMember(dest => dest.Document, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Document))))
-                .ForMember(dest => dest.DocumentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.DocumentId))))
-                .ForMember(dest => dest.End, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.End))))
-                .ForMember(dest => dest.Project, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Project))))
-                .ForMember(dest => dest.ProjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ProjectId))))
-                .ForMember(dest => dest.ReferenceId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.ReferenceId))))
-                .ForMember(dest => dest.Start, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Start))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.Status))))
-                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.StatusId))))
-                .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.User))))
-                .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.UserId))))
-                .ForMember(dest => dest.WorkType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.WorkType))))
-                .ForMember(dest => dest.WorkTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimeCard>(c, nameof(DocEntityTimeCard.WorkTypeId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<TimeCard,DocEntityTimeCard>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

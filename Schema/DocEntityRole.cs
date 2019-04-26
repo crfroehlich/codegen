@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityRole() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Role());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Role()));
 
         #region Static Members
         public static DocEntityRole GetRole(Reference reference)
@@ -173,7 +159,6 @@ namespace Services.Schema
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -191,7 +176,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -281,50 +265,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityRole, bool>> RoleIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class RoleMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityRole,Role> _EntityToDto;
-        protected IMappingExpression<Role,DocEntityRole> _DtoToEntity;
-
-        public RoleMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityRole>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityRole,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityRole>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityRole.GetRole(c));
-            _EntityToDto = CreateMap<DocEntityRole,Role>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, "Updated")))
-                .ForMember(dest => dest.AdminTeam, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.AdminTeam))))
-                .ForMember(dest => dest.AdminTeamId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.AdminTeamId))))
-                .ForMember(dest => dest.Apps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Apps))))
-                .ForMember(dest => dest.AppsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.AppsCount))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Description))))
-                .ForMember(dest => dest.Features, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Features))))
-                .ForMember(dest => dest.FeatureSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.FeatureSets))))
-                .ForMember(dest => dest.FeatureSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.FeatureSetsCount))))
-                .ForMember(dest => dest.IsInternal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.IsInternal))))
-                .ForMember(dest => dest.IsSuperAdmin, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.IsSuperAdmin))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Name))))
-                .ForMember(dest => dest.Pages, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Pages))))
-                .ForMember(dest => dest.PagesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.PagesCount))))
-                .ForMember(dest => dest.Permissions, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Permissions))))
-                .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.Users))))
-                .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Role>(c, nameof(DocEntityRole.UsersCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Role,DocEntityRole>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

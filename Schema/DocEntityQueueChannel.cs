@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityQueueChannel() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new QueueChannel());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new QueueChannel()));
 
         #region Static Members
         public static DocEntityQueueChannel GetQueueChannel(Reference reference)
@@ -143,7 +129,6 @@ namespace Services.Schema
         public string Name { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -161,7 +146,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -261,42 +245,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityQueueChannel, bool>> QueueChannelIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class QueueChannelMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityQueueChannel,QueueChannel> _EntityToDto;
-        protected IMappingExpression<QueueChannel,DocEntityQueueChannel> _DtoToEntity;
-
-        public QueueChannelMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityQueueChannel>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityQueueChannel,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityQueueChannel>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityQueueChannel.GetQueueChannel(c));
-            _EntityToDto = CreateMap<DocEntityQueueChannel,QueueChannel>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, "Updated")))
-                .ForMember(dest => dest.AutoDelete, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, nameof(DocEntityQueueChannel.AutoDelete))))
-                .ForMember(dest => dest.BackgroundTask, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, nameof(DocEntityQueueChannel.BackgroundTask))))
-                .ForMember(dest => dest.BackgroundTaskId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, nameof(DocEntityQueueChannel.BackgroundTaskId))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, nameof(DocEntityQueueChannel.Description))))
-                .ForMember(dest => dest.Durable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, nameof(DocEntityQueueChannel.Durable))))
-                .ForMember(dest => dest.Enabled, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, nameof(DocEntityQueueChannel.Enabled))))
-                .ForMember(dest => dest.Exclusive, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, nameof(DocEntityQueueChannel.Exclusive))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<QueueChannel>(c, nameof(DocEntityQueueChannel.Name))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<QueueChannel,DocEntityQueueChannel>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

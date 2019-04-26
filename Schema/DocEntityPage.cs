@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityPage() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Page());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Page()));
 
         #region Static Members
         public static DocEntityPage GetPage(Reference reference)
@@ -153,7 +139,6 @@ namespace Services.Schema
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -171,7 +156,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -251,44 +235,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityPage, bool>> PageIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class PageMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityPage,Page> _EntityToDto;
-        protected IMappingExpression<Page,DocEntityPage> _DtoToEntity;
-
-        public PageMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityPage>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityPage,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityPage>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityPage.GetPage(c));
-            _EntityToDto = CreateMap<DocEntityPage,Page>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, "Updated")))
-                .ForMember(dest => dest.Apps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Apps))))
-                .ForMember(dest => dest.AppsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.AppsCount))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Description))))
-                .ForMember(dest => dest.Glossary, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Glossary))))
-                .ForMember(dest => dest.GlossaryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.GlossaryCount))))
-                .ForMember(dest => dest.Help, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Help))))
-                .ForMember(dest => dest.HelpCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.HelpCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Name))))
-                .ForMember(dest => dest.Roles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Roles))))
-                .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.RolesCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Page,DocEntityPage>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

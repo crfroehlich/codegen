@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityReleaseStatus() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new ReleaseStatus());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new ReleaseStatus()));
 
         #region Static Members
         public static DocEntityReleaseStatus GetReleaseStatus(Reference reference)
@@ -134,7 +120,6 @@ namespace Services.Schema
         public string Version { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -152,7 +137,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -255,39 +239,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityReleaseStatus, bool>> ReleaseStatusIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class ReleaseStatusMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityReleaseStatus,ReleaseStatus> _EntityToDto;
-        protected IMappingExpression<ReleaseStatus,DocEntityReleaseStatus> _DtoToEntity;
-
-        public ReleaseStatusMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityReleaseStatus>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityReleaseStatus,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityReleaseStatus>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityReleaseStatus.GetReleaseStatus(c));
-            _EntityToDto = CreateMap<DocEntityReleaseStatus,ReleaseStatus>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReleaseStatus>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReleaseStatus>(c, "Updated")))
-                .ForMember(dest => dest.Branch, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReleaseStatus>(c, nameof(DocEntityReleaseStatus.Branch))))
-                .ForMember(dest => dest.Release, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReleaseStatus>(c, nameof(DocEntityReleaseStatus.Release))))
-                .ForMember(dest => dest.Server, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReleaseStatus>(c, nameof(DocEntityReleaseStatus.Server))))
-                .ForMember(dest => dest.URL, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReleaseStatus>(c, nameof(DocEntityReleaseStatus.URL))))
-                .ForMember(dest => dest.Version, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReleaseStatus>(c, nameof(DocEntityReleaseStatus.Version))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<ReleaseStatus,DocEntityReleaseStatus>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

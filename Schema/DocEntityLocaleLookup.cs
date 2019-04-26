@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityLocaleLookup() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new LocaleLookup());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new LocaleLookup()));
 
         #region Static Members
         public static DocEntityLocaleLookup GetLocaleLookup(Reference reference)
@@ -127,7 +113,6 @@ namespace Services.Schema
         public int? LocaleId { get { return Locale?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -145,7 +130,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -229,38 +213,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityLocaleLookup, bool>> LocaleLookupIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class LocaleLookupMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityLocaleLookup,LocaleLookup> _EntityToDto;
-        protected IMappingExpression<LocaleLookup,DocEntityLocaleLookup> _DtoToEntity;
-
-        public LocaleLookupMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityLocaleLookup>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityLocaleLookup,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityLocaleLookup>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityLocaleLookup.GetLocaleLookup(c));
-            _EntityToDto = CreateMap<DocEntityLocaleLookup,LocaleLookup>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LocaleLookup>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LocaleLookup>(c, "Updated")))
-                .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LocaleLookup>(c, nameof(DocEntityLocaleLookup.Data))))
-                .ForMember(dest => dest.IpAddress, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LocaleLookup>(c, nameof(DocEntityLocaleLookup.IpAddress))))
-                .ForMember(dest => dest.Locale, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LocaleLookup>(c, nameof(DocEntityLocaleLookup.Locale))))
-                .ForMember(dest => dest.LocaleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LocaleLookup>(c, nameof(DocEntityLocaleLookup.LocaleId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<LocaleLookup,DocEntityLocaleLookup>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

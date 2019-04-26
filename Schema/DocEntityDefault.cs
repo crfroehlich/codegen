@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityDefault() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Default());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Default()));
 
         #region Static Members
         public static DocEntityDefault GetDefault(Reference reference)
@@ -134,7 +120,6 @@ namespace Services.Schema
         public int? TherapeuticAreaId { get { return TherapeuticArea?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -152,7 +137,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -241,42 +225,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityDefault, bool>> DefaultIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class DefaultMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityDefault,Default> _EntityToDto;
-        protected IMappingExpression<Default,DocEntityDefault> _DtoToEntity;
-
-        public DefaultMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityDefault>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityDefault,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityDefault>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDefault.GetDefault(c));
-            _EntityToDto = CreateMap<DocEntityDefault,Default>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, "Updated")))
-                .ForMember(dest => dest.DiseaseState, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, nameof(DocEntityDefault.DiseaseState))))
-                .ForMember(dest => dest.DiseaseStateId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, nameof(DocEntityDefault.DiseaseStateId))))
-                .ForMember(dest => dest.Role, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, nameof(DocEntityDefault.Role))))
-                .ForMember(dest => dest.RoleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, nameof(DocEntityDefault.RoleId))))
-                .ForMember(dest => dest.Scope, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, nameof(DocEntityDefault.Scope))))
-                .ForMember(dest => dest.ScopeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, nameof(DocEntityDefault.ScopeId))))
-                .ForMember(dest => dest.TherapeuticArea, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, nameof(DocEntityDefault.TherapeuticArea))))
-                .ForMember(dest => dest.TherapeuticAreaId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Default>(c, nameof(DocEntityDefault.TherapeuticAreaId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Default,DocEntityDefault>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

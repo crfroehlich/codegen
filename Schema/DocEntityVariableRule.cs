@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityVariableRule() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new VariableRule());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new VariableRule()));
 
         #region Static Members
         public static DocEntityVariableRule GetVariableRule(Reference reference)
@@ -160,7 +146,6 @@ namespace Services.Schema
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -178,7 +163,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -298,48 +282,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityVariableRule, bool>> VariableRuleIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class VariableRuleMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityVariableRule,VariableRule> _EntityToDto;
-        protected IMappingExpression<VariableRule,DocEntityVariableRule> _DtoToEntity;
-
-        public VariableRuleMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityVariableRule>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityVariableRule,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityVariableRule>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityVariableRule.GetVariableRule(c));
-            _EntityToDto = CreateMap<DocEntityVariableRule,VariableRule>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, "Updated")))
-                .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.Children))))
-                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.ChildrenCount))))
-                .ForMember(dest => dest.Definition, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.Definition))))
-                .ForMember(dest => dest.Instances, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.Instances))))
-                .ForMember(dest => dest.InstancesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.InstancesCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.Name))))
-                .ForMember(dest => dest.Owner, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.Owner))))
-                .ForMember(dest => dest.OwnerId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.OwnerId))))
-                .ForMember(dest => dest.Rule, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.Rule))))
-                .ForMember(dest => dest.RuleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.RuleId))))
-                .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.Scopes))))
-                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.ScopesCount))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableRule>(c, nameof(DocEntityVariableRule.TypeId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<VariableRule,DocEntityVariableRule>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityIntervention() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Intervention());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Intervention()));
 
         #region Static Members
         public static DocEntityIntervention GetIntervention(Reference reference)
@@ -129,7 +115,6 @@ namespace Services.Schema
         public string URI { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -147,7 +132,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -227,38 +211,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityIntervention, bool>> InterventionIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class InterventionMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityIntervention,Intervention> _EntityToDto;
-        protected IMappingExpression<Intervention,DocEntityIntervention> _DtoToEntity;
-
-        public InterventionMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityIntervention>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityIntervention,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityIntervention>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityIntervention.GetIntervention(c));
-            _EntityToDto = CreateMap<DocEntityIntervention,Intervention>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, "Updated")))
-                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, nameof(DocEntityIntervention.DocumentSets))))
-                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, nameof(DocEntityIntervention.DocumentSetsCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, nameof(DocEntityIntervention.Name))))
-                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Intervention>(c, nameof(DocEntityIntervention.URI))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Intervention,DocEntityIntervention>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

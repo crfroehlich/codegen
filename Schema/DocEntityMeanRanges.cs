@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityMeanRanges() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new MeanRanges());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new MeanRanges()));
 
         #region Static Members
         public static DocEntityMeanRanges GetMeanRanges(Reference reference)
@@ -122,7 +108,6 @@ namespace Services.Schema
         public int? RangesCount { get { return Ranges.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -140,7 +125,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -215,36 +199,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityMeanRanges, bool>> MeanRangesIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class MeanRangesMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityMeanRanges,MeanRanges> _EntityToDto;
-        protected IMappingExpression<MeanRanges,DocEntityMeanRanges> _DtoToEntity;
-
-        public MeanRangesMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityMeanRanges>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityMeanRanges,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityMeanRanges>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityMeanRanges.GetMeanRanges(c));
-            _EntityToDto = CreateMap<DocEntityMeanRanges,MeanRanges>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRanges>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRanges>(c, "Updated")))
-                .ForMember(dest => dest.Ranges, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRanges>(c, nameof(DocEntityMeanRanges.Ranges))))
-                .ForMember(dest => dest.RangesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRanges>(c, nameof(DocEntityMeanRanges.RangesCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<MeanRanges,DocEntityMeanRanges>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

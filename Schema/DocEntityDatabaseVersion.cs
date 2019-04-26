@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityDatabaseVersion() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new DatabaseVersion());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DatabaseVersion()));
 
         #region Static Members
         public static DocEntityDatabaseVersion GetDatabaseVersion(Reference reference)
@@ -130,7 +116,6 @@ namespace Services.Schema
         public string VersionName { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -148,7 +133,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -229,38 +213,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityDatabaseVersion, bool>> DatabaseVersionIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class DatabaseVersionMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityDatabaseVersion,DatabaseVersion> _EntityToDto;
-        protected IMappingExpression<DatabaseVersion,DocEntityDatabaseVersion> _DtoToEntity;
-
-        public DatabaseVersionMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityDatabaseVersion>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityDatabaseVersion,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityDatabaseVersion>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDatabaseVersion.GetDatabaseVersion(c));
-            _EntityToDto = CreateMap<DocEntityDatabaseVersion,DatabaseVersion>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, "Updated")))
-                .ForMember(dest => dest.DatabaseState, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, nameof(DocEntityDatabaseVersion.DatabaseState))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, nameof(DocEntityDatabaseVersion.Description))))
-                .ForMember(dest => dest.Release, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, nameof(DocEntityDatabaseVersion.Release))))
-                .ForMember(dest => dest.VersionName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, nameof(DocEntityDatabaseVersion.VersionName))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<DatabaseVersion,DocEntityDatabaseVersion>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

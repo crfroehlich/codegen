@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityTimePoint() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new TimePoint());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TimePoint()));
 
         #region Static Members
         public static DocEntityTimePoint GetTimePoint(Reference reference)
@@ -135,7 +121,6 @@ namespace Services.Schema
         public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -153,7 +138,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -232,40 +216,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityTimePoint, bool>> TimePointIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class TimePointMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityTimePoint,TimePoint> _EntityToDto;
-        protected IMappingExpression<TimePoint,DocEntityTimePoint> _DtoToEntity;
-
-        public TimePointMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityTimePoint>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityTimePoint,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityTimePoint>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityTimePoint.GetTimePoint(c));
-            _EntityToDto = CreateMap<DocEntityTimePoint,TimePoint>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, "Updated")))
-                .ForMember(dest => dest.IsAbsolute, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.IsAbsolute))))
-                .ForMember(dest => dest.MeanValue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.MeanValue))))
-                .ForMember(dest => dest.SingleValue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.SingleValue))))
-                .ForMember(dest => dest.TotalValue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.TotalValue))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TimePoint>(c, nameof(DocEntityTimePoint.TypeId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<TimePoint,DocEntityTimePoint>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

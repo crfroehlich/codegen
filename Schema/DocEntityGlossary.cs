@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityGlossary() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Glossary());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Glossary()));
 
         #region Static Members
         public static DocEntityGlossary GetGlossary(Reference reference)
@@ -137,7 +123,6 @@ namespace Services.Schema
         public int? TermId { get { return Term?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -155,7 +140,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -239,42 +223,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityGlossary, bool>> GlossaryIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class GlossaryMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityGlossary,Glossary> _EntityToDto;
-        protected IMappingExpression<Glossary,DocEntityGlossary> _DtoToEntity;
-
-        public GlossaryMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityGlossary>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityGlossary,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityGlossary>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityGlossary.GetGlossary(c));
-            _EntityToDto = CreateMap<DocEntityGlossary,Glossary>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, "Updated")))
-                .ForMember(dest => dest.Definition, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, nameof(DocEntityGlossary.Definition))))
-                .ForMember(dest => dest.Enum, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, nameof(DocEntityGlossary.Enum))))
-                .ForMember(dest => dest.EnumId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, nameof(DocEntityGlossary.EnumId))))
-                .ForMember(dest => dest.Icon, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, nameof(DocEntityGlossary.Icon))))
-                .ForMember(dest => dest.Page, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, nameof(DocEntityGlossary.Page))))
-                .ForMember(dest => dest.PageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, nameof(DocEntityGlossary.PageId))))
-                .ForMember(dest => dest.Term, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, nameof(DocEntityGlossary.Term))))
-                .ForMember(dest => dest.TermId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Glossary>(c, nameof(DocEntityGlossary.TermId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Glossary,DocEntityGlossary>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

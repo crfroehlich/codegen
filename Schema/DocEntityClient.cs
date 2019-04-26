@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityClient() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Client());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Client()));
 
         #region Static Members
         public static DocEntityClient GetClient(Reference reference)
@@ -167,7 +153,6 @@ namespace Services.Schema
         public string Settings { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -185,7 +170,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -285,49 +269,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityClient, bool>> ClientIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class ClientMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityClient,Client> _EntityToDto;
-        protected IMappingExpression<Client,DocEntityClient> _DtoToEntity;
-
-        public ClientMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityClient>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityClient,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityClient>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityClient.GetClient(c));
-            _EntityToDto = CreateMap<DocEntityClient,Client>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, "Updated")))
-                .ForMember(dest => dest.DefaultLocale, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DefaultLocale))))
-                .ForMember(dest => dest.DefaultLocaleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DefaultLocaleId))))
-                .ForMember(dest => dest.Divisions, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Divisions))))
-                .ForMember(dest => dest.DivisionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DivisionsCount))))
-                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DocumentSets))))
-                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.DocumentSetsCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Name))))
-                .ForMember(dest => dest.Projects, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Projects))))
-                .ForMember(dest => dest.ProjectsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.ProjectsCount))))
-                .ForMember(dest => dest.Role, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Role))))
-                .ForMember(dest => dest.RoleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.RoleId))))
-                .ForMember(dest => dest.SalesforceAccountId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.SalesforceAccountId))))
-                .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Scopes))))
-                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.ScopesCount))))
-                .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Client>(c, nameof(DocEntityClient.Settings))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Client,DocEntityClient>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityAuditRecord() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new AuditRecord());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new AuditRecord()));
 
         #region Static Members
         public static DocEntityAuditRecord GetAuditRecord(Reference reference)
@@ -201,7 +187,6 @@ namespace Services.Schema
         public int? UserSessionId { get { return UserSession?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -219,7 +204,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -308,56 +292,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityAuditRecord, bool>> AuditRecordIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class AuditRecordMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityAuditRecord,AuditRecord> _EntityToDto;
-        protected IMappingExpression<AuditRecord,DocEntityAuditRecord> _DtoToEntity;
-
-        public AuditRecordMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityAuditRecord>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityAuditRecord,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityAuditRecord>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityAuditRecord.GetAuditRecord(c));
-            _EntityToDto = CreateMap<DocEntityAuditRecord,AuditRecord>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, "Updated")))
-                .ForMember(dest => dest.Action, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.Action))))
-                .ForMember(dest => dest.BackgroundTask, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.BackgroundTask))))
-                .ForMember(dest => dest.BackgroundTaskId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.BackgroundTaskId))))
-                .ForMember(dest => dest.ChangedOnDate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.ChangedOnDate))))
-                .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.Data))))
-                .ForMember(dest => dest.DatabaseSessionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.DatabaseSessionId))))
-                .ForMember(dest => dest.Deltas, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.Deltas))))
-                .ForMember(dest => dest.DeltasCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.DeltasCount))))
-                .ForMember(dest => dest.EntityId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.EntityId))))
-                .ForMember(dest => dest.EntityType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.EntityType))))
-                .ForMember(dest => dest.EntityVersion, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.EntityVersion))))
-                .ForMember(dest => dest.Events, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.Events))))
-                .ForMember(dest => dest.EventsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.EventsCount))))
-                .ForMember(dest => dest.Impersonation, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.Impersonation))))
-                .ForMember(dest => dest.ImpersonationId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.ImpersonationId))))
-                .ForMember(dest => dest.TargetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.TargetId))))
-                .ForMember(dest => dest.TargetType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.TargetType))))
-                .ForMember(dest => dest.TargetVersion, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.TargetVersion))))
-                .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.User))))
-                .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.UserId))))
-                .ForMember(dest => dest.UserSession, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.UserSession))))
-                .ForMember(dest => dest.UserSessionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditRecord>(c, nameof(DocEntityAuditRecord.UserSessionId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<AuditRecord,DocEntityAuditRecord>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

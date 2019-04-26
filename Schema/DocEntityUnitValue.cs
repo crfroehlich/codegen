@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityUnitValue() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new UnitValue());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UnitValue()));
 
         #region Static Members
         public static DocEntityUnitValue GetUnitValue(Reference reference)
@@ -143,7 +129,6 @@ namespace Services.Schema
         public int? UnitId { get { return Unit?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -161,7 +146,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -255,43 +239,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityUnitValue, bool>> UnitValueIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class UnitValueMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityUnitValue,UnitValue> _EntityToDto;
-        protected IMappingExpression<UnitValue,DocEntityUnitValue> _DtoToEntity;
-
-        public UnitValueMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityUnitValue>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityUnitValue,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityUnitValue>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityUnitValue.GetUnitValue(c));
-            _EntityToDto = CreateMap<DocEntityUnitValue,UnitValue>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, "Updated")))
-                .ForMember(dest => dest.EqualityOperator, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.EqualityOperator))))
-                .ForMember(dest => dest.EqualityOperatorId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.EqualityOperatorId))))
-                .ForMember(dest => dest.Multiplier, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Multiplier))))
-                .ForMember(dest => dest.Number, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Number))))
-                .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Order))))
-                .ForMember(dest => dest.Owners, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Owners))))
-                .ForMember(dest => dest.OwnersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.OwnersCount))))
-                .ForMember(dest => dest.Unit, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.Unit))))
-                .ForMember(dest => dest.UnitId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitValue>(c, nameof(DocEntityUnitValue.UnitId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<UnitValue,DocEntityUnitValue>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

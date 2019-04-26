@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityHistory() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new History());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new History()));
 
         #region Static Members
         public static DocEntityHistory GetHistory(Reference reference)
@@ -153,7 +139,6 @@ namespace Services.Schema
         public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -171,7 +156,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -250,49 +234,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityHistory, bool>> HistoryIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class HistoryMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityHistory,History> _EntityToDto;
-        protected IMappingExpression<History,DocEntityHistory> _DtoToEntity;
-
-        public HistoryMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityHistory>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityHistory,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityHistory>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityHistory.GetHistory(c));
-            _EntityToDto = CreateMap<DocEntityHistory,History>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, "Updated")))
-                .ForMember(dest => dest.App, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.App))))
-                .ForMember(dest => dest.AppId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.AppId))))
-                .ForMember(dest => dest.DocumentSet, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.DocumentSet))))
-                .ForMember(dest => dest.DocumentSetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.DocumentSetId))))
-                .ForMember(dest => dest.Impersonation, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.Impersonation))))
-                .ForMember(dest => dest.ImpersonationId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.ImpersonationId))))
-                .ForMember(dest => dest.Page, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.Page))))
-                .ForMember(dest => dest.PageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.PageId))))
-                .ForMember(dest => dest.URL, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.URL))))
-                .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.User))))
-                .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.UserId))))
-                .ForMember(dest => dest.UserSession, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.UserSession))))
-                .ForMember(dest => dest.UserSessionId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.UserSessionId))))
-                .ForMember(dest => dest.Workflow, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.Workflow))))
-                .ForMember(dest => dest.WorkflowId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<History>(c, nameof(DocEntityHistory.WorkflowId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<History,DocEntityHistory>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityStatsStudySet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new StatsStudySet());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new StatsStudySet()));
 
         #region Static Members
         public static DocEntityStatsStudySet GetStatsStudySet(Reference reference)
@@ -179,7 +165,6 @@ namespace Services.Schema
         public int UnboundTerms { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -197,7 +182,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -327,52 +311,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityStatsStudySet, bool>> StatsStudySetIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class StatsStudySetMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityStatsStudySet,StatsStudySet> _EntityToDto;
-        protected IMappingExpression<StatsStudySet,DocEntityStatsStudySet> _DtoToEntity;
-
-        public StatsStudySetMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityStatsStudySet>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityStatsStudySet,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityStatsStudySet>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityStatsStudySet.GetStatsStudySet(c));
-            _EntityToDto = CreateMap<DocEntityStatsStudySet,StatsStudySet>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, "Updated")))
-                .ForMember(dest => dest.BoundTerms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.BoundTerms))))
-                .ForMember(dest => dest.Characteristics, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Characteristics))))
-                .ForMember(dest => dest.DataPoints, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.DataPoints))))
-                .ForMember(dest => dest.DesignCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.DesignCount))))
-                .ForMember(dest => dest.DesignList, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.DesignList))))
-                .ForMember(dest => dest.DocumentSet, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.DocumentSet))))
-                .ForMember(dest => dest.DocumentSetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.DocumentSetId))))
-                .ForMember(dest => dest.Interventions, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Interventions))))
-                .ForMember(dest => dest.Outcomes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Outcomes))))
-                .ForMember(dest => dest.OutcomesReported, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.OutcomesReported))))
-                .ForMember(dest => dest.Records, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Records))))
-                .ForMember(dest => dest.RecordsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.RecordsCount))))
-                .ForMember(dest => dest.Stat, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Stat))))
-                .ForMember(dest => dest.StatId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.StatId))))
-                .ForMember(dest => dest.Studies, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.Studies))))
-                .ForMember(dest => dest.TypeCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.TypeCount))))
-                .ForMember(dest => dest.TypeList, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.TypeList))))
-                .ForMember(dest => dest.UnboundTerms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<StatsStudySet>(c, nameof(DocEntityStatsStudySet.UnboundTerms))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<StatsStudySet,DocEntityStatsStudySet>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

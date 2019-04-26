@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityDataProperty() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new DataProperty());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DataProperty()));
 
         #region Static Members
         public static DocEntityDataProperty GetDataProperty(Reference reference)
@@ -284,7 +270,6 @@ namespace Services.Schema
         public UiType? UIType { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -302,7 +287,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -398,81 +382,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityDataProperty, bool>> DataPropertyIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class DataPropertyMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityDataProperty,DataProperty> _EntityToDto;
-        protected IMappingExpression<DataProperty,DocEntityDataProperty> _DtoToEntity;
-
-        public DataPropertyMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityDataProperty>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityDataProperty,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityDataProperty>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDataProperty.GetDataProperty(c));
-            _EntityToDto = CreateMap<DocEntityDataProperty,DataProperty>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, "Updated")))
-                .ForMember(dest => dest.AutoCreateMissing, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.AutoCreateMissing))))
-                .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Children))))
-                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.ChildrenCount))))
-                .ForMember(dest => dest.Class, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Class))))
-                .ForMember(dest => dest.ClassId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.ClassId))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Description))))
-                .ForMember(dest => dest.DisplayName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.DisplayName))))
-                .ForMember(dest => dest.IsAllowAddInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowAddInForm))))
-                .ForMember(dest => dest.IsAllowCreateInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowCreateInForm))))
-                .ForMember(dest => dest.IsAllowEditInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowEditInForm))))
-                .ForMember(dest => dest.IsAllowFreeText, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowFreeText))))
-                .ForMember(dest => dest.IsAllowRemoveInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAllowRemoveInForm))))
-                .ForMember(dest => dest.IsAudited, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsAudited))))
-                .ForMember(dest => dest.IsCompressed, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsCompressed))))
-                .ForMember(dest => dest.IsDisplayInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsDisplayInForm))))
-                .ForMember(dest => dest.IsDisplayInGrid, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsDisplayInGrid))))
-                .ForMember(dest => dest.IsEditColumn, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsEditColumn))))
-                .ForMember(dest => dest.IsInsertOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsInsertOnly))))
-                .ForMember(dest => dest.IsJSON, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsJSON))))
-                .ForMember(dest => dest.IsLazy, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsLazy))))
-                .ForMember(dest => dest.IsNullOnUpgrade, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsNullOnUpgrade))))
-                .ForMember(dest => dest.IsReadOnly, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsReadOnly))))
-                .ForMember(dest => dest.IsRelationship, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsRelationship))))
-                .ForMember(dest => dest.IsRequired, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsRequired))))
-                .ForMember(dest => dest.IsRequiredInForm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsRequiredInForm))))
-                .ForMember(dest => dest.IsVirtual, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.IsVirtual))))
-                .ForMember(dest => dest.JsonType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.JsonType))))
-                .ForMember(dest => dest.LookupTableEnum, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.LookupTableEnum))))
-                .ForMember(dest => dest.LookupTableEnumId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.LookupTableEnumId))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Name))))
-                .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Order))))
-                .ForMember(dest => dest.Owner, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Owner))))
-                .ForMember(dest => dest.OwnerId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.OwnerId))))
-                .ForMember(dest => dest.Precision, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Precision))))
-                .ForMember(dest => dest.RelationshipOnOwnerRemove, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.RelationshipOnOwnerRemove))))
-                .ForMember(dest => dest.RelationshipOnTargetRemove, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.RelationshipOnTargetRemove))))
-                .ForMember(dest => dest.RelationshipPairTo, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.RelationshipPairTo))))
-                .ForMember(dest => dest.RelationshipPairToId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.RelationshipPairToId))))
-                .ForMember(dest => dest.Scale, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Scale))))
-                .ForMember(dest => dest.SetDefaultValue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.SetDefaultValue))))
-                .ForMember(dest => dest.Tab, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Tab))))
-                .ForMember(dest => dest.TabId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.TabId))))
-                .ForMember(dest => dest.Target, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Target))))
-                .ForMember(dest => dest.TargetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.TargetId))))
-                .ForMember(dest => dest.TargetAlias, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.TargetAlias))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Type))))
-                .ForMember(dest => dest.UIType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.UIType))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<DataProperty,DocEntityDataProperty>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

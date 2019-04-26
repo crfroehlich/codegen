@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityApp() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new App());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new App()));
 
         #region Static Members
         public static DocEntityApp GetApp(Reference reference)
@@ -146,7 +132,6 @@ namespace Services.Schema
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -164,7 +149,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -251,42 +235,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityApp, bool>> AppIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class AppMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityApp,App> _EntityToDto;
-        protected IMappingExpression<App,DocEntityApp> _DtoToEntity;
-
-        public AppMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityApp>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityApp,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityApp>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityApp.GetApp(c));
-            _EntityToDto = CreateMap<DocEntityApp,App>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, "Updated")))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Description))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Name))))
-                .ForMember(dest => dest.Pages, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Pages))))
-                .ForMember(dest => dest.PagesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.PagesCount))))
-                .ForMember(dest => dest.Roles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Roles))))
-                .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.RolesCount))))
-                .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Scopes))))
-                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.ScopesCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<App,DocEntityApp>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

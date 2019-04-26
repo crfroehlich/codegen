@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityCharacteristic() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Characteristic());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Characteristic()));
 
         #region Static Members
         public static DocEntityCharacteristic GetCharacteristic(Reference reference)
@@ -129,7 +115,6 @@ namespace Services.Schema
         public string URI { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -147,7 +132,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -227,38 +211,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityCharacteristic, bool>> CharacteristicIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class CharacteristicMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityCharacteristic,Characteristic> _EntityToDto;
-        protected IMappingExpression<Characteristic,DocEntityCharacteristic> _DtoToEntity;
-
-        public CharacteristicMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityCharacteristic>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityCharacteristic,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityCharacteristic>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityCharacteristic.GetCharacteristic(c));
-            _EntityToDto = CreateMap<DocEntityCharacteristic,Characteristic>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, "Updated")))
-                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, nameof(DocEntityCharacteristic.DocumentSets))))
-                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, nameof(DocEntityCharacteristic.DocumentSetsCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, nameof(DocEntityCharacteristic.Name))))
-                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Characteristic>(c, nameof(DocEntityCharacteristic.URI))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Characteristic,DocEntityCharacteristic>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

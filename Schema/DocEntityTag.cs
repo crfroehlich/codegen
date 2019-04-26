@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityTag() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Tag());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Tag()));
 
         #region Static Members
         public static DocEntityTag GetTag(Reference reference)
@@ -130,7 +116,6 @@ namespace Services.Schema
         public string URI { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -148,7 +133,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -228,38 +212,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityTag, bool>> TagIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class TagMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityTag,Tag> _EntityToDto;
-        protected IMappingExpression<Tag,DocEntityTag> _DtoToEntity;
-
-        public TagMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityTag>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityTag,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityTag>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityTag.GetTag(c));
-            _EntityToDto = CreateMap<DocEntityTag,Tag>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, "Updated")))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.Name))))
-                .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.Scopes))))
-                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.ScopesCount))))
-                .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.URI))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Tag,DocEntityTag>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

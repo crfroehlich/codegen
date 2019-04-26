@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityUnitOfMeasure() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new UnitOfMeasure());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UnitOfMeasure()));
 
         #region Static Members
         public static DocEntityUnitOfMeasure GetUnitOfMeasure(Reference reference)
@@ -133,7 +119,6 @@ namespace Services.Schema
         public int? UnitId { get { return Unit?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -151,7 +136,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -261,41 +245,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityUnitOfMeasure, bool>> UnitOfMeasureIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class UnitOfMeasureMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityUnitOfMeasure,UnitOfMeasure> _EntityToDto;
-        protected IMappingExpression<UnitOfMeasure,DocEntityUnitOfMeasure> _DtoToEntity;
-
-        public UnitOfMeasureMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityUnitOfMeasure>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityUnitOfMeasure,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityUnitOfMeasure>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityUnitOfMeasure.GetUnitOfMeasure(c));
-            _EntityToDto = CreateMap<DocEntityUnitOfMeasure,UnitOfMeasure>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, "Updated")))
-                .ForMember(dest => dest.IsSI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.IsSI))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.Name))))
-                .ForMember(dest => dest.NameId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.NameId))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.TypeId))))
-                .ForMember(dest => dest.Unit, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.Unit))))
-                .ForMember(dest => dest.UnitId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitOfMeasure>(c, nameof(DocEntityUnitOfMeasure.UnitId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<UnitOfMeasure,DocEntityUnitOfMeasure>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

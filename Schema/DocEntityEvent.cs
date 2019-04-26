@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityEvent() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Event());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Event()));
 
         #region Static Members
         public static DocEntityEvent GetEvent(Reference reference)
@@ -152,7 +138,6 @@ namespace Services.Schema
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -170,7 +155,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -250,45 +234,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityEvent, bool>> EventIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class EventMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityEvent,Event> _EntityToDto;
-        protected IMappingExpression<Event,DocEntityEvent> _DtoToEntity;
-
-        public EventMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityEvent>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityEvent,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityEvent>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityEvent.GetEvent(c));
-            _EntityToDto = CreateMap<DocEntityEvent,Event>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, "Updated")))
-                .ForMember(dest => dest.AuditRecord, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.AuditRecord))))
-                .ForMember(dest => dest.AuditRecordId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.AuditRecordId))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Description))))
-                .ForMember(dest => dest.Processed, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Processed))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Status))))
-                .ForMember(dest => dest.Teams, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Teams))))
-                .ForMember(dest => dest.TeamsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.TeamsCount))))
-                .ForMember(dest => dest.Updates, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Updates))))
-                .ForMember(dest => dest.UpdatesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.UpdatesCount))))
-                .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.Users))))
-                .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Event>(c, nameof(DocEntityEvent.UsersCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Event,DocEntityEvent>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

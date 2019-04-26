@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityAttributeInterval() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new AttributeInterval());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new AttributeInterval()));
 
         #region Static Members
         public static DocEntityAttributeInterval GetAttributeInterval(Reference reference)
@@ -118,7 +104,6 @@ namespace Services.Schema
         public DocStructureInterval Interval { get; set; }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -136,7 +121,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -215,35 +199,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityAttributeInterval, bool>> AttributeIntervalIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class AttributeIntervalMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityAttributeInterval,AttributeInterval> _EntityToDto;
-        protected IMappingExpression<AttributeInterval,DocEntityAttributeInterval> _DtoToEntity;
-
-        public AttributeIntervalMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityAttributeInterval>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityAttributeInterval,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityAttributeInterval>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityAttributeInterval.GetAttributeInterval(c));
-            _EntityToDto = CreateMap<DocEntityAttributeInterval,AttributeInterval>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AttributeInterval>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AttributeInterval>(c, "Updated")))
-                .ForMember(dest => dest.Interval, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AttributeInterval>(c, nameof(DocEntityAttributeInterval.Interval))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<AttributeInterval,DocEntityAttributeInterval>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

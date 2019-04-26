@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityBackgroundTaskItem() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new BackgroundTaskItem());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new BackgroundTaskItem()));
 
         #region Static Members
         public static DocEntityBackgroundTaskItem GetBackgroundTaskItem(Reference reference)
@@ -178,7 +164,6 @@ namespace Services.Schema
         public int? TaskHistoryCount { get { return TaskHistory.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -196,7 +181,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -277,49 +261,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityBackgroundTaskItem, bool>> BackgroundTaskItemIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class BackgroundTaskItemMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityBackgroundTaskItem,BackgroundTaskItem> _EntityToDto;
-        protected IMappingExpression<BackgroundTaskItem,DocEntityBackgroundTaskItem> _DtoToEntity;
-
-        public BackgroundTaskItemMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityBackgroundTaskItem>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityBackgroundTaskItem,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityBackgroundTaskItem>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityBackgroundTaskItem.GetBackgroundTaskItem(c));
-            _EntityToDto = CreateMap<DocEntityBackgroundTaskItem,BackgroundTaskItem>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, "Updated")))
-                .ForMember(dest => dest.Attempts, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Attempts))))
-                .ForMember(dest => dest.AuditRecord, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.AuditRecord))))
-                .ForMember(dest => dest.AuditRecordId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.AuditRecordId))))
-                .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Data))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Description))))
-                .ForMember(dest => dest.Ended, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Ended))))
-                .ForMember(dest => dest.EntityId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.EntityId))))
-                .ForMember(dest => dest.ExecutionTime, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.ExecutionTime))))
-                .ForMember(dest => dest.Started, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Started))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Status))))
-                .ForMember(dest => dest.Succeeded, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Succeeded))))
-                .ForMember(dest => dest.Task, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.Task))))
-                .ForMember(dest => dest.TaskId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.TaskId))))
-                .ForMember(dest => dest.TaskHistory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.TaskHistory))))
-                .ForMember(dest => dest.TaskHistoryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.TaskHistoryCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<BackgroundTaskItem,DocEntityBackgroundTaskItem>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

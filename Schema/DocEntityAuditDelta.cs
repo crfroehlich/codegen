@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityAuditDelta() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new AuditDelta());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new AuditDelta()));
 
         #region Static Members
         public static DocEntityAuditDelta GetAuditDelta(Reference reference)
@@ -134,7 +120,6 @@ namespace Services.Schema
         }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -152,7 +137,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -236,37 +220,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityAuditDelta, bool>> AuditDeltaIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class AuditDeltaMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityAuditDelta,AuditDelta> _EntityToDto;
-        protected IMappingExpression<AuditDelta,DocEntityAuditDelta> _DtoToEntity;
-
-        public AuditDeltaMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityAuditDelta>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityAuditDelta,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityAuditDelta>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityAuditDelta.GetAuditDelta(c));
-            _EntityToDto = CreateMap<DocEntityAuditDelta,AuditDelta>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditDelta>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditDelta>(c, "Updated")))
-                .ForMember(dest => dest.Audit, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditDelta>(c, nameof(DocEntityAuditDelta.Audit))))
-                .ForMember(dest => dest.AuditId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditDelta>(c, nameof(DocEntityAuditDelta.AuditId))))
-                .ForMember(dest => dest.Delta, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<AuditDelta>(c, nameof(DocEntityAuditDelta.Delta))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<AuditDelta,DocEntityAuditDelta>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

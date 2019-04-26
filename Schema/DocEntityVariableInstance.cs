@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityVariableInstance() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new VariableInstance());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new VariableInstance()));
 
         #region Static Members
         public static DocEntityVariableInstance GetVariableInstance(Reference reference)
@@ -136,7 +122,6 @@ namespace Services.Schema
         public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -154,7 +139,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -238,41 +222,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityVariableInstance, bool>> VariableInstanceIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class VariableInstanceMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityVariableInstance,VariableInstance> _EntityToDto;
-        protected IMappingExpression<VariableInstance,DocEntityVariableInstance> _DtoToEntity;
-
-        public VariableInstanceMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityVariableInstance>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityVariableInstance,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityVariableInstance>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityVariableInstance.GetVariableInstance(c));
-            _EntityToDto = CreateMap<DocEntityVariableInstance,VariableInstance>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, "Updated")))
-                .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.Data))))
-                .ForMember(dest => dest.Document, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.Document))))
-                .ForMember(dest => dest.DocumentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.DocumentId))))
-                .ForMember(dest => dest.Rule, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.Rule))))
-                .ForMember(dest => dest.RuleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.RuleId))))
-                .ForMember(dest => dest.Workflows, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.Workflows))))
-                .ForMember(dest => dest.WorkflowsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<VariableInstance>(c, nameof(DocEntityVariableInstance.WorkflowsCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<VariableInstance,DocEntityVariableInstance>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

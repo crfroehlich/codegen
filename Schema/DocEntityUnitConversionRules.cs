@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityUnitConversionRules() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new UnitConversionRules());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UnitConversionRules()));
 
         #region Static Members
         public static DocEntityUnitConversionRules GetUnitConversionRules(Reference reference)
@@ -151,7 +137,6 @@ namespace Services.Schema
         public int? SourceUnitId { get { return SourceUnit?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -169,7 +154,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -263,47 +247,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityUnitConversionRules, bool>> UnitConversionRulesIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class UnitConversionRulesMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityUnitConversionRules,UnitConversionRules> _EntityToDto;
-        protected IMappingExpression<UnitConversionRules,DocEntityUnitConversionRules> _DtoToEntity;
-
-        public UnitConversionRulesMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityUnitConversionRules>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityUnitConversionRules,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityUnitConversionRules>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityUnitConversionRules.GetUnitConversionRules(c));
-            _EntityToDto = CreateMap<DocEntityUnitConversionRules,UnitConversionRules>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, "Updated")))
-                .ForMember(dest => dest.DestinationUnit, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.DestinationUnit))))
-                .ForMember(dest => dest.DestinationUnitId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.DestinationUnitId))))
-                .ForMember(dest => dest.IsDefault, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.IsDefault))))
-                .ForMember(dest => dest.IsDestinationSi, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.IsDestinationSi))))
-                .ForMember(dest => dest.ModifierTerm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.ModifierTerm))))
-                .ForMember(dest => dest.ModifierTermId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.ModifierTermId))))
-                .ForMember(dest => dest.Multiplier, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.Multiplier))))
-                .ForMember(dest => dest.Parent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.Parent))))
-                .ForMember(dest => dest.ParentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.ParentId))))
-                .ForMember(dest => dest.RootTerm, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.RootTerm))))
-                .ForMember(dest => dest.RootTermId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.RootTermId))))
-                .ForMember(dest => dest.SourceUnit, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.SourceUnit))))
-                .ForMember(dest => dest.SourceUnitId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, nameof(DocEntityUnitConversionRules.SourceUnitId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<UnitConversionRules,DocEntityUnitConversionRules>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

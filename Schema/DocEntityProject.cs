@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityProject() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Project());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Project()));
 
         #region Static Members
         public static DocEntityProject GetProject(Reference reference)
@@ -206,7 +192,6 @@ namespace Services.Schema
         public int? TimeCardsCount { get { return TimeCards.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -224,7 +209,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -318,60 +302,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityProject, bool>> ProjectIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class ProjectMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityProject,Project> _EntityToDto;
-        protected IMappingExpression<Project,DocEntityProject> _DtoToEntity;
-
-        public ProjectMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityProject>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityProject,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityProject>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityProject.GetProject(c));
-            _EntityToDto = CreateMap<DocEntityProject,Project>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, "Updated")))
-                .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Children))))
-                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ChildrenCount))))
-                .ForMember(dest => dest.Client, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Client))))
-                .ForMember(dest => dest.ClientId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ClientId))))
-                .ForMember(dest => dest.DatabaseDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DatabaseDeadline))))
-                .ForMember(dest => dest.DatabaseName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DatabaseName))))
-                .ForMember(dest => dest.Dataset, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Dataset))))
-                .ForMember(dest => dest.DatasetId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DatasetId))))
-                .ForMember(dest => dest.DeliverableDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DeliverableDeadline))))
-                .ForMember(dest => dest.FqId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.FqId))))
-                .ForMember(dest => dest.LegacyPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LegacyPackageId))))
-                .ForMember(dest => dest.LibraryPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LibraryPackageId))))
-                .ForMember(dest => dest.LibraryPackageName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LibraryPackageName))))
-                .ForMember(dest => dest.Number, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Number))))
-                .ForMember(dest => dest.OperationsDeliverable, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.OperationsDeliverable))))
-                .ForMember(dest => dest.OpportunityId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.OpportunityId))))
-                .ForMember(dest => dest.OpportunityName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.OpportunityName))))
-                .ForMember(dest => dest.Parent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Parent))))
-                .ForMember(dest => dest.ParentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ParentId))))
-                .ForMember(dest => dest.PICO, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.PICO))))
-                .ForMember(dest => dest.ProjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ProjectId))))
-                .ForMember(dest => dest.ProjectName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ProjectName))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Status))))
-                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.StatusId))))
-                .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCards))))
-                .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCardsCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Project,DocEntityProject>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

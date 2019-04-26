@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityTermCategory() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new TermCategory());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TermCategory()));
 
         #region Static Members
         public static DocEntityTermCategory GetTermCategory(Reference reference)
@@ -137,7 +123,6 @@ namespace Services.Schema
         public int? TermsCount { get { return Terms.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -155,7 +140,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -242,42 +226,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityTermCategory, bool>> TermCategoryIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class TermCategoryMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityTermCategory,TermCategory> _EntityToDto;
-        protected IMappingExpression<TermCategory,DocEntityTermCategory> _DtoToEntity;
-
-        public TermCategoryMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityTermCategory>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityTermCategory,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityTermCategory>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityTermCategory.GetTermCategory(c));
-            _EntityToDto = CreateMap<DocEntityTermCategory,TermCategory>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, "Updated")))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.Name))))
-                .ForMember(dest => dest.NameId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.NameId))))
-                .ForMember(dest => dest.ParentCategory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ParentCategory))))
-                .ForMember(dest => dest.ParentCategoryId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ParentCategoryId))))
-                .ForMember(dest => dest.Scope, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.Scope))))
-                .ForMember(dest => dest.ScopeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.ScopeId))))
-                .ForMember(dest => dest.Terms, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.Terms))))
-                .ForMember(dest => dest.TermsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<TermCategory>(c, nameof(DocEntityTermCategory.TermsCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<TermCategory,DocEntityTermCategory>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityWorkflowTask() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new WorkflowTask());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new WorkflowTask()));
 
         #region Static Members
         public static DocEntityWorkflowTask GetWorkflowTask(Reference reference)
@@ -151,7 +137,6 @@ namespace Services.Schema
         public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -169,7 +154,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -276,47 +260,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityWorkflowTask, bool>> WorkflowTaskIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class WorkflowTaskMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityWorkflowTask,WorkflowTask> _EntityToDto;
-        protected IMappingExpression<WorkflowTask,DocEntityWorkflowTask> _DtoToEntity;
-
-        public WorkflowTaskMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityWorkflowTask>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityWorkflowTask,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityWorkflowTask>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityWorkflowTask.GetWorkflowTask(c));
-            _EntityToDto = CreateMap<DocEntityWorkflowTask,WorkflowTask>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, "Updated")))
-                .ForMember(dest => dest.Assignee, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.Assignee))))
-                .ForMember(dest => dest.AssigneeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.AssigneeId))))
-                .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.Data))))
-                .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.Description))))
-                .ForMember(dest => dest.DueDate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.DueDate))))
-                .ForMember(dest => dest.Reporter, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.Reporter))))
-                .ForMember(dest => dest.ReporterId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.ReporterId))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.Status))))
-                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.StatusId))))
-                .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.TypeId))))
-                .ForMember(dest => dest.Workflow, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.Workflow))))
-                .ForMember(dest => dest.WorkflowId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, nameof(DocEntityWorkflowTask.WorkflowId))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<WorkflowTask,DocEntityWorkflowTask>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }

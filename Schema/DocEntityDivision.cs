@@ -56,21 +56,7 @@ namespace Services.Schema
         public DocEntityDivision() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        #region VisibleFields
-
-        protected override List<string> _visibleFields
-        {
-            get
-            {
-                if(null == __vf)
-                {
-                    __vf = DocWebSession.GetTypeVisibleFields(new Division());
-                }
-                return __vf;
-            }
-        }
-
-        #endregion VisibleFields
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Division()));
 
         #region Static Members
         public static DocEntityDivision GetDivision(Reference reference)
@@ -152,7 +138,6 @@ namespace Services.Schema
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }
 
 
-
         [Field]
         public override string Gestalt { get; set; }
 
@@ -170,7 +155,6 @@ namespace Services.Schema
 
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
-
         #endregion Properties
 
         #region Overrides of DocEntity
@@ -266,46 +250,5 @@ namespace Services.Schema
 
         public override IDto ToIDto() => ToDto();
         #endregion Converters
-    }
-
-    public static partial class UniqueConstraintFilter
-    {
-        public static Expression<Func<DocEntityDivision, bool>> DivisionIgnoreArchived() => d => d.Archived == false;
-    }
-
-    public partial class DivisionMapper : DocMapperBase
-    {
-        protected IMappingExpression<DocEntityDivision,Division> _EntityToDto;
-        protected IMappingExpression<Division,DocEntityDivision> _DtoToEntity;
-
-        public DivisionMapper()
-        {
-            CreateMap<DocEntitySet<DocEntityDivision>,List<Reference>>()
-                .ConvertUsing(s => s.ToReferences());
-            CreateMap<DocEntityDivision,Reference>()
-                .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
-            CreateMap<Reference,DocEntityDivision>()
-                .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDivision.GetDivision(c));
-            _EntityToDto = CreateMap<DocEntityDivision,Division>()
-                .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, "Created")))
-                .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, "Updated")))
-                .ForMember(dest => dest.Client, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Client))))
-                .ForMember(dest => dest.ClientId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.ClientId))))
-                .ForMember(dest => dest.DefaultLocale, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DefaultLocale))))
-                .ForMember(dest => dest.DefaultLocaleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DefaultLocaleId))))
-                .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DocumentSets))))
-                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.DocumentSetsCount))))
-                .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Name))))
-                .ForMember(dest => dest.Role, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Role))))
-                .ForMember(dest => dest.RoleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.RoleId))))
-                .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Settings))))
-                .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.Users))))
-                .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Division>(c, nameof(DocEntityDivision.UsersCount))))
-                .MaxDepth(2);
-            _DtoToEntity = CreateMap<Division,DocEntityDivision>()
-                .MaxDepth(2);
-            ApplyCustomMaps();
-        }
     }
 }
