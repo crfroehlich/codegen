@@ -206,7 +206,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityUserType.GetUserType(request.Id);
+                entity = DocEntityUserType.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -277,7 +277,7 @@ namespace Services.API
                     var toAdd = requestedUsers.Where(id => entity.Users.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityUser.GetUser(id);
+                        var target = DocEntityUser.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Users)} to {nameof(UserType)}");
                         entity.Users.Add(target);
@@ -285,7 +285,7 @@ namespace Services.API
                     var toRemove = entity.Users.Where(e => requestedUsers.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityUser.GetUser(id);
+                        var target = DocEntityUser.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(UserType)}");
                         entity.Users.Remove(target);
@@ -296,7 +296,7 @@ namespace Services.API
                     var toRemove = entity.Users.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityUser.GetUser(id);
+                        var target = DocEntityUser.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(UserType), columnName: nameof(request.Users)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(UserType)}");
                         entity.Users.Remove(target);
@@ -390,7 +390,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityUserType.GetUserType(request?.Id);
+                    var entity = DocEntityUserType.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -546,7 +546,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityUserType.GetUserType(request?.Id);
+                    var en = DocEntityUserType.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UserType could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -618,7 +618,7 @@ namespace Services.API
             DocEntityUserType entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityUserType.GetUserType(id.Value);
+                entity = DocEntityUserType.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No UserType found for Id {id.Value}");

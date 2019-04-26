@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new MeanRanges()));
 
         #region Static Members
-        public static DocEntityMeanRanges GetMeanRanges(Reference reference)
+        public static DocEntityMeanRanges Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetMeanRanges(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityMeanRanges GetMeanRanges(int? primaryKey)
+        public static DocEntityMeanRanges Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityMeanRanges GetMeanRanges(Guid hash)
+        public static DocEntityMeanRanges Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityMeanRanges>.GetFromCache(hash, MEANRANGES_CACHE);

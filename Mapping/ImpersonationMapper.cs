@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityImpersonation>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityImpersonation.GetImpersonation(c));
+                .ConstructUsing(c => DocEntityImpersonation.Get(c));
             _EntityToDto = CreateMap<DocEntityImpersonation,Impersonation>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Impersonation>(c, "Updated")))

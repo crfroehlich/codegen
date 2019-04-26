@@ -210,13 +210,13 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pDescription = request.Description;
-            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.GetDocument(request.Document.Id) : null;
+            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
             var pEnd = request.End;
-            var pProject = (request.Project?.Id > 0) ? DocEntityProject.GetProject(request.Project.Id) : null;
+            var pProject = (request.Project?.Id > 0) ? DocEntityProject.Get(request.Project.Id) : null;
             var pReferenceId = request.ReferenceId;
             var pStart = request.Start;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.TIMECARDSTATUS, request.Status?.Name, request.Status?.Id);
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
+            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
             DocEntityLookupTable pWorkType = GetLookup(DocConstantLookupTable.WORKTYPE, request.WorkType?.Name, request.WorkType?.Id);
 
             DocEntityTimeCard entity = null;
@@ -231,7 +231,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityTimeCard.GetTimeCard(request.Id);
+                entity = DocEntityTimeCard.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -440,7 +440,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityTimeCard.GetTimeCard(request?.Id);
+                    var entity = DocEntityTimeCard.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -605,7 +605,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityTimeCard.GetTimeCard(request?.Id);
+                    var en = DocEntityTimeCard.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No TimeCard could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -640,7 +640,7 @@ namespace Services.API
             DocEntityTimeCard entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityTimeCard.GetTimeCard(id.Value);
+                entity = DocEntityTimeCard.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No TimeCard found for Id {id.Value}");

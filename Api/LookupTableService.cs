@@ -166,7 +166,7 @@ namespace Services.API
             var pBindings = request.Bindings?.ToList();
             var pCategories = request.Categories?.ToList();
             var pDocuments = request.Documents?.ToList();
-            var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(request.Enum);
+            var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
             var pName = request.Name;
 
             DocEntityLookupTable entity = null;
@@ -181,7 +181,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityLookupTable.GetLookupTable(request.Id);
+                entity = DocEntityLookupTable.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -241,7 +241,7 @@ namespace Services.API
                     var toAdd = requestedBindings.Where(id => entity.Bindings.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
+                        var target = DocEntityLookupTableBinding.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Bindings)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Bindings)} to {nameof(LookupTable)}");
                         entity.Bindings.Add(target);
@@ -249,7 +249,7 @@ namespace Services.API
                     var toRemove = entity.Bindings.Where(e => requestedBindings.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
+                        var target = DocEntityLookupTableBinding.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Bindings)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(LookupTable)}");
                         entity.Bindings.Remove(target);
@@ -260,7 +260,7 @@ namespace Services.API
                     var toRemove = entity.Bindings.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityLookupTableBinding.GetLookupTableBinding(id);
+                        var target = DocEntityLookupTableBinding.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Bindings)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Bindings)} from {nameof(LookupTable)}");
                         entity.Bindings.Remove(target);
@@ -285,7 +285,7 @@ namespace Services.API
                     var toAdd = requestedCategories.Where(id => entity.Categories.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityLookupCategory.GetLookupCategory(id);
+                        var target = DocEntityLookupCategory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Categories)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Categories)} to {nameof(LookupTable)}");
                         entity.Categories.Add(target);
@@ -293,7 +293,7 @@ namespace Services.API
                     var toRemove = entity.Categories.Where(e => requestedCategories.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityLookupCategory.GetLookupCategory(id);
+                        var target = DocEntityLookupCategory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Categories)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(LookupTable)}");
                         entity.Categories.Remove(target);
@@ -304,7 +304,7 @@ namespace Services.API
                     var toRemove = entity.Categories.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityLookupCategory.GetLookupCategory(id);
+                        var target = DocEntityLookupCategory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Categories)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Categories)} from {nameof(LookupTable)}");
                         entity.Categories.Remove(target);
@@ -329,7 +329,7 @@ namespace Services.API
                     var toAdd = requestedDocuments.Where(id => entity.Documents.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityDocument.GetDocument(id);
+                        var target = DocEntityDocument.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Documents)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Documents)} to {nameof(LookupTable)}");
                         entity.Documents.Add(target);
@@ -337,7 +337,7 @@ namespace Services.API
                     var toRemove = entity.Documents.Where(e => requestedDocuments.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityDocument.GetDocument(id);
+                        var target = DocEntityDocument.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Documents)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Documents)} from {nameof(LookupTable)}");
                         entity.Documents.Remove(target);
@@ -348,7 +348,7 @@ namespace Services.API
                     var toRemove = entity.Documents.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityDocument.GetDocument(id);
+                        var target = DocEntityDocument.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LookupTable), columnName: nameof(request.Documents)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Documents)} from {nameof(LookupTable)}");
                         entity.Documents.Remove(target);
@@ -442,7 +442,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityLookupTable.GetLookupTable(request?.Id);
+                    var entity = DocEntityLookupTable.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -610,7 +610,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityLookupTable.GetLookupTable(request?.Id);
+                    var en = DocEntityLookupTable.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No LookupTable could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -694,7 +694,7 @@ namespace Services.API
             DocEntityLookupTable entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityLookupTable.GetLookupTable(id.Value);
+                entity = DocEntityLookupTable.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No LookupTable found for Id {id.Value}");

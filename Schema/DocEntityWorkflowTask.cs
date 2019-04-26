@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new WorkflowTask()));
 
         #region Static Members
-        public static DocEntityWorkflowTask GetWorkflowTask(Reference reference)
+        public static DocEntityWorkflowTask Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetWorkflowTask(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityWorkflowTask GetWorkflowTask(int? primaryKey)
+        public static DocEntityWorkflowTask Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityWorkflowTask GetWorkflowTask(Guid hash)
+        public static DocEntityWorkflowTask Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityWorkflowTask>.GetFromCache(hash, WORKFLOWTASK_CACHE);

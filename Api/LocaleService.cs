@@ -159,7 +159,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityLocale.GetLocale(request.Id);
+                entity = DocEntityLocale.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -300,7 +300,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityLocale.GetLocale(request?.Id);
+                    var entity = DocEntityLocale.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -343,7 +343,7 @@ namespace Services.API
             DocEntityLocale entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityLocale.GetLocale(id.Value);
+                entity = DocEntityLocale.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Locale found for Id {id.Value}");

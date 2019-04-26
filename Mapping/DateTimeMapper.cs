@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityDateTime>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDateTime.GetDateTime(c));
+                .ConstructUsing(c => DocEntityDateTime.Get(c));
             _EntityToDto = CreateMap<DocEntityDateTime,DateTimeDto>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DateTimeDto>(c, "Updated")))

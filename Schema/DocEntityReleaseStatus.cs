@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new ReleaseStatus()));
 
         #region Static Members
-        public static DocEntityReleaseStatus GetReleaseStatus(Reference reference)
+        public static DocEntityReleaseStatus Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetReleaseStatus(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityReleaseStatus GetReleaseStatus(int? primaryKey)
+        public static DocEntityReleaseStatus Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityReleaseStatus GetReleaseStatus(Guid hash)
+        public static DocEntityReleaseStatus Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityReleaseStatus>.GetFromCache(hash, RELEASESTATUS_CACHE);

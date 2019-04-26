@@ -145,7 +145,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<AuditDelta>(DocConstantModelName.AUDITDELTA, nameof(AuditDelta), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pAudit = (request.Audit?.Id > 0) ? DocEntityAuditRecord.GetAuditRecord(request.Audit.Id) : null;
+            var pAudit = (request.Audit?.Id > 0) ? DocEntityAuditRecord.Get(request.Audit.Id) : null;
             var pDelta = request.Delta;
 
             DocEntityAuditDelta entity = null;
@@ -160,7 +160,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityAuditDelta.GetAuditDelta(request.Id);
+                entity = DocEntityAuditDelta.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -290,7 +290,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityAuditDelta.GetAuditDelta(request?.Id);
+                    var entity = DocEntityAuditDelta.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -325,7 +325,7 @@ namespace Services.API
             DocEntityAuditDelta entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityAuditDelta.GetAuditDelta(id.Value);
+                entity = DocEntityAuditDelta.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No AuditDelta found for Id {id.Value}");

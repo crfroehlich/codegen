@@ -197,14 +197,14 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<UnitConversionRules>(DocConstantModelName.UNITCONVERSIONRULES, nameof(UnitConversionRules), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pDestinationUnit = (request.DestinationUnit?.Id > 0) ? DocEntityUnitOfMeasure.GetUnitOfMeasure(request.DestinationUnit.Id) : null;
+            var pDestinationUnit = (request.DestinationUnit?.Id > 0) ? DocEntityUnitOfMeasure.Get(request.DestinationUnit.Id) : null;
             var pIsDefault = request.IsDefault;
             var pIsDestinationSi = request.IsDestinationSi;
-            var pModifierTerm = (request.ModifierTerm?.Id > 0) ? DocEntityTermMaster.GetTermMaster(request.ModifierTerm.Id) : null;
+            var pModifierTerm = (request.ModifierTerm?.Id > 0) ? DocEntityTermMaster.Get(request.ModifierTerm.Id) : null;
             var pMultiplier = request.Multiplier;
             DocEntityLookupTable pParent = GetLookup(DocConstantLookupTable.UNITCONVERSIONRULEPARENT, request.Parent?.Name, request.Parent?.Id);
-            var pRootTerm = (request.RootTerm?.Id > 0) ? DocEntityTermMaster.GetTermMaster(request.RootTerm.Id) : null;
-            var pSourceUnit = (request.SourceUnit?.Id > 0) ? DocEntityUnitOfMeasure.GetUnitOfMeasure(request.SourceUnit.Id) : null;
+            var pRootTerm = (request.RootTerm?.Id > 0) ? DocEntityTermMaster.Get(request.RootTerm.Id) : null;
+            var pSourceUnit = (request.SourceUnit?.Id > 0) ? DocEntityUnitOfMeasure.Get(request.SourceUnit.Id) : null;
 
             DocEntityUnitConversionRules entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -218,7 +218,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityUnitConversionRules.GetUnitConversionRules(request.Id);
+                entity = DocEntityUnitConversionRules.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -414,7 +414,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityUnitConversionRules.GetUnitConversionRules(request?.Id);
+                    var entity = DocEntityUnitConversionRules.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -575,7 +575,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityUnitConversionRules.GetUnitConversionRules(request?.Id);
+                    var en = DocEntityUnitConversionRules.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No UnitConversionRules could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -610,7 +610,7 @@ namespace Services.API
             DocEntityUnitConversionRules entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityUnitConversionRules.GetUnitConversionRules(id.Value);
+                entity = DocEntityUnitConversionRules.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No UnitConversionRules found for Id {id.Value}");

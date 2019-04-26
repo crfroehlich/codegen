@@ -151,7 +151,7 @@ namespace Services.API
             DocEntityTimePoint entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityTimePoint.GetTimePoint(id.Value);
+                entity = DocEntityTimePoint.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No TimePoint found for Id {id.Value}");

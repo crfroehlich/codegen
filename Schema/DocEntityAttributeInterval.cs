@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new AttributeInterval()));
 
         #region Static Members
-        public static DocEntityAttributeInterval GetAttributeInterval(Reference reference)
+        public static DocEntityAttributeInterval Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetAttributeInterval(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityAttributeInterval GetAttributeInterval(int? primaryKey)
+        public static DocEntityAttributeInterval Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityAttributeInterval GetAttributeInterval(Guid hash)
+        public static DocEntityAttributeInterval Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityAttributeInterval>.GetFromCache(hash, ATTRIBUTEINTERVAL_CACHE);

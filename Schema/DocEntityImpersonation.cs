@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Impersonation()));
 
         #region Static Members
-        public static DocEntityImpersonation GetImpersonation(Reference reference)
+        public static DocEntityImpersonation Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetImpersonation(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityImpersonation GetImpersonation(int? primaryKey)
+        public static DocEntityImpersonation Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityImpersonation GetImpersonation(Guid hash)
+        public static DocEntityImpersonation Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityImpersonation>.GetFromCache(hash, IMPERSONATION_CACHE);

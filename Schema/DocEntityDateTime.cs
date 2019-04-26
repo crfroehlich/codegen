@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DateTimeDto()));
 
         #region Static Members
-        public static DocEntityDateTime GetDateTime(Reference reference)
+        public static DocEntityDateTime Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetDateTime(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityDateTime GetDateTime(int? primaryKey)
+        public static DocEntityDateTime Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityDateTime GetDateTime(Guid hash)
+        public static DocEntityDateTime Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityDateTime>.GetFromCache(hash, DATETIME_CACHE);

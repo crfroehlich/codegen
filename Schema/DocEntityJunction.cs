@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Junction()));
 
         #region Static Members
-        public static DocEntityJunction GetJunction(Reference reference)
+        public static DocEntityJunction Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetJunction(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityJunction GetJunction(int? primaryKey)
+        public static DocEntityJunction Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityJunction GetJunction(Guid hash)
+        public static DocEntityJunction Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityJunction>.GetFromCache(hash, JUNCTION_CACHE);

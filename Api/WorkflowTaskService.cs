@@ -201,14 +201,14 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, nameof(WorkflowTask), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pAssignee = (request.Assignee?.Id > 0) ? DocEntityUser.GetUser(request.Assignee.Id) : null;
+            var pAssignee = (request.Assignee?.Id > 0) ? DocEntityUser.Get(request.Assignee.Id) : null;
             var pData = request.Data;
             var pDescription = request.Description;
             var pDueDate = request.DueDate;
-            var pReporter = (request.Reporter?.Id > 0) ? DocEntityUser.GetUser(request.Reporter.Id) : null;
+            var pReporter = (request.Reporter?.Id > 0) ? DocEntityUser.Get(request.Reporter.Id) : null;
             DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.WORKFLOWSTATUS, request.Status?.Name, request.Status?.Id);
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.WORKFLOWTASKTYPE, request.Type?.Name, request.Type?.Id);
-            var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.GetWorkflow(request.Workflow.Id) : null;
+            var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
 
             DocEntityWorkflowTask entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -222,7 +222,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityWorkflowTask.GetWorkflowTask(request.Id);
+                entity = DocEntityWorkflowTask.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -418,7 +418,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityWorkflowTask.GetWorkflowTask(request?.Id);
+                    var entity = DocEntityWorkflowTask.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -581,7 +581,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityWorkflowTask.GetWorkflowTask(request?.Id);
+                    var en = DocEntityWorkflowTask.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowTask could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -616,7 +616,7 @@ namespace Services.API
             DocEntityWorkflowTask entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityWorkflowTask.GetWorkflowTask(id.Value);
+                entity = DocEntityWorkflowTask.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowTask found for Id {id.Value}");

@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TimePoint()));
 
         #region Static Members
-        public static DocEntityTimePoint GetTimePoint(Reference reference)
+        public static DocEntityTimePoint Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetTimePoint(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityTimePoint GetTimePoint(int? primaryKey)
+        public static DocEntityTimePoint Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityTimePoint GetTimePoint(Guid hash)
+        public static DocEntityTimePoint Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityTimePoint>.GetFromCache(hash, TIMEPOINT_CACHE);

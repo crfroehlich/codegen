@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new QueueChannel()));
 
         #region Static Members
-        public static DocEntityQueueChannel GetQueueChannel(Reference reference)
+        public static DocEntityQueueChannel Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetQueueChannel(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityQueueChannel GetQueueChannel(int? primaryKey)
+        public static DocEntityQueueChannel Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityQueueChannel GetQueueChannel(Guid hash)
+        public static DocEntityQueueChannel Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityQueueChannel>.GetFromCache(hash, QUEUECHANNEL_CACHE);

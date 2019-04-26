@@ -321,7 +321,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pAutoCreateMissing = request.AutoCreateMissing;
             var pChildren = request.Children?.ToList();
-            var pClass = (request.Class?.Id > 0) ? DocEntityDataClass.GetDataClass(request.Class.Id) : null;
+            var pClass = (request.Class?.Id > 0) ? DocEntityDataClass.Get(request.Class.Id) : null;
             var pDescription = request.Description;
             var pDisplayName = request.DisplayName;
             var pIsAllowAddInForm = request.IsAllowAddInForm;
@@ -344,18 +344,18 @@ namespace Services.API
             var pIsRequiredInForm = request.IsRequiredInForm;
             var pIsVirtual = request.IsVirtual;
             var pJsonType = request.JsonType;
-            var pLookupTableEnum = DocEntityLookupTableEnum.GetLookupTableEnum(request.LookupTableEnum);
+            var pLookupTableEnum = DocEntityLookupTableEnum.Get(request.LookupTableEnum);
             var pName = request.Name;
             var pOrder = request.Order;
-            var pOwner = (request.Owner?.Id > 0) ? DocEntityDataProperty.GetDataProperty(request.Owner.Id) : null;
+            var pOwner = (request.Owner?.Id > 0) ? DocEntityDataProperty.Get(request.Owner.Id) : null;
             var pPrecision = request.Precision;
             var pRelationshipOnOwnerRemove = request.RelationshipOnOwnerRemove;
             var pRelationshipOnTargetRemove = request.RelationshipOnTargetRemove;
-            var pRelationshipPairTo = (request.RelationshipPairTo?.Id > 0) ? DocEntityDataProperty.GetDataProperty(request.RelationshipPairTo.Id) : null;
+            var pRelationshipPairTo = (request.RelationshipPairTo?.Id > 0) ? DocEntityDataProperty.Get(request.RelationshipPairTo.Id) : null;
             var pScale = request.Scale;
             var pSetDefaultValue = request.SetDefaultValue;
-            var pTab = (request.Tab?.Id > 0) ? DocEntityDataTab.GetDataTab(request.Tab.Id) : null;
-            var pTarget = (request.Target?.Id > 0) ? DocEntityDataClass.GetDataClass(request.Target.Id) : null;
+            var pTab = (request.Tab?.Id > 0) ? DocEntityDataTab.Get(request.Tab.Id) : null;
+            var pTarget = (request.Target?.Id > 0) ? DocEntityDataClass.Get(request.Target.Id) : null;
             var pTargetAlias = request.TargetAlias;
             var pType = request.Type;
             var pUIType = request.UIType;
@@ -372,7 +372,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityDataProperty.GetDataProperty(request.Id);
+                entity = DocEntityDataProperty.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -841,7 +841,7 @@ namespace Services.API
                     var toAdd = requestedChildren.Where(id => entity.Children.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        var target = DocEntityDataProperty.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DataProperty), columnName: nameof(request.Children)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Children)} to {nameof(DataProperty)}");
                         entity.Children.Add(target);
@@ -849,7 +849,7 @@ namespace Services.API
                     var toRemove = entity.Children.Where(e => requestedChildren.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        var target = DocEntityDataProperty.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataProperty), columnName: nameof(request.Children)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(DataProperty)}");
                         entity.Children.Remove(target);
@@ -860,7 +860,7 @@ namespace Services.API
                     var toRemove = entity.Children.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityDataProperty.GetDataProperty(id);
+                        var target = DocEntityDataProperty.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DataProperty), columnName: nameof(request.Children)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(DataProperty)}");
                         entity.Children.Remove(target);
@@ -1000,7 +1000,7 @@ namespace Services.API
             DocEntityDataProperty entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityDataProperty.GetDataProperty(id.Value);
+                entity = DocEntityDataProperty.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No DataProperty found for Id {id.Value}");

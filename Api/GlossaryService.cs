@@ -170,10 +170,10 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pDefinition = request.Definition;
-            var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(request.Enum);
+            var pEnum = DocEntityLookupTableEnum.Get(request.Enum);
             var pIcon = request.Icon;
-            var pPage = (request.Page?.Id > 0) ? DocEntityPage.GetPage(request.Page.Id) : null;
-            var pTerm = (request.Term?.Id > 0) ? DocEntityTermMaster.GetTermMaster(request.Term.Id) : null;
+            var pPage = (request.Page?.Id > 0) ? DocEntityPage.Get(request.Page.Id) : null;
+            var pTerm = (request.Term?.Id > 0) ? DocEntityTermMaster.Get(request.Term.Id) : null;
 
             DocEntityGlossary entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -187,7 +187,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityGlossary.GetGlossary(request.Id);
+                entity = DocEntityGlossary.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -350,7 +350,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityGlossary.GetGlossary(request?.Id);
+                    var entity = DocEntityGlossary.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -507,7 +507,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityGlossary.GetGlossary(request?.Id);
+                    var en = DocEntityGlossary.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Glossary could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -542,7 +542,7 @@ namespace Services.API
             DocEntityGlossary entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityGlossary.GetGlossary(id.Value);
+                entity = DocEntityGlossary.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Glossary found for Id {id.Value}");

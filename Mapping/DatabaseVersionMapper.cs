@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityDatabaseVersion>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityDatabaseVersion.GetDatabaseVersion(c));
+                .ConstructUsing(c => DocEntityDatabaseVersion.Get(c));
             _EntityToDto = CreateMap<DocEntityDatabaseVersion,DatabaseVersion>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DatabaseVersion>(c, "Updated")))

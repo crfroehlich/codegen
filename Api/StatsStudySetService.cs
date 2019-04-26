@@ -186,7 +186,7 @@ namespace Services.API
             DocEntityStatsStudySet entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityStatsStudySet.GetStatsStudySet(id.Value);
+                entity = DocEntityStatsStudySet.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No StatsStudySet found for Id {id.Value}");

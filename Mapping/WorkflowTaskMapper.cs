@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityWorkflowTask>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityWorkflowTask.GetWorkflowTask(c));
+                .ConstructUsing(c => DocEntityWorkflowTask.Get(c));
             _EntityToDto = CreateMap<DocEntityWorkflowTask,WorkflowTask>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<WorkflowTask>(c, "Updated")))

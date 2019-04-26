@@ -151,7 +151,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<DataTab>(DocConstantModelName.DATATAB, nameof(DataTab), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pClass = (request.Class?.Id > 0) ? DocEntityDataClass.GetDataClass(request.Class.Id) : null;
+            var pClass = (request.Class?.Id > 0) ? DocEntityDataClass.Get(request.Class.Id) : null;
             var pDescription = request.Description;
             var pName = request.Name;
             var pOrder = request.Order;
@@ -168,7 +168,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityDataTab.GetDataTab(request.Id);
+                entity = DocEntityDataTab.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -330,7 +330,7 @@ namespace Services.API
             DocEntityDataTab entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityDataTab.GetDataTab(id.Value);
+                entity = DocEntityDataTab.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No DataTab found for Id {id.Value}");

@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Comparator()));
 
         #region Static Members
-        public static DocEntityComparator GetComparator(Reference reference)
+        public static DocEntityComparator Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetComparator(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityComparator GetComparator(int? primaryKey)
+        public static DocEntityComparator Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityComparator GetComparator(Guid hash)
+        public static DocEntityComparator Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityComparator>.GetFromCache(hash, COMPARATOR_CACHE);

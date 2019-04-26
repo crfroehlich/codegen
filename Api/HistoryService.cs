@@ -195,14 +195,14 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<History>(DocConstantModelName.HISTORY, nameof(History), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
-            var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.DocumentSet.Id) : null;
-            var pImpersonation = (request.Impersonation?.Id > 0) ? DocEntityImpersonation.GetImpersonation(request.Impersonation.Id) : null;
-            var pPage = (request.Page?.Id > 0) ? DocEntityPage.GetPage(request.Page.Id) : null;
+            var pApp = (request.App?.Id > 0) ? DocEntityApp.Get(request.App.Id) : null;
+            var pDocumentSet = (request.DocumentSet?.Id > 0) ? DocEntityDocumentSet.Get(request.DocumentSet.Id) : null;
+            var pImpersonation = (request.Impersonation?.Id > 0) ? DocEntityImpersonation.Get(request.Impersonation.Id) : null;
+            var pPage = (request.Page?.Id > 0) ? DocEntityPage.Get(request.Page.Id) : null;
             var pURL = request.URL;
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
-            var pUserSession = (request.UserSession?.Id > 0) ? DocEntityUserSession.GetUserSession(request.UserSession.Id) : null;
-            var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.GetWorkflow(request.Workflow.Id) : null;
+            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
+            var pUserSession = (request.UserSession?.Id > 0) ? DocEntityUserSession.Get(request.UserSession.Id) : null;
+            var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
 
             DocEntityHistory entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -216,7 +216,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityHistory.GetHistory(request.Id);
+                entity = DocEntityHistory.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -412,7 +412,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityHistory.GetHistory(request?.Id);
+                    var entity = DocEntityHistory.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -461,7 +461,7 @@ namespace Services.API
             DocEntityHistory entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityHistory.GetHistory(id.Value);
+                entity = DocEntityHistory.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No History found for Id {id.Value}");

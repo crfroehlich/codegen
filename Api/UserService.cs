@@ -267,7 +267,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pClientDepartment = request.ClientDepartment;
-            var pDivision = (request.Division?.Id > 0) ? DocEntityDivision.GetDivision(request.Division.Id) : null;
+            var pDivision = (request.Division?.Id > 0) ? DocEntityDivision.Get(request.Division.Id) : null;
             var pDocumentSets = request.DocumentSets?.ToList();
             var pEmail = request.Email;
             var pExpireDate = request.ExpireDate;
@@ -282,7 +282,7 @@ namespace Services.API
             var pLastLogin = request.LastLogin;
             var pLastName = request.LastName;
             var pLegacyUsername = request.LegacyUsername;
-            var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.GetLocale(request.Locale.Id) : null;
+            var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.Get(request.Locale.Id) : null;
             var pLoginCount = request.LoginCount;
             var pName = request.Name;
             var pRoles = request.Roles?.ToList();
@@ -295,7 +295,7 @@ namespace Services.API
             var pTeams = request.Teams?.ToList();
             var pTimeCards = request.TimeCards?.ToList();
             var pUpdates = request.Updates?.ToList();
-            var pUserType = (request.UserType?.Id > 0) ? DocEntityUserType.GetUserType(request.UserType.Id) : null;
+            var pUserType = (request.UserType?.Id > 0) ? DocEntityUserType.Get(request.UserType.Id) : null;
             var pWorkflows = request.Workflows?.ToList();
 
             DocEntityUser entity = null;
@@ -310,7 +310,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityUser.GetUser(request.Id);
+                entity = DocEntityUser.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -559,7 +559,7 @@ namespace Services.API
                     var toAdd = requestedDocumentSets.Where(id => entity.DocumentSets.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        var target = DocEntityDocumentSet.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.DocumentSets)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(User)}");
                         entity.DocumentSets.Add(target);
@@ -567,7 +567,7 @@ namespace Services.API
                     var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        var target = DocEntityDocumentSet.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.DocumentSets)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(User)}");
                         entity.DocumentSets.Remove(target);
@@ -578,7 +578,7 @@ namespace Services.API
                     var toRemove = entity.DocumentSets.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityDocumentSet.GetDocumentSet(id);
+                        var target = DocEntityDocumentSet.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.DocumentSets)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(User)}");
                         entity.DocumentSets.Remove(target);
@@ -603,7 +603,7 @@ namespace Services.API
                     var toAdd = requestedHistory.Where(id => entity.History.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityHistory.GetHistory(id);
+                        var target = DocEntityHistory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.History)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.History)} to {nameof(User)}");
                         entity.History.Add(target);
@@ -611,7 +611,7 @@ namespace Services.API
                     var toRemove = entity.History.Where(e => requestedHistory.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityHistory.GetHistory(id);
+                        var target = DocEntityHistory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.History)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.History)} from {nameof(User)}");
                         entity.History.Remove(target);
@@ -622,7 +622,7 @@ namespace Services.API
                     var toRemove = entity.History.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityHistory.GetHistory(id);
+                        var target = DocEntityHistory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.History)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.History)} from {nameof(User)}");
                         entity.History.Remove(target);
@@ -647,7 +647,7 @@ namespace Services.API
                     var toAdd = requestedImpersonated.Where(id => entity.Impersonated.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityImpersonation.GetImpersonation(id);
+                        var target = DocEntityImpersonation.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Impersonated)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Impersonated)} to {nameof(User)}");
                         entity.Impersonated.Add(target);
@@ -655,7 +655,7 @@ namespace Services.API
                     var toRemove = entity.Impersonated.Where(e => requestedImpersonated.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityImpersonation.GetImpersonation(id);
+                        var target = DocEntityImpersonation.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Impersonated)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Impersonated)} from {nameof(User)}");
                         entity.Impersonated.Remove(target);
@@ -666,7 +666,7 @@ namespace Services.API
                     var toRemove = entity.Impersonated.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityImpersonation.GetImpersonation(id);
+                        var target = DocEntityImpersonation.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Impersonated)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Impersonated)} from {nameof(User)}");
                         entity.Impersonated.Remove(target);
@@ -691,7 +691,7 @@ namespace Services.API
                     var toAdd = requestedImpersonating.Where(id => entity.Impersonating.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityImpersonation.GetImpersonation(id);
+                        var target = DocEntityImpersonation.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Impersonating)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Impersonating)} to {nameof(User)}");
                         entity.Impersonating.Add(target);
@@ -699,7 +699,7 @@ namespace Services.API
                     var toRemove = entity.Impersonating.Where(e => requestedImpersonating.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityImpersonation.GetImpersonation(id);
+                        var target = DocEntityImpersonation.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Impersonating)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Impersonating)} from {nameof(User)}");
                         entity.Impersonating.Remove(target);
@@ -710,7 +710,7 @@ namespace Services.API
                     var toRemove = entity.Impersonating.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityImpersonation.GetImpersonation(id);
+                        var target = DocEntityImpersonation.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Impersonating)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Impersonating)} from {nameof(User)}");
                         entity.Impersonating.Remove(target);
@@ -735,7 +735,7 @@ namespace Services.API
                     var toAdd = requestedRoles.Where(id => entity.Roles.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityRole.GetRole(id);
+                        var target = DocEntityRole.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Roles)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Roles)} to {nameof(User)}");
                         entity.Roles.Add(target);
@@ -743,7 +743,7 @@ namespace Services.API
                     var toRemove = entity.Roles.Where(e => requestedRoles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityRole.GetRole(id);
+                        var target = DocEntityRole.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Roles)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(User)}");
                         entity.Roles.Remove(target);
@@ -754,7 +754,7 @@ namespace Services.API
                     var toRemove = entity.Roles.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityRole.GetRole(id);
+                        var target = DocEntityRole.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Roles)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(User)}");
                         entity.Roles.Remove(target);
@@ -779,7 +779,7 @@ namespace Services.API
                     var toAdd = requestedScopes.Where(id => entity.Scopes.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityScope.GetScope(id);
+                        var target = DocEntityScope.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(User)}");
                         entity.Scopes.Add(target);
@@ -787,7 +787,7 @@ namespace Services.API
                     var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityScope.GetScope(id);
+                        var target = DocEntityScope.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(User)}");
                         entity.Scopes.Remove(target);
@@ -798,7 +798,7 @@ namespace Services.API
                     var toRemove = entity.Scopes.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityScope.GetScope(id);
+                        var target = DocEntityScope.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(User)}");
                         entity.Scopes.Remove(target);
@@ -823,7 +823,7 @@ namespace Services.API
                     var toAdd = requestedSessions.Where(id => entity.Sessions.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityUserSession.GetUserSession(id);
+                        var target = DocEntityUserSession.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Sessions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Sessions)} to {nameof(User)}");
                         entity.Sessions.Add(target);
@@ -831,7 +831,7 @@ namespace Services.API
                     var toRemove = entity.Sessions.Where(e => requestedSessions.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityUserSession.GetUserSession(id);
+                        var target = DocEntityUserSession.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Sessions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Sessions)} from {nameof(User)}");
                         entity.Sessions.Remove(target);
@@ -842,7 +842,7 @@ namespace Services.API
                     var toRemove = entity.Sessions.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityUserSession.GetUserSession(id);
+                        var target = DocEntityUserSession.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Sessions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Sessions)} from {nameof(User)}");
                         entity.Sessions.Remove(target);
@@ -867,7 +867,7 @@ namespace Services.API
                     var toAdd = requestedTeams.Where(id => entity.Teams.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityTeam.GetTeam(id);
+                        var target = DocEntityTeam.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Teams)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Teams)} to {nameof(User)}");
                         entity.Teams.Add(target);
@@ -875,7 +875,7 @@ namespace Services.API
                     var toRemove = entity.Teams.Where(e => requestedTeams.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityTeam.GetTeam(id);
+                        var target = DocEntityTeam.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Teams)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Teams)} from {nameof(User)}");
                         entity.Teams.Remove(target);
@@ -886,7 +886,7 @@ namespace Services.API
                     var toRemove = entity.Teams.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityTeam.GetTeam(id);
+                        var target = DocEntityTeam.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Teams)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Teams)} from {nameof(User)}");
                         entity.Teams.Remove(target);
@@ -911,7 +911,7 @@ namespace Services.API
                     var toAdd = requestedTimeCards.Where(id => entity.TimeCards.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
+                        var target = DocEntityTimeCard.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.TimeCards)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.TimeCards)} to {nameof(User)}");
                         entity.TimeCards.Add(target);
@@ -919,7 +919,7 @@ namespace Services.API
                     var toRemove = entity.TimeCards.Where(e => requestedTimeCards.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
+                        var target = DocEntityTimeCard.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.TimeCards)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TimeCards)} from {nameof(User)}");
                         entity.TimeCards.Remove(target);
@@ -930,7 +930,7 @@ namespace Services.API
                     var toRemove = entity.TimeCards.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityTimeCard.GetTimeCard(id);
+                        var target = DocEntityTimeCard.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.TimeCards)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TimeCards)} from {nameof(User)}");
                         entity.TimeCards.Remove(target);
@@ -955,7 +955,7 @@ namespace Services.API
                     var toAdd = requestedUpdates.Where(id => entity.Updates.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityUpdate.GetUpdate(id);
+                        var target = DocEntityUpdate.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Updates)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Updates)} to {nameof(User)}");
                         entity.Updates.Add(target);
@@ -963,7 +963,7 @@ namespace Services.API
                     var toRemove = entity.Updates.Where(e => requestedUpdates.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityUpdate.GetUpdate(id);
+                        var target = DocEntityUpdate.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Updates)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Updates)} from {nameof(User)}");
                         entity.Updates.Remove(target);
@@ -974,7 +974,7 @@ namespace Services.API
                     var toRemove = entity.Updates.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityUpdate.GetUpdate(id);
+                        var target = DocEntityUpdate.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Updates)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Updates)} from {nameof(User)}");
                         entity.Updates.Remove(target);
@@ -999,7 +999,7 @@ namespace Services.API
                     var toAdd = requestedWorkflows.Where(id => entity.Workflows.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
+                        var target = DocEntityWorkflow.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Workflows)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Workflows)} to {nameof(User)}");
                         entity.Workflows.Add(target);
@@ -1007,7 +1007,7 @@ namespace Services.API
                     var toRemove = entity.Workflows.Where(e => requestedWorkflows.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
+                        var target = DocEntityWorkflow.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Workflows)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Workflows)} from {nameof(User)}");
                         entity.Workflows.Remove(target);
@@ -1018,7 +1018,7 @@ namespace Services.API
                     var toRemove = entity.Workflows.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
+                        var target = DocEntityWorkflow.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(User), columnName: nameof(request.Workflows)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Workflows)} from {nameof(User)}");
                         entity.Workflows.Remove(target);
@@ -1112,7 +1112,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityUser.GetUser(request?.Id);
+                    var entity = DocEntityUser.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -1412,7 +1412,7 @@ namespace Services.API
             DocEntityUser entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityUser.GetUser(id.Value);
+                entity = DocEntityUser.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No User found for Id {id.Value}");

@@ -169,7 +169,7 @@ namespace Services.API
             DocEntityBackgroundTaskHistory entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id.Value);
+                entity = DocEntityBackgroundTaskHistory.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No BackgroundTaskHistory found for Id {id.Value}");

@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityUnitConversionRules>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityUnitConversionRules.GetUnitConversionRules(c));
+                .ConstructUsing(c => DocEntityUnitConversionRules.Get(c));
             _EntityToDto = CreateMap<DocEntityUnitConversionRules,UnitConversionRules>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitConversionRules>(c, "Updated")))

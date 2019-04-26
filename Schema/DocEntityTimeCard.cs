@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TimeCard()));
 
         #region Static Members
-        public static DocEntityTimeCard GetTimeCard(Reference reference)
+        public static DocEntityTimeCard Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetTimeCard(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityTimeCard GetTimeCard(int? primaryKey)
+        public static DocEntityTimeCard Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityTimeCard GetTimeCard(Guid hash)
+        public static DocEntityTimeCard Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityTimeCard>.GetFromCache(hash, TIMECARD_CACHE);

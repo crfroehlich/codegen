@@ -197,8 +197,8 @@ namespace Services.API
             var pRead = request.Read;
             var pSlackSent = request.SlackSent;
             var pSubject = request.Subject;
-            var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.GetTeam(request.Team.Id) : null;
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
+            var pTeam = (request.Team?.Id > 0) ? DocEntityTeam.Get(request.Team.Id) : null;
+            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
 
             DocEntityUpdate entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -212,7 +212,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityUpdate.GetUpdate(request.Id);
+                entity = DocEntityUpdate.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -373,7 +373,7 @@ namespace Services.API
                     var toAdd = requestedEvents.Where(id => entity.Events.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityEvent.GetEvent(id);
+                        var target = DocEntityEvent.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Events)} to {nameof(Update)}");
                         entity.Events.Add(target);
@@ -381,7 +381,7 @@ namespace Services.API
                     var toRemove = entity.Events.Where(e => requestedEvents.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityEvent.GetEvent(id);
+                        var target = DocEntityEvent.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Events)} from {nameof(Update)}");
                         entity.Events.Remove(target);
@@ -392,7 +392,7 @@ namespace Services.API
                     var toRemove = entity.Events.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityEvent.GetEvent(id);
+                        var target = DocEntityEvent.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Update), columnName: nameof(request.Events)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Events)} from {nameof(Update)}");
                         entity.Events.Remove(target);
@@ -486,7 +486,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityUpdate.GetUpdate(request?.Id);
+                    var entity = DocEntityUpdate.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -560,7 +560,7 @@ namespace Services.API
             DocEntityUpdate entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityUpdate.GetUpdate(id.Value);
+                entity = DocEntityUpdate.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Update found for Id {id.Value}");

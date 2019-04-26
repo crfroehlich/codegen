@@ -189,7 +189,7 @@ namespace Services.API
             DocEntityBackgroundTaskItem entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id.Value);
+                entity = DocEntityBackgroundTaskItem.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No BackgroundTaskItem found for Id {id.Value}");

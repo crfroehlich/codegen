@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UserType()));
 
         #region Static Members
-        public static DocEntityUserType GetUserType(Reference reference)
+        public static DocEntityUserType Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetUserType(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityUserType GetUserType(int? primaryKey)
+        public static DocEntityUserType Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityUserType GetUserType(Guid hash)
+        public static DocEntityUserType Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityUserType>.GetFromCache(hash, USERTYPE_CACHE);

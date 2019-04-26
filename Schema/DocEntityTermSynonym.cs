@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TermSynonym()));
 
         #region Static Members
-        public static DocEntityTermSynonym GetTermSynonym(Reference reference)
+        public static DocEntityTermSynonym Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetTermSynonym(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityTermSynonym GetTermSynonym(int? primaryKey)
+        public static DocEntityTermSynonym Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityTermSynonym GetTermSynonym(Guid hash)
+        public static DocEntityTermSynonym Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityTermSynonym>.GetFromCache(hash, TERMSYNONYM_CACHE);

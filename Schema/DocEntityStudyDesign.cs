@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new StudyDesign()));
 
         #region Static Members
-        public static DocEntityStudyDesign GetStudyDesign(Reference reference)
+        public static DocEntityStudyDesign Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetStudyDesign(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityStudyDesign GetStudyDesign(int? primaryKey)
+        public static DocEntityStudyDesign Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityStudyDesign GetStudyDesign(Guid hash)
+        public static DocEntityStudyDesign Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityStudyDesign>.GetFromCache(hash, STUDYDESIGN_CACHE);

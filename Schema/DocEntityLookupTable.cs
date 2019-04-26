@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new LookupTable()));
 
         #region Static Members
-        public static DocEntityLookupTable GetLookupTable(Reference reference)
+        public static DocEntityLookupTable Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetLookupTable(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityLookupTable GetLookupTable(int? primaryKey)
+        public static DocEntityLookupTable Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityLookupTable GetLookupTable(Guid hash)
+        public static DocEntityLookupTable Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityLookupTable>.GetFromCache(hash, LOOKUPTABLE_CACHE);

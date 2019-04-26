@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new StatsStudySet()));
 
         #region Static Members
-        public static DocEntityStatsStudySet GetStatsStudySet(Reference reference)
+        public static DocEntityStatsStudySet Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetStatsStudySet(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityStatsStudySet GetStatsStudySet(int? primaryKey)
+        public static DocEntityStatsStudySet Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityStatsStudySet GetStatsStudySet(Guid hash)
+        public static DocEntityStatsStudySet Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityStatsStudySet>.GetFromCache(hash, STATSSTUDYSET_CACHE);

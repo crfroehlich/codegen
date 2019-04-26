@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TermMaster()));
 
         #region Static Members
-        public static DocEntityTermMaster GetTermMaster(Reference reference)
+        public static DocEntityTermMaster Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetTermMaster(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityTermMaster GetTermMaster(int? primaryKey)
+        public static DocEntityTermMaster Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityTermMaster GetTermMaster(Guid hash)
+        public static DocEntityTermMaster Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityTermMaster>.GetFromCache(hash, TERMMASTER_CACHE);

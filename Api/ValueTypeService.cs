@@ -162,7 +162,7 @@ namespace Services.API
             DocEntityValueType entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityValueType.GetValueType(id.Value);
+                entity = DocEntityValueType.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No ValueType found for Id {id.Value}");

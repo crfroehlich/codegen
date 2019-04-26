@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Locale()));
 
         #region Static Members
-        public static DocEntityLocale GetLocale(Reference reference)
+        public static DocEntityLocale Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetLocale(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityLocale GetLocale(int? primaryKey)
+        public static DocEntityLocale Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityLocale GetLocale(Guid hash)
+        public static DocEntityLocale Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityLocale>.GetFromCache(hash, LOCALE_CACHE);

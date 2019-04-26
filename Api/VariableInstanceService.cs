@@ -158,8 +158,8 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pData = request.Data;
-            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.GetDocument(request.Document.Id) : null;
-            var pRule = (request.Rule?.Id > 0) ? DocEntityVariableRule.GetVariableRule(request.Rule.Id) : null;
+            var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
+            var pRule = (request.Rule?.Id > 0) ? DocEntityVariableRule.Get(request.Rule.Id) : null;
             var pWorkflows = request.Workflows?.ToList();
 
             DocEntityVariableInstance entity = null;
@@ -174,7 +174,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityVariableInstance.GetVariableInstance(request.Id);
+                entity = DocEntityVariableInstance.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -245,7 +245,7 @@ namespace Services.API
                     var toAdd = requestedWorkflows.Where(id => entity.Workflows.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
+                        var target = DocEntityWorkflow.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(VariableInstance), columnName: nameof(request.Workflows)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Workflows)} to {nameof(VariableInstance)}");
                         entity.Workflows.Add(target);
@@ -253,7 +253,7 @@ namespace Services.API
                     var toRemove = entity.Workflows.Where(e => requestedWorkflows.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
+                        var target = DocEntityWorkflow.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(VariableInstance), columnName: nameof(request.Workflows)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Workflows)} from {nameof(VariableInstance)}");
                         entity.Workflows.Remove(target);
@@ -264,7 +264,7 @@ namespace Services.API
                     var toRemove = entity.Workflows.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityWorkflow.GetWorkflow(id);
+                        var target = DocEntityWorkflow.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(VariableInstance), columnName: nameof(request.Workflows)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Workflows)} from {nameof(VariableInstance)}");
                         entity.Workflows.Remove(target);
@@ -358,7 +358,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityVariableInstance.GetVariableInstance(request?.Id);
+                    var entity = DocEntityVariableInstance.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -514,7 +514,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityVariableInstance.GetVariableInstance(request?.Id);
+                    var en = DocEntityVariableInstance.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No VariableInstance could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -586,7 +586,7 @@ namespace Services.API
             DocEntityVariableInstance entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityVariableInstance.GetVariableInstance(id.Value);
+                entity = DocEntityVariableInstance.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No VariableInstance found for Id {id.Value}");

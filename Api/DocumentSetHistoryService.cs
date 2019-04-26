@@ -146,7 +146,7 @@ namespace Services.API
             DocEntityDocumentSetHistory entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityDocumentSetHistory.GetDocumentSetHistory(id.Value);
+                entity = DocEntityDocumentSetHistory.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSetHistory found for Id {id.Value}");

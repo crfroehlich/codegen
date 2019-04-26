@@ -192,7 +192,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityHelp.GetHelp(request.Id);
+                entity = DocEntityHelp.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -296,7 +296,7 @@ namespace Services.API
                     var toAdd = requestedPages.Where(id => entity.Pages.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityPage.GetPage(id);
+                        var target = DocEntityPage.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Pages)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Pages)} to {nameof(Help)}");
                         entity.Pages.Add(target);
@@ -304,7 +304,7 @@ namespace Services.API
                     var toRemove = entity.Pages.Where(e => requestedPages.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityPage.GetPage(id);
+                        var target = DocEntityPage.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Pages)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Pages)} from {nameof(Help)}");
                         entity.Pages.Remove(target);
@@ -315,7 +315,7 @@ namespace Services.API
                     var toRemove = entity.Pages.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityPage.GetPage(id);
+                        var target = DocEntityPage.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Pages)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Pages)} from {nameof(Help)}");
                         entity.Pages.Remove(target);
@@ -340,7 +340,7 @@ namespace Services.API
                     var toAdd = requestedScopes.Where(id => entity.Scopes.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityScope.GetScope(id);
+                        var target = DocEntityScope.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(Help)}");
                         entity.Scopes.Add(target);
@@ -348,7 +348,7 @@ namespace Services.API
                     var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityScope.GetScope(id);
+                        var target = DocEntityScope.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Help)}");
                         entity.Scopes.Remove(target);
@@ -359,7 +359,7 @@ namespace Services.API
                     var toRemove = entity.Scopes.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityScope.GetScope(id);
+                        var target = DocEntityScope.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Help), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Help)}");
                         entity.Scopes.Remove(target);
@@ -453,7 +453,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityHelp.GetHelp(request?.Id);
+                    var entity = DocEntityHelp.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -629,7 +629,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityHelp.GetHelp(request?.Id);
+                    var en = DocEntityHelp.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Help could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -707,7 +707,7 @@ namespace Services.API
             DocEntityHelp entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityHelp.GetHelp(id.Value);
+                entity = DocEntityHelp.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Help found for Id {id.Value}");

@@ -165,7 +165,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityLookupTableEnum.GetLookupTableEnum(request.Id);
+                entity = DocEntityLookupTableEnum.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -274,7 +274,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityLookupTableEnum.GetLookupTableEnum(request?.Id);
+                    var entity = DocEntityLookupTableEnum.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -427,7 +427,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityLookupTableEnum.GetLookupTableEnum(request?.Id);
+                    var en = DocEntityLookupTableEnum.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No LookupTableEnum could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -462,7 +462,7 @@ namespace Services.API
             DocEntityLookupTableEnum entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityLookupTableEnum.GetLookupTableEnum(id.Value);
+                entity = DocEntityLookupTableEnum.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No LookupTableEnum found for Id {id.Value}");

@@ -204,12 +204,12 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             DocEntityLookupTable pAttributeName = GetLookup(DocConstantLookupTable.ATTRIBUTENAME, request.AttributeName?.Name, request.AttributeName?.Id);
             DocEntityLookupTable pAttributeType = GetLookup(DocConstantLookupTable.ATTRIBUTETYPE, request.AttributeType?.Name, request.AttributeType?.Id);
-            var pInterval = (request.Interval?.Id > 0) ? DocEntityAttributeInterval.GetAttributeInterval(request.Interval.Id) : null;
+            var pInterval = (request.Interval?.Id > 0) ? DocEntityAttributeInterval.Get(request.Interval.Id) : null;
             var pIsCharacteristic = request.IsCharacteristic;
             var pIsOutcome = request.IsOutcome;
             var pIsPositive = request.IsPositive;
             var pUniqueKey = request.UniqueKey;
-            var pValueType = DocEntityValueType.GetValueType(request.ValueType);
+            var pValueType = DocEntityValueType.Get(request.ValueType);
 
             DocEntityAttribute entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -223,7 +223,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityAttribute.GetAttribute(request.Id);
+                entity = DocEntityAttribute.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -419,7 +419,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityAttribute.GetAttribute(request?.Id);
+                    var entity = DocEntityAttribute.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -582,7 +582,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityAttribute.GetAttribute(request?.Id);
+                    var en = DocEntityAttribute.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Attribute could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -617,7 +617,7 @@ namespace Services.API
             DocEntityAttribute entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityAttribute.GetAttribute(id.Value);
+                entity = DocEntityAttribute.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Attribute found for Id {id.Value}");

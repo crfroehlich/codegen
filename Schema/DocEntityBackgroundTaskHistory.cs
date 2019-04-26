@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new BackgroundTaskHistory()));
 
         #region Static Members
-        public static DocEntityBackgroundTaskHistory GetBackgroundTaskHistory(Reference reference)
+        public static DocEntityBackgroundTaskHistory Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetBackgroundTaskHistory(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityBackgroundTaskHistory GetBackgroundTaskHistory(int? primaryKey)
+        public static DocEntityBackgroundTaskHistory Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityBackgroundTaskHistory GetBackgroundTaskHistory(Guid hash)
+        public static DocEntityBackgroundTaskHistory Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityBackgroundTaskHistory>.GetFromCache(hash, BACKGROUNDTASKHISTORY_CACHE);

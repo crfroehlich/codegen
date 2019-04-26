@@ -195,8 +195,8 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<BackgroundTask>(DocConstantModelName.BACKGROUNDTASK, nameof(BackgroundTask), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pApp = (request.App?.Id > 0) ? DocEntityApp.GetApp(request.App.Id) : null;
-            var pChannel = (request.Channel?.Id > 0) ? DocEntityQueueChannel.GetQueueChannel(request.Channel.Id) : null;
+            var pApp = (request.App?.Id > 0) ? DocEntityApp.Get(request.App.Id) : null;
+            var pChannel = (request.Channel?.Id > 0) ? DocEntityQueueChannel.Get(request.Channel.Id) : null;
             var pDescription = request.Description;
             var pEnabled = request.Enabled;
             var pFrequency = request.Frequency;
@@ -223,7 +223,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityBackgroundTask.GetBackgroundTask(request.Id);
+                entity = DocEntityBackgroundTask.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -406,7 +406,7 @@ namespace Services.API
                     var toAdd = requestedItems.Where(id => entity.Items.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
+                        var target = DocEntityBackgroundTaskItem.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Items)} to {nameof(BackgroundTask)}");
                         entity.Items.Add(target);
@@ -414,7 +414,7 @@ namespace Services.API
                     var toRemove = entity.Items.Where(e => requestedItems.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
+                        var target = DocEntityBackgroundTaskItem.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Items)} from {nameof(BackgroundTask)}");
                         entity.Items.Remove(target);
@@ -425,7 +425,7 @@ namespace Services.API
                     var toRemove = entity.Items.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityBackgroundTaskItem.GetBackgroundTaskItem(id);
+                        var target = DocEntityBackgroundTaskItem.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.Items)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Items)} from {nameof(BackgroundTask)}");
                         entity.Items.Remove(target);
@@ -450,7 +450,7 @@ namespace Services.API
                     var toAdd = requestedTaskHistory.Where(id => entity.TaskHistory.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
+                        var target = DocEntityBackgroundTaskHistory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.TaskHistory)} to {nameof(BackgroundTask)}");
                         entity.TaskHistory.Add(target);
@@ -458,7 +458,7 @@ namespace Services.API
                     var toRemove = entity.TaskHistory.Where(e => requestedTaskHistory.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
+                        var target = DocEntityBackgroundTaskHistory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TaskHistory)} from {nameof(BackgroundTask)}");
                         entity.TaskHistory.Remove(target);
@@ -469,7 +469,7 @@ namespace Services.API
                     var toRemove = entity.TaskHistory.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityBackgroundTaskHistory.GetBackgroundTaskHistory(id);
+                        var target = DocEntityBackgroundTaskHistory.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(BackgroundTask), columnName: nameof(request.TaskHistory)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.TaskHistory)} from {nameof(BackgroundTask)}");
                         entity.TaskHistory.Remove(target);
@@ -586,7 +586,7 @@ namespace Services.API
             DocEntityBackgroundTask entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityBackgroundTask.GetBackgroundTask(id.Value);
+                entity = DocEntityBackgroundTask.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No BackgroundTask found for Id {id.Value}");

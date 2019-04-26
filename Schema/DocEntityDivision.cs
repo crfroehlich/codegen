@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Division()));
 
         #region Static Members
-        public static DocEntityDivision GetDivision(Reference reference)
+        public static DocEntityDivision Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetDivision(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityDivision GetDivision(int? primaryKey)
+        public static DocEntityDivision Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityDivision GetDivision(Guid hash)
+        public static DocEntityDivision Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityDivision>.GetFromCache(hash, DIVISION_CACHE);

@@ -165,7 +165,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityReleaseStatus.GetReleaseStatus(request.Id);
+                entity = DocEntityReleaseStatus.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -328,7 +328,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityReleaseStatus.GetReleaseStatus(request?.Id);
+                    var entity = DocEntityReleaseStatus.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -493,7 +493,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityReleaseStatus.GetReleaseStatus(request?.Id);
+                    var en = DocEntityReleaseStatus.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No ReleaseStatus could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -528,7 +528,7 @@ namespace Services.API
             DocEntityReleaseStatus entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityReleaseStatus.GetReleaseStatus(id.Value);
+                entity = DocEntityReleaseStatus.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No ReleaseStatus found for Id {id.Value}");

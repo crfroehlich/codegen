@@ -152,7 +152,7 @@ namespace Services.API
             DocEntityStatsRecord entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityStatsRecord.GetStatsRecord(id.Value);
+                entity = DocEntityStatsRecord.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No StatsRecord found for Id {id.Value}");

@@ -160,7 +160,7 @@ namespace Services.API
             DocEntityUserRequest entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityUserRequest.GetUserRequest(id.Value);
+                entity = DocEntityUserRequest.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No UserRequest found for Id {id.Value}");

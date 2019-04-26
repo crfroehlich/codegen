@@ -170,7 +170,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pAutoDelete = request.AutoDelete;
-            var pBackgroundTask = (request.BackgroundTask?.Id > 0) ? DocEntityBackgroundTask.GetBackgroundTask(request.BackgroundTask.Id) : null;
+            var pBackgroundTask = (request.BackgroundTask?.Id > 0) ? DocEntityBackgroundTask.Get(request.BackgroundTask.Id) : null;
             var pDescription = request.Description;
             var pDurable = request.Durable;
             var pEnabled = request.Enabled;
@@ -189,7 +189,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityQueueChannel.GetQueueChannel(request.Id);
+                entity = DocEntityQueueChannel.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -374,7 +374,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityQueueChannel.GetQueueChannel(request?.Id);
+                    var entity = DocEntityQueueChannel.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -537,7 +537,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityQueueChannel.GetQueueChannel(request?.Id);
+                    var en = DocEntityQueueChannel.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No QueueChannel could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -572,7 +572,7 @@ namespace Services.API
             DocEntityQueueChannel entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityQueueChannel.GetQueueChannel(id.Value);
+                entity = DocEntityQueueChannel.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No QueueChannel found for Id {id.Value}");

@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityFeatureSet>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityFeatureSet.GetFeatureSet(c));
+                .ConstructUsing(c => DocEntityFeatureSet.Get(c));
             _EntityToDto = CreateMap<DocEntityFeatureSet,FeatureSet>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<FeatureSet>(c, "Updated")))

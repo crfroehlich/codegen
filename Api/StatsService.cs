@@ -154,7 +154,7 @@ namespace Services.API
             DocEntityStats entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityStats.GetStats(id.Value);
+                entity = DocEntityStats.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Stats found for Id {id.Value}");

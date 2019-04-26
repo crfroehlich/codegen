@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityMeanVarianceValue>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityMeanVarianceValue.GetMeanVarianceValue(c));
+                .ConstructUsing(c => DocEntityMeanVarianceValue.Get(c));
             _EntityToDto = CreateMap<DocEntityMeanVarianceValue,MeanVarianceValue>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, "Updated")))

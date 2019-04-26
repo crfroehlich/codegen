@@ -169,10 +169,10 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Default>(DocConstantModelName.DEFAULT, nameof(Default), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pDiseaseState = (request.DiseaseState?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.DiseaseState.Id) : null;
-            var pRole = (request.Role?.Id > 0) ? DocEntityRole.GetRole(request.Role.Id) : null;
-            var pScope = (request.Scope?.Id > 0) ? DocEntityScope.GetScope(request.Scope.Id) : null;
-            var pTherapeuticArea = (request.TherapeuticArea?.Id > 0) ? DocEntityDocumentSet.GetDocumentSet(request.TherapeuticArea.Id) : null;
+            var pDiseaseState = (request.DiseaseState?.Id > 0) ? DocEntityDocumentSet.Get(request.DiseaseState.Id) : null;
+            var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
+            var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
+            var pTherapeuticArea = (request.TherapeuticArea?.Id > 0) ? DocEntityDocumentSet.Get(request.TherapeuticArea.Id) : null;
 
             DocEntityDefault entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -186,7 +186,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityDefault.GetDefault(request.Id);
+                entity = DocEntityDefault.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -338,7 +338,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityDefault.GetDefault(request?.Id);
+                    var entity = DocEntityDefault.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -450,7 +450,7 @@ namespace Services.API
             DocEntityDefault entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityDefault.GetDefault(id.Value);
+                entity = DocEntityDefault.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Default found for Id {id.Value}");

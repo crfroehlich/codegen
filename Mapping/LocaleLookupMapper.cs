@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityLocaleLookup>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityLocaleLookup.GetLocaleLookup(c));
+                .ConstructUsing(c => DocEntityLocaleLookup.Get(c));
             _EntityToDto = CreateMap<DocEntityLocaleLookup,LocaleLookup>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LocaleLookup>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LocaleLookup>(c, "Updated")))

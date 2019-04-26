@@ -149,7 +149,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pData = request.Data;
             var pIpAddress = request.IpAddress;
-            var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.GetLocale(request.Locale.Id) : null;
+            var pLocale = (request.Locale?.Id > 0) ? DocEntityLocale.Get(request.Locale.Id) : null;
 
             DocEntityLocaleLookup entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -163,7 +163,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityLocaleLookup.GetLocaleLookup(request.Id);
+                entity = DocEntityLocaleLookup.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -304,7 +304,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityLocaleLookup.GetLocaleLookup(request?.Id);
+                    var entity = DocEntityLocaleLookup.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -343,7 +343,7 @@ namespace Services.API
             DocEntityLocaleLookup entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityLocaleLookup.GetLocaleLookup(id.Value);
+                entity = DocEntityLocaleLookup.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No LocaleLookup found for Id {id.Value}");

@@ -154,7 +154,7 @@ namespace Services.API
             DocEntityImpersonation entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityImpersonation.GetImpersonation(id.Value);
+                entity = DocEntityImpersonation.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Impersonation found for Id {id.Value}");

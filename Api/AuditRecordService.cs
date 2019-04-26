@@ -206,7 +206,7 @@ namespace Services.API
             DocEntityAuditRecord entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityAuditRecord.GetAuditRecord(id.Value);
+                entity = DocEntityAuditRecord.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No AuditRecord found for Id {id.Value}");

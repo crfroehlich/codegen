@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new AuditDelta()));
 
         #region Static Members
-        public static DocEntityAuditDelta GetAuditDelta(Reference reference)
+        public static DocEntityAuditDelta Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetAuditDelta(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityAuditDelta GetAuditDelta(int? primaryKey)
+        public static DocEntityAuditDelta Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityAuditDelta GetAuditDelta(Guid hash)
+        public static DocEntityAuditDelta Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityAuditDelta>.GetFromCache(hash, AUDITDELTA_CACHE);

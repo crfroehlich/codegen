@@ -185,11 +185,11 @@ namespace Services.API
             var pData = request.Data;
             var pOwnerId = request.OwnerId;
             var pOwnerType = request.OwnerType;
-            var pParent = (request.Parent?.Id > 0) ? DocEntityJunction.GetJunction(request.Parent.Id) : null;
+            var pParent = (request.Parent?.Id > 0) ? DocEntityJunction.Get(request.Parent.Id) : null;
             var pTargetId = request.TargetId;
             var pTargetType = request.TargetType;
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.JUNCTIONTYPE, request.Type?.Name, request.Type?.Id);
-            var pUser = (request.User?.Id > 0) ? DocEntityUser.GetUser(request.User.Id) : null;
+            var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
 
             DocEntityJunction entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -203,7 +203,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityJunction.GetJunction(request.Id);
+                entity = DocEntityJunction.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -329,7 +329,7 @@ namespace Services.API
                     var toAdd = requestedChildren.Where(id => entity.Children.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityJunction.GetJunction(id);
+                        var target = DocEntityJunction.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Children)} to {nameof(Junction)}");
                         entity.Children.Add(target);
@@ -337,7 +337,7 @@ namespace Services.API
                     var toRemove = entity.Children.Where(e => requestedChildren.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityJunction.GetJunction(id);
+                        var target = DocEntityJunction.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Junction)}");
                         entity.Children.Remove(target);
@@ -348,7 +348,7 @@ namespace Services.API
                     var toRemove = entity.Children.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityJunction.GetJunction(id);
+                        var target = DocEntityJunction.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Junction), columnName: nameof(request.Children)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Children)} from {nameof(Junction)}");
                         entity.Children.Remove(target);
@@ -442,7 +442,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityJunction.GetJunction(request?.Id);
+                    var entity = DocEntityJunction.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -612,7 +612,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityJunction.GetJunction(request?.Id);
+                    var en = DocEntityJunction.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Junction could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -684,7 +684,7 @@ namespace Services.API
             DocEntityJunction entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityJunction.GetJunction(id.Value);
+                entity = DocEntityJunction.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Junction found for Id {id.Value}");

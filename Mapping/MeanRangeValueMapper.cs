@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityMeanRangeValue>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityMeanRangeValue.GetMeanRangeValue(c));
+                .ConstructUsing(c => DocEntityMeanRangeValue.Get(c));
             _EntityToDto = CreateMap<DocEntityMeanRangeValue,MeanRangeValue>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, "Updated")))

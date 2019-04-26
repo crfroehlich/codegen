@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new WorkflowComment()));
 
         #region Static Members
-        public static DocEntityWorkflowComment GetWorkflowComment(Reference reference)
+        public static DocEntityWorkflowComment Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetWorkflowComment(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityWorkflowComment GetWorkflowComment(int? primaryKey)
+        public static DocEntityWorkflowComment Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityWorkflowComment GetWorkflowComment(Guid hash)
+        public static DocEntityWorkflowComment Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityWorkflowComment>.GetFromCache(hash, WORKFLOWCOMMENT_CACHE);

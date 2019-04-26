@@ -166,7 +166,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityDateTime.GetDateTime(request.Id);
+                entity = DocEntityDateTime.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -318,7 +318,7 @@ namespace Services.API
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityDateTime.GetDateTime(request?.Id);
+                    var entity = DocEntityDateTime.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -471,7 +471,7 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityDateTime.GetDateTime(request?.Id);
+                    var en = DocEntityDateTime.Get(request?.Id);
                     if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No DateTime could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
@@ -506,7 +506,7 @@ namespace Services.API
             DocEntityDateTime entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityDateTime.GetDateTime(id.Value);
+                entity = DocEntityDateTime.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No DateTime found for Id {id.Value}");

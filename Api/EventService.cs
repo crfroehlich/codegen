@@ -176,7 +176,7 @@ namespace Services.API
             DocEntityEvent entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityEvent.GetEvent(id.Value);
+                entity = DocEntityEvent.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No Event found for Id {id.Value}");

@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Glossary()));
 
         #region Static Members
-        public static DocEntityGlossary GetGlossary(Reference reference)
+        public static DocEntityGlossary Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetGlossary(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityGlossary GetGlossary(int? primaryKey)
+        public static DocEntityGlossary Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityGlossary GetGlossary(Guid hash)
+        public static DocEntityGlossary Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityGlossary>.GetFromCache(hash, GLOSSARY_CACHE);

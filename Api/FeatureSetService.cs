@@ -162,7 +162,7 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityFeatureSet.GetFeatureSet(request.Id);
+                entity = DocEntityFeatureSet.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
@@ -233,7 +233,7 @@ namespace Services.API
                     var toAdd = requestedRoles.Where(id => entity.Roles.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityRole.GetRole(id);
+                        var target = DocEntityRole.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Roles)} to {nameof(FeatureSet)}");
                         entity.Roles.Add(target);
@@ -241,7 +241,7 @@ namespace Services.API
                     var toRemove = entity.Roles.Where(e => requestedRoles.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityRole.GetRole(id);
+                        var target = DocEntityRole.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(FeatureSet)}");
                         entity.Roles.Remove(target);
@@ -252,7 +252,7 @@ namespace Services.API
                     var toRemove = entity.Roles.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityRole.GetRole(id);
+                        var target = DocEntityRole.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(FeatureSet), columnName: nameof(request.Roles)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Roles)} from {nameof(FeatureSet)}");
                         entity.Roles.Remove(target);
@@ -392,7 +392,7 @@ namespace Services.API
             DocEntityFeatureSet entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityFeatureSet.GetFeatureSet(id.Value);
+                entity = DocEntityFeatureSet.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No FeatureSet found for Id {id.Value}");

@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TermCategory()));
 
         #region Static Members
-        public static DocEntityTermCategory GetTermCategory(Reference reference)
+        public static DocEntityTermCategory Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetTermCategory(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityTermCategory GetTermCategory(int? primaryKey)
+        public static DocEntityTermCategory Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityTermCategory GetTermCategory(Guid hash)
+        public static DocEntityTermCategory Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityTermCategory>.GetFromCache(hash, TERMCATEGORY_CACHE);

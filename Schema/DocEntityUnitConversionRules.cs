@@ -59,12 +59,12 @@ namespace Services.Schema
         protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UnitConversionRules()));
 
         #region Static Members
-        public static DocEntityUnitConversionRules GetUnitConversionRules(Reference reference)
+        public static DocEntityUnitConversionRules Get(Reference reference)
         {
-            return (true == (reference?.Id > 0)) ? GetUnitConversionRules(reference.Id) : null;
+            return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityUnitConversionRules GetUnitConversionRules(int? primaryKey)
+        public static DocEntityUnitConversionRules Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
@@ -81,7 +81,7 @@ namespace Services.Schema
             return ret;
         }
 
-        public static DocEntityUnitConversionRules GetUnitConversionRules(Guid hash)
+        public static DocEntityUnitConversionRules Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
             var ret = DocEntityThreadCache<DocEntityUnitConversionRules>.GetFromCache(hash, UNITCONVERSIONRULES_CACHE);

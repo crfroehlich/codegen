@@ -176,7 +176,7 @@ namespace Services.API
             DocEntityUserSession entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityUserSession.GetUserSession(id.Value);
+                entity = DocEntityUserSession.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No UserSession found for Id {id.Value}");

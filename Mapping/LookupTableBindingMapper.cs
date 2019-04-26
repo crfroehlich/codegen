@@ -57,7 +57,7 @@ namespace Services.Schema
                 .ConstructUsing(s => null == s || !(s.Id > 0) ? null : s.ToReference());
             CreateMap<Reference,DocEntityLookupTableBinding>()
                 .ForMember(dest => dest.Id, opt => opt.Condition(src => null != src && src.Id > 0))
-                .ConstructUsing(c => DocEntityLookupTableBinding.GetLookupTableBinding(c));
+                .ConstructUsing(c => DocEntityLookupTableBinding.Get(c));
             _EntityToDto = CreateMap<DocEntityLookupTableBinding,LookupTableBinding>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<LookupTableBinding>(c, "Updated")))

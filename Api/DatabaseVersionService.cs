@@ -136,7 +136,7 @@ namespace Services.API
             DocEntityDatabaseVersion entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityDatabaseVersion.GetDatabaseVersion(id.Value);
+                entity = DocEntityDatabaseVersion.Get(id.Value);
             }
             if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No DatabaseVersion found for Id {id.Value}");
