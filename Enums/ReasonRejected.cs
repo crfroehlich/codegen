@@ -57,8 +57,6 @@ namespace Services.Enums
         DUPLICATE_PUBLICATION,
         [EnumMember(Value = DocConstantReasonRejected.ERRONEOUS_DATA)]
         ERRONEOUS_DATA,
-        [EnumMember(Value = DocConstantReasonRejected.FAILED_JOURNAL_FILTER)]
-        FAILED_JOURNAL_FILTER,
         [EnumMember(Value = DocConstantReasonRejected.IN_VITRO_STUDY)]
         IN_VITRO_STUDY,
         [EnumMember(Value = DocConstantReasonRejected.MISSING_CHARACTERISTICS)]
@@ -71,16 +69,12 @@ namespace Services.Enums
         NOT_ENGLISH,
         [EnumMember(Value = DocConstantReasonRejected.NOT_TREAMENT_STUDY)]
         NOT_TREAMENT_STUDY,
-        [EnumMember(Value = DocConstantReasonRejected.OTHER)]
-        OTHER,
         [EnumMember(Value = DocConstantReasonRejected.RELEVANT_MISCLASSIFIED_REFERENCE)]
         RELEVANT_MISCLASSIFIED_REFERENCE,
         [EnumMember(Value = DocConstantReasonRejected.STUDY_FITS_PROTOCOL_ADD_LATER)]
         STUDY_FITS_PROTOCOL_ADD_LATER,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_COMPARISON)]
         WRONG_COMPARISON,
-        [EnumMember(Value = DocConstantReasonRejected.WRONG_FOLLOWUP)]
-        WRONG_FOLLOWUP,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_INTERVENTION)]
         WRONG_INTERVENTION,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_NUMBER_PARTICIPANTS)]
@@ -93,8 +87,12 @@ namespace Services.Enums
         WRONG_POPULATION,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_PUBLICATION_DATE_CUTOFF)]
         WRONG_PUBLICATION_DATE_CUTOFF,
+        [EnumMember(Value = DocConstantReasonRejected.WRONG_SETTING)]
+        WRONG_SETTING,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_STUDY_DESIGN)]
-        WRONG_STUDY_DESIGN
+        WRONG_STUDY_DESIGN,
+        [EnumMember(Value = DocConstantReasonRejected.WRONG_TIMING)]
+        WRONG_TIMING
     }
     
     public static partial class EnumExtensions
@@ -113,8 +111,6 @@ namespace Services.Enums
                     return DocConstantReasonRejected.DUPLICATE_PUBLICATION;
                 case ReasonRejectedEnm.ERRONEOUS_DATA:
                     return DocConstantReasonRejected.ERRONEOUS_DATA;
-                case ReasonRejectedEnm.FAILED_JOURNAL_FILTER:
-                    return DocConstantReasonRejected.FAILED_JOURNAL_FILTER;
                 case ReasonRejectedEnm.IN_VITRO_STUDY:
                     return DocConstantReasonRejected.IN_VITRO_STUDY;
                 case ReasonRejectedEnm.MISSING_CHARACTERISTICS:
@@ -127,16 +123,12 @@ namespace Services.Enums
                     return DocConstantReasonRejected.NOT_ENGLISH;
                 case ReasonRejectedEnm.NOT_TREAMENT_STUDY:
                     return DocConstantReasonRejected.NOT_TREAMENT_STUDY;
-                case ReasonRejectedEnm.OTHER:
-                    return DocConstantReasonRejected.OTHER;
                 case ReasonRejectedEnm.RELEVANT_MISCLASSIFIED_REFERENCE:
                     return DocConstantReasonRejected.RELEVANT_MISCLASSIFIED_REFERENCE;
                 case ReasonRejectedEnm.STUDY_FITS_PROTOCOL_ADD_LATER:
                     return DocConstantReasonRejected.STUDY_FITS_PROTOCOL_ADD_LATER;
                 case ReasonRejectedEnm.WRONG_COMPARISON:
                     return DocConstantReasonRejected.WRONG_COMPARISON;
-                case ReasonRejectedEnm.WRONG_FOLLOWUP:
-                    return DocConstantReasonRejected.WRONG_FOLLOWUP;
                 case ReasonRejectedEnm.WRONG_INTERVENTION:
                     return DocConstantReasonRejected.WRONG_INTERVENTION;
                 case ReasonRejectedEnm.WRONG_NUMBER_PARTICIPANTS:
@@ -149,8 +141,12 @@ namespace Services.Enums
                     return DocConstantReasonRejected.WRONG_POPULATION;
                 case ReasonRejectedEnm.WRONG_PUBLICATION_DATE_CUTOFF:
                     return DocConstantReasonRejected.WRONG_PUBLICATION_DATE_CUTOFF;
+                case ReasonRejectedEnm.WRONG_SETTING:
+                    return DocConstantReasonRejected.WRONG_SETTING;
                 case ReasonRejectedEnm.WRONG_STUDY_DESIGN:
                     return DocConstantReasonRejected.WRONG_STUDY_DESIGN;
+                case ReasonRejectedEnm.WRONG_TIMING:
+                    return DocConstantReasonRejected.WRONG_TIMING;
                 default:
                     return string.Empty;
             }
@@ -164,25 +160,24 @@ namespace Services.Enums
         public const string DOES_NOT_MEET_PROTOCOL = "Does not meet protocol";
         public const string DUPLICATE_PUBLICATION = "Duplicate Publication";
         public const string ERRONEOUS_DATA = "Erroneous Data";
-        public const string FAILED_JOURNAL_FILTER = "Failed Journal Filter";
         public const string IN_VITRO_STUDY = "In vitro study";
         public const string MISSING_CHARACTERISTICS = "Missing Characteristic(s)";
         public const string MISSING_OUTCOMES = "Missing Outcome(s)";
         public const string NOT_CLINICAL_STUDY = "Not a Clinical Study";
         public const string NOT_ENGLISH = "Not English";
         public const string NOT_TREAMENT_STUDY = "Not a treatment Study";
-        public const string OTHER = "Other";
         public const string RELEVANT_MISCLASSIFIED_REFERENCE = "Relevant misclassified reference";
         public const string STUDY_FITS_PROTOCOL_ADD_LATER = "Study fits protocol, to be possibly added later";
         public const string WRONG_COMPARISON = "Wrong Comparison";
-        public const string WRONG_FOLLOWUP = "Wrong Follow-up";
         public const string WRONG_INTERVENTION = "Wrong Intervention";
         public const string WRONG_NUMBER_PARTICIPANTS = "Wrong Number of Participants";
         public const string WRONG_OUTCOME_STRATIFICATION = "Wrong Outcome Stratification";
         public const string WRONG_OUTCOMES = "Wrong Outcome(s)";
         public const string WRONG_POPULATION = "Wrong Population";
         public const string WRONG_PUBLICATION_DATE_CUTOFF = "Wrong Publication Date Cutoff";
+        public const string WRONG_SETTING = "Wrong Setting";
         public const string WRONG_STUDY_DESIGN = "Wrong Study Design";
+        public const string WRONG_TIMING = "Wrong Timing";
         
         #region Internals
         

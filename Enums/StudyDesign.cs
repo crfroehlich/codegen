@@ -67,6 +67,8 @@ namespace Services.Enums
         EXPANDED_ACCESS_PROGRAM,
         [EnumMember(Value = DocConstantStudyDesign.FOLLOW_UP_EXTENSION)]
         FOLLOW_UP_EXTENSION,
+        [EnumMember(Value = DocConstantStudyDesign.INTERIM_ANALYSIS)]
+        INTERIM_ANALYSIS,
         [EnumMember(Value = DocConstantStudyDesign.LITERATURE_REVIEW)]
         LITERATURE_REVIEW,
         [EnumMember(Value = DocConstantStudyDesign.NON_COMPARATIVE_OTHER)]
@@ -125,6 +127,8 @@ namespace Services.Enums
                     return DocConstantStudyDesign.EXPANDED_ACCESS_PROGRAM;
                 case StudyDesignEnm.FOLLOW_UP_EXTENSION:
                     return DocConstantStudyDesign.FOLLOW_UP_EXTENSION;
+                case StudyDesignEnm.INTERIM_ANALYSIS:
+                    return DocConstantStudyDesign.INTERIM_ANALYSIS;
                 case StudyDesignEnm.LITERATURE_REVIEW:
                     return DocConstantStudyDesign.LITERATURE_REVIEW;
                 case StudyDesignEnm.NON_COMPARATIVE_OTHER:
@@ -173,6 +177,7 @@ namespace Services.Enums
         public const string CROSS_SECTIONAL_STUDY = "Cross Sectional Study";
         public const string EXPANDED_ACCESS_PROGRAM = "Expanded Access Program";
         public const string FOLLOW_UP_EXTENSION = "Follow-up/Extension";
+        public const string INTERIM_ANALYSIS = "Interim Analysis";
         public const string LITERATURE_REVIEW = "Literature Review";
         public const string NON_COMPARATIVE_OTHER = "Non-Comparative, Other";
         public const string NON_CONTROLLED_CLINICAL_TRIAL = "Non-Controlled Clinical Trial";
