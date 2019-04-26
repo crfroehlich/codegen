@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(request.DateDay.HasValue)
                     entities = entities.Where(en => request.DateDay.Value == en.DateDay);
                 if(request.DateMonth.HasValue)

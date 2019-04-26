@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.AdditionalCriteria))
                     entities = entities.Where(en => en.AdditionalCriteria.Contains(request.AdditionalCriteria));
                 if(true == request.CharacteristicsIds?.Any())

@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.AdminRolesIds?.Any())
                 {
                     entities = entities.Where(en => en.AdminRoles.Any(r => r.Id.In(request.AdminRolesIds)));

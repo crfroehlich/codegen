@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.AutoCreateMissing?.Any())
                 {
                     if(request.AutoCreateMissing.Any(v => v == null)) entities = entities.Where(en => en.AutoCreateMissing.In(request.AutoCreateMissing) || en.AutoCreateMissing == null);
@@ -224,6 +223,10 @@ namespace Services.API
                 if(true == request.LookupTableEnumIds?.Any())
                 {
                     entities = entities.Where(en => en.LookupTableEnum.Id.In(request.LookupTableEnumIds));
+                }
+                if(true == request.LookupTableEnumNames?.Any())
+                {
+                    entities = entities.Where(en => en.LookupTableEnum.Name.In(request.LookupTableEnumNames));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));

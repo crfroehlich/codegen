@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.CalendarDateEnd) && !DocTools.IsNullOrEmpty(request.CalendarDateEnd.Id))
                 {
                     entities = entities.Where(en => en.CalendarDateEnd.Id == request.CalendarDateEnd.Id );

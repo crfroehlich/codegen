@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.Abstract))
                     entities = entities.Where(en => en.Abstract.Contains(request.Abstract));
                 if(!DocTools.IsNullOrEmpty(request.AccessionID))

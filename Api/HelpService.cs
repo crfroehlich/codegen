@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.ConfluenceId))
                     entities = entities.Where(en => en.ConfluenceId.Contains(request.ConfluenceId));
                 if(!DocTools.IsNullOrEmpty(request.Description))

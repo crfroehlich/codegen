@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.IsSI?.Any())
                 {
                     if(request.IsSI.Any(v => v == null)) entities = entities.Where(en => en.IsSI.In(request.IsSI) || en.IsSI == null);

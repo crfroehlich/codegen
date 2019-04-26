@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.Approved?.Any())
                 {
                     if(request.Approved.Any(v => v == null)) entities = entities.Where(en => en.Approved.In(request.Approved) || en.Approved == null);

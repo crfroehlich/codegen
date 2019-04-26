@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.Audit) && !DocTools.IsNullOrEmpty(request.Audit.Id))
                 {
                     entities = entities.Where(en => en.Audit.Id == request.Audit.Id );

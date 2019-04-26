@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.DefaultLocale) && !DocTools.IsNullOrEmpty(request.DefaultLocale.Id))
                 {
                     entities = entities.Where(en => en.DefaultLocale.Id == request.DefaultLocale.Id );

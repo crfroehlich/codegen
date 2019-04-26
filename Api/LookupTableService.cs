@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.BindingsIds?.Any())
                 {
                     entities = entities.Where(en => en.Bindings.Any(r => r.Id.In(request.BindingsIds)));
@@ -118,6 +117,10 @@ namespace Services.API
                 if(true == request.EnumIds?.Any())
                 {
                     entities = entities.Where(en => en.Enum.Id.In(request.EnumIds));
+                }
+                if(true == request.EnumNames?.Any())
+                {
+                    entities = entities.Where(en => en.Enum.Name.In(request.EnumNames));
                 }
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));

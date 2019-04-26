@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.BoundName))
                     entities = entities.Where(en => en.BoundName.Contains(request.BoundName));
                 if(!DocTools.IsNullOrEmpty(request.LookupTable) && !DocTools.IsNullOrEmpty(request.LookupTable.Id))

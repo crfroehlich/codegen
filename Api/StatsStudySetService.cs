@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(request.BoundTerms.HasValue)
                     entities = entities.Where(en => request.BoundTerms.Value == en.BoundTerms);
                 if(request.Characteristics.HasValue)

@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.IsAbsolute?.Any())
                 {
                     if(request.IsAbsolute.Any(v => v == null)) entities = entities.Where(en => en.IsAbsolute.In(request.IsAbsolute) || en.IsAbsolute == null);

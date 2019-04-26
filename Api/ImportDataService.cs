@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.CompletedOn))
                     entities = entities.Where(en => null != en.CompletedOn && request.CompletedOn.Value.Date == en.CompletedOn.Value.Date);
                 if(!DocTools.IsNullOrEmpty(request.CompletedOnBefore))

@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(request.Completed.HasValue)
                     entities = entities.Where(en => request.Completed.Value == en.Completed);
                 if(!DocTools.IsNullOrEmpty(request.Ended))

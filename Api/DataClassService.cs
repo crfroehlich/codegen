@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.AllowDelete?.Any())
                 {
                     if(request.AllowDelete.Any(v => v == null)) entities = entities.Where(en => en.AllowDelete.In(request.AllowDelete) || en.AllowDelete == null);

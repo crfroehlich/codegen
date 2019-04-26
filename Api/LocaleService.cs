@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.Country))
                     entities = entities.Where(en => en.Country.Contains(request.Country));
                 if(!DocTools.IsNullOrEmpty(request.Language))

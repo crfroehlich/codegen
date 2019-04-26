@@ -55,13 +55,15 @@ namespace Services.Dto
 
         public LookupCategoryBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public LookupCategoryBase(int? pId, string pCategory, Reference pEnum, int? pEnumId, List<Reference> pLookups, int? pLookupsCount) : this(DocConvert.ToInt(pId)) 
+        public LookupCategoryBase(int? pId, string pCategory, Reference pEnum, int? pEnumId, List<Reference> pLookups, int? pLookupsCount, Reference pParentCategory, int? pParentCategoryId) : this(DocConvert.ToInt(pId)) 
         {
             Category = pCategory;
             Enum = pEnum;
             EnumId = pEnumId;
             Lookups = pLookups;
             LookupsCount = pLookupsCount;
+            ParentCategory = pParentCategory;
+            ParentCategoryId = pParentCategoryId;
         }
 
         [ApiMember(Name = nameof(Category), Description = "string", IsRequired = true)]
@@ -79,19 +81,27 @@ namespace Services.Dto
         public int? LookupsCount { get; set; }
 
 
+        [ApiMember(Name = nameof(ParentCategory), Description = "LookupCategory", IsRequired = false)]
+        public Reference ParentCategory { get; set; }
+        [ApiMember(Name = nameof(ParentCategoryId), Description = "Primary Key of LookupCategory", IsRequired = false)]
+        public int? ParentCategoryId { get; set; }
 
-        public void Deconstruct(out string pCategory, out Reference pEnum, out int? pEnumId, out List<Reference> pLookups, out int? pLookupsCount)
+
+
+        public void Deconstruct(out string pCategory, out Reference pEnum, out int? pEnumId, out List<Reference> pLookups, out int? pLookupsCount, out Reference pParentCategory, out int? pParentCategoryId)
         {
             pCategory = Category;
             pEnum = Enum;
             pEnumId = EnumId;
             pLookups = Lookups;
             pLookupsCount = LookupsCount;
+            pParentCategory = ParentCategory;
+            pParentCategoryId = ParentCategoryId;
         }
 
         //Not ready until C# v8.?
-        //public LookupCategoryBase With(int? pId = Id, string pCategory = Category, Reference pEnum = Enum, int? pEnumId = EnumId, List<Reference> pLookups = Lookups, int? pLookupsCount = LookupsCount) => 
-        //	new LookupCategoryBase(pId, pCategory, pEnum, pEnumId, pLookups, pLookupsCount);
+        //public LookupCategoryBase With(int? pId = Id, string pCategory = Category, Reference pEnum = Enum, int? pEnumId = EnumId, List<Reference> pLookups = Lookups, int? pLookupsCount = LookupsCount, Reference pParentCategory = ParentCategory, int? pParentCategoryId = ParentCategoryId) => 
+        //	new LookupCategoryBase(pId, pCategory, pEnum, pEnumId, pLookups, pLookupsCount, pParentCategory, pParentCategoryId);
 
     }
 
@@ -106,8 +116,8 @@ namespace Services.Dto
 
         public LookupCategory(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupCategory(int id) : base(id) {}
-        public LookupCategory(int? pId, string pCategory, Reference pEnum, int? pEnumId, List<Reference> pLookups, int? pLookupsCount) : 
-            base(pId, pCategory, pEnum, pEnumId, pLookups, pLookupsCount) { }
+        public LookupCategory(int? pId, string pCategory, Reference pEnum, int? pEnumId, List<Reference> pLookups, int? pLookupsCount, Reference pParentCategory, int? pParentCategoryId) : 
+            base(pId, pCategory, pEnum, pEnumId, pLookups, pLookupsCount, pParentCategory, pParentCategoryId) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -125,7 +135,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Category),nameof(Created),nameof(CreatorId),nameof(Enum),nameof(EnumId),nameof(Gestalt),nameof(Locked),nameof(Lookups),nameof(LookupsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Category),nameof(Created),nameof(CreatorId),nameof(Enum),nameof(EnumId),nameof(Gestalt),nameof(Locked),nameof(Lookups),nameof(LookupsCount),nameof(ParentCategory),nameof(ParentCategoryId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -161,7 +171,11 @@ namespace Services.Dto
         public string Category { get; set; }
         public Reference Enum { get; set; }
         public List<int> EnumIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {@"AmPersonCount",@"App",@"ArmPopulationAge",@"ArmPopulationN",@"AssociationMeasure",@"AttributeCategory",@"AttributeType",@"BroadcastStatus",@"BroadcastType",@"ConfidenceInterval",@"Conjunction",@"DatabaseType",@"DataHubSearchCategory",@"DataHubSource",@"DefaultTimeUnit",@"DefaultUnitType",@"Directionality",@"DocumentSetType",@"DocumentType",@"DosageProtocol",@"DosageType",@"EqualityOperator",@"ErrorMessage",@"ExternalKey",@"Feature",@"FieldType",@"ForeignKeyStatus",@"FqReferenceStatus",@"Help",@"ImportStatus",@"IncidenceRateType",@"InstitutionType",@"IntegrationName",@"IntegrationPropertyName",@"InterventionLineOfTreatment",@"InterventionMedium",@"InterventionProvider",@"InterventionRoute",@"InterventionSchedule",@"InterventionStageSetting",@"InterventionType",@"Job",@"JunctionType",@"LookupTable",@"LookupType",@"ManualizedTreatment",@"MeanCalculationType",@"MeanRangeType",@"MeanVariableType",@"MeanVarianceType",@"MethodOfAnalysis",@"ModelName",@"OutcomeCategory",@"OutcomeType",@"Permission",@"PopulationType",@"PrevalenceType",@"ProtocolFilterOwner",@"ProtocolFilterType",@"ProtocolType",@"PublicationPoolStudies",@"PubType",@"Question",@"QuestionCategory",@"QuestionType",@"QueueChannel",@"Randomization",@"RangeType",@"Rating",@"ReasonRejected",@"RecruitmentMethod",@"RepresentativeSample",@"ResponsesCollectedBy",@"ResultsCategory",@"RiskOfBiasAssessment",@"Scope",@"SettingType",@"StatisticalSignificance",@"StatisticalTest",@"StatsRecordName",@"Status",@"StratificationType",@"StudyAllocattionMethod",@"StudyBias",@"StudyBlindingMethod",@"StudyCompliance",@"StudyDesign",@"StudyDocumentType",@"StudyFunding",@"StudyGroupType",@"StudyImportLocation",@"StudyImportType",@"StudyNGA",@"StudyObjective",@"StudyPhaseNames",@"StudyPurpose",@"StudyRandomizationMethod",@"StudyType",@"StudyTypeHarmEtiology",@"StudyTypeTherapy",@"StudyYears",@"TermClassification",@"TermSection",@"TimeCardStatus",@"TimepointType",@"UnitsOfMeasure",@"UnitType",@"UserEmployeeType",@"UserPayrollStatus",@"UserPayrollType",@"UserType",@"ValueStatus",@"ValueType",@"VariableRule",@"VariableType",@"Workflow",@"WorkflowStatus",@"WorkflowTaskType",@"YesNoNa"})]
+        public List<string> EnumNames { get; set; }
         public List<int> LookupsIds { get; set; }
+        public Reference ParentCategory { get; set; }
+        public List<int> ParentCategoryIds { get; set; }
     }
 
     [Route("/lookupcategory", "GET")]
@@ -188,6 +202,7 @@ namespace Services.Dto
         public bool doCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Category))); }
         public bool doEnum { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Enum))); }
         public bool doLookups { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.Lookups))); }
+        public bool doParentCategory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(LookupCategory.ParentCategory))); }
     }
 
     [Route("/lookupcategory/batch", "DELETE, PATCH, POST, PUT")]

@@ -99,7 +99,6 @@ namespace Services.API
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
 
-
                 entities = ApplyFilters<DocEntityAttributeInterval,AttributeIntervalSearch>(request, entities);
 
                 if(request.Skip > 0)

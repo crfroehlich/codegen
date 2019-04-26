@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.IsBindable?.Any())
                 {
                     if(request.IsBindable.Any(v => v == null)) entities = entities.Where(en => en.IsBindable.In(request.IsBindable) || en.IsBindable == null);

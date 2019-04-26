@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.BioPortal))
                     entities = entities.Where(en => en.BioPortal.Contains(request.BioPortal));
                 if(true == request.CategoriesIds?.Any())
@@ -114,6 +113,10 @@ namespace Services.API
                 if(true == request.EnumIds?.Any())
                 {
                     entities = entities.Where(en => en.Enum.Id.In(request.EnumIds));
+                }
+                if(true == request.EnumNames?.Any())
+                {
+                    entities = entities.Where(en => en.Enum.Name.In(request.EnumNames));
                 }
                 if(!DocTools.IsNullOrEmpty(request.MedDRA))
                     entities = entities.Where(en => en.MedDRA.Contains(request.MedDRA));

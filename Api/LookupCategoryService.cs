@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(!DocTools.IsNullOrEmpty(request.Category))
                     entities = entities.Where(en => en.Category.Contains(request.Category));
                 if(!DocTools.IsNullOrEmpty(request.Enum) && !DocTools.IsNullOrEmpty(request.Enum.Id))
@@ -109,9 +108,21 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Enum.Id.In(request.EnumIds));
                 }
+                if(true == request.EnumNames?.Any())
+                {
+                    entities = entities.Where(en => en.Enum.Name.In(request.EnumNames));
+                }
                 if(true == request.LookupsIds?.Any())
                 {
                     entities = entities.Where(en => en.Lookups.Any(r => r.Id.In(request.LookupsIds)));
+                }
+                if(!DocTools.IsNullOrEmpty(request.ParentCategory) && !DocTools.IsNullOrEmpty(request.ParentCategory.Id))
+                {
+                    entities = entities.Where(en => en.ParentCategory.Id == request.ParentCategory.Id );
+                }
+                if(true == request.ParentCategoryIds?.Any())
+                {
+                    entities = entities.Where(en => en.ParentCategory.Id.In(request.ParentCategoryIds));
                 }
 
                 entities = ApplyFilters<DocEntityLookupCategory,LookupCategorySearch>(request, entities);
@@ -155,6 +166,7 @@ namespace Services.API
             var pCategory = request.Category;
             var pEnum = DocEntityLookupTableEnum.GetLookupTableEnum(request.Enum);
             var pLookups = request.Lookups?.ToList();
+            var pParentCategory = (request.ParentCategory?.Id > 0) ? DocEntityLookupCategory.GetLookupCategory(request.ParentCategory.Id) : null;
 
             DocEntityLookupCategory entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -207,6 +219,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Enum));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupCategory>(currentUser, request, pParentCategory, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pParentCategory, entity.ParentCategory, nameof(request.ParentCategory)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ParentCategory)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pParentCategory) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ParentCategory)} requires a value.");
+                    entity.ParentCategory = pParentCategory;
+                if(DocPermissionFactory.IsRequested<DocEntityLookupCategory>(request, pParentCategory, nameof(request.ParentCategory)) && !request.VisibleFields.Matches(nameof(request.ParentCategory), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.ParentCategory));
                 }
             }
 
@@ -351,6 +374,7 @@ namespace Services.API
                         pCategory += " (Copy)";
                     var pEnum = entity.Enum;
                     var pLookups = entity.Lookups.ToList();
+                    var pParentCategory = entity.ParentCategory;
                     #region Custom Before copyLookupCategory
                     #endregion Custom Before copyLookupCategory
                     var copy = new DocEntityLookupCategory(ssn)
@@ -358,6 +382,7 @@ namespace Services.API
                         Hash = Guid.NewGuid()
                                 , Category = pCategory
                                 , Enum = pEnum
+                                , ParentCategory = pParentCategory
                     };
                             foreach(var item in pLookups)
                             {

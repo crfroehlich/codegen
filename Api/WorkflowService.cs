@@ -98,7 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-
                 if(true == request.BindingsIds?.Any())
                 {
                     entities = entities.Where(en => en.Bindings.Any(r => r.Id.In(request.BindingsIds)));
