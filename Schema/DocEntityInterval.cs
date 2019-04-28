@@ -213,6 +213,7 @@ namespace Services.Schema
 
         public Interval ToDto() => Mapper.Map<DocEntityInterval, Interval>(this);
 
+        public static explicit operator Interval(DocEntityInterval en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

@@ -222,6 +222,7 @@ namespace Services.Schema
 
         public UserRequest ToDto() => Mapper.Map<DocEntityUserRequest, UserRequest>(this);
 
+        public static explicit operator UserRequest(DocEntityUserRequest en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

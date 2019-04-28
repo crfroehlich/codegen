@@ -220,6 +220,7 @@ namespace Services.Schema
 
         public LookupCategory ToDto() => Mapper.Map<DocEntityLookupCategory, LookupCategory>(this);
 
+        public static explicit operator LookupCategory(DocEntityLookupCategory en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

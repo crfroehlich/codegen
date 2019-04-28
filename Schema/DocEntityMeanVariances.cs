@@ -197,6 +197,7 @@ namespace Services.Schema
 
         public MeanVariances ToDto() => Mapper.Map<DocEntityMeanVariances, MeanVariances>(this);
 
+        public static explicit operator MeanVariances(DocEntityMeanVariances en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

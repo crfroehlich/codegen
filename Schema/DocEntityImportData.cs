@@ -305,6 +305,7 @@ namespace Services.Schema
 
         public ImportData ToDto() => Mapper.Map<DocEntityImportData, ImportData>(this);
 
+        public static explicit operator ImportData(DocEntityImportData en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

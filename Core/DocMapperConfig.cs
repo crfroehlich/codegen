@@ -84,6 +84,7 @@ namespace Services.Core
             cfg.AddProfile<DocumentMapper>();
             cfg.AddProfile<DocumentSetMapper>();
             cfg.AddProfile<DocumentSetHistoryMapper>();
+            cfg.AddProfile<EoDMapper>();
             cfg.AddProfile<EventMapper>();
             cfg.AddProfile<FeatureSetMapper>();
             cfg.AddProfile<GlossaryMapper>();
@@ -108,6 +109,7 @@ namespace Services.Core
             cfg.AddProfile<PageMapper>();
             cfg.AddProfile<ProjectMapper>();
             cfg.AddProfile<QueueChannelMapper>();
+            cfg.AddProfile<RatingMapper>();
             cfg.AddProfile<ReleaseStatusMapper>();
             cfg.AddProfile<RoleMapper>();
             cfg.AddProfile<ScopeMapper>();
@@ -117,6 +119,7 @@ namespace Services.Core
             cfg.AddProfile<StudyDesignMapper>();
             cfg.AddProfile<StudyTypeMapper>();
             cfg.AddProfile<TagMapper>();
+            cfg.AddProfile<TaskMapper>();
             cfg.AddProfile<TeamMapper>();
             cfg.AddProfile<TermCategoryMapper>();
             cfg.AddProfile<TermMasterMapper>();
@@ -136,7 +139,6 @@ namespace Services.Core
             cfg.AddProfile<VariableRuleMapper>();
             cfg.AddProfile<WorkflowMapper>();
             cfg.AddProfile<WorkflowCommentMapper>();
-            cfg.AddProfile<WorkflowTaskMapper>();
             } );
         }
     }

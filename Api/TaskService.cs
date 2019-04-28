@@ -44,19 +44,19 @@ using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
 namespace Services.API
 {
-    public partial class WorkflowTaskService : DocServiceBase
+    public partial class TaskService : DocServiceBase
     {
-        private IQueryable<DocEntityWorkflowTask> _ExecSearch(WorkflowTaskSearch request, DocQuery query)
+        private IQueryable<DocEntityTask> _ExecSearch(TaskSearch request, DocQuery query)
         {
-            request = InitSearch<WorkflowTask, WorkflowTaskSearch>(request);
-            IQueryable<DocEntityWorkflowTask> entities = null;
+            request = InitSearch<Task, TaskSearch>(request);
+            IQueryable<DocEntityTask> entities = null;
             query.Run( session => 
             {
-                entities = query.SelectAll<DocEntityWorkflowTask>();
+                entities = query.SelectAll<DocEntityTask>();
                 if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
                 {
-                    var fts = new WorkflowTaskFullTextSearch(request);
-                    entities = GetFullTextSearch<DocEntityWorkflowTask,WorkflowTaskFullTextSearch>(fts, entities);
+                    var fts = new TaskFullTextSearch(request);
+                    entities = GetFullTextSearch<DocEntityTask,TaskFullTextSearch>(fts, entities);
                 }
 
                 if(null != request.Ids && request.Ids.Any())
@@ -86,7 +86,7 @@ namespace Services.API
                 {
                     entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
                 }
-                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.WORKFLOWTASK, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.TASK, nameof(Reference.Archived), DocConstantPermission.VIEW))
                 {
                     entities = entities.Where(en => en.Archived.In(request.Archived));
                 }
@@ -122,22 +122,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Reporter.Id.In(request.ReporterIds));
                 }
-                if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Id))
-                {
-                    entities = entities.Where(en => en.Status.Id == request.Status.Id );
-                }
-                if(true == request.StatusIds?.Any())
-                {
-                    entities = entities.Where(en => en.Status.Id.In(request.StatusIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Name))
-                {
-                    entities = entities.Where(en => en.Status.Name == request.Status.Name );
-                }
-                if(true == request.StatusNames?.Any())
-                {
-                    entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
-                }
                 if(!DocTools.IsNullOrEmpty(request.Type) && !DocTools.IsNullOrEmpty(request.Type.Id))
                 {
                     entities = entities.Where(en => en.Type.Id == request.Type.Id );
@@ -163,7 +147,7 @@ namespace Services.API
                     entities = entities.Where(en => en.Workflow.Id.In(request.WorkflowIds));
                 }
 
-                entities = ApplyFilters<DocEntityWorkflowTask,WorkflowTaskSearch>(request, entities);
+                entities = ApplyFilters<DocEntityTask,TaskSearch>(request, entities);
 
                 if(request.Skip > 0)
                     entities = entities.Skip(request.Skip.Value);
@@ -177,28 +161,28 @@ namespace Services.API
             return entities;
         }
 
-        public object Post(WorkflowTaskSearch request) => Get(request);
+        public object Post(TaskSearch request) => Get(request);
 
-        public object Get(WorkflowTaskSearch request) => GetSearchResultWithCache<WorkflowTask,DocEntityWorkflowTask,WorkflowTaskSearch>(DocConstantModelName.WORKFLOWTASK, request, _ExecSearch);
+        public object Get(TaskSearch request) => GetSearchResultWithCache<Task,DocEntityTask,TaskSearch>(DocConstantModelName.TASK, request, _ExecSearch);
 
-        public object Get(WorkflowTask request) => GetEntityWithCache<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, request, GetWorkflowTask);
+        public object Get(Task request) => GetEntityWithCache<Task>(DocConstantModelName.TASK, request, GetTask);
 
-        private WorkflowTask _AssignValues(WorkflowTask request, DocConstantPermission permission, Session session)
+        private Task _AssignValues(Task request, DocConstantPermission permission, Session session)
         {
             if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
-            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "WorkflowTask"))
+            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Task"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            WorkflowTask ret = null;
-            request = _InitAssignValues<WorkflowTask>(request, permission, session);
+            Task ret = null;
+            request = _InitAssignValues<Task>(request, permission, session);
             //In case init assign handles create for us, return it
             if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
             
-            var cacheKey = GetApiCacheKey<WorkflowTask>(DocConstantModelName.WORKFLOWTASK, nameof(WorkflowTask), request);
+            var cacheKey = GetApiCacheKey<Task>(DocConstantModelName.TASK, nameof(Task), request);
             
             //First, assign all the variables, do database lookups and conversions
             var pAssignee = (request.Assignee?.Id > 0) ? DocEntityUser.Get(request.Assignee.Id) : null;
@@ -206,15 +190,14 @@ namespace Services.API
             var pDescription = request.Description;
             var pDueDate = request.DueDate;
             var pReporter = (request.Reporter?.Id > 0) ? DocEntityUser.Get(request.Reporter.Id) : null;
-            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.WORKFLOWSTATUS, request.Status?.Name, request.Status?.Id);
             DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.WORKFLOWTASKTYPE, request.Type?.Name, request.Type?.Id);
             var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
 
-            DocEntityWorkflowTask entity = null;
+            DocEntityTask entity = null;
             if(permission == DocConstantPermission.ADD)
             {
                 var now = DateTime.UtcNow;
-                entity = new DocEntityWorkflowTask(session)
+                entity = new DocEntityTask(session)
                 {
                     Created = now,
                     Updated = now
@@ -222,18 +205,18 @@ namespace Services.API
             }
             else
             {
-                entity = DocEntityWorkflowTask.Get(request.Id);
+                entity = DocEntityTask.Get(request.Id);
                 if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
             //Special case for Archived
             var pArchived = true == request.Archived;
-            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Archived)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.TASK, nameof(request.Archived)))
             {
                 if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
                 if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
@@ -241,88 +224,77 @@ namespace Services.API
                 }
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pAssignee, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Assignee)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pAssignee, permission, DocConstantModelName.TASK, nameof(request.Assignee)))
             {
                 if(DocPermissionFactory.IsRequested(request, pAssignee, entity.Assignee, nameof(request.Assignee)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.Assignee)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Assignee)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pAssignee) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.Assignee))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Assignee)} requires a value.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.Assignee)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Assignee)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pAssignee) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.Assignee))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Assignee)} requires a value.");
                     entity.Assignee = pAssignee;
                 if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pAssignee, nameof(request.Assignee)) && !request.VisibleFields.Matches(nameof(request.Assignee), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Assignee));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pData, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Data)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pData, permission, DocConstantModelName.TASK, nameof(request.Data)))
             {
                 if(DocPermissionFactory.IsRequested(request, pData, entity.Data, nameof(request.Data)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.Data)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pData) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.Data))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Data)} requires a value.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.Data)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pData) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.Data))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Data)} requires a value.");
                     entity.Data = pData;
                 if(DocPermissionFactory.IsRequested<string>(request, pData, nameof(request.Data)) && !request.VisibleFields.Matches(nameof(request.Data), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Data));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Description)))
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDescription, permission, DocConstantModelName.TASK, nameof(request.Description)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDescription, entity.Description, nameof(request.Description)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.Description)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Description)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDescription) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.Description))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Description)} requires a value.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.Description)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Description)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pDescription) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.Description))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Description)} requires a value.");
                     entity.Description = pDescription;
                 if(DocPermissionFactory.IsRequested<string>(request, pDescription, nameof(request.Description)) && !request.VisibleFields.Matches(nameof(request.Description), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Description));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDueDate, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.DueDate)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pDueDate, permission, DocConstantModelName.TASK, nameof(request.DueDate)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDueDate, entity.DueDate, nameof(request.DueDate)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.DueDate)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DueDate)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pDueDate) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.DueDate))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DueDate)} requires a value.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.DueDate)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DueDate)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pDueDate) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.DueDate))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DueDate)} requires a value.");
                     entity.DueDate = pDueDate;
                 if(DocPermissionFactory.IsRequested<DateTime?>(request, pDueDate, nameof(request.DueDate)) && !request.VisibleFields.Matches(nameof(request.DueDate), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.DueDate));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pReporter, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Reporter)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pReporter, permission, DocConstantModelName.TASK, nameof(request.Reporter)))
             {
                 if(DocPermissionFactory.IsRequested(request, pReporter, entity.Reporter, nameof(request.Reporter)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.Reporter)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Reporter)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pReporter) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.Reporter))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Reporter)} requires a value.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.Reporter)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Reporter)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pReporter) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.Reporter))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Reporter)} requires a value.");
                     entity.Reporter = pReporter;
                 if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pReporter, nameof(request.Reporter)) && !request.VisibleFields.Matches(nameof(request.Reporter), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Reporter));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Status)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
-                    entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Status));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Type)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.TASK, nameof(request.Type)))
             {
                 if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
                     entity.Type = pType;
                 if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Type));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, request, pWorkflow, permission, DocConstantModelName.WORKFLOWTASK, nameof(request.Workflow)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, request, pWorkflow, permission, DocConstantModelName.TASK, nameof(request.Workflow)))
             {
                 if(DocPermissionFactory.IsRequested(request, pWorkflow, entity.Workflow, nameof(request.Workflow)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOWTASK, nameof(request.Workflow)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Workflow)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pWorkflow) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOWTASK, nameof(request.Workflow))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Workflow)} requires a value.");
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.Workflow)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Workflow)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pWorkflow) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.Workflow))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Workflow)} requires a value.");
                     entity.Workflow = pWorkflow;
                 if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(request, pWorkflow, nameof(request.Workflow)) && !request.VisibleFields.Matches(nameof(request.Workflow), ignoreSpaces: true))
                 {
@@ -335,27 +307,27 @@ namespace Services.API
             entity.SaveChanges(permission);
 
 
-            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, nameof(WorkflowTask), request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Task>(currentUser, nameof(Task), request.VisibleFields);
             ret = entity.ToDto();
 
-            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.WORKFLOWTASK);
-            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.WORKFLOWTASK, cacheExpires);
+            var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.TASK);
+            DocCacheClient.Set(key: cacheKey, value: ret, entityId: request.Id, entityType: DocConstantModelName.TASK, cacheExpires);
 
             return ret;
         }
-        public WorkflowTask Post(WorkflowTask request)
+        public Task Post(Task request)
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.VisibleFields = request.VisibleFields ?? new List<string>();
 
-            WorkflowTask ret = null;
+            Task ret = null;
 
             using(Execute)
             {
                 Execute.Run(ssn =>
                 {
-                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "WorkflowTask")) 
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "Task")) 
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
@@ -364,11 +336,11 @@ namespace Services.API
             return ret;
         }
    
-        public List<WorkflowTask> Post(WorkflowTaskBatch request)
+        public List<Task> Post(TaskBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<WorkflowTask>();
+            var ret = new List<Task>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -376,7 +348,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Post(dto) as WorkflowTask;
+                    var obj = Post(dto) as Task;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"{obj.Id}";
                 }
@@ -411,14 +383,14 @@ namespace Services.API
             return ret;
         }
 
-        public WorkflowTask Post(WorkflowTaskCopy request)
+        public Task Post(TaskCopy request)
         {
-            WorkflowTask ret = null;
+            Task ret = null;
             using(Execute)
             {
                 Execute.Run(ssn =>
                 {
-                    var entity = DocEntityWorkflowTask.Get(request?.Id);
+                    var entity = DocEntityTask.Get(request?.Id);
                     if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
@@ -430,12 +402,11 @@ namespace Services.API
                         pDescription += " (Copy)";
                     var pDueDate = entity.DueDate;
                     var pReporter = entity.Reporter;
-                    var pStatus = entity.Status;
                     var pType = entity.Type;
                     var pWorkflow = entity.Workflow;
-                    #region Custom Before copyWorkflowTask
-                    #endregion Custom Before copyWorkflowTask
-                    var copy = new DocEntityWorkflowTask(ssn)
+                    #region Custom Before copyTask
+                    #endregion Custom Before copyTask
+                    var copy = new DocEntityTask(ssn)
                     {
                         Hash = Guid.NewGuid()
                                 , Assignee = pAssignee
@@ -443,13 +414,12 @@ namespace Services.API
                                 , Description = pDescription
                                 , DueDate = pDueDate
                                 , Reporter = pReporter
-                                , Status = pStatus
                                 , Type = pType
                                 , Workflow = pWorkflow
                     };
 
-                    #region Custom After copyWorkflowTask
-                    #endregion Custom After copyWorkflowTask
+                    #region Custom After copyTask
+                    #endregion Custom After copyTask
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });
@@ -457,20 +427,20 @@ namespace Services.API
             return ret;
         }
 
-        public List<WorkflowTask> Put(WorkflowTaskBatch request)
+        public List<Task> Put(TaskBatch request)
         {
             return Patch(request);
         }
 
-        public WorkflowTask Put(WorkflowTask request)
+        public Task Put(Task request)
         {
             return Patch(request);
         }
-        public List<WorkflowTask> Patch(WorkflowTaskBatch request)
+        public List<Task> Patch(TaskBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
-            var ret = new List<WorkflowTask>();
+            var ret = new List<Task>();
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
             var i = 0;
@@ -478,7 +448,7 @@ namespace Services.API
             {
                 try
                 {
-                    var obj = Patch(dto) as WorkflowTask;
+                    var obj = Patch(dto) as Task;
                     ret.Add(obj);
                     errorMap[$"{i}"] = $"true";
                 }
@@ -513,13 +483,13 @@ namespace Services.API
             return ret;
         }
 
-        public WorkflowTask Patch(WorkflowTask request)
+        public Task Patch(Task request)
         {
-            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the WorkflowTask to patch.");
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Task to patch.");
             
             request.VisibleFields = request.VisibleFields ?? new List<string>();
             
-            WorkflowTask ret = null;
+            Task ret = null;
             using(Execute)
             {
                 Execute.Run(ssn =>
@@ -529,7 +499,7 @@ namespace Services.API
             }
             return ret;
         }
-        public void Delete(WorkflowTaskBatch request)
+        public void Delete(TaskBatch request)
         {
             if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
@@ -573,7 +543,7 @@ namespace Services.API
             }
         }
 
-        public void Delete(WorkflowTask request)
+        public void Delete(Task request)
         {
             using(Execute)
             {
@@ -581,8 +551,8 @@ namespace Services.API
                 {
                     if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
-                    var en = DocEntityWorkflowTask.Get(request?.Id);
-                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowTask could be found for Id {request?.Id}.");
+                    var en = DocEntityTask.Get(request?.Id);
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No Task could be found for Id {request?.Id}.");
                     if(en.IsRemoved) return;
                 
                     if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
@@ -590,36 +560,36 @@ namespace Services.API
                 
                     en.Remove();
 
-                    DocCacheClient.RemoveSearch(DocConstantModelName.WORKFLOWTASK);
+                    DocCacheClient.RemoveSearch(DocConstantModelName.TASK);
                     DocCacheClient.RemoveById(request.Id);
                 });
             }
         }
 
-        public void Delete(WorkflowTaskSearch request)
+        public void Delete(TaskSearch request)
         {
-            var matches = Get(request) as List<WorkflowTask>;
+            var matches = Get(request) as List<Task>;
             if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
             matches.ForEach(match =>
             {
                 Delete(match);
             });
         }
-        private WorkflowTask GetWorkflowTask(WorkflowTask request)
+        private Task GetTask(Task request)
         {
             var id = request?.Id;
-            WorkflowTask ret = null;
+            Task ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<WorkflowTask>(currentUser, "WorkflowTask", request.VisibleFields);
+            DocPermissionFactory.SetVisibleFields<Task>(currentUser, "Task", request.VisibleFields);
 
-            DocEntityWorkflowTask entity = null;
+            DocEntityTask entity = null;
             if(id.HasValue)
             {
-                entity = DocEntityWorkflowTask.Get(id.Value);
+                entity = DocEntityTask.Get(id.Value);
             }
             if(null == entity)
-                throw new HttpError(HttpStatusCode.NotFound, $"No WorkflowTask found for Id {id.Value}");
+                throw new HttpError(HttpStatusCode.NotFound, $"No Task found for Id {id.Value}");
 
             if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.VIEW))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");

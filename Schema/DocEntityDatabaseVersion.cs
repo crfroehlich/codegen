@@ -211,6 +211,7 @@ namespace Services.Schema
 
         public DatabaseVersion ToDto() => Mapper.Map<DocEntityDatabaseVersion, DatabaseVersion>(this);
 
+        public static explicit operator DatabaseVersion(DocEntityDatabaseVersion en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

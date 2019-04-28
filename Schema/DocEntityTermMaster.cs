@@ -264,6 +264,7 @@ namespace Services.Schema
 
         public TermMaster ToDto() => Mapper.Map<DocEntityTermMaster, TermMaster>(this);
 
+        public static explicit operator TermMaster(DocEntityTermMaster en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

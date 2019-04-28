@@ -240,6 +240,7 @@ namespace Services.Schema
 
         public LookupTableBinding ToDto() => Mapper.Map<DocEntityLookupTableBinding, LookupTableBinding>(this);
 
+        public static explicit operator LookupTableBinding(DocEntityLookupTableBinding en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

@@ -496,6 +496,7 @@ namespace Services.Schema
 
         public DocumentSet ToDto() => Mapper.Map<DocEntityDocumentSet, DocumentSet>(this);
 
+        public static explicit operator DocumentSet(DocEntityDocumentSet en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

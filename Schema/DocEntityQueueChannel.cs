@@ -243,6 +243,7 @@ namespace Services.Schema
 
         public QueueChannel ToDto() => Mapper.Map<DocEntityQueueChannel, QueueChannel>(this);
 
+        public static explicit operator QueueChannel(DocEntityQueueChannel en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

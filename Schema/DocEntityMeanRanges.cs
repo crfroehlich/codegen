@@ -197,6 +197,7 @@ namespace Services.Schema
 
         public MeanRanges ToDto() => Mapper.Map<DocEntityMeanRanges, MeanRanges>(this);
 
+        public static explicit operator MeanRanges(DocEntityMeanRanges en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

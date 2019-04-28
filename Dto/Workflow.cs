@@ -129,7 +129,7 @@ namespace Services.Dto
         public int? StatusId { get; set; }
 
 
-        [ApiMember(Name = nameof(Tasks), Description = "WorkflowTask", IsRequired = false)]
+        [ApiMember(Name = nameof(Tasks), Description = "Task", IsRequired = false)]
         public List<Reference> Tasks { get; set; }
         public int? TasksCount { get; set; }
 

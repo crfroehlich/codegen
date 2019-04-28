@@ -309,6 +309,7 @@ namespace Services.Schema
 
         public StatsStudySet ToDto() => Mapper.Map<DocEntityStatsStudySet, StatsStudySet>(this);
 
+        public static explicit operator StatsStudySet(DocEntityStatsStudySet en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

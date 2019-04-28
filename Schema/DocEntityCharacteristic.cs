@@ -209,6 +209,7 @@ namespace Services.Schema
 
         public Characteristic ToDto() => Mapper.Map<DocEntityCharacteristic, Characteristic>(this);
 
+        public static explicit operator Characteristic(DocEntityCharacteristic en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

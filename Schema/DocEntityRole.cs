@@ -263,6 +263,7 @@ namespace Services.Schema
 
         public Role ToDto() => Mapper.Map<DocEntityRole, Role>(this);
 
+        public static explicit operator Role(DocEntityRole en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

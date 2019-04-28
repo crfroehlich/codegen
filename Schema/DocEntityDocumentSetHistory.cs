@@ -214,6 +214,7 @@ namespace Services.Schema
 
         public DocumentSetHistory ToDto() => Mapper.Map<DocEntityDocumentSetHistory, DocumentSetHistory>(this);
 
+        public static explicit operator DocumentSetHistory(DocEntityDocumentSetHistory en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

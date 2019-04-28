@@ -210,6 +210,7 @@ namespace Services.Schema
 
         public Tag ToDto() => Mapper.Map<DocEntityTag, Tag>(this);
 
+        public static explicit operator Tag(DocEntityTag en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

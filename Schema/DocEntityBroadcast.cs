@@ -260,6 +260,7 @@ namespace Services.Schema
 
         public Broadcast ToDto() => Mapper.Map<DocEntityBroadcast, Broadcast>(this);
 
+        public static explicit operator Broadcast(DocEntityBroadcast en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

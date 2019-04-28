@@ -230,6 +230,7 @@ namespace Services.Schema
 
         public Stats ToDto() => Mapper.Map<DocEntityStats, Stats>(this);
 
+        public static explicit operator Stats(DocEntityStats en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

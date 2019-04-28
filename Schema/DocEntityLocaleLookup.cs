@@ -211,6 +211,7 @@ namespace Services.Schema
 
         public LocaleLookup ToDto() => Mapper.Map<DocEntityLocaleLookup, LocaleLookup>(this);
 
+        public static explicit operator LocaleLookup(DocEntityLocaleLookup en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

@@ -232,6 +232,7 @@ namespace Services.Schema
 
         public WorkflowComment ToDto() => Mapper.Map<DocEntityWorkflowComment, WorkflowComment>(this);
 
+        public static explicit operator WorkflowComment(DocEntityWorkflowComment en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

@@ -280,6 +280,7 @@ namespace Services.Schema
 
         public VariableRule ToDto() => Mapper.Map<DocEntityVariableRule, VariableRule>(this);
 
+        public static explicit operator VariableRule(DocEntityVariableRule en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

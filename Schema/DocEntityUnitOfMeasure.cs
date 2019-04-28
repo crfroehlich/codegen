@@ -243,6 +243,7 @@ namespace Services.Schema
 
         public UnitOfMeasure ToDto() => Mapper.Map<DocEntityUnitOfMeasure, UnitOfMeasure>(this);
 
+        public static explicit operator UnitOfMeasure(DocEntityUnitOfMeasure en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

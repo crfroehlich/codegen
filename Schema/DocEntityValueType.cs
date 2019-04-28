@@ -216,6 +216,7 @@ namespace Services.Schema
 
         public ValueType ToDto() => Mapper.Map<DocEntityValueType, ValueType>(this);
 
+        public static explicit operator ValueType(DocEntityValueType en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

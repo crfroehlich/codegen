@@ -237,6 +237,7 @@ namespace Services.Schema
 
         public LookupTable ToDto() => Mapper.Map<DocEntityLookupTable, LookupTable>(this);
 
+        public static explicit operator LookupTable(DocEntityLookupTable en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

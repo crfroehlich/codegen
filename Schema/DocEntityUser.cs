@@ -412,6 +412,7 @@ namespace Services.Schema
 
         public User ToDto() => Mapper.Map<DocEntityUser, User>(this);
 
+        public static explicit operator User(DocEntityUser en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

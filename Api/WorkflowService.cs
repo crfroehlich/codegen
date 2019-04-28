@@ -526,7 +526,7 @@ namespace Services.API
                 if (true == pTasks?.Any() )
                 {
                     var requestedTasks = pTasks.Select(p => p.Id).Distinct().ToList();
-                    var existsTasks = Execute.SelectAll<DocEntityWorkflowTask>().Where(e => e.Id.In(requestedTasks)).Select( e => e.Id ).ToList();
+                    var existsTasks = Execute.SelectAll<DocEntityTask>().Where(e => e.Id.In(requestedTasks)).Select( e => e.Id ).ToList();
                     if (existsTasks.Count != requestedTasks.Count)
                     {
                         var nonExists = requestedTasks.Where(id => existsTasks.All(eId => eId != id));
@@ -535,7 +535,7 @@ namespace Services.API
                     var toAdd = requestedTasks.Where(id => entity.Tasks.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityWorkflowTask.Get(id);
+                        var target = DocEntityTask.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Tasks)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Tasks)} to {nameof(Workflow)}");
                         entity.Tasks.Add(target);
@@ -543,7 +543,7 @@ namespace Services.API
                     var toRemove = entity.Tasks.Where(e => requestedTasks.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityWorkflowTask.Get(id);
+                        var target = DocEntityTask.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Tasks)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Tasks)} from {nameof(Workflow)}");
                         entity.Tasks.Remove(target);
@@ -554,7 +554,7 @@ namespace Services.API
                     var toRemove = entity.Tasks.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityWorkflowTask.Get(id);
+                        var target = DocEntityTask.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Tasks)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Tasks)} from {nameof(Workflow)}");
                         entity.Tasks.Remove(target);
@@ -902,8 +902,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
-                    case "workflowtask":
-                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflowTask, WorkflowTask, WorkflowTaskSearch>((int)request.Id, DocConstantModelName.WORKFLOWTASK, "Tasks", request, (ss) => HostContext.ResolveService<WorkflowTaskService>(Request)?.Get(ss));
+                    case "task":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityTask, Task, TaskSearch>((int)request.Id, DocConstantModelName.TASK, "Tasks", request, (ss) => HostContext.ResolveService<TaskService>(Request)?.Get(ss));
                     case "variableinstance":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request, (ss) => HostContext.ResolveService<VariableInstanceService>(Request)?.Get(ss));
                     case "workflow":
@@ -926,8 +926,8 @@ namespace Services.API
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
-                    case "workflowtask":
-                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowTask, WorkflowTask, WorkflowTaskSearch>((int)request.Id, DocConstantModelName.WORKFLOWTASK, "Tasks", request);
+                    case "task":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityTask, Task, TaskSearch>((int)request.Id, DocConstantModelName.TASK, "Tasks", request);
                     case "variableinstance":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request);
                     case "workflow":
@@ -951,8 +951,8 @@ namespace Services.API
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
-                    case "workflowtask":
-                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowTask, WorkflowTask, WorkflowTaskSearch>((int)request.Id, DocConstantModelName.WORKFLOWTASK, "Tasks", request);
+                    case "task":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityTask, Task, TaskSearch>((int)request.Id, DocConstantModelName.TASK, "Tasks", request);
                     case "variableinstance":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityVariableInstance, VariableInstance, VariableInstanceSearch>((int)request.Id, DocConstantModelName.VARIABLEINSTANCE, "Variables", request);
                     case "workflow":

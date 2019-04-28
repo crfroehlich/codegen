@@ -301,6 +301,7 @@ namespace Services.Schema
 
         public Scope ToDto() => Mapper.Map<DocEntityScope, Scope>(this);
 
+        public static explicit operator Scope(DocEntityScope en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

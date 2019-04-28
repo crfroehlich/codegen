@@ -267,6 +267,7 @@ namespace Services.Schema
 
         public Client ToDto() => Mapper.Map<DocEntityClient, Client>(this);
 
+        public static explicit operator Client(DocEntityClient en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

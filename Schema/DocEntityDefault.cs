@@ -223,6 +223,7 @@ namespace Services.Schema
 
         public Default ToDto() => Mapper.Map<DocEntityDefault, Default>(this);
 
+        public static explicit operator Default(DocEntityDefault en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

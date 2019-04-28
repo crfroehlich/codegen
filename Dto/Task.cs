@@ -44,18 +44,18 @@ using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
 namespace Services.Dto
 {
-    public abstract partial class WorkflowTaskBase : Dto<WorkflowTask>
+    public abstract partial class TaskBase : Dto<Task>
     {
-        public WorkflowTaskBase() {}
+        public TaskBase() {}
 
-        public WorkflowTaskBase(int id) : this()
+        public TaskBase(int id) : this()
         {
             if(id > 0) Id = id;
         }
 
-        public WorkflowTaskBase(int? id) : this(DocConvert.ToInt(id)) {}
+        public TaskBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public WorkflowTaskBase(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
+        public TaskBase(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, Reference pType, int? pTypeId, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
         {
             Assignee = pAssignee;
             AssigneeId = pAssigneeId;
@@ -64,8 +64,6 @@ namespace Services.Dto
             DueDate = pDueDate;
             Reporter = pReporter;
             ReporterId = pReporterId;
-            Status = pStatus;
-            StatusId = pStatusId;
             Type = pType;
             TypeId = pTypeId;
             Workflow = pWorkflow;
@@ -96,13 +94,6 @@ namespace Services.Dto
         public int? ReporterId { get; set; }
 
 
-        [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
-        public Reference Status { get; set; }
-        [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
-        public int? StatusId { get; set; }
-
-
         [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Evidence on Demand"})]
         public Reference Type { get; set; }
@@ -117,7 +108,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out Reference pAssignee, out int? pAssigneeId, out string pData, out string pDescription, out DateTime? pDueDate, out Reference pReporter, out int? pReporterId, out Reference pStatus, out int? pStatusId, out Reference pType, out int? pTypeId, out Reference pWorkflow, out int? pWorkflowId)
+        public void Deconstruct(out Reference pAssignee, out int? pAssigneeId, out string pData, out string pDescription, out DateTime? pDueDate, out Reference pReporter, out int? pReporterId, out Reference pType, out int? pTypeId, out Reference pWorkflow, out int? pWorkflowId)
         {
             pAssignee = Assignee;
             pAssigneeId = AssigneeId;
@@ -126,8 +117,6 @@ namespace Services.Dto
             pDueDate = DueDate;
             pReporter = Reporter;
             pReporterId = ReporterId;
-            pStatus = Status;
-            pStatusId = StatusId;
             pType = Type;
             pTypeId = TypeId;
             pWorkflow = Workflow;
@@ -135,24 +124,24 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public WorkflowTaskBase With(int? pId = Id, Reference pAssignee = Assignee, int? pAssigneeId = AssigneeId, string pData = Data, string pDescription = Description, DateTime? pDueDate = DueDate, Reference pReporter = Reporter, int? pReporterId = ReporterId, Reference pStatus = Status, int? pStatusId = StatusId, Reference pType = Type, int? pTypeId = TypeId, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
-        //	new WorkflowTaskBase(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pStatus, pStatusId, pType, pTypeId, pWorkflow, pWorkflowId);
+        //public TaskBase With(int? pId = Id, Reference pAssignee = Assignee, int? pAssigneeId = AssigneeId, string pData = Data, string pDescription = Description, DateTime? pDueDate = DueDate, Reference pReporter = Reporter, int? pReporterId = ReporterId, Reference pType = Type, int? pTypeId = TypeId, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
+        //	new TaskBase(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pType, pTypeId, pWorkflow, pWorkflowId);
 
     }
 
-    [Route("/workflowtask", "POST")]
-    [Route("/workflowtask/{Id}", "GET, PATCH, PUT, DELETE")]
-    public partial class WorkflowTask : WorkflowTaskBase, IReturn<WorkflowTask>, IDto, ICloneable
+    [Route("/task", "POST")]
+    [Route("/task/{Id}", "GET, PATCH, PUT, DELETE")]
+    public partial class Task : TaskBase, IReturn<Task>, IDto, ICloneable
     {
-        public WorkflowTask()
+        public Task()
         {
             _Constructor();
         }
 
-        public WorkflowTask(int? id) : base(DocConvert.ToInt(id)) {}
-        public WorkflowTask(int id) : base(id) {}
-        public WorkflowTask(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId, Reference pWorkflow, int? pWorkflowId) : 
-            base(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pStatus, pStatusId, pType, pTypeId, pWorkflow, pWorkflowId) { }
+        public Task(int? id) : base(DocConvert.ToInt(id)) {}
+        public Task(int id) : base(id) {}
+        public Task(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, Reference pType, int? pTypeId, Reference pWorkflow, int? pWorkflowId) : 
+            base(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pType, pTypeId, pWorkflow, pWorkflowId) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -166,11 +155,11 @@ namespace Services.Dto
             return ret;
         }
 
-        public static List<string> Fields => DocTools.Fields<WorkflowTask>();
+        public static List<string> Fields => DocTools.Fields<Task>();
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Assignee),nameof(AssigneeId),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(DueDate),nameof(Gestalt),nameof(Locked),nameof(Reporter),nameof(ReporterId),nameof(Status),nameof(StatusId),nameof(Type),nameof(TypeId),nameof(Updated),nameof(VersionNo),nameof(Workflow),nameof(WorkflowId)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Assignee),nameof(AssigneeId),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(DueDate),nameof(Gestalt),nameof(Locked),nameof(Reporter),nameof(ReporterId),nameof(Type),nameof(TypeId),nameof(Updated),nameof(VersionNo),nameof(Workflow),nameof(WorkflowId)})]
         public new List<string> VisibleFields
         {
             get
@@ -186,18 +175,18 @@ namespace Services.Dto
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<WorkflowTask>("WorkflowTask",exists);
+                _VisibleFields = DocPermissionFactory.SetVisibleFields<Task>("Task",exists);
             }
         }
 
         #endregion Fields
 
-        public object Clone() => this.Copy<WorkflowTask>();
+        public object Clone() => this.Copy<Task>();
     }
     
-    [Route("/workflowtask/{Id}/copy", "POST")]
-    public partial class WorkflowTaskCopy : WorkflowTask {}
-    public partial class WorkflowTaskSearchBase : Search<WorkflowTask>
+    [Route("/task/{Id}/copy", "POST")]
+    public partial class TaskCopy : Task {}
+    public partial class TaskSearchBase : Search<Task>
     {
         public int? Id { get; set; }
         public Reference Assignee { get; set; }
@@ -209,10 +198,6 @@ namespace Services.Dto
         public DateTime? DueDateBefore { get; set; }
         public Reference Reporter { get; set; }
         public List<int> ReporterIds { get; set; }
-        public Reference Status { get; set; }
-        public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
-        public List<string> StatusNames { get; set; }
         public Reference Type { get; set; }
         public List<int> TypeIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {@"Evidence on Demand"})]
@@ -221,38 +206,37 @@ namespace Services.Dto
         public List<int> WorkflowIds { get; set; }
     }
 
-    [Route("/workflowtask", "GET")]
-    [Route("/workflowtask/version", "GET, POST")]
-    [Route("/workflowtask/search", "GET, POST, DELETE")]
-    public partial class WorkflowTaskSearch : WorkflowTaskSearchBase
+    [Route("/task", "GET")]
+    [Route("/task/version", "GET, POST")]
+    [Route("/task/search", "GET, POST, DELETE")]
+    public partial class TaskSearch : TaskSearchBase
     {
     }
 
-    public class WorkflowTaskFullTextSearch
+    public class TaskFullTextSearch
     {
-        public WorkflowTaskFullTextSearch() {}
-        private WorkflowTaskSearch _request;
-        public WorkflowTaskFullTextSearch(WorkflowTaskSearch request) => _request = request;
+        public TaskFullTextSearch() {}
+        private TaskSearch _request;
+        public TaskFullTextSearch(TaskSearch request) => _request = request;
 
         public string fts { get => _request.FullTextSearch?.TrimAndPruneSpaces(); }
         public bool isBool { get => (fts == "1" || fts == "0" || fts.ToLower() == "true" || fts.ToLower() == "false"); }
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Updated))); }
+        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.Created))); }
+        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.Updated))); }
 
-        public bool doAssignee { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Assignee))); }
-        public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Data))); }
-        public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Description))); }
-        public bool doDueDate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.DueDate))); }
-        public bool doReporter { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Reporter))); }
-        public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Status))); }
-        public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Type))); }
-        public bool doWorkflow { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(WorkflowTask.Workflow))); }
+        public bool doAssignee { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.Assignee))); }
+        public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.Data))); }
+        public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.Description))); }
+        public bool doDueDate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.DueDate))); }
+        public bool doReporter { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.Reporter))); }
+        public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.Type))); }
+        public bool doWorkflow { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Task.Workflow))); }
     }
 
-    [Route("/workflowtask/batch", "DELETE, PATCH, POST, PUT")]
-    public partial class WorkflowTaskBatch : List<WorkflowTask> { }
+    [Route("/task/batch", "DELETE, PATCH, POST, PUT")]
+    public partial class TaskBatch : List<Task> { }
 
 }

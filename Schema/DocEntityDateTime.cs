@@ -205,6 +205,7 @@ namespace Services.Schema
 
         public DateTimeDto ToDto() => Mapper.Map<DocEntityDateTime, DateTimeDto>(this);
 
+        public static explicit operator DateTimeDto(DocEntityDateTime en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

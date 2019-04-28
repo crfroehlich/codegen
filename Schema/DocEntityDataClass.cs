@@ -317,6 +317,7 @@ namespace Services.Schema
 
         public DataClass ToDto() => Mapper.Map<DocEntityDataClass, DataClass>(this);
 
+        public static explicit operator DataClass(DocEntityDataClass en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

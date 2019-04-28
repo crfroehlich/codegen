@@ -233,6 +233,7 @@ namespace Services.Schema
 
         public UserType ToDto() => Mapper.Map<DocEntityUserType, UserType>(this);
 
+        public static explicit operator UserType(DocEntityUserType en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

@@ -1,7 +1,9 @@
 {
-  "MaxTypeId": 20265,
-  "NextTypeId": 20365,
+  "MaxTypeId": 20385,
+  "NextTypeId": 20485,
   "Types": {
+    "EoD": 20385,
+    "Rating": 20365,
     "DataTab": 20265,
     "DataProperty": 20255,
     "DataClass": 20235,
@@ -18,7 +20,7 @@
     "AuditDelta": 19019,
     "BackgroundTaskHistory": 18919,
     "DatabaseVersion": 18819,
-    "WorkflowTask": 18719,
+    "Task": 18719,
     "UserRequest": 18619,
     "QueueChannel": 18519,
     "UserSession": 18419,

@@ -289,6 +289,7 @@ namespace Services.Schema
 
         public Team ToDto() => Mapper.Map<DocEntityTeam, Team>(this);
 
+        public static explicit operator Team(DocEntityTeam en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

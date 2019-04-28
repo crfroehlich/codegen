@@ -213,6 +213,7 @@ namespace Services.Schema
 
         public FeatureSet ToDto() => Mapper.Map<DocEntityFeatureSet, FeatureSet>(this);
 
+        public static explicit operator FeatureSet(DocEntityFeatureSet en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

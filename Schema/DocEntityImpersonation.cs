@@ -213,6 +213,7 @@ namespace Services.Schema
 
         public Impersonation ToDto() => Mapper.Map<DocEntityImpersonation, Impersonation>(this);
 
+        public static explicit operator Impersonation(DocEntityImpersonation en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

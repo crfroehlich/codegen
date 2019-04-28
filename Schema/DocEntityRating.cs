@@ -44,55 +44,55 @@ using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
 namespace Services.Schema
 {
-    [TableMapping(DocConstantModelName.MEANVARIANCEVALUE)]
-    public partial class DocEntityMeanVarianceValue : DocEntityBase
+    [TableMapping(DocConstantModelName.RATING)]
+    public partial class DocEntityRating : DocEntityTask
     {
-        private const string MEANVARIANCEVALUE_CACHE = "MeanVarianceValueCache";
-        public const string TABLE_NAME = DocConstantModelName.MEANVARIANCEVALUE;
+        private const string RATING_CACHE = "RatingCache";
+        public const string TABLE_NAME = DocConstantModelName.RATING;
         
         #region Constructor
-        public DocEntityMeanVarianceValue(Session session) : base(session) {}
+        public DocEntityRating(Session session) : base(session) {}
 
-        public DocEntityMeanVarianceValue() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityRating() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new MeanVarianceValue()));
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Rating()));
 
         #region Static Members
-        public static DocEntityMeanVarianceValue Get(Reference reference)
+        public static DocEntityRating Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityMeanVarianceValue Get(int? primaryKey)
+        public static DocEntityRating Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
-            var ret = DocEntityThreadCache<DocEntityMeanVarianceValue>.GetFromCache(primaryKey, MEANVARIANCEVALUE_CACHE);
+            var ret = DocEntityThreadCache<DocEntityRating>.GetFromCache(primaryKey, RATING_CACHE);
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityMeanVarianceValue>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
+                ret = query.SelectAll<DocEntityRating>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityMeanVarianceValue>.UpdateCache(ret.Id, ret, MEANVARIANCEVALUE_CACHE);
-                    DocEntityThreadCache<DocEntityMeanVarianceValue>.UpdateCache(ret.Hash, ret, MEANVARIANCEVALUE_CACHE);
+                    DocEntityThreadCache<DocEntityRating>.UpdateCache(ret.Id, ret, RATING_CACHE);
+                    DocEntityThreadCache<DocEntityRating>.UpdateCache(ret.Hash, ret, RATING_CACHE);
                 }
             }
             return ret;
         }
 
-        public static DocEntityMeanVarianceValue Get(Guid hash)
+        public static DocEntityRating Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
-            var ret = DocEntityThreadCache<DocEntityMeanVarianceValue>.GetFromCache(hash, MEANVARIANCEVALUE_CACHE);
+            var ret = DocEntityThreadCache<DocEntityRating>.GetFromCache(hash, RATING_CACHE);
             
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityMeanVarianceValue>().Where(e => e.Hash == hash).FirstOrDefault();
+                ret = query.SelectAll<DocEntityRating>().Where(e => e.Hash == hash).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityMeanVarianceValue>.UpdateCache(ret.Id, ret, MEANVARIANCEVALUE_CACHE);
-                    DocEntityThreadCache<DocEntityMeanVarianceValue>.UpdateCache(ret.Hash, ret, MEANVARIANCEVALUE_CACHE);
+                    DocEntityThreadCache<DocEntityRating>.UpdateCache(ret.Id, ret, RATING_CACHE);
+                    DocEntityThreadCache<DocEntityRating>.UpdateCache(ret.Hash, ret, RATING_CACHE);
                 }
             }
             return ret;
@@ -100,54 +100,22 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field]
-        public DocStructureUnits MeanVariance { get; set; }
-
-
-        [Field]
-        public DocStructureUnitsRange MeanVarianceRange { get; set; }
-
-
         [Field(Nullable = false)]
-        public DocEntityLookupTable MeanVarianceType { get; set; }
-        public int? MeanVarianceTypeId { get { return MeanVarianceType?.Id; } private set { var noid = value; } }
-
-
-        [Field(Nullable = false, DefaultValue = 0)]
-        public int Order { get; set; }
+        public DocEntityDocument Document { get; set; }
+        public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
 
         [Field]
-        public DocEntitySet<DocEntityMeanVariances> Owners { get; private set; }
+        public RatingEnm? Status { get; set; }
 
 
-        public int? OwnersCount { get { return Owners.Count(); } private set { var noid = value; } }
-
-
-        [Field]
-        public override string Gestalt { get; set; }
-
-        [Field(DefaultValue = 0), Version(VersionMode.Manual)]
-        public override int VersionNo { get; set; }
-
-        [Field]
-        public override DateTime? Created { get; set; }
-
-        [Field]
-        public override DateTime? Updated { get; set; }
-
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
-        public override bool Locked { get; set; }
-
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
-        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
 
         public override DocConstantModelName TableName => TABLE_NAME;
 
-        public const string CACHE_KEY_PREFIX = "FindMeanVarianceValues";
+        public const string CACHE_KEY_PREFIX = "FindRatings";
 
         #endregion Overrides of DocEntity
 
@@ -169,7 +137,7 @@ namespace Services.Schema
         {
             if (false == ValidationMessage.IsValid)
             {
-                throw new HttpError(HttpStatusCode.Conflict, $"MeanVarianceValue requires: {ValidationMessage.Message}.");
+                throw new HttpError(HttpStatusCode.Conflict, $"Rating requires: {ValidationMessage.Message}.");
             }
 
             base.OnValidate();
@@ -201,23 +169,10 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(MeanVarianceType))
+                if(DocTools.IsNullOrEmpty(Document))
                 {
                     isValid = false;
-                    message += " MeanVarianceType is a required property.";
-                }
-                else
-                {
-                    if(MeanVarianceType.Enum?.Name != "MeanVarianceType")
-                    {
-                        isValid = false;
-                        message += " MeanVarianceType is a " + MeanVarianceType.Enum.Name + ", but must be a MeanVarianceType.";
-                    }
-                }
-                if(DocTools.IsNullOrEmpty(Order))
-                {
-                    isValid = false;
-                    message += " Order is a required property.";
+                    message += " Document is a required property.";
                 }
 
                 var ret = new DocValidationMessage(message, isValid);
@@ -228,9 +183,10 @@ namespace Services.Schema
 
         #region Converters
 
-        public MeanVarianceValue ToDto() => Mapper.Map<DocEntityMeanVarianceValue, MeanVarianceValue>(this);
+        public Rating ToDto() => Mapper.Map<DocEntityRating, Rating>(this);
 
-        public static explicit operator MeanVarianceValue(DocEntityMeanVarianceValue en) => en?.ToDto();
+        public static explicit operator Rating(DocEntityRating en) => en?.ToDto();
+        public static explicit operator Task(DocEntityRating en) => (Task) en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

@@ -248,6 +248,7 @@ namespace Services.Schema
 
         public Division ToDto() => Mapper.Map<DocEntityDivision, Division>(this);
 
+        public static explicit operator Division(DocEntityDivision en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

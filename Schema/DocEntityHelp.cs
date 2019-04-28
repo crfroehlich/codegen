@@ -240,6 +240,7 @@ namespace Services.Schema
 
         public Help ToDto() => Mapper.Map<DocEntityHelp, Help>(this);
 
+        public static explicit operator Help(DocEntityHelp en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

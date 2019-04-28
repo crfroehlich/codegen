@@ -216,6 +216,7 @@ namespace Services.Schema
 
         public DataTab ToDto() => Mapper.Map<DocEntityDataTab, DataTab>(this);
 
+        public static explicit operator DataTab(DocEntityDataTab en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

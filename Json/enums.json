@@ -633,6 +633,7 @@
     "DOCUMENT": "Document",
     "DOCUMENTSET": "DocumentSet",
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
+    "EOD": "EoD",
     "EVENT": "Event",
     "FEATURESET": "FeatureSet",
     "GLOSSARY": "Glossary",
@@ -657,6 +658,7 @@
     "PAGE": "Page",
     "PROJECT": "Project",
     "QUEUECHANNEL": "QueueChannel",
+    "RATING": "Rating",
     "RELEASESTATUS": "ReleaseStatus",
     "ROLE": "Role",
     "SCOPE": "Scope",
@@ -666,6 +668,7 @@
     "STUDYDESIGN": "StudyDesign",
     "STUDYTYPE": "StudyType",
     "TAG": "Tag",
+    "TASK": "Task",
     "TEAM": "Team",
     "TERMCATEGORY": "TermCategory",
     "TERMMASTER": "TermMaster",
@@ -685,8 +688,7 @@
     "VARIABLEINSTANCE": "VariableInstance",
     "VARIABLERULE": "VariableRule",
     "WORKFLOW": "Workflow",
-    "WORKFLOWCOMMENT": "WorkflowComment",
-    "WORKFLOWTASK": "WorkflowTask"
+    "WORKFLOWCOMMENT": "WorkflowComment"
   },
   "OutcomeCategory": {
     "ADVERSE_EVENT": "Adverse Event",

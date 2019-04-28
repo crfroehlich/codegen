@@ -290,6 +290,7 @@ namespace Services.Schema
 
         public AuditRecord ToDto() => Mapper.Map<DocEntityAuditRecord, AuditRecord>(this);
 
+        public static explicit operator AuditRecord(DocEntityAuditRecord en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

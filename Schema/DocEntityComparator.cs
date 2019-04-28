@@ -209,6 +209,7 @@ namespace Services.Schema
 
         public Comparator ToDto() => Mapper.Map<DocEntityComparator, Comparator>(this);
 
+        public static explicit operator Comparator(DocEntityComparator en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

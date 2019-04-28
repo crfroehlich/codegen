@@ -214,6 +214,7 @@ namespace Services.Schema
 
         public TimePoint ToDto() => Mapper.Map<DocEntityTimePoint, TimePoint>(this);
 
+        public static explicit operator TimePoint(DocEntityTimePoint en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

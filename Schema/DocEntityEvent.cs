@@ -232,6 +232,7 @@ namespace Services.Schema
 
         public Event ToDto() => Mapper.Map<DocEntityEvent, Event>(this);
 
+        public static explicit operator Event(DocEntityEvent en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

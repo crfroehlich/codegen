@@ -224,6 +224,7 @@ namespace Services.Schema
 
         public TermCategory ToDto() => Mapper.Map<DocEntityTermCategory, TermCategory>(this);
 
+        public static explicit operator TermCategory(DocEntityTermCategory en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

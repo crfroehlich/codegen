@@ -306,6 +306,7 @@ namespace Services.Schema
 
         public BackgroundTask ToDto() => Mapper.Map<DocEntityBackgroundTask, BackgroundTask>(this);
 
+        public static explicit operator BackgroundTask(DocEntityBackgroundTask en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

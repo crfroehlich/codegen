@@ -93,6 +93,8 @@ namespace Services.Enums
         DOCUMENTSETHISTORY,
         [EnumMember(Value = DocConstantModelName.ENTITIES)]
         ENTITIES,
+        [EnumMember(Value = DocConstantModelName.EOD)]
+        EOD,
         [EnumMember(Value = DocConstantModelName.EVENT)]
         EVENT,
         [EnumMember(Value = DocConstantModelName.FEATURESET)]
@@ -141,6 +143,8 @@ namespace Services.Enums
         PROJECT,
         [EnumMember(Value = DocConstantModelName.QUEUECHANNEL)]
         QUEUECHANNEL,
+        [EnumMember(Value = DocConstantModelName.RATING)]
+        RATING,
         [EnumMember(Value = DocConstantModelName.RELEASESTATUS)]
         RELEASESTATUS,
         [EnumMember(Value = DocConstantModelName.ROLE)]
@@ -159,6 +163,8 @@ namespace Services.Enums
         STUDYTYPE,
         [EnumMember(Value = DocConstantModelName.TAG)]
         TAG,
+        [EnumMember(Value = DocConstantModelName.TASK)]
+        TASK,
         [EnumMember(Value = DocConstantModelName.TEAM)]
         TEAM,
         [EnumMember(Value = DocConstantModelName.TERMCATEGORY)]
@@ -198,9 +204,7 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantModelName.WORKFLOW)]
         WORKFLOW,
         [EnumMember(Value = DocConstantModelName.WORKFLOWCOMMENT)]
-        WORKFLOWCOMMENT,
-        [EnumMember(Value = DocConstantModelName.WORKFLOWTASK)]
-        WORKFLOWTASK
+        WORKFLOWCOMMENT
     }
     
     public static partial class EnumExtensions
@@ -255,6 +259,8 @@ namespace Services.Enums
                     return DocConstantModelName.DOCUMENTSETHISTORY;
                 case ModelNameEnm.ENTITIES:
                     return DocConstantModelName.ENTITIES;
+                case ModelNameEnm.EOD:
+                    return DocConstantModelName.EOD;
                 case ModelNameEnm.EVENT:
                     return DocConstantModelName.EVENT;
                 case ModelNameEnm.FEATURESET:
@@ -303,6 +309,8 @@ namespace Services.Enums
                     return DocConstantModelName.PROJECT;
                 case ModelNameEnm.QUEUECHANNEL:
                     return DocConstantModelName.QUEUECHANNEL;
+                case ModelNameEnm.RATING:
+                    return DocConstantModelName.RATING;
                 case ModelNameEnm.RELEASESTATUS:
                     return DocConstantModelName.RELEASESTATUS;
                 case ModelNameEnm.ROLE:
@@ -321,6 +329,8 @@ namespace Services.Enums
                     return DocConstantModelName.STUDYTYPE;
                 case ModelNameEnm.TAG:
                     return DocConstantModelName.TAG;
+                case ModelNameEnm.TASK:
+                    return DocConstantModelName.TASK;
                 case ModelNameEnm.TEAM:
                     return DocConstantModelName.TEAM;
                 case ModelNameEnm.TERMCATEGORY:
@@ -361,8 +371,6 @@ namespace Services.Enums
                     return DocConstantModelName.WORKFLOW;
                 case ModelNameEnm.WORKFLOWCOMMENT:
                     return DocConstantModelName.WORKFLOWCOMMENT;
-                case ModelNameEnm.WORKFLOWTASK:
-                    return DocConstantModelName.WORKFLOWTASK;
                 default:
                     return string.Empty;
             }
@@ -394,6 +402,7 @@ namespace Services.Enums
         public const string DOCUMENTSET = "DocumentSet";
         public const string DOCUMENTSETHISTORY = "DocumentSetHistory";
         public const string ENTITIES = "Entities";
+        public const string EOD = "EoD";
         public const string EVENT = "Event";
         public const string FEATURESET = "FeatureSet";
         public const string GLOSSARY = "Glossary";
@@ -418,6 +427,7 @@ namespace Services.Enums
         public const string PAGE = "Page";
         public const string PROJECT = "Project";
         public const string QUEUECHANNEL = "QueueChannel";
+        public const string RATING = "Rating";
         public const string RELEASESTATUS = "ReleaseStatus";
         public const string ROLE = "Role";
         public const string SCOPE = "Scope";
@@ -427,6 +437,7 @@ namespace Services.Enums
         public const string STUDYDESIGN = "StudyDesign";
         public const string STUDYTYPE = "StudyType";
         public const string TAG = "Tag";
+        public const string TASK = "Task";
         public const string TEAM = "Team";
         public const string TERMCATEGORY = "TermCategory";
         public const string TERMMASTER = "TermMaster";
@@ -447,7 +458,6 @@ namespace Services.Enums
         public const string VARIABLERULE = "VariableRule";
         public const string WORKFLOW = "Workflow";
         public const string WORKFLOWCOMMENT = "WorkflowComment";
-        public const string WORKFLOWTASK = "WorkflowTask";
         
         #region Internals
         

@@ -209,6 +209,7 @@ namespace Services.Schema
 
         public Intervention ToDto() => Mapper.Map<DocEntityIntervention, Intervention>(this);
 
+        public static explicit operator Intervention(DocEntityIntervention en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

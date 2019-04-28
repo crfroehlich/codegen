@@ -300,6 +300,7 @@ namespace Services.Schema
 
         public Project ToDto() => Mapper.Map<DocEntityProject, Project>(this);
 
+        public static explicit operator Project(DocEntityProject en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

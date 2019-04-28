@@ -250,6 +250,7 @@ namespace Services.Schema
 
         public UserSession ToDto() => Mapper.Map<DocEntityUserSession, UserSession>(this);
 
+        public static explicit operator UserSession(DocEntityUserSession en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

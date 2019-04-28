@@ -244,6 +244,7 @@ namespace Services.Schema
 
         public Update ToDto() => Mapper.Map<DocEntityUpdate, Update>(this);
 
+        public static explicit operator Update(DocEntityUpdate en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

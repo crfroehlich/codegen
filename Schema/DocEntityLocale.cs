@@ -217,6 +217,7 @@ namespace Services.Schema
 
         public Locale ToDto() => Mapper.Map<DocEntityLocale, Locale>(this);
 
+        public static explicit operator Locale(DocEntityLocale en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

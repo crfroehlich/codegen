@@ -44,55 +44,55 @@ using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
 namespace Services.Schema
 {
-    [TableMapping(DocConstantModelName.WORKFLOWTASK)]
-    public partial class DocEntityWorkflowTask : DocEntityBase
+    [TableMapping(DocConstantModelName.TASK)]
+    public partial class DocEntityTask : DocEntityBase
     {
-        private const string WORKFLOWTASK_CACHE = "WorkflowTaskCache";
-        public const string TABLE_NAME = DocConstantModelName.WORKFLOWTASK;
+        private const string TASK_CACHE = "TaskCache";
+        public const string TABLE_NAME = DocConstantModelName.TASK;
         
         #region Constructor
-        public DocEntityWorkflowTask(Session session) : base(session) {}
+        public DocEntityTask(Session session) : base(session) {}
 
-        public DocEntityWorkflowTask() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityTask() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new WorkflowTask()));
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Task()));
 
         #region Static Members
-        public static DocEntityWorkflowTask Get(Reference reference)
+        public static DocEntityTask Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityWorkflowTask Get(int? primaryKey)
+        public static DocEntityTask Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
-            var ret = DocEntityThreadCache<DocEntityWorkflowTask>.GetFromCache(primaryKey, WORKFLOWTASK_CACHE);
+            var ret = DocEntityThreadCache<DocEntityTask>.GetFromCache(primaryKey, TASK_CACHE);
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityWorkflowTask>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
+                ret = query.SelectAll<DocEntityTask>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityWorkflowTask>.UpdateCache(ret.Id, ret, WORKFLOWTASK_CACHE);
-                    DocEntityThreadCache<DocEntityWorkflowTask>.UpdateCache(ret.Hash, ret, WORKFLOWTASK_CACHE);
+                    DocEntityThreadCache<DocEntityTask>.UpdateCache(ret.Id, ret, TASK_CACHE);
+                    DocEntityThreadCache<DocEntityTask>.UpdateCache(ret.Hash, ret, TASK_CACHE);
                 }
             }
             return ret;
         }
 
-        public static DocEntityWorkflowTask Get(Guid hash)
+        public static DocEntityTask Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
-            var ret = DocEntityThreadCache<DocEntityWorkflowTask>.GetFromCache(hash, WORKFLOWTASK_CACHE);
+            var ret = DocEntityThreadCache<DocEntityTask>.GetFromCache(hash, TASK_CACHE);
             
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityWorkflowTask>().Where(e => e.Hash == hash).FirstOrDefault();
+                ret = query.SelectAll<DocEntityTask>().Where(e => e.Hash == hash).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityWorkflowTask>.UpdateCache(ret.Id, ret, WORKFLOWTASK_CACHE);
-                    DocEntityThreadCache<DocEntityWorkflowTask>.UpdateCache(ret.Hash, ret, WORKFLOWTASK_CACHE);
+                    DocEntityThreadCache<DocEntityTask>.UpdateCache(ret.Id, ret, TASK_CACHE);
+                    DocEntityThreadCache<DocEntityTask>.UpdateCache(ret.Hash, ret, TASK_CACHE);
                 }
             }
             return ret;
@@ -120,11 +120,6 @@ namespace Services.Schema
         [Field(Nullable = false)]
         public DocEntityUser Reporter { get; set; }
         public int? ReporterId { get { return Reporter?.Id; } private set { var noid = value; } }
-
-
-        [Field(NullableOnUpgrade = true)]
-        public DocEntityLookupTable Status { get; set; }
-        public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
 
 
         [Field(Nullable = false, NullableOnUpgrade = true)]
@@ -160,7 +155,7 @@ namespace Services.Schema
 
         public override DocConstantModelName TableName => TABLE_NAME;
 
-        public const string CACHE_KEY_PREFIX = "FindWorkflowTasks";
+        public const string CACHE_KEY_PREFIX = "FindTasks";
 
         #endregion Overrides of DocEntity
 
@@ -182,7 +177,7 @@ namespace Services.Schema
         {
             if (false == ValidationMessage.IsValid)
             {
-                throw new HttpError(HttpStatusCode.Conflict, $"WorkflowTask requires: {ValidationMessage.Message}.");
+                throw new HttpError(HttpStatusCode.Conflict, $"Task requires: {ValidationMessage.Message}.");
             }
 
             base.OnValidate();
@@ -224,11 +219,6 @@ namespace Services.Schema
                     isValid = false;
                     message += " Reporter is a required property.";
                 }
-                if(null != Status && Status?.Enum?.Name != "WorkflowStatus")
-                {
-                    isValid = false;
-                    message += " Status is a " + Status?.Enum?.Name + ", but must be a WorkflowStatus.";
-                }
                 if(DocTools.IsNullOrEmpty(Type))
                 {
                     isValid = false;
@@ -256,8 +246,9 @@ namespace Services.Schema
 
         #region Converters
 
-        public WorkflowTask ToDto() => Mapper.Map<DocEntityWorkflowTask, WorkflowTask>(this);
+        public Task ToDto() => Mapper.Map<DocEntityTask, Task>(this);
 
+        public static explicit operator Task(DocEntityTask en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

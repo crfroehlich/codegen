@@ -254,6 +254,7 @@ namespace Services.Schema
 
         public TimeCard ToDto() => Mapper.Map<DocEntityTimeCard, TimeCard>(this);
 
+        public static explicit operator TimeCard(DocEntityTimeCard en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

@@ -153,8 +153,8 @@ namespace Services.Schema
 
 
         [Field]
-        [Association(PairTo = nameof(DocEntityWorkflowTask.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
-        public DocEntitySet<DocEntityWorkflowTask> Tasks { get; private set; }
+        [Association(PairTo = nameof(DocEntityTask.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
+        public DocEntitySet<DocEntityTask> Tasks { get; private set; }
 
 
         public int? TasksCount { get { return Tasks.Count(); } private set { var noid = value; } }
@@ -317,6 +317,7 @@ namespace Services.Schema
 
         public Workflow ToDto() => Mapper.Map<DocEntityWorkflow, Workflow>(this);
 
+        public static explicit operator Workflow(DocEntityWorkflow en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

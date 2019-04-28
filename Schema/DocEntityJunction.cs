@@ -257,6 +257,7 @@ namespace Services.Schema
 
         public Junction ToDto() => Mapper.Map<DocEntityJunction, Junction>(this);
 
+        public static explicit operator Junction(DocEntityJunction en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

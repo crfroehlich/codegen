@@ -209,6 +209,7 @@ namespace Services.Schema
 
         public Outcome ToDto() => Mapper.Map<DocEntityOutcome, Outcome>(this);
 
+        public static explicit operator Outcome(DocEntityOutcome en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

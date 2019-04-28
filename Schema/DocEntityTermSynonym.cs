@@ -227,6 +227,7 @@ namespace Services.Schema
 
         public TermSynonym ToDto() => Mapper.Map<DocEntityTermSynonym, TermSynonym>(this);
 
+        public static explicit operator TermSynonym(DocEntityTermSynonym en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

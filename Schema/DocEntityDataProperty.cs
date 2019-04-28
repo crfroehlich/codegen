@@ -380,6 +380,7 @@ namespace Services.Schema
 
         public DataProperty ToDto() => Mapper.Map<DocEntityDataProperty, DataProperty>(this);
 
+        public static explicit operator DataProperty(DocEntityDataProperty en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

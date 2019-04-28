@@ -237,6 +237,7 @@ namespace Services.Schema
 
         public UnitValue ToDto() => Mapper.Map<DocEntityUnitValue, UnitValue>(this);
 
+        public static explicit operator UnitValue(DocEntityUnitValue en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

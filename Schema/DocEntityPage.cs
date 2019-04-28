@@ -233,6 +233,7 @@ namespace Services.Schema
 
         public Page ToDto() => Mapper.Map<DocEntityPage, Page>(this);
 
+        public static explicit operator Page(DocEntityPage en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

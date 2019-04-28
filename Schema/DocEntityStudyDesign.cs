@@ -206,6 +206,7 @@ namespace Services.Schema
 
         public StudyDesign ToDto() => Mapper.Map<DocEntityStudyDesign, StudyDesign>(this);
 
+        public static explicit operator StudyDesign(DocEntityStudyDesign en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

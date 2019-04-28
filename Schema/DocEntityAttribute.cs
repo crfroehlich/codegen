@@ -262,6 +262,7 @@ namespace Services.Schema
 
         public Attribute ToDto() => Mapper.Map<DocEntityAttribute, Attribute>(this);
 
+        public static explicit operator Attribute(DocEntityAttribute en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

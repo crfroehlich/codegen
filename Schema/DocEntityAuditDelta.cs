@@ -218,6 +218,7 @@ namespace Services.Schema
 
         public AuditDelta ToDto() => Mapper.Map<DocEntityAuditDelta, AuditDelta>(this);
 
+        public static explicit operator AuditDelta(DocEntityAuditDelta en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

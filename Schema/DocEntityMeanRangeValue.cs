@@ -248,6 +248,7 @@ namespace Services.Schema
 
         public MeanRangeValue ToDto() => Mapper.Map<DocEntityMeanRangeValue, MeanRangeValue>(this);
 
+        public static explicit operator MeanRangeValue(DocEntityMeanRangeValue en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

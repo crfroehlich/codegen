@@ -61,6 +61,8 @@ namespace Services.Schema
     {
         public static List<TypeMap> Maps { get; } = new List<TypeMap>
         {
+            new TypeMap() { SchemaName = typeof(DocEntityEoD).FullName, TypeId = 20385, TableName = DocConstantModelName.EOD, ClassName = "EoD", DtoName = nameof(EoD) },
+            new TypeMap() { SchemaName = typeof(DocEntityRating).FullName, TypeId = 20365, TableName = DocConstantModelName.RATING, ClassName = "Rating", DtoName = nameof(Rating) },
             new TypeMap() { SchemaName = typeof(DocEntityDataTab).FullName, TypeId = 20265, TableName = DocConstantModelName.DATATAB, ClassName = "DataTab", DtoName = nameof(DataTab) },
             new TypeMap() { SchemaName = typeof(DocEntityDataProperty).FullName, TypeId = 20255, TableName = DocConstantModelName.DATAPROPERTY, ClassName = "DataProperty", DtoName = nameof(DataProperty) },
             new TypeMap() { SchemaName = typeof(DocEntityDataClass).FullName, TypeId = 20235, TableName = DocConstantModelName.DATACLASS, ClassName = "DataClass", DtoName = nameof(DataClass) },
@@ -77,7 +79,7 @@ namespace Services.Schema
             new TypeMap() { SchemaName = typeof(DocEntityAuditDelta).FullName, TypeId = 19019, TableName = DocConstantModelName.AUDITDELTA, ClassName = "AuditDelta", DtoName = nameof(AuditDelta) },
             new TypeMap() { SchemaName = typeof(DocEntityBackgroundTaskHistory).FullName, TypeId = 18919, TableName = DocConstantModelName.BACKGROUNDTASKHISTORY, ClassName = "BackgroundTaskHistory", DtoName = nameof(BackgroundTaskHistory) },
             new TypeMap() { SchemaName = typeof(DocEntityDatabaseVersion).FullName, TypeId = 18819, TableName = DocConstantModelName.DATABASEVERSION, ClassName = "DatabaseVersion", DtoName = nameof(DatabaseVersion) },
-            new TypeMap() { SchemaName = typeof(DocEntityWorkflowTask).FullName, TypeId = 18719, TableName = DocConstantModelName.WORKFLOWTASK, ClassName = "WorkflowTask", DtoName = nameof(WorkflowTask) },
+            new TypeMap() { SchemaName = typeof(DocEntityTask).FullName, TypeId = 18719, TableName = DocConstantModelName.TASK, ClassName = "Task", DtoName = nameof(Task) },
             new TypeMap() { SchemaName = typeof(DocEntityUserRequest).FullName, TypeId = 18619, TableName = DocConstantModelName.USERREQUEST, ClassName = "UserRequest", DtoName = nameof(UserRequest) },
             new TypeMap() { SchemaName = typeof(DocEntityQueueChannel).FullName, TypeId = 18519, TableName = DocConstantModelName.QUEUECHANNEL, ClassName = "QueueChannel", DtoName = nameof(QueueChannel) },
             new TypeMap() { SchemaName = typeof(DocEntityUserSession).FullName, TypeId = 18419, TableName = DocConstantModelName.USERSESSION, ClassName = "UserSession", DtoName = nameof(UserSession) },

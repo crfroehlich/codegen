@@ -197,6 +197,7 @@ namespace Services.Schema
 
         public AttributeInterval ToDto() => Mapper.Map<DocEntityAttributeInterval, AttributeInterval>(this);
 
+        public static explicit operator AttributeInterval(DocEntityAttributeInterval en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

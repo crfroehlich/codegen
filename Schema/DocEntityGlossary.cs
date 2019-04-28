@@ -221,6 +221,7 @@ namespace Services.Schema
 
         public Glossary ToDto() => Mapper.Map<DocEntityGlossary, Glossary>(this);
 
+        public static explicit operator Glossary(DocEntityGlossary en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

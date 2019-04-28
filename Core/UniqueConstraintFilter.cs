@@ -68,6 +68,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityDocument, bool>> DocumentIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDocumentSet, bool>> DocumentSetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDocumentSetHistory, bool>> DocumentSetHistoryIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityEoD, bool>> EoDIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityEvent, bool>> EventIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityFeatureSet, bool>> FeatureSetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityGlossary, bool>> GlossaryIgnoreArchived() => d => d.Archived == false;
@@ -92,6 +93,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityPage, bool>> PageIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityProject, bool>> ProjectIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityQueueChannel, bool>> QueueChannelIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityRating, bool>> RatingIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityReleaseStatus, bool>> ReleaseStatusIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityRole, bool>> RoleIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityScope, bool>> ScopeIgnoreArchived() => d => d.Archived == false;
@@ -101,6 +103,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityStudyDesign, bool>> StudyDesignIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityStudyType, bool>> StudyTypeIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTag, bool>> TagIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityTask, bool>> TaskIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTeam, bool>> TeamIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTermCategory, bool>> TermCategoryIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTermMaster, bool>> TermMasterIgnoreArchived() => d => d.Archived == false;
@@ -121,6 +124,5 @@ namespace Services.Core
             public static Expression<Func<DocEntityVariableRule, bool>> VariableRuleIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityWorkflow, bool>> WorkflowIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityWorkflowComment, bool>> WorkflowCommentIgnoreArchived() => d => d.Archived == false;
-            public static Expression<Func<DocEntityWorkflowTask, bool>> WorkflowTaskIgnoreArchived() => d => d.Archived == false;
     }
 }
