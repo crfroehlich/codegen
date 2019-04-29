@@ -106,7 +106,7 @@ namespace Services.Schema
 
 
         [Field]
-        public RatingEnm? Status { get; set; }
+        public WorkflowStatusEnm? Status { get; set; }
 
 
         #endregion Properties

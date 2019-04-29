@@ -55,7 +55,7 @@ namespace Services.Dto
 
         public EoDBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public EoDBase(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pStatus) : this(DocConvert.ToInt(pId)) 
+        public EoDBase(int? pId, Reference pDocument, int? pDocumentId, WorkflowStatusEnm? pStatus) : this(DocConvert.ToInt(pId)) 
         {
             Document = pDocument;
             DocumentId = pDocumentId;
@@ -68,12 +68,12 @@ namespace Services.Dto
         public int? DocumentId { get; set; }
 
 
-        [ApiMember(Name = nameof(Status), Description = "RatingEnm?", IsRequired = false)]
-        public RatingEnm? Status { get; set; }
+        [ApiMember(Name = nameof(Status), Description = "WorkflowStatusEnm?", IsRequired = false)]
+        public WorkflowStatusEnm? Status { get; set; }
 
 
 
-        public void Deconstruct(out Reference pDocument, out int? pDocumentId, out RatingEnm? pStatus)
+        public void Deconstruct(out Reference pDocument, out int? pDocumentId, out WorkflowStatusEnm? pStatus)
         {
             pDocument = Document;
             pDocumentId = DocumentId;
@@ -81,7 +81,7 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public EoDBase With(int? pId = Id, Reference pDocument = Document, int? pDocumentId = DocumentId, RatingEnm? pStatus = Status) => 
+        //public EoDBase With(int? pId = Id, Reference pDocument = Document, int? pDocumentId = DocumentId, WorkflowStatusEnm? pStatus = Status) => 
         //	new EoDBase(pId, pDocument, pDocumentId, pStatus);
 
     }
@@ -97,7 +97,7 @@ namespace Services.Dto
 
         public EoD(int? id) : base(DocConvert.ToInt(id)) {}
         public EoD(int id) : base(id) {}
-        public EoD(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pStatus) : 
+        public EoD(int? pId, Reference pDocument, int? pDocumentId, WorkflowStatusEnm? pStatus) : 
             base(pId, pDocument, pDocumentId, pStatus) { }
         #region Fields
 
@@ -150,7 +150,7 @@ namespace Services.Dto
         public int? Id { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
-        public RatingEnm? Status { get; set; }
+        public WorkflowStatusEnm? Status { get; set; }
     }
 
     [Route("/eod", "GET")]

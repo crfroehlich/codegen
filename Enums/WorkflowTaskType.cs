@@ -48,7 +48,7 @@ namespace Services.Enums
     public enum WorkflowTaskTypeEnm
     {
         [EnumMember(Value = DocConstantWorkflowTaskType.EVIDENCE_ON_DEMAND)]
-        EVIDENCE_ON_DEMAND
+        EVIDENCE_ON_DEMAND = 96669235
     }
     
     public static partial class EnumExtensions

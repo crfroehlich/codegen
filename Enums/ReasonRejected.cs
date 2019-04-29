@@ -48,51 +48,51 @@ namespace Services.Enums
     public enum ReasonRejectedEnm
     {
         [EnumMember(Value = DocConstantReasonRejected.ABSTRACT_INSUFFICIENT_INFORMATION)]
-        ABSTRACT_INSUFFICIENT_INFORMATION,
+        ABSTRACT_INSUFFICIENT_INFORMATION = 77289761,
         [EnumMember(Value = DocConstantReasonRejected.ANIMAL_STUDY)]
-        ANIMAL_STUDY,
+        ANIMAL_STUDY = 77289753,
         [EnumMember(Value = DocConstantReasonRejected.DOES_NOT_MEET_PROTOCOL)]
-        DOES_NOT_MEET_PROTOCOL,
+        DOES_NOT_MEET_PROTOCOL = 77289741,
         [EnumMember(Value = DocConstantReasonRejected.DUPLICATE_PUBLICATION)]
-        DUPLICATE_PUBLICATION,
+        DUPLICATE_PUBLICATION = 77289759,
         [EnumMember(Value = DocConstantReasonRejected.ERRONEOUS_DATA)]
-        ERRONEOUS_DATA,
+        ERRONEOUS_DATA = 77289758,
         [EnumMember(Value = DocConstantReasonRejected.IN_VITRO_STUDY)]
-        IN_VITRO_STUDY,
+        IN_VITRO_STUDY = 77289752,
         [EnumMember(Value = DocConstantReasonRejected.MISSING_CHARACTERISTICS)]
-        MISSING_CHARACTERISTICS,
+        MISSING_CHARACTERISTICS = 77289756,
         [EnumMember(Value = DocConstantReasonRejected.MISSING_OUTCOMES)]
-        MISSING_OUTCOMES,
+        MISSING_OUTCOMES = 77289757,
         [EnumMember(Value = DocConstantReasonRejected.NOT_CLINICAL_STUDY)]
-        NOT_CLINICAL_STUDY,
+        NOT_CLINICAL_STUDY = 77289749,
         [EnumMember(Value = DocConstantReasonRejected.NOT_ENGLISH)]
-        NOT_ENGLISH,
+        NOT_ENGLISH = 77289754,
         [EnumMember(Value = DocConstantReasonRejected.NOT_TREAMENT_STUDY)]
-        NOT_TREAMENT_STUDY,
+        NOT_TREAMENT_STUDY = 77289747,
         [EnumMember(Value = DocConstantReasonRejected.RELEVANT_MISCLASSIFIED_REFERENCE)]
-        RELEVANT_MISCLASSIFIED_REFERENCE,
+        RELEVANT_MISCLASSIFIED_REFERENCE = 77289764,
         [EnumMember(Value = DocConstantReasonRejected.STUDY_FITS_PROTOCOL_ADD_LATER)]
-        STUDY_FITS_PROTOCOL_ADD_LATER,
+        STUDY_FITS_PROTOCOL_ADD_LATER = 77289762,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_COMPARISON)]
-        WRONG_COMPARISON,
+        WRONG_COMPARISON = 77289745,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_INTERVENTION)]
-        WRONG_INTERVENTION,
+        WRONG_INTERVENTION = 77289744,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_NUMBER_PARTICIPANTS)]
-        WRONG_NUMBER_PARTICIPANTS,
+        WRONG_NUMBER_PARTICIPANTS = 77289751,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_OUTCOME_STRATIFICATION)]
-        WRONG_OUTCOME_STRATIFICATION,
+        WRONG_OUTCOME_STRATIFICATION = 77289760,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_OUTCOMES)]
-        WRONG_OUTCOMES,
+        WRONG_OUTCOMES = 77289746,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_POPULATION)]
-        WRONG_POPULATION,
+        WRONG_POPULATION = 77289743,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_PUBLICATION_DATE_CUTOFF)]
-        WRONG_PUBLICATION_DATE_CUTOFF,
+        WRONG_PUBLICATION_DATE_CUTOFF = 77289755,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_SETTING)]
-        WRONG_SETTING,
+        WRONG_SETTING = 77289799,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_STUDY_DESIGN)]
-        WRONG_STUDY_DESIGN,
+        WRONG_STUDY_DESIGN = 77289742,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_TIMING)]
-        WRONG_TIMING
+        WRONG_TIMING = 77289786
     }
     
     public static partial class EnumExtensions

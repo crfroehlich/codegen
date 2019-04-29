@@ -48,163 +48,163 @@ namespace Services.Enums
     public enum ModelNameEnm
     {
         [EnumMember(Value = DocConstantModelName.APP)]
-        APP,
+        APP = 14173,
         [EnumMember(Value = DocConstantModelName.ATTRIBUTE)]
-        ATTRIBUTE,
+        ATTRIBUTE = 102,
         [EnumMember(Value = DocConstantModelName.ATTRIBUTEINTERVAL)]
-        ATTRIBUTEINTERVAL,
+        ATTRIBUTEINTERVAL = 104,
         [EnumMember(Value = DocConstantModelName.AUDITDELTA)]
-        AUDITDELTA,
+        AUDITDELTA = 19019,
         [EnumMember(Value = DocConstantModelName.AUDITRECORD)]
-        AUDITRECORD,
+        AUDITRECORD = 108,
         [EnumMember(Value = DocConstantModelName.BACKGROUNDTASK)]
-        BACKGROUNDTASK,
+        BACKGROUNDTASK = 14375,
         [EnumMember(Value = DocConstantModelName.BACKGROUNDTASKHISTORY)]
-        BACKGROUNDTASKHISTORY,
+        BACKGROUNDTASKHISTORY = 18919,
         [EnumMember(Value = DocConstantModelName.BACKGROUNDTASKITEM)]
-        BACKGROUNDTASKITEM,
+        BACKGROUNDTASKITEM = 19935,
         [EnumMember(Value = DocConstantModelName.BROADCAST)]
-        BROADCAST,
+        BROADCAST = 13962,
         [EnumMember(Value = DocConstantModelName.CHARACTERISTIC)]
-        CHARACTERISTIC,
+        CHARACTERISTIC = 14475,
         [EnumMember(Value = DocConstantModelName.CLIENT)]
-        CLIENT,
+        CLIENT = 111,
         [EnumMember(Value = DocConstantModelName.COMPARATOR)]
-        COMPARATOR,
+        COMPARATOR = 20035,
         [EnumMember(Value = DocConstantModelName.DATABASEVERSION)]
-        DATABASEVERSION,
+        DATABASEVERSION = 18819,
         [EnumMember(Value = DocConstantModelName.DATACLASS)]
-        DATACLASS,
+        DATACLASS = 20235,
         [EnumMember(Value = DocConstantModelName.DATAPROPERTY)]
-        DATAPROPERTY,
+        DATAPROPERTY = 20255,
         [EnumMember(Value = DocConstantModelName.DATATAB)]
-        DATATAB,
+        DATATAB = 20265,
         [EnumMember(Value = DocConstantModelName.DATETIME)]
-        DATETIME,
+        DATETIME = 15278,
         [EnumMember(Value = DocConstantModelName.DEFAULT)]
-        DEFAULT,
+        DEFAULT = 19435,
         [EnumMember(Value = DocConstantModelName.DIVISION)]
-        DIVISION,
+        DIVISION = 112,
         [EnumMember(Value = DocConstantModelName.DOCUMENT)]
-        DOCUMENT,
+        DOCUMENT = 136,
         [EnumMember(Value = DocConstantModelName.DOCUMENTSET)]
-        DOCUMENTSET,
+        DOCUMENTSET = 142,
         [EnumMember(Value = DocConstantModelName.DOCUMENTSETHISTORY)]
-        DOCUMENTSETHISTORY,
+        DOCUMENTSETHISTORY = 13320,
         [EnumMember(Value = DocConstantModelName.ENTITIES)]
-        ENTITIES,
+        ENTITIES = 13364,
         [EnumMember(Value = DocConstantModelName.EOD)]
-        EOD,
+        EOD = 20385,
         [EnumMember(Value = DocConstantModelName.EVENT)]
-        EVENT,
+        EVENT = 19219,
         [EnumMember(Value = DocConstantModelName.FEATURESET)]
-        FEATURESET,
+        FEATURESET = 116,
         [EnumMember(Value = DocConstantModelName.GLOSSARY)]
-        GLOSSARY,
+        GLOSSARY = 14977,
         [EnumMember(Value = DocConstantModelName.HELP)]
-        HELP,
+        HELP = 14978,
         [EnumMember(Value = DocConstantModelName.HISTORY)]
-        HISTORY,
+        HISTORY = 15885,
         [EnumMember(Value = DocConstantModelName.IMPERSONATION)]
-        IMPERSONATION,
+        IMPERSONATION = 19319,
         [EnumMember(Value = DocConstantModelName.IMPORTDATA)]
-        IMPORTDATA,
+        IMPORTDATA = 12600,
         [EnumMember(Value = DocConstantModelName.INTERVAL)]
-        INTERVAL,
+        INTERVAL = 15178,
         [EnumMember(Value = DocConstantModelName.INTERVENTION)]
-        INTERVENTION,
+        INTERVENTION = 13420,
         [EnumMember(Value = DocConstantModelName.JUNCTION)]
-        JUNCTION,
+        JUNCTION = 17619,
         [EnumMember(Value = DocConstantModelName.LOCALE)]
-        LOCALE,
+        LOCALE = 19335,
         [EnumMember(Value = DocConstantModelName.LOCALELOOKUP)]
-        LOCALELOOKUP,
+        LOCALELOOKUP = 19325,
         [EnumMember(Value = DocConstantModelName.LOOKUPCATEGORY)]
-        LOOKUPCATEGORY,
+        LOOKUPCATEGORY = 17419,
         [EnumMember(Value = DocConstantModelName.LOOKUPTABLE)]
-        LOOKUPTABLE,
+        LOOKUPTABLE = 127,
         [EnumMember(Value = DocConstantModelName.LOOKUPTABLEBINDING)]
-        LOOKUPTABLEBINDING,
+        LOOKUPTABLEBINDING = 15380,
         [EnumMember(Value = DocConstantModelName.LOOKUPTABLEENUM)]
-        LOOKUPTABLEENUM,
+        LOOKUPTABLEENUM = 128,
         [EnumMember(Value = DocConstantModelName.MEANRANGES)]
-        MEANRANGES,
+        MEANRANGES = 130,
         [EnumMember(Value = DocConstantModelName.MEANRANGEVALUE)]
-        MEANRANGEVALUE,
+        MEANRANGEVALUE = 129,
         [EnumMember(Value = DocConstantModelName.MEANVARIANCES)]
-        MEANVARIANCES,
+        MEANVARIANCES = 18219,
         [EnumMember(Value = DocConstantModelName.MEANVARIANCEVALUE)]
-        MEANVARIANCEVALUE,
+        MEANVARIANCEVALUE = 18119,
         [EnumMember(Value = DocConstantModelName.OUTCOME)]
-        OUTCOME,
+        OUTCOME = 13662,
         [EnumMember(Value = DocConstantModelName.PAGE)]
-        PAGE,
+        PAGE = 180,
         [EnumMember(Value = DocConstantModelName.PROJECT)]
-        PROJECT,
+        PROJECT = 20135,
         [EnumMember(Value = DocConstantModelName.QUEUECHANNEL)]
-        QUEUECHANNEL,
+        QUEUECHANNEL = 18519,
         [EnumMember(Value = DocConstantModelName.RATING)]
-        RATING,
+        RATING = 20365,
         [EnumMember(Value = DocConstantModelName.RELEASESTATUS)]
-        RELEASESTATUS,
+        RELEASESTATUS = 19835,
         [EnumMember(Value = DocConstantModelName.ROLE)]
-        ROLE,
+        ROLE = 133,
         [EnumMember(Value = DocConstantModelName.SCOPE)]
-        SCOPE,
+        SCOPE = 15379,
         [EnumMember(Value = DocConstantModelName.STATS)]
-        STATS,
+        STATS = 14273,
         [EnumMember(Value = DocConstantModelName.STATSRECORD)]
-        STATSRECORD,
+        STATSRECORD = 14275,
         [EnumMember(Value = DocConstantModelName.STATSSTUDYSET)]
-        STATSSTUDYSET,
+        STATSSTUDYSET = 14274,
         [EnumMember(Value = DocConstantModelName.STUDYDESIGN)]
-        STUDYDESIGN,
+        STUDYDESIGN = 137,
         [EnumMember(Value = DocConstantModelName.STUDYTYPE)]
-        STUDYTYPE,
+        STUDYTYPE = 143,
         [EnumMember(Value = DocConstantModelName.TAG)]
-        TAG,
+        TAG = 18019,
         [EnumMember(Value = DocConstantModelName.TASK)]
-        TASK,
+        TASK = 18719,
         [EnumMember(Value = DocConstantModelName.TEAM)]
-        TEAM,
+        TEAM = 15881,
         [EnumMember(Value = DocConstantModelName.TERMCATEGORY)]
-        TERMCATEGORY,
+        TERMCATEGORY = 146,
         [EnumMember(Value = DocConstantModelName.TERMMASTER)]
-        TERMMASTER,
+        TERMMASTER = 147,
         [EnumMember(Value = DocConstantModelName.TERMSYNONYM)]
-        TERMSYNONYM,
+        TERMSYNONYM = 148,
         [EnumMember(Value = DocConstantModelName.TIMECARD)]
-        TIMECARD,
+        TIMECARD = 17319,
         [EnumMember(Value = DocConstantModelName.TIMEPOINT)]
-        TIMEPOINT,
+        TIMEPOINT = 15078,
         [EnumMember(Value = DocConstantModelName.UNITCONVERSIONRULES)]
-        UNITCONVERSIONRULES,
+        UNITCONVERSIONRULES = 149,
         [EnumMember(Value = DocConstantModelName.UNITOFMEASURE)]
-        UNITOFMEASURE,
+        UNITOFMEASURE = 150,
         [EnumMember(Value = DocConstantModelName.UNITS)]
-        UNITS,
+        UNITS = 152,
         [EnumMember(Value = DocConstantModelName.UNITVALUE)]
-        UNITVALUE,
+        UNITVALUE = 151,
         [EnumMember(Value = DocConstantModelName.UPDATE)]
-        UPDATE,
+        UPDATE = 19119,
         [EnumMember(Value = DocConstantModelName.USER)]
-        USER,
+        USER = 153,
         [EnumMember(Value = DocConstantModelName.USERREQUEST)]
-        USERREQUEST,
+        USERREQUEST = 18619,
         [EnumMember(Value = DocConstantModelName.USERSESSION)]
-        USERSESSION,
+        USERSESSION = 18419,
         [EnumMember(Value = DocConstantModelName.USERTYPE)]
-        USERTYPE,
+        USERTYPE = 17919,
         [EnumMember(Value = DocConstantModelName.VALUETYPE)]
-        VALUETYPE,
+        VALUETYPE = 171,
         [EnumMember(Value = DocConstantModelName.VARIABLEINSTANCE)]
-        VARIABLEINSTANCE,
+        VARIABLEINSTANCE = 15781,
         [EnumMember(Value = DocConstantModelName.VARIABLERULE)]
-        VARIABLERULE,
+        VARIABLERULE = 15680,
         [EnumMember(Value = DocConstantModelName.WORKFLOW)]
-        WORKFLOW,
+        WORKFLOW = 15378,
         [EnumMember(Value = DocConstantModelName.WORKFLOWCOMMENT)]
-        WORKFLOWCOMMENT
+        WORKFLOWCOMMENT = 18319
     }
     
     public static partial class EnumExtensions

@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum WorkflowStatusEnm
     {
         [EnumMember(Value = DocConstantWorkflowStatus.ACCEPTED)]
-        ACCEPTED,
+        ACCEPTED = 147180163,
         [EnumMember(Value = DocConstantWorkflowStatus.COLLECTED)]
-        COLLECTED,
+        COLLECTED = 128789899,
         [EnumMember(Value = DocConstantWorkflowStatus.REJECTED)]
-        REJECTED,
+        REJECTED = 76351815,
         [EnumMember(Value = DocConstantWorkflowStatus.REQUESTED)]
-        REQUESTED,
+        REQUESTED = 128789898,
         [EnumMember(Value = DocConstantWorkflowStatus.UNAVAILABLE)]
-        UNAVAILABLE
+        UNAVAILABLE = 128789900
     }
     
     public static partial class EnumExtensions

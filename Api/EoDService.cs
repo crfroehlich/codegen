@@ -192,13 +192,13 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Document));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<RatingEnm?>(currentUser, request, pStatus, permission, DocConstantModelName.EOD, nameof(request.Status)))
+            if (DocPermissionFactory.IsRequestedHasPermission<WorkflowStatusEnm?>(currentUser, request, pStatus, permission, DocConstantModelName.EOD, nameof(request.Status)))
             {
                 if(DocPermissionFactory.IsRequested(request, (int?) pStatus, (int?) entity.Status, nameof(request.Status)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.EOD, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.EOD, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
                     entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<RatingEnm?>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<WorkflowStatusEnm?>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Status));
                 }

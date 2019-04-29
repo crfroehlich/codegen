@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum RatingEnm
     {
         [EnumMember(Value = DocConstantRating.MAYBE_RELEVANT)]
-        MAYBE_RELEVANT,
+        MAYBE_RELEVANT = 77289739,
         [EnumMember(Value = DocConstantRating.NOT_RATED)]
-        NOT_RATED,
+        NOT_RATED = 77289740,
         [EnumMember(Value = DocConstantRating.NOT_RELEVANT)]
-        NOT_RELEVANT,
+        NOT_RELEVANT = 77289738,
         [EnumMember(Value = DocConstantRating.RELEVANT)]
-        RELEVANT
+        RELEVANT = 77289737
     }
     
     public static partial class EnumExtensions

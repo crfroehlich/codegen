@@ -48,73 +48,73 @@ namespace Services.Enums
     public enum WorkflowEnm
     {
         [EnumMember(Value = DocConstantWorkflow.AUDIT_ERROR)]
-        AUDIT_ERROR,
+        AUDIT_ERROR = 76351812,
         [EnumMember(Value = DocConstantWorkflow.BAYESIAN_ANALYSIS)]
-        BAYESIAN_ANALYSIS,
+        BAYESIAN_ANALYSIS = 23395205,
         [EnumMember(Value = DocConstantWorkflow.COHORT_ANALYSIS)]
-        COHORT_ANALYSIS,
+        COHORT_ANALYSIS = 17686252,
         [EnumMember(Value = DocConstantWorkflow.CUSTOM_REPORT)]
-        CUSTOM_REPORT,
+        CUSTOM_REPORT = 120648707,
         [EnumMember(Value = DocConstantWorkflow.DATA_EXPORT)]
-        DATA_EXPORT,
+        DATA_EXPORT = 22669313,
         [EnumMember(Value = DocConstantWorkflow.DIA_PROJECT)]
-        DIA_PROJECT,
+        DIA_PROJECT = 76351804,
         [EnumMember(Value = DocConstantWorkflow.DIA_REPORT)]
-        DIA_REPORT,
+        DIA_REPORT = 76351811,
         [EnumMember(Value = DocConstantWorkflow.DOC_DATA_PROJECT)]
-        DOC_DATA_PROJECT,
+        DOC_DATA_PROJECT = 76351800,
         [EnumMember(Value = DocConstantWorkflow.DOC_EXTRACT_PROJECT)]
-        DOC_EXTRACT_PROJECT,
+        DOC_EXTRACT_PROJECT = 76351802,
         [EnumMember(Value = DocConstantWorkflow.DOC_LIBRARY_PROJECT)]
-        DOC_LIBRARY_PROJECT,
+        DOC_LIBRARY_PROJECT = 76351801,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_ON_DEMAND)]
-        EVIDENCE_ON_DEMAND,
+        EVIDENCE_ON_DEMAND = 76351619,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_STATEMENTS)]
-        EVIDENCE_STATEMENTS,
+        EVIDENCE_STATEMENTS = 146157857,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_TABLE)]
-        EVIDENCE_TABLE,
+        EVIDENCE_TABLE = 10483144,
         [EnumMember(Value = DocConstantWorkflow.FAQ)]
-        FAQ,
+        FAQ = 146157861,
         [EnumMember(Value = DocConstantWorkflow.FILTER)]
-        FILTER,
+        FILTER = 10483149,
         [EnumMember(Value = DocConstantWorkflow.FRAMED_QUESTION_DATA_SET)]
-        FRAMED_QUESTION_DATA_SET,
+        FRAMED_QUESTION_DATA_SET = 76351798,
         [EnumMember(Value = DocConstantWorkflow.FRAMED_QUESTION_LIBRARY)]
-        FRAMED_QUESTION_LIBRARY,
+        FRAMED_QUESTION_LIBRARY = 76351799,
         [EnumMember(Value = DocConstantWorkflow.FREQUENTIST_ANALYSIS)]
-        FREQUENTIST_ANALYSIS,
+        FREQUENTIST_ANALYSIS = 21595126,
         [EnumMember(Value = DocConstantWorkflow.HTA)]
-        HTA,
+        HTA = 76351809,
         [EnumMember(Value = DocConstantWorkflow.META_ANALYSIS)]
-        META_ANALYSIS,
+        META_ANALYSIS = 12627091,
         [EnumMember(Value = DocConstantWorkflow.METHODOLOGY_PROJECT)]
-        METHODOLOGY_PROJECT,
+        METHODOLOGY_PROJECT = 76351805,
         [EnumMember(Value = DocConstantWorkflow.NAMESET)]
-        NAMESET,
+        NAMESET = 17611704,
         [EnumMember(Value = DocConstantWorkflow.ONTOLOGY_PROJECT)]
-        ONTOLOGY_PROJECT,
+        ONTOLOGY_PROJECT = 76351803,
         [EnumMember(Value = DocConstantWorkflow.PICO_RATING)]
-        PICO_RATING,
+        PICO_RATING = 76351813,
         [EnumMember(Value = DocConstantWorkflow.R_SNIPPET)]
-        R_SNIPPET,
+        R_SNIPPET = 146157859,
         [EnumMember(Value = DocConstantWorkflow.RAPID_REVIEW)]
-        RAPID_REVIEW,
+        RAPID_REVIEW = 76351810,
         [EnumMember(Value = DocConstantWorkflow.RESPONSE_LETTER)]
-        RESPONSE_LETTER,
+        RESPONSE_LETTER = 76351808,
         [EnumMember(Value = DocConstantWorkflow.RISK_OF_BIAS)]
-        RISK_OF_BIAS,
+        RISK_OF_BIAS = 146157858,
         [EnumMember(Value = DocConstantWorkflow.RMD_SNIPPET)]
-        RMD_SNIPPET,
+        RMD_SNIPPET = 146157860,
         [EnumMember(Value = DocConstantWorkflow.SURVEY_DESIGN)]
-        SURVEY_DESIGN,
+        SURVEY_DESIGN = 59620917,
         [EnumMember(Value = DocConstantWorkflow.SURVEY_WIZARD)]
-        SURVEY_WIZARD,
+        SURVEY_WIZARD = 59620923,
         [EnumMember(Value = DocConstantWorkflow.SYSTEMATIC_REVIEW)]
-        SYSTEMATIC_REVIEW,
+        SYSTEMATIC_REVIEW = 76351807,
         [EnumMember(Value = DocConstantWorkflow.TAG)]
-        TAG,
+        TAG = 76351806,
         [EnumMember(Value = DocConstantWorkflow.VIEW)]
-        VIEW
+        VIEW = 41790614
     }
     
     public static partial class EnumExtensions
