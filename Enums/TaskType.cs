@@ -45,38 +45,43 @@ using Version = Services.Dto.Version;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum WorkflowTaskTypeEnm
+    public enum TaskTypeEnm
     {
-        [EnumMember(Value = DocConstantWorkflowTaskType.EVIDENCE_ON_DEMAND)]
-        EVIDENCE_ON_DEMAND = 96669235
+        [EnumMember(Value = DocConstantTaskType.EVIDENCE_ON_DEMAND)]
+        EVIDENCE_ON_DEMAND = 96669235,
+        [EnumMember(Value = DocConstantTaskType.LIBRARY_RATING)]
+        LIBRARY_RATING = 150785333
     }
     
     public static partial class EnumExtensions
     {
-        public static string ToEnumString(this WorkflowTaskTypeEnm instance)
+        public static string ToEnumString(this TaskTypeEnm instance)
         {
             switch(instance) 
             {
-                case WorkflowTaskTypeEnm.EVIDENCE_ON_DEMAND:
-                    return DocConstantWorkflowTaskType.EVIDENCE_ON_DEMAND;
+                case TaskTypeEnm.EVIDENCE_ON_DEMAND:
+                    return DocConstantTaskType.EVIDENCE_ON_DEMAND;
+                case TaskTypeEnm.LIBRARY_RATING:
+                    return DocConstantTaskType.LIBRARY_RATING;
                 default:
                     return string.Empty;
             }
         }
     }
 
-    public sealed partial class DocConstantWorkflowTaskType : IEquatable<DocConstantWorkflowTaskType>, IEqualityComparer<DocConstantWorkflowTaskType>
+    public sealed partial class DocConstantTaskType : IEquatable<DocConstantTaskType>, IEqualityComparer<DocConstantTaskType>
     {
         public const string EVIDENCE_ON_DEMAND = "Evidence on Demand";
+        public const string LIBRARY_RATING = "Library Rating";
         
         #region Internals
         
         private static List<string> _all;
-        public static List<string> All => _all ?? (_all = typeof(DocConstantWorkflowTaskType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
+        public static List<string> All => _all ?? (_all = typeof(DocConstantTaskType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
         private readonly string Value;
 
-        private DocConstantWorkflowTaskType(string ItemName = null)
+        private DocConstantTaskType(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
@@ -86,9 +91,9 @@ namespace Services.Enums
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        public static implicit operator DocConstantWorkflowTaskType(string Val) => new DocConstantWorkflowTaskType(Val);
+        public static implicit operator DocConstantTaskType(string Val) => new DocConstantTaskType(Val);
 
-        public static implicit operator string(DocConstantWorkflowTaskType item) => item?.Value ?? string.Empty;
+        public static implicit operator string(DocConstantTaskType item) => item?.Value ?? string.Empty;
 
         public override string ToString() => Value;
 
@@ -96,31 +101,31 @@ namespace Services.Enums
 
         #region IEquatable
 
-        public bool Equals(DocConstantWorkflowTaskType obj) => this == obj;
+        public bool Equals(DocConstantTaskType obj) => this == obj;
 
-        public static bool operator ==(DocConstantWorkflowTaskType x, DocConstantWorkflowTaskType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+        public static bool operator ==(DocConstantTaskType x, DocConstantTaskType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
         
-        public bool Equals(DocConstantWorkflowTaskType x, DocConstantWorkflowTaskType y) => x == y;
+        public bool Equals(DocConstantTaskType x, DocConstantTaskType y) => x == y;
         
-        public static bool operator !=(DocConstantWorkflowTaskType x, DocConstantWorkflowTaskType y) => !(x == y);
+        public static bool operator !=(DocConstantTaskType x, DocConstantTaskType y) => !(x == y);
 
         public override bool Equals(object obj)
         {
             var ret = false;
-            if(!(obj is DocConstantWorkflowTaskType))
+            if(!(obj is DocConstantTaskType))
             {
                 ret = false;
             }
             else
             {
-                ret = this == (DocConstantWorkflowTaskType) obj;
+                ret = this == (DocConstantTaskType) obj;
             }
             return ret;
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
-        public int GetHashCode(DocConstantWorkflowTaskType obj) => obj?.GetHashCode() ?? -17;
+        public int GetHashCode(DocConstantTaskType obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

@@ -48,23 +48,23 @@ namespace Services.Enums
     public enum StudyFundingEnm
     {
         [EnumMember(Value = DocConstantStudyFunding.ACKNOWLEDGEMENT)]
-        ACKNOWLEDGEMENT,
+        ACKNOWLEDGEMENT = 3343,
         [EnumMember(Value = DocConstantStudyFunding.AUTHOR_EMPLOYMENT)]
-        AUTHOR_EMPLOYMENT,
+        AUTHOR_EMPLOYMENT = 3348,
         [EnumMember(Value = DocConstantStudyFunding.CONFLICT_OF_INTEREST)]
-        CONFLICT_OF_INTEREST,
+        CONFLICT_OF_INTEREST = 3353,
         [EnumMember(Value = DocConstantStudyFunding.FINANCIAL_INTEREST)]
-        FINANCIAL_INTEREST,
+        FINANCIAL_INTEREST = 3358,
         [EnumMember(Value = DocConstantStudyFunding.FUNDED_BY)]
-        FUNDED_BY,
+        FUNDED_BY = 3363,
         [EnumMember(Value = DocConstantStudyFunding.NR)]
-        NR,
+        NR = 3368,
         [EnumMember(Value = DocConstantStudyFunding.SPONSORED_BY)]
-        SPONSORED_BY,
+        SPONSORED_BY = 3373,
         [EnumMember(Value = DocConstantStudyFunding.SUPPORTED_BY)]
-        SUPPORTED_BY,
+        SUPPORTED_BY = 3378,
         [EnumMember(Value = DocConstantStudyFunding.UNCLEAR)]
-        UNCLEAR
+        UNCLEAR = 3383
     }
     
     public static partial class EnumExtensions

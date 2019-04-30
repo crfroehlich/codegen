@@ -69,7 +69,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Reporter, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Task>(c, nameof(DocEntityTask.Reporter))))
                 .ForMember(dest => dest.ReporterId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Task>(c, nameof(DocEntityTask.ReporterId))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Task>(c, nameof(DocEntityTask.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Task>(c, nameof(DocEntityTask.TypeId))))
                 .ForMember(dest => dest.Workflow, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Task>(c, nameof(DocEntityTask.Workflow))))
                 .ForMember(dest => dest.WorkflowId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Task>(c, nameof(DocEntityTask.WorkflowId))))
                 .MaxDepth(2);

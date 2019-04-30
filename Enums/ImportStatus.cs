@@ -48,19 +48,19 @@ namespace Services.Enums
     public enum ImportStatusEnm
     {
         [EnumMember(Value = DocConstantImportStatus.ALREADY_IMPORTED)]
-        ALREADY_IMPORTED,
+        ALREADY_IMPORTED = 1062,
         [EnumMember(Value = DocConstantImportStatus.CANCELLED)]
-        CANCELLED,
+        CANCELLED = 69422902,
         [EnumMember(Value = DocConstantImportStatus.FAILED)]
-        FAILED,
+        FAILED = 1067,
         [EnumMember(Value = DocConstantImportStatus.NO_JSON_FOUND)]
-        NO_JSON_FOUND,
+        NO_JSON_FOUND = 59620845,
         [EnumMember(Value = DocConstantImportStatus.PROCESSING)]
-        PROCESSING,
+        PROCESSING = 1072,
         [EnumMember(Value = DocConstantImportStatus.QUEUED)]
-        QUEUED,
+        QUEUED = 1077,
         [EnumMember(Value = DocConstantImportStatus.SUCCEEDED)]
-        SUCCEEDED
+        SUCCEEDED = 1082
     }
     
     public static partial class EnumExtensions

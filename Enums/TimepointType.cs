@@ -48,35 +48,35 @@ namespace Services.Enums
     public enum TimepointTypeEnm
     {
         [EnumMember(Value = DocConstantTimepointType.AFTER)]
-        AFTER,
+        AFTER = 10709242,
         [EnumMember(Value = DocConstantTimepointType.AVERAGE)]
-        AVERAGE,
+        AVERAGE = 3813,
         [EnumMember(Value = DocConstantTimepointType.BEFORE)]
-        BEFORE,
+        BEFORE = 11793786,
         [EnumMember(Value = DocConstantTimepointType.DURATION)]
-        DURATION,
+        DURATION = 3818,
         [EnumMember(Value = DocConstantTimepointType.DURING)]
-        DURING,
+        DURING = 11793791,
         [EnumMember(Value = DocConstantTimepointType.MAX_RANGE)]
-        MAX_RANGE,
+        MAX_RANGE = 3823,
         [EnumMember(Value = DocConstantTimepointType.MAXIMUM)]
-        MAXIMUM,
+        MAXIMUM = 3828,
         [EnumMember(Value = DocConstantTimepointType.MEAN)]
-        MEAN,
+        MEAN = 3833,
         [EnumMember(Value = DocConstantTimepointType.MEDIAN)]
-        MEDIAN,
+        MEDIAN = 3838,
         [EnumMember(Value = DocConstantTimepointType.NA)]
-        NA,
+        NA = 3843,
         [EnumMember(Value = DocConstantTimepointType.NONE)]
-        NONE,
+        NONE = 3848,
         [EnumMember(Value = DocConstantTimepointType.NR)]
-        NR,
+        NR = 3853,
         [EnumMember(Value = DocConstantTimepointType.TIME_ZERO)]
-        TIME_ZERO,
+        TIME_ZERO = 3858,
         [EnumMember(Value = DocConstantTimepointType.TOTAL)]
-        TOTAL,
+        TOTAL = 3863,
         [EnumMember(Value = DocConstantTimepointType.VARIES)]
-        VARIES
+        VARIES = 9377173
     }
     
     public static partial class EnumExtensions

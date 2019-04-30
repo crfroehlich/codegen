@@ -195,6 +195,13 @@
     "THERAPEUTIC_DOSE": "Therapeutic Dose",
     "PROPHYLACTIC_DOSE": "Prophylactic Dose"
   },
+  "EoDStatus": {
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected",
+    "COLLECTED": "Collected",
+    "REQUESTED": "Requested",
+    "UNAVAILABLE": "Unavailable"
+  },
   "EqualityOperator": {
     "APPROXIMATELY_EQUALS": "~=",
     "APPROXIMATELY_GREATER_THAN": "~>",
@@ -458,6 +465,7 @@
     "DOCUMENTTYPE": "DocumentType",
     "DOSAGEPROTOCOL": "DosageProtocol",
     "DOSAGETYPE": "DosageType",
+    "EODSTATUS": "EoDStatus",
     "EQUALITYOPERATOR": "EqualityOperator",
     "ERRORMESSAGE": "ErrorMessage",
     "EXTERNALKEY": "ExternalKey",
@@ -538,6 +546,7 @@
     "STUDYTYPEHARMETIOLOGY": "StudyTypeHarmEtiology",
     "STUDYTYPETHERAPY": "StudyTypeTherapy",
     "STUDYYEARS": "StudyYears",
+    "TASKTYPE": "TaskType",
     "TERMCLASSIFICATION": "TermClassification",
     "TERMSECTION": "TermSection",
     "TIMECARDSTATUS": "TimeCardStatus",
@@ -553,8 +562,6 @@
     "VARIABLERULE": "VariableRule",
     "VARIABLETYPE": "VariableType",
     "WORKFLOW": "Workflow",
-    "WORKFLOWSTATUS": "WorkflowStatus",
-    "WORKFLOWTASKTYPE": "WorkflowTaskType",
     "YESNONA": "YesNoNa"
   },
   "LookupType": {
@@ -815,10 +822,10 @@
     "UNIT": "Unit"
   },
   "Rating": {
-    "RELEVANT": "Relevant",
-    "NOT_RELEVANT": "Not Relevant",
     "MAYBE_RELEVANT": "Maybe Relevant",
-    "NOT_RATED": "Not Rated"
+    "NOT_RATED": "Not Rated",
+    "NOT_RELEVANT": "Not Relevant",
+    "RELEVANT": "Relevant"
   },
   "ReasonRejected": {
     "DOES_NOT_MEET_PROTOCOL": "Does not meet protocol",
@@ -1195,6 +1202,10 @@
     "ENROLLMENT": "Enrollment",
     "RECRUITMENT": "Recruitment"
   },
+  "TaskType": {
+    "EVIDENCE_ON_DEMAND": "Evidence on Demand",
+    "LIBRARY_RATING": "Library Rating"
+  },
   "TermClassification": {
     "OUTCOME": "Outcome",
     "CHARACTERISTIC": "Characteristic"
@@ -1503,16 +1514,6 @@
     "SYSTEMATIC_REVIEW": "Systematic Review",
     "TAG": "Tag",
     "VIEW": "View"
-  },
-  "WorkflowStatus": {
-    "ACCEPTED": "Accepted",
-    "REJECTED": "Rejected",
-    "COLLECTED": "Collected",
-    "REQUESTED": "Requested",
-    "UNAVAILABLE": "Unavailable"
-  },
-  "WorkflowTaskType": {
-    "EVIDENCE_ON_DEMAND": "Evidence on Demand"
   },
   "YesNoNa": {
     "NA": "N/A",

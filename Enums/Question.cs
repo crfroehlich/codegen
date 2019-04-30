@@ -48,7 +48,7 @@ namespace Services.Enums
     public enum QuestionEnm
     {
         [EnumMember(Value = DocConstantQuestion.INCLUDE_MIXED_POPULATIONS)]
-        INCLUDE_MIXED_POPULATIONS
+        INCLUDE_MIXED_POPULATIONS = 46351032
     }
     
     public static partial class EnumExtensions

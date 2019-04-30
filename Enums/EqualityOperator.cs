@@ -48,31 +48,31 @@ namespace Services.Enums
     public enum EqualityOperatorEnm
     {
         [EnumMember(Value = DocConstantEqualityOperator.APPROXIMATELY_EQUALS)]
-        APPROXIMATELY_EQUALS,
+        APPROXIMATELY_EQUALS = 777,
         [EnumMember(Value = DocConstantEqualityOperator.APPROXIMATELY_GREATER_THAN)]
-        APPROXIMATELY_GREATER_THAN,
+        APPROXIMATELY_GREATER_THAN = 782,
         [EnumMember(Value = DocConstantEqualityOperator.APPROXIMATELY_GREATER_THAN_OR_EQUALS)]
-        APPROXIMATELY_GREATER_THAN_OR_EQUALS,
+        APPROXIMATELY_GREATER_THAN_OR_EQUALS = 787,
         [EnumMember(Value = DocConstantEqualityOperator.APPROXIMATELY_LESS_THAN)]
-        APPROXIMATELY_LESS_THAN,
+        APPROXIMATELY_LESS_THAN = 792,
         [EnumMember(Value = DocConstantEqualityOperator.APPROXIMATELY_LESS_THAN_OR_EQUALS)]
-        APPROXIMATELY_LESS_THAN_OR_EQUALS,
+        APPROXIMATELY_LESS_THAN_OR_EQUALS = 797,
         [EnumMember(Value = DocConstantEqualityOperator.EQUALS)]
-        EQUALS,
+        EQUALS = 802,
         [EnumMember(Value = DocConstantEqualityOperator.GREATER_THAN)]
-        GREATER_THAN,
+        GREATER_THAN = 807,
         [EnumMember(Value = DocConstantEqualityOperator.GREATER_THAN_OR_EQUALS)]
-        GREATER_THAN_OR_EQUALS,
+        GREATER_THAN_OR_EQUALS = 812,
         [EnumMember(Value = DocConstantEqualityOperator.GREATER_THAN_OR_EQUALS_ALIAS)]
-        GREATER_THAN_OR_EQUALS_ALIAS,
+        GREATER_THAN_OR_EQUALS_ALIAS = 817,
         [EnumMember(Value = DocConstantEqualityOperator.LESS_THAN)]
-        LESS_THAN,
+        LESS_THAN = 822,
         [EnumMember(Value = DocConstantEqualityOperator.LESS_THAN_OR_EQUALS)]
-        LESS_THAN_OR_EQUALS,
+        LESS_THAN_OR_EQUALS = 827,
         [EnumMember(Value = DocConstantEqualityOperator.LESS_THAN_OR_EQUALS_ALIAS)]
-        LESS_THAN_OR_EQUALS_ALIAS,
+        LESS_THAN_OR_EQUALS_ALIAS = 832,
         [EnumMember(Value = DocConstantEqualityOperator.NOT_EQUALS)]
-        NOT_EQUALS
+        NOT_EQUALS = 837
     }
     
     public static partial class EnumExtensions

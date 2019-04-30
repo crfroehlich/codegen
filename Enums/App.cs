@@ -48,61 +48,61 @@ namespace Services.Enums
     public enum AppEnm
     {
         [EnumMember(Value = DocConstantApp.BAMBOO)]
-        BAMBOO,
+        BAMBOO = 139850785,
         [EnumMember(Value = DocConstantApp.BITBUCKET)]
-        BITBUCKET,
+        BITBUCKET = 139850784,
         [EnumMember(Value = DocConstantApp.CONFLUENCE)]
-        CONFLUENCE,
+        CONFLUENCE = 139850783,
         [EnumMember(Value = DocConstantApp.DOC_CREATE)]
-        DOC_CREATE,
+        DOC_CREATE = 139850769,
         [EnumMember(Value = DocConstantApp.DOC_DASHBOARD)]
-        DOC_DASHBOARD,
+        DOC_DASHBOARD = 139850786,
         [EnumMember(Value = DocConstantApp.DOC_DATA_ADMIN)]
-        DOC_DATA_ADMIN,
+        DOC_DATA_ADMIN = 139850759,
         [EnumMember(Value = DocConstantApp.DOC_DATA_V1)]
-        DOC_DATA_V1,
+        DOC_DATA_V1 = 139850767,
         [EnumMember(Value = DocConstantApp.DOC_DATA_V2)]
-        DOC_DATA_V2,
+        DOC_DATA_V2 = 139850768,
         [EnumMember(Value = DocConstantApp.DOC_DEVELOPMENT)]
-        DOC_DEVELOPMENT,
+        DOC_DEVELOPMENT = 139850777,
         [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V1)]
-        DOC_EXTRACT_V1,
+        DOC_EXTRACT_V1 = 139850761,
         [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V2)]
-        DOC_EXTRACT_V2,
+        DOC_EXTRACT_V2 = 139850762,
         [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V3)]
-        DOC_EXTRACT_V3,
+        DOC_EXTRACT_V3 = 139850763,
         [EnumMember(Value = DocConstantApp.DOC_LABEL)]
-        DOC_LABEL,
+        DOC_LABEL = 139850770,
         [EnumMember(Value = DocConstantApp.DOC_LIBRARY)]
-        DOC_LIBRARY,
+        DOC_LIBRARY = 139850766,
         [EnumMember(Value = DocConstantApp.DOC_NHANES)]
-        DOC_NHANES,
+        DOC_NHANES = 139850771,
         [EnumMember(Value = DocConstantApp.DOC_SEARCH)]
-        DOC_SEARCH,
+        DOC_SEARCH = 139850773,
         [EnumMember(Value = DocConstantApp.DOC_TIMELY)]
-        DOC_TIMELY,
+        DOC_TIMELY = 139850780,
         [EnumMember(Value = DocConstantApp.DOC_TRACK)]
-        DOC_TRACK,
+        DOC_TRACK = 139850781,
         [EnumMember(Value = DocConstantApp.DRE_ADMIN)]
-        DRE_ADMIN,
+        DRE_ADMIN = 139850760,
         [EnumMember(Value = DocConstantApp.GRADE)]
-        GRADE,
+        GRADE = 139850772,
         [EnumMember(Value = DocConstantApp.GROWTH)]
-        GROWTH,
+        GROWTH = 139850774,
         [EnumMember(Value = DocConstantApp.JIRA)]
-        JIRA,
+        JIRA = 139850782,
         [EnumMember(Value = DocConstantApp.LAUNCH)]
-        LAUNCH,
+        LAUNCH = 139850779,
         [EnumMember(Value = DocConstantApp.LMS)]
-        LMS,
+        LMS = 139850764,
         [EnumMember(Value = DocConstantApp.LOGIN)]
-        LOGIN,
+        LOGIN = 139850778,
         [EnumMember(Value = DocConstantApp.MISC)]
-        MISC,
+        MISC = 139850776,
         [EnumMember(Value = DocConstantApp.REPORTS)]
-        REPORTS,
+        REPORTS = 139850775,
         [EnumMember(Value = DocConstantApp.SERVE)]
-        SERVE
+        SERVE = 146157827
     }
     
     public static partial class EnumExtensions

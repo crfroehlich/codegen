@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StudyImportLocationEnm
     {
         [EnumMember(Value = DocConstantStudyImportLocation.DEFAULT)]
-        DEFAULT,
+        DEFAULT = 150784189,
         [EnumMember(Value = DocConstantStudyImportLocation.DOCDATA)]
-        DOCDATA,
+        DOCDATA = 150784190,
         [EnumMember(Value = DocConstantStudyImportLocation.EXTRACT)]
-        EXTRACT,
+        EXTRACT = 150784191,
         [EnumMember(Value = DocConstantStudyImportLocation.IMPORT_DATA)]
-        IMPORT_DATA
+        IMPORT_DATA = 150784192
     }
     
     public static partial class EnumExtensions

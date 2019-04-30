@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum AmPersonCountEnm
     {
         [EnumMember(Value = DocConstantAmPersonCount.COUNT)]
-        COUNT,
+        COUNT = 31621634,
         [EnumMember(Value = DocConstantAmPersonCount.PERSONS)]
-        PERSONS
+        PERSONS = 31621641
     }
     
     public static partial class EnumExtensions

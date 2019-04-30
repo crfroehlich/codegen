@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum InterventionMediumEnm
     {
         [EnumMember(Value = DocConstantInterventionMedium.BOOKLET)]
-        BOOKLET,
+        BOOKLET = 1147,
         [EnumMember(Value = DocConstantInterventionMedium.BROCHURE)]
-        BROCHURE,
+        BROCHURE = 1152,
         [EnumMember(Value = DocConstantInterventionMedium.VIDEO)]
-        VIDEO,
+        VIDEO = 1157,
         [EnumMember(Value = DocConstantInterventionMedium.WEBSITE)]
-        WEBSITE
+        WEBSITE = 1162
     }
     
     public static partial class EnumExtensions

@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum IntegrationPropertyNameEnm
     {
         [EnumMember(Value = DocConstantIntegrationPropertyName.ACCOUNT)]
-        ACCOUNT,
+        ACCOUNT = 76351776,
         [EnumMember(Value = DocConstantIntegrationPropertyName.OPPORTUNITY)]
-        OPPORTUNITY,
+        OPPORTUNITY = 76351774,
         [EnumMember(Value = DocConstantIntegrationPropertyName.PROJECT)]
-        PROJECT
+        PROJECT = 94162434
     }
     
     public static partial class EnumExtensions

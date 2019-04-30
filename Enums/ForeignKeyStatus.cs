@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum ForeignKeyStatusEnm
     {
         [EnumMember(Value = DocConstantForeignKeyStatus.ACTIVE)]
-        ACTIVE,
+        ACTIVE = 76351771,
         [EnumMember(Value = DocConstantForeignKeyStatus.ARCHIVED)]
-        ARCHIVED,
+        ARCHIVED = 90640169,
         [EnumMember(Value = DocConstantForeignKeyStatus.INACTIVE)]
-        INACTIVE
+        INACTIVE = 76351772
     }
     
     public static partial class EnumExtensions

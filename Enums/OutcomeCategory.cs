@@ -48,19 +48,19 @@ namespace Services.Enums
     public enum OutcomeCategoryEnm
     {
         [EnumMember(Value = DocConstantOutcomeCategory.ADVERSE_EVENT)]
-        ADVERSE_EVENT,
+        ADVERSE_EVENT = 2652,
         [EnumMember(Value = DocConstantOutcomeCategory.CLINICAL_OUTCOME)]
-        CLINICAL_OUTCOME,
+        CLINICAL_OUTCOME = 2657,
         [EnumMember(Value = DocConstantOutcomeCategory.DEMOGRAPHICS)]
-        DEMOGRAPHICS,
+        DEMOGRAPHICS = 2662,
         [EnumMember(Value = DocConstantOutcomeCategory.LABORATORY_VALUE)]
-        LABORATORY_VALUE,
+        LABORATORY_VALUE = 2667,
         [EnumMember(Value = DocConstantOutcomeCategory.MEDICAL_HISTORY)]
-        MEDICAL_HISTORY,
+        MEDICAL_HISTORY = 2672,
         [EnumMember(Value = DocConstantOutcomeCategory.OTHER)]
-        OTHER,
+        OTHER = 2677,
         [EnumMember(Value = DocConstantOutcomeCategory.SCALES_SCORES)]
-        SCALES_SCORES
+        SCALES_SCORES = 2682
     }
     
     public static partial class EnumExtensions

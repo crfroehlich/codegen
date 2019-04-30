@@ -48,19 +48,19 @@ namespace Services.Enums
     public enum MeanVariableTypeEnm
     {
         [EnumMember(Value = DocConstantMeanVariableType.AVERAGE)]
-        AVERAGE,
+        AVERAGE = 2137,
         [EnumMember(Value = DocConstantMeanVariableType.ESTIMATED_PROPORTION)]
-        ESTIMATED_PROPORTION,
+        ESTIMATED_PROPORTION = 2162,
         [EnumMember(Value = DocConstantMeanVariableType.FIXED)]
-        FIXED,
+        FIXED = 2142,
         [EnumMember(Value = DocConstantMeanVariableType.FLEX)]
-        FLEX,
+        FLEX = 2147,
         [EnumMember(Value = DocConstantMeanVariableType.MEAN)]
-        MEAN,
+        MEAN = 2152,
         [EnumMember(Value = DocConstantMeanVariableType.MEDIAN)]
-        MEDIAN,
+        MEDIAN = 2157,
         [EnumMember(Value = DocConstantMeanVariableType.RATIO)]
-        RATIO
+        RATIO = 2167
     }
     
     public static partial class EnumExtensions

@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum QuestionCategoryEnm
     {
         [EnumMember(Value = DocConstantQuestionCategory.GENERAL)]
-        GENERAL,
+        GENERAL = 46351038,
         [EnumMember(Value = DocConstantQuestionCategory.PICO)]
-        PICO
+        PICO = 46351044
     }
     
     public static partial class EnumExtensions

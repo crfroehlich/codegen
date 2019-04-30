@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum DocumentTypeEnm
     {
         [EnumMember(Value = DocConstantDocumentType.CTG)]
-        CTG,
+        CTG = 76351766,
         [EnumMember(Value = DocConstantDocumentType.DATA_HUB)]
-        DATA_HUB,
+        DATA_HUB = 76351765,
         [EnumMember(Value = DocConstantDocumentType.DOC_EXTRACT)]
-        DOC_EXTRACT,
+        DOC_EXTRACT = 76351767,
         [EnumMember(Value = DocConstantDocumentType.DOC_LIBRARY)]
-        DOC_LIBRARY,
+        DOC_LIBRARY = 76351768,
         [EnumMember(Value = DocConstantDocumentType.PUBMED)]
-        PUBMED
+        PUBMED = 76351769
     }
     
     public static partial class EnumExtensions

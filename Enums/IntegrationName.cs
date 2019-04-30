@@ -48,7 +48,7 @@ namespace Services.Enums
     public enum IntegrationNameEnm
     {
         [EnumMember(Value = DocConstantIntegrationName.SALESFORCE)]
-        SALESFORCE
+        SALESFORCE = 76351773
     }
     
     public static partial class EnumExtensions

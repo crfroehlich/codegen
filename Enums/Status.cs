@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StatusEnm
     {
         [EnumMember(Value = DocConstantStatus.ACTIVE)]
-        ACTIVE,
+        ACTIVE = 21514062,
         [EnumMember(Value = DocConstantStatus.ARCHIVED)]
-        ARCHIVED,
+        ARCHIVED = 21514072,
         [EnumMember(Value = DocConstantStatus.DISABLED)]
-        DISABLED,
+        DISABLED = 21514077,
         [EnumMember(Value = DocConstantStatus.INACTIVE)]
-        INACTIVE
+        INACTIVE = 21514082
     }
     
     public static partial class EnumExtensions

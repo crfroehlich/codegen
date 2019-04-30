@@ -48,21 +48,21 @@ namespace Services.Enums
     public enum FieldTypeEnm
     {
         [EnumMember(Value = DocConstantFieldType.BINARY)]
-        BINARY,
+        BINARY = 1027,
         [EnumMember(Value = DocConstantFieldType.CONTINUOUS)]
-        CONTINUOUS,
+        CONTINUOUS = 1032,
         [EnumMember(Value = DocConstantFieldType.COUNT)]
-        COUNT,
+        COUNT = 1037,
         [EnumMember(Value = DocConstantFieldType.INDIVIDUAL)]
-        INDIVIDUAL,
+        INDIVIDUAL = 14739713,
         [EnumMember(Value = DocConstantFieldType.KAPLAN_MEIER)]
-        KAPLAN_MEIER,
+        KAPLAN_MEIER = 77893240,
         [EnumMember(Value = DocConstantFieldType.RANGE)]
-        RANGE,
+        RANGE = 1042,
         [EnumMember(Value = DocConstantFieldType.RATE)]
-        RATE,
+        RATE = 25812406,
         [EnumMember(Value = DocConstantFieldType.YES_NO_NA)]
-        YES_NO_NA
+        YES_NO_NA = 1047
     }
     
     public static partial class EnumExtensions

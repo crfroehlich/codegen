@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum DosageProtocolEnm
     {
         [EnumMember(Value = DocConstantDosageProtocol.ACTUAL)]
-        ACTUAL,
+        ACTUAL = 732,
         [EnumMember(Value = DocConstantDosageProtocol.PROTOCOL)]
-        PROTOCOL
+        PROTOCOL = 737
     }
     
     public static partial class EnumExtensions

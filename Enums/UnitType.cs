@@ -48,35 +48,35 @@ namespace Services.Enums
     public enum UnitTypeEnm
     {
         [EnumMember(Value = DocConstantUnitType.AMOUNT)]
-        AMOUNT,
+        AMOUNT = 4553,
         [EnumMember(Value = DocConstantUnitType.AREA)]
-        AREA,
+        AREA = 4558,
         [EnumMember(Value = DocConstantUnitType.CONCENTRATION)]
-        CONCENTRATION,
+        CONCENTRATION = 4563,
         [EnumMember(Value = DocConstantUnitType.CONCENTRATION_MOLAR)]
-        CONCENTRATION_MOLAR,
+        CONCENTRATION_MOLAR = 4568,
         [EnumMember(Value = DocConstantUnitType.CONCENTRATION_SOLUTION)]
-        CONCENTRATION_SOLUTION,
+        CONCENTRATION_SOLUTION = 4573,
         [EnumMember(Value = DocConstantUnitType.LABEL)]
-        LABEL,
+        LABEL = 4578,
         [EnumMember(Value = DocConstantUnitType.LENGTH)]
-        LENGTH,
+        LENGTH = 67058544,
         [EnumMember(Value = DocConstantUnitType.MASS)]
-        MASS,
+        MASS = 4583,
         [EnumMember(Value = DocConstantUnitType.MOLES)]
-        MOLES,
+        MOLES = 4588,
         [EnumMember(Value = DocConstantUnitType.NON_TIME)]
-        NON_TIME,
+        NON_TIME = 4593,
         [EnumMember(Value = DocConstantUnitType.NON_UNIT)]
-        NON_UNIT,
+        NON_UNIT = 4598,
         [EnumMember(Value = DocConstantUnitType.RADIATION)]
-        RADIATION,
+        RADIATION = 4603,
         [EnumMember(Value = DocConstantUnitType.TIME)]
-        TIME,
+        TIME = 4608,
         [EnumMember(Value = DocConstantUnitType.VOLUME)]
-        VOLUME,
+        VOLUME = 4613,
         [EnumMember(Value = DocConstantUnitType.WEIGHT)]
-        WEIGHT
+        WEIGHT = 4618
     }
     
     public static partial class EnumExtensions

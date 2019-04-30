@@ -48,19 +48,19 @@ namespace Services.Enums
     public enum DosageTypeEnm
     {
         [EnumMember(Value = DocConstantDosageType.BASAL)]
-        BASAL,
+        BASAL = 742,
         [EnumMember(Value = DocConstantDosageType.BOLUS)]
-        BOLUS,
+        BOLUS = 747,
         [EnumMember(Value = DocConstantDosageType.ENDING_DOSE)]
-        ENDING_DOSE,
+        ENDING_DOSE = 752,
         [EnumMember(Value = DocConstantDosageType.PROPHYLACTIC_DOSE)]
-        PROPHYLACTIC_DOSE,
+        PROPHYLACTIC_DOSE = 757,
         [EnumMember(Value = DocConstantDosageType.STANDARD)]
-        STANDARD,
+        STANDARD = 762,
         [EnumMember(Value = DocConstantDosageType.STARTING_DOSE)]
-        STARTING_DOSE,
+        STARTING_DOSE = 767,
         [EnumMember(Value = DocConstantDosageType.THERAPEUTIC_DOSE)]
-        THERAPEUTIC_DOSE
+        THERAPEUTIC_DOSE = 772
     }
     
     public static partial class EnumExtensions

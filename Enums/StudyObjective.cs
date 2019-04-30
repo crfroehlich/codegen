@@ -48,47 +48,47 @@ namespace Services.Enums
     public enum StudyObjectiveEnm
     {
         [EnumMember(Value = DocConstantStudyObjective.OTHERS)]
-        OTHERS,
+        OTHERS = 3473,
         [EnumMember(Value = DocConstantStudyObjective.PRIMARY_EFFICACY_OUTCOME)]
-        PRIMARY_EFFICACY_OUTCOME,
+        PRIMARY_EFFICACY_OUTCOME = 3478,
         [EnumMember(Value = DocConstantStudyObjective.PRIMARY_ENDPOINT)]
-        PRIMARY_ENDPOINT,
+        PRIMARY_ENDPOINT = 3483,
         [EnumMember(Value = DocConstantStudyObjective.PRIMARY_ENDPOINT_OUTCOME)]
-        PRIMARY_ENDPOINT_OUTCOME,
+        PRIMARY_ENDPOINT_OUTCOME = 3488,
         [EnumMember(Value = DocConstantStudyObjective.PRIMARY_OBJECTIVE)]
-        PRIMARY_OBJECTIVE,
+        PRIMARY_OBJECTIVE = 3493,
         [EnumMember(Value = DocConstantStudyObjective.PRIMARY_SAFETY_OUTCOME)]
-        PRIMARY_SAFETY_OUTCOME,
+        PRIMARY_SAFETY_OUTCOME = 3498,
         [EnumMember(Value = DocConstantStudyObjective.SECONDARY_EFFICACY_OUTCOME)]
-        SECONDARY_EFFICACY_OUTCOME,
+        SECONDARY_EFFICACY_OUTCOME = 3503,
         [EnumMember(Value = DocConstantStudyObjective.SECONDARY_ENDPOINT)]
-        SECONDARY_ENDPOINT,
+        SECONDARY_ENDPOINT = 3508,
         [EnumMember(Value = DocConstantStudyObjective.SECONDARY_ENDPOINT_OUTCOME)]
-        SECONDARY_ENDPOINT_OUTCOME,
+        SECONDARY_ENDPOINT_OUTCOME = 3513,
         [EnumMember(Value = DocConstantStudyObjective.SECONDARY_OBJECTIVE)]
-        SECONDARY_OBJECTIVE,
+        SECONDARY_OBJECTIVE = 3518,
         [EnumMember(Value = DocConstantStudyObjective.SECONDARY_SAFETY_OUTCOME)]
-        SECONDARY_SAFETY_OUTCOME,
+        SECONDARY_SAFETY_OUTCOME = 3523,
         [EnumMember(Value = DocConstantStudyObjective.STUDY_AIM)]
-        STUDY_AIM,
+        STUDY_AIM = 3528,
         [EnumMember(Value = DocConstantStudyObjective.STUDY_HYPOTHESIS)]
-        STUDY_HYPOTHESIS,
+        STUDY_HYPOTHESIS = 3533,
         [EnumMember(Value = DocConstantStudyObjective.STUDY_OBJECTIVE)]
-        STUDY_OBJECTIVE,
+        STUDY_OBJECTIVE = 3538,
         [EnumMember(Value = DocConstantStudyObjective.STUDY_PURPOSE)]
-        STUDY_PURPOSE,
+        STUDY_PURPOSE = 3543,
         [EnumMember(Value = DocConstantStudyObjective.STUDY_QUESTION)]
-        STUDY_QUESTION,
+        STUDY_QUESTION = 3548,
         [EnumMember(Value = DocConstantStudyObjective.TERIARY_ENDPOINT)]
-        TERIARY_ENDPOINT,
+        TERIARY_ENDPOINT = 3553,
         [EnumMember(Value = DocConstantStudyObjective.TERTIARY_EFFICACY_OUTCOME)]
-        TERTIARY_EFFICACY_OUTCOME,
+        TERTIARY_EFFICACY_OUTCOME = 3558,
         [EnumMember(Value = DocConstantStudyObjective.TERTIARY_ENDPOINT_OUTCOME)]
-        TERTIARY_ENDPOINT_OUTCOME,
+        TERTIARY_ENDPOINT_OUTCOME = 3563,
         [EnumMember(Value = DocConstantStudyObjective.TERTIARY_OBJECTIVE)]
-        TERTIARY_OBJECTIVE,
+        TERTIARY_OBJECTIVE = 3568,
         [EnumMember(Value = DocConstantStudyObjective.TERTIARY_SAFETY_OUTCOME)]
-        TERTIARY_SAFETY_OUTCOME
+        TERTIARY_SAFETY_OUTCOME = 3573
     }
     
     public static partial class EnumExtensions

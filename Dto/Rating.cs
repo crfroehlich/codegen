@@ -55,34 +55,34 @@ namespace Services.Dto
 
         public RatingBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public RatingBase(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pStatus) : this(DocConvert.ToInt(pId)) 
+        public RatingBase(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating) : this(DocConvert.ToInt(pId)) 
         {
             Document = pDocument;
             DocumentId = pDocumentId;
-            Status = pStatus;
+            Rating = pRating;
         }
 
-        [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = true)]
+        [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
         public Reference Document { get; set; }
         [ApiMember(Name = nameof(DocumentId), Description = "Primary Key of Document", IsRequired = false)]
         public int? DocumentId { get; set; }
 
 
-        [ApiMember(Name = nameof(Status), Description = "RatingEnm?", IsRequired = false)]
-        public RatingEnm? Status { get; set; }
+        [ApiMember(Name = nameof(Rating), Description = "RatingEnm?", IsRequired = false)]
+        public RatingEnm? Rating { get; set; }
 
 
 
-        public void Deconstruct(out Reference pDocument, out int? pDocumentId, out RatingEnm? pStatus)
+        public void Deconstruct(out Reference pDocument, out int? pDocumentId, out RatingEnm? pRating)
         {
             pDocument = Document;
             pDocumentId = DocumentId;
-            pStatus = Status;
+            pRating = Rating;
         }
 
         //Not ready until C# v8.?
-        //public RatingBase With(int? pId = Id, Reference pDocument = Document, int? pDocumentId = DocumentId, RatingEnm? pStatus = Status) => 
-        //	new RatingBase(pId, pDocument, pDocumentId, pStatus);
+        //public RatingBase With(int? pId = Id, Reference pDocument = Document, int? pDocumentId = DocumentId, RatingEnm? pRating = Rating) => 
+        //	new RatingBase(pId, pDocument, pDocumentId, pRating);
 
     }
 
@@ -97,8 +97,8 @@ namespace Services.Dto
 
         public Rating(int? id) : base(DocConvert.ToInt(id)) {}
         public Rating(int id) : base(id) {}
-        public Rating(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pStatus) : 
-            base(pId, pDocument, pDocumentId, pStatus) { }
+        public Rating(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating) : 
+            base(pId, pDocument, pDocumentId, pRating) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -116,7 +116,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(Gestalt),nameof(Locked),nameof(Status),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(Gestalt),nameof(Locked),nameof(Rating),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -150,7 +150,7 @@ namespace Services.Dto
         public int? Id { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
-        public RatingEnm? Status { get; set; }
+        public RatingEnm? Rating { get; set; }
     }
 
     [Route("/rating", "GET")]
@@ -175,7 +175,7 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Rating.Updated))); }
 
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Rating.Document))); }
-        public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Rating.Status))); }
+        public bool doRating { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Rating.Rating))); }
     }
 
     [Route("/rating/batch", "DELETE, PATCH, POST, PUT")]

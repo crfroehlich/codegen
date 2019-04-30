@@ -48,19 +48,19 @@ namespace Services.Enums
     public enum DefaultTimeUnitEnm
     {
         [EnumMember(Value = DocConstantDefaultTimeUnit.DAYS)]
-        DAYS,
+        DAYS = 682,
         [EnumMember(Value = DocConstantDefaultTimeUnit.HOURS)]
-        HOURS,
+        HOURS = 687,
         [EnumMember(Value = DocConstantDefaultTimeUnit.MINUTES)]
-        MINUTES,
+        MINUTES = 692,
         [EnumMember(Value = DocConstantDefaultTimeUnit.SECONDS)]
-        SECONDS,
+        SECONDS = 697,
         [EnumMember(Value = DocConstantDefaultTimeUnit.STUDY_SET_DEFAULT)]
-        STUDY_SET_DEFAULT,
+        STUDY_SET_DEFAULT = 702,
         [EnumMember(Value = DocConstantDefaultTimeUnit.WEEKS)]
-        WEEKS,
+        WEEKS = 707,
         [EnumMember(Value = DocConstantDefaultTimeUnit.YEARS)]
-        YEARS
+        YEARS = 712
     }
     
     public static partial class EnumExtensions

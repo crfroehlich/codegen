@@ -48,17 +48,17 @@ namespace Services.Enums
     public enum ArmPopulationAgeEnm
     {
         [EnumMember(Value = DocConstantArmPopulationAge.MEAN_RANGE)]
-        MEAN_RANGE,
+        MEAN_RANGE = 153,
         [EnumMember(Value = DocConstantArmPopulationAge.MEAN_SD)]
-        MEAN_SD,
+        MEAN_SD = 158,
         [EnumMember(Value = DocConstantArmPopulationAge.MEAN_SE)]
-        MEAN_SE,
+        MEAN_SE = 163,
         [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_RANGE)]
-        MEDIAN_RANGE,
+        MEDIAN_RANGE = 168,
         [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_SD)]
-        MEDIAN_SD,
+        MEDIAN_SD = 173,
         [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_SE)]
-        MEDIAN_SE
+        MEDIAN_SE = 178
     }
     
     public static partial class EnumExtensions

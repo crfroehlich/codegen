@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum InstitutionTypeEnm
     {
         [EnumMember(Value = DocConstantInstitutionType.ACADEMIC)]
-        ACADEMIC,
+        ACADEMIC = 1087,
         [EnumMember(Value = DocConstantInstitutionType.COMMERCIAL)]
-        COMMERCIAL,
+        COMMERCIAL = 1092,
         [EnumMember(Value = DocConstantInstitutionType.NA)]
-        NA,
+        NA = 1097,
         [EnumMember(Value = DocConstantInstitutionType.NON_PROFIT)]
-        NON_PROFIT,
+        NON_PROFIT = 1102,
         [EnumMember(Value = DocConstantInstitutionType.UNKNOWN)]
-        UNKNOWN
+        UNKNOWN = 1107
     }
     
     public static partial class EnumExtensions

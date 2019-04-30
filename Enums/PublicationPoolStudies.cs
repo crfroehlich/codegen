@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum PublicationPoolStudiesEnm
     {
         [EnumMember(Value = DocConstantPublicationPoolStudies.NO)]
-        NO,
+        NO = 2717,
         [EnumMember(Value = DocConstantPublicationPoolStudies.NR)]
-        NR,
+        NR = 2722,
         [EnumMember(Value = DocConstantPublicationPoolStudies.UNSURE)]
-        UNSURE,
+        UNSURE = 2727,
         [EnumMember(Value = DocConstantPublicationPoolStudies.YES)]
-        YES
+        YES = 2732
     }
     
     public static partial class EnumExtensions

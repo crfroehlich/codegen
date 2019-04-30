@@ -48,17 +48,17 @@ namespace Services.Enums
     public enum QuestionTypeEnm
     {
         [EnumMember(Value = DocConstantQuestionType.DATE)]
-        DATE,
+        DATE = 46351049,
         [EnumMember(Value = DocConstantQuestionType.DATE_TIME)]
-        DATE_TIME,
+        DATE_TIME = 46351055,
         [EnumMember(Value = DocConstantQuestionType.MEMO)]
-        MEMO,
+        MEMO = 46351061,
         [EnumMember(Value = DocConstantQuestionType.NUMBER)]
-        NUMBER,
+        NUMBER = 46351066,
         [EnumMember(Value = DocConstantQuestionType.YES_NO)]
-        YES_NO,
+        YES_NO = 46351072,
         [EnumMember(Value = DocConstantQuestionType.YES_NO_NA)]
-        YES_NO_NA
+        YES_NO_NA = 46351078
     }
     
     public static partial class EnumExtensions

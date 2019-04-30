@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum InterventionStageSettingEnm
     {
         [EnumMember(Value = DocConstantInterventionStageSetting.ADJUVANT)]
-        ADJUVANT,
+        ADJUVANT = 1492,
         [EnumMember(Value = DocConstantInterventionStageSetting.NEO_ADJUVANT)]
-        NEO_ADJUVANT
+        NEO_ADJUVANT = 1497
     }
     
     public static partial class EnumExtensions

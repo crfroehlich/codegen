@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum HelpEnm
     {
         [EnumMember(Value = DocConstantHelp.DIALOG)]
-        DIALOG,
+        DIALOG = 61884870,
         [EnumMember(Value = DocConstantHelp.MANUAL)]
-        MANUAL,
+        MANUAL = 74232466,
         [EnumMember(Value = DocConstantHelp.SECTION)]
-        SECTION,
+        SECTION = 74232467,
         [EnumMember(Value = DocConstantHelp.SIDEBAR)]
-        SIDEBAR
+        SIDEBAR = 61884876
     }
     
     public static partial class EnumExtensions

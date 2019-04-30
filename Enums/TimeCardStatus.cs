@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum TimeCardStatusEnm
     {
         [EnumMember(Value = DocConstantTimeCardStatus.APPROVED)]
-        APPROVED,
+        APPROVED = 90640203,
         [EnumMember(Value = DocConstantTimeCardStatus.PENDING)]
-        PENDING,
+        PENDING = 90640202,
         [EnumMember(Value = DocConstantTimeCardStatus.REJECTED)]
-        REJECTED
+        REJECTED = 90640204
     }
     
     public static partial class EnumExtensions

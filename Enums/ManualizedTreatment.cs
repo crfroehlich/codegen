@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum ManualizedTreatmentEnm
     {
         [EnumMember(Value = DocConstantManualizedTreatment.NA)]
-        NA,
+        NA = 2072,
         [EnumMember(Value = DocConstantManualizedTreatment.NO)]
-        NO,
+        NO = 2077,
         [EnumMember(Value = DocConstantManualizedTreatment.NR)]
-        NR,
+        NR = 2082,
         [EnumMember(Value = DocConstantManualizedTreatment.UNCLEAR)]
-        UNCLEAR,
+        UNCLEAR = 2087,
         [EnumMember(Value = DocConstantManualizedTreatment.YES)]
-        YES
+        YES = 2092
     }
     
     public static partial class EnumExtensions

@@ -106,8 +106,8 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Document.Id.In(request.DocumentIds));
                 }
-                if(request.Status.HasValue)
-                    entities = entities.Where(en => request.Status.Value == en.Status);
+                if(request.Rating.HasValue)
+                    entities = entities.Where(en => request.Rating.Value == en.Rating);
 
                 entities = ApplyFilters<DocEntityRating,RatingSearch>(request, entities);
 
@@ -148,7 +148,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
-            var pStatus = request.Status;
+            var pRating = request.Rating;
 
             DocEntityRating entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -192,15 +192,16 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Document));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<RatingEnm?>(currentUser, request, pStatus, permission, DocConstantModelName.RATING, nameof(request.Status)))
+            if (DocPermissionFactory.IsRequestedHasPermission<RatingEnm?>(currentUser, request, pRating, permission, DocConstantModelName.RATING, nameof(request.Rating)))
             {
-                if(DocPermissionFactory.IsRequested(request, (int?) pStatus, (int?) entity.Status, nameof(request.Status)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RATING, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.RATING, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
-                    entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<RatingEnm?>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested(request, (int?) pRating, (int) entity.Rating, nameof(request.Rating)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RATING, nameof(request.Rating)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Rating)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pRating) && DocResources.Metadata.IsRequired(DocConstantModelName.RATING, nameof(request.Rating))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Rating)} requires a value.");
+                    if(null != pRating)
+                        entity.Rating = pRating.Value;
+                if(DocPermissionFactory.IsRequested<RatingEnm?>(request, pRating, nameof(request.Rating)) && !request.VisibleFields.Matches(nameof(request.Rating), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Status));
+                    request.VisibleFields.Add(nameof(request.Rating));
                 }
             }
 
@@ -298,14 +299,14 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pDocument = entity.Document;
-                    var pStatus = entity.Status;
+                    var pRating = entity.Rating;
                     #region Custom Before copyRating
                     #endregion Custom Before copyRating
                     var copy = new DocEntityRating(ssn)
                     {
                         Hash = Guid.NewGuid()
                                 , Document = pDocument
-                                , Status = pStatus
+                                , Rating = pRating
                     };
 
                     #region Custom After copyRating

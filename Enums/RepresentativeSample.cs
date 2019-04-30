@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum RepresentativeSampleEnm
     {
         [EnumMember(Value = DocConstantRepresentativeSample.NA)]
-        NA,
+        NA = 2792,
         [EnumMember(Value = DocConstantRepresentativeSample.NO)]
-        NO,
+        NO = 2797,
         [EnumMember(Value = DocConstantRepresentativeSample.NR)]
-        NR,
+        NR = 2802,
         [EnumMember(Value = DocConstantRepresentativeSample.YES)]
-        YES
+        YES = 2807
     }
     
     public static partial class EnumExtensions

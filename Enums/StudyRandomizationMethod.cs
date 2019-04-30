@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum StudyRandomizationMethodEnm
     {
         [EnumMember(Value = DocConstantStudyRandomizationMethod.CLUSTER)]
-        CLUSTER,
+        CLUSTER = 3658,
         [EnumMember(Value = DocConstantStudyRandomizationMethod.INDIVIDUAL)]
-        INDIVIDUAL,
+        INDIVIDUAL = 3663,
         [EnumMember(Value = DocConstantStudyRandomizationMethod.INDIVIDUAL_CLUSTER)]
-        INDIVIDUAL_CLUSTER,
+        INDIVIDUAL_CLUSTER = 3668,
         [EnumMember(Value = DocConstantStudyRandomizationMethod.N_A)]
-        N_A,
+        N_A = 3673,
         [EnumMember(Value = DocConstantStudyRandomizationMethod.NR)]
-        NR
+        NR = 3678
     }
     
     public static partial class EnumExtensions

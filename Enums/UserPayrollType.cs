@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum UserPayrollTypeEnm
     {
         [EnumMember(Value = DocConstantUserPayrollType.HOURLY)]
-        HOURLY,
+        HOURLY = 76351797,
         [EnumMember(Value = DocConstantUserPayrollType.SALARY)]
-        SALARY
+        SALARY = 76351796
     }
     
     public static partial class EnumExtensions

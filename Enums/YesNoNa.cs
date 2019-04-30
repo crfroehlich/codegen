@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum YesNoNaEnm
     {
         [EnumMember(Value = DocConstantYesNoNa.NA)]
-        NA,
+        NA = 4958,
         [EnumMember(Value = DocConstantYesNoNa.NO)]
-        NO,
+        NO = 4963,
         [EnumMember(Value = DocConstantYesNoNa.YES)]
-        YES
+        YES = 4968
     }
     
     public static partial class EnumExtensions

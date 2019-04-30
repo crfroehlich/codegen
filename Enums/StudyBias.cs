@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum StudyBiasEnm
     {
         [EnumMember(Value = DocConstantStudyBias.AHRQ)]
-        AHRQ,
+        AHRQ = 3092,
         [EnumMember(Value = DocConstantStudyBias.COMPLIANCE)]
-        COMPLIANCE,
+        COMPLIANCE = 3097,
         [EnumMember(Value = DocConstantStudyBias.GRADE)]
-        GRADE,
+        GRADE = 3102,
         [EnumMember(Value = DocConstantStudyBias.JADAD)]
-        JADAD,
+        JADAD = 3107,
         [EnumMember(Value = DocConstantStudyBias.ROB)]
-        ROB
+        ROB = 3112
     }
     
     public static partial class EnumExtensions

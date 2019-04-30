@@ -122,22 +122,8 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Reporter.Id.In(request.ReporterIds));
                 }
-                if(!DocTools.IsNullOrEmpty(request.Type) && !DocTools.IsNullOrEmpty(request.Type.Id))
-                {
-                    entities = entities.Where(en => en.Type.Id == request.Type.Id );
-                }
-                if(true == request.TypeIds?.Any())
-                {
-                    entities = entities.Where(en => en.Type.Id.In(request.TypeIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.Type) && !DocTools.IsNullOrEmpty(request.Type.Name))
-                {
-                    entities = entities.Where(en => en.Type.Name == request.Type.Name );
-                }
-                if(true == request.TypeNames?.Any())
-                {
-                    entities = entities.Where(en => en.Type.Name.In(request.TypeNames));
-                }
+                if(request.Type.HasValue)
+                    entities = entities.Where(en => request.Type.Value == en.Type);
                 if(!DocTools.IsNullOrEmpty(request.Workflow) && !DocTools.IsNullOrEmpty(request.Workflow.Id))
                 {
                     entities = entities.Where(en => en.Workflow.Id == request.Workflow.Id );
@@ -190,7 +176,7 @@ namespace Services.API
             var pDescription = request.Description;
             var pDueDate = request.DueDate;
             var pReporter = (request.Reporter?.Id > 0) ? DocEntityUser.Get(request.Reporter.Id) : null;
-            DocEntityLookupTable pType = GetLookup(DocConstantLookupTable.WORKFLOWTASKTYPE, request.Type?.Name, request.Type?.Id);
+            var pType = request.Type;
             var pWorkflow = (request.Workflow?.Id > 0) ? DocEntityWorkflow.Get(request.Workflow.Id) : null;
 
             DocEntityTask entity = null;
@@ -279,13 +265,14 @@ namespace Services.API
                     request.VisibleFields.Add(nameof(request.Reporter));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pType, permission, DocConstantModelName.TASK, nameof(request.Type)))
+            if (DocPermissionFactory.IsRequestedHasPermission<TaskTypeEnm?>(currentUser, request, pType, permission, DocConstantModelName.TASK, nameof(request.Type)))
             {
-                if(DocPermissionFactory.IsRequested(request, pType, entity.Type, nameof(request.Type)))
+                if(DocPermissionFactory.IsRequested(request, (int?) pType, (int) entity.Type, nameof(request.Type)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.TASK, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.TASK, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
-                    entity.Type = pType;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
+                    if(null != pType)
+                        entity.Type = pType.Value;
+                if(DocPermissionFactory.IsRequested<TaskTypeEnm?>(request, pType, nameof(request.Type)) && !request.VisibleFields.Matches(nameof(request.Type), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Type));
                 }

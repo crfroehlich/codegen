@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum ProtocolFilterOwnerEnm
     {
         [EnumMember(Value = DocConstantProtocolFilterOwner.ATTRIBUTE)]
-        ATTRIBUTE,
+        ATTRIBUTE = 9093548,
         [EnumMember(Value = DocConstantProtocolFilterOwner.DOSAGE_VALUE)]
-        DOSAGE_VALUE,
+        DOSAGE_VALUE = 9093553,
         [EnumMember(Value = DocConstantProtocolFilterOwner.GROUP)]
-        GROUP,
+        GROUP = 9093558,
         [EnumMember(Value = DocConstantProtocolFilterOwner.INTERVENTION)]
-        INTERVENTION,
+        INTERVENTION = 9093563,
         [EnumMember(Value = DocConstantProtocolFilterOwner.STUDY)]
-        STUDY
+        STUDY = 9093568
     }
     
     public static partial class EnumExtensions

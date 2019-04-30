@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StudyPurposeEnm
     {
         [EnumMember(Value = DocConstantStudyPurpose.BOTH)]
-        BOTH,
+        BOTH = 3638,
         [EnumMember(Value = DocConstantStudyPurpose.NA)]
-        NA,
+        NA = 3643,
         [EnumMember(Value = DocConstantStudyPurpose.PREVENTION)]
-        PREVENTION,
+        PREVENTION = 3648,
         [EnumMember(Value = DocConstantStudyPurpose.TREATMENT)]
-        TREATMENT
+        TREATMENT = 3653
     }
     
     public static partial class EnumExtensions

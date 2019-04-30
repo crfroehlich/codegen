@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum BroadcastTypeEnm
     {
         [EnumMember(Value = DocConstantBroadcastType.CHANGE_LOG)]
-        CHANGE_LOG,
+        CHANGE_LOG = 25812391,
         [EnumMember(Value = DocConstantBroadcastType.SCOPE_SPECIFIC)]
-        SCOPE_SPECIFIC,
+        SCOPE_SPECIFIC = 74232465,
         [EnumMember(Value = DocConstantBroadcastType.SYSTEM_ALERT)]
-        SYSTEM_ALERT,
+        SYSTEM_ALERT = 25812396,
         [EnumMember(Value = DocConstantBroadcastType.TERMS_OF_SERVICE)]
-        TERMS_OF_SERVICE
+        TERMS_OF_SERVICE = 25812401
     }
     
     public static partial class EnumExtensions

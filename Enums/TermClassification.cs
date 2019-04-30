@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum TermClassificationEnm
     {
         [EnumMember(Value = DocConstantTermClassification.CHARACTERISTIC)]
-        CHARACTERISTIC,
+        CHARACTERISTIC = 90640196,
         [EnumMember(Value = DocConstantTermClassification.OUTCOME)]
-        OUTCOME
+        OUTCOME = 90640195
     }
     
     public static partial class EnumExtensions

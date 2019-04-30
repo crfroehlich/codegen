@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum ProtocolFilterTypeEnm
     {
         [EnumMember(Value = DocConstantProtocolFilterType.ATTRIBUTE)]
-        ATTRIBUTE,
+        ATTRIBUTE = 9093573,
         [EnumMember(Value = DocConstantProtocolFilterType.ATTRIBUTE_LABEL)]
-        ATTRIBUTE_LABEL,
+        ATTRIBUTE_LABEL = 9093578,
         [EnumMember(Value = DocConstantProtocolFilterType.FIRST_CLASS)]
-        FIRST_CLASS
+        FIRST_CLASS = 9093583
     }
     
     public static partial class EnumExtensions

@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum DataHubSourceEnm
     {
         [EnumMember(Value = DocConstantDataHubSource.AdditionalDataSources)]
-        AdditionalDataSources,
+        AdditionalDataSources = 657,
         [EnumMember(Value = DocConstantDataHubSource.DigitizedData)]
-        DigitizedData,
+        DigitizedData = 662,
         [EnumMember(Value = DocConstantDataHubSource.EpidemiologicalData)]
-        EpidemiologicalData,
+        EpidemiologicalData = 667,
         [EnumMember(Value = DocConstantDataHubSource.LabelingData)]
-        LabelingData,
+        LabelingData = 672,
         [EnumMember(Value = DocConstantDataHubSource.PublishedLiterature)]
-        PublishedLiterature
+        PublishedLiterature = 677
     }
     
     public static partial class EnumExtensions

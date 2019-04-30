@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum RandomizationEnm
     {
         [EnumMember(Value = DocConstantRandomization.NR)]
-        NR,
+        NR = 2737,
         [EnumMember(Value = DocConstantRandomization.POST)]
-        POST,
+        POST = 2742,
         [EnumMember(Value = DocConstantRandomization.PRE)]
-        PRE
+        PRE = 2747
     }
     
     public static partial class EnumExtensions

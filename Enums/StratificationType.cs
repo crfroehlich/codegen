@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum StratificationTypeEnm
     {
         [EnumMember(Value = DocConstantStratificationType.AGE)]
-        AGE,
+        AGE = 3057,
         [EnumMember(Value = DocConstantStratificationType.ETHNICITY)]
-        ETHNICITY,
+        ETHNICITY = 3062,
         [EnumMember(Value = DocConstantStratificationType.GENDER)]
-        GENDER
+        GENDER = 3067
     }
     
     public static partial class EnumExtensions

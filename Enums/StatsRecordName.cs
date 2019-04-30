@@ -48,117 +48,117 @@ namespace Services.Enums
     public enum StatsRecordNameEnm
     {
         [EnumMember(Value = DocConstantStatsRecordName.AMBISPECTIVE_OBSERVATIONAL)]
-        AMBISPECTIVE_OBSERVATIONAL,
+        AMBISPECTIVE_OBSERVATIONAL = 41790260,
         [EnumMember(Value = DocConstantStatsRecordName.BOUNDCHARACTERISTICVARIABLES)]
-        BOUNDCHARACTERISTICVARIABLES,
+        BOUNDCHARACTERISTICVARIABLES = 41790267,
         [EnumMember(Value = DocConstantStatsRecordName.BOUNDGROUPVARIABLES)]
-        BOUNDGROUPVARIABLES,
+        BOUNDGROUPVARIABLES = 41790274,
         [EnumMember(Value = DocConstantStatsRecordName.BOUNDOUTCOMEITERATIONS)]
-        BOUNDOUTCOMEITERATIONS,
+        BOUNDOUTCOMEITERATIONS = 41790281,
         [EnumMember(Value = DocConstantStatsRecordName.BOUNDOUTCOMEVARIABLES)]
-        BOUNDOUTCOMEVARIABLES,
+        BOUNDOUTCOMEVARIABLES = 41790288,
         [EnumMember(Value = DocConstantStatsRecordName.BOUNDSTUDYLEVELVARIABLES)]
-        BOUNDSTUDYLEVELVARIABLES,
+        BOUNDSTUDYLEVELVARIABLES = 41790295,
         [EnumMember(Value = DocConstantStatsRecordName.BOUNDTOTALVARIABLES)]
-        BOUNDTOTALVARIABLES,
+        BOUNDTOTALVARIABLES = 41790302,
         [EnumMember(Value = DocConstantStatsRecordName.CASE_CONTROL)]
-        CASE_CONTROL,
+        CASE_CONTROL = 41790309,
         [EnumMember(Value = DocConstantStatsRecordName.CASE_REPORT)]
-        CASE_REPORT,
+        CASE_REPORT = 41790316,
         [EnumMember(Value = DocConstantStatsRecordName.CASE_SERIES)]
-        CASE_SERIES,
+        CASE_SERIES = 41790323,
         [EnumMember(Value = DocConstantStatsRecordName.COLLECTEDCHARACTERISTICVARIABLES)]
-        COLLECTEDCHARACTERISTICVARIABLES,
+        COLLECTEDCHARACTERISTICVARIABLES = 59620857,
         [EnumMember(Value = DocConstantStatsRecordName.COLLECTEDMAINGROUPS)]
-        COLLECTEDMAINGROUPS,
+        COLLECTEDMAINGROUPS = 59620863,
         [EnumMember(Value = DocConstantStatsRecordName.COLLECTEDOUTCOMEVARIABLES)]
-        COLLECTEDOUTCOMEVARIABLES,
+        COLLECTEDOUTCOMEVARIABLES = 59620869,
         [EnumMember(Value = DocConstantStatsRecordName.COMPARISONS)]
-        COMPARISONS,
+        COMPARISONS = 41790330,
         [EnumMember(Value = DocConstantStatsRecordName.CROSS_SECTIONAL)]
-        CROSS_SECTIONAL,
+        CROSS_SECTIONAL = 41790341,
         [EnumMember(Value = DocConstantStatsRecordName.DATAPOINTSAVG)]
-        DATAPOINTSAVG,
+        DATAPOINTSAVG = 41790348,
         [EnumMember(Value = DocConstantStatsRecordName.DATAPOINTSMAX)]
-        DATAPOINTSMAX,
+        DATAPOINTSMAX = 41790355,
         [EnumMember(Value = DocConstantStatsRecordName.DATAPOINTSTOTAL)]
-        DATAPOINTSTOTAL,
+        DATAPOINTSTOTAL = 41790362,
         [EnumMember(Value = DocConstantStatsRecordName.DATASTUDIES)]
-        DATASTUDIES,
+        DATASTUDIES = 59620875,
         [EnumMember(Value = DocConstantStatsRecordName.DIAGNOSIS)]
-        DIAGNOSIS,
+        DIAGNOSIS = 41790369,
         [EnumMember(Value = DocConstantStatsRecordName.FOLLOW_UP_EXTENSION)]
-        FOLLOW_UP_EXTENSION,
+        FOLLOW_UP_EXTENSION = 41790376,
         [EnumMember(Value = DocConstantStatsRecordName.FRSTUDIES)]
-        FRSTUDIES,
+        FRSTUDIES = 59620881,
         [EnumMember(Value = DocConstantStatsRecordName.HARM)]
-        HARM,
+        HARM = 41790383,
         [EnumMember(Value = DocConstantStatsRecordName.INTERVENTIONS)]
-        INTERVENTIONS,
+        INTERVENTIONS = 41790390,
         [EnumMember(Value = DocConstantStatsRecordName.MODELING)]
-        MODELING,
+        MODELING = 41790404,
         [EnumMember(Value = DocConstantStatsRecordName.NON_RANDOMIZED_CONTROLLED_TRIAL)]
-        NON_RANDOMIZED_CONTROLLED_TRIAL,
+        NON_RANDOMIZED_CONTROLLED_TRIAL = 41790411,
         [EnumMember(Value = DocConstantStatsRecordName.NON_RANDOMIZED_CROSSOVER)]
-        NON_RANDOMIZED_CROSSOVER,
+        NON_RANDOMIZED_CROSSOVER = 41790418,
         [EnumMember(Value = DocConstantStatsRecordName.NON_RANDOMIZED_NON_CONTROLLED_TRIAL)]
-        NON_RANDOMIZED_NON_CONTROLLED_TRIAL,
+        NON_RANDOMIZED_NON_CONTROLLED_TRIAL = 41790425,
         [EnumMember(Value = DocConstantStatsRecordName.OTHER)]
-        OTHER,
+        OTHER = 41790432,
         [EnumMember(Value = DocConstantStatsRecordName.POOLED_ANALYSIS)]
-        POOLED_ANALYSIS,
+        POOLED_ANALYSIS = 41790439,
         [EnumMember(Value = DocConstantStatsRecordName.POSTHOC_ANALYSIS)]
-        POSTHOC_ANALYSIS,
+        POSTHOC_ANALYSIS = 41790446,
         [EnumMember(Value = DocConstantStatsRecordName.PREVALENCE)]
-        PREVALENCE,
+        PREVALENCE = 41790453,
         [EnumMember(Value = DocConstantStatsRecordName.PREVENTION_RISK)]
-        PREVENTION_RISK,
+        PREVENTION_RISK = 41790460,
         [EnumMember(Value = DocConstantStatsRecordName.PROGNOSIS)]
-        PROGNOSIS,
+        PROGNOSIS = 41790467,
         [EnumMember(Value = DocConstantStatsRecordName.PROSPECTIVE_OBSERVATIONAL)]
-        PROSPECTIVE_OBSERVATIONAL,
+        PROSPECTIVE_OBSERVATIONAL = 41790474,
         [EnumMember(Value = DocConstantStatsRecordName.RANDOMIZED_CONTROLLED_TRIAL)]
-        RANDOMIZED_CONTROLLED_TRIAL,
+        RANDOMIZED_CONTROLLED_TRIAL = 41790481,
         [EnumMember(Value = DocConstantStatsRecordName.RANDOMIZED_CROSSOVER)]
-        RANDOMIZED_CROSSOVER,
+        RANDOMIZED_CROSSOVER = 41790488,
         [EnumMember(Value = DocConstantStatsRecordName.RANDOMIZED_NON_CONTROLLED_TRIAL)]
-        RANDOMIZED_NON_CONTROLLED_TRIAL,
+        RANDOMIZED_NON_CONTROLLED_TRIAL = 41790495,
         [EnumMember(Value = DocConstantStatsRecordName.RETROSPECTIVE_OBSERVATIONAL)]
-        RETROSPECTIVE_OBSERVATIONAL,
+        RETROSPECTIVE_OBSERVATIONAL = 41790502,
         [EnumMember(Value = DocConstantStatsRecordName.STUDY_DESIGN_OVERVIEW)]
-        STUDY_DESIGN_OVERVIEW,
+        STUDY_DESIGN_OVERVIEW = 41790509,
         [EnumMember(Value = DocConstantStatsRecordName.SUB_GROUP_ANALYSIS)]
-        SUB_GROUP_ANALYSIS,
+        SUB_GROUP_ANALYSIS = 41790516,
         [EnumMember(Value = DocConstantStatsRecordName.SUBGROUPS)]
-        SUBGROUPS,
+        SUBGROUPS = 41790523,
         [EnumMember(Value = DocConstantStatsRecordName.THERAPY)]
-        THERAPY,
+        THERAPY = 41790530,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALCHARACTERISTICVARIABLES)]
-        TOTALCHARACTERISTICVARIABLES,
+        TOTALCHARACTERISTICVARIABLES = 41790537,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALCOMPARATIVESTATEMENTS)]
-        TOTALCOMPARATIVESTATEMENTS,
+        TOTALCOMPARATIVESTATEMENTS = 41790544,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALGROUPVARIABLES)]
-        TOTALGROUPVARIABLES,
+        TOTALGROUPVARIABLES = 41790551,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALMAINGROUPS)]
-        TOTALMAINGROUPS,
+        TOTALMAINGROUPS = 59620887,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALOUTCOMEITERATIONS)]
-        TOTALOUTCOMEITERATIONS,
+        TOTALOUTCOMEITERATIONS = 41790558,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALOUTCOMEVARIABLES)]
-        TOTALOUTCOMEVARIABLES,
+        TOTALOUTCOMEVARIABLES = 41790565,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALPARTICIPANTS)]
-        TOTALPARTICIPANTS,
+        TOTALPARTICIPANTS = 41790572,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALSTUDIES)]
-        TOTALSTUDIES,
+        TOTALSTUDIES = 59620893,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALSTUDYLEVELVARIABLES)]
-        TOTALSTUDYLEVELVARIABLES,
+        TOTALSTUDYLEVELVARIABLES = 41790579,
         [EnumMember(Value = DocConstantStatsRecordName.TOTALVARIABLES)]
-        TOTALVARIABLES,
+        TOTALVARIABLES = 41790586,
         [EnumMember(Value = DocConstantStatsRecordName.UNCOLLECTEDCHARACTERISTICVARIABLES)]
-        UNCOLLECTEDCHARACTERISTICVARIABLES,
+        UNCOLLECTEDCHARACTERISTICVARIABLES = 59620899,
         [EnumMember(Value = DocConstantStatsRecordName.UNCOLLECTEDMAINGROUPS)]
-        UNCOLLECTEDMAINGROUPS,
+        UNCOLLECTEDMAINGROUPS = 59620905,
         [EnumMember(Value = DocConstantStatsRecordName.UNCOLLECTEDOUTCOMEVARIABLES)]
-        UNCOLLECTEDOUTCOMEVARIABLES
+        UNCOLLECTEDOUTCOMEVARIABLES = 59620911
     }
     
     public static partial class EnumExtensions

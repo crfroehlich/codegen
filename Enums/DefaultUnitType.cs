@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum DefaultUnitTypeEnm
     {
         [EnumMember(Value = DocConstantDefaultUnitType.SI)]
-        SI,
+        SI = 717,
         [EnumMember(Value = DocConstantDefaultUnitType.STUDY_SET_DEFAULT)]
-        STUDY_SET_DEFAULT,
+        STUDY_SET_DEFAULT = 722,
         [EnumMember(Value = DocConstantDefaultUnitType.US)]
-        US
+        US = 727
     }
     
     public static partial class EnumExtensions

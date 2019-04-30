@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum RecruitmentMethodEnm
     {
         [EnumMember(Value = DocConstantRecruitmentMethod.EMAIL)]
-        EMAIL,
+        EMAIL = 2767,
         [EnumMember(Value = DocConstantRecruitmentMethod.FLYER)]
-        FLYER,
+        FLYER = 2772,
         [EnumMember(Value = DocConstantRecruitmentMethod.PHONE)]
-        PHONE,
+        PHONE = 2777,
         [EnumMember(Value = DocConstantRecruitmentMethod.REFERRAL)]
-        REFERRAL,
+        REFERRAL = 2782,
         [EnumMember(Value = DocConstantRecruitmentMethod.REGISTRY)]
-        REGISTRY
+        REGISTRY = 2787
     }
     
     public static partial class EnumExtensions

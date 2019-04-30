@@ -48,49 +48,49 @@ namespace Services.Enums
     public enum InterventionRouteEnm
     {
         [EnumMember(Value = DocConstantInterventionRoute.GROUP_THERAPY)]
-        GROUP_THERAPY,
+        GROUP_THERAPY = 1272,
         [EnumMember(Value = DocConstantInterventionRoute.HAI)]
-        HAI,
+        HAI = 1277,
         [EnumMember(Value = DocConstantInterventionRoute.I_V)]
-        I_V,
+        I_V = 1282,
         [EnumMember(Value = DocConstantInterventionRoute.IMPLANT)]
-        IMPLANT,
+        IMPLANT = 1287,
         [EnumMember(Value = DocConstantInterventionRoute.INDIVIDUAL_THERAPY)]
-        INDIVIDUAL_THERAPY,
+        INDIVIDUAL_THERAPY = 1292,
         [EnumMember(Value = DocConstantInterventionRoute.INHALENT)]
-        INHALENT,
+        INHALENT = 1297,
         [EnumMember(Value = DocConstantInterventionRoute.INJECTION)]
-        INJECTION,
+        INJECTION = 1302,
         [EnumMember(Value = DocConstantInterventionRoute.INSTILLED_INTO_EYE)]
-        INSTILLED_INTO_EYE,
+        INSTILLED_INTO_EYE = 1307,
         [EnumMember(Value = DocConstantInterventionRoute.INTRAMUSCULAR)]
-        INTRAMUSCULAR,
+        INTRAMUSCULAR = 1312,
         [EnumMember(Value = DocConstantInterventionRoute.INTRANASAL)]
-        INTRANASAL,
+        INTRANASAL = 1317,
         [EnumMember(Value = DocConstantInterventionRoute.INTRATHECAL)]
-        INTRATHECAL,
+        INTRATHECAL = 1322,
         [EnumMember(Value = DocConstantInterventionRoute.INTRAVESICULAR)]
-        INTRAVESICULAR,
+        INTRAVESICULAR = 1327,
         [EnumMember(Value = DocConstantInterventionRoute.IONTOPHORETIC)]
-        IONTOPHORETIC,
+        IONTOPHORETIC = 1332,
         [EnumMember(Value = DocConstantInterventionRoute.LAPAROSCOPIC_SURGERY)]
-        LAPAROSCOPIC_SURGERY,
+        LAPAROSCOPIC_SURGERY = 1337,
         [EnumMember(Value = DocConstantInterventionRoute.OPEN_SURGERY)]
-        OPEN_SURGERY,
+        OPEN_SURGERY = 1342,
         [EnumMember(Value = DocConstantInterventionRoute.ORAL)]
-        ORAL,
+        ORAL = 1347,
         [EnumMember(Value = DocConstantInterventionRoute.SUBQ)]
-        SUBQ,
+        SUBQ = 1352,
         [EnumMember(Value = DocConstantInterventionRoute.SUBQ_PEN)]
-        SUBQ_PEN,
+        SUBQ_PEN = 1357,
         [EnumMember(Value = DocConstantInterventionRoute.SUBQ_VIAL)]
-        SUBQ_VIAL,
+        SUBQ_VIAL = 1362,
         [EnumMember(Value = DocConstantInterventionRoute.SUPPOSITORY)]
-        SUPPOSITORY,
+        SUPPOSITORY = 1367,
         [EnumMember(Value = DocConstantInterventionRoute.TOPICAL)]
-        TOPICAL,
+        TOPICAL = 1372,
         [EnumMember(Value = DocConstantInterventionRoute.TRANSDERMAL)]
-        TRANSDERMAL
+        TRANSDERMAL = 1377
     }
     
     public static partial class EnumExtensions

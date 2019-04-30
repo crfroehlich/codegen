@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StudyComplianceEnm
     {
         [EnumMember(Value = DocConstantStudyCompliance.DEMONSTRATED_COMPLIANCE)]
-        DEMONSTRATED_COMPLIANCE,
+        DEMONSTRATED_COMPLIANCE = 3137,
         [EnumMember(Value = DocConstantStudyCompliance.EXCLUDED_NON_COMPLIANT)]
-        EXCLUDED_NON_COMPLIANT,
+        EXCLUDED_NON_COMPLIANT = 3142,
         [EnumMember(Value = DocConstantStudyCompliance.INCLUDED_NON_COMPLIANT)]
-        INCLUDED_NON_COMPLIANT,
+        INCLUDED_NON_COMPLIANT = 3147,
         [EnumMember(Value = DocConstantStudyCompliance.NOT_SPECIFIED)]
-        NOT_SPECIFIED
+        NOT_SPECIFIED = 3152
     }
     
     public static partial class EnumExtensions

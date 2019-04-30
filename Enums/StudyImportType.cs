@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum StudyImportTypeEnm
     {
         [EnumMember(Value = DocConstantStudyImportType.CLINICAL_TRIALS_GOV)]
-        CLINICAL_TRIALS_GOV,
+        CLINICAL_TRIALS_GOV = 146157849,
         [EnumMember(Value = DocConstantStudyImportType.EXTRACT)]
-        EXTRACT,
+        EXTRACT = 3403,
         [EnumMember(Value = DocConstantStudyImportType.LEGACY)]
-        LEGACY
+        LEGACY = 3408
     }
     
     public static partial class EnumExtensions

@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum TermSectionEnm
     {
         [EnumMember(Value = DocConstantTermSection.CHARACTERISTICS)]
-        CHARACTERISTICS,
+        CHARACTERISTICS = 90640198,
         [EnumMember(Value = DocConstantTermSection.OUTCOMES)]
-        OUTCOMES,
+        OUTCOMES = 90640197,
         [EnumMember(Value = DocConstantTermSection.UNCOLLECTED_CHARACTERISTICS)]
-        UNCOLLECTED_CHARACTERISTICS,
+        UNCOLLECTED_CHARACTERISTICS = 90640201,
         [EnumMember(Value = DocConstantTermSection.UNCOLLECTED_OUTCOMES)]
-        UNCOLLECTED_OUTCOMES,
+        UNCOLLECTED_OUTCOMES = 90640200,
         [EnumMember(Value = DocConstantTermSection.UNCOLLECTED_RESULTS)]
-        UNCOLLECTED_RESULTS
+        UNCOLLECTED_RESULTS = 90640199
     }
     
     public static partial class EnumExtensions

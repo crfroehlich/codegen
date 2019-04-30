@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum ProtocolTypeEnm
     {
         [EnumMember(Value = DocConstantProtocolType.DATA)]
-        DATA,
+        DATA = 46351014,
         [EnumMember(Value = DocConstantProtocolType.FULL)]
-        FULL,
+        FULL = 46351020,
         [EnumMember(Value = DocConstantProtocolType.SEARCH)]
-        SEARCH
+        SEARCH = 46351026
     }
     
     public static partial class EnumExtensions

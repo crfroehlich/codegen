@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum DirectionalityEnm
     {
         [EnumMember(Value = DocConstantDirectionality.NA)]
-        NA,
+        NA = 90640168,
         [EnumMember(Value = DocConstantDirectionality.NEG)]
-        NEG,
+        NEG = 90640167,
         [EnumMember(Value = DocConstantDirectionality.POS)]
-        POS
+        POS = 90640166
     }
     
     public static partial class EnumExtensions

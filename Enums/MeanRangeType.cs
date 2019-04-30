@@ -48,21 +48,21 @@ namespace Services.Enums
     public enum MeanRangeTypeEnm
     {
         [EnumMember(Value = DocConstantMeanRangeType.CI)]
-        CI,
+        CI = 2097,
         [EnumMember(Value = DocConstantMeanRangeType.IQR)]
-        IQR,
+        IQR = 2102,
         [EnumMember(Value = DocConstantMeanRangeType.PERCENTILE)]
-        PERCENTILE,
+        PERCENTILE = 2107,
         [EnumMember(Value = DocConstantMeanRangeType.TOTAL)]
-        TOTAL,
+        TOTAL = 2112,
         [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_CI)]
-        VARIANCE_CI,
+        VARIANCE_CI = 2117,
         [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_IQR)]
-        VARIANCE_IQR,
+        VARIANCE_IQR = 2122,
         [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_PERCENTILE)]
-        VARIANCE_PERCENTILE,
+        VARIANCE_PERCENTILE = 2127,
         [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_TOTAL)]
-        VARIANCE_TOTAL
+        VARIANCE_TOTAL = 2132
     }
     
     public static partial class EnumExtensions

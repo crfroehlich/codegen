@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum MethodOfAnalysisEnm
     {
         [EnumMember(Value = DocConstantMethodOfAnalysis.AUTHOR_CLARIFICATION)]
-        AUTHOR_CLARIFICATION,
+        AUTHOR_CLARIFICATION = 2192,
         [EnumMember(Value = DocConstantMethodOfAnalysis.POSSIBLE_AUTHOR_ERROR)]
-        POSSIBLE_AUTHOR_ERROR,
+        POSSIBLE_AUTHOR_ERROR = 2197,
         [EnumMember(Value = DocConstantMethodOfAnalysis.UNCLEAR_DRE_ASSUMPTION)]
-        UNCLEAR_DRE_ASSUMPTION
+        UNCLEAR_DRE_ASSUMPTION = 2202
     }
     
     public static partial class EnumExtensions

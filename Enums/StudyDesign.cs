@@ -48,57 +48,57 @@ namespace Services.Enums
     public enum StudyDesignEnm
     {
         [EnumMember(Value = DocConstantStudyDesign.BEFORE_AND_AFTER_TRIAL)]
-        BEFORE_AND_AFTER_TRIAL,
+        BEFORE_AND_AFTER_TRIAL = 75099240,
         [EnumMember(Value = DocConstantStudyDesign.CASE_CONTROL)]
-        CASE_CONTROL,
+        CASE_CONTROL = 3162,
         [EnumMember(Value = DocConstantStudyDesign.CASE_REPORT)]
-        CASE_REPORT,
+        CASE_REPORT = 3167,
         [EnumMember(Value = DocConstantStudyDesign.CASE_SERIES)]
-        CASE_SERIES,
+        CASE_SERIES = 3172,
         [EnumMember(Value = DocConstantStudyDesign.CLUSTER_RCT)]
-        CLUSTER_RCT,
+        CLUSTER_RCT = 75099241,
         [EnumMember(Value = DocConstantStudyDesign.COHORT_STUDY)]
-        COHORT_STUDY,
+        COHORT_STUDY = 75099264,
         [EnumMember(Value = DocConstantStudyDesign.CONTROLLED_BEFORE_AND_AFTER_TRIAL)]
-        CONTROLLED_BEFORE_AND_AFTER_TRIAL,
+        CONTROLLED_BEFORE_AND_AFTER_TRIAL = 75099242,
         [EnumMember(Value = DocConstantStudyDesign.CROSS_SECTIONAL_STUDY)]
-        CROSS_SECTIONAL_STUDY,
+        CROSS_SECTIONAL_STUDY = 75100176,
         [EnumMember(Value = DocConstantStudyDesign.EXPANDED_ACCESS_PROGRAM)]
-        EXPANDED_ACCESS_PROGRAM,
+        EXPANDED_ACCESS_PROGRAM = 75099244,
         [EnumMember(Value = DocConstantStudyDesign.FOLLOW_UP_EXTENSION)]
-        FOLLOW_UP_EXTENSION,
+        FOLLOW_UP_EXTENSION = 3192,
         [EnumMember(Value = DocConstantStudyDesign.INTERIM_ANALYSIS)]
-        INTERIM_ANALYSIS,
+        INTERIM_ANALYSIS = 150785332,
         [EnumMember(Value = DocConstantStudyDesign.LITERATURE_REVIEW)]
-        LITERATURE_REVIEW,
+        LITERATURE_REVIEW = 76351787,
         [EnumMember(Value = DocConstantStudyDesign.NON_COMPARATIVE_OTHER)]
-        NON_COMPARATIVE_OTHER,
+        NON_COMPARATIVE_OTHER = 76351788,
         [EnumMember(Value = DocConstantStudyDesign.NON_CONTROLLED_CLINICAL_TRIAL)]
-        NON_CONTROLLED_CLINICAL_TRIAL,
+        NON_CONTROLLED_CLINICAL_TRIAL = 75100189,
         [EnumMember(Value = DocConstantStudyDesign.NON_RANDOMIZED_CONTROLLED_TRIAL)]
-        NON_RANDOMIZED_CONTROLLED_TRIAL,
+        NON_RANDOMIZED_CONTROLLED_TRIAL = 3202,
         [EnumMember(Value = DocConstantStudyDesign.NON_RANDOMIZED_CROSSOVER)]
-        NON_RANDOMIZED_CROSSOVER,
+        NON_RANDOMIZED_CROSSOVER = 3205,
         [EnumMember(Value = DocConstantStudyDesign.OBSERVATIONAL_NON_COMPARATIVE_STUDY)]
-        OBSERVATIONAL_NON_COMPARATIVE_STUDY,
+        OBSERVATIONAL_NON_COMPARATIVE_STUDY = 75099243,
         [EnumMember(Value = DocConstantStudyDesign.POOLED_ANALYSIS)]
-        POOLED_ANALYSIS,
+        POOLED_ANALYSIS = 3215,
         [EnumMember(Value = DocConstantStudyDesign.POSTHOC_ANALYSIS)]
-        POSTHOC_ANALYSIS,
+        POSTHOC_ANALYSIS = 3220,
         [EnumMember(Value = DocConstantStudyDesign.PROSPECTIVE_COHORT_STUDY)]
-        PROSPECTIVE_COHORT_STUDY,
+        PROSPECTIVE_COHORT_STUDY = 75100174,
         [EnumMember(Value = DocConstantStudyDesign.QUALITATIVE_RESEARCH)]
-        QUALITATIVE_RESEARCH,
+        QUALITATIVE_RESEARCH = 75099262,
         [EnumMember(Value = DocConstantStudyDesign.RANDOMIZED_CONTROLLED_TRIAL)]
-        RANDOMIZED_CONTROLLED_TRIAL,
+        RANDOMIZED_CONTROLLED_TRIAL = 3235,
         [EnumMember(Value = DocConstantStudyDesign.RANDOMIZED_CROSSOVER)]
-        RANDOMIZED_CROSSOVER,
+        RANDOMIZED_CROSSOVER = 3238,
         [EnumMember(Value = DocConstantStudyDesign.RANDOMIZED_NON_CONTROLLED_TRIAL)]
-        RANDOMIZED_NON_CONTROLLED_TRIAL,
+        RANDOMIZED_NON_CONTROLLED_TRIAL = 3243,
         [EnumMember(Value = DocConstantStudyDesign.RETROSPECTIVE_COHORT_STUDY)]
-        RETROSPECTIVE_COHORT_STUDY,
+        RETROSPECTIVE_COHORT_STUDY = 75099263,
         [EnumMember(Value = DocConstantStudyDesign.SUB_GROUP_ANALYSIS)]
-        SUB_GROUP_ANALYSIS
+        SUB_GROUP_ANALYSIS = 3258
     }
     
     public static partial class EnumExtensions

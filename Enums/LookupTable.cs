@@ -48,243 +48,243 @@ namespace Services.Enums
     public enum LookupTableEnm
     {
         [EnumMember(Value = DocConstantLookupTable.AMPERSONCOUNT)]
-        AMPERSONCOUNT,
+        AMPERSONCOUNT = 31621672,
         [EnumMember(Value = DocConstantLookupTable.APP)]
-        APP,
+        APP = 35775432,
         [EnumMember(Value = DocConstantLookupTable.ARMPOPULATIONAGE)]
-        ARMPOPULATIONAGE,
+        ARMPOPULATIONAGE = 1577,
         [EnumMember(Value = DocConstantLookupTable.ARMPOPULATIONN)]
-        ARMPOPULATIONN,
+        ARMPOPULATIONN = 1582,
         [EnumMember(Value = DocConstantLookupTable.ASSOCIATIONMEASURE)]
-        ASSOCIATIONMEASURE,
+        ASSOCIATIONMEASURE = 1587,
         [EnumMember(Value = DocConstantLookupTable.ATTRIBUTECATEGORY)]
-        ATTRIBUTECATEGORY,
+        ATTRIBUTECATEGORY = 11793742,
         [EnumMember(Value = DocConstantLookupTable.ATTRIBUTETYPE)]
-        ATTRIBUTETYPE,
+        ATTRIBUTETYPE = 1607,
         [EnumMember(Value = DocConstantLookupTable.BROADCASTSTATUS)]
-        BROADCASTSTATUS,
+        BROADCASTSTATUS = 67058499,
         [EnumMember(Value = DocConstantLookupTable.BROADCASTTYPE)]
-        BROADCASTTYPE,
+        BROADCASTTYPE = 25812426,
         [EnumMember(Value = DocConstantLookupTable.CONFIDENCEINTERVAL)]
-        CONFIDENCEINTERVAL,
+        CONFIDENCEINTERVAL = 1617,
         [EnumMember(Value = DocConstantLookupTable.CONJUNCTION)]
-        CONJUNCTION,
+        CONJUNCTION = 1622,
         [EnumMember(Value = DocConstantLookupTable.DATABASETYPE)]
-        DATABASETYPE,
+        DATABASETYPE = 90640170,
         [EnumMember(Value = DocConstantLookupTable.DATAHUBSEARCHCATEGORY)]
-        DATAHUBSEARCHCATEGORY,
+        DATAHUBSEARCHCATEGORY = 1627,
         [EnumMember(Value = DocConstantLookupTable.DATAHUBSOURCE)]
-        DATAHUBSOURCE,
+        DATAHUBSOURCE = 1632,
         [EnumMember(Value = DocConstantLookupTable.DEFAULTTIMEUNIT)]
-        DEFAULTTIMEUNIT,
+        DEFAULTTIMEUNIT = 1637,
         [EnumMember(Value = DocConstantLookupTable.DEFAULTUNITTYPE)]
-        DEFAULTUNITTYPE,
+        DEFAULTUNITTYPE = 1642,
         [EnumMember(Value = DocConstantLookupTable.DIRECTIONALITY)]
-        DIRECTIONALITY,
+        DIRECTIONALITY = 90640171,
         [EnumMember(Value = DocConstantLookupTable.DOCUMENTSETTYPE)]
-        DOCUMENTSETTYPE,
+        DOCUMENTSETTYPE = 90640172,
         [EnumMember(Value = DocConstantLookupTable.DOCUMENTTYPE)]
-        DOCUMENTTYPE,
+        DOCUMENTTYPE = 90640173,
         [EnumMember(Value = DocConstantLookupTable.DOSAGEPROTOCOL)]
-        DOSAGEPROTOCOL,
+        DOSAGEPROTOCOL = 1647,
         [EnumMember(Value = DocConstantLookupTable.DOSAGETYPE)]
-        DOSAGETYPE,
+        DOSAGETYPE = 1652,
+        [EnumMember(Value = DocConstantLookupTable.EODSTATUS)]
+        EODSTATUS = 150785325,
         [EnumMember(Value = DocConstantLookupTable.EQUALITYOPERATOR)]
-        EQUALITYOPERATOR,
+        EQUALITYOPERATOR = 1657,
         [EnumMember(Value = DocConstantLookupTable.ERRORMESSAGE)]
-        ERRORMESSAGE,
+        ERRORMESSAGE = 67058501,
         [EnumMember(Value = DocConstantLookupTable.EXTERNALKEY)]
-        EXTERNALKEY,
+        EXTERNALKEY = 1662,
         [EnumMember(Value = DocConstantLookupTable.FEATURE)]
-        FEATURE,
+        FEATURE = 1667,
         [EnumMember(Value = DocConstantLookupTable.FIELDTYPE)]
-        FIELDTYPE,
+        FIELDTYPE = 1677,
         [EnumMember(Value = DocConstantLookupTable.FOREIGNKEYSTATUS)]
-        FOREIGNKEYSTATUS,
+        FOREIGNKEYSTATUS = 90640174,
         [EnumMember(Value = DocConstantLookupTable.FQREFERENCESTATUS)]
-        FQREFERENCESTATUS,
+        FQREFERENCESTATUS = 90640175,
         [EnumMember(Value = DocConstantLookupTable.HELP)]
-        HELP,
+        HELP = 61884906,
         [EnumMember(Value = DocConstantLookupTable.IMPORTSTATUS)]
-        IMPORTSTATUS,
+        IMPORTSTATUS = 1692,
         [EnumMember(Value = DocConstantLookupTable.INCIDENCERATETYPE)]
-        INCIDENCERATETYPE,
+        INCIDENCERATETYPE = 21514023,
         [EnumMember(Value = DocConstantLookupTable.INSTITUTIONTYPE)]
-        INSTITUTIONTYPE,
+        INSTITUTIONTYPE = 1697,
         [EnumMember(Value = DocConstantLookupTable.INTEGRATIONNAME)]
-        INTEGRATIONNAME,
+        INTEGRATIONNAME = 90640176,
         [EnumMember(Value = DocConstantLookupTable.INTEGRATIONPROPERTYNAME)]
-        INTEGRATIONPROPERTYNAME,
+        INTEGRATIONPROPERTYNAME = 90640177,
         [EnumMember(Value = DocConstantLookupTable.INTERVENTIONLINEOFTREATMENT)]
-        INTERVENTIONLINEOFTREATMENT,
+        INTERVENTIONLINEOFTREATMENT = 74232478,
         [EnumMember(Value = DocConstantLookupTable.INTERVENTIONMEDIUM)]
-        INTERVENTIONMEDIUM,
+        INTERVENTIONMEDIUM = 1712,
         [EnumMember(Value = DocConstantLookupTable.INTERVENTIONPROVIDER)]
-        INTERVENTIONPROVIDER,
+        INTERVENTIONPROVIDER = 1717,
         [EnumMember(Value = DocConstantLookupTable.INTERVENTIONROUTE)]
-        INTERVENTIONROUTE,
+        INTERVENTIONROUTE = 1722,
         [EnumMember(Value = DocConstantLookupTable.INTERVENTIONSCHEDULE)]
-        INTERVENTIONSCHEDULE,
+        INTERVENTIONSCHEDULE = 1727,
         [EnumMember(Value = DocConstantLookupTable.INTERVENTIONSTAGESETTING)]
-        INTERVENTIONSTAGESETTING,
+        INTERVENTIONSTAGESETTING = 1732,
         [EnumMember(Value = DocConstantLookupTable.INTERVENTIONTYPE)]
-        INTERVENTIONTYPE,
+        INTERVENTIONTYPE = 1737,
         [EnumMember(Value = DocConstantLookupTable.JOB)]
-        JOB,
+        JOB = 1742,
         [EnumMember(Value = DocConstantLookupTable.JUNCTIONTYPE)]
-        JUNCTIONTYPE,
+        JUNCTIONTYPE = 74232479,
         [EnumMember(Value = DocConstantLookupTable.LOOKUPTABLE)]
-        LOOKUPTABLE,
+        LOOKUPTABLE = 1752,
         [EnumMember(Value = DocConstantLookupTable.LOOKUPTYPE)]
-        LOOKUPTYPE,
+        LOOKUPTYPE = 46350926,
         [EnumMember(Value = DocConstantLookupTable.MANUALIZEDTREATMENT)]
-        MANUALIZEDTREATMENT,
+        MANUALIZEDTREATMENT = 1757,
         [EnumMember(Value = DocConstantLookupTable.MEANCALCULATIONTYPE)]
-        MEANCALCULATIONTYPE,
+        MEANCALCULATIONTYPE = 6677506,
         [EnumMember(Value = DocConstantLookupTable.MEANRANGETYPE)]
-        MEANRANGETYPE,
+        MEANRANGETYPE = 1762,
         [EnumMember(Value = DocConstantLookupTable.MEANVARIABLETYPE)]
-        MEANVARIABLETYPE,
+        MEANVARIABLETYPE = 1767,
         [EnumMember(Value = DocConstantLookupTable.MEANVARIANCETYPE)]
-        MEANVARIANCETYPE,
+        MEANVARIANCETYPE = 1772,
         [EnumMember(Value = DocConstantLookupTable.METHODOFANALYSIS)]
-        METHODOFANALYSIS,
+        METHODOFANALYSIS = 1777,
         [EnumMember(Value = DocConstantLookupTable.MODELNAME)]
-        MODELNAME,
+        MODELNAME = 1782,
         [EnumMember(Value = DocConstantLookupTable.OUTCOMECATEGORY)]
-        OUTCOMECATEGORY,
+        OUTCOMECATEGORY = 1787,
         [EnumMember(Value = DocConstantLookupTable.OUTCOMETYPE)]
-        OUTCOMETYPE,
+        OUTCOMETYPE = 1792,
         [EnumMember(Value = DocConstantLookupTable.PERMISSION)]
-        PERMISSION,
+        PERMISSION = 10483104,
         [EnumMember(Value = DocConstantLookupTable.POPULATIONTYPE)]
-        POPULATIONTYPE,
+        POPULATIONTYPE = 11793747,
         [EnumMember(Value = DocConstantLookupTable.PREVALENCETYPE)]
-        PREVALENCETYPE,
+        PREVALENCETYPE = 21514028,
         [EnumMember(Value = DocConstantLookupTable.PROTOCOLFILTEROWNER)]
-        PROTOCOLFILTEROWNER,
+        PROTOCOLFILTEROWNER = 9093523,
         [EnumMember(Value = DocConstantLookupTable.PROTOCOLFILTERTYPE)]
-        PROTOCOLFILTERTYPE,
+        PROTOCOLFILTERTYPE = 9093528,
         [EnumMember(Value = DocConstantLookupTable.PROTOCOLTYPE)]
-        PROTOCOLTYPE,
+        PROTOCOLTYPE = 46350931,
         [EnumMember(Value = DocConstantLookupTable.PUBLICATIONPOOLSTUDIES)]
-        PUBLICATIONPOOLSTUDIES,
+        PUBLICATIONPOOLSTUDIES = 1802,
         [EnumMember(Value = DocConstantLookupTable.PUBTYPE)]
-        PUBTYPE,
+        PUBTYPE = 93510279,
         [EnumMember(Value = DocConstantLookupTable.QUESTION)]
-        QUESTION,
+        QUESTION = 46350936,
         [EnumMember(Value = DocConstantLookupTable.QUESTIONCATEGORY)]
-        QUESTIONCATEGORY,
+        QUESTIONCATEGORY = 46350942,
         [EnumMember(Value = DocConstantLookupTable.QUESTIONTYPE)]
-        QUESTIONTYPE,
+        QUESTIONTYPE = 46350947,
         [EnumMember(Value = DocConstantLookupTable.QUEUECHANNEL)]
-        QUEUECHANNEL,
+        QUEUECHANNEL = 96669200,
         [EnumMember(Value = DocConstantLookupTable.RANDOMIZATION)]
-        RANDOMIZATION,
+        RANDOMIZATION = 1807,
         [EnumMember(Value = DocConstantLookupTable.RANGETYPE)]
-        RANGETYPE,
+        RANGETYPE = 1812,
         [EnumMember(Value = DocConstantLookupTable.RATING)]
-        RATING,
+        RATING = 90640178,
         [EnumMember(Value = DocConstantLookupTable.REASONREJECTED)]
-        REASONREJECTED,
+        REASONREJECTED = 90640179,
         [EnumMember(Value = DocConstantLookupTable.RECRUITMENTMETHOD)]
-        RECRUITMENTMETHOD,
+        RECRUITMENTMETHOD = 1817,
         [EnumMember(Value = DocConstantLookupTable.REPRESENTATIVESAMPLE)]
-        REPRESENTATIVESAMPLE,
+        REPRESENTATIVESAMPLE = 1822,
         [EnumMember(Value = DocConstantLookupTable.RESPONSESCOLLECTEDBY)]
-        RESPONSESCOLLECTEDBY,
+        RESPONSESCOLLECTEDBY = 1827,
         [EnumMember(Value = DocConstantLookupTable.RESULTSCATEGORY)]
-        RESULTSCATEGORY,
+        RESULTSCATEGORY = 90640180,
         [EnumMember(Value = DocConstantLookupTable.RISKOFBIASASSESSMENT)]
-        RISKOFBIASASSESSMENT,
+        RISKOFBIASASSESSMENT = 150784177,
         [EnumMember(Value = DocConstantLookupTable.SCOPE)]
-        SCOPE,
+        SCOPE = 67058503,
         [EnumMember(Value = DocConstantLookupTable.SETTINGTYPE)]
-        SETTINGTYPE,
+        SETTINGTYPE = 1842,
         [EnumMember(Value = DocConstantLookupTable.STATISTICALSIGNIFICANCE)]
-        STATISTICALSIGNIFICANCE,
+        STATISTICALSIGNIFICANCE = 1857,
         [EnumMember(Value = DocConstantLookupTable.STATISTICALTEST)]
-        STATISTICALTEST,
+        STATISTICALTEST = 1862,
         [EnumMember(Value = DocConstantLookupTable.STATSRECORDNAME)]
-        STATSRECORDNAME,
+        STATSRECORDNAME = 41790206,
         [EnumMember(Value = DocConstantLookupTable.STATUS)]
-        STATUS,
+        STATUS = 21514033,
         [EnumMember(Value = DocConstantLookupTable.STRATIFICATIONTYPE)]
-        STRATIFICATIONTYPE,
+        STRATIFICATIONTYPE = 1867,
         [EnumMember(Value = DocConstantLookupTable.STUDYALLOCATTIONMETHOD)]
-        STUDYALLOCATTIONMETHOD,
+        STUDYALLOCATTIONMETHOD = 1872,
         [EnumMember(Value = DocConstantLookupTable.STUDYBIAS)]
-        STUDYBIAS,
+        STUDYBIAS = 1877,
         [EnumMember(Value = DocConstantLookupTable.STUDYBLINDINGMETHOD)]
-        STUDYBLINDINGMETHOD,
+        STUDYBLINDINGMETHOD = 1882,
         [EnumMember(Value = DocConstantLookupTable.STUDYCOMPLIANCE)]
-        STUDYCOMPLIANCE,
+        STUDYCOMPLIANCE = 1887,
         [EnumMember(Value = DocConstantLookupTable.STUDYDESIGN)]
-        STUDYDESIGN,
+        STUDYDESIGN = 1892,
         [EnumMember(Value = DocConstantLookupTable.STUDYDOCUMENTTYPE)]
-        STUDYDOCUMENTTYPE,
+        STUDYDOCUMENTTYPE = 1897,
         [EnumMember(Value = DocConstantLookupTable.STUDYFUNDING)]
-        STUDYFUNDING,
+        STUDYFUNDING = 1902,
         [EnumMember(Value = DocConstantLookupTable.STUDYGROUPTYPE)]
-        STUDYGROUPTYPE,
+        STUDYGROUPTYPE = 1912,
         [EnumMember(Value = DocConstantLookupTable.STUDYIMPORTLOCATION)]
-        STUDYIMPORTLOCATION,
+        STUDYIMPORTLOCATION = 150784178,
         [EnumMember(Value = DocConstantLookupTable.STUDYIMPORTTYPE)]
-        STUDYIMPORTTYPE,
+        STUDYIMPORTTYPE = 1917,
         [EnumMember(Value = DocConstantLookupTable.STUDYNGA)]
-        STUDYNGA,
+        STUDYNGA = 1922,
         [EnumMember(Value = DocConstantLookupTable.STUDYOBJECTIVE)]
-        STUDYOBJECTIVE,
+        STUDYOBJECTIVE = 1927,
         [EnumMember(Value = DocConstantLookupTable.STUDYPHASENAMES)]
-        STUDYPHASENAMES,
+        STUDYPHASENAMES = 1947,
         [EnumMember(Value = DocConstantLookupTable.STUDYPURPOSE)]
-        STUDYPURPOSE,
+        STUDYPURPOSE = 1952,
         [EnumMember(Value = DocConstantLookupTable.STUDYRANDOMIZATIONMETHOD)]
-        STUDYRANDOMIZATIONMETHOD,
+        STUDYRANDOMIZATIONMETHOD = 1957,
         [EnumMember(Value = DocConstantLookupTable.STUDYTYPE)]
-        STUDYTYPE,
+        STUDYTYPE = 1967,
         [EnumMember(Value = DocConstantLookupTable.STUDYTYPEHARMETIOLOGY)]
-        STUDYTYPEHARMETIOLOGY,
+        STUDYTYPEHARMETIOLOGY = 1972,
         [EnumMember(Value = DocConstantLookupTable.STUDYTYPETHERAPY)]
-        STUDYTYPETHERAPY,
+        STUDYTYPETHERAPY = 1977,
         [EnumMember(Value = DocConstantLookupTable.STUDYYEARS)]
-        STUDYYEARS,
+        STUDYYEARS = 1982,
+        [EnumMember(Value = DocConstantLookupTable.TASKTYPE)]
+        TASKTYPE = 150785326,
         [EnumMember(Value = DocConstantLookupTable.TERMCLASSIFICATION)]
-        TERMCLASSIFICATION,
+        TERMCLASSIFICATION = 90640181,
         [EnumMember(Value = DocConstantLookupTable.TERMSECTION)]
-        TERMSECTION,
+        TERMSECTION = 90640182,
         [EnumMember(Value = DocConstantLookupTable.TIMECARDSTATUS)]
-        TIMECARDSTATUS,
+        TIMECARDSTATUS = 90640183,
         [EnumMember(Value = DocConstantLookupTable.TIMEPOINTTYPE)]
-        TIMEPOINTTYPE,
+        TIMEPOINTTYPE = 2007,
         [EnumMember(Value = DocConstantLookupTable.UNITSOFMEASURE)]
-        UNITSOFMEASURE,
+        UNITSOFMEASURE = 2017,
         [EnumMember(Value = DocConstantLookupTable.UNITTYPE)]
-        UNITTYPE,
+        UNITTYPE = 2022,
         [EnumMember(Value = DocConstantLookupTable.USEREMPLOYEETYPE)]
-        USEREMPLOYEETYPE,
+        USEREMPLOYEETYPE = 90640184,
         [EnumMember(Value = DocConstantLookupTable.USERPAYROLLSTATUS)]
-        USERPAYROLLSTATUS,
+        USERPAYROLLSTATUS = 90640185,
         [EnumMember(Value = DocConstantLookupTable.USERPAYROLLTYPE)]
-        USERPAYROLLTYPE,
+        USERPAYROLLTYPE = 90640186,
         [EnumMember(Value = DocConstantLookupTable.USERTYPE)]
-        USERTYPE,
+        USERTYPE = 2052,
         [EnumMember(Value = DocConstantLookupTable.VALUESTATUS)]
-        VALUESTATUS,
+        VALUESTATUS = 2057,
         [EnumMember(Value = DocConstantLookupTable.VALUETYPE)]
-        VALUETYPE,
+        VALUETYPE = 2062,
         [EnumMember(Value = DocConstantLookupTable.VARIABLERULE)]
-        VARIABLERULE,
+        VARIABLERULE = 69422903,
         [EnumMember(Value = DocConstantLookupTable.VARIABLETYPE)]
-        VARIABLETYPE,
+        VARIABLETYPE = 73104015,
         [EnumMember(Value = DocConstantLookupTable.WORKFLOW)]
-        WORKFLOW,
-        [EnumMember(Value = DocConstantLookupTable.WORKFLOWSTATUS)]
-        WORKFLOWSTATUS,
-        [EnumMember(Value = DocConstantLookupTable.WORKFLOWTASKTYPE)]
-        WORKFLOWTASKTYPE,
+        WORKFLOW = 10483109,
         [EnumMember(Value = DocConstantLookupTable.YESNONA)]
-        YESNONA
+        YESNONA = 2067
     }
     
     public static partial class EnumExtensions
@@ -335,6 +335,8 @@ namespace Services.Enums
                     return DocConstantLookupTable.DOSAGEPROTOCOL;
                 case LookupTableEnm.DOSAGETYPE:
                     return DocConstantLookupTable.DOSAGETYPE;
+                case LookupTableEnm.EODSTATUS:
+                    return DocConstantLookupTable.EODSTATUS;
                 case LookupTableEnm.EQUALITYOPERATOR:
                     return DocConstantLookupTable.EQUALITYOPERATOR;
                 case LookupTableEnm.ERRORMESSAGE:
@@ -495,6 +497,8 @@ namespace Services.Enums
                     return DocConstantLookupTable.STUDYTYPETHERAPY;
                 case LookupTableEnm.STUDYYEARS:
                     return DocConstantLookupTable.STUDYYEARS;
+                case LookupTableEnm.TASKTYPE:
+                    return DocConstantLookupTable.TASKTYPE;
                 case LookupTableEnm.TERMCLASSIFICATION:
                     return DocConstantLookupTable.TERMCLASSIFICATION;
                 case LookupTableEnm.TERMSECTION:
@@ -525,10 +529,6 @@ namespace Services.Enums
                     return DocConstantLookupTable.VARIABLETYPE;
                 case LookupTableEnm.WORKFLOW:
                     return DocConstantLookupTable.WORKFLOW;
-                case LookupTableEnm.WORKFLOWSTATUS:
-                    return DocConstantLookupTable.WORKFLOWSTATUS;
-                case LookupTableEnm.WORKFLOWTASKTYPE:
-                    return DocConstantLookupTable.WORKFLOWTASKTYPE;
                 case LookupTableEnm.YESNONA:
                     return DocConstantLookupTable.YESNONA;
                 default:
@@ -560,6 +560,7 @@ namespace Services.Enums
         public const string DOCUMENTTYPE = "DocumentType";
         public const string DOSAGEPROTOCOL = "DosageProtocol";
         public const string DOSAGETYPE = "DosageType";
+        public const string EODSTATUS = "EoDStatus";
         public const string EQUALITYOPERATOR = "EqualityOperator";
         public const string ERRORMESSAGE = "ErrorMessage";
         public const string EXTERNALKEY = "ExternalKey";
@@ -640,6 +641,7 @@ namespace Services.Enums
         public const string STUDYTYPEHARMETIOLOGY = "StudyTypeHarmEtiology";
         public const string STUDYTYPETHERAPY = "StudyTypeTherapy";
         public const string STUDYYEARS = "StudyYears";
+        public const string TASKTYPE = "TaskType";
         public const string TERMCLASSIFICATION = "TermClassification";
         public const string TERMSECTION = "TermSection";
         public const string TIMECARDSTATUS = "TimeCardStatus";
@@ -655,8 +657,6 @@ namespace Services.Enums
         public const string VARIABLERULE = "VariableRule";
         public const string VARIABLETYPE = "VariableType";
         public const string WORKFLOW = "Workflow";
-        public const string WORKFLOWSTATUS = "WorkflowStatus";
-        public const string WORKFLOWTASKTYPE = "WorkflowTaskType";
         public const string YESNONA = "YesNoNa";
         
         #region Internals

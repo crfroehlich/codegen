@@ -48,17 +48,17 @@ namespace Services.Enums
     public enum PermissionEnm
     {
         [EnumMember(Value = DocConstantPermission.ADD)]
-        ADD,
+        ADD = 17611229,
         [EnumMember(Value = DocConstantPermission.DELETE)]
-        DELETE,
+        DELETE = 17611234,
         [EnumMember(Value = DocConstantPermission.EDIT)]
-        EDIT,
+        EDIT = 10483119,
         [EnumMember(Value = DocConstantPermission.REMOVE)]
-        REMOVE,
+        REMOVE = 107893902,
         [EnumMember(Value = DocConstantPermission.UNLOCK)]
-        UNLOCK,
+        UNLOCK = 90640194,
         [EnumMember(Value = DocConstantPermission.VIEW)]
-        VIEW
+        VIEW = 10483124
     }
     
     public static partial class EnumExtensions

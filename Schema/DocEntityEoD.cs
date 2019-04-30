@@ -100,13 +100,13 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(Nullable = false)]
+        [Field]
         public DocEntityDocument Document { get; set; }
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
 
-        [Field]
-        public WorkflowStatusEnm? Status { get; set; }
+        [Field(DefaultValue = EoDStatusEnm.REQUESTED)]
+        public EoDStatusEnm Status { get; set; }
 
 
         #endregion Properties
@@ -169,11 +169,7 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(Document))
-                {
-                    isValid = false;
-                    message += " Document is a required property.";
-                }
+
 
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;

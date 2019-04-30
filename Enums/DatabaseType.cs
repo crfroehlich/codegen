@@ -48,21 +48,21 @@ namespace Services.Enums
     public enum DatabaseTypeEnm
     {
         [EnumMember(Value = DocConstantDatabaseType.ASCO)]
-        ASCO,
+        ASCO = 76351757,
         [EnumMember(Value = DocConstantDatabaseType.CLINICAL_TRIALS_GOV)]
-        CLINICAL_TRIALS_GOV,
+        CLINICAL_TRIALS_GOV = 76351758,
         [EnumMember(Value = DocConstantDatabaseType.COCHRANE)]
-        COCHRANE,
+        COCHRANE = 76351759,
         [EnumMember(Value = DocConstantDatabaseType.EMBASE)]
-        EMBASE,
+        EMBASE = 76351760,
         [EnumMember(Value = DocConstantDatabaseType.IOVS)]
-        IOVS,
+        IOVS = 76351761,
         [EnumMember(Value = DocConstantDatabaseType.MANUAL_ENTRY)]
-        MANUAL_ENTRY,
+        MANUAL_ENTRY = 76351762,
         [EnumMember(Value = DocConstantDatabaseType.MEDLINE)]
-        MEDLINE,
+        MEDLINE = 76351763,
         [EnumMember(Value = DocConstantDatabaseType.NORTHERN_LIGHT)]
-        NORTHERN_LIGHT
+        NORTHERN_LIGHT = 76351764
     }
     
     public static partial class EnumExtensions

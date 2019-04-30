@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StudyBlindingMethodEnm
     {
         [EnumMember(Value = DocConstantStudyBlindingMethod.DOUBLE_BLIND)]
-        DOUBLE_BLIND,
+        DOUBLE_BLIND = 3117,
         [EnumMember(Value = DocConstantStudyBlindingMethod.OPEN_BLINDED_ENDPOINT)]
-        OPEN_BLINDED_ENDPOINT,
+        OPEN_BLINDED_ENDPOINT = 3122,
         [EnumMember(Value = DocConstantStudyBlindingMethod.OPEN_NO_BLINDING)]
-        OPEN_NO_BLINDING,
+        OPEN_NO_BLINDING = 3127,
         [EnumMember(Value = DocConstantStudyBlindingMethod.SINGLE_BLIND)]
-        SINGLE_BLIND
+        SINGLE_BLIND = 3132
     }
     
     public static partial class EnumExtensions

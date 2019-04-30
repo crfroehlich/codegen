@@ -122,9 +122,8 @@ namespace Services.Schema
         public int? ReporterId { get { return Reporter?.Id; } private set { var noid = value; } }
 
 
-        [Field(Nullable = false, NullableOnUpgrade = true)]
-        public DocEntityLookupTable Type { get; set; }
-        public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
+        [Field(Nullable = false)]
+        public TaskTypeEnm Type { get; set; }
 
 
         [Field(Nullable = false)]
@@ -223,14 +222,6 @@ namespace Services.Schema
                 {
                     isValid = false;
                     message += " Type is a required property.";
-                }
-                else
-                {
-                    if(Type.Enum?.Name != "WorkflowTaskType")
-                    {
-                        isValid = false;
-                        message += " Type is a " + Type.Enum.Name + ", but must be a WorkflowTaskType.";
-                    }
                 }
                 if(DocTools.IsNullOrEmpty(Workflow))
                 {

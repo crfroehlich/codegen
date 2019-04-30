@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum ConfidenceIntervalEnm
     {
         [EnumMember(Value = DocConstantConfidenceInterval.P90)]
-        P90,
+        P90 = 557,
         [EnumMember(Value = DocConstantConfidenceInterval.P92_5)]
-        P92_5,
+        P92_5 = 562,
         [EnumMember(Value = DocConstantConfidenceInterval.P95)]
-        P95,
+        P95 = 567,
         [EnumMember(Value = DocConstantConfidenceInterval.P97_5)]
-        P97_5,
+        P97_5 = 572,
         [EnumMember(Value = DocConstantConfidenceInterval.P99)]
-        P99
+        P99 = 577
     }
     
     public static partial class EnumExtensions

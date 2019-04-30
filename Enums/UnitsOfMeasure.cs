@@ -48,279 +48,279 @@ namespace Services.Enums
     public enum UnitsOfMeasureEnm
     {
         [EnumMember(Value = DocConstantUnitsOfMeasure.ARE)]
-        ARE,
+        ARE = 3873,
         [EnumMember(Value = DocConstantUnitsOfMeasure.ATOMS)]
-        ATOMS,
+        ATOMS = 3878,
         [EnumMember(Value = DocConstantUnitsOfMeasure.BECQUEREL)]
-        BECQUEREL,
+        BECQUEREL = 3883,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CENTIGRAM)]
-        CENTIGRAM,
+        CENTIGRAM = 3888,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CENTILITER)]
-        CENTILITER,
+        CENTILITER = 3893,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CENTIMETER)]
-        CENTIMETER,
+        CENTIMETER = 3898,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_CENTIMETER)]
-        CUBIC_CENTIMETER,
+        CUBIC_CENTIMETER = 3903,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_FOOT)]
-        CUBIC_FOOT,
+        CUBIC_FOOT = 3908,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_INCH)]
-        CUBIC_INCH,
+        CUBIC_INCH = 3913,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_KILOMETER)]
-        CUBIC_KILOMETER,
+        CUBIC_KILOMETER = 3918,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_METER)]
-        CUBIC_METER,
+        CUBIC_METER = 3923,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MICROLITER)]
-        CUBIC_MICROLITER,
+        CUBIC_MICROLITER = 3928,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MICROMETER)]
-        CUBIC_MICROMETER,
+        CUBIC_MICROMETER = 3933,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MILE)]
-        CUBIC_MILE,
+        CUBIC_MILE = 3938,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MILLIMETER)]
-        CUBIC_MILLIMETER,
+        CUBIC_MILLIMETER = 3943,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_NANOMETER)]
-        CUBIC_NANOMETER,
+        CUBIC_NANOMETER = 3948,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_YARD)]
-        CUBIC_YARD,
+        CUBIC_YARD = 3953,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CUP)]
-        CUP,
+        CUP = 3958,
         [EnumMember(Value = DocConstantUnitsOfMeasure.CURIE)]
-        CURIE,
+        CURIE = 3963,
         [EnumMember(Value = DocConstantUnitsOfMeasure.DAY)]
-        DAY,
+        DAY = 3968,
         [EnumMember(Value = DocConstantUnitsOfMeasure.DECIGRAM)]
-        DECIGRAM,
+        DECIGRAM = 3973,
         [EnumMember(Value = DocConstantUnitsOfMeasure.DECILITER)]
-        DECILITER,
+        DECILITER = 3978,
         [EnumMember(Value = DocConstantUnitsOfMeasure.DEKAGRAM)]
-        DEKAGRAM,
+        DEKAGRAM = 3983,
         [EnumMember(Value = DocConstantUnitsOfMeasure.EXAGRAM)]
-        EXAGRAM,
+        EXAGRAM = 3988,
         [EnumMember(Value = DocConstantUnitsOfMeasure.GALLON)]
-        GALLON,
+        GALLON = 3993,
         [EnumMember(Value = DocConstantUnitsOfMeasure.GIGABECQUEREL)]
-        GIGABECQUEREL,
+        GIGABECQUEREL = 3998,
         [EnumMember(Value = DocConstantUnitsOfMeasure.GIGAGRAM)]
-        GIGAGRAM,
+        GIGAGRAM = 4003,
         [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM)]
-        GRAM,
+        GRAM = 4008,
         [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_CENTIMETER)]
-        GRAM_PER_CUBIC_CENTIMETER,
+        GRAM_PER_CUBIC_CENTIMETER = 4013,
         [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_METER)]
-        GRAM_PER_CUBIC_METER,
+        GRAM_PER_CUBIC_METER = 4018,
         [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_DECILITER)]
-        GRAM_PER_DECILITER,
+        GRAM_PER_DECILITER = 4023,
         [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_LITER)]
-        GRAM_PER_LITER,
+        GRAM_PER_LITER = 4028,
         [EnumMember(Value = DocConstantUnitsOfMeasure.HECTARE)]
-        HECTARE,
+        HECTARE = 4033,
         [EnumMember(Value = DocConstantUnitsOfMeasure.HECTOGRAM)]
-        HECTOGRAM,
+        HECTOGRAM = 4038,
         [EnumMember(Value = DocConstantUnitsOfMeasure.HOUR)]
-        HOUR,
+        HOUR = 4043,
         [EnumMember(Value = DocConstantUnitsOfMeasure.INTERNATIONAL_UNIT_PER_LITER)]
-        INTERNATIONAL_UNIT_PER_LITER,
+        INTERNATIONAL_UNIT_PER_LITER = 4048,
         [EnumMember(Value = DocConstantUnitsOfMeasure.INTERNATIONALUNIT)]
-        INTERNATIONALUNIT,
+        INTERNATIONALUNIT = 4053,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_CENTIMETER)]
-        KILIMOL_PER_CUBIC_CENTIMETER,
+        KILIMOL_PER_CUBIC_CENTIMETER = 4058,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_METER)]
-        KILIMOL_PER_CUBIC_METER,
+        KILIMOL_PER_CUBIC_METER = 4063,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_MILLIMETER)]
-        KILIMOL_PER_CUBIC_MILLIMETER,
+        KILIMOL_PER_CUBIC_MILLIMETER = 4068,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_LITER)]
-        KILIMOL_PER_LITER,
+        KILIMOL_PER_LITER = 4073,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOBECQUEREL)]
-        KILOBECQUEREL,
+        KILOBECQUEREL = 4078,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOCURIE)]
-        KILOCURIE,
+        KILOCURIE = 4083,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM)]
-        KILOGRAM,
+        KILOGRAM = 4088,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_CUBIC_METER)]
-        KILOGRAM_PER_CUBIC_METER,
+        KILOGRAM_PER_CUBIC_METER = 4093,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_DECILITER)]
-        KILOGRAM_PER_DECILITER,
+        KILOGRAM_PER_DECILITER = 4098,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_LITER)]
-        KILOGRAM_PER_LITER,
+        KILOGRAM_PER_LITER = 4103,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_MICROLITER)]
-        KILOGRAM_PER_MICROLITER,
+        KILOGRAM_PER_MICROLITER = 4108,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_MILLILITER)]
-        KILOGRAM_PER_MILLILITER,
+        KILOGRAM_PER_MILLILITER = 4113,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_SQUARE_METER)]
-        KILOGRAM_PER_SQUARE_METER,
+        KILOGRAM_PER_SQUARE_METER = 6677521,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOLITER)]
-        KILOLITER,
+        KILOLITER = 4118,
         [EnumMember(Value = DocConstantUnitsOfMeasure.KILOMOLE)]
-        KILOMOLE,
+        KILOMOLE = 4123,
         [EnumMember(Value = DocConstantUnitsOfMeasure.LITER)]
-        LITER,
+        LITER = 4128,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MEGABECQUEREL)]
-        MEGABECQUEREL,
+        MEGABECQUEREL = 4133,
         [EnumMember(Value = DocConstantUnitsOfMeasure.METER)]
-        METER,
+        METER = 4138,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICRO_INTERNATIONAL_UNIT_PER_MILLILITER)]
-        MICRO_INTERNATIONAL_UNIT_PER_MILLILITER,
+        MICRO_INTERNATIONAL_UNIT_PER_MILLILITER = 4143,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROCURIE)]
-        MICROCURIE,
+        MICROCURIE = 4148,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM)]
-        MICROGRAM,
+        MICROGRAM = 4153,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_DECILITER)]
-        MICROGRAM_PER_DECILITER,
+        MICROGRAM_PER_DECILITER = 4158,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_LITER)]
-        MICROGRAM_PER_LITER,
+        MICROGRAM_PER_LITER = 4163,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_MICROLITER)]
-        MICROGRAM_PER_MICROLITER,
+        MICROGRAM_PER_MICROLITER = 4168,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_MILLILITER)]
-        MICROGRAM_PER_MILLILITER,
+        MICROGRAM_PER_MILLILITER = 4173,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROLITER)]
-        MICROLITER,
+        MICROLITER = 4178,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMETER)]
-        MICROMETER,
+        MICROMETER = 4183,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_CENTIMETER)]
-        MICROMOL_PER_CUBIC_CENTIMETER,
+        MICROMOL_PER_CUBIC_CENTIMETER = 4188,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_METER)]
-        MICROMOL_PER_CUBIC_METER,
+        MICROMOL_PER_CUBIC_METER = 4193,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_MILLIMETER)]
-        MICROMOL_PER_CUBIC_MILLIMETER,
+        MICROMOL_PER_CUBIC_MILLIMETER = 4198,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_DECILITER)]
-        MICROMOL_PER_DECILITER,
+        MICROMOL_PER_DECILITER = 4203,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_LITER)]
-        MICROMOL_PER_LITER,
+        MICROMOL_PER_LITER = 4208,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOLE)]
-        MICROMOLE,
+        MICROMOLE = 4213,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLI_INTERNATIONAL_UNIT_PER_MILLILITER)]
-        MILLI_INTERNATIONAL_UNIT_PER_MILLILITER,
+        MILLI_INTERNATIONAL_UNIT_PER_MILLILITER = 4218,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLICURIE)]
-        MILLICURIE,
+        MILLICURIE = 4223,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIEQUIVALENT)]
-        MILLIEQUIVALENT,
+        MILLIEQUIVALENT = 4228,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM)]
-        MILLIGRAM,
+        MILLIGRAM = 4233,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_DECILITER)]
-        MILLIGRAM_PER_DECILITER,
+        MILLIGRAM_PER_DECILITER = 4238,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_LITER)]
-        MILLIGRAM_PER_LITER,
+        MILLIGRAM_PER_LITER = 4243,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_MICROLITER)]
-        MILLIGRAM_PER_MICROLITER,
+        MILLIGRAM_PER_MICROLITER = 4248,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_MILLILITER)]
-        MILLIGRAM_PER_MILLILITER,
+        MILLIGRAM_PER_MILLILITER = 4253,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_TEASPOON)]
-        MILLIGRAM_PER_TEASPOON,
+        MILLIGRAM_PER_TEASPOON = 4258,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLILITER)]
-        MILLILITER,
+        MILLILITER = 4263,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMETER)]
-        MILLIMETER,
+        MILLIMETER = 4268,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMETER_OF_MERCURY)]
-        MILLIMETER_OF_MERCURY,
+        MILLIMETER_OF_MERCURY = 4273,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_CENTIMETER)]
-        MILLIMOL_PER_CUBIC_CENTIMETER,
+        MILLIMOL_PER_CUBIC_CENTIMETER = 4278,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_METER)]
-        MILLIMOL_PER_CUBIC_METER,
+        MILLIMOL_PER_CUBIC_METER = 4283,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_MILLIMETER)]
-        MILLIMOL_PER_CUBIC_MILLIMETER,
+        MILLIMOL_PER_CUBIC_MILLIMETER = 4288,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_LITER)]
-        MILLIMOL_PER_LITER,
+        MILLIMOL_PER_LITER = 4293,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOLE)]
-        MILLIMOLE,
+        MILLIMOLE = 4298,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIONINTERFERONREFERENCEUNIT)]
-        MILLIONINTERFERONREFERENCEUNIT,
+        MILLIONINTERFERONREFERENCEUNIT = 4303,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIONINTERNATIONALUNIT)]
-        MILLIONINTERNATIONALUNIT,
+        MILLIONINTERNATIONALUNIT = 4308,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MILLISECOND)]
-        MILLISECOND,
+        MILLISECOND = 4313,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MINUTE)]
-        MINUTE,
+        MINUTE = 4318,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_CENTIMETER)]
-        MOL_PER_CUBIC_CENTIMETER,
+        MOL_PER_CUBIC_CENTIMETER = 4323,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_METER)]
-        MOL_PER_CUBIC_METER,
+        MOL_PER_CUBIC_METER = 4328,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_MILLIMETER)]
-        MOL_PER_CUBIC_MILLIMETER,
+        MOL_PER_CUBIC_MILLIMETER = 4333,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_LITER)]
-        MOL_PER_LITER,
+        MOL_PER_LITER = 4338,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MOLE)]
-        MOLE,
+        MOLE = 4343,
         [EnumMember(Value = DocConstantUnitsOfMeasure.MONTH)]
-        MONTH,
+        MONTH = 4348,
         [EnumMember(Value = DocConstantUnitsOfMeasure.NANOCURIE)]
-        NANOCURIE,
+        NANOCURIE = 4353,
         [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM)]
-        NANOGRAM,
+        NANOGRAM = 4358,
         [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_DECILITER)]
-        NANOGRAM_PER_DECILITER,
+        NANOGRAM_PER_DECILITER = 4363,
         [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_LITER)]
-        NANOGRAM_PER_LITER,
+        NANOGRAM_PER_LITER = 4368,
         [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_MICROLITER)]
-        NANOGRAM_PER_MICROLITER,
+        NANOGRAM_PER_MICROLITER = 4373,
         [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_MILLILITER)]
-        NANOGRAM_PER_MILLILITER,
+        NANOGRAM_PER_MILLILITER = 4378,
         [EnumMember(Value = DocConstantUnitsOfMeasure.NANOMOL_PER_LITER)]
-        NANOMOL_PER_LITER,
+        NANOMOL_PER_LITER = 4383,
         [EnumMember(Value = DocConstantUnitsOfMeasure.NANOMOLE)]
-        NANOMOLE,
+        NANOMOLE = 4388,
         [EnumMember(Value = DocConstantUnitsOfMeasure.OUNCE)]
-        OUNCE,
+        OUNCE = 4393,
         [EnumMember(Value = DocConstantUnitsOfMeasure.OUNCES)]
-        OUNCES,
+        OUNCES = 4398,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PARTSPERBILLION)]
-        PARTSPERBILLION,
+        PARTSPERBILLION = 4403,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PARTSPERMILLION)]
-        PARTSPERMILLION,
+        PARTSPERMILLION = 4408,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM)]
-        PICOGRAM,
+        PICOGRAM = 4413,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_DECILITER)]
-        PICOGRAM_PER_DECILITER,
+        PICOGRAM_PER_DECILITER = 4418,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_LITER)]
-        PICOGRAM_PER_LITER,
+        PICOGRAM_PER_LITER = 4423,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_MICROLITER)]
-        PICOGRAM_PER_MICROLITER,
+        PICOGRAM_PER_MICROLITER = 4428,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_MILLILITER)]
-        PICOGRAM_PER_MILLILITER,
+        PICOGRAM_PER_MILLILITER = 4433,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PICOMOL_PER_LITER)]
-        PICOMOL_PER_LITER,
+        PICOMOL_PER_LITER = 4438,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PICOMOLE)]
-        PICOMOLE,
+        PICOMOLE = 4443,
         [EnumMember(Value = DocConstantUnitsOfMeasure.PINT)]
-        PINT,
+        PINT = 4448,
         [EnumMember(Value = DocConstantUnitsOfMeasure.POUND)]
-        POUND,
+        POUND = 4453,
         [EnumMember(Value = DocConstantUnitsOfMeasure.QUART)]
-        QUART,
+        QUART = 4458,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SECOND)]
-        SECOND,
+        SECOND = 4463,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_DEKAMETER)]
-        SQUARE_DEKAMETER,
+        SQUARE_DEKAMETER = 4468,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_FOOT)]
-        SQUARE_FOOT,
+        SQUARE_FOOT = 4473,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_HECTOMETER)]
-        SQUARE_HECTOMETER,
+        SQUARE_HECTOMETER = 4478,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_INCH)]
-        SQUARE_INCH,
+        SQUARE_INCH = 4483,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_KILOMETER)]
-        SQUARE_KILOMETER,
+        SQUARE_KILOMETER = 4488,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_METER)]
-        SQUARE_METER,
+        SQUARE_METER = 4493,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MICROMETER)]
-        SQUARE_MICROMETER,
+        SQUARE_MICROMETER = 4498,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MILE)]
-        SQUARE_MILE,
+        SQUARE_MILE = 4503,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MILIMETER)]
-        SQUARE_MILIMETER,
+        SQUARE_MILIMETER = 4508,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_NANOMETER)]
-        SQUARE_NANOMETER,
+        SQUARE_NANOMETER = 4513,
         [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_YARD)]
-        SQUARE_YARD,
+        SQUARE_YARD = 4518,
         [EnumMember(Value = DocConstantUnitsOfMeasure.TABLESPOON)]
-        TABLESPOON,
+        TABLESPOON = 4523,
         [EnumMember(Value = DocConstantUnitsOfMeasure.TEASPOON)]
-        TEASPOON,
+        TEASPOON = 4528,
         [EnumMember(Value = DocConstantUnitsOfMeasure.TERABECQUEREL)]
-        TERABECQUEREL,
+        TERABECQUEREL = 4533,
         [EnumMember(Value = DocConstantUnitsOfMeasure.TERAGRAM)]
-        TERAGRAM,
+        TERAGRAM = 4538,
         [EnumMember(Value = DocConstantUnitsOfMeasure.WEEK)]
-        WEEK,
+        WEEK = 4543,
         [EnumMember(Value = DocConstantUnitsOfMeasure.YEAR)]
-        YEAR
+        YEAR = 4548
     }
     
     public static partial class EnumExtensions

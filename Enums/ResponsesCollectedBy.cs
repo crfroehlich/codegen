@@ -48,31 +48,31 @@ namespace Services.Enums
     public enum ResponsesCollectedByEnm
     {
         [EnumMember(Value = DocConstantResponsesCollectedBy.CLINICAL_CARE_PROVIDER)]
-        CLINICAL_CARE_PROVIDER,
+        CLINICAL_CARE_PROVIDER = 2812,
         [EnumMember(Value = DocConstantResponsesCollectedBy.LABORATORY_TECH)]
-        LABORATORY_TECH,
+        LABORATORY_TECH = 2817,
         [EnumMember(Value = DocConstantResponsesCollectedBy.MULTIPLE)]
-        MULTIPLE,
+        MULTIPLE = 2822,
         [EnumMember(Value = DocConstantResponsesCollectedBy.NR)]
-        NR,
+        NR = 2827,
         [EnumMember(Value = DocConstantResponsesCollectedBy.OBSERVE)]
-        OBSERVE,
+        OBSERVE = 2832,
         [EnumMember(Value = DocConstantResponsesCollectedBy.PAID_CAREGIVER_STAFF)]
-        PAID_CAREGIVER_STAFF,
+        PAID_CAREGIVER_STAFF = 2837,
         [EnumMember(Value = DocConstantResponsesCollectedBy.RESEARCHER)]
-        RESEARCHER,
+        RESEARCHER = 2842,
         [EnumMember(Value = DocConstantResponsesCollectedBy.SELF)]
-        SELF,
+        SELF = 2847,
         [EnumMember(Value = DocConstantResponsesCollectedBy.STUDY_INVESTIGATOR)]
-        STUDY_INVESTIGATOR,
+        STUDY_INVESTIGATOR = 2852,
         [EnumMember(Value = DocConstantResponsesCollectedBy.SURGEON)]
-        SURGEON,
+        SURGEON = 2857,
         [EnumMember(Value = DocConstantResponsesCollectedBy.TEACHER)]
-        TEACHER,
+        TEACHER = 2862,
         [EnumMember(Value = DocConstantResponsesCollectedBy.UNCLEAR)]
-        UNCLEAR,
+        UNCLEAR = 2867,
         [EnumMember(Value = DocConstantResponsesCollectedBy.UNPAID_CAREGIVER_FAMILY)]
-        UNPAID_CAREGIVER_FAMILY
+        UNPAID_CAREGIVER_FAMILY = 2872
     }
     
     public static partial class EnumExtensions

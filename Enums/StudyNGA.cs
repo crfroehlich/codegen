@@ -48,29 +48,29 @@ namespace Services.Enums
     public enum StudyNGAEnm
     {
         [EnumMember(Value = DocConstantStudyNGA.COMPLETED_FINISHED)]
-        COMPLETED_FINISHED,
+        COMPLETED_FINISHED = 3413,
         [EnumMember(Value = DocConstantStudyNGA.CROSSOVER)]
-        CROSSOVER,
+        CROSSOVER = 3418,
         [EnumMember(Value = DocConstantStudyNGA.DRUG_DISCONTINUATION)]
-        DRUG_DISCONTINUATION,
+        DRUG_DISCONTINUATION = 3423,
         [EnumMember(Value = DocConstantStudyNGA.ENROLLED)]
-        ENROLLED,
+        ENROLLED = 3428,
         [EnumMember(Value = DocConstantStudyNGA.ITT)]
-        ITT,
+        ITT = 3433,
         [EnumMember(Value = DocConstantStudyNGA.MODIFIED_ITT)]
-        MODIFIED_ITT,
+        MODIFIED_ITT = 3438,
         [EnumMember(Value = DocConstantStudyNGA.PARTICIPANTS_INITIATED_STUDY)]
-        PARTICIPANTS_INITIATED_STUDY,
+        PARTICIPANTS_INITIATED_STUDY = 3443,
         [EnumMember(Value = DocConstantStudyNGA.PP)]
-        PP,
+        PP = 3448,
         [EnumMember(Value = DocConstantStudyNGA.RECRUITED)]
-        RECRUITED,
+        RECRUITED = 3453,
         [EnumMember(Value = DocConstantStudyNGA.SAFETY)]
-        SAFETY,
+        SAFETY = 3458,
         [EnumMember(Value = DocConstantStudyNGA.SCREENED)]
-        SCREENED,
+        SCREENED = 3463,
         [EnumMember(Value = DocConstantStudyNGA.STUDY_WITHDRAWALS)]
-        STUDY_WITHDRAWALS
+        STUDY_WITHDRAWALS = 3468
     }
     
     public static partial class EnumExtensions

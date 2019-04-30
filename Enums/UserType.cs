@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum UserTypeEnm
     {
         [EnumMember(Value = DocConstantUserType.CLIENT)]
-        CLIENT,
+        CLIENT = 4728,
         [EnumMember(Value = DocConstantUserType.DIVISION)]
-        DIVISION,
+        DIVISION = 4733,
         [EnumMember(Value = DocConstantUserType.USER)]
-        USER
+        USER = 4738
     }
     
     public static partial class EnumExtensions

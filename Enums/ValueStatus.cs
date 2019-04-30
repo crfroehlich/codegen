@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum ValueStatusEnm
     {
         [EnumMember(Value = DocConstantValueStatus.COLLECTED)]
-        COLLECTED,
+        COLLECTED = 4743,
         [EnumMember(Value = DocConstantValueStatus.NOT_AVAILABLE)]
-        NOT_AVAILABLE,
+        NOT_AVAILABLE = 146157850,
         [EnumMember(Value = DocConstantValueStatus.NOT_COLLECTED)]
-        NOT_COLLECTED,
+        NOT_COLLECTED = 4748,
         [EnumMember(Value = DocConstantValueStatus.NOT_REPORTED)]
-        NOT_REPORTED,
+        NOT_REPORTED = 4753,
         [EnumMember(Value = DocConstantValueStatus.REQUESTED)]
-        REQUESTED
+        REQUESTED = 4758
     }
     
     public static partial class EnumExtensions

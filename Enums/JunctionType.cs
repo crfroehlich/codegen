@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum JunctionTypeEnm
     {
         [EnumMember(Value = DocConstantJunctionType.APPROVAL)]
-        APPROVAL,
+        APPROVAL = 74232474,
         [EnumMember(Value = DocConstantJunctionType.COMMENT)]
-        COMMENT,
+        COMMENT = 74232475,
         [EnumMember(Value = DocConstantJunctionType.FLAGGED_FOR_APPROVAL)]
-        FLAGGED_FOR_APPROVAL,
+        FLAGGED_FOR_APPROVAL = 74232476,
         [EnumMember(Value = DocConstantJunctionType.RATING)]
-        RATING
+        RATING = 74232477
     }
     
     public static partial class EnumExtensions

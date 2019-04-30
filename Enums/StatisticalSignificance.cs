@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum StatisticalSignificanceEnm
     {
         [EnumMember(Value = DocConstantStatisticalSignificance.NS)]
-        NS,
+        NS = 2952,
         [EnumMember(Value = DocConstantStatisticalSignificance.NSS)]
-        NSS,
+        NSS = 2957,
         [EnumMember(Value = DocConstantStatisticalSignificance.S)]
-        S,
+        S = 2962,
         [EnumMember(Value = DocConstantStatisticalSignificance.SS)]
-        SS,
+        SS = 2967,
         [EnumMember(Value = DocConstantStatisticalSignificance.UNKNOWN)]
-        UNKNOWN
+        UNKNOWN = 2972
     }
     
     public static partial class EnumExtensions

@@ -48,19 +48,19 @@ namespace Services.Enums
     public enum ScopeEnm
     {
         [EnumMember(Value = DocConstantScope.APP)]
-        APP,
+        APP = 76351785,
         [EnumMember(Value = DocConstantScope.CLIENT)]
-        CLIENT,
+        CLIENT = 67058051,
         [EnumMember(Value = DocConstantScope.COMPOUND)]
-        COMPOUND,
+        COMPOUND = 76351620,
         [EnumMember(Value = DocConstantScope.DOCUMENTSET)]
-        DOCUMENTSET,
+        DOCUMENTSET = 67058052,
         [EnumMember(Value = DocConstantScope.GLOBAL)]
-        GLOBAL,
+        GLOBAL = 76351784,
         [EnumMember(Value = DocConstantScope.TEAM)]
-        TEAM,
+        TEAM = 76351786,
         [EnumMember(Value = DocConstantScope.USER)]
-        USER
+        USER = 67058050
     }
     
     public static partial class EnumExtensions

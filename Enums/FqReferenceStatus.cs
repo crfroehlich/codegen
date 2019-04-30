@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum FqReferenceStatusEnm
     {
         [EnumMember(Value = DocConstantFqReferenceStatus.ASSIGNED)]
-        ASSIGNED,
+        ASSIGNED = 77289732,
         [EnumMember(Value = DocConstantFqReferenceStatus.HOLD)]
-        HOLD,
+        HOLD = 77289733,
         [EnumMember(Value = DocConstantFqReferenceStatus.REJECTED)]
-        REJECTED,
+        REJECTED = 77289735,
         [EnumMember(Value = DocConstantFqReferenceStatus.REVIEW)]
-        REVIEW,
+        REVIEW = 77289734,
         [EnumMember(Value = DocConstantFqReferenceStatus.UPLOADED)]
-        UPLOADED
+        UPLOADED = 77289736
     }
     
     public static partial class EnumExtensions

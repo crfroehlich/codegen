@@ -48,27 +48,27 @@ namespace Services.Enums
     public enum InterventionTypeEnm
     {
         [EnumMember(Value = DocConstantInterventionType.ACCURACY_OUTCOMES)]
-        ACCURACY_OUTCOMES,
+        ACCURACY_OUTCOMES = 96669191,
         [EnumMember(Value = DocConstantInterventionType.CLINICAL_OUTCOMES)]
-        CLINICAL_OUTCOMES,
+        CLINICAL_OUTCOMES = 96669192,
         [EnumMember(Value = DocConstantInterventionType.COST_EFFECTIVENESS)]
-        COST_EFFECTIVENESS,
+        COST_EFFECTIVENESS = 96669193,
         [EnumMember(Value = DocConstantInterventionType.GENE_TRANSFER)]
-        GENE_TRANSFER,
+        GENE_TRANSFER = 96669194,
         [EnumMember(Value = DocConstantInterventionType.INFORMATIONAL_MATERIAL)]
-        INFORMATIONAL_MATERIAL,
+        INFORMATIONAL_MATERIAL = 1502,
         [EnumMember(Value = DocConstantInterventionType.MINERALS)]
-        MINERALS,
+        MINERALS = 96669195,
         [EnumMember(Value = DocConstantInterventionType.QUALITY_OF_LIFE)]
-        QUALITY_OF_LIFE,
+        QUALITY_OF_LIFE = 96669196,
         [EnumMember(Value = DocConstantInterventionType.RECOMBINANT_DNA)]
-        RECOMBINANT_DNA,
+        RECOMBINANT_DNA = 96669197,
         [EnumMember(Value = DocConstantInterventionType.SESSION_MEETING)]
-        SESSION_MEETING,
+        SESSION_MEETING = 1507,
         [EnumMember(Value = DocConstantInterventionType.STEM_CELL)]
-        STEM_CELL,
+        STEM_CELL = 96669198,
         [EnumMember(Value = DocConstantInterventionType.VITAMINS)]
-        VITAMINS
+        VITAMINS = 96669199
     }
     
     public static partial class EnumExtensions

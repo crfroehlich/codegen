@@ -48,21 +48,21 @@ namespace Services.Enums
     public enum ConjunctionEnm
     {
         [EnumMember(Value = DocConstantConjunction.AND)]
-        AND,
+        AND = 582,
         [EnumMember(Value = DocConstantConjunction.AND_NOT)]
-        AND_NOT,
+        AND_NOT = 587,
         [EnumMember(Value = DocConstantConjunction.AND_OR)]
-        AND_OR,
+        AND_OR = 592,
         [EnumMember(Value = DocConstantConjunction.BETWEEN)]
-        BETWEEN,
+        BETWEEN = 597,
         [EnumMember(Value = DocConstantConjunction.EXCEPT)]
-        EXCEPT,
+        EXCEPT = 17610999,
         [EnumMember(Value = DocConstantConjunction.OR)]
-        OR,
+        OR = 602,
         [EnumMember(Value = DocConstantConjunction.OR_NOT)]
-        OR_NOT,
+        OR_NOT = 607,
         [EnumMember(Value = DocConstantConjunction.WITH_WITHOUT)]
-        WITH_WITHOUT
+        WITH_WITHOUT = 23807242
     }
     
     public static partial class EnumExtensions

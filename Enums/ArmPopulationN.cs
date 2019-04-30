@@ -48,29 +48,29 @@ namespace Services.Enums
     public enum ArmPopulationNEnm
     {
         [EnumMember(Value = DocConstantArmPopulationN.COMPLETED)]
-        COMPLETED,
+        COMPLETED = 183,
         [EnumMember(Value = DocConstantArmPopulationN.CROSSOVER)]
-        CROSSOVER,
+        CROSSOVER = 188,
         [EnumMember(Value = DocConstantArmPopulationN.ENROLLED)]
-        ENROLLED,
+        ENROLLED = 193,
         [EnumMember(Value = DocConstantArmPopulationN.INITIATED_STUDY)]
-        INITIATED_STUDY,
+        INITIATED_STUDY = 198,
         [EnumMember(Value = DocConstantArmPopulationN.ITT)]
-        ITT,
+        ITT = 203,
         [EnumMember(Value = DocConstantArmPopulationN.MODIFIED_ITT)]
-        MODIFIED_ITT,
+        MODIFIED_ITT = 208,
         [EnumMember(Value = DocConstantArmPopulationN.PARTICIPANTS)]
-        PARTICIPANTS,
+        PARTICIPANTS = 213,
         [EnumMember(Value = DocConstantArmPopulationN.PP)]
-        PP,
+        PP = 218,
         [EnumMember(Value = DocConstantArmPopulationN.RANDOMIZED)]
-        RANDOMIZED,
+        RANDOMIZED = 223,
         [EnumMember(Value = DocConstantArmPopulationN.RECRUITED)]
-        RECRUITED,
+        RECRUITED = 228,
         [EnumMember(Value = DocConstantArmPopulationN.SAFETY)]
-        SAFETY,
+        SAFETY = 233,
         [EnumMember(Value = DocConstantArmPopulationN.SCREENED)]
-        SCREENED
+        SCREENED = 238
     }
     
     public static partial class EnumExtensions

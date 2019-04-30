@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StudyTypeHarmEtiologyEnm
     {
         [EnumMember(Value = DocConstantStudyTypeHarmEtiology.CAUSATION)]
-        CAUSATION,
+        CAUSATION = 3733,
         [EnumMember(Value = DocConstantStudyTypeHarmEtiology.ETIOLOGY)]
-        ETIOLOGY,
+        ETIOLOGY = 3738,
         [EnumMember(Value = DocConstantStudyTypeHarmEtiology.HARM)]
-        HARM,
+        HARM = 3743,
         [EnumMember(Value = DocConstantStudyTypeHarmEtiology.RISK)]
-        RISK
+        RISK = 3748
     }
     
     public static partial class EnumExtensions

@@ -48,21 +48,21 @@ namespace Services.Enums
     public enum VariableRuleEnm
     {
         [EnumMember(Value = DocConstantVariableRule.ADDITION)]
-        ADDITION,
+        ADDITION = 69422931,
         [EnumMember(Value = DocConstantVariableRule.AGGREGATION)]
-        AGGREGATION,
+        AGGREGATION = 69422932,
         [EnumMember(Value = DocConstantVariableRule.AUTHOR_ERROR)]
-        AUTHOR_ERROR,
+        AUTHOR_ERROR = 69422933,
         [EnumMember(Value = DocConstantVariableRule.CORRECTION)]
-        CORRECTION,
+        CORRECTION = 69422934,
         [EnumMember(Value = DocConstantVariableRule.CUSTOMIZATION)]
-        CUSTOMIZATION,
+        CUSTOMIZATION = 69422935,
         [EnumMember(Value = DocConstantVariableRule.INVERSION)]
-        INVERSION,
+        INVERSION = 69422936,
         [EnumMember(Value = DocConstantVariableRule.NORMALIZATION)]
-        NORMALIZATION,
+        NORMALIZATION = 69422937,
         [EnumMember(Value = DocConstantVariableRule.STUDY_EDIT)]
-        STUDY_EDIT
+        STUDY_EDIT = 69422938
     }
     
     public static partial class EnumExtensions

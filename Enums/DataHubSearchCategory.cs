@@ -48,23 +48,23 @@ namespace Services.Enums
     public enum DataHubSearchCategoryEnm
     {
         [EnumMember(Value = DocConstantDataHubSearchCategory.CharacteristicVariables)]
-        CharacteristicVariables,
+        CharacteristicVariables = 612,
         [EnumMember(Value = DocConstantDataHubSearchCategory.InterventionalStudies)]
-        InterventionalStudies,
+        InterventionalStudies = 617,
         [EnumMember(Value = DocConstantDataHubSearchCategory.NhanesPrevalence)]
-        NhanesPrevalence,
+        NhanesPrevalence = 622,
         [EnumMember(Value = DocConstantDataHubSearchCategory.ObservationalStudies)]
-        ObservationalStudies,
+        ObservationalStudies = 627,
         [EnumMember(Value = DocConstantDataHubSearchCategory.OutcomeVariables)]
-        OutcomeVariables,
+        OutcomeVariables = 632,
         [EnumMember(Value = DocConstantDataHubSearchCategory.TitleOnly)]
-        TitleOnly,
+        TitleOnly = 637,
         [EnumMember(Value = DocConstantDataHubSearchCategory.TitlesAndAbstracts)]
-        TitlesAndAbstracts,
+        TitlesAndAbstracts = 642,
         [EnumMember(Value = DocConstantDataHubSearchCategory.UkProductLabels)]
-        UkProductLabels,
+        UkProductLabels = 647,
         [EnumMember(Value = DocConstantDataHubSearchCategory.UsProductLabels)]
-        UsProductLabels
+        UsProductLabels = 652
     }
     
     public static partial class EnumExtensions

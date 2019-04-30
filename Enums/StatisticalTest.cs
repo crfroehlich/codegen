@@ -48,37 +48,37 @@ namespace Services.Enums
     public enum StatisticalTestEnm
     {
         [EnumMember(Value = DocConstantStatisticalTest.BINOMIAL_TEST)]
-        BINOMIAL_TEST,
+        BINOMIAL_TEST = 2977,
         [EnumMember(Value = DocConstantStatisticalTest.CHI_SQUARE_GOODNESS_OF_FIT)]
-        CHI_SQUARE_GOODNESS_OF_FIT,
+        CHI_SQUARE_GOODNESS_OF_FIT = 2982,
         [EnumMember(Value = DocConstantStatisticalTest.CHI_SQUARE_TEST)]
-        CHI_SQUARE_TEST,
+        CHI_SQUARE_TEST = 2987,
         [EnumMember(Value = DocConstantStatisticalTest.FISHERS_EXACT_TEST)]
-        FISHERS_EXACT_TEST,
+        FISHERS_EXACT_TEST = 2992,
         [EnumMember(Value = DocConstantStatisticalTest.INDEPENDENT)]
-        INDEPENDENT,
+        INDEPENDENT = 2997,
         [EnumMember(Value = DocConstantStatisticalTest.KRUSKAL_WALLIS)]
-        KRUSKAL_WALLIS,
+        KRUSKAL_WALLIS = 3002,
         [EnumMember(Value = DocConstantStatisticalTest.MCNEMAR)]
-        MCNEMAR,
+        MCNEMAR = 3007,
         [EnumMember(Value = DocConstantStatisticalTest.ONE_SAMPLE_MEDIAN)]
-        ONE_SAMPLE_MEDIAN,
+        ONE_SAMPLE_MEDIAN = 3012,
         [EnumMember(Value = DocConstantStatisticalTest.ONE_SAMPLE_T_TEST)]
-        ONE_SAMPLE_T_TEST,
+        ONE_SAMPLE_T_TEST = 3017,
         [EnumMember(Value = DocConstantStatisticalTest.ONE_WAY_ANOVA)]
-        ONE_WAY_ANOVA,
+        ONE_WAY_ANOVA = 3022,
         [EnumMember(Value = DocConstantStatisticalTest.OVERLAPPING_TWO_SAMPLE_T_TEST)]
-        OVERLAPPING_TWO_SAMPLE_T_TEST,
+        OVERLAPPING_TWO_SAMPLE_T_TEST = 3027,
         [EnumMember(Value = DocConstantStatisticalTest.PAIRED_T_TEST)]
-        PAIRED_T_TEST,
+        PAIRED_T_TEST = 3032,
         [EnumMember(Value = DocConstantStatisticalTest.SAMPLE_T_TEST)]
-        SAMPLE_T_TEST,
+        SAMPLE_T_TEST = 3037,
         [EnumMember(Value = DocConstantStatisticalTest.STUDENT_T_TEST)]
-        STUDENT_T_TEST,
+        STUDENT_T_TEST = 3042,
         [EnumMember(Value = DocConstantStatisticalTest.WILCOXON_MANN_WHITNEY_TEST)]
-        WILCOXON_MANN_WHITNEY_TEST,
+        WILCOXON_MANN_WHITNEY_TEST = 3047,
         [EnumMember(Value = DocConstantStatisticalTest.WILCOXON_SIGNED_RANKS_TEST)]
-        WILCOXON_SIGNED_RANKS_TEST
+        WILCOXON_SIGNED_RANKS_TEST = 3052
     }
     
     public static partial class EnumExtensions

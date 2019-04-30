@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum UserEmployeeTypeEnm
     {
         [EnumMember(Value = DocConstantUserEmployeeType.CLIENT)]
-        CLIENT,
+        CLIENT = 76351791,
         [EnumMember(Value = DocConstantUserEmployeeType.CONTRACTOR)]
-        CONTRACTOR,
+        CONTRACTOR = 76351790,
         [EnumMember(Value = DocConstantUserEmployeeType.EMPLOYEE)]
-        EMPLOYEE,
+        EMPLOYEE = 76351789,
         [EnumMember(Value = DocConstantUserEmployeeType.VENDOR)]
-        VENDOR
+        VENDOR = 76351792
     }
     
     public static partial class EnumExtensions

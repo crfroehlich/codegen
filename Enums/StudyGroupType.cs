@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum StudyGroupTypeEnm
     {
         [EnumMember(Value = DocConstantStudyGroupType.ARM)]
-        ARM,
+        ARM = 3393,
         [EnumMember(Value = DocConstantStudyGroupType.AUTHOR_CALCULATED)]
-        AUTHOR_CALCULATED
+        AUTHOR_CALCULATED = 3398
     }
     
     public static partial class EnumExtensions

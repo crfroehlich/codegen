@@ -48,49 +48,49 @@ namespace Services.Enums
     public enum InterventionScheduleEnm
     {
         [EnumMember(Value = DocConstantInterventionSchedule.AFTERNOON)]
-        AFTERNOON,
+        AFTERNOON = 1382,
         [EnumMember(Value = DocConstantInterventionSchedule.BEDTIME)]
-        BEDTIME,
+        BEDTIME = 1387,
         [EnumMember(Value = DocConstantInterventionSchedule.BREAKFAST)]
-        BREAKFAST,
+        BREAKFAST = 1392,
         [EnumMember(Value = DocConstantInterventionSchedule.DAILY)]
-        DAILY,
+        DAILY = 1397,
         [EnumMember(Value = DocConstantInterventionSchedule.DINNER)]
-        DINNER,
+        DINNER = 1402,
         [EnumMember(Value = DocConstantInterventionSchedule.EVENING)]
-        EVENING,
+        EVENING = 1407,
         [EnumMember(Value = DocConstantInterventionSchedule.INTRAOPERATIVE)]
-        INTRAOPERATIVE,
+        INTRAOPERATIVE = 1412,
         [EnumMember(Value = DocConstantInterventionSchedule.LUNCH)]
-        LUNCH,
+        LUNCH = 1417,
         [EnumMember(Value = DocConstantInterventionSchedule.MORNING)]
-        MORNING,
+        MORNING = 1422,
         [EnumMember(Value = DocConstantInterventionSchedule.PERI_OP)]
-        PERI_OP,
+        PERI_OP = 1427,
         [EnumMember(Value = DocConstantInterventionSchedule.POST_BREAKFAST)]
-        POST_BREAKFAST,
+        POST_BREAKFAST = 1432,
         [EnumMember(Value = DocConstantInterventionSchedule.POST_DIAGNOSTIC)]
-        POST_DIAGNOSTIC,
+        POST_DIAGNOSTIC = 1437,
         [EnumMember(Value = DocConstantInterventionSchedule.POST_DINNER)]
-        POST_DINNER,
+        POST_DINNER = 1442,
         [EnumMember(Value = DocConstantInterventionSchedule.POST_LUNCH)]
-        POST_LUNCH,
+        POST_LUNCH = 1447,
         [EnumMember(Value = DocConstantInterventionSchedule.POST_PRANDIAL)]
-        POST_PRANDIAL,
+        POST_PRANDIAL = 1452,
         [EnumMember(Value = DocConstantInterventionSchedule.PRANDIAL)]
-        PRANDIAL,
+        PRANDIAL = 1457,
         [EnumMember(Value = DocConstantInterventionSchedule.PRE_BREAKFAST)]
-        PRE_BREAKFAST,
+        PRE_BREAKFAST = 1462,
         [EnumMember(Value = DocConstantInterventionSchedule.PRE_DIAGNOSTIC)]
-        PRE_DIAGNOSTIC,
+        PRE_DIAGNOSTIC = 1467,
         [EnumMember(Value = DocConstantInterventionSchedule.PRE_DINNER)]
-        PRE_DINNER,
+        PRE_DINNER = 1472,
         [EnumMember(Value = DocConstantInterventionSchedule.PRE_LUNCH)]
-        PRE_LUNCH,
+        PRE_LUNCH = 1477,
         [EnumMember(Value = DocConstantInterventionSchedule.PRE_POST_OP)]
-        PRE_POST_OP,
+        PRE_POST_OP = 1482,
         [EnumMember(Value = DocConstantInterventionSchedule.PRE_PRANDIAL)]
-        PRE_PRANDIAL
+        PRE_PRANDIAL = 1487
     }
     
     public static partial class EnumExtensions

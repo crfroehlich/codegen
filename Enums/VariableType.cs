@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum VariableTypeEnm
     {
         [EnumMember(Value = DocConstantVariableType.APPLIED)]
-        APPLIED,
+        APPLIED = 73104023,
         [EnumMember(Value = DocConstantVariableType.OVERRIDE)]
-        OVERRIDE,
+        OVERRIDE = 73104024,
         [EnumMember(Value = DocConstantVariableType.TEMPLATE)]
-        TEMPLATE
+        TEMPLATE = 73104025
     }
     
     public static partial class EnumExtensions

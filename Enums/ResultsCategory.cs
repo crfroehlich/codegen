@@ -48,29 +48,29 @@ namespace Services.Enums
     public enum ResultsCategoryEnm
     {
         [EnumMember(Value = DocConstantResultsCategory.ADVERSE_EVENT)]
-        ADVERSE_EVENT,
+        ADVERSE_EVENT = 79868676,
         [EnumMember(Value = DocConstantResultsCategory.CLINICAL_OUTCOME)]
-        CLINICAL_OUTCOME,
+        CLINICAL_OUTCOME = 79868677,
         [EnumMember(Value = DocConstantResultsCategory.COST_UTILIZATION)]
-        COST_UTILIZATION,
+        COST_UTILIZATION = 79868678,
         [EnumMember(Value = DocConstantResultsCategory.DEMOGRAPHICS)]
-        DEMOGRAPHICS,
+        DEMOGRAPHICS = 79868679,
         [EnumMember(Value = DocConstantResultsCategory.LABORATORY_VALUE_DIAGNOSTIC)]
-        LABORATORY_VALUE_DIAGNOSTIC,
+        LABORATORY_VALUE_DIAGNOSTIC = 79868680,
         [EnumMember(Value = DocConstantResultsCategory.MEDICAL_HISTORY)]
-        MEDICAL_HISTORY,
+        MEDICAL_HISTORY = 79868681,
         [EnumMember(Value = DocConstantResultsCategory.MISCELLANEOUS)]
-        MISCELLANEOUS,
+        MISCELLANEOUS = 79868682,
         [EnumMember(Value = DocConstantResultsCategory.MORTALITY)]
-        MORTALITY,
+        MORTALITY = 79868683,
         [EnumMember(Value = DocConstantResultsCategory.SCALES_SCORES)]
-        SCALES_SCORES,
+        SCALES_SCORES = 79868684,
         [EnumMember(Value = DocConstantResultsCategory.SOCIAL_HISTORY)]
-        SOCIAL_HISTORY,
+        SOCIAL_HISTORY = 79868685,
         [EnumMember(Value = DocConstantResultsCategory.THERAPIES)]
-        THERAPIES,
+        THERAPIES = 79868686,
         [EnumMember(Value = DocConstantResultsCategory.WITHDRAWAL_DRUG_DISCONTINUATION)]
-        WITHDRAWAL_DRUG_DISCONTINUATION
+        WITHDRAWAL_DRUG_DISCONTINUATION = 79868687
     }
     
     public static partial class EnumExtensions

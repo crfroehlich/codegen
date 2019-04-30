@@ -148,11 +148,6 @@ namespace Services.Schema
 
 
         [Field]
-        public DocEntityLookupTable Status { get; set; }
-        public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
-
-
-        [Field]
         [Association(PairTo = nameof(DocEntityTask.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTask> Tasks { get; private set; }
 
@@ -282,11 +277,6 @@ namespace Services.Schema
                 {
                     isValid = false;
                     message += " Name is a required property.";
-                }
-                if(null != Status && Status?.Enum?.Name != "WorkflowStatus")
-                {
-                    isValid = false;
-                    message += " Status is a " + Status?.Enum?.Name + ", but must be a WorkflowStatus.";
                 }
                 if(DocTools.IsNullOrEmpty(Type))
                 {

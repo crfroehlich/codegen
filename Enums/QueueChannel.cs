@@ -48,67 +48,67 @@ namespace Services.Enums
     public enum QueueChannelEnm
     {
         [EnumMember(Value = DocConstantQueueChannel.PORTAL_AUDIT)]
-        PORTAL_AUDIT,
+        PORTAL_AUDIT = 139850941,
         [EnumMember(Value = DocConstantQueueChannel.PORTAL_BACKGROUND_TASK)]
-        PORTAL_BACKGROUND_TASK,
+        PORTAL_BACKGROUND_TASK = 139850942,
         [EnumMember(Value = DocConstantQueueChannel.PORTAL_NOTIFICATION)]
-        PORTAL_NOTIFICATION,
+        PORTAL_NOTIFICATION = 139850943,
         [EnumMember(Value = DocConstantQueueChannel.PORTAL_USER_UPDATE)]
-        PORTAL_USER_UPDATE,
+        PORTAL_USER_UPDATE = 139850944,
         [EnumMember(Value = DocConstantQueueChannel.QUEUE_ERROR)]
-        QUEUE_ERROR,
+        QUEUE_ERROR = 139850945,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_AUDIT)]
-        SERVICES_AUDIT,
+        SERVICES_AUDIT = 139850946,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_AUDIT_FAILURES)]
-        SERVICES_AUDIT_FAILURES,
+        SERVICES_AUDIT_FAILURES = 139850947,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_DOCUMENT_IMPORT)]
-        SERVICES_DOCUMENT_IMPORT,
+        SERVICES_DOCUMENT_IMPORT = 146157835,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_DOCUMENT_UPDATE)]
-        SERVICES_DOCUMENT_UPDATE,
+        SERVICES_DOCUMENT_UPDATE = 139850949,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_ERRORS)]
-        SERVICES_ERRORS,
+        SERVICES_ERRORS = 150784182,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_EXTRACT_ANNOTATION)]
-        SERVICES_EXTRACT_ANNOTATION,
+        SERVICES_EXTRACT_ANNOTATION = 150784183,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_EXTRACT_NOTIFICATION)]
-        SERVICES_EXTRACT_NOTIFICATION,
+        SERVICES_EXTRACT_NOTIFICATION = 139850950,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_HEARTBEAT)]
-        SERVICES_HEARTBEAT,
+        SERVICES_HEARTBEAT = 139850951,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS)]
-        SERVICES_LOGS,
+        SERVICES_LOGS = 146157836,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS_TO_SEGMENT)]
-        SERVICES_LOGS_TO_SEGMENT,
+        SERVICES_LOGS_TO_SEGMENT = 146157837,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS_TO_SLACK)]
-        SERVICES_LOGS_TO_SLACK,
+        SERVICES_LOGS_TO_SLACK = 146157838,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_LOGS_TO_STACKIFY)]
-        SERVICES_LOGS_TO_STACKIFY,
+        SERVICES_LOGS_TO_STACKIFY = 146157839,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_METADATA_UPDATE)]
-        SERVICES_METADATA_UPDATE,
+        SERVICES_METADATA_UPDATE = 150784184,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_SALESFORCE)]
-        SERVICES_SALESFORCE,
+        SERVICES_SALESFORCE = 146157840,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_SLACK)]
-        SERVICES_SLACK,
+        SERVICES_SLACK = 139850957,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_TEAM_SERVE)]
-        SERVICES_TEAM_SERVE,
+        SERVICES_TEAM_SERVE = 150784185,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_SESSION)]
-        SERVICES_USER_SESSION,
+        SERVICES_USER_SESSION = 139850958,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE)]
-        SERVICES_USER_UPDATE,
+        SERVICES_USER_UPDATE = 139850959,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_ARCHIVING)]
-        SERVICES_USER_UPDATE_ARCHIVING,
+        SERVICES_USER_UPDATE_ARCHIVING = 146157841,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_BROADCASTS)]
-        SERVICES_USER_UPDATE_BROADCASTS,
+        SERVICES_USER_UPDATE_BROADCASTS = 146157842,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT)]
-        SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT,
+        SERVICES_USER_UPDATE_DOCUMENT_ASSIGNMENT = 146157843,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_IMPORTS)]
-        SERVICES_USER_UPDATE_DOCUMENT_IMPORTS,
+        SERVICES_USER_UPDATE_DOCUMENT_IMPORTS = 146157844,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT)]
-        SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT,
+        SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT = 146157845,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_ROLES)]
-        SERVICES_USER_UPDATE_ROLES,
+        SERVICES_USER_UPDATE_ROLES = 146157846,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_SHARING)]
-        SERVICES_USER_UPDATE_SHARING,
+        SERVICES_USER_UPDATE_SHARING = 146157847,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_TEAMS)]
-        SERVICES_USER_UPDATE_TEAMS
+        SERVICES_USER_UPDATE_TEAMS = 146157848
     }
     
     public static partial class EnumExtensions

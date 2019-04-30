@@ -48,19 +48,19 @@ namespace Services.Enums
     public enum AttributeTypeEnm
     {
         [EnumMember(Value = DocConstantAttributeType.CHANGE)]
-        CHANGE,
+        CHANGE = 322,
         [EnumMember(Value = DocConstantAttributeType.DURATION)]
-        DURATION,
+        DURATION = 327,
         [EnumMember(Value = DocConstantAttributeType.NOT_IN_STUDY)]
-        NOT_IN_STUDY,
+        NOT_IN_STUDY = 332,
         [EnumMember(Value = DocConstantAttributeType.PERCENT_CHANGE)]
-        PERCENT_CHANGE,
+        PERCENT_CHANGE = 337,
         [EnumMember(Value = DocConstantAttributeType.STANDARD)]
-        STANDARD,
+        STANDARD = 342,
         [EnumMember(Value = DocConstantAttributeType.TIME_SINCE)]
-        TIME_SINCE,
+        TIME_SINCE = 347,
         [EnumMember(Value = DocConstantAttributeType.TIME_TO)]
-        TIME_TO
+        TIME_TO = 352
     }
     
     public static partial class EnumExtensions

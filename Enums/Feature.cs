@@ -48,61 +48,61 @@ namespace Services.Enums
     public enum FeatureEnm
     {
         [EnumMember(Value = DocConstantFeature.ACCESS_BACKEND)]
-        ACCESS_BACKEND,
+        ACCESS_BACKEND = 139850787,
         [EnumMember(Value = DocConstantFeature.ALL_ENTITIES)]
-        ALL_ENTITIES,
+        ALL_ENTITIES = 146157829,
         [EnumMember(Value = DocConstantFeature.ALL_PAGES)]
-        ALL_PAGES,
+        ALL_PAGES = 139850793,
         [EnumMember(Value = DocConstantFeature.ALL_STUDY_SETS)]
-        ALL_STUDY_SETS,
+        ALL_STUDY_SETS = 139850794,
         [EnumMember(Value = DocConstantFeature.ALPHA_TESTING)]
-        ALPHA_TESTING,
+        ALPHA_TESTING = 139850795,
         [EnumMember(Value = DocConstantFeature.AUDITING)]
-        AUDITING,
+        AUDITING = 139850796,
         [EnumMember(Value = DocConstantFeature.BINDINGS_ADMIN)]
-        BINDINGS_ADMIN,
+        BINDINGS_ADMIN = 139850797,
         [EnumMember(Value = DocConstantFeature.CLIENT_BINDING)]
-        CLIENT_BINDING,
+        CLIENT_BINDING = 139850798,
         [EnumMember(Value = DocConstantFeature.CONTRACT_ONBOARDING_REPORT)]
-        CONTRACT_ONBOARDING_REPORT,
+        CONTRACT_ONBOARDING_REPORT = 139850799,
         [EnumMember(Value = DocConstantFeature.DEBUG)]
-        DEBUG,
+        DEBUG = 139850800,
         [EnumMember(Value = DocConstantFeature.DISPLAY_BROADCASTS)]
-        DISPLAY_BROADCASTS,
+        DISPLAY_BROADCASTS = 139850801,
         [EnumMember(Value = DocConstantFeature.DISPLAY_NOTIFICATIONS)]
-        DISPLAY_NOTIFICATIONS,
+        DISPLAY_NOTIFICATIONS = 139850802,
         [EnumMember(Value = DocConstantFeature.DOCUMENT_SET_ACCESS)]
-        DOCUMENT_SET_ACCESS,
+        DOCUMENT_SET_ACCESS = 146157830,
         [EnumMember(Value = DocConstantFeature.ERROR_REPORTS)]
-        ERROR_REPORTS,
+        ERROR_REPORTS = 139850803,
         [EnumMember(Value = DocConstantFeature.EXTRACTION)]
-        EXTRACTION,
+        EXTRACTION = 139850804,
         [EnumMember(Value = DocConstantFeature.IMPERSONATION)]
-        IMPERSONATION,
+        IMPERSONATION = 139850805,
         [EnumMember(Value = DocConstantFeature.LIVE_CHAT)]
-        LIVE_CHAT,
+        LIVE_CHAT = 139850806,
         [EnumMember(Value = DocConstantFeature.PRODUCTION_REPORT)]
-        PRODUCTION_REPORT,
+        PRODUCTION_REPORT = 139850807,
         [EnumMember(Value = DocConstantFeature.PRODUCTION_RESET)]
-        PRODUCTION_RESET,
+        PRODUCTION_RESET = 139850808,
         [EnumMember(Value = DocConstantFeature.PROTOCOL_ADMIN)]
-        PROTOCOL_ADMIN,
+        PROTOCOL_ADMIN = 139850809,
         [EnumMember(Value = DocConstantFeature.QC)]
-        QC,
+        QC = 139850810,
         [EnumMember(Value = DocConstantFeature.RELEVANCE_RATING)]
-        RELEVANCE_RATING,
+        RELEVANCE_RATING = 139850811,
         [EnumMember(Value = DocConstantFeature.RISK_OF_BIAS)]
-        RISK_OF_BIAS,
+        RISK_OF_BIAS = 146157831,
         [EnumMember(Value = DocConstantFeature.SALESFORCE_DATA)]
-        SALESFORCE_DATA,
+        SALESFORCE_DATA = 139850812,
         [EnumMember(Value = DocConstantFeature.SHARING)]
-        SHARING,
+        SHARING = 146157832,
         [EnumMember(Value = DocConstantFeature.SUBMIT_FEEDBACK)]
-        SUBMIT_FEEDBACK,
+        SUBMIT_FEEDBACK = 139850816,
         [EnumMember(Value = DocConstantFeature.TERMS_ADMIN)]
-        TERMS_ADMIN,
+        TERMS_ADMIN = 139850817,
         [EnumMember(Value = DocConstantFeature.WORKFLOW_ACCESS)]
-        WORKFLOW_ACCESS
+        WORKFLOW_ACCESS = 146157833
     }
     
     public static partial class EnumExtensions

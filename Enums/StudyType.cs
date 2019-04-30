@@ -48,23 +48,23 @@ namespace Services.Enums
     public enum StudyTypeEnm
     {
         [EnumMember(Value = DocConstantStudyType.CAUSATION_ETIOLOGY)]
-        CAUSATION_ETIOLOGY,
+        CAUSATION_ETIOLOGY = 3688,
         [EnumMember(Value = DocConstantStudyType.DIAGNOSIS)]
-        DIAGNOSIS,
+        DIAGNOSIS = 3693,
         [EnumMember(Value = DocConstantStudyType.HARM)]
-        HARM,
+        HARM = 3698,
         [EnumMember(Value = DocConstantStudyType.MODELING)]
-        MODELING,
+        MODELING = 3703,
         [EnumMember(Value = DocConstantStudyType.OTHER)]
-        OTHER,
+        OTHER = 3708,
         [EnumMember(Value = DocConstantStudyType.PREVALENCE)]
-        PREVALENCE,
+        PREVALENCE = 3713,
         [EnumMember(Value = DocConstantStudyType.PREVENTION_RISK)]
-        PREVENTION_RISK,
+        PREVENTION_RISK = 3718,
         [EnumMember(Value = DocConstantStudyType.PROGNOSIS)]
-        PROGNOSIS,
+        PROGNOSIS = 3723,
         [EnumMember(Value = DocConstantStudyType.THERAPY)]
-        THERAPY
+        THERAPY = 3728
     }
     
     public static partial class EnumExtensions

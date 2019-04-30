@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StudyAllocattionMethodEnm
     {
         [EnumMember(Value = DocConstantStudyAllocattionMethod.OPAQUE_ENVELOPES)]
-        OPAQUE_ENVELOPES,
+        OPAQUE_ENVELOPES = 3072,
         [EnumMember(Value = DocConstantStudyAllocattionMethod.RANDOM_NUMBER_GENERATOR)]
-        RANDOM_NUMBER_GENERATOR,
+        RANDOM_NUMBER_GENERATOR = 3077,
         [EnumMember(Value = DocConstantStudyAllocattionMethod.ROLLING_DICE)]
-        ROLLING_DICE,
+        ROLLING_DICE = 3082,
         [EnumMember(Value = DocConstantStudyAllocattionMethod.SEQUENCE_ALLOCATION)]
-        SEQUENCE_ALLOCATION
+        SEQUENCE_ALLOCATION = 3087
     }
     
     public static partial class EnumExtensions

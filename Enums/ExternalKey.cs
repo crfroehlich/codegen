@@ -48,17 +48,17 @@ namespace Services.Enums
     public enum ExternalKeyEnm
     {
         [EnumMember(Value = DocConstantExternalKey.ATTRIBUTE_NAME_ID)]
-        ATTRIBUTE_NAME_ID,
+        ATTRIBUTE_NAME_ID = 842,
         [EnumMember(Value = DocConstantExternalKey.FILTER)]
-        FILTER,
+        FILTER = 10483075,
         [EnumMember(Value = DocConstantExternalKey.FRAMED_QUESTION_ID)]
-        FRAMED_QUESTION_ID,
+        FRAMED_QUESTION_ID = 847,
         [EnumMember(Value = DocConstantExternalKey.PROJECT)]
-        PROJECT,
+        PROJECT = 10483080,
         [EnumMember(Value = DocConstantExternalKey.STUDY_DESIGN_ID)]
-        STUDY_DESIGN_ID,
+        STUDY_DESIGN_ID = 852,
         [EnumMember(Value = DocConstantExternalKey.STUDY_TYPE_ID)]
-        STUDY_TYPE_ID
+        STUDY_TYPE_ID = 857
     }
     
     public static partial class EnumExtensions

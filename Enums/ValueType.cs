@@ -48,85 +48,85 @@ namespace Services.Enums
     public enum ValueTypeEnm
     {
         [EnumMember(Value = DocConstantValueType.ASSOCIATIONMEASURE)]
-        ASSOCIATIONMEASURE,
+        ASSOCIATIONMEASURE = 4763,
         [EnumMember(Value = DocConstantValueType.BOOLEAN)]
-        BOOLEAN,
+        BOOLEAN = 4768,
         [EnumMember(Value = DocConstantValueType.CALENDARDATE)]
-        CALENDARDATE,
+        CALENDARDATE = 96669231,
         [EnumMember(Value = DocConstantValueType.CALENDARDATES)]
-        CALENDARDATES,
+        CALENDARDATES = 96669232,
         [EnumMember(Value = DocConstantValueType.CONTACT)]
-        CONTACT,
+        CONTACT = 146157851,
         [EnumMember(Value = DocConstantValueType.DATETIME)]
-        DATETIME,
+        DATETIME = 4773,
         [EnumMember(Value = DocConstantValueType.DATETIMERANGE)]
-        DATETIMERANGE,
+        DATETIMERANGE = 46350624,
         [EnumMember(Value = DocConstantValueType.DECIMAL)]
-        DECIMAL,
+        DECIMAL = 4778,
         [EnumMember(Value = DocConstantValueType.DECIMALRANGE)]
-        DECIMALRANGE,
+        DECIMALRANGE = 4783,
         [EnumMember(Value = DocConstantValueType.DESIGNNESTEDSTUDYIDLINK)]
-        DESIGNNESTEDSTUDYIDLINK,
+        DESIGNNESTEDSTUDYIDLINK = 67058545,
         [EnumMember(Value = DocConstantValueType.EVENTCOUNTS)]
-        EVENTCOUNTS,
+        EVENTCOUNTS = 146157852,
         [EnumMember(Value = DocConstantValueType.FACILITY)]
-        FACILITY,
+        FACILITY = 146157853,
         [EnumMember(Value = DocConstantValueType.FIXEDDOSEINTERVENTION)]
-        FIXEDDOSEINTERVENTION,
+        FIXEDDOSEINTERVENTION = 74232450,
         [EnumMember(Value = DocConstantValueType.FLAG)]
-        FLAG,
+        FLAG = 23807267,
         [EnumMember(Value = DocConstantValueType.FUNDING)]
-        FUNDING,
+        FUNDING = 4793,
         [EnumMember(Value = DocConstantValueType.INTEGER)]
-        INTEGER,
+        INTEGER = 4798,
         [EnumMember(Value = DocConstantValueType.INTERVAL)]
-        INTERVAL,
+        INTERVAL = 4803,
         [EnumMember(Value = DocConstantValueType.INTERVALS)]
-        INTERVALS,
+        INTERVALS = 96669233,
         [EnumMember(Value = DocConstantValueType.LOOKUP)]
-        LOOKUP,
+        LOOKUP = 4808,
         [EnumMember(Value = DocConstantValueType.MEMO)]
-        MEMO,
+        MEMO = 4813,
         [EnumMember(Value = DocConstantValueType.NPERSONS)]
-        NPERSONS,
+        NPERSONS = 4818,
         [EnumMember(Value = DocConstantValueType.PARTICIPANT)]
-        PARTICIPANT,
+        PARTICIPANT = 4823,
         [EnumMember(Value = DocConstantValueType.PARTICIPANTS)]
-        PARTICIPANTS,
+        PARTICIPANTS = 4828,
         [EnumMember(Value = DocConstantValueType.POPULATIONANALYZED)]
-        POPULATIONANALYZED,
+        POPULATIONANALYZED = 146157854,
         [EnumMember(Value = DocConstantValueType.PVALUE)]
-        PVALUE,
+        PVALUE = 4833,
         [EnumMember(Value = DocConstantValueType.RATE)]
-        RATE,
+        RATE = 4838,
         [EnumMember(Value = DocConstantValueType.SETTINGLOCATION)]
-        SETTINGLOCATION,
+        SETTINGLOCATION = 4843,
         [EnumMember(Value = DocConstantValueType.SETTINGLOCATIONTOTAL)]
-        SETTINGLOCATIONTOTAL,
+        SETTINGLOCATIONTOTAL = 4848,
         [EnumMember(Value = DocConstantValueType.STUDYDOC)]
-        STUDYDOC,
+        STUDYDOC = 146157855,
         [EnumMember(Value = DocConstantValueType.STUDYOBJECTIVE)]
-        STUDYOBJECTIVE,
+        STUDYOBJECTIVE = 67058546,
         [EnumMember(Value = DocConstantValueType.STUDYREFERENCE)]
-        STUDYREFERENCE,
+        STUDYREFERENCE = 146157856,
         [EnumMember(Value = DocConstantValueType.SUBGROUPDESCRIPTOR)]
-        SUBGROUPDESCRIPTOR,
+        SUBGROUPDESCRIPTOR = 4853,
         [EnumMember(Value = DocConstantValueType.TIMEPOINT)]
-        TIMEPOINT,
+        TIMEPOINT = 4858,
         [EnumMember(Value = DocConstantValueType.TIMEPOINTS)]
-        TIMEPOINTS,
+        TIMEPOINTS = 96669234,
         [EnumMember(Value = DocConstantValueType.UNCOLLECTEDVALUE)]
-        UNCOLLECTEDVALUE,
+        UNCOLLECTEDVALUE = 4863,
         [EnumMember(Value = DocConstantValueType.UNITRANGE)]
-        UNITRANGE,
+        UNITRANGE = 4868,
         [EnumMember(Value = DocConstantValueType.UNITS)]
-        UNITS,
+        UNITS = 4873,
         [EnumMember(Value = DocConstantValueType.UNITSRANGE)]
-        UNITSRANGE,
+        UNITSRANGE = 4878,
         [EnumMember(Value = DocConstantValueType.UNITVALUE)]
-        UNITVALUE,
+        UNITVALUE = 4883,
         [EnumMember(Value = DocConstantValueType.YESNONA)]
-        YESNONA
+        YESNONA = 4893
     }
     
     public static partial class EnumExtensions

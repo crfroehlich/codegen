@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum UserPayrollStatusEnm
     {
         [EnumMember(Value = DocConstantUserPayrollStatus.CONTRACT)]
-        CONTRACT,
+        CONTRACT = 76351795,
         [EnumMember(Value = DocConstantUserPayrollStatus.FULL_TIME)]
-        FULL_TIME,
+        FULL_TIME = 76351793,
         [EnumMember(Value = DocConstantUserPayrollStatus.PART_TIME)]
-        PART_TIME
+        PART_TIME = 76351794
     }
     
     public static partial class EnumExtensions

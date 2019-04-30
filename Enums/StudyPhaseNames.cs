@@ -48,23 +48,23 @@ namespace Services.Enums
     public enum StudyPhaseNamesEnm
     {
         [EnumMember(Value = DocConstantStudyPhaseNames.FOLLOW_UP_PERIOD)]
-        FOLLOW_UP_PERIOD,
+        FOLLOW_UP_PERIOD = 3593,
         [EnumMember(Value = DocConstantStudyPhaseNames.NR)]
-        NR,
+        NR = 3598,
         [EnumMember(Value = DocConstantStudyPhaseNames.OBSERVATIONAL_PERIOD)]
-        OBSERVATIONAL_PERIOD,
+        OBSERVATIONAL_PERIOD = 3603,
         [EnumMember(Value = DocConstantStudyPhaseNames.RUN_IN_PERIOD)]
-        RUN_IN_PERIOD,
+        RUN_IN_PERIOD = 3608,
         [EnumMember(Value = DocConstantStudyPhaseNames.SCREENING_PERIOD)]
-        SCREENING_PERIOD,
+        SCREENING_PERIOD = 3613,
         [EnumMember(Value = DocConstantStudyPhaseNames.TITRATION_PERIOD)]
-        TITRATION_PERIOD,
+        TITRATION_PERIOD = 3618,
         [EnumMember(Value = DocConstantStudyPhaseNames.TOTAL_STUDY_LENGTH)]
-        TOTAL_STUDY_LENGTH,
+        TOTAL_STUDY_LENGTH = 3623,
         [EnumMember(Value = DocConstantStudyPhaseNames.TREATMENT_PERIOD)]
-        TREATMENT_PERIOD,
+        TREATMENT_PERIOD = 3628,
         [EnumMember(Value = DocConstantStudyPhaseNames.WASH_OUT_PERIOD)]
-        WASH_OUT_PERIOD
+        WASH_OUT_PERIOD = 3633
     }
     
     public static partial class EnumExtensions

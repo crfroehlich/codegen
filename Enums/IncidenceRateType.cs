@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum IncidenceRateTypeEnm
     {
         [EnumMember(Value = DocConstantIncidenceRateType.COUNT)]
-        COUNT,
+        COUNT = 21514013,
         [EnumMember(Value = DocConstantIncidenceRateType.PERSONS)]
-        PERSONS
+        PERSONS = 21514018
     }
     
     public static partial class EnumExtensions

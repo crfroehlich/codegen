@@ -48,17 +48,17 @@ namespace Services.Enums
     public enum LookupTypeEnm
     {
         [EnumMember(Value = DocConstantLookupType.CHARACTERISTIC)]
-        CHARACTERISTIC,
+        CHARACTERISTIC = 46350952,
         [EnumMember(Value = DocConstantLookupType.COMPARATOR)]
-        COMPARATOR,
+        COMPARATOR = 46350957,
         [EnumMember(Value = DocConstantLookupType.INTERVENTION)]
-        INTERVENTION,
+        INTERVENTION = 46350962,
         [EnumMember(Value = DocConstantLookupType.OUTCOME)]
-        OUTCOME,
+        OUTCOME = 46350967,
         [EnumMember(Value = DocConstantLookupType.STUDY_DESIGN)]
-        STUDY_DESIGN,
+        STUDY_DESIGN = 46350973,
         [EnumMember(Value = DocConstantLookupType.STUDY_TYPE)]
-        STUDY_TYPE
+        STUDY_TYPE = 46350979
     }
     
     public static partial class EnumExtensions

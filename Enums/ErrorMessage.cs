@@ -48,7 +48,7 @@ namespace Services.Enums
     public enum ErrorMessageEnm
     {
         [EnumMember(Value = DocConstantErrorMessage.ORNY)]
-        ORNY
+        ORNY = 67058497
     }
     
     public static partial class EnumExtensions

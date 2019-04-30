@@ -48,17 +48,17 @@ namespace Services.Enums
     public enum DocumentSetTypeEnm
     {
         [EnumMember(Value = DocConstantDocumentSetType.DATA_SET)]
-        DATA_SET,
+        DATA_SET = 41789739,
         [EnumMember(Value = DocConstantDocumentSetType.DISEASE_STATE)]
-        DISEASE_STATE,
+        DISEASE_STATE = 41790593,
         [EnumMember(Value = DocConstantDocumentSetType.GLOBAL)]
-        GLOBAL,
+        GLOBAL = 41790600,
         [EnumMember(Value = DocConstantDocumentSetType.LIBRARY)]
-        LIBRARY,
+        LIBRARY = 150784620,
         [EnumMember(Value = DocConstantDocumentSetType.SERVE_PORTAL)]
-        SERVE_PORTAL,
+        SERVE_PORTAL = 146157828,
         [EnumMember(Value = DocConstantDocumentSetType.THERAPEUTIC_AREA)]
-        THERAPEUTIC_AREA
+        THERAPEUTIC_AREA = 41790607
     }
     
     public static partial class EnumExtensions

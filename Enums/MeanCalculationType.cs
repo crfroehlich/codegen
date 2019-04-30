@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum MeanCalculationTypeEnm
     {
         [EnumMember(Value = DocConstantMeanCalculationType.ARITHMETIC)]
-        ARITHMETIC,
+        ARITHMETIC = 6677511,
         [EnumMember(Value = DocConstantMeanCalculationType.GEOMETRIC)]
-        GEOMETRIC,
+        GEOMETRIC = 6677516,
         [EnumMember(Value = DocConstantMeanCalculationType.LEAST_SQUARES_MEAN)]
-        LEAST_SQUARES_MEAN
+        LEAST_SQUARES_MEAN = 18227931
     }
     
     public static partial class EnumExtensions

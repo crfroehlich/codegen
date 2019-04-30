@@ -48,43 +48,43 @@ namespace Services.Enums
     public enum JobEnm
     {
         [EnumMember(Value = DocConstantJob.CLEANUP_HISTORY)]
-        CLEANUP_HISTORY,
+        CLEANUP_HISTORY = 139850818,
         [EnumMember(Value = DocConstantJob.CREATE_ALL_APPS)]
-        CREATE_ALL_APPS,
+        CREATE_ALL_APPS = 139850819,
         [EnumMember(Value = DocConstantJob.CREATE_ALL_ROLE_PERMISSIONS)]
-        CREATE_ALL_ROLE_PERMISSIONS,
+        CREATE_ALL_ROLE_PERMISSIONS = 139850820,
         [EnumMember(Value = DocConstantJob.CREATE_ALL_VALUE_TYPES)]
-        CREATE_ALL_VALUE_TYPES,
+        CREATE_ALL_VALUE_TYPES = 139850821,
         [EnumMember(Value = DocConstantJob.CREATE_DOCUMENT_SET_QUEUES)]
-        CREATE_DOCUMENT_SET_QUEUES,
+        CREATE_DOCUMENT_SET_QUEUES = 139850822,
         [EnumMember(Value = DocConstantJob.EXTRACT_IMPORT)]
-        EXTRACT_IMPORT,
+        EXTRACT_IMPORT = 139850823,
         [EnumMember(Value = DocConstantJob.EXTRACT_NOTIFICATIONS)]
-        EXTRACT_NOTIFICATIONS,
+        EXTRACT_NOTIFICATIONS = 139850824,
         [EnumMember(Value = DocConstantJob.IMPORT_LIBRARY)]
-        IMPORT_LIBRARY,
+        IMPORT_LIBRARY = 139850825,
         [EnumMember(Value = DocConstantJob.IMPORT_PACKAGES)]
-        IMPORT_PACKAGES,
+        IMPORT_PACKAGES = 139850826,
         [EnumMember(Value = DocConstantJob.PROCESS_EVENTS)]
-        PROCESS_EVENTS,
+        PROCESS_EVENTS = 139850827,
         [EnumMember(Value = DocConstantJob.PROCESS_STATS)]
-        PROCESS_STATS,
+        PROCESS_STATS = 139850828,
         [EnumMember(Value = DocConstantJob.PROCESS_UPDATES)]
-        PROCESS_UPDATES,
+        PROCESS_UPDATES = 139850829,
         [EnumMember(Value = DocConstantJob.REASSIGN_ARCHIVED_USERS)]
-        REASSIGN_ARCHIVED_USERS,
+        REASSIGN_ARCHIVED_USERS = 150784176,
         [EnumMember(Value = DocConstantJob.RUN_TIMECARD_RULES)]
-        RUN_TIMECARD_RULES,
+        RUN_TIMECARD_RULES = 139850830,
         [EnumMember(Value = DocConstantJob.STUDYSET_HISTORY)]
-        STUDYSET_HISTORY,
+        STUDYSET_HISTORY = 139850831,
         [EnumMember(Value = DocConstantJob.SYNC_DATA_SETS)]
-        SYNC_DATA_SETS,
+        SYNC_DATA_SETS = 139850834,
         [EnumMember(Value = DocConstantJob.SYNC_LEGACY_STUDIES)]
-        SYNC_LEGACY_STUDIES,
+        SYNC_LEGACY_STUDIES = 139850832,
         [EnumMember(Value = DocConstantJob.SYNC_LOOKUP_TABLES)]
-        SYNC_LOOKUP_TABLES,
+        SYNC_LOOKUP_TABLES = 139850833,
         [EnumMember(Value = DocConstantJob.SYNC_USERS)]
-        SYNC_USERS
+        SYNC_USERS = 139850835
     }
     
     public static partial class EnumExtensions

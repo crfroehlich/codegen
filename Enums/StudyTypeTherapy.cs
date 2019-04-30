@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StudyTypeTherapyEnm
     {
         [EnumMember(Value = DocConstantStudyTypeTherapy.BEHAVIORAL_COUNSELING)]
-        BEHAVIORAL_COUNSELING,
+        BEHAVIORAL_COUNSELING = 3753,
         [EnumMember(Value = DocConstantStudyTypeTherapy.DEVICE_SERVICE)]
-        DEVICE_SERVICE,
+        DEVICE_SERVICE = 3758,
         [EnumMember(Value = DocConstantStudyTypeTherapy.DRUG)]
-        DRUG,
+        DRUG = 3763,
         [EnumMember(Value = DocConstantStudyTypeTherapy.LIFESTYLE_MODIFICATION)]
-        LIFESTYLE_MODIFICATION
+        LIFESTYLE_MODIFICATION = 3768
     }
     
     public static partial class EnumExtensions

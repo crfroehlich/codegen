@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum PrevalenceTypeEnm
     {
         [EnumMember(Value = DocConstantPrevalenceType.LIFETIME)]
-        LIFETIME,
+        LIFETIME = 21514047,
         [EnumMember(Value = DocConstantPrevalenceType.PERIOD)]
-        PERIOD,
+        PERIOD = 21514052,
         [EnumMember(Value = DocConstantPrevalenceType.POINT)]
-        POINT
+        POINT = 21514057
     }
     
     public static partial class EnumExtensions

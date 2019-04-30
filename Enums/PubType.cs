@@ -48,19 +48,19 @@ namespace Services.Enums
     public enum PubTypeEnm
     {
         [EnumMember(Value = DocConstantPubType.GUIDELINE_HTA)]
-        GUIDELINE_HTA,
+        GUIDELINE_HTA = 93510303,
         [EnumMember(Value = DocConstantPubType.JOURNAL_ARTICLE)]
-        JOURNAL_ARTICLE,
+        JOURNAL_ARTICLE = 93510304,
         [EnumMember(Value = DocConstantPubType.LETTER_COMMENTARY)]
-        LETTER_COMMENTARY,
+        LETTER_COMMENTARY = 93510306,
         [EnumMember(Value = DocConstantPubType.MEETING_ABSTRACT_ORAL_POSTER)]
-        MEETING_ABSTRACT_ORAL_POSTER,
+        MEETING_ABSTRACT_ORAL_POSTER = 93510308,
         [EnumMember(Value = DocConstantPubType.NEWS_ARTICLE_PRESS_RELEASE)]
-        NEWS_ARTICLE_PRESS_RELEASE,
+        NEWS_ARTICLE_PRESS_RELEASE = 93510312,
         [EnumMember(Value = DocConstantPubType.OTHER)]
-        OTHER,
+        OTHER = 93510317,
         [EnumMember(Value = DocConstantPubType.REGULATORY_DOCUMENTS)]
-        REGULATORY_DOCUMENTS
+        REGULATORY_DOCUMENTS = 96669213
     }
     
     public static partial class EnumExtensions

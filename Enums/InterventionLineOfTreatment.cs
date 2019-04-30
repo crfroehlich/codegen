@@ -48,17 +48,17 @@ namespace Services.Enums
     public enum InterventionLineOfTreatmentEnm
     {
         [EnumMember(Value = DocConstantInterventionLineOfTreatment.FIRST)]
-        FIRST,
+        FIRST = 74232468,
         [EnumMember(Value = DocConstantInterventionLineOfTreatment.MAINTENANCE)]
-        MAINTENANCE,
+        MAINTENANCE = 74232469,
         [EnumMember(Value = DocConstantInterventionLineOfTreatment.MIXED)]
-        MIXED,
+        MIXED = 74232470,
         [EnumMember(Value = DocConstantInterventionLineOfTreatment.OTHER)]
-        OTHER,
+        OTHER = 74232471,
         [EnumMember(Value = DocConstantInterventionLineOfTreatment.SECOND)]
-        SECOND,
+        SECOND = 74232472,
         [EnumMember(Value = DocConstantInterventionLineOfTreatment.THIRD)]
-        THIRD
+        THIRD = 74232473
     }
     
     public static partial class EnumExtensions

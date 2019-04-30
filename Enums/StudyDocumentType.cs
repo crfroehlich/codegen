@@ -48,37 +48,37 @@ namespace Services.Enums
     public enum StudyDocumentTypeEnm
     {
         [EnumMember(Value = DocConstantStudyDocumentType.CLINICAL_STUDY_REPORT)]
-        CLINICAL_STUDY_REPORT,
+        CLINICAL_STUDY_REPORT = 3263,
         [EnumMember(Value = DocConstantStudyDocumentType.CLINICAL_TRIALS_GOV)]
-        CLINICAL_TRIALS_GOV,
+        CLINICAL_TRIALS_GOV = 3268,
         [EnumMember(Value = DocConstantStudyDocumentType.DOC_DATA_DIRECT_META_ANALYSIS)]
-        DOC_DATA_DIRECT_META_ANALYSIS,
+        DOC_DATA_DIRECT_META_ANALYSIS = 3308,
         [EnumMember(Value = DocConstantStudyDocumentType.FDA_ADVISORY_COMMITTEE_SUBMISSION)]
-        FDA_ADVISORY_COMMITTEE_SUBMISSION,
+        FDA_ADVISORY_COMMITTEE_SUBMISSION = 3273,
         [EnumMember(Value = DocConstantStudyDocumentType.FDA_APPROVAL_DOCUMENTS)]
-        FDA_APPROVAL_DOCUMENTS,
+        FDA_APPROVAL_DOCUMENTS = 3278,
         [EnumMember(Value = DocConstantStudyDocumentType.GOVERNMENT_REPORT)]
-        GOVERNMENT_REPORT,
+        GOVERNMENT_REPORT = 3283,
         [EnumMember(Value = DocConstantStudyDocumentType.GUIDELINE)]
-        GUIDELINE,
+        GUIDELINE = 3288,
         [EnumMember(Value = DocConstantStudyDocumentType.JOURNAL_ARTICLE)]
-        JOURNAL_ARTICLE,
+        JOURNAL_ARTICLE = 3293,
         [EnumMember(Value = DocConstantStudyDocumentType.LETTER_TO_THE_EDITOR)]
-        LETTER_TO_THE_EDITOR,
+        LETTER_TO_THE_EDITOR = 3298,
         [EnumMember(Value = DocConstantStudyDocumentType.MEETING_ABSTRACT)]
-        MEETING_ABSTRACT,
+        MEETING_ABSTRACT = 3303,
         [EnumMember(Value = DocConstantStudyDocumentType.POSTER)]
-        POSTER,
+        POSTER = 3313,
         [EnumMember(Value = DocConstantStudyDocumentType.POWER_POINT)]
-        POWER_POINT,
+        POWER_POINT = 3318,
         [EnumMember(Value = DocConstantStudyDocumentType.PRESS_RELEASE)]
-        PRESS_RELEASE,
+        PRESS_RELEASE = 3323,
         [EnumMember(Value = DocConstantStudyDocumentType.REVIEW)]
-        REVIEW,
+        REVIEW = 3328,
         [EnumMember(Value = DocConstantStudyDocumentType.SYSTEMATIC_REVIEW_META_ANALYSIS)]
-        SYSTEMATIC_REVIEW_META_ANALYSIS,
+        SYSTEMATIC_REVIEW_META_ANALYSIS = 3333,
         [EnumMember(Value = DocConstantStudyDocumentType.THESIS)]
-        THESIS
+        THESIS = 3338
     }
     
     public static partial class EnumExtensions

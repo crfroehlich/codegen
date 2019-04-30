@@ -55,7 +55,7 @@ namespace Services.Dto
 
         public TaskBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public TaskBase(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, Reference pType, int? pTypeId, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
+        public TaskBase(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, TaskTypeEnm? pType, Reference pWorkflow, int? pWorkflowId) : this(DocConvert.ToInt(pId)) 
         {
             Assignee = pAssignee;
             AssigneeId = pAssigneeId;
@@ -65,7 +65,6 @@ namespace Services.Dto
             Reporter = pReporter;
             ReporterId = pReporterId;
             Type = pType;
-            TypeId = pTypeId;
             Workflow = pWorkflow;
             WorkflowId = pWorkflowId;
         }
@@ -94,11 +93,8 @@ namespace Services.Dto
         public int? ReporterId { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Evidence on Demand"})]
-        public Reference Type { get; set; }
-        [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
-        public int? TypeId { get; set; }
+        [ApiMember(Name = nameof(Type), Description = "TaskTypeEnm?", IsRequired = true)]
+        public TaskTypeEnm? Type { get; set; }
 
 
         [ApiMember(Name = nameof(Workflow), Description = "Workflow", IsRequired = true)]
@@ -108,7 +104,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out Reference pAssignee, out int? pAssigneeId, out string pData, out string pDescription, out DateTime? pDueDate, out Reference pReporter, out int? pReporterId, out Reference pType, out int? pTypeId, out Reference pWorkflow, out int? pWorkflowId)
+        public void Deconstruct(out Reference pAssignee, out int? pAssigneeId, out string pData, out string pDescription, out DateTime? pDueDate, out Reference pReporter, out int? pReporterId, out TaskTypeEnm? pType, out Reference pWorkflow, out int? pWorkflowId)
         {
             pAssignee = Assignee;
             pAssigneeId = AssigneeId;
@@ -118,14 +114,13 @@ namespace Services.Dto
             pReporter = Reporter;
             pReporterId = ReporterId;
             pType = Type;
-            pTypeId = TypeId;
             pWorkflow = Workflow;
             pWorkflowId = WorkflowId;
         }
 
         //Not ready until C# v8.?
-        //public TaskBase With(int? pId = Id, Reference pAssignee = Assignee, int? pAssigneeId = AssigneeId, string pData = Data, string pDescription = Description, DateTime? pDueDate = DueDate, Reference pReporter = Reporter, int? pReporterId = ReporterId, Reference pType = Type, int? pTypeId = TypeId, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
-        //	new TaskBase(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pType, pTypeId, pWorkflow, pWorkflowId);
+        //public TaskBase With(int? pId = Id, Reference pAssignee = Assignee, int? pAssigneeId = AssigneeId, string pData = Data, string pDescription = Description, DateTime? pDueDate = DueDate, Reference pReporter = Reporter, int? pReporterId = ReporterId, TaskTypeEnm? pType = Type, Reference pWorkflow = Workflow, int? pWorkflowId = WorkflowId) => 
+        //	new TaskBase(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pType, pWorkflow, pWorkflowId);
 
     }
 
@@ -140,8 +135,8 @@ namespace Services.Dto
 
         public Task(int? id) : base(DocConvert.ToInt(id)) {}
         public Task(int id) : base(id) {}
-        public Task(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, Reference pType, int? pTypeId, Reference pWorkflow, int? pWorkflowId) : 
-            base(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pType, pTypeId, pWorkflow, pWorkflowId) { }
+        public Task(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, TaskTypeEnm? pType, Reference pWorkflow, int? pWorkflowId) : 
+            base(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pType, pWorkflow, pWorkflowId) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -159,7 +154,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Assignee),nameof(AssigneeId),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(DueDate),nameof(Gestalt),nameof(Locked),nameof(Reporter),nameof(ReporterId),nameof(Type),nameof(TypeId),nameof(Updated),nameof(VersionNo),nameof(Workflow),nameof(WorkflowId)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Assignee),nameof(AssigneeId),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(DueDate),nameof(Gestalt),nameof(Locked),nameof(Reporter),nameof(ReporterId),nameof(Type),nameof(Updated),nameof(VersionNo),nameof(Workflow),nameof(WorkflowId)})]
         public new List<string> VisibleFields
         {
             get
@@ -198,10 +193,7 @@ namespace Services.Dto
         public DateTime? DueDateBefore { get; set; }
         public Reference Reporter { get; set; }
         public List<int> ReporterIds { get; set; }
-        public Reference Type { get; set; }
-        public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Evidence on Demand"})]
-        public List<string> TypeNames { get; set; }
+        public TaskTypeEnm? Type { get; set; }
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
     }

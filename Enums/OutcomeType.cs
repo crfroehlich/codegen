@@ -48,15 +48,15 @@ namespace Services.Enums
     public enum OutcomeTypeEnm
     {
         [EnumMember(Value = DocConstantOutcomeType.BINARY)]
-        BINARY,
+        BINARY = 2687,
         [EnumMember(Value = DocConstantOutcomeType.CONTINUOUS)]
-        CONTINUOUS,
+        CONTINUOUS = 2692,
         [EnumMember(Value = DocConstantOutcomeType.PRIMARY_ENDPOINT_OUTCOME)]
-        PRIMARY_ENDPOINT_OUTCOME,
+        PRIMARY_ENDPOINT_OUTCOME = 2697,
         [EnumMember(Value = DocConstantOutcomeType.SECONDARY_ENDPOINT_OUTCOME)]
-        SECONDARY_ENDPOINT_OUTCOME,
+        SECONDARY_ENDPOINT_OUTCOME = 2702,
         [EnumMember(Value = DocConstantOutcomeType.TERTIARY_ENDPOINT_OUTCOME)]
-        TERTIARY_ENDPOINT_OUTCOME
+        TERTIARY_ENDPOINT_OUTCOME = 2707
     }
     
     public static partial class EnumExtensions

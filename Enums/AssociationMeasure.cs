@@ -48,31 +48,31 @@ namespace Services.Enums
     public enum AssociationMeasureEnm
     {
         [EnumMember(Value = DocConstantAssociationMeasure.COHENS_D)]
-        COHENS_D,
+        COHENS_D = 243,
         [EnumMember(Value = DocConstantAssociationMeasure.HAZARD_RATIO)]
-        HAZARD_RATIO,
+        HAZARD_RATIO = 253,
         [EnumMember(Value = DocConstantAssociationMeasure.HEDGES_G)]
-        HEDGES_G,
+        HEDGES_G = 256,
         [EnumMember(Value = DocConstantAssociationMeasure.MEAN_DIFFERENCE)]
-        MEAN_DIFFERENCE,
+        MEAN_DIFFERENCE = 261,
         [EnumMember(Value = DocConstantAssociationMeasure.ODDS_RATIO)]
-        ODDS_RATIO,
+        ODDS_RATIO = 271,
         [EnumMember(Value = DocConstantAssociationMeasure.RATE_DIFFERENCE)]
-        RATE_DIFFERENCE,
+        RATE_DIFFERENCE = 77315987,
         [EnumMember(Value = DocConstantAssociationMeasure.RATE_RATIO)]
-        RATE_RATIO,
+        RATE_RATIO = 274,
         [EnumMember(Value = DocConstantAssociationMeasure.RAW_DIFFERENCE)]
-        RAW_DIFFERENCE,
+        RAW_DIFFERENCE = 279,
         [EnumMember(Value = DocConstantAssociationMeasure.RELATIVE_RISK_INCREASE)]
-        RELATIVE_RISK_INCREASE,
+        RELATIVE_RISK_INCREASE = 284,
         [EnumMember(Value = DocConstantAssociationMeasure.RELATIVE_RISK_REDUCTION)]
-        RELATIVE_RISK_REDUCTION,
+        RELATIVE_RISK_REDUCTION = 289,
         [EnumMember(Value = DocConstantAssociationMeasure.RISK_DIFFERENCE)]
-        RISK_DIFFERENCE,
+        RISK_DIFFERENCE = 294,
         [EnumMember(Value = DocConstantAssociationMeasure.RISK_RATIO)]
-        RISK_RATIO,
+        RISK_RATIO = 73104011,
         [EnumMember(Value = DocConstantAssociationMeasure.RISK_RATIO_RELATIVE_RISK)]
-        RISK_RATIO_RELATIVE_RISK
+        RISK_RATIO_RELATIVE_RISK = 304
     }
     
     public static partial class EnumExtensions

@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum RiskOfBiasAssessmentEnm
     {
         [EnumMember(Value = DocConstantRiskOfBiasAssessment.NO)]
-        NO,
+        NO = 150784187,
         [EnumMember(Value = DocConstantRiskOfBiasAssessment.UNCLEAR)]
-        UNCLEAR,
+        UNCLEAR = 150784188,
         [EnumMember(Value = DocConstantRiskOfBiasAssessment.YES)]
-        YES
+        YES = 150784186
     }
     
     public static partial class EnumExtensions

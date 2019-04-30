@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum RangeTypeEnm
     {
         [EnumMember(Value = DocConstantRangeType.AGE)]
-        AGE,
+        AGE = 2752,
         [EnumMember(Value = DocConstantRangeType.TIME)]
-        TIME,
+        TIME = 2757,
         [EnumMember(Value = DocConstantRangeType.UNIT)]
-        UNIT
+        UNIT = 2762
     }
     
     public static partial class EnumExtensions

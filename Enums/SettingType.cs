@@ -48,27 +48,27 @@ namespace Services.Enums
     public enum SettingTypeEnm
     {
         [EnumMember(Value = DocConstantSettingType.CRIMINAL_JUSTICE_SYSTEM)]
-        CRIMINAL_JUSTICE_SYSTEM,
+        CRIMINAL_JUSTICE_SYSTEM = 2887,
         [EnumMember(Value = DocConstantSettingType.EDUCATION_SYSTEM)]
-        EDUCATION_SYSTEM,
+        EDUCATION_SYSTEM = 2892,
         [EnumMember(Value = DocConstantSettingType.HOME)]
-        HOME,
+        HOME = 2897,
         [EnumMember(Value = DocConstantSettingType.INPATIENT)]
-        INPATIENT,
+        INPATIENT = 2902,
         [EnumMember(Value = DocConstantSettingType.MIXED)]
-        MIXED,
+        MIXED = 2907,
         [EnumMember(Value = DocConstantSettingType.NA)]
-        NA,
+        NA = 2912,
         [EnumMember(Value = DocConstantSettingType.NR)]
-        NR,
+        NR = 2917,
         [EnumMember(Value = DocConstantSettingType.OTHER)]
-        OTHER,
+        OTHER = 2922,
         [EnumMember(Value = DocConstantSettingType.OUTPATIENT)]
-        OUTPATIENT,
+        OUTPATIENT = 2927,
         [EnumMember(Value = DocConstantSettingType.SURVEY)]
-        SURVEY,
+        SURVEY = 2932,
         [EnumMember(Value = DocConstantSettingType.UNCLEAR)]
-        UNCLEAR
+        UNCLEAR = 2937
     }
     
     public static partial class EnumExtensions

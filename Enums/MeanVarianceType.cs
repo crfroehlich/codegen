@@ -48,17 +48,17 @@ namespace Services.Enums
     public enum MeanVarianceTypeEnm
     {
         [EnumMember(Value = DocConstantMeanVarianceType.CV)]
-        CV,
+        CV = 95113988,
         [EnumMember(Value = DocConstantMeanVarianceType.IQR_DIFFERENCE)]
-        IQR_DIFFERENCE,
+        IQR_DIFFERENCE = 17618177,
         [EnumMember(Value = DocConstantMeanVarianceType.SD)]
-        SD,
+        SD = 2172,
         [EnumMember(Value = DocConstantMeanVarianceType.SE)]
-        SE,
+        SE = 2177,
         [EnumMember(Value = DocConstantMeanVarianceType.SEMI_IQR)]
-        SEMI_IQR,
+        SEMI_IQR = 2182,
         [EnumMember(Value = DocConstantMeanVarianceType.UNKNOWN)]
-        UNKNOWN
+        UNKNOWN = 2187
     }
     
     public static partial class EnumExtensions

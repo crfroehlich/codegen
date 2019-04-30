@@ -88,11 +88,11 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantReasonRejected.WRONG_PUBLICATION_DATE_CUTOFF)]
         WRONG_PUBLICATION_DATE_CUTOFF = 77289755,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_SETTING)]
-        WRONG_SETTING = 77289799,
+        WRONG_SETTING = 150785331,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_STUDY_DESIGN)]
         WRONG_STUDY_DESIGN = 77289742,
         [EnumMember(Value = DocConstantReasonRejected.WRONG_TIMING)]
-        WRONG_TIMING = 77289786
+        WRONG_TIMING = 150785330
     }
     
     public static partial class EnumExtensions

@@ -45,43 +45,43 @@ using Version = Services.Dto.Version;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum WorkflowStatusEnm
+    public enum EoDStatusEnm
     {
-        [EnumMember(Value = DocConstantWorkflowStatus.ACCEPTED)]
+        [EnumMember(Value = DocConstantEoDStatus.ACCEPTED)]
         ACCEPTED = 147180163,
-        [EnumMember(Value = DocConstantWorkflowStatus.COLLECTED)]
+        [EnumMember(Value = DocConstantEoDStatus.COLLECTED)]
         COLLECTED = 128789899,
-        [EnumMember(Value = DocConstantWorkflowStatus.REJECTED)]
+        [EnumMember(Value = DocConstantEoDStatus.REJECTED)]
         REJECTED = 76351815,
-        [EnumMember(Value = DocConstantWorkflowStatus.REQUESTED)]
+        [EnumMember(Value = DocConstantEoDStatus.REQUESTED)]
         REQUESTED = 128789898,
-        [EnumMember(Value = DocConstantWorkflowStatus.UNAVAILABLE)]
+        [EnumMember(Value = DocConstantEoDStatus.UNAVAILABLE)]
         UNAVAILABLE = 128789900
     }
     
     public static partial class EnumExtensions
     {
-        public static string ToEnumString(this WorkflowStatusEnm instance)
+        public static string ToEnumString(this EoDStatusEnm instance)
         {
             switch(instance) 
             {
-                case WorkflowStatusEnm.ACCEPTED:
-                    return DocConstantWorkflowStatus.ACCEPTED;
-                case WorkflowStatusEnm.COLLECTED:
-                    return DocConstantWorkflowStatus.COLLECTED;
-                case WorkflowStatusEnm.REJECTED:
-                    return DocConstantWorkflowStatus.REJECTED;
-                case WorkflowStatusEnm.REQUESTED:
-                    return DocConstantWorkflowStatus.REQUESTED;
-                case WorkflowStatusEnm.UNAVAILABLE:
-                    return DocConstantWorkflowStatus.UNAVAILABLE;
+                case EoDStatusEnm.ACCEPTED:
+                    return DocConstantEoDStatus.ACCEPTED;
+                case EoDStatusEnm.COLLECTED:
+                    return DocConstantEoDStatus.COLLECTED;
+                case EoDStatusEnm.REJECTED:
+                    return DocConstantEoDStatus.REJECTED;
+                case EoDStatusEnm.REQUESTED:
+                    return DocConstantEoDStatus.REQUESTED;
+                case EoDStatusEnm.UNAVAILABLE:
+                    return DocConstantEoDStatus.UNAVAILABLE;
                 default:
                     return string.Empty;
             }
         }
     }
 
-    public sealed partial class DocConstantWorkflowStatus : IEquatable<DocConstantWorkflowStatus>, IEqualityComparer<DocConstantWorkflowStatus>
+    public sealed partial class DocConstantEoDStatus : IEquatable<DocConstantEoDStatus>, IEqualityComparer<DocConstantEoDStatus>
     {
         public const string ACCEPTED = "Accepted";
         public const string COLLECTED = "Collected";
@@ -92,11 +92,11 @@ namespace Services.Enums
         #region Internals
         
         private static List<string> _all;
-        public static List<string> All => _all ?? (_all = typeof(DocConstantWorkflowStatus).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
+        public static List<string> All => _all ?? (_all = typeof(DocConstantEoDStatus).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
         private readonly string Value;
 
-        private DocConstantWorkflowStatus(string ItemName = null)
+        private DocConstantEoDStatus(string ItemName = null)
         {
             ItemName = ItemName ?? string.Empty;
             Value = FirstOrDefault(ItemName) ?? ItemName;
@@ -106,9 +106,9 @@ namespace Services.Enums
         
         public static string FirstOrDefault(string name) => All.FirstOrDefault(val => string.Equals(val, name, StringComparison.OrdinalIgnoreCase));
 
-        public static implicit operator DocConstantWorkflowStatus(string Val) => new DocConstantWorkflowStatus(Val);
+        public static implicit operator DocConstantEoDStatus(string Val) => new DocConstantEoDStatus(Val);
 
-        public static implicit operator string(DocConstantWorkflowStatus item) => item?.Value ?? string.Empty;
+        public static implicit operator string(DocConstantEoDStatus item) => item?.Value ?? string.Empty;
 
         public override string ToString() => Value;
 
@@ -116,31 +116,31 @@ namespace Services.Enums
 
         #region IEquatable
 
-        public bool Equals(DocConstantWorkflowStatus obj) => this == obj;
+        public bool Equals(DocConstantEoDStatus obj) => this == obj;
 
-        public static bool operator ==(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
+        public static bool operator ==(DocConstantEoDStatus x, DocConstantEoDStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
         
-        public bool Equals(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => x == y;
+        public bool Equals(DocConstantEoDStatus x, DocConstantEoDStatus y) => x == y;
         
-        public static bool operator !=(DocConstantWorkflowStatus x, DocConstantWorkflowStatus y) => !(x == y);
+        public static bool operator !=(DocConstantEoDStatus x, DocConstantEoDStatus y) => !(x == y);
 
         public override bool Equals(object obj)
         {
             var ret = false;
-            if(!(obj is DocConstantWorkflowStatus))
+            if(!(obj is DocConstantEoDStatus))
             {
                 ret = false;
             }
             else
             {
-                ret = this == (DocConstantWorkflowStatus) obj;
+                ret = this == (DocConstantEoDStatus) obj;
             }
             return ret;
         }
 
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
-        public int GetHashCode(DocConstantWorkflowStatus obj) => obj?.GetHashCode() ?? -17;
+        public int GetHashCode(DocConstantEoDStatus obj) => obj?.GetHashCode() ?? -17;
 
         #endregion IEquatable
     }

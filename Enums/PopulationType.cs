@@ -48,11 +48,11 @@ namespace Services.Enums
     public enum PopulationTypeEnm
     {
         [EnumMember(Value = DocConstantPopulationType.BODY_SITE)]
-        BODY_SITE,
+        BODY_SITE = 11793767,
         [EnumMember(Value = DocConstantPopulationType.CLUSTER)]
-        CLUSTER,
+        CLUSTER = 11793772,
         [EnumMember(Value = DocConstantPopulationType.PARTICIPANT)]
-        PARTICIPANT
+        PARTICIPANT = 11793777
     }
     
     public static partial class EnumExtensions

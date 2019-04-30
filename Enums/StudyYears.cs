@@ -48,13 +48,13 @@ namespace Services.Enums
     public enum StudyYearsEnm
     {
         [EnumMember(Value = DocConstantStudyYears.ANALYZED)]
-        ANALYZED,
+        ANALYZED = 3773,
         [EnumMember(Value = DocConstantStudyYears.CONDUCTED)]
-        CONDUCTED,
+        CONDUCTED = 3778,
         [EnumMember(Value = DocConstantStudyYears.ENROLLMENT)]
-        ENROLLMENT,
+        ENROLLMENT = 3783,
         [EnumMember(Value = DocConstantStudyYears.RECRUITMENT)]
-        RECRUITMENT
+        RECRUITMENT = 3788
     }
     
     public static partial class EnumExtensions

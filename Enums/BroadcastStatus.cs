@@ -48,9 +48,9 @@ namespace Services.Enums
     public enum BroadcastStatusEnm
     {
         [EnumMember(Value = DocConstantBroadcastStatus.DRAFT)]
-        DRAFT,
+        DRAFT = 67058495,
         [EnumMember(Value = DocConstantBroadcastStatus.RELEASE)]
-        RELEASE
+        RELEASE = 67058496
     }
     
     public static partial class EnumExtensions

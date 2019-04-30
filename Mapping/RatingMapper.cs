@@ -63,7 +63,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Rating>(c, "Updated")))
                 .ForMember(dest => dest.Document, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Rating>(c, nameof(DocEntityRating.Document))))
                 .ForMember(dest => dest.DocumentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Rating>(c, nameof(DocEntityRating.DocumentId))))
-                .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Rating>(c, nameof(DocEntityRating.Status))))
+                .ForMember(dest => dest.Rating, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Rating>(c, nameof(DocEntityRating.Rating))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Rating,DocEntityRating>()
                 .MaxDepth(2);
