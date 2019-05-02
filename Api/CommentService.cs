@@ -106,6 +106,10 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Parent.Id.In(request.ParentIds));
                 }
+                if(true == request.ScopesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Text))
                     entities = entities.Where(en => en.Text.Contains(request.Text));
                 if(!DocTools.IsNullOrEmpty(request.User) && !DocTools.IsNullOrEmpty(request.User.Id))
@@ -156,6 +160,7 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pParent = (request.Parent?.Id > 0) ? DocEntityComment.Get(request.Parent.Id) : null;
+            var pScopes = request.Scopes?.ToList();
             var pText = request.Text;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
 
@@ -228,7 +233,50 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.COMMENT, nameof(request.Scopes)))
+            {
+                if (true == pScopes?.Any() )
+                {
+                    var requestedScopes = pScopes.Select(p => p.Id).Distinct().ToList();
+                    var existsScopes = Execute.SelectAll<DocEntityScope>().Where(e => e.Id.In(requestedScopes)).Select( e => e.Id ).ToList();
+                    if (existsScopes.Count != requestedScopes.Count)
+                    {
+                        var nonExists = requestedScopes.Where(id => existsScopes.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Scopes with objects that do not exist. No matching Scopes(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                    }
+                    var toAdd = requestedScopes.Where(id => entity.Scopes.All(e => e.Id != id)).ToList(); 
+                    toAdd?.ForEach(id =>
+                    {
+                        var target = DocEntityScope.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Comment), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(Comment)}");
+                        entity.Scopes.Add(target);
+                    });
+                    var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityScope.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Comment), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Comment)}");
+                        entity.Scopes.Remove(target);
+                    });
+                }
+                else
+                {
+                    var toRemove = entity.Scopes.Select(e => e.Id).ToList(); 
+                    toRemove.ForEach(id =>
+                    {
+                        var target = DocEntityScope.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Comment), columnName: nameof(request.Scopes)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(Comment)}");
+                        entity.Scopes.Remove(target);
+                    });
+                }
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopes, nameof(request.Scopes)) && !request.VisibleFields.Matches(nameof(request.Scopes), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Scopes));
+                }
+            }
             DocPermissionFactory.SetVisibleFields<Comment>(currentUser, nameof(Comment), request.VisibleFields);
             ret = entity.ToDto();
 
@@ -318,6 +366,7 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pParent = entity.Parent;
+                    var pScopes = entity.Scopes.ToList();
                     var pText = entity.Text;
                     var pUser = entity.User;
                     #region Custom Before copyComment
@@ -329,6 +378,10 @@ namespace Services.API
                                 , Text = pText
                                 , User = pUser
                     };
+                            foreach(var item in pScopes)
+                            {
+                                entity.Scopes.Add(item);
+                            }
 
                     #region Custom After copyComment
                     #endregion Custom After copyComment
@@ -486,6 +539,55 @@ namespace Services.API
             {
                 Delete(match);
             });
+        }
+        public object Get(CommentJunction request)
+        {
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
+                    case "comment":
+                        return GetJunctionSearchResult<Comment, DocEntityComment, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Comment, DocEntityComment, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<Comment, DocEntityComment, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<Comment, DocEntityComment, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for comment/{request.Id}/{request.Junction} was not found");
+            }
+        }
+        public object Post(CommentJunction request)
+        {
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
+                    case "comment":
+                        return AddJunction<Comment, DocEntityComment, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "favorite":
+                        return AddJunction<Comment, DocEntityComment, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "scope":
+                        return AddJunction<Comment, DocEntityComment, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<Comment, DocEntityComment, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for comment/{request.Id}/{request.Junction} was not found");
+            }
+        }
+
+        public object Delete(CommentJunction request)
+        {    
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
+            {
+                    case "comment":
+                        return RemoveJunction<Comment, DocEntityComment, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "favorite":
+                        return RemoveJunction<Comment, DocEntityComment, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "scope":
+                        return RemoveJunction<Comment, DocEntityComment, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<Comment, DocEntityComment, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                default:
+                    throw new HttpError(HttpStatusCode.NotFound, $"Route for comment/{request.Id}/{request.Junction} was not found");
+            }
         }
         private Comment GetComment(Comment request)
         {

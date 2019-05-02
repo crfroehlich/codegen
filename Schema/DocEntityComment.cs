@@ -105,6 +105,14 @@ namespace Services.Schema
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
 
+        [Field]
+        [Association(PairTo = nameof(DocEntityScope.Tags), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        public DocEntitySet<DocEntityScope> Scopes { get; private set; }
+
+
+        public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
+
+
         [Field(Length = int.MaxValue)]
         public string Text { get; set; }
 
