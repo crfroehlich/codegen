@@ -152,18 +152,25 @@ namespace Services.Schema
 
 
         [Field]
+        public DocEntitySet<DocEntityComment> ScopedComments { get; private set; }
+
+
+        public int? ScopedCommentsCount { get { return ScopedComments.Count(); } private set { var noid = value; } }
+
+
+        [Field]
+        public DocEntitySet<DocEntityTag> ScopedTags { get; private set; }
+
+
+        public int? ScopedTagsCount { get { return ScopedTags.Count(); } private set { var noid = value; } }
+
+
+        [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Scope), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
 
 
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
-
-
-        [Field]
-        public DocEntitySet<DocEntityTag> Tags { get; private set; }
-
-
-        public int? TagsCount { get { return Tags.Count(); } private set { var noid = value; } }
 
 
         [Field]

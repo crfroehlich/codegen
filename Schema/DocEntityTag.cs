@@ -105,7 +105,7 @@ namespace Services.Schema
 
 
         [Field]
-        [Association(PairTo = nameof(DocEntityScope.Tags), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association(PairTo = nameof(DocEntityScope.ScopedTags), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
