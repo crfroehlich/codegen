@@ -44,55 +44,55 @@ using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
 namespace Services.Schema
 {
-    [TableMapping(DocConstantModelName.WORKFLOWCOMMENT)]
-    public partial class DocEntityWorkflowComment : DocEntityBase
+    [TableMapping(DocConstantModelName.COMMENT)]
+    public partial class DocEntityComment : DocEntityBase
     {
-        private const string WORKFLOWCOMMENT_CACHE = "WorkflowCommentCache";
-        public const string TABLE_NAME = DocConstantModelName.WORKFLOWCOMMENT;
+        private const string COMMENT_CACHE = "CommentCache";
+        public const string TABLE_NAME = DocConstantModelName.COMMENT;
         
         #region Constructor
-        public DocEntityWorkflowComment(Session session) : base(session) {}
+        public DocEntityComment(Session session) : base(session) {}
 
-        public DocEntityWorkflowComment() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityComment() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new WorkflowComment()));
+        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Comment()));
 
         #region Static Members
-        public static DocEntityWorkflowComment Get(Reference reference)
+        public static DocEntityComment Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityWorkflowComment Get(int? primaryKey)
+        public static DocEntityComment Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
-            var ret = DocEntityThreadCache<DocEntityWorkflowComment>.GetFromCache(primaryKey, WORKFLOWCOMMENT_CACHE);
+            var ret = DocEntityThreadCache<DocEntityComment>.GetFromCache(primaryKey, COMMENT_CACHE);
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityWorkflowComment>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
+                ret = query.SelectAll<DocEntityComment>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityWorkflowComment>.UpdateCache(ret.Id, ret, WORKFLOWCOMMENT_CACHE);
-                    DocEntityThreadCache<DocEntityWorkflowComment>.UpdateCache(ret.Hash, ret, WORKFLOWCOMMENT_CACHE);
+                    DocEntityThreadCache<DocEntityComment>.UpdateCache(ret.Id, ret, COMMENT_CACHE);
+                    DocEntityThreadCache<DocEntityComment>.UpdateCache(ret.Hash, ret, COMMENT_CACHE);
                 }
             }
             return ret;
         }
 
-        public static DocEntityWorkflowComment Get(Guid hash)
+        public static DocEntityComment Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
-            var ret = DocEntityThreadCache<DocEntityWorkflowComment>.GetFromCache(hash, WORKFLOWCOMMENT_CACHE);
+            var ret = DocEntityThreadCache<DocEntityComment>.GetFromCache(hash, COMMENT_CACHE);
             
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityWorkflowComment>().Where(e => e.Hash == hash).FirstOrDefault();
+                ret = query.SelectAll<DocEntityComment>().Where(e => e.Hash == hash).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityWorkflowComment>.UpdateCache(ret.Id, ret, WORKFLOWCOMMENT_CACHE);
-                    DocEntityThreadCache<DocEntityWorkflowComment>.UpdateCache(ret.Hash, ret, WORKFLOWCOMMENT_CACHE);
+                    DocEntityThreadCache<DocEntityComment>.UpdateCache(ret.Id, ret, COMMENT_CACHE);
+                    DocEntityThreadCache<DocEntityComment>.UpdateCache(ret.Hash, ret, COMMENT_CACHE);
                 }
             }
             return ret;
@@ -101,15 +101,7 @@ namespace Services.Schema
 
         #region Properties
         [Field]
-        [Association(PairTo = nameof(DocEntityWorkflowComment.Parent), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
-        public DocEntitySet<DocEntityWorkflowComment> Children { get; private set; }
-
-
-        public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
-
-
-        [Field]
-        public DocEntityWorkflowComment Parent { get; set; }
+        public DocEntityComment Parent { get; set; }
         public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
 
 
@@ -120,11 +112,6 @@ namespace Services.Schema
         [Field(Nullable = false)]
         public DocEntityUser User { get; set; }
         public int? UserId { get { return User?.Id; } private set { var noid = value; } }
-
-
-        [Field(Nullable = false)]
-        public DocEntityWorkflow Workflow { get; set; }
-        public int? WorkflowId { get { return Workflow?.Id; } private set { var noid = value; } }
 
 
         [Field]
@@ -150,7 +137,7 @@ namespace Services.Schema
 
         public override DocConstantModelName TableName => TABLE_NAME;
 
-        public const string CACHE_KEY_PREFIX = "FindWorkflowComments";
+        public const string CACHE_KEY_PREFIX = "FindComments";
 
         #endregion Overrides of DocEntity
 
@@ -161,14 +148,7 @@ namespace Services.Schema
         protected override void OnRemoving()
         {
             base.OnRemoving();
-            try
-            {
-                Children.Clear(); //foreach thing in Children en.Remove();
-            }
-            catch(Exception ex)
-            {
-                throw new DocException("Failed to delete WorkflowComment in Children delete", ex);
-            }
+
             FlushCache();
         }
 
@@ -179,7 +159,7 @@ namespace Services.Schema
         {
             if (false == ValidationMessage.IsValid)
             {
-                throw new HttpError(HttpStatusCode.Conflict, $"WorkflowComment requires: {ValidationMessage.Message}.");
+                throw new HttpError(HttpStatusCode.Conflict, $"Comment requires: {ValidationMessage.Message}.");
             }
 
             base.OnValidate();
@@ -216,11 +196,6 @@ namespace Services.Schema
                     isValid = false;
                     message += " User is a required property.";
                 }
-                if(DocTools.IsNullOrEmpty(Workflow))
-                {
-                    isValid = false;
-                    message += " Workflow is a required property.";
-                }
 
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;
@@ -230,9 +205,9 @@ namespace Services.Schema
 
         #region Converters
 
-        public WorkflowComment ToDto() => Mapper.Map<DocEntityWorkflowComment, WorkflowComment>(this);
+        public Comment ToDto() => Mapper.Map<DocEntityComment, Comment>(this);
 
-        public static explicit operator WorkflowComment(DocEntityWorkflowComment en) => en?.ToDto();
+        public static explicit operator Comment(DocEntityComment en) => en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

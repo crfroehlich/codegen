@@ -520,6 +520,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return GetJunctionSearchResult<Characteristic, DocEntityCharacteristic, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "documentset":
                         return GetJunctionSearchResult<Characteristic, DocEntityCharacteristic, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
                     case "favorite":
@@ -534,6 +536,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return AddJunction<Characteristic, DocEntityCharacteristic, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "documentset":
                         return AddJunction<Characteristic, DocEntityCharacteristic, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "favorite":
@@ -549,6 +553,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return RemoveJunction<Characteristic, DocEntityCharacteristic, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "documentset":
                         return RemoveJunction<Characteristic, DocEntityCharacteristic, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "favorite":

@@ -629,6 +629,7 @@
     "BROADCAST": "Broadcast",
     "CHARACTERISTIC": "Characteristic",
     "CLIENT": "Client",
+    "COMMENT": "Comment",
     "COMPARATOR": "Comparator",
     "DATABASEVERSION": "DatabaseVersion",
     "DATACLASS": "DataClass",
@@ -695,8 +696,7 @@
     "VALUETYPE": "ValueType",
     "VARIABLEINSTANCE": "VariableInstance",
     "VARIABLERULE": "VariableRule",
-    "WORKFLOW": "Workflow",
-    "WORKFLOWCOMMENT": "WorkflowComment"
+    "WORKFLOW": "Workflow"
   },
   "OutcomeCategory": {
     "ADVERSE_EVENT": "Adverse Event",

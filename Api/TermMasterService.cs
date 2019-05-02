@@ -711,6 +711,8 @@ namespace Services.API
             {
                     case "termcategory":
                         return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request, (ss) => HostContext.ResolveService<TermCategoryService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<TermMaster, DocEntityTermMaster, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "termsynonym":
@@ -727,6 +729,8 @@ namespace Services.API
             {
                     case "termcategory":
                         return AddJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
+                    case "comment":
+                        return AddJunction<TermMaster, DocEntityTermMaster, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return AddJunction<TermMaster, DocEntityTermMaster, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "termsynonym":
@@ -744,6 +748,8 @@ namespace Services.API
             {
                     case "termcategory":
                         return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityTermCategory, TermCategory, TermCategorySearch>((int)request.Id, DocConstantModelName.TERMCATEGORY, "Categories", request);
+                    case "comment":
+                        return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return RemoveJunction<TermMaster, DocEntityTermMaster, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "termsynonym":

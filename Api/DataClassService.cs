@@ -746,6 +746,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "customcollections":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "dontflattenproperties":
@@ -768,6 +770,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return AddJunction<DataClass, DocEntityDataClass, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "customcollections":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request);
                     case "dontflattenproperties":
@@ -791,6 +795,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return RemoveJunction<DataClass, DocEntityDataClass, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "customcollections":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request);
                     case "dontflattenproperties":

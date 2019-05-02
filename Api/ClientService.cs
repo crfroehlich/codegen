@@ -745,6 +745,8 @@ namespace Services.API
             {
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<Client, DocEntityClient, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "division":
                         return GetJunctionSearchResult<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request, (ss) => HostContext.ResolveService<DivisionService>(Request)?.Get(ss));
                     case "documentset":
@@ -769,6 +771,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return AddJunction<Client, DocEntityClient, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "division":
                         return AddJunction<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
                     case "documentset":
@@ -788,6 +792,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return RemoveJunction<Client, DocEntityClient, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "division":
                         return RemoveJunction<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
                     case "documentset":

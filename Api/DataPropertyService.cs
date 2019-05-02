@@ -958,6 +958,8 @@ namespace Services.API
             {
                     case "dataproperty":
                         return GetJunctionSearchResult<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<DataProperty, DocEntityDataProperty, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<DataProperty, DocEntityDataProperty, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
@@ -972,6 +974,8 @@ namespace Services.API
             {
                     case "dataproperty":
                         return AddJunction<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request);
+                    case "comment":
+                        return AddJunction<DataProperty, DocEntityDataProperty, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return AddJunction<DataProperty, DocEntityDataProperty, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
@@ -987,6 +991,8 @@ namespace Services.API
             {
                     case "dataproperty":
                         return RemoveJunction<DataProperty, DocEntityDataProperty, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "Children", request);
+                    case "comment":
+                        return RemoveJunction<DataProperty, DocEntityDataProperty, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return RemoveJunction<DataProperty, DocEntityDataProperty, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":

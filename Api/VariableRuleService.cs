@@ -710,6 +710,8 @@ namespace Services.API
             {
                     case "variablerule":
                         return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request, (ss) => HostContext.ResolveService<VariableRuleService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<VariableRule, DocEntityVariableRule, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "variableinstance":
@@ -728,6 +730,8 @@ namespace Services.API
             {
                     case "variablerule":
                         return AddJunction<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request);
+                    case "comment":
+                        return AddJunction<VariableRule, DocEntityVariableRule, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return AddJunction<VariableRule, DocEntityVariableRule, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "variableinstance":
@@ -747,6 +751,8 @@ namespace Services.API
             {
                     case "variablerule":
                         return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityVariableRule, VariableRule, VariableRuleSearch>((int)request.Id, DocConstantModelName.VARIABLERULE, "Children", request);
+                    case "comment":
+                        return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return RemoveJunction<VariableRule, DocEntityVariableRule, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "variableinstance":

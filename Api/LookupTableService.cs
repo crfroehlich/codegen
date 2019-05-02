@@ -642,6 +642,8 @@ namespace Services.API
                         return GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
                     case "lookupcategory":
                         return GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityLookupCategory, LookupCategory, LookupCategorySearch>((int)request.Id, DocConstantModelName.LOOKUPCATEGORY, "Categories", request, (ss) => HostContext.ResolveService<LookupCategoryService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "document":
                         return GetJunctionSearchResult<LookupTable, DocEntityLookupTable, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
                     case "favorite":
@@ -660,6 +662,8 @@ namespace Services.API
                         return AddJunction<LookupTable, DocEntityLookupTable, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     case "lookupcategory":
                         return AddJunction<LookupTable, DocEntityLookupTable, DocEntityLookupCategory, LookupCategory, LookupCategorySearch>((int)request.Id, DocConstantModelName.LOOKUPCATEGORY, "Categories", request);
+                    case "comment":
+                        return AddJunction<LookupTable, DocEntityLookupTable, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "document":
                         return AddJunction<LookupTable, DocEntityLookupTable, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
@@ -679,6 +683,8 @@ namespace Services.API
                         return RemoveJunction<LookupTable, DocEntityLookupTable, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     case "lookupcategory":
                         return RemoveJunction<LookupTable, DocEntityLookupTable, DocEntityLookupCategory, LookupCategory, LookupCategorySearch>((int)request.Id, DocConstantModelName.LOOKUPCATEGORY, "Categories", request);
+                    case "comment":
+                        return RemoveJunction<LookupTable, DocEntityLookupTable, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "document":
                         return RemoveJunction<LookupTable, DocEntityLookupTable, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":

@@ -102,10 +102,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Bindings.Any(r => r.Id.In(request.BindingsIds)));
                 }
-                if(true == request.CommentsIds?.Any())
-                {
-                    entities = entities.Where(en => en.Comments.Any(r => r.Id.In(request.CommentsIds)));
-                }
                 if(!DocTools.IsNullOrEmpty(request.Description))
                     entities = entities.Where(en => en.Description.Contains(request.Description));
                 if(true == request.DocumentsIds?.Any())
@@ -202,7 +198,6 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pBindings = request.Bindings?.ToList();
-            var pComments = request.Comments?.ToList();
             var pData = request.Data;
             var pDescription = request.Description;
             var pDocuments = request.Documents?.ToList();
@@ -359,50 +354,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<List<Reference>>(request, pBindings, nameof(request.Bindings)) && !request.VisibleFields.Matches(nameof(request.Bindings), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Bindings));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pComments, permission, DocConstantModelName.WORKFLOW, nameof(request.Comments)))
-            {
-                if (true == pComments?.Any() )
-                {
-                    var requestedComments = pComments.Select(p => p.Id).Distinct().ToList();
-                    var existsComments = Execute.SelectAll<DocEntityWorkflowComment>().Where(e => e.Id.In(requestedComments)).Select( e => e.Id ).ToList();
-                    if (existsComments.Count != requestedComments.Count)
-                    {
-                        var nonExists = requestedComments.Where(id => existsComments.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Comments with objects that do not exist. No matching Comments(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
-                    }
-                    var toAdd = requestedComments.Where(id => entity.Comments.All(e => e.Id != id)).ToList(); 
-                    toAdd?.ForEach(id =>
-                    {
-                        var target = DocEntityWorkflowComment.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Comments)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Comments)} to {nameof(Workflow)}");
-                        entity.Comments.Add(target);
-                    });
-                    var toRemove = entity.Comments.Where(e => requestedComments.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityWorkflowComment.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Comments)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Comments)} from {nameof(Workflow)}");
-                        entity.Comments.Remove(target);
-                    });
-                }
-                else
-                {
-                    var toRemove = entity.Comments.Select(e => e.Id).ToList(); 
-                    toRemove.ForEach(id =>
-                    {
-                        var target = DocEntityWorkflowComment.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(Workflow), columnName: nameof(request.Comments)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Comments)} from {nameof(Workflow)}");
-                        entity.Comments.Remove(target);
-                    });
-                }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pComments, nameof(request.Comments)) && !request.VisibleFields.Matches(nameof(request.Comments), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Comments));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocuments, permission, DocConstantModelName.WORKFLOW, nameof(request.Documents)))
@@ -714,7 +665,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pBindings = entity.Bindings.ToList();
-                    var pComments = entity.Comments.ToList();
                     var pData = entity.Data;
                     var pDescription = entity.Description;
                     if(!DocTools.IsNullOrEmpty(pDescription))
@@ -745,11 +695,6 @@ namespace Services.API
                             foreach(var item in pBindings)
                             {
                                 entity.Bindings.Add(item);
-                            }
-
-                            foreach(var item in pComments)
-                            {
-                                entity.Comments.Add(item);
                             }
 
                             foreach(var item in pDocuments)
@@ -864,8 +809,8 @@ namespace Services.API
             {
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
-                    case "workflowcomment":
-                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request, (ss) => HostContext.ResolveService<WorkflowCommentService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "document":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
                     case "favorite":
@@ -890,8 +835,8 @@ namespace Services.API
             {
                     case "lookuptablebinding":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
-                    case "workflowcomment":
-                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request);
+                    case "comment":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "document":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
@@ -917,8 +862,8 @@ namespace Services.API
             {
                     case "lookuptablebinding":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
-                    case "workflowcomment":
-                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request);
+                    case "comment":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "document":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":

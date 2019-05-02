@@ -63,8 +63,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, "Updated")))
                 .ForMember(dest => dest.Bindings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Bindings))))
                 .ForMember(dest => dest.BindingsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.BindingsCount))))
-                .ForMember(dest => dest.Comments, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Comments))))
-                .ForMember(dest => dest.CommentsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.CommentsCount))))
                 .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Data))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Description))))
                 .ForMember(dest => dest.Documents, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Documents))))

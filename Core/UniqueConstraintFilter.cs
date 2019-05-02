@@ -57,6 +57,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityBroadcast, bool>> BroadcastIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityCharacteristic, bool>> CharacteristicIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityClient, bool>> ClientIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityComment, bool>> CommentIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityComparator, bool>> ComparatorIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDatabaseVersion, bool>> DatabaseVersionIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDataClass, bool>> DataClassIgnoreArchived() => d => d.Archived == false;
@@ -124,6 +125,5 @@ namespace Services.Core
             public static Expression<Func<DocEntityVariableInstance, bool>> VariableInstanceIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityVariableRule, bool>> VariableRuleIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityWorkflow, bool>> WorkflowIgnoreArchived() => d => d.Archived == false;
-            public static Expression<Func<DocEntityWorkflowComment, bool>> WorkflowCommentIgnoreArchived() => d => d.Archived == false;
     }
 }

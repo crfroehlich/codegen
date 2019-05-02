@@ -69,6 +69,8 @@ namespace Services.Enums
         CHARACTERISTIC = 14475,
         [EnumMember(Value = DocConstantModelName.CLIENT)]
         CLIENT = 111,
+        [EnumMember(Value = DocConstantModelName.COMMENT)]
+        COMMENT = 18319,
         [EnumMember(Value = DocConstantModelName.COMPARATOR)]
         COMPARATOR = 20035,
         [EnumMember(Value = DocConstantModelName.DATABASEVERSION)]
@@ -204,9 +206,7 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantModelName.VARIABLERULE)]
         VARIABLERULE = 15680,
         [EnumMember(Value = DocConstantModelName.WORKFLOW)]
-        WORKFLOW = 15378,
-        [EnumMember(Value = DocConstantModelName.WORKFLOWCOMMENT)]
-        WORKFLOWCOMMENT = 18319
+        WORKFLOW = 15378
     }
     
     public static partial class EnumExtensions
@@ -237,6 +237,8 @@ namespace Services.Enums
                     return DocConstantModelName.CHARACTERISTIC;
                 case ModelNameEnm.CLIENT:
                     return DocConstantModelName.CLIENT;
+                case ModelNameEnm.COMMENT:
+                    return DocConstantModelName.COMMENT;
                 case ModelNameEnm.COMPARATOR:
                     return DocConstantModelName.COMPARATOR;
                 case ModelNameEnm.DATABASEVERSION:
@@ -373,8 +375,6 @@ namespace Services.Enums
                     return DocConstantModelName.VARIABLERULE;
                 case ModelNameEnm.WORKFLOW:
                     return DocConstantModelName.WORKFLOW;
-                case ModelNameEnm.WORKFLOWCOMMENT:
-                    return DocConstantModelName.WORKFLOWCOMMENT;
                 default:
                     return string.Empty;
             }
@@ -394,6 +394,7 @@ namespace Services.Enums
         public const string BROADCAST = "Broadcast";
         public const string CHARACTERISTIC = "Characteristic";
         public const string CLIENT = "Client";
+        public const string COMMENT = "Comment";
         public const string COMPARATOR = "Comparator";
         public const string DATABASEVERSION = "DatabaseVersion";
         public const string DATACLASS = "DataClass";
@@ -462,7 +463,6 @@ namespace Services.Enums
         public const string VARIABLEINSTANCE = "VariableInstance";
         public const string VARIABLERULE = "VariableRule";
         public const string WORKFLOW = "Workflow";
-        public const string WORKFLOWCOMMENT = "WorkflowComment";
         
         #region Internals
         

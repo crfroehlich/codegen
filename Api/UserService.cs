@@ -1336,6 +1336,8 @@ namespace Services.API
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityAuditRecord, AuditRecord, AuditRecordSearch>((int)request.Id, DocConstantModelName.AUDITRECORD, "Audits", request, (ss) => HostContext.ResolveService<AuditRecordService>(Request)?.Get(ss));
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "documentset":
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
                     case "favorite":
@@ -1370,6 +1372,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return AddJunction<User, DocEntityUser, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "documentset":
                         return AddJunction<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "favorite":
@@ -1391,6 +1395,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return RemoveJunction<User, DocEntityUser, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "documentset":
                         return RemoveJunction<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
                     case "favorite":

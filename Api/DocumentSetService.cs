@@ -1852,6 +1852,8 @@ namespace Services.API
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request, (ss) => HostContext.ResolveService<CharacteristicService>(Request)?.Get(ss));
                     case "client":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request, (ss) => HostContext.ResolveService<ClientService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "comparator":
                         return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request, (ss) => HostContext.ResolveService<ComparatorService>(Request)?.Get(ss));
                     case "division":
@@ -1896,6 +1898,8 @@ namespace Services.API
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
                     case "client":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
+                    case "comment":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "comparator":
                         return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request);
                     case "division":
@@ -1929,6 +1933,8 @@ namespace Services.API
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
                     case "client":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
+                    case "comment":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "comparator":
                         return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request);
                     case "division":

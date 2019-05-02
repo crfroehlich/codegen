@@ -97,6 +97,10 @@ namespace Services.Core
                     var enClient = entity as DocEntityClient;
                     ret = enClient.ToDto() as TDto;
                     break;
+                case DocConstantModelName.COMMENT:
+                    var enComment = entity as DocEntityComment;
+                    ret = enComment.ToDto() as TDto;
+                    break;
                 case DocConstantModelName.COMPARATOR:
                     var enComparator = entity as DocEntityComparator;
                     ret = enComparator.ToDto() as TDto;
@@ -364,10 +368,6 @@ namespace Services.Core
                 case DocConstantModelName.WORKFLOW:
                     var enWorkflow = entity as DocEntityWorkflow;
                     ret = enWorkflow.ToDto() as TDto;
-                    break;
-                case DocConstantModelName.WORKFLOWCOMMENT:
-                    var enWorkflowComment = entity as DocEntityWorkflowComment;
-                    ret = enWorkflowComment.ToDto() as TDto;
                     break;
             }
             return ret;

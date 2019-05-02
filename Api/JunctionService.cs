@@ -642,6 +642,8 @@ namespace Services.API
             {
                     case "junction":
                         return GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request, (ss) => HostContext.ResolveService<JunctionService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<Junction, DocEntityJunction, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
@@ -656,6 +658,8 @@ namespace Services.API
             {
                     case "junction":
                         return AddJunction<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request);
+                    case "comment":
+                        return AddJunction<Junction, DocEntityJunction, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return AddJunction<Junction, DocEntityJunction, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
@@ -671,6 +675,8 @@ namespace Services.API
             {
                     case "junction":
                         return RemoveJunction<Junction, DocEntityJunction, DocEntityJunction, Junction, JunctionSearch>((int)request.Id, DocConstantModelName.JUNCTION, "Children", request);
+                    case "comment":
+                        return RemoveJunction<Junction, DocEntityJunction, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return RemoveJunction<Junction, DocEntityJunction, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":

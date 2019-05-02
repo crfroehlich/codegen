@@ -185,6 +185,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "comment":
+                        return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "auditdelta":
                         return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityAuditDelta, AuditDelta, AuditDeltaSearch>((int)request.Id, DocConstantModelName.AUDITDELTA, "Deltas", request, (ss) => HostContext.ResolveService<AuditDeltaService>(Request)?.Get(ss));
                     case "event":

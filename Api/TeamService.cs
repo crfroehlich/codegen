@@ -778,6 +778,8 @@ namespace Services.API
             {
                     case "role":
                         return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request, (ss) => HostContext.ResolveService<RoleService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<Team, DocEntityTeam, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "scope":
@@ -798,6 +800,8 @@ namespace Services.API
             {
                     case "role":
                         return AddJunction<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request);
+                    case "comment":
+                        return AddJunction<Team, DocEntityTeam, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return AddJunction<Team, DocEntityTeam, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "scope":
@@ -819,6 +823,8 @@ namespace Services.API
             {
                     case "role":
                         return RemoveJunction<Team, DocEntityTeam, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "AdminRoles", request);
+                    case "comment":
+                        return RemoveJunction<Team, DocEntityTeam, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "favorite":
                         return RemoveJunction<Team, DocEntityTeam, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "scope":

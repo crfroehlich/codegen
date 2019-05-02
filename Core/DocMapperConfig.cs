@@ -74,6 +74,7 @@ namespace Services.Core
             cfg.AddProfile<BroadcastMapper>();
             cfg.AddProfile<CharacteristicMapper>();
             cfg.AddProfile<ClientMapper>();
+            cfg.AddProfile<CommentMapper>();
             cfg.AddProfile<ComparatorMapper>();
             cfg.AddProfile<DatabaseVersionMapper>();
             cfg.AddProfile<DataClassMapper>();
@@ -139,7 +140,6 @@ namespace Services.Core
             cfg.AddProfile<VariableInstanceMapper>();
             cfg.AddProfile<VariableRuleMapper>();
             cfg.AddProfile<WorkflowMapper>();
-            cfg.AddProfile<WorkflowCommentMapper>();
             } );
         }
     }

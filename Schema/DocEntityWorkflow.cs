@@ -107,14 +107,6 @@ namespace Services.Schema
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
-        [Field]
-        [Association(PairTo = nameof(DocEntityWorkflowComment.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
-        public DocEntitySet<DocEntityWorkflowComment> Comments { get; private set; }
-
-
-        public int? CommentsCount { get { return Comments.Count(); } private set { var noid = value; } }
-
-
         [Field(Length = int.MaxValue, NullableOnUpgrade = true)]
         public string Data { get; set; }
 
@@ -214,14 +206,6 @@ namespace Services.Schema
         protected override void OnRemoving()
         {
             base.OnRemoving();
-            try
-            {
-                Comments.Clear(); //foreach thing in Comments en.Remove();
-            }
-            catch(Exception ex)
-            {
-                throw new DocException("Failed to delete Workflow in Comments delete", ex);
-            }
             try
             {
                 Tasks.Clear(); //foreach thing in Tasks en.Remove();

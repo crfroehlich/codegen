@@ -25,7 +25,7 @@
     "UserRequest": 18619,
     "QueueChannel": 18519,
     "UserSession": 18419,
-    "WorkflowComment": 18319,
+    "Comment": 18319,
     "MeanVariances": 18219,
     "MeanVarianceValue": 18119,
     "Tag": 18019,

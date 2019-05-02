@@ -84,7 +84,7 @@ namespace Services.Schema
             new TypeMap() { SchemaName = typeof(DocEntityUserRequest).FullName, TypeId = 18619, TableName = DocConstantModelName.USERREQUEST, ClassName = "UserRequest", DtoName = nameof(UserRequest) },
             new TypeMap() { SchemaName = typeof(DocEntityQueueChannel).FullName, TypeId = 18519, TableName = DocConstantModelName.QUEUECHANNEL, ClassName = "QueueChannel", DtoName = nameof(QueueChannel) },
             new TypeMap() { SchemaName = typeof(DocEntityUserSession).FullName, TypeId = 18419, TableName = DocConstantModelName.USERSESSION, ClassName = "UserSession", DtoName = nameof(UserSession) },
-            new TypeMap() { SchemaName = typeof(DocEntityWorkflowComment).FullName, TypeId = 18319, TableName = DocConstantModelName.WORKFLOWCOMMENT, ClassName = "WorkflowComment", DtoName = nameof(WorkflowComment) },
+            new TypeMap() { SchemaName = typeof(DocEntityComment).FullName, TypeId = 18319, TableName = DocConstantModelName.COMMENT, ClassName = "Comment", DtoName = nameof(Comment) },
             new TypeMap() { SchemaName = typeof(DocEntityMeanVariances).FullName, TypeId = 18219, TableName = DocConstantModelName.MEANVARIANCES, ClassName = "MeanVariances", DtoName = nameof(MeanVariances) },
             new TypeMap() { SchemaName = typeof(DocEntityMeanVarianceValue).FullName, TypeId = 18119, TableName = DocConstantModelName.MEANVARIANCEVALUE, ClassName = "MeanVarianceValue", DtoName = nameof(MeanVarianceValue) },
             new TypeMap() { SchemaName = typeof(DocEntityTag).FullName, TypeId = 18019, TableName = DocConstantModelName.TAG, ClassName = "Tag", DtoName = nameof(Tag) },
