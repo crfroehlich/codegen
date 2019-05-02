@@ -887,6 +887,8 @@ namespace Services.API
             {
                     case "project":
                         return GetJunctionSearchResult<Project, DocEntityProject, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Children", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Project, DocEntityProject, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<Project, DocEntityProject, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "timecard":
@@ -899,6 +901,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return AddJunction<Project, DocEntityProject, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return AddJunction<Project, DocEntityProject, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "timecard":
@@ -912,6 +916,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return RemoveJunction<Project, DocEntityProject, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return RemoveJunction<Project, DocEntityProject, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "timecard":

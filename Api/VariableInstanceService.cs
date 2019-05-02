@@ -542,6 +542,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return GetJunctionSearchResult<VariableInstance, DocEntityVariableInstance, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<VariableInstance, DocEntityVariableInstance, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "workflow":
@@ -554,6 +556,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return AddJunction<VariableInstance, DocEntityVariableInstance, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return AddJunction<VariableInstance, DocEntityVariableInstance, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "workflow":
@@ -567,6 +571,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return RemoveJunction<VariableInstance, DocEntityVariableInstance, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return RemoveJunction<VariableInstance, DocEntityVariableInstance, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "workflow":

@@ -586,6 +586,8 @@ namespace Services.API
             {
                     case "lookuptablebinding":
                         return GetJunctionSearchResult<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<TermSynonym, DocEntityTermSynonym, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<TermSynonym, DocEntityTermSynonym, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
@@ -598,6 +600,8 @@ namespace Services.API
             {
                     case "lookuptablebinding":
                         return AddJunction<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
+                    case "favorite":
+                        return AddJunction<TermSynonym, DocEntityTermSynonym, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return AddJunction<TermSynonym, DocEntityTermSynonym, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
@@ -611,6 +615,8 @@ namespace Services.API
             {
                     case "lookuptablebinding":
                         return RemoveJunction<TermSynonym, DocEntityTermSynonym, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
+                    case "favorite":
+                        return RemoveJunction<TermSynonym, DocEntityTermSynonym, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return RemoveJunction<TermSynonym, DocEntityTermSynonym, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:

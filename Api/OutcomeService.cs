@@ -522,6 +522,8 @@ namespace Services.API
             {
                     case "documentset":
                         return GetJunctionSearchResult<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Outcome, DocEntityOutcome, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<Outcome, DocEntityOutcome, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
@@ -534,6 +536,8 @@ namespace Services.API
             {
                     case "documentset":
                         return AddJunction<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return AddJunction<Outcome, DocEntityOutcome, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return AddJunction<Outcome, DocEntityOutcome, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
@@ -547,6 +551,8 @@ namespace Services.API
             {
                     case "documentset":
                         return RemoveJunction<Outcome, DocEntityOutcome, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return RemoveJunction<Outcome, DocEntityOutcome, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return RemoveJunction<Outcome, DocEntityOutcome, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:

@@ -868,6 +868,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request, (ss) => HostContext.ResolveService<WorkflowCommentService>(Request)?.Get(ss));
                     case "document":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "scope":
                         return GetJunctionSearchResult<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
                     case "tag":
@@ -892,6 +894,8 @@ namespace Services.API
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request);
                     case "document":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "favorite":
+                        return AddJunction<Workflow, DocEntityWorkflow, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "scope":
                         return AddJunction<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":
@@ -917,6 +921,8 @@ namespace Services.API
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Comments", request);
                     case "document":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "favorite":
+                        return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "scope":
                         return RemoveJunction<Workflow, DocEntityWorkflow, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":

@@ -565,6 +565,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return GetJunctionSearchResult<BackgroundTask, DocEntityBackgroundTask, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "backgroundtaskitem":
                         return GetJunctionSearchResult<BackgroundTask, DocEntityBackgroundTask, DocEntityBackgroundTaskItem, BackgroundTaskItem, BackgroundTaskItemSearch>((int)request.Id, DocConstantModelName.BACKGROUNDTASKITEM, "Items", request, (ss) => HostContext.ResolveService<BackgroundTaskItemService>(Request)?.Get(ss));
                     case "tag":

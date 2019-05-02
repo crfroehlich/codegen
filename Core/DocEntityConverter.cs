@@ -149,6 +149,10 @@ namespace Services.Core
                     var enEvent = entity as DocEntityEvent;
                     ret = enEvent.ToDto() as TDto;
                     break;
+                case DocConstantModelName.FAVORITE:
+                    var enFavorite = entity as DocEntityFavorite;
+                    ret = enFavorite.ToDto() as TDto;
+                    break;
                 case DocConstantModelName.FEATURESET:
                     var enFeatureSet = entity as DocEntityFeatureSet;
                     ret = enFeatureSet.ToDto() as TDto;

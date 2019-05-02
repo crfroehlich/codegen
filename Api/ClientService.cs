@@ -749,6 +749,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request, (ss) => HostContext.ResolveService<DivisionService>(Request)?.Get(ss));
                     case "documentset":
                         return GetJunctionSearchResult<Client, DocEntityClient, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Client, DocEntityClient, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "project":
                         return GetJunctionSearchResult<Client, DocEntityClient, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Projects", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
                     case "scope":
@@ -771,6 +773,8 @@ namespace Services.API
                         return AddJunction<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
                     case "documentset":
                         return AddJunction<Client, DocEntityClient, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return AddJunction<Client, DocEntityClient, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "scope":
                         return AddJunction<Client, DocEntityClient, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":
@@ -788,6 +792,8 @@ namespace Services.API
                         return RemoveJunction<Client, DocEntityClient, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
                     case "documentset":
                         return RemoveJunction<Client, DocEntityClient, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return RemoveJunction<Client, DocEntityClient, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "scope":
                         return RemoveJunction<Client, DocEntityClient, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":

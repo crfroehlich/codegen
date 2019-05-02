@@ -167,6 +167,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return GetJunctionSearchResult<StatsStudySet, DocEntityStatsStudySet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "statsrecord":
                         return GetJunctionSearchResult<StatsStudySet, DocEntityStatsStudySet, DocEntityStatsRecord, StatsRecord, StatsRecordSearch>((int)request.Id, DocConstantModelName.STATSRECORD, "Records", request, (ss) => HostContext.ResolveService<StatsRecordService>(Request)?.Get(ss));
                     case "tag":

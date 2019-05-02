@@ -639,6 +639,8 @@ namespace Services.API
             {
                     case "documentset":
                         return GetJunctionSearchResult<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Division, DocEntityDivision, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<Division, DocEntityDivision, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "user":
@@ -653,6 +655,8 @@ namespace Services.API
             {
                     case "documentset":
                         return AddJunction<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return AddJunction<Division, DocEntityDivision, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return AddJunction<Division, DocEntityDivision, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "user":
@@ -668,6 +672,8 @@ namespace Services.API
             {
                     case "documentset":
                         return RemoveJunction<Division, DocEntityDivision, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return RemoveJunction<Division, DocEntityDivision, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return RemoveJunction<Division, DocEntityDivision, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                     case "user":

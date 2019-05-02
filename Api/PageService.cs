@@ -687,6 +687,8 @@ namespace Services.API
             {
                     case "app":
                         return GetJunctionSearchResult<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request, (ss) => HostContext.ResolveService<AppService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Page, DocEntityPage, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "glossary":
                         return GetJunctionSearchResult<Page, DocEntityPage, DocEntityGlossary, Glossary, GlossarySearch>((int)request.Id, DocConstantModelName.GLOSSARY, "Glossary", request, (ss) => HostContext.ResolveService<GlossaryService>(Request)?.Get(ss));
                     case "help":
@@ -705,6 +707,8 @@ namespace Services.API
             {
                     case "app":
                         return AddJunction<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
+                    case "favorite":
+                        return AddJunction<Page, DocEntityPage, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "glossary":
                         return AddJunction<Page, DocEntityPage, DocEntityGlossary, Glossary, GlossarySearch>((int)request.Id, DocConstantModelName.GLOSSARY, "Glossary", request);
                     case "help":
@@ -724,6 +728,8 @@ namespace Services.API
             {
                     case "app":
                         return RemoveJunction<Page, DocEntityPage, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
+                    case "favorite":
+                        return RemoveJunction<Page, DocEntityPage, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "glossary":
                         return RemoveJunction<Page, DocEntityPage, DocEntityGlossary, Glossary, GlossarySearch>((int)request.Id, DocConstantModelName.GLOSSARY, "Glossary", request);
                     case "help":

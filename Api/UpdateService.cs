@@ -543,6 +543,8 @@ namespace Services.API
             {
                     case "event":
                         return GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request, (ss) => HostContext.ResolveService<EventService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<Update, DocEntityUpdate, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:

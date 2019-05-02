@@ -764,6 +764,8 @@ namespace Services.API
             {
                     case "app":
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request, (ss) => HostContext.ResolveService<AppService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Role, DocEntityRole, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "featureset":
                         return GetJunctionSearchResult<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request, (ss) => HostContext.ResolveService<FeatureSetService>(Request)?.Get(ss));
                     case "page":
@@ -782,6 +784,8 @@ namespace Services.API
             {
                     case "app":
                         return AddJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
+                    case "favorite":
+                        return AddJunction<Role, DocEntityRole, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "featureset":
                         return AddJunction<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request);
                     case "page":
@@ -801,6 +805,8 @@ namespace Services.API
             {
                     case "app":
                         return RemoveJunction<Role, DocEntityRole, DocEntityApp, App, AppSearch>((int)request.Id, DocConstantModelName.APP, "Apps", request);
+                    case "favorite":
+                        return RemoveJunction<Role, DocEntityRole, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "featureset":
                         return RemoveJunction<Role, DocEntityRole, DocEntityFeatureSet, FeatureSet, FeatureSetSearch>((int)request.Id, DocConstantModelName.FEATURESET, "FeatureSets", request);
                     case "page":

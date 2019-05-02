@@ -153,6 +153,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "impersonation":
                         return GetJunctionSearchResult<UserSession, DocEntityUserSession, DocEntityImpersonation, Impersonation, ImpersonationSearch>((int)request.Id, DocConstantModelName.IMPERSONATION, "Impersonations", request, (ss) => HostContext.ResolveService<ImpersonationService>(Request)?.Get(ss));
                     case "request":

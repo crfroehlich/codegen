@@ -61,6 +61,7 @@ namespace Services.Schema
     {
         public static List<TypeMap> Maps { get; } = new List<TypeMap>
         {
+            new TypeMap() { SchemaName = typeof(DocEntityFavorite).FullName, TypeId = 20485, TableName = DocConstantModelName.FAVORITE, ClassName = "Favorite", DtoName = nameof(Favorite) },
             new TypeMap() { SchemaName = typeof(DocEntityEoD).FullName, TypeId = 20385, TableName = DocConstantModelName.EOD, ClassName = "EoD", DtoName = nameof(EoD) },
             new TypeMap() { SchemaName = typeof(DocEntityRating).FullName, TypeId = 20365, TableName = DocConstantModelName.RATING, ClassName = "Rating", DtoName = nameof(Rating) },
             new TypeMap() { SchemaName = typeof(DocEntityDataTab).FullName, TypeId = 20265, TableName = DocConstantModelName.DATATAB, ClassName = "DataTab", DtoName = nameof(DataTab) },

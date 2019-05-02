@@ -189,6 +189,8 @@ namespace Services.API
                         return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityAuditDelta, AuditDelta, AuditDeltaSearch>((int)request.Id, DocConstantModelName.AUDITDELTA, "Deltas", request, (ss) => HostContext.ResolveService<AuditDeltaService>(Request)?.Get(ss));
                     case "event":
                         return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityEvent, Event, EventSearch>((int)request.Id, DocConstantModelName.EVENT, "Events", request, (ss) => HostContext.ResolveService<EventService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<AuditRecord, DocEntityAuditRecord, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:

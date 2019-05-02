@@ -568,6 +568,8 @@ namespace Services.API
             {
                     case "workflowcomment":
                         return GetJunctionSearchResult<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request, (ss) => HostContext.ResolveService<WorkflowCommentService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<WorkflowComment, DocEntityWorkflowComment, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<WorkflowComment, DocEntityWorkflowComment, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                 default:
@@ -580,6 +582,8 @@ namespace Services.API
             {
                     case "workflowcomment":
                         return AddJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request);
+                    case "favorite":
+                        return AddJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return AddJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:
@@ -593,6 +597,8 @@ namespace Services.API
             {
                     case "workflowcomment":
                         return RemoveJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityWorkflowComment, WorkflowComment, WorkflowCommentSearch>((int)request.Id, DocConstantModelName.WORKFLOWCOMMENT, "Children", request);
+                    case "favorite":
+                        return RemoveJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
                         return RemoveJunction<WorkflowComment, DocEntityWorkflowComment, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
                 default:

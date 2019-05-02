@@ -623,6 +623,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return GetJunctionSearchResult<LookupTableBinding, DocEntityLookupTableBinding, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "termsynonym":
                         return GetJunctionSearchResult<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request, (ss) => HostContext.ResolveService<TermSynonymService>(Request)?.Get(ss));
                     case "tag":
@@ -637,6 +639,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return AddJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "termsynonym":
                         return AddJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
                     case "tag":
@@ -652,6 +656,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return RemoveJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "termsynonym":
                         return RemoveJunction<LookupTableBinding, DocEntityLookupTableBinding, DocEntityTermSynonym, TermSynonym, TermSynonymSearch>((int)request.Id, DocConstantModelName.TERMSYNONYM, "Synonyms", request);
                     case "tag":

@@ -86,6 +86,7 @@ namespace Services.Core
             cfg.AddProfile<DocumentSetHistoryMapper>();
             cfg.AddProfile<EoDMapper>();
             cfg.AddProfile<EventMapper>();
+            cfg.AddProfile<FavoriteMapper>();
             cfg.AddProfile<FeatureSetMapper>();
             cfg.AddProfile<GlossaryMapper>();
             cfg.AddProfile<HelpMapper>();

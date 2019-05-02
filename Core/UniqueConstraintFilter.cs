@@ -70,6 +70,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityDocumentSetHistory, bool>> DocumentSetHistoryIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityEoD, bool>> EoDIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityEvent, bool>> EventIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityFavorite, bool>> FavoriteIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityFeatureSet, bool>> FeatureSetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityGlossary, bool>> GlossaryIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityHelp, bool>> HelpIgnoreArchived() => d => d.Archived == false;

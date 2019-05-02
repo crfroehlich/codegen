@@ -550,6 +550,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "lookuptable":
                         return GetJunctionSearchResult<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
                     case "tag":
@@ -562,6 +564,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "lookuptable":
                         return AddJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
                     case "tag":
@@ -575,6 +579,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "lookuptable":
                         return RemoveJunction<LookupCategory, DocEntityLookupCategory, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "Lookups", request);
                     case "tag":

@@ -642,6 +642,7 @@
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
     "EOD": "EoD",
     "EVENT": "Event",
+    "FAVORITE": "Favorite",
     "FEATURESET": "FeatureSet",
     "GLOSSARY": "Glossary",
     "HELP": "Help",

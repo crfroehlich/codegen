@@ -657,6 +657,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return GetJunctionSearchResult<Help, DocEntityHelp, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "page":
                         return GetJunctionSearchResult<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request, (ss) => HostContext.ResolveService<PageService>(Request)?.Get(ss));
                     case "scope":
@@ -671,6 +673,8 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return AddJunction<Help, DocEntityHelp, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "page":
                         return AddJunction<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
                     case "scope":
@@ -686,6 +690,8 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "favorite":
+                        return RemoveJunction<Help, DocEntityHelp, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "page":
                         return RemoveJunction<Help, DocEntityHelp, DocEntityPage, Page, PageSearch>((int)request.Id, DocConstantModelName.PAGE, "Pages", request);
                     case "scope":

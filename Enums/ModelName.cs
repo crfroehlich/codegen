@@ -97,6 +97,8 @@ namespace Services.Enums
         EOD = 20385,
         [EnumMember(Value = DocConstantModelName.EVENT)]
         EVENT = 19219,
+        [EnumMember(Value = DocConstantModelName.FAVORITE)]
+        FAVORITE = 20485,
         [EnumMember(Value = DocConstantModelName.FEATURESET)]
         FEATURESET = 116,
         [EnumMember(Value = DocConstantModelName.GLOSSARY)]
@@ -263,6 +265,8 @@ namespace Services.Enums
                     return DocConstantModelName.EOD;
                 case ModelNameEnm.EVENT:
                     return DocConstantModelName.EVENT;
+                case ModelNameEnm.FAVORITE:
+                    return DocConstantModelName.FAVORITE;
                 case ModelNameEnm.FEATURESET:
                     return DocConstantModelName.FEATURESET;
                 case ModelNameEnm.GLOSSARY:
@@ -404,6 +408,7 @@ namespace Services.Enums
         public const string ENTITIES = "Entities";
         public const string EOD = "EoD";
         public const string EVENT = "Event";
+        public const string FAVORITE = "Favorite";
         public const string FEATURESET = "FeatureSet";
         public const string GLOSSARY = "Glossary";
         public const string HELP = "Help";

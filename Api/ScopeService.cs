@@ -1034,6 +1034,8 @@ namespace Services.API
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
                     case "broadcast":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityBroadcast, Broadcast, BroadcastSearch>((int)request.Id, DocConstantModelName.BROADCAST, "Broadcasts", request, (ss) => HostContext.ResolveService<BroadcastService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "help":
                         return GetJunctionSearchResult<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request, (ss) => HostContext.ResolveService<HelpService>(Request)?.Get(ss));
                     case "termsynonym":
@@ -1056,6 +1058,8 @@ namespace Services.API
                         return AddJunction<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     case "broadcast":
                         return AddJunction<Scope, DocEntityScope, DocEntityBroadcast, Broadcast, BroadcastSearch>((int)request.Id, DocConstantModelName.BROADCAST, "Broadcasts", request);
+                    case "favorite":
+                        return AddJunction<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "help":
                         return AddJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
                     case "termsynonym":
@@ -1079,6 +1083,8 @@ namespace Services.API
                         return RemoveJunction<Scope, DocEntityScope, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request);
                     case "broadcast":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityBroadcast, Broadcast, BroadcastSearch>((int)request.Id, DocConstantModelName.BROADCAST, "Broadcasts", request);
+                    case "favorite":
+                        return RemoveJunction<Scope, DocEntityScope, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "help":
                         return RemoveJunction<Scope, DocEntityScope, DocEntityHelp, Help, HelpSearch>((int)request.Id, DocConstantModelName.HELP, "Help", request);
                     case "termsynonym":

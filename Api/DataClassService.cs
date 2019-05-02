@@ -750,6 +750,8 @@ namespace Services.API
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "dontflattenproperties":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "ignoreprops":
                         return GetJunctionSearchResult<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request, (ss) => HostContext.ResolveService<DataPropertyService>(Request)?.Get(ss));
                     case "dataproperty":
@@ -770,6 +772,8 @@ namespace Services.API
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request);
                     case "dontflattenproperties":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request);
+                    case "favorite":
+                        return AddJunction<DataClass, DocEntityDataClass, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "ignoreprops":
                         return AddJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request);
                     case "dataproperty":
@@ -791,6 +795,8 @@ namespace Services.API
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "CustomCollections", request);
                     case "dontflattenproperties":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "DontFlattenProperties", request);
+                    case "favorite":
+                        return RemoveJunction<DataClass, DocEntityDataClass, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "ignoreprops":
                         return RemoveJunction<DataClass, DocEntityDataClass, DocEntityDataProperty, DataProperty, DataPropertySearch>((int)request.Id, DocConstantModelName.DATAPROPERTY, "IgnoreProps", request);
                     case "dataproperty":

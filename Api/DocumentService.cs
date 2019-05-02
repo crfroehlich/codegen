@@ -1347,6 +1347,8 @@ namespace Services.API
             {
                     case "documentset":
                         return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "lookuptable":
                         return GetJunctionSearchResult<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request, (ss) => HostContext.ResolveService<LookupTableService>(Request)?.Get(ss));
                     case "tag":
@@ -1363,6 +1365,8 @@ namespace Services.API
             {
                     case "documentset":
                         return AddJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return AddJunction<Document, DocEntityDocument, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "lookuptable":
                         return AddJunction<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request);
                     case "tag":
@@ -1380,6 +1384,8 @@ namespace Services.API
             {
                     case "documentset":
                         return RemoveJunction<Document, DocEntityDocument, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return RemoveJunction<Document, DocEntityDocument, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "lookuptable":
                         return RemoveJunction<Document, DocEntityDocument, DocEntityLookupTable, LookupTable, LookupTableSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLE, "LookupTables", request);
                     case "tag":

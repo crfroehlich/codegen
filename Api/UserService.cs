@@ -1338,6 +1338,8 @@ namespace Services.API
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
                     case "documentset":
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<User, DocEntityUser, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "history":
                         return GetJunctionSearchResult<User, DocEntityUser, DocEntityHistory, History, HistorySearch>((int)request.Id, DocConstantModelName.HISTORY, "History", request, (ss) => HostContext.ResolveService<HistoryService>(Request)?.Get(ss));
                     case "impersonateduser":
@@ -1370,6 +1372,8 @@ namespace Services.API
             {
                     case "documentset":
                         return AddJunction<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return AddJunction<User, DocEntityUser, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "role":
                         return AddJunction<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
                     case "scope":
@@ -1389,6 +1393,8 @@ namespace Services.API
             {
                     case "documentset":
                         return RemoveJunction<User, DocEntityUser, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "favorite":
+                        return RemoveJunction<User, DocEntityUser, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "role":
                         return RemoveJunction<User, DocEntityUser, DocEntityRole, Role, RoleSearch>((int)request.Id, DocConstantModelName.ROLE, "Roles", request);
                     case "scope":
