@@ -328,8 +328,8 @@ namespace Services.Dto
         public int? StudyDesignsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"Library",@"SERVE Portal",@"Therapeutic Area"})]
+        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }

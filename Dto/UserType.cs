@@ -67,22 +67,22 @@ namespace Services.Dto
             UsersCount = pUsersCount;
         }
 
-        [ApiMember(Name = nameof(PayrollStatus), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Contract",@"Full-Time",@"Part-Time"})]
+        [ApiMember(Name = nameof(PayrollStatus), Description = "LookupTable", IsRequired = false)]
         public Reference PayrollStatus { get; set; }
         [ApiMember(Name = nameof(PayrollStatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? PayrollStatusId { get; set; }
 
 
-        [ApiMember(Name = nameof(PayrollType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Hourly",@"Salary"})]
+        [ApiMember(Name = nameof(PayrollType), Description = "LookupTable", IsRequired = false)]
         public Reference PayrollType { get; set; }
         [ApiMember(Name = nameof(PayrollTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? PayrollTypeId { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Client",@"Contractor",@"Employee",@"Vendor"})]
+        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }

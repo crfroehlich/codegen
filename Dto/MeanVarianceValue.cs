@@ -74,8 +74,8 @@ namespace Services.Dto
         public TypeUnitsRange MeanVarianceRange { get; set; }
 
 
-        [ApiMember(Name = nameof(MeanVarianceType), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"CV",@"IQR Difference",@"SD",@"SE",@"Semi IQR",@"Unknown"})]
+        [ApiMember(Name = nameof(MeanVarianceType), Description = "LookupTable", IsRequired = true)]
         public Reference MeanVarianceType { get; set; }
         [ApiMember(Name = nameof(MeanVarianceTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? MeanVarianceTypeId { get; set; }

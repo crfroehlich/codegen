@@ -68,6 +68,7 @@ namespace Services.Dto
         public int? DocumentId { get; set; }
 
 
+        [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
         [ApiMember(Name = nameof(Status), Description = "EoDStatusEnm?", IsRequired = false)]
         public EoDStatusEnm? Status { get; set; }
 

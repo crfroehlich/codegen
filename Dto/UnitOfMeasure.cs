@@ -76,8 +76,8 @@ namespace Services.Dto
         public int? NameId { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Amount",@"Area",@"Concentration",@"Concentration Molar",@"Concentration Solution",@"Label",@"Length",@"Mass",@"Moles",@"NonTime",@"NonUnit",@"Radiation",@"Time",@"Volume",@"Weight"})]
+        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }

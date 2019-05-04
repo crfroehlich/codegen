@@ -81,8 +81,8 @@ namespace Services.Dto
         public TypeUnitRange TotalValue { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"After",@"Average",@"Before",@"Duration",@"During",@"Max Range",@"Maximum",@"Mean",@"Median",@"N/A",@"None",@"Not Reported",@"Time Zero",@"Total",@"Varies"})]
+        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }

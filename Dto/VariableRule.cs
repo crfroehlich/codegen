@@ -97,8 +97,8 @@ namespace Services.Dto
         public int? OwnerId { get; set; }
 
 
-        [ApiMember(Name = nameof(Rule), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Addition",@"Aggregation",@"Author Error",@"Correction",@"Customization",@"Inversion",@"Normalization",@"Study Edit"})]
+        [ApiMember(Name = nameof(Rule), Description = "LookupTable", IsRequired = true)]
         public Reference Rule { get; set; }
         [ApiMember(Name = nameof(RuleId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? RuleId { get; set; }
@@ -109,8 +109,8 @@ namespace Services.Dto
         public int? ScopesCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Applied",@"Override",@"Template"})]
+        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }

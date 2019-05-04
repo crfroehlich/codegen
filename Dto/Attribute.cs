@@ -75,8 +75,8 @@ namespace Services.Dto
         public int? AttributeNameId { get; set; }
 
 
-        [ApiMember(Name = nameof(AttributeType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Change",@"Duration",@"Not In Study",@"% Change",@"Standard",@"Time Since",@"Time To"})]
+        [ApiMember(Name = nameof(AttributeType), Description = "LookupTable", IsRequired = false)]
         public Reference AttributeType { get; set; }
         [ApiMember(Name = nameof(AttributeTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? AttributeTypeId { get; set; }

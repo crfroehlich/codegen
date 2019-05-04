@@ -63,15 +63,15 @@ namespace Services.Dto
             NameId = pNameId;
         }
 
-        [ApiMember(Name = nameof(FieldType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Binary",@"Continuous",@"Count",@"Individual",@"Kaplan-Meier",@"Range",@"Rate",@"Yes/No/Na"})]
+        [ApiMember(Name = nameof(FieldType), Description = "LookupTable", IsRequired = false)]
         public Reference FieldType { get; set; }
         [ApiMember(Name = nameof(FieldTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? FieldTypeId { get; set; }
 
 
-        [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"AssociationMeasure",@"Boolean",@"CalendarDate",@"CalendarDates",@"Contact",@"DateTime",@"DateTimeRange",@"Decimal",@"DecimalRange",@"DesignNestedStudyIdLink",@"EventCounts",@"Facility",@"FixedDoseIntervention",@"Flag",@"Funding",@"Integer",@"Interval",@"Intervals",@"Lookup",@"Memo",@"NPersons",@"Participant",@"Participants",@"PopulationAnalyzed",@"PValue",@"Rate",@"SettingLocation",@"SettingLocationTotal",@"StudyDoc",@"StudyObjective",@"StudyReference",@"SubgroupDescriptor",@"Timepoint",@"Timepoints",@"UncollectedValue",@"UnitRange",@"Units",@"UnitsRange",@"UnitValue",@"YesNoNa"})]
+        [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
         public Reference Name { get; set; }
         [ApiMember(Name = nameof(NameId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? NameId { get; set; }

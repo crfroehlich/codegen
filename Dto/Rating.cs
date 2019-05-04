@@ -68,6 +68,7 @@ namespace Services.Dto
         public int? DocumentId { get; set; }
 
 
+        [ApiAllowableValues("Includes", Values = new string[] {@"Maybe Relevant",@"Not Rated",@"Not Relevant",@"Relevant"})]
         [ApiMember(Name = nameof(Rating), Description = "RatingEnm?", IsRequired = false)]
         public RatingEnm? Rating { get; set; }
 

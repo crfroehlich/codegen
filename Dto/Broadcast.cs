@@ -98,15 +98,15 @@ namespace Services.Dto
         public int? ScopesCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Draft",@"Release"})]
+        [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Change Log",@"Scope Specific",@"System Alert",@"Terms of Service"})]
+        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }

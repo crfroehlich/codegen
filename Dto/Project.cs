@@ -164,8 +164,8 @@ namespace Services.Dto
         public string ProjectName { get; set; }
 
 
-        [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
+        [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }

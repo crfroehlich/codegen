@@ -142,8 +142,8 @@ namespace Services.Dto
         public string CustomData { get; set; }
 
 
-        [ApiMember(Name = nameof(DatabaseType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"ASCO",@"ClinicalTrials.gov",@"Cochrane",@"Embase",@"IOVS",@"Manual Entry",@"MEDLINE",@"Northern Light"})]
+        [ApiMember(Name = nameof(DatabaseType), Description = "LookupTable", IsRequired = false)]
         public Reference DatabaseType { get; set; }
         [ApiMember(Name = nameof(DatabaseTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? DatabaseTypeId { get; set; }
@@ -154,8 +154,8 @@ namespace Services.Dto
         public int? DocumentSetsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(DocumentType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"CTG",@"Data Hub",@"DOC Extract",@"DOC Library",@"PubMed"})]
+        [ApiMember(Name = nameof(DocumentType), Description = "LookupTable", IsRequired = false)]
         public Reference DocumentType { get; set; }
         [ApiMember(Name = nameof(DocumentTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? DocumentTypeId { get; set; }
@@ -191,8 +191,8 @@ namespace Services.Dto
         public int? ImportId { get; set; }
 
 
-        [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
+        [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
         public Reference ImportType { get; set; }
         [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? ImportTypeId { get; set; }

@@ -64,8 +64,8 @@ namespace Services.Dto
             Value = pValue;
         }
 
-        [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Ambispective Observational",@"Bound Characteristic Variables",@"Bound Group Variables",@"Bound Outcome Iterations",@"Bound Outcome Variables",@"Bound Study Level Variables",@"Bound Total Variables",@"Case Control",@"Case Report",@"Case Series",@"Collected Characteristic Variables",@"Collected MainGroups",@"Collected Outcome Variables",@"Comparisons",@"Cross-Sectional",@"Data Points Avg",@"Data Points Max",@"Data Points Total",@"Data Studies",@"Diagnosis",@"Follow-up/Extension",@"FR Studies",@"Harm",@"Interventions",@"Modeling",@"Non-Randomized Controlled Trial",@"Non-Randomized Crossover",@"Non-Randomized Non-Controlled Trial",@"Other",@"Pooled Analysis",@"Posthoc Analysis",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Prospective Observational",@"Randomized Controlled Trial",@"Randomized Crossover",@"Randomized Non-Controlled Trial",@"Retrospective Observational",@"Study Design Overview",@"Sub-Group Analysis",@"SubGroups",@"Therapy",@"Total Characteristic Variables",@"Total Comparative Statements",@"Total Group Variables",@"Total MainGroups",@"Total Outcome Iterations",@"Total Outcome Variables",@"Total Participants",@"Total Studies",@"Total Study Level Variables",@"Total Variables",@"Uncollected Characteristic Variables",@"Uncollected MainGroups",@"Uncollected Outcome Variables"})]
+        [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
         public Reference Name { get; set; }
         [ApiMember(Name = nameof(NameId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? NameId { get; set; }

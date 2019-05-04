@@ -61,8 +61,8 @@ namespace Services.Dto
             TypeId = pTypeId;
         }
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Causation/Etiology",@"Diagnosis",@"Harm",@"Modeling",@"Other",@"Prevalence",@"Prevention/Risk",@"Prognosis",@"Therapy"})]
+        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }

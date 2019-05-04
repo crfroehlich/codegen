@@ -78,7 +78,7 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantWorkflow.HTA)]
         HTA = 76351809,
         [EnumMember(Value = DocConstantWorkflow.LIBRARY_RATINGS)]
-        LIBRARY_RATINGS = 76351853,
+        LIBRARY_RATINGS = 150785214,
         [EnumMember(Value = DocConstantWorkflow.META_ANALYSIS)]
         META_ANALYSIS = 12627091,
         [EnumMember(Value = DocConstantWorkflow.NAMESET)]
@@ -88,7 +88,7 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantWorkflow.RAPID_REVIEW)]
         RAPID_REVIEW = 76351810,
         [EnumMember(Value = DocConstantWorkflow.RATINGS_ADJUDICATION)]
-        RATINGS_ADJUDICATION = 76351854,
+        RATINGS_ADJUDICATION = 150785215,
         [EnumMember(Value = DocConstantWorkflow.RESPONSE_LETTER)]
         RESPONSE_LETTER = 76351808,
         [EnumMember(Value = DocConstantWorkflow.RISK_OF_BIAS)]

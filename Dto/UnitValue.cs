@@ -66,8 +66,8 @@ namespace Services.Dto
             UnitId = pUnitId;
         }
 
-        [ApiMember(Name = nameof(EqualityOperator), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"~=",@"~>",@"~>=",@"~<",@"~<=",@"=",@">",@">=",@"≥",@"<",@"<=",@"≤",@"!="})]
+        [ApiMember(Name = nameof(EqualityOperator), Description = "LookupTable", IsRequired = false)]
         public Reference EqualityOperator { get; set; }
         [ApiMember(Name = nameof(EqualityOperatorId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? EqualityOperatorId { get; set; }

@@ -100,8 +100,8 @@ namespace Services.Dto
         public string Title { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Dialog",@"Manual",@"Section",@"Sidebar"})]
+        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = false)]
         public Reference Type { get; set; }
         [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? TypeId { get; set; }

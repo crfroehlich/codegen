@@ -115,8 +115,8 @@ namespace Services.Dto
         public bool ImportFr { get; set; }
 
 
-        [ApiMember(Name = nameof(ImportLocation), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Default",@"DocData",@"Extract",@"Import Data"})]
+        [ApiMember(Name = nameof(ImportLocation), Description = "LookupTable", IsRequired = false)]
         public Reference ImportLocation { get; set; }
         [ApiMember(Name = nameof(ImportLocationId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? ImportLocationId { get; set; }
@@ -134,8 +134,8 @@ namespace Services.Dto
         public bool ImportText { get; set; }
 
 
-        [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
         [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
+        [ApiMember(Name = nameof(ImportType), Description = "LookupTable", IsRequired = false)]
         public Reference ImportType { get; set; }
         [ApiMember(Name = nameof(ImportTypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? ImportTypeId { get; set; }
@@ -167,8 +167,8 @@ namespace Services.Dto
         public DateTime? StartedOn { get; set; }
 
 
-        [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {@"Already Imported",@"Cancelled",@"Failed",@"No JSON Found",@"Processing",@"Queued",@"Succeeded"})]
+        [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = true)]
         public Reference Status { get; set; }
         [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
         public int? StatusId { get; set; }

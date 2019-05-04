@@ -117,6 +117,7 @@ namespace Services.Dto
         public int? TasksCount { get; set; }
 
 
+        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Report",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"FAQ",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Library Ratings",@"Direct Meta Analysis",@"Nameset",@"R Snippet",@"Rapid Review",@"Ratings Adjudication",@"Response Letter",@"Risk of Bias",@"RMD Snippet",@"Systematic Review",@"View"})]
         [ApiMember(Name = nameof(Type), Description = "WorkflowEnm?", IsRequired = false)]
         public WorkflowEnm? Type { get; set; }
 
