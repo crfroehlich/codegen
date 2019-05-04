@@ -75,7 +75,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Tasks, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Tasks))))
                 .ForMember(dest => dest.TasksCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.TasksCount))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.TypeId))))
                 .ForMember(dest => dest.User, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.User))))
                 .ForMember(dest => dest.UserId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.UserId))))
                 .ForMember(dest => dest.Variables, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Workflow>(c, nameof(DocEntityWorkflow.Variables))))

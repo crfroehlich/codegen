@@ -93,7 +93,7 @@ namespace Services.Dto
         public int? ReporterId { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "TaskTypeEnm?", IsRequired = true)]
+        [ApiMember(Name = nameof(Type), Description = "TaskTypeEnm?", IsRequired = false)]
         public TaskTypeEnm? Type { get; set; }
 
 

@@ -57,16 +57,8 @@ namespace Services.Enums
         CUSTOM_REPORT = 120648707,
         [EnumMember(Value = DocConstantWorkflow.DATA_EXPORT)]
         DATA_EXPORT = 22669313,
-        [EnumMember(Value = DocConstantWorkflow.DIA_PROJECT)]
-        DIA_PROJECT = 76351804,
         [EnumMember(Value = DocConstantWorkflow.DIA_REPORT)]
         DIA_REPORT = 76351811,
-        [EnumMember(Value = DocConstantWorkflow.DOC_DATA_PROJECT)]
-        DOC_DATA_PROJECT = 76351800,
-        [EnumMember(Value = DocConstantWorkflow.DOC_EXTRACT_PROJECT)]
-        DOC_EXTRACT_PROJECT = 76351802,
-        [EnumMember(Value = DocConstantWorkflow.DOC_LIBRARY_PROJECT)]
-        DOC_LIBRARY_PROJECT = 76351801,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_ON_DEMAND)]
         EVIDENCE_ON_DEMAND = 76351619,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_STATEMENTS)]
@@ -85,34 +77,26 @@ namespace Services.Enums
         FREQUENTIST_ANALYSIS = 21595126,
         [EnumMember(Value = DocConstantWorkflow.HTA)]
         HTA = 76351809,
+        [EnumMember(Value = DocConstantWorkflow.LIBRARY_RATINGS)]
+        LIBRARY_RATINGS = 76351853,
         [EnumMember(Value = DocConstantWorkflow.META_ANALYSIS)]
         META_ANALYSIS = 12627091,
-        [EnumMember(Value = DocConstantWorkflow.METHODOLOGY_PROJECT)]
-        METHODOLOGY_PROJECT = 76351805,
         [EnumMember(Value = DocConstantWorkflow.NAMESET)]
         NAMESET = 17611704,
-        [EnumMember(Value = DocConstantWorkflow.ONTOLOGY_PROJECT)]
-        ONTOLOGY_PROJECT = 76351803,
-        [EnumMember(Value = DocConstantWorkflow.PICO_RATING)]
-        PICO_RATING = 76351813,
         [EnumMember(Value = DocConstantWorkflow.R_SNIPPET)]
         R_SNIPPET = 146157859,
         [EnumMember(Value = DocConstantWorkflow.RAPID_REVIEW)]
         RAPID_REVIEW = 76351810,
+        [EnumMember(Value = DocConstantWorkflow.RATINGS_ADJUDICATION)]
+        RATINGS_ADJUDICATION = 76351854,
         [EnumMember(Value = DocConstantWorkflow.RESPONSE_LETTER)]
         RESPONSE_LETTER = 76351808,
         [EnumMember(Value = DocConstantWorkflow.RISK_OF_BIAS)]
         RISK_OF_BIAS = 146157858,
         [EnumMember(Value = DocConstantWorkflow.RMD_SNIPPET)]
         RMD_SNIPPET = 146157860,
-        [EnumMember(Value = DocConstantWorkflow.SURVEY_DESIGN)]
-        SURVEY_DESIGN = 59620917,
-        [EnumMember(Value = DocConstantWorkflow.SURVEY_WIZARD)]
-        SURVEY_WIZARD = 59620923,
         [EnumMember(Value = DocConstantWorkflow.SYSTEMATIC_REVIEW)]
         SYSTEMATIC_REVIEW = 76351807,
-        [EnumMember(Value = DocConstantWorkflow.TAG)]
-        TAG = 76351806,
         [EnumMember(Value = DocConstantWorkflow.VIEW)]
         VIEW = 41790614
     }
@@ -133,16 +117,8 @@ namespace Services.Enums
                     return DocConstantWorkflow.CUSTOM_REPORT;
                 case WorkflowEnm.DATA_EXPORT:
                     return DocConstantWorkflow.DATA_EXPORT;
-                case WorkflowEnm.DIA_PROJECT:
-                    return DocConstantWorkflow.DIA_PROJECT;
                 case WorkflowEnm.DIA_REPORT:
                     return DocConstantWorkflow.DIA_REPORT;
-                case WorkflowEnm.DOC_DATA_PROJECT:
-                    return DocConstantWorkflow.DOC_DATA_PROJECT;
-                case WorkflowEnm.DOC_EXTRACT_PROJECT:
-                    return DocConstantWorkflow.DOC_EXTRACT_PROJECT;
-                case WorkflowEnm.DOC_LIBRARY_PROJECT:
-                    return DocConstantWorkflow.DOC_LIBRARY_PROJECT;
                 case WorkflowEnm.EVIDENCE_ON_DEMAND:
                     return DocConstantWorkflow.EVIDENCE_ON_DEMAND;
                 case WorkflowEnm.EVIDENCE_STATEMENTS:
@@ -161,34 +137,26 @@ namespace Services.Enums
                     return DocConstantWorkflow.FREQUENTIST_ANALYSIS;
                 case WorkflowEnm.HTA:
                     return DocConstantWorkflow.HTA;
+                case WorkflowEnm.LIBRARY_RATINGS:
+                    return DocConstantWorkflow.LIBRARY_RATINGS;
                 case WorkflowEnm.META_ANALYSIS:
                     return DocConstantWorkflow.META_ANALYSIS;
-                case WorkflowEnm.METHODOLOGY_PROJECT:
-                    return DocConstantWorkflow.METHODOLOGY_PROJECT;
                 case WorkflowEnm.NAMESET:
                     return DocConstantWorkflow.NAMESET;
-                case WorkflowEnm.ONTOLOGY_PROJECT:
-                    return DocConstantWorkflow.ONTOLOGY_PROJECT;
-                case WorkflowEnm.PICO_RATING:
-                    return DocConstantWorkflow.PICO_RATING;
                 case WorkflowEnm.R_SNIPPET:
                     return DocConstantWorkflow.R_SNIPPET;
                 case WorkflowEnm.RAPID_REVIEW:
                     return DocConstantWorkflow.RAPID_REVIEW;
+                case WorkflowEnm.RATINGS_ADJUDICATION:
+                    return DocConstantWorkflow.RATINGS_ADJUDICATION;
                 case WorkflowEnm.RESPONSE_LETTER:
                     return DocConstantWorkflow.RESPONSE_LETTER;
                 case WorkflowEnm.RISK_OF_BIAS:
                     return DocConstantWorkflow.RISK_OF_BIAS;
                 case WorkflowEnm.RMD_SNIPPET:
                     return DocConstantWorkflow.RMD_SNIPPET;
-                case WorkflowEnm.SURVEY_DESIGN:
-                    return DocConstantWorkflow.SURVEY_DESIGN;
-                case WorkflowEnm.SURVEY_WIZARD:
-                    return DocConstantWorkflow.SURVEY_WIZARD;
                 case WorkflowEnm.SYSTEMATIC_REVIEW:
                     return DocConstantWorkflow.SYSTEMATIC_REVIEW;
-                case WorkflowEnm.TAG:
-                    return DocConstantWorkflow.TAG;
                 case WorkflowEnm.VIEW:
                     return DocConstantWorkflow.VIEW;
                 default:
@@ -204,11 +172,7 @@ namespace Services.Enums
         public const string COHORT_ANALYSIS = "Cohort Analysis";
         public const string CUSTOM_REPORT = "Custom Report";
         public const string DATA_EXPORT = "Data Export";
-        public const string DIA_PROJECT = "DIA Project";
         public const string DIA_REPORT = "DIA Report";
-        public const string DOC_DATA_PROJECT = "DOC Data Project";
-        public const string DOC_EXTRACT_PROJECT = "DOC Extract Project";
-        public const string DOC_LIBRARY_PROJECT = "DOC Library Project";
         public const string EVIDENCE_ON_DEMAND = "Evidence on Demand";
         public const string EVIDENCE_STATEMENTS = "Evidence Statements";
         public const string EVIDENCE_TABLE = "Evidence Table";
@@ -218,20 +182,16 @@ namespace Services.Enums
         public const string FRAMED_QUESTION_LIBRARY = "Framed Question Library";
         public const string FREQUENTIST_ANALYSIS = "Frequentist NMA";
         public const string HTA = "HTA";
+        public const string LIBRARY_RATINGS = "Library Ratings";
         public const string META_ANALYSIS = "Direct Meta Analysis";
-        public const string METHODOLOGY_PROJECT = "Methodology Project";
         public const string NAMESET = "Nameset";
-        public const string ONTOLOGY_PROJECT = "Ontology Project";
-        public const string PICO_RATING = "PICO Rating";
         public const string R_SNIPPET = "R Snippet";
         public const string RAPID_REVIEW = "Rapid Review";
+        public const string RATINGS_ADJUDICATION = "Ratings Adjudication";
         public const string RESPONSE_LETTER = "Response Letter";
         public const string RISK_OF_BIAS = "Risk of Bias";
         public const string RMD_SNIPPET = "RMD Snippet";
-        public const string SURVEY_DESIGN = "Survey Design";
-        public const string SURVEY_WIZARD = "Survery Wizard";
         public const string SYSTEMATIC_REVIEW = "Systematic Review";
-        public const string TAG = "Tag";
         public const string VIEW = "View";
         
         #region Internals

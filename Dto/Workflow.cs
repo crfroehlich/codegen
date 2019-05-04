@@ -55,7 +55,7 @@ namespace Services.Dto
 
         public WorkflowBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public WorkflowBase(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, List<Reference> pTasks, int? pTasksCount, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+        public WorkflowBase(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
         {
             Bindings = pBindings;
             BindingsCount = pBindingsCount;
@@ -71,7 +71,6 @@ namespace Services.Dto
             Tasks = pTasks;
             TasksCount = pTasksCount;
             Type = pType;
-            TypeId = pTypeId;
             User = pUser;
             UserId = pUserId;
             Variables = pVariables;
@@ -118,11 +117,8 @@ namespace Services.Dto
         public int? TasksCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Type), Description = "LookupTable", IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"FAQ",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"R Snippet",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"RMD Snippet",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
-        public Reference Type { get; set; }
-        [ApiMember(Name = nameof(TypeId), Description = "Primary Key of LookupTable", IsRequired = false)]
-        public int? TypeId { get; set; }
+        [ApiMember(Name = nameof(Type), Description = "WorkflowEnm?", IsRequired = false)]
+        public WorkflowEnm? Type { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
@@ -142,7 +138,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out List<Reference> pBindings, out int? pBindingsCount, out string pData, out string pDescription, out List<Reference> pDocuments, out int? pDocumentsCount, out string pName, out Reference pOwner, out int? pOwnerId, out List<Reference> pScopes, out int? pScopesCount, out List<Reference> pTasks, out int? pTasksCount, out Reference pType, out int? pTypeId, out Reference pUser, out int? pUserId, out List<Reference> pVariables, out int? pVariablesCount, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+        public void Deconstruct(out List<Reference> pBindings, out int? pBindingsCount, out string pData, out string pDescription, out List<Reference> pDocuments, out int? pDocumentsCount, out string pName, out Reference pOwner, out int? pOwnerId, out List<Reference> pScopes, out int? pScopesCount, out List<Reference> pTasks, out int? pTasksCount, out WorkflowEnm? pType, out Reference pUser, out int? pUserId, out List<Reference> pVariables, out int? pVariablesCount, out List<Reference> pWorkflows, out int? pWorkflowsCount)
         {
             pBindings = Bindings;
             pBindingsCount = BindingsCount;
@@ -158,7 +154,6 @@ namespace Services.Dto
             pTasks = Tasks;
             pTasksCount = TasksCount;
             pType = Type;
-            pTypeId = TypeId;
             pUser = User;
             pUserId = UserId;
             pVariables = Variables;
@@ -168,8 +163,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public WorkflowBase With(int? pId = Id, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, string pData = Data, string pDescription = Description, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, List<Reference> pTasks = Tasks, int? pTasksCount = TasksCount, Reference pType = Type, int? pTypeId = TypeId, Reference pUser = User, int? pUserId = UserId, List<Reference> pVariables = Variables, int? pVariablesCount = VariablesCount, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
-        //	new WorkflowBase(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pTasks, pTasksCount, pType, pTypeId, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount);
+        //public WorkflowBase With(int? pId = Id, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, string pData = Data, string pDescription = Description, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, List<Reference> pTasks = Tasks, int? pTasksCount = TasksCount, WorkflowEnm? pType = Type, Reference pUser = User, int? pUserId = UserId, List<Reference> pVariables = Variables, int? pVariablesCount = VariablesCount, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+        //	new WorkflowBase(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pTasks, pTasksCount, pType, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount);
 
     }
 
@@ -184,8 +179,8 @@ namespace Services.Dto
 
         public Workflow(int? id) : base(DocConvert.ToInt(id)) {}
         public Workflow(int id) : base(id) {}
-        public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, List<Reference> pTasks, int? pTasksCount, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : 
-            base(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pTasks, pTasksCount, pType, pTypeId, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount) { }
+        public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+            base(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pTasks, pTasksCount, pType, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -203,7 +198,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Bindings),nameof(BindingsCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Documents),nameof(DocumentsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Tasks),nameof(TasksCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(Variables),nameof(VariablesCount),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Bindings),nameof(BindingsCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Documents),nameof(DocumentsCount),nameof(Gestalt),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(Scopes),nameof(ScopesCount),nameof(Tasks),nameof(TasksCount),nameof(Type),nameof(Updated),nameof(User),nameof(UserId),nameof(Variables),nameof(VariablesCount),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
         public new List<string> VisibleFields
         {
             get
@@ -247,10 +242,7 @@ namespace Services.Dto
         public List<int> OwnerIds { get; set; }
         public List<int> ScopesIds { get; set; }
         public List<int> TasksIds { get; set; }
-        public Reference Type { get; set; }
-        public List<int> TypeIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Audit Error",@"Bayesian NMA",@"Cohort Analysis",@"Custom Report",@"Data Export",@"DIA Project",@"DIA Report",@"DOC Data Project",@"DOC Extract Project",@"DOC Library Project",@"Evidence on Demand",@"Evidence Statements",@"Evidence Table",@"FAQ",@"Filter",@"Framed Question Data Set",@"Framed Question Library",@"Frequentist NMA",@"HTA",@"Direct Meta Analysis",@"Methodology Project",@"Nameset",@"Ontology Project",@"PICO Rating",@"R Snippet",@"Rapid Review",@"Response Letter",@"Risk of Bias",@"RMD Snippet",@"Survey Design",@"Survery Wizard",@"Systematic Review",@"Tag",@"View"})]
-        public List<string> TypeNames { get; set; }
+        public WorkflowEnm? Type { get; set; }
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
         public List<int> VariablesIds { get; set; }

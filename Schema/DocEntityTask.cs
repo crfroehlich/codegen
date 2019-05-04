@@ -122,7 +122,7 @@ namespace Services.Schema
         public int? ReporterId { get { return Reporter?.Id; } private set { var noid = value; } }
 
 
-        [Field(Nullable = false)]
+        [Field(Nullable = false, DefaultValue = TaskTypeEnm.EVIDENCE_ON_DEMAND)]
         public TaskTypeEnm Type { get; set; }
 
 
