@@ -199,10 +199,6 @@ namespace Services.Schema
         public string JournalTitle { get; set; }
 
 
-        [Field(Length = int.MaxValue)]
-        public string LegacyModel { get; set; }
-
-
         [Field]
         public DateTime? LegacySync { get; set; }
 

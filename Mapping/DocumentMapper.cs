@@ -89,7 +89,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.ISSN, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.ISSN))))
                 .ForMember(dest => dest.Issue, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Issue))))
                 .ForMember(dest => dest.JournalTitle, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.JournalTitle))))
-                .ForMember(dest => dest.LegacyModel, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LegacyModel))))
                 .ForMember(dest => dest.LegacySync, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LegacySync))))
                 .ForMember(dest => dest.LookupTables, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LookupTables))))
                 .ForMember(dest => dest.LookupTablesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LookupTablesCount))))

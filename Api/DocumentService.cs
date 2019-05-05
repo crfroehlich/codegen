@@ -298,7 +298,6 @@ namespace Services.API
             var pISSN = request.ISSN;
             var pIssue = request.Issue;
             var pJournalTitle = request.JournalTitle;
-            var pLegacyModel = request.LegacyModel;
             var pLegacySync = request.LegacySync;
             var pLookupTables = request.LookupTables?.ToList();
             var pMedlineID = request.MedlineID;
@@ -591,17 +590,6 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pJournalTitle, nameof(request.JournalTitle)) && !request.VisibleFields.Matches(nameof(request.JournalTitle), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.JournalTitle));
-                }
-            }
-            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLegacyModel, permission, DocConstantModelName.DOCUMENT, nameof(request.LegacyModel)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pLegacyModel, entity.LegacyModel, nameof(request.LegacyModel)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENT, nameof(request.LegacyModel)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LegacyModel)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pLegacyModel) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENT, nameof(request.LegacyModel))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LegacyModel)} requires a value.");
-                    entity.LegacyModel = pLegacyModel;
-                if(DocPermissionFactory.IsRequested<string>(request, pLegacyModel, nameof(request.LegacyModel)) && !request.VisibleFields.Matches(nameof(request.LegacyModel), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.LegacyModel));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pLegacySync, permission, DocConstantModelName.DOCUMENT, nameof(request.LegacySync)))
@@ -1083,7 +1071,6 @@ namespace Services.API
                     var pJournalTitle = entity.JournalTitle;
                     if(!DocTools.IsNullOrEmpty(pJournalTitle))
                         pJournalTitle += " (Copy)";
-                    var pLegacyModel = entity.LegacyModel;
                     var pLegacySync = entity.LegacySync;
                     var pLookupTables = entity.LookupTables.ToList();
                     var pMedlineID = entity.MedlineID;
@@ -1149,7 +1136,6 @@ namespace Services.API
                                 , ISSN = pISSN
                                 , Issue = pIssue
                                 , JournalTitle = pJournalTitle
-                                , LegacyModel = pLegacyModel
                                 , LegacySync = pLegacySync
                                 , MedlineID = pMedlineID
                                 , MeSH = pMeSH
