@@ -810,7 +810,8 @@
     "SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT": "services_user_update_document_set_assignment",
     "SERVICES_USER_UPDATE_ROLES": "services_user_update_roles",
     "SERVICES_USER_UPDATE_SHARING": "services_user_update_sharing",
-    "SERVICES_USER_UPDATE_TEAMS": "services_user_update_teams"
+    "SERVICES_USER_UPDATE_TEAMS": "services_user_update_teams",
+    "SERVICES_WORKFLOW_UPDATE": "services_workflow_update"
   },
   "Randomization": {
     "NR": "Not Reported",

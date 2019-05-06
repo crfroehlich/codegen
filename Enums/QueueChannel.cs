@@ -108,7 +108,9 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_SHARING)]
         SERVICES_USER_UPDATE_SHARING = 146157847,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_TEAMS)]
-        SERVICES_USER_UPDATE_TEAMS = 146157848
+        SERVICES_USER_UPDATE_TEAMS = 146157848,
+        [EnumMember(Value = DocConstantQueueChannel.SERVICES_WORKFLOW_UPDATE)]
+        SERVICES_WORKFLOW_UPDATE = 146157892
     }
     
     public static partial class EnumExtensions
@@ -179,6 +181,8 @@ namespace Services.Enums
                     return DocConstantQueueChannel.SERVICES_USER_UPDATE_SHARING;
                 case QueueChannelEnm.SERVICES_USER_UPDATE_TEAMS:
                     return DocConstantQueueChannel.SERVICES_USER_UPDATE_TEAMS;
+                case QueueChannelEnm.SERVICES_WORKFLOW_UPDATE:
+                    return DocConstantQueueChannel.SERVICES_WORKFLOW_UPDATE;
                 default:
                     return string.Empty;
             }
@@ -218,6 +222,7 @@ namespace Services.Enums
         public const string SERVICES_USER_UPDATE_ROLES = "services_user_update_roles";
         public const string SERVICES_USER_UPDATE_SHARING = "services_user_update_sharing";
         public const string SERVICES_USER_UPDATE_TEAMS = "services_user_update_teams";
+        public const string SERVICES_WORKFLOW_UPDATE = "services_workflow_update";
         
         #region Internals
         
