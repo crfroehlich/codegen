@@ -140,6 +140,10 @@ namespace Services.Schema
 
 
         [Field]
+        public WorkflowStatusEnm? Status { get; set; }
+
+
+        [Field]
         [Association(PairTo = nameof(DocEntityTask.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTask> Tasks { get; private set; }
 

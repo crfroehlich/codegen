@@ -110,7 +110,7 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_USER_UPDATE_TEAMS)]
         SERVICES_USER_UPDATE_TEAMS = 146157848,
         [EnumMember(Value = DocConstantQueueChannel.SERVICES_WORKFLOW_UPDATE)]
-        SERVICES_WORKFLOW_UPDATE = 146157892
+        SERVICES_WORKFLOW_UPDATE = 150786180
     }
     
     public static partial class EnumExtensions

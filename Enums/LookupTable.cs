@@ -283,6 +283,8 @@ namespace Services.Enums
         VARIABLETYPE = 73104015,
         [EnumMember(Value = DocConstantLookupTable.WORKFLOW)]
         WORKFLOW = 10483109,
+        [EnumMember(Value = DocConstantLookupTable.WORKFLOWSTATUS)]
+        WORKFLOWSTATUS = 90640187,
         [EnumMember(Value = DocConstantLookupTable.YESNONA)]
         YESNONA = 2067
     }
@@ -529,6 +531,8 @@ namespace Services.Enums
                     return DocConstantLookupTable.VARIABLETYPE;
                 case LookupTableEnm.WORKFLOW:
                     return DocConstantLookupTable.WORKFLOW;
+                case LookupTableEnm.WORKFLOWSTATUS:
+                    return DocConstantLookupTable.WORKFLOWSTATUS;
                 case LookupTableEnm.YESNONA:
                     return DocConstantLookupTable.YESNONA;
                 default:
@@ -657,6 +661,7 @@ namespace Services.Enums
         public const string VARIABLERULE = "VariableRule";
         public const string VARIABLETYPE = "VariableType";
         public const string WORKFLOW = "Workflow";
+        public const string WORKFLOWSTATUS = "WorkflowStatus";
         public const string YESNONA = "YesNoNa";
         
         #region Internals

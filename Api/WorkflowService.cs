@@ -122,6 +122,8 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
                 }
+                if(request.Status.HasValue)
+                    entities = entities.Where(en => request.Status.Value == en.Status);
                 if(true == request.TasksIds?.Any())
                 {
                     entities = entities.Where(en => en.Tasks.Any(r => r.Id.In(request.TasksIds)));
@@ -190,6 +192,7 @@ namespace Services.API
             var pName = request.Name;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityWorkflow.Get(request.Owner.Id) : null;
             var pScopes = request.Scopes?.ToList();
+            var pStatus = request.Status;
             var pTasks = request.Tasks?.ToList();
             var pType = request.Type;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
@@ -269,6 +272,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(request, pOwner, nameof(request.Owner)) && !request.VisibleFields.Matches(nameof(request.Owner), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Owner));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<WorkflowStatusEnm?>(currentUser, request, pStatus, permission, DocConstantModelName.WORKFLOW, nameof(request.Status)))
+            {
+                if(DocPermissionFactory.IsRequested(request, (int?) pStatus, (int?) entity.Status, nameof(request.Status)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.WORKFLOW, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.WORKFLOW, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
+                    entity.Status = pStatus;
+                if(DocPermissionFactory.IsRequested<WorkflowStatusEnm?>(request, pStatus, nameof(request.Status)) && !request.VisibleFields.Matches(nameof(request.Status), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.Status));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<WorkflowEnm?>(currentUser, request, pType, permission, DocConstantModelName.WORKFLOW, nameof(request.Type)))
@@ -662,6 +676,7 @@ namespace Services.API
                         pName += " (Copy)";
                     var pOwner = entity.Owner;
                     var pScopes = entity.Scopes.ToList();
+                    var pStatus = entity.Status;
                     var pTasks = entity.Tasks.ToList();
                     var pType = entity.Type;
                     var pUser = entity.User;
@@ -676,6 +691,7 @@ namespace Services.API
                                 , Description = pDescription
                                 , Name = pName
                                 , Owner = pOwner
+                                , Status = pStatus
                                 , Type = pType
                                 , User = pUser
                     };

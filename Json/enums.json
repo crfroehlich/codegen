@@ -562,6 +562,7 @@
     "VARIABLERULE": "VariableRule",
     "VARIABLETYPE": "VariableType",
     "WORKFLOW": "Workflow",
+    "WORKFLOWSTATUS": "WorkflowStatus",
     "YESNONA": "YesNoNa"
   },
   "LookupType": {
@@ -1508,6 +1509,13 @@
     "RMD_SNIPPET": "RMD Snippet",
     "SYSTEMATIC_REVIEW": "Systematic Review",
     "VIEW": "View"
+  },
+  "WorkflowStatus": {
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected",
+    "COLLECTED": "Collected",
+    "REQUESTED": "Requested",
+    "UNAVAILABLE": "Unavailable"
   },
   "YesNoNa": {
     "NA": "N/A",
