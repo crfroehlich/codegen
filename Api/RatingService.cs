@@ -108,6 +108,8 @@ namespace Services.API
                 }
                 if(request.Rating.HasValue)
                     entities = entities.Where(en => request.Rating.Value == en.Rating);
+                if(request.ReasonRejected.HasValue)
+                    entities = entities.Where(en => request.ReasonRejected.Value == en.ReasonRejected);
 
                 entities = ApplyFilters<DocEntityRating,RatingSearch>(request, entities);
 
@@ -149,6 +151,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
             var pRating = request.Rating;
+            var pReasonRejected = request.ReasonRejected;
 
             DocEntityRating entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -202,6 +205,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<RatingEnm?>(request, pRating, nameof(request.Rating)) && !request.VisibleFields.Matches(nameof(request.Rating), ignoreSpaces: true))
                 {
                     request.VisibleFields.Add(nameof(request.Rating));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<ReasonRejectedEnm?>(currentUser, request, pReasonRejected, permission, DocConstantModelName.RATING, nameof(request.ReasonRejected)))
+            {
+                if(DocPermissionFactory.IsRequested(request, (int?) pReasonRejected, (int?) entity.ReasonRejected, nameof(request.ReasonRejected)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RATING, nameof(request.ReasonRejected)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ReasonRejected)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pReasonRejected) && DocResources.Metadata.IsRequired(DocConstantModelName.RATING, nameof(request.ReasonRejected))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ReasonRejected)} requires a value.");
+                    entity.ReasonRejected = pReasonRejected;
+                if(DocPermissionFactory.IsRequested<ReasonRejectedEnm?>(request, pReasonRejected, nameof(request.ReasonRejected)) && !request.VisibleFields.Matches(nameof(request.ReasonRejected), ignoreSpaces: true))
+                {
+                    request.VisibleFields.Add(nameof(request.ReasonRejected));
                 }
             }
 
@@ -300,6 +314,7 @@ namespace Services.API
 
                     var pDocument = entity.Document;
                     var pRating = entity.Rating;
+                    var pReasonRejected = entity.ReasonRejected;
                     #region Custom Before copyRating
                     #endregion Custom Before copyRating
                     var copy = new DocEntityRating(ssn)
@@ -307,6 +322,7 @@ namespace Services.API
                         Hash = Guid.NewGuid()
                                 , Document = pDocument
                                 , Rating = pRating
+                                , ReasonRejected = pReasonRejected
                     };
 
                     #region Custom After copyRating

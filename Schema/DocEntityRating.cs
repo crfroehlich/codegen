@@ -109,6 +109,10 @@ namespace Services.Schema
         public RatingEnm Rating { get; set; }
 
 
+        [Field]
+        public ReasonRejectedEnm? ReasonRejected { get; set; }
+
+
         #endregion Properties
 
         #region Overrides of DocEntity

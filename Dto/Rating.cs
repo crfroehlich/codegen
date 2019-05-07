@@ -55,11 +55,12 @@ namespace Services.Dto
 
         public RatingBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public RatingBase(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating) : this(DocConvert.ToInt(pId)) 
+        public RatingBase(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating, ReasonRejectedEnm? pReasonRejected) : this(DocConvert.ToInt(pId)) 
         {
             Document = pDocument;
             DocumentId = pDocumentId;
             Rating = pRating;
+            ReasonRejected = pReasonRejected;
         }
 
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
@@ -73,17 +74,23 @@ namespace Services.Dto
         public RatingEnm? Rating { get; set; }
 
 
+        [ApiAllowableValues("Includes", Values = new string[] {@"Abstract with Insufficient Information",@"Animal study",@"Does not meet protocol",@"Duplicate Publication",@"Erroneous Data",@"In vitro study",@"Missing Characteristic(s)",@"Missing Outcome(s)",@"Not a Clinical Study",@"Not English",@"Not a treatment Study",@"Relevant misclassified reference",@"Study fits protocol, to be possibly added later",@"Wrong Comparison",@"Wrong Intervention",@"Wrong Number of Participants",@"Wrong Outcome Stratification",@"Wrong Outcome(s)",@"Wrong Population",@"Wrong Publication Date Cutoff",@"Wrong Setting",@"Wrong Study Design",@"Wrong Timing"})]
+        [ApiMember(Name = nameof(ReasonRejected), Description = "ReasonRejectedEnm?", IsRequired = false)]
+        public ReasonRejectedEnm? ReasonRejected { get; set; }
 
-        public void Deconstruct(out Reference pDocument, out int? pDocumentId, out RatingEnm? pRating)
+
+
+        public void Deconstruct(out Reference pDocument, out int? pDocumentId, out RatingEnm? pRating, out ReasonRejectedEnm? pReasonRejected)
         {
             pDocument = Document;
             pDocumentId = DocumentId;
             pRating = Rating;
+            pReasonRejected = ReasonRejected;
         }
 
         //Not ready until C# v8.?
-        //public RatingBase With(int? pId = Id, Reference pDocument = Document, int? pDocumentId = DocumentId, RatingEnm? pRating = Rating) => 
-        //	new RatingBase(pId, pDocument, pDocumentId, pRating);
+        //public RatingBase With(int? pId = Id, Reference pDocument = Document, int? pDocumentId = DocumentId, RatingEnm? pRating = Rating, ReasonRejectedEnm? pReasonRejected = ReasonRejected) => 
+        //	new RatingBase(pId, pDocument, pDocumentId, pRating, pReasonRejected);
 
     }
 
@@ -98,8 +105,8 @@ namespace Services.Dto
 
         public Rating(int? id) : base(DocConvert.ToInt(id)) {}
         public Rating(int id) : base(id) {}
-        public Rating(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating) : 
-            base(pId, pDocument, pDocumentId, pRating) { }
+        public Rating(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating, ReasonRejectedEnm? pReasonRejected) : 
+            base(pId, pDocument, pDocumentId, pRating, pReasonRejected) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -117,7 +124,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(Gestalt),nameof(Locked),nameof(Rating),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(Gestalt),nameof(Locked),nameof(Rating),nameof(ReasonRejected),nameof(Updated),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -152,6 +159,7 @@ namespace Services.Dto
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
         public RatingEnm? Rating { get; set; }
+        public ReasonRejectedEnm? ReasonRejected { get; set; }
     }
 
     [Route("/rating", "GET")]
@@ -177,6 +185,7 @@ namespace Services.Dto
 
         public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Rating.Document))); }
         public bool doRating { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Rating.Rating))); }
+        public bool doReasonRejected { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Rating.ReasonRejected))); }
     }
 
     [Route("/rating/batch", "DELETE, PATCH, POST, PUT")]
