@@ -619,6 +619,7 @@
   },
   "ModelName": {
     "ENTITIES": "Entities",
+    "ADJUDICATEDRATING": "AdjudicatedRating",
     "APP": "App",
     "ATTRIBUTE": "Attribute",
     "ATTRIBUTEINTERVAL": "AttributeInterval",
@@ -1206,8 +1207,9 @@
     "RECRUITMENT": "Recruitment"
   },
   "TaskType": {
-    "EVIDENCE_ON_DEMAND": "Evidence on Demand",
-    "LIBRARY_RATING": "Library Rating"
+    "DOCUMENT_ADJUDICATION": "Document Adjudication",
+    "DOCUMENT_RATING": "Document Rating",
+    "EVIDENCE_ON_DEMAND": "Evidence on Demand"
   },
   "TermClassification": {
     "OUTCOME": "Outcome",
@@ -1503,7 +1505,6 @@
     "NAMESET": "Nameset",
     "R_SNIPPET": "R Snippet",
     "RAPID_REVIEW": "Rapid Review",
-    "RATINGS_ADJUDICATION": "Ratings Adjudication",
     "RESPONSE_LETTER": "Response Letter",
     "RISK_OF_BIAS": "Risk of Bias",
     "RMD_SNIPPET": "RMD Snippet",

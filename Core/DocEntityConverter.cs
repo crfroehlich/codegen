@@ -53,6 +53,10 @@ namespace Services.Core
             TDto ret = null;
             switch (typeof(TDto).Name)
             {
+                case DocConstantModelName.ADJUDICATEDRATING:
+                    var enAdjudicatedRating = entity as DocEntityAdjudicatedRating;
+                    ret = enAdjudicatedRating.ToDto() as TDto;
+                    break;
                 case DocConstantModelName.APP:
                     var enApp = entity as DocEntityApp;
                     ret = enApp.ToDto() as TDto;

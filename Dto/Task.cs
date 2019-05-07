@@ -93,7 +93,7 @@ namespace Services.Dto
         public int? ReporterId { get; set; }
 
 
-        [ApiAllowableValues("Includes", Values = new string[] {@"Evidence on Demand",@"Library Rating"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"Document Adjudication",@"Document Rating",@"Evidence on Demand"})]
         [ApiMember(Name = nameof(Type), Description = "TaskTypeEnm?", IsRequired = false)]
         public TaskTypeEnm? Type { get; set; }
 

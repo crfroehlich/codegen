@@ -47,10 +47,12 @@ namespace Services.Enums
     [JsonConverter(typeof(StringEnumConverter))]
     public enum TaskTypeEnm
     {
+        [EnumMember(Value = DocConstantTaskType.DOCUMENT_ADJUDICATION)]
+        DOCUMENT_ADJUDICATION = 150785334,
+        [EnumMember(Value = DocConstantTaskType.DOCUMENT_RATING)]
+        DOCUMENT_RATING = 150785333,
         [EnumMember(Value = DocConstantTaskType.EVIDENCE_ON_DEMAND)]
-        EVIDENCE_ON_DEMAND = 96669235,
-        [EnumMember(Value = DocConstantTaskType.LIBRARY_RATING)]
-        LIBRARY_RATING = 150785333
+        EVIDENCE_ON_DEMAND = 96669235
     }
     
     public static partial class EnumExtensions
@@ -59,10 +61,12 @@ namespace Services.Enums
         {
             switch(instance) 
             {
+                case TaskTypeEnm.DOCUMENT_ADJUDICATION:
+                    return DocConstantTaskType.DOCUMENT_ADJUDICATION;
+                case TaskTypeEnm.DOCUMENT_RATING:
+                    return DocConstantTaskType.DOCUMENT_RATING;
                 case TaskTypeEnm.EVIDENCE_ON_DEMAND:
                     return DocConstantTaskType.EVIDENCE_ON_DEMAND;
-                case TaskTypeEnm.LIBRARY_RATING:
-                    return DocConstantTaskType.LIBRARY_RATING;
                 default:
                     return string.Empty;
             }
@@ -71,8 +75,9 @@ namespace Services.Enums
 
     public sealed partial class DocConstantTaskType : IEquatable<DocConstantTaskType>, IEqualityComparer<DocConstantTaskType>
     {
+        public const string DOCUMENT_ADJUDICATION = "Document Adjudication";
+        public const string DOCUMENT_RATING = "Document Rating";
         public const string EVIDENCE_ON_DEMAND = "Evidence on Demand";
-        public const string LIBRARY_RATING = "Library Rating";
         
         #region Internals
         

@@ -87,8 +87,6 @@ namespace Services.Enums
         R_SNIPPET = 146157859,
         [EnumMember(Value = DocConstantWorkflow.RAPID_REVIEW)]
         RAPID_REVIEW = 76351810,
-        [EnumMember(Value = DocConstantWorkflow.RATINGS_ADJUDICATION)]
-        RATINGS_ADJUDICATION = 150785215,
         [EnumMember(Value = DocConstantWorkflow.RESPONSE_LETTER)]
         RESPONSE_LETTER = 76351808,
         [EnumMember(Value = DocConstantWorkflow.RISK_OF_BIAS)]
@@ -147,8 +145,6 @@ namespace Services.Enums
                     return DocConstantWorkflow.R_SNIPPET;
                 case WorkflowEnm.RAPID_REVIEW:
                     return DocConstantWorkflow.RAPID_REVIEW;
-                case WorkflowEnm.RATINGS_ADJUDICATION:
-                    return DocConstantWorkflow.RATINGS_ADJUDICATION;
                 case WorkflowEnm.RESPONSE_LETTER:
                     return DocConstantWorkflow.RESPONSE_LETTER;
                 case WorkflowEnm.RISK_OF_BIAS:
@@ -187,7 +183,6 @@ namespace Services.Enums
         public const string NAMESET = "Nameset";
         public const string R_SNIPPET = "R Snippet";
         public const string RAPID_REVIEW = "Rapid Review";
-        public const string RATINGS_ADJUDICATION = "Ratings Adjudication";
         public const string RESPONSE_LETTER = "Response Letter";
         public const string RISK_OF_BIAS = "Risk of Bias";
         public const string RMD_SNIPPET = "RMD Snippet";

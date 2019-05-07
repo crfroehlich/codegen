@@ -1,7 +1,8 @@
 {
-  "MaxTypeId": 20485,
-  "NextTypeId": 20585,
+  "MaxTypeId": 20585,
+  "NextTypeId": 20685,
   "Types": {
+    "AdjudicatedRating": 20585,
     "Favorite": 20485,
     "EoD": 20385,
     "Rating": 20365,

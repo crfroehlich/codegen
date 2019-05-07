@@ -46,6 +46,7 @@ namespace Services.Core
 {
     public static partial class UniqueConstraintFilter
     {
+            public static Expression<Func<DocEntityAdjudicatedRating, bool>> AdjudicatedRatingIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityApp, bool>> AppIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityAttribute, bool>> AttributeIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityAttributeInterval, bool>> AttributeIntervalIgnoreArchived() => d => d.Archived == false;

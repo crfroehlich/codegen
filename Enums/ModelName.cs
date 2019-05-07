@@ -47,6 +47,8 @@ namespace Services.Enums
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ModelNameEnm
     {
+        [EnumMember(Value = DocConstantModelName.ADJUDICATEDRATING)]
+        ADJUDICATEDRATING = 20585,
         [EnumMember(Value = DocConstantModelName.APP)]
         APP = 14173,
         [EnumMember(Value = DocConstantModelName.ATTRIBUTE)]
@@ -215,6 +217,8 @@ namespace Services.Enums
         {
             switch(instance) 
             {
+                case ModelNameEnm.ADJUDICATEDRATING:
+                    return DocConstantModelName.ADJUDICATEDRATING;
                 case ModelNameEnm.APP:
                     return DocConstantModelName.APP;
                 case ModelNameEnm.ATTRIBUTE:
@@ -383,6 +387,7 @@ namespace Services.Enums
 
     public sealed partial class DocConstantModelName : IEquatable<DocConstantModelName>, IEqualityComparer<DocConstantModelName>
     {
+        public const string ADJUDICATEDRATING = "AdjudicatedRating";
         public const string APP = "App";
         public const string ATTRIBUTE = "Attribute";
         public const string ATTRIBUTEINTERVAL = "AttributeInterval";

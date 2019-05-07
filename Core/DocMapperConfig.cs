@@ -63,6 +63,7 @@ namespace Services.Core
             {
                 Init(cfg);
 
+            cfg.AddProfile<AdjudicatedRatingMapper>();
             cfg.AddProfile<AppMapper>();
             cfg.AddProfile<AttributeMapper>();
             cfg.AddProfile<AttributeIntervalMapper>();
