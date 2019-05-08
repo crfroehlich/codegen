@@ -98,14 +98,6 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
-                if(!DocTools.IsNullOrEmpty(request.Parent) && !DocTools.IsNullOrEmpty(request.Parent.Id))
-                {
-                    entities = entities.Where(en => en.Parent.Id == request.Parent.Id );
-                }
-                if(true == request.ParentIds?.Any())
-                {
-                    entities = entities.Where(en => en.Parent.Id.In(request.ParentIds));
-                }
                 if(true == request.ScopesIds?.Any())
                 {
                     entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
@@ -159,7 +151,6 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Comment>(DocConstantModelName.COMMENT, nameof(Comment), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pParent = (request.Parent?.Id > 0) ? DocEntityComment.Get(request.Parent.Id) : null;
             var pScopes = request.Scopes?.ToList();
             var pText = request.Text;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
@@ -195,17 +186,6 @@ namespace Services.API
                 }
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityComment>(currentUser, request, pParent, permission, DocConstantModelName.COMMENT, nameof(request.Parent)))
-            {
-                if(DocPermissionFactory.IsRequested(request, pParent, entity.Parent, nameof(request.Parent)))
-                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.COMMENT, nameof(request.Parent)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Parent)} cannot be modified once set.");
-                    if (DocTools.IsNullOrEmpty(pParent) && DocResources.Metadata.IsRequired(DocConstantModelName.COMMENT, nameof(request.Parent))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Parent)} requires a value.");
-                    entity.Parent = pParent;
-                if(DocPermissionFactory.IsRequested<DocEntityComment>(request, pParent, nameof(request.Parent)) && !request.VisibleFields.Matches(nameof(request.Parent), ignoreSpaces: true))
-                {
-                    request.VisibleFields.Add(nameof(request.Parent));
-                }
-            }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pText, permission, DocConstantModelName.COMMENT, nameof(request.Text)))
             {
                 if(DocPermissionFactory.IsRequested(request, pText, entity.Text, nameof(request.Text)))
@@ -365,7 +345,6 @@ namespace Services.API
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-                    var pParent = entity.Parent;
                     var pScopes = entity.Scopes.ToList();
                     var pText = entity.Text;
                     var pUser = entity.User;
@@ -374,7 +353,6 @@ namespace Services.API
                     var copy = new DocEntityComment(ssn)
                     {
                         Hash = Guid.NewGuid()
-                                , Parent = pParent
                                 , Text = pText
                                 , User = pUser
                     };

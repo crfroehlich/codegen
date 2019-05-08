@@ -55,22 +55,14 @@ namespace Services.Dto
 
         public CommentBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public CommentBase(int? pId, Reference pParent, int? pParentId, List<Reference> pScopes, int? pScopesCount, string pText, Reference pUser, int? pUserId) : this(DocConvert.ToInt(pId)) 
+        public CommentBase(int? pId, List<Reference> pScopes, int? pScopesCount, string pText, Reference pUser, int? pUserId) : this(DocConvert.ToInt(pId)) 
         {
-            Parent = pParent;
-            ParentId = pParentId;
             Scopes = pScopes;
             ScopesCount = pScopesCount;
             Text = pText;
             User = pUser;
             UserId = pUserId;
         }
-
-        [ApiMember(Name = nameof(Parent), Description = "Comment", IsRequired = false)]
-        public Reference Parent { get; set; }
-        [ApiMember(Name = nameof(ParentId), Description = "Primary Key of Comment", IsRequired = false)]
-        public int? ParentId { get; set; }
-
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
@@ -88,10 +80,8 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out Reference pParent, out int? pParentId, out List<Reference> pScopes, out int? pScopesCount, out string pText, out Reference pUser, out int? pUserId)
+        public void Deconstruct(out List<Reference> pScopes, out int? pScopesCount, out string pText, out Reference pUser, out int? pUserId)
         {
-            pParent = Parent;
-            pParentId = ParentId;
             pScopes = Scopes;
             pScopesCount = ScopesCount;
             pText = Text;
@@ -100,8 +90,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public CommentBase With(int? pId = Id, Reference pParent = Parent, int? pParentId = ParentId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, string pText = Text, Reference pUser = User, int? pUserId = UserId) => 
-        //	new CommentBase(pId, pParent, pParentId, pScopes, pScopesCount, pText, pUser, pUserId);
+        //public CommentBase With(int? pId = Id, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, string pText = Text, Reference pUser = User, int? pUserId = UserId) => 
+        //	new CommentBase(pId, pScopes, pScopesCount, pText, pUser, pUserId);
 
     }
 
@@ -116,8 +106,8 @@ namespace Services.Dto
 
         public Comment(int? id) : base(DocConvert.ToInt(id)) {}
         public Comment(int id) : base(id) {}
-        public Comment(int? pId, Reference pParent, int? pParentId, List<Reference> pScopes, int? pScopesCount, string pText, Reference pUser, int? pUserId) : 
-            base(pId, pParent, pParentId, pScopes, pScopesCount, pText, pUser, pUserId) { }
+        public Comment(int? pId, List<Reference> pScopes, int? pScopesCount, string pText, Reference pUser, int? pUserId) : 
+            base(pId, pScopes, pScopesCount, pText, pUser, pUserId) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -135,7 +125,7 @@ namespace Services.Dto
 
         private List<string> _VisibleFields;
         [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Parent),nameof(ParentId),nameof(Scopes),nameof(ScopesCount),nameof(Text),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(Scopes),nameof(ScopesCount),nameof(Text),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo)})]
         public new List<string> VisibleFields
         {
             get
@@ -170,8 +160,6 @@ namespace Services.Dto
     public partial class CommentSearchBase : Search<Comment>
     {
         public int? Id { get; set; }
-        public Reference Parent { get; set; }
-        public List<int> ParentIds { get; set; }
         public List<int> ScopesIds { get; set; }
         public string Text { get; set; }
         public Reference User { get; set; }
@@ -199,7 +187,6 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comment.Created))); }
         public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comment.Updated))); }
 
-        public bool doParent { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comment.Parent))); }
         public bool doScopes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comment.Scopes))); }
         public bool doText { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comment.Text))); }
         public bool doUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Comment.User))); }

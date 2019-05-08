@@ -101,11 +101,6 @@ namespace Services.Schema
 
         #region Properties
         [Field]
-        public DocEntityComment Parent { get; set; }
-        public int? ParentId { get { return Parent?.Id; } private set { var noid = value; } }
-
-
-        [Field]
         [Association(PairTo = nameof(DocEntityScope.ScopedComments), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
