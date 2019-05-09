@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityDatabaseVersion() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DatabaseVersion()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DatabaseVersion()));
 
         #region Static Members
         public static DocEntityDatabaseVersion Get(Reference reference)

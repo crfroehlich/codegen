@@ -139,7 +139,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupTableEnum"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             LookupTableEnum ret = null;
             request = _InitAssignValues<LookupTableEnum>(request, permission, session);
@@ -178,9 +178,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPTABLEENUM, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPTABLEENUM, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -191,7 +191,7 @@ namespace Services.API
             entity.SaveChanges(permission);
 
 
-            DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, nameof(LookupTableEnum), request.VisibleFields);
+            DocPermissionFactory.SetSelect<LookupTableEnum>(currentUser, nameof(LookupTableEnum), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.LOOKUPTABLEENUM);
@@ -203,7 +203,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             LookupTableEnum ret = null;
 
@@ -363,7 +363,7 @@ namespace Services.API
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the LookupTableEnum to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
             
             LookupTableEnum ret = null;
             using(Execute)
@@ -457,7 +457,7 @@ namespace Services.API
             LookupTableEnum ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<LookupTableEnum>(currentUser, "LookupTableEnum", request.VisibleFields);
+            DocPermissionFactory.SetSelect<LookupTableEnum>(currentUser, "LookupTableEnum", request.Select);
 
             DocEntityLookupTableEnum entity = null;
             if(id.HasValue)

@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityDateTime() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DateTimeDto()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DateTimeDto()));
 
         #region Static Members
         public static DocEntityDateTime Get(Reference reference)

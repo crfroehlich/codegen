@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityUnits() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UnitsDto()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new UnitsDto()));
 
         #region Static Members
         public static DocEntityUnits Get(Reference reference)

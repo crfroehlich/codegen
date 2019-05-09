@@ -161,32 +161,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<Junction>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Gestalt),nameof(Locked),nameof(OwnerId),nameof(OwnerType),nameof(Parent),nameof(ParentId),nameof(TargetId),nameof(TargetType),nameof(Type),nameof(TypeId),nameof(Updated),nameof(User),nameof(UserId),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Junction>("Junction",exists);
+                _Select = DocPermissionFactory.SetSelect<Junction>("Junction",exists);
             }
         }
 
@@ -239,18 +239,18 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.Updated))); }
 
-        public bool doChildren { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Children))); }
-        public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Data))); }
-        public bool doOwnerId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.OwnerId))); }
-        public bool doOwnerType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.OwnerType))); }
-        public bool doParent { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Parent))); }
-        public bool doTargetId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.TargetId))); }
-        public bool doTargetType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.TargetType))); }
-        public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.Type))); }
-        public bool doUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Junction.User))); }
+        public bool doChildren { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.Children))); }
+        public bool doData { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.Data))); }
+        public bool doOwnerId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.OwnerId))); }
+        public bool doOwnerType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.OwnerType))); }
+        public bool doParent { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.Parent))); }
+        public bool doTargetId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.TargetId))); }
+        public bool doTargetType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.TargetType))); }
+        public bool doType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.Type))); }
+        public bool doUser { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Junction.User))); }
     }
 
     [Route("/junction/batch", "DELETE, PATCH, POST, PUT")]

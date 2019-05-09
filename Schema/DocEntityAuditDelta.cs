@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityAuditDelta() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new AuditDelta()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new AuditDelta()));
 
         #region Static Members
         public static DocEntityAuditDelta Get(Reference reference)

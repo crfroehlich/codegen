@@ -155,7 +155,7 @@ namespace Services.API
             UserRequest ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<UserRequest>(currentUser, "UserRequest", request.VisibleFields);
+            DocPermissionFactory.SetSelect<UserRequest>(currentUser, "UserRequest", request.Select);
 
             DocEntityUserRequest entity = null;
             if(id.HasValue)

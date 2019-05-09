@@ -173,32 +173,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<BackgroundTaskItem>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(Attempts),nameof(AuditRecord),nameof(AuditRecordId),nameof(Created),nameof(CreatorId),nameof(Data),nameof(Description),nameof(Ended),nameof(EntityId),nameof(ExecutionTime),nameof(Gestalt),nameof(Locked),nameof(Started),nameof(Status),nameof(Succeeded),nameof(Task),nameof(TaskHistory),nameof(TaskHistoryCount),nameof(TaskId),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>("BackgroundTaskItem",exists);
+                _Select = DocPermissionFactory.SetSelect<BackgroundTaskItem>("BackgroundTaskItem",exists);
             }
         }
 
@@ -254,21 +254,21 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Updated))); }
 
-        public bool doAttempts { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Attempts))); }
-        public bool doAuditRecord { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.AuditRecord))); }
-        public bool doData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Data))); }
-        public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Description))); }
-        public bool doEnded { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Ended))); }
-        public bool doEntityId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.EntityId))); }
-        public bool doExecutionTime { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.ExecutionTime))); }
-        public bool doStarted { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Started))); }
-        public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Status))); }
-        public bool doSucceeded { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Succeeded))); }
-        public bool doTask { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Task))); }
-        public bool doTaskHistory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.TaskHistory))); }
+        public bool doAttempts { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Attempts))); }
+        public bool doAuditRecord { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.AuditRecord))); }
+        public bool doData { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Data))); }
+        public bool doDescription { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Description))); }
+        public bool doEnded { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Ended))); }
+        public bool doEntityId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.EntityId))); }
+        public bool doExecutionTime { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.ExecutionTime))); }
+        public bool doStarted { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Started))); }
+        public bool doStatus { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Status))); }
+        public bool doSucceeded { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Succeeded))); }
+        public bool doTask { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.Task))); }
+        public bool doTaskHistory { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTaskItem.TaskHistory))); }
     }
 
     public partial class BackgroundTaskItemBatch : List<BackgroundTaskItem> { }

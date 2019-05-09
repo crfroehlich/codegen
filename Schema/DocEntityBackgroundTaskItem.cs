@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityBackgroundTaskItem() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new BackgroundTaskItem()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new BackgroundTaskItem()));
 
         #region Static Members
         public static DocEntityBackgroundTaskItem Get(Reference reference)

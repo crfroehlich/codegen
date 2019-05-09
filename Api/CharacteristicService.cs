@@ -135,7 +135,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Characteristic"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Characteristic ret = null;
             request = _InitAssignValues<Characteristic>(request, permission, session);
@@ -174,9 +174,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.CHARACTERISTIC, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.CHARACTERISTIC, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -186,9 +186,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.CHARACTERISTIC, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.CHARACTERISTIC, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
                     entity.Name = pName;
-                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.VisibleFields.Matches(nameof(request.Name), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.Select.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Name));
+                    request.Select.Add(nameof(request.Name));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pURI, permission, DocConstantModelName.CHARACTERISTIC, nameof(request.URI)))
@@ -197,9 +197,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.CHARACTERISTIC, nameof(request.URI)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.URI)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pURI) && DocResources.Metadata.IsRequired(DocConstantModelName.CHARACTERISTIC, nameof(request.URI))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.URI)} requires a value.");
                     entity.URI = pURI;
-                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.VisibleFields.Matches(nameof(request.URI), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pURI, nameof(request.URI)) && !request.Select.Matches(nameof(request.URI), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.URI));
+                    request.Select.Add(nameof(request.URI));
                 }
             }
 
@@ -246,12 +246,12 @@ namespace Services.API
                         entity.DocumentSets.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.VisibleFields.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.Select.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.DocumentSets));
+                    request.Select.Add(nameof(request.DocumentSets));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, nameof(Characteristic), request.VisibleFields);
+            DocPermissionFactory.SetSelect<Characteristic>(currentUser, nameof(Characteristic), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.CHARACTERISTIC);
@@ -263,7 +263,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Characteristic ret = null;
 
@@ -428,7 +428,7 @@ namespace Services.API
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Characteristic to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
             
             Characteristic ret = null;
             using(Execute)
@@ -571,7 +571,7 @@ namespace Services.API
             Characteristic ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Characteristic>(currentUser, "Characteristic", request.VisibleFields);
+            DocPermissionFactory.SetSelect<Characteristic>(currentUser, "Characteristic", request.Select);
 
             DocEntityCharacteristic entity = null;
             if(id.HasValue)

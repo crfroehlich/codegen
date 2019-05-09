@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityVariableRule() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new VariableRule()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new VariableRule()));
 
         #region Static Members
         public static DocEntityVariableRule Get(Reference reference)

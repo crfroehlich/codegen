@@ -377,32 +377,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<Document>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(Abstract),nameof(AccessionID),nameof(Acronym),nameof(Authors),nameof(CochraneID),nameof(CorporateAuthor),nameof(Country),nameof(Created),nameof(CreatorId),nameof(CustomData),nameof(DatabaseType),nameof(DatabaseTypeId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(DocumentType),nameof(DocumentTypeId),nameof(DOI),nameof(EmbaseAccessionNumber),nameof(Emtree),nameof(ErrataText),nameof(FullText),nameof(FullTextURL),nameof(Gestalt),nameof(Import),nameof(ImportId),nameof(ImportType),nameof(ImportTypeId),nameof(Institution),nameof(ISSN),nameof(Issue),nameof(JournalTitle),nameof(LegacySync),nameof(Locked),nameof(LookupTables),nameof(LookupTablesCount),nameof(MedlineID),nameof(MeSH),nameof(Pages),nameof(ParentChildStatus),nameof(ParentID),nameof(PublicationDate),nameof(PublicationYear),nameof(PubType),nameof(ReferenceStudy),nameof(SecondarySourceID),nameof(Source),nameof(StorageModel),nameof(SupplementalFiles),nameof(TaStudyDesign),nameof(Title),nameof(TrialOutcome),nameof(Updated),nameof(VariableData),nameof(VariableDataCount),nameof(VersionNo),nameof(Volume)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Document>("Document",exists);
+                _Select = DocPermissionFactory.SetSelect<Document>("Document",exists);
             }
         }
 
@@ -496,52 +496,52 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Updated))); }
 
-        public bool doAbstract { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Abstract))); }
-        public bool doAccessionID { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.AccessionID))); }
-        public bool doAcronym { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Acronym))); }
-        public bool doAuthors { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Authors))); }
-        public bool doCochraneID { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.CochraneID))); }
-        public bool doCorporateAuthor { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.CorporateAuthor))); }
-        public bool doCountry { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Country))); }
-        public bool doCustomData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.CustomData))); }
-        public bool doDatabaseType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.DatabaseType))); }
-        public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.DocumentSets))); }
-        public bool doDocumentType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.DocumentType))); }
-        public bool doDOI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.DOI))); }
-        public bool doEmbaseAccessionNumber { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.EmbaseAccessionNumber))); }
-        public bool doEmtree { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Emtree))); }
-        public bool doErrataText { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.ErrataText))); }
-        public bool doFullText { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.FullText))); }
-        public bool doFullTextURL { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.FullTextURL))); }
-        public bool doImport { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Import))); }
-        public bool doImportType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.ImportType))); }
-        public bool doInstitution { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Institution))); }
-        public bool doISSN { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.ISSN))); }
-        public bool doIssue { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Issue))); }
-        public bool doJournalTitle { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.JournalTitle))); }
-        public bool doLegacySync { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.LegacySync))); }
-        public bool doLookupTables { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.LookupTables))); }
-        public bool doMedlineID { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.MedlineID))); }
-        public bool doMeSH { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.MeSH))); }
-        public bool doPages { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Pages))); }
-        public bool doParentChildStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.ParentChildStatus))); }
-        public bool doParentID { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.ParentID))); }
-        public bool doPublicationDate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.PublicationDate))); }
-        public bool doPublicationYear { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.PublicationYear))); }
-        public bool doPubType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.PubType))); }
-        public bool doReferenceStudy { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.ReferenceStudy))); }
-        public bool doSecondarySourceID { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.SecondarySourceID))); }
-        public bool doSource { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Source))); }
-        public bool doStorageModel { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.StorageModel))); }
-        public bool doSupplementalFiles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.SupplementalFiles))); }
-        public bool doTaStudyDesign { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.TaStudyDesign))); }
-        public bool doTitle { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Title))); }
-        public bool doTrialOutcome { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.TrialOutcome))); }
-        public bool doVariableData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.VariableData))); }
-        public bool doVolume { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Document.Volume))); }
+        public bool doAbstract { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Abstract))); }
+        public bool doAccessionID { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.AccessionID))); }
+        public bool doAcronym { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Acronym))); }
+        public bool doAuthors { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Authors))); }
+        public bool doCochraneID { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.CochraneID))); }
+        public bool doCorporateAuthor { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.CorporateAuthor))); }
+        public bool doCountry { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Country))); }
+        public bool doCustomData { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.CustomData))); }
+        public bool doDatabaseType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.DatabaseType))); }
+        public bool doDocumentSets { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.DocumentSets))); }
+        public bool doDocumentType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.DocumentType))); }
+        public bool doDOI { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.DOI))); }
+        public bool doEmbaseAccessionNumber { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.EmbaseAccessionNumber))); }
+        public bool doEmtree { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Emtree))); }
+        public bool doErrataText { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.ErrataText))); }
+        public bool doFullText { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.FullText))); }
+        public bool doFullTextURL { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.FullTextURL))); }
+        public bool doImport { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Import))); }
+        public bool doImportType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.ImportType))); }
+        public bool doInstitution { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Institution))); }
+        public bool doISSN { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.ISSN))); }
+        public bool doIssue { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Issue))); }
+        public bool doJournalTitle { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.JournalTitle))); }
+        public bool doLegacySync { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.LegacySync))); }
+        public bool doLookupTables { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.LookupTables))); }
+        public bool doMedlineID { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.MedlineID))); }
+        public bool doMeSH { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.MeSH))); }
+        public bool doPages { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Pages))); }
+        public bool doParentChildStatus { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.ParentChildStatus))); }
+        public bool doParentID { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.ParentID))); }
+        public bool doPublicationDate { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.PublicationDate))); }
+        public bool doPublicationYear { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.PublicationYear))); }
+        public bool doPubType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.PubType))); }
+        public bool doReferenceStudy { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.ReferenceStudy))); }
+        public bool doSecondarySourceID { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.SecondarySourceID))); }
+        public bool doSource { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Source))); }
+        public bool doStorageModel { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.StorageModel))); }
+        public bool doSupplementalFiles { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.SupplementalFiles))); }
+        public bool doTaStudyDesign { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.TaStudyDesign))); }
+        public bool doTitle { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Title))); }
+        public bool doTrialOutcome { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.TrialOutcome))); }
+        public bool doVariableData { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.VariableData))); }
+        public bool doVolume { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Document.Volume))); }
     }
 
     [Route("/document/batch", "DELETE, PATCH, POST, PUT")]

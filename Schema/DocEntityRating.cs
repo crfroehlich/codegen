@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityRating() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Rating()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Rating()));
 
         #region Static Members
         public static DocEntityRating Get(Reference reference)

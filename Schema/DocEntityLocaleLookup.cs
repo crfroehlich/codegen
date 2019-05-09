@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityLocaleLookup() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new LocaleLookup()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new LocaleLookup()));
 
         #region Static Members
         public static DocEntityLocaleLookup Get(Reference reference)

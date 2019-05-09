@@ -157,32 +157,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<UserSession>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Hits),nameof(Impersonations),nameof(ImpersonationsCount),nameof(IpAddress),nameof(Locked),nameof(Requests),nameof(RequestsCount),nameof(SessionId),nameof(TemporarySessionId),nameof(Updated),nameof(User),nameof(UserHistory),nameof(UserHistoryCount),nameof(UserId),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<UserSession>("UserSession",exists);
+                _Select = DocPermissionFactory.SetSelect<UserSession>("UserSession",exists);
             }
         }
 
@@ -229,18 +229,18 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Updated))); }
 
-        public bool doClientId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.ClientId))); }
-        public bool doHits { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Hits))); }
-        public bool doImpersonations { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Impersonations))); }
-        public bool doIpAddress { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.IpAddress))); }
-        public bool doRequests { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Requests))); }
-        public bool doSessionId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.SessionId))); }
-        public bool doTemporarySessionId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.TemporarySessionId))); }
-        public bool doUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.User))); }
-        public bool doUserHistory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserSession.UserHistory))); }
+        public bool doClientId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.ClientId))); }
+        public bool doHits { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Hits))); }
+        public bool doImpersonations { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Impersonations))); }
+        public bool doIpAddress { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.IpAddress))); }
+        public bool doRequests { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.Requests))); }
+        public bool doSessionId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.SessionId))); }
+        public bool doTemporarySessionId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.TemporarySessionId))); }
+        public bool doUser { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.User))); }
+        public bool doUserHistory { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserSession.UserHistory))); }
     }
 
     public partial class UserSessionBatch : List<UserSession> { }

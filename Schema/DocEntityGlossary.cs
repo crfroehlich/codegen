@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityGlossary() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Glossary()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Glossary()));
 
         #region Static Members
         public static DocEntityGlossary Get(Reference reference)

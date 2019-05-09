@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityDataClass() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DataClass()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DataClass()));
 
         #region Static Members
         public static DocEntityDataClass Get(Reference reference)
@@ -105,7 +105,7 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
-        public bool AllVisibleFieldsByDefault { get; set; }
+        public bool AllSelectByDefault { get; set; }
 
 
         [Field(Nullable = false, DefaultValue = 5)]

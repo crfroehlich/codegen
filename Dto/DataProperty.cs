@@ -357,32 +357,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<DataProperty>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(AutoCreateMissing),nameof(Children),nameof(ChildrenCount),nameof(Class),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(DisplayName),nameof(Gestalt),nameof(IsAllowAddInForm),nameof(IsAllowCreateInForm),nameof(IsAllowEditInForm),nameof(IsAllowFreeText),nameof(IsAllowRemoveInForm),nameof(IsAudited),nameof(IsCompressed),nameof(IsDisplayInForm),nameof(IsDisplayInGrid),nameof(IsEditColumn),nameof(IsInsertOnly),nameof(IsJSON),nameof(IsLazy),nameof(IsNullOnUpgrade),nameof(IsReadOnly),nameof(IsRelationship),nameof(IsRequired),nameof(IsRequiredInForm),nameof(IsVirtual),nameof(JsonType),nameof(Locked),nameof(LookupTableEnum),nameof(LookupTableEnumId),nameof(Name),nameof(Order),nameof(Owner),nameof(OwnerId),nameof(Precision),nameof(RelationshipOnOwnerRemove),nameof(RelationshipOnTargetRemove),nameof(RelationshipPairTo),nameof(RelationshipPairToId),nameof(Scale),nameof(SetDefaultValue),nameof(Tab),nameof(TabId),nameof(Target),nameof(TargetAlias),nameof(TargetId),nameof(Type),nameof(UIType),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<DataProperty>("DataProperty",exists);
+                _Select = DocPermissionFactory.SetSelect<DataProperty>("DataProperty",exists);
             }
         }
 
@@ -487,49 +487,49 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Updated))); }
 
-        public bool doAutoCreateMissing { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.AutoCreateMissing))); }
-        public bool doChildren { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Children))); }
-        public bool doClass { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Class))); }
-        public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Description))); }
-        public bool doDisplayName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.DisplayName))); }
-        public bool doIsAllowAddInForm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowAddInForm))); }
-        public bool doIsAllowCreateInForm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowCreateInForm))); }
-        public bool doIsAllowEditInForm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowEditInForm))); }
-        public bool doIsAllowFreeText { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowFreeText))); }
-        public bool doIsAllowRemoveInForm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowRemoveInForm))); }
-        public bool doIsAudited { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAudited))); }
-        public bool doIsCompressed { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsCompressed))); }
-        public bool doIsDisplayInForm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsDisplayInForm))); }
-        public bool doIsDisplayInGrid { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsDisplayInGrid))); }
-        public bool doIsEditColumn { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsEditColumn))); }
-        public bool doIsInsertOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsInsertOnly))); }
-        public bool doIsJSON { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsJSON))); }
-        public bool doIsLazy { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsLazy))); }
-        public bool doIsNullOnUpgrade { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsNullOnUpgrade))); }
-        public bool doIsReadOnly { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsReadOnly))); }
-        public bool doIsRelationship { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsRelationship))); }
-        public bool doIsRequired { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsRequired))); }
-        public bool doIsRequiredInForm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsRequiredInForm))); }
-        public bool doIsVirtual { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsVirtual))); }
-        public bool doJsonType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.JsonType))); }
-        public bool doLookupTableEnum { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.LookupTableEnum))); }
-        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Name))); }
-        public bool doOrder { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Order))); }
-        public bool doOwner { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Owner))); }
-        public bool doPrecision { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Precision))); }
-        public bool doRelationshipOnOwnerRemove { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.RelationshipOnOwnerRemove))); }
-        public bool doRelationshipOnTargetRemove { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.RelationshipOnTargetRemove))); }
-        public bool doRelationshipPairTo { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.RelationshipPairTo))); }
-        public bool doScale { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Scale))); }
-        public bool doSetDefaultValue { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.SetDefaultValue))); }
-        public bool doTab { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Tab))); }
-        public bool doTarget { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Target))); }
-        public bool doTargetAlias { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.TargetAlias))); }
-        public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Type))); }
-        public bool doUIType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.UIType))); }
+        public bool doAutoCreateMissing { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.AutoCreateMissing))); }
+        public bool doChildren { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Children))); }
+        public bool doClass { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Class))); }
+        public bool doDescription { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Description))); }
+        public bool doDisplayName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.DisplayName))); }
+        public bool doIsAllowAddInForm { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowAddInForm))); }
+        public bool doIsAllowCreateInForm { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowCreateInForm))); }
+        public bool doIsAllowEditInForm { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowEditInForm))); }
+        public bool doIsAllowFreeText { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowFreeText))); }
+        public bool doIsAllowRemoveInForm { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAllowRemoveInForm))); }
+        public bool doIsAudited { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsAudited))); }
+        public bool doIsCompressed { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsCompressed))); }
+        public bool doIsDisplayInForm { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsDisplayInForm))); }
+        public bool doIsDisplayInGrid { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsDisplayInGrid))); }
+        public bool doIsEditColumn { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsEditColumn))); }
+        public bool doIsInsertOnly { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsInsertOnly))); }
+        public bool doIsJSON { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsJSON))); }
+        public bool doIsLazy { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsLazy))); }
+        public bool doIsNullOnUpgrade { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsNullOnUpgrade))); }
+        public bool doIsReadOnly { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsReadOnly))); }
+        public bool doIsRelationship { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsRelationship))); }
+        public bool doIsRequired { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsRequired))); }
+        public bool doIsRequiredInForm { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsRequiredInForm))); }
+        public bool doIsVirtual { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.IsVirtual))); }
+        public bool doJsonType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.JsonType))); }
+        public bool doLookupTableEnum { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.LookupTableEnum))); }
+        public bool doName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Name))); }
+        public bool doOrder { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Order))); }
+        public bool doOwner { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Owner))); }
+        public bool doPrecision { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Precision))); }
+        public bool doRelationshipOnOwnerRemove { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.RelationshipOnOwnerRemove))); }
+        public bool doRelationshipOnTargetRemove { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.RelationshipOnTargetRemove))); }
+        public bool doRelationshipPairTo { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.RelationshipPairTo))); }
+        public bool doScale { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Scale))); }
+        public bool doSetDefaultValue { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.SetDefaultValue))); }
+        public bool doTab { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Tab))); }
+        public bool doTarget { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Target))); }
+        public bool doTargetAlias { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.TargetAlias))); }
+        public bool doType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.Type))); }
+        public bool doUIType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataProperty.UIType))); }
     }
 
     [Route("/dataproperty/batch", "DELETE, PATCH, POST, PUT")]

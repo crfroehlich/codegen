@@ -443,32 +443,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<DocumentSet>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Participants),nameof(PRISMA),nameof(Projects),nameof(ProjectsCount),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SearchUpdated),nameof(SelectionCriteria),nameof(Settings),nameof(ShowEtw),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(TypeId),nameof(Updated),nameof(UpdateFrequency),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<DocumentSet>("DocumentSet",exists);
+                _Select = DocPermissionFactory.SetSelect<DocumentSet>("DocumentSet",exists);
             }
         }
 
@@ -569,58 +569,58 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Updated))); }
 
-        public bool doAdditionalCriteria { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.AdditionalCriteria))); }
-        public bool doCharacteristics { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Characteristics))); }
-        public bool doClients { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Clients))); }
-        public bool doComparators { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Comparators))); }
-        public bool doConfidential { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Confidential))); }
-        public bool doDataCollection { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.DataCollection))); }
-        public bool doDivisions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Divisions))); }
-        public bool doDocuments { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Documents))); }
-        public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.DocumentSets))); }
-        public bool doEvidencePortalId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.EvidencePortalId))); }
-        public bool doExtractionProtocol { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ExtractionProtocol))); }
-        public bool doFqId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.FqId))); }
-        public bool doFramedQuestionId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.FramedQuestionId))); }
-        public bool doGeneralScope { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.GeneralScope))); }
-        public bool doHistories { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Histories))); }
-        public bool doImportPriority { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ImportPriority))); }
-        public bool doImports { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Imports))); }
-        public bool doIndications { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Indications))); }
-        public bool doInterventions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Interventions))); }
-        public bool doLibraryPackageId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.LibraryPackageId))); }
-        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Name))); }
-        public bool doNotes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Notes))); }
-        public bool doOriginalComparators { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalComparators))); }
-        public bool doOriginalDatabase { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalDatabase))); }
-        public bool doOriginalDesigns { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalDesigns))); }
-        public bool doOriginalInterventions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalInterventions))); }
-        public bool doOriginalOutcomes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalOutcomes))); }
-        public bool doOriginalSearch { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalSearch))); }
-        public bool doOutcomes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Outcomes))); }
-        public bool doOwner { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Owner))); }
-        public bool doParticipants { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Participants))); }
-        public bool doPRISMA { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.PRISMA))); }
-        public bool doProjects { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Projects))); }
-        public bool doProjectTeam { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProjectTeam))); }
-        public bool doProtocolReferenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProtocolReferenceId))); }
-        public bool doQUOROM { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.QUOROM))); }
-        public bool doScopes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Scopes))); }
-        public bool doSearchEnd { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchEnd))); }
-        public bool doSearchStart { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchStart))); }
-        public bool doSearchStrategy { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchStrategy))); }
-        public bool doSearchUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchUpdated))); }
-        public bool doSelectionCriteria { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SelectionCriteria))); }
-        public bool doSettings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Settings))); }
-        public bool doShowEtw { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ShowEtw))); }
-        public bool doStats { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Stats))); }
-        public bool doStudyDesigns { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.StudyDesigns))); }
-        public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Type))); }
-        public bool doUpdateFrequency { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.UpdateFrequency))); }
-        public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Users))); }
+        public bool doAdditionalCriteria { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.AdditionalCriteria))); }
+        public bool doCharacteristics { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Characteristics))); }
+        public bool doClients { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Clients))); }
+        public bool doComparators { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Comparators))); }
+        public bool doConfidential { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Confidential))); }
+        public bool doDataCollection { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.DataCollection))); }
+        public bool doDivisions { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Divisions))); }
+        public bool doDocuments { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Documents))); }
+        public bool doDocumentSets { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.DocumentSets))); }
+        public bool doEvidencePortalId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.EvidencePortalId))); }
+        public bool doExtractionProtocol { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ExtractionProtocol))); }
+        public bool doFqId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.FqId))); }
+        public bool doFramedQuestionId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.FramedQuestionId))); }
+        public bool doGeneralScope { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.GeneralScope))); }
+        public bool doHistories { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Histories))); }
+        public bool doImportPriority { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ImportPriority))); }
+        public bool doImports { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Imports))); }
+        public bool doIndications { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Indications))); }
+        public bool doInterventions { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Interventions))); }
+        public bool doLibraryPackageId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.LibraryPackageId))); }
+        public bool doName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Name))); }
+        public bool doNotes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Notes))); }
+        public bool doOriginalComparators { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalComparators))); }
+        public bool doOriginalDatabase { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalDatabase))); }
+        public bool doOriginalDesigns { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalDesigns))); }
+        public bool doOriginalInterventions { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalInterventions))); }
+        public bool doOriginalOutcomes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalOutcomes))); }
+        public bool doOriginalSearch { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalSearch))); }
+        public bool doOutcomes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Outcomes))); }
+        public bool doOwner { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Owner))); }
+        public bool doParticipants { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Participants))); }
+        public bool doPRISMA { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.PRISMA))); }
+        public bool doProjects { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Projects))); }
+        public bool doProjectTeam { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProjectTeam))); }
+        public bool doProtocolReferenceId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProtocolReferenceId))); }
+        public bool doQUOROM { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.QUOROM))); }
+        public bool doScopes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Scopes))); }
+        public bool doSearchEnd { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchEnd))); }
+        public bool doSearchStart { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchStart))); }
+        public bool doSearchStrategy { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchStrategy))); }
+        public bool doSearchUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchUpdated))); }
+        public bool doSelectionCriteria { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SelectionCriteria))); }
+        public bool doSettings { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Settings))); }
+        public bool doShowEtw { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ShowEtw))); }
+        public bool doStats { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Stats))); }
+        public bool doStudyDesigns { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.StudyDesigns))); }
+        public bool doType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Type))); }
+        public bool doUpdateFrequency { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.UpdateFrequency))); }
+        public bool doUsers { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Users))); }
     }
 
     [Route("/documentset/batch", "DELETE, PATCH, POST, PUT")]

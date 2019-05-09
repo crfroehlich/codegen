@@ -133,32 +133,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<UserType>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(PayrollStatus),nameof(PayrollStatusId),nameof(PayrollType),nameof(PayrollTypeId),nameof(Type),nameof(TypeId),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<UserType>("UserType",exists);
+                _Select = DocPermissionFactory.SetSelect<UserType>("UserType",exists);
             }
         }
 
@@ -210,13 +210,13 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserType.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserType.Updated))); }
 
-        public bool doPayrollStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.PayrollStatus))); }
-        public bool doPayrollType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.PayrollType))); }
-        public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.Type))); }
-        public bool doUsers { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(UserType.Users))); }
+        public bool doPayrollStatus { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserType.PayrollStatus))); }
+        public bool doPayrollType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserType.PayrollType))); }
+        public bool doType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserType.Type))); }
+        public bool doUsers { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(UserType.Users))); }
     }
 
     [Route("/usertype/batch", "DELETE, PATCH, POST, PUT")]

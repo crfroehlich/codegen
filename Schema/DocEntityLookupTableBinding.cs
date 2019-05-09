@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityLookupTableBinding() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new LookupTableBinding()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new LookupTableBinding()));
 
         #region Static Members
         public static DocEntityLookupTableBinding Get(Reference reference)

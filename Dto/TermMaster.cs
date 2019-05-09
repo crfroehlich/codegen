@@ -167,32 +167,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<TermMaster>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(BioPortal),nameof(Categories),nameof(CategoriesCount),nameof(Created),nameof(CreatorId),nameof(CUI),nameof(Enum),nameof(EnumId),nameof(Gestalt),nameof(Locked),nameof(MedDRA),nameof(Name),nameof(RxNorm),nameof(SNOWMED),nameof(Synonyms),nameof(SynonymsCount),nameof(TUI),nameof(Updated),nameof(URI),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<TermMaster>("TermMaster",exists);
+                _Select = DocPermissionFactory.SetSelect<TermMaster>("TermMaster",exists);
             }
         }
 
@@ -245,20 +245,20 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Updated))); }
 
-        public bool doBioPortal { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.BioPortal))); }
-        public bool doCategories { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Categories))); }
-        public bool doCUI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.CUI))); }
-        public bool doEnum { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Enum))); }
-        public bool doMedDRA { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.MedDRA))); }
-        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Name))); }
-        public bool doRxNorm { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.RxNorm))); }
-        public bool doSNOWMED { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.SNOWMED))); }
-        public bool doSynonyms { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Synonyms))); }
-        public bool doTUI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.TUI))); }
-        public bool doURI { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.URI))); }
+        public bool doBioPortal { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.BioPortal))); }
+        public bool doCategories { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Categories))); }
+        public bool doCUI { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.CUI))); }
+        public bool doEnum { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Enum))); }
+        public bool doMedDRA { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.MedDRA))); }
+        public bool doName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Name))); }
+        public bool doRxNorm { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.RxNorm))); }
+        public bool doSNOWMED { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.SNOWMED))); }
+        public bool doSynonyms { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.Synonyms))); }
+        public bool doTUI { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.TUI))); }
+        public bool doURI { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(TermMaster.URI))); }
     }
 
     [Route("/termmaster/batch", "DELETE, PATCH, POST, PUT")]

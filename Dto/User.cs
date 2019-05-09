@@ -327,32 +327,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<User>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(ClientDepartment),nameof(Created),nameof(CreatorId),nameof(Division),nameof(DivisionId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Email),nameof(ExpireDate),nameof(FailedLoginCount),nameof(FirstName),nameof(Gestalt),nameof(Gravatar),nameof(History),nameof(HistoryCount),nameof(Impersonated),nameof(ImpersonatedCount),nameof(Impersonating),nameof(ImpersonatingCount),nameof(IsSystemUser),nameof(JobTitle),nameof(LastLogin),nameof(LastName),nameof(LegacyUsername),nameof(Locale),nameof(LocaleId),nameof(Locked),nameof(LoginCount),nameof(Name),nameof(Roles),nameof(RolesCount),nameof(Scopes),nameof(ScopesCount),nameof(Sessions),nameof(SessionsCount),nameof(Settings),nameof(Slack),nameof(StartDate),nameof(Status),nameof(StatusId),nameof(Teams),nameof(TeamsCount),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(Updates),nameof(UpdatesCount),nameof(UserType),nameof(UserTypeId),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<User>("User",exists);
+                _Select = DocPermissionFactory.SetSelect<User>("User",exists);
             }
         }
 
@@ -435,40 +435,40 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Updated))); }
 
-        public bool doClientDepartment { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.ClientDepartment))); }
-        public bool doDivision { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Division))); }
-        public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.DocumentSets))); }
-        public bool doEmail { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Email))); }
-        public bool doExpireDate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.ExpireDate))); }
-        public bool doFailedLoginCount { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.FailedLoginCount))); }
-        public bool doFirstName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.FirstName))); }
-        public bool doGravatar { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Gravatar))); }
-        public bool doHistory { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.History))); }
-        public bool doImpersonated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Impersonated))); }
-        public bool doImpersonating { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Impersonating))); }
-        public bool doIsSystemUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.IsSystemUser))); }
-        public bool doJobTitle { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.JobTitle))); }
-        public bool doLastLogin { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.LastLogin))); }
-        public bool doLastName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.LastName))); }
-        public bool doLegacyUsername { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.LegacyUsername))); }
-        public bool doLocale { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Locale))); }
-        public bool doLoginCount { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.LoginCount))); }
-        public bool doName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Name))); }
-        public bool doRoles { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Roles))); }
-        public bool doScopes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Scopes))); }
-        public bool doSessions { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Sessions))); }
-        public bool doSettings { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Settings))); }
-        public bool doSlack { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Slack))); }
-        public bool doStartDate { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.StartDate))); }
-        public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Status))); }
-        public bool doTeams { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Teams))); }
-        public bool doTimeCards { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.TimeCards))); }
-        public bool doUpdates { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Updates))); }
-        public bool doUserType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.UserType))); }
-        public bool doWorkflows { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(User.Workflows))); }
+        public bool doClientDepartment { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.ClientDepartment))); }
+        public bool doDivision { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Division))); }
+        public bool doDocumentSets { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.DocumentSets))); }
+        public bool doEmail { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Email))); }
+        public bool doExpireDate { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.ExpireDate))); }
+        public bool doFailedLoginCount { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.FailedLoginCount))); }
+        public bool doFirstName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.FirstName))); }
+        public bool doGravatar { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Gravatar))); }
+        public bool doHistory { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.History))); }
+        public bool doImpersonated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Impersonated))); }
+        public bool doImpersonating { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Impersonating))); }
+        public bool doIsSystemUser { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.IsSystemUser))); }
+        public bool doJobTitle { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.JobTitle))); }
+        public bool doLastLogin { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.LastLogin))); }
+        public bool doLastName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.LastName))); }
+        public bool doLegacyUsername { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.LegacyUsername))); }
+        public bool doLocale { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Locale))); }
+        public bool doLoginCount { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.LoginCount))); }
+        public bool doName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Name))); }
+        public bool doRoles { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Roles))); }
+        public bool doScopes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Scopes))); }
+        public bool doSessions { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Sessions))); }
+        public bool doSettings { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Settings))); }
+        public bool doSlack { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Slack))); }
+        public bool doStartDate { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.StartDate))); }
+        public bool doStatus { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Status))); }
+        public bool doTeams { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Teams))); }
+        public bool doTimeCards { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.TimeCards))); }
+        public bool doUpdates { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Updates))); }
+        public bool doUserType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.UserType))); }
+        public bool doWorkflows { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(User.Workflows))); }
     }
 
     [Route("/user/batch", "DELETE, PATCH, POST, PUT")]

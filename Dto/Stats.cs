@@ -134,30 +134,30 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<Stats>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Created),nameof(CreatorId),nameof(ExternalId),nameof(ExternalType),nameof(Gestalt),nameof(Locked),nameof(ObjectId),nameof(ObjectType),nameof(StudySetStats),nameof(StudySetStatsId),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _Select = DocPermissionFactory.RemoveNonEssentialFields(Fields);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
-                _VisibleFields = Fields;
+                _Select = Fields;
             }
         }
 
@@ -197,15 +197,15 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Stats.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Stats.Updated))); }
 
-        public bool doApp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.App))); }
-        public bool doExternalId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.ExternalId))); }
-        public bool doExternalType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.ExternalType))); }
-        public bool doObjectId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.ObjectId))); }
-        public bool doObjectType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.ObjectType))); }
-        public bool doStudySetStats { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Stats.StudySetStats))); }
+        public bool doApp { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Stats.App))); }
+        public bool doExternalId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Stats.ExternalId))); }
+        public bool doExternalType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Stats.ExternalType))); }
+        public bool doObjectId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Stats.ObjectId))); }
+        public bool doObjectType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Stats.ObjectType))); }
+        public bool doStudySetStats { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Stats.StudySetStats))); }
     }
 
     public partial class StatsBatch : List<Stats> { }

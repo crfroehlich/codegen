@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityAuditRecord() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new AuditRecord()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new AuditRecord()));
 
         #region Static Members
         public static DocEntityAuditRecord Get(Reference reference)

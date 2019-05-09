@@ -149,7 +149,7 @@ namespace Services.API
             Impersonation ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Impersonation>(currentUser, "Impersonation", request.VisibleFields);
+            DocPermissionFactory.SetSelect<Impersonation>(currentUser, "Impersonation", request.Select);
 
             DocEntityImpersonation entity = null;
             if(id.HasValue)

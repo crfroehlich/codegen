@@ -168,7 +168,7 @@ namespace Services.API
             BackgroundTaskHistory ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<BackgroundTaskHistory>(currentUser, "BackgroundTaskHistory", request.VisibleFields);
+            DocPermissionFactory.SetSelect<BackgroundTaskHistory>(currentUser, "BackgroundTaskHistory", request.Select);
 
             DocEntityBackgroundTaskHistory entity = null;
             if(id.HasValue)

@@ -205,7 +205,7 @@ namespace Services.API
             AuditRecord ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<AuditRecord>(currentUser, "AuditRecord", request.VisibleFields);
+            DocPermissionFactory.SetSelect<AuditRecord>(currentUser, "AuditRecord", request.Select);
 
             DocEntityAuditRecord entity = null;
             if(id.HasValue)

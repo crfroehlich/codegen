@@ -167,32 +167,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<History>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Created),nameof(CreatorId),nameof(DocumentSet),nameof(DocumentSetId),nameof(Gestalt),nameof(Impersonation),nameof(ImpersonationId),nameof(Locked),nameof(Page),nameof(PageId),nameof(Updated),nameof(URL),nameof(User),nameof(UserId),nameof(UserSession),nameof(UserSessionId),nameof(VersionNo),nameof(Workflow),nameof(WorkflowId)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<History>("History",exists);
+                _Select = DocPermissionFactory.SetSelect<History>("History",exists);
             }
         }
 
@@ -241,17 +241,17 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.Updated))); }
 
-        public bool doApp { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.App))); }
-        public bool doDocumentSet { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.DocumentSet))); }
-        public bool doImpersonation { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Impersonation))); }
-        public bool doPage { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Page))); }
-        public bool doURL { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.URL))); }
-        public bool doUser { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.User))); }
-        public bool doUserSession { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.UserSession))); }
-        public bool doWorkflow { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(History.Workflow))); }
+        public bool doApp { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.App))); }
+        public bool doDocumentSet { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.DocumentSet))); }
+        public bool doImpersonation { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.Impersonation))); }
+        public bool doPage { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.Page))); }
+        public bool doURL { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.URL))); }
+        public bool doUser { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.User))); }
+        public bool doUserSession { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.UserSession))); }
+        public bool doWorkflow { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(History.Workflow))); }
     }
 
     [Route("/history/batch", "DELETE, PATCH, POST, PUT")]

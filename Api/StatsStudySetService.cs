@@ -185,7 +185,7 @@ namespace Services.API
             StatsStudySet ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<StatsStudySet>(currentUser, "StatsStudySet", request.VisibleFields);
+            DocPermissionFactory.SetSelect<StatsStudySet>(currentUser, "StatsStudySet", request.Select);
 
             DocEntityStatsStudySet entity = null;
             if(id.HasValue)

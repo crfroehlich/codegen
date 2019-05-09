@@ -161,7 +161,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Interval"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Interval ret = null;
             request = _InitAssignValues<Interval>(request, permission, session);
@@ -202,9 +202,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -214,9 +214,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.CalendarDateEnd)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CalendarDateEnd)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pCalendarDateEnd) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.CalendarDateEnd))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.CalendarDateEnd)} requires a value.");
                     entity.CalendarDateEnd = pCalendarDateEnd;
-                if(DocPermissionFactory.IsRequested<DocEntityDateTime>(request, pCalendarDateEnd, nameof(request.CalendarDateEnd)) && !request.VisibleFields.Matches(nameof(request.CalendarDateEnd), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDateTime>(request, pCalendarDateEnd, nameof(request.CalendarDateEnd)) && !request.Select.Matches(nameof(request.CalendarDateEnd), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.CalendarDateEnd));
+                    request.Select.Add(nameof(request.CalendarDateEnd));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDateTime>(currentUser, request, pCalendarDateStart, permission, DocConstantModelName.INTERVAL, nameof(request.CalendarDateStart)))
@@ -225,9 +225,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.CalendarDateStart)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CalendarDateStart)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pCalendarDateStart) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.CalendarDateStart))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.CalendarDateStart)} requires a value.");
                     entity.CalendarDateStart = pCalendarDateStart;
-                if(DocPermissionFactory.IsRequested<DocEntityDateTime>(request, pCalendarDateStart, nameof(request.CalendarDateStart)) && !request.VisibleFields.Matches(nameof(request.CalendarDateStart), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDateTime>(request, pCalendarDateStart, nameof(request.CalendarDateStart)) && !request.Select.Matches(nameof(request.CalendarDateStart), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.CalendarDateStart));
+                    request.Select.Add(nameof(request.CalendarDateStart));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pCalendarType, permission, DocConstantModelName.INTERVAL, nameof(request.CalendarType)))
@@ -236,9 +236,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.CalendarType)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.CalendarType)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pCalendarType) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.CalendarType))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.CalendarType)} requires a value.");
                     entity.CalendarType = pCalendarType;
-                if(DocPermissionFactory.IsRequested<string>(request, pCalendarType, nameof(request.CalendarType)) && !request.VisibleFields.Matches(nameof(request.CalendarType), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pCalendarType, nameof(request.CalendarType)) && !request.Select.Matches(nameof(request.CalendarType), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.CalendarType));
+                    request.Select.Add(nameof(request.CalendarType));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTimePoint>(currentUser, request, pFollowUp, permission, DocConstantModelName.INTERVAL, nameof(request.FollowUp)))
@@ -247,9 +247,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.FollowUp)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.FollowUp)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pFollowUp) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.FollowUp))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.FollowUp)} requires a value.");
                     entity.FollowUp = pFollowUp;
-                if(DocPermissionFactory.IsRequested<DocEntityTimePoint>(request, pFollowUp, nameof(request.FollowUp)) && !request.VisibleFields.Matches(nameof(request.FollowUp), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTimePoint>(request, pFollowUp, nameof(request.FollowUp)) && !request.Select.Matches(nameof(request.FollowUp), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.FollowUp));
+                    request.Select.Add(nameof(request.FollowUp));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTimePoint>(currentUser, request, pTimeOfDay, permission, DocConstantModelName.INTERVAL, nameof(request.TimeOfDay)))
@@ -258,9 +258,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.INTERVAL, nameof(request.TimeOfDay)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TimeOfDay)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pTimeOfDay) && DocResources.Metadata.IsRequired(DocConstantModelName.INTERVAL, nameof(request.TimeOfDay))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.TimeOfDay)} requires a value.");
                     entity.TimeOfDay = pTimeOfDay;
-                if(DocPermissionFactory.IsRequested<DocEntityTimePoint>(request, pTimeOfDay, nameof(request.TimeOfDay)) && !request.VisibleFields.Matches(nameof(request.TimeOfDay), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTimePoint>(request, pTimeOfDay, nameof(request.TimeOfDay)) && !request.Select.Matches(nameof(request.TimeOfDay), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.TimeOfDay));
+                    request.Select.Add(nameof(request.TimeOfDay));
                 }
             }
 
@@ -269,7 +269,7 @@ namespace Services.API
             entity.SaveChanges(permission);
 
 
-            DocPermissionFactory.SetVisibleFields<Interval>(currentUser, nameof(Interval), request.VisibleFields);
+            DocPermissionFactory.SetSelect<Interval>(currentUser, nameof(Interval), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.INTERVAL);
@@ -281,7 +281,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Interval ret = null;
 
@@ -445,7 +445,7 @@ namespace Services.API
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Interval to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
             
             Interval ret = null;
             using(Execute)
@@ -539,7 +539,7 @@ namespace Services.API
             Interval ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Interval>(currentUser, "Interval", request.VisibleFields);
+            DocPermissionFactory.SetSelect<Interval>(currentUser, "Interval", request.Select);
 
             DocEntityInterval entity = null;
             if(id.HasValue)

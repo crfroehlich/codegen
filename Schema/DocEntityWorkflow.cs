@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityWorkflow() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Workflow()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Workflow()));
 
         #region Static Members
         public static DocEntityWorkflow Get(Reference reference)

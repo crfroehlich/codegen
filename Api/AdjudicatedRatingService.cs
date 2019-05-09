@@ -139,7 +139,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "AdjudicatedRating"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             AdjudicatedRating ret = null;
             request = _InitAssignValues<AdjudicatedRating>(request, permission, session);
@@ -178,9 +178,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -190,9 +190,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Document)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Document)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pDocument) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Document))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Document)} requires a value.");
                     entity.Document = pDocument;
-                if(DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.VisibleFields.Matches(nameof(request.Document), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDocument>(request, pDocument, nameof(request.Document)) && !request.Select.Matches(nameof(request.Document), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Document));
+                    request.Select.Add(nameof(request.Document));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<RatingEnm?>(currentUser, request, pRating, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.Rating)))
@@ -202,9 +202,9 @@ namespace Services.API
                     if (DocTools.IsNullOrEmpty(pRating) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.Rating))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Rating)} requires a value.");
                     if(null != pRating)
                         entity.Rating = pRating.Value;
-                if(DocPermissionFactory.IsRequested<RatingEnm?>(request, pRating, nameof(request.Rating)) && !request.VisibleFields.Matches(nameof(request.Rating), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<RatingEnm?>(request, pRating, nameof(request.Rating)) && !request.Select.Matches(nameof(request.Rating), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Rating));
+                    request.Select.Add(nameof(request.Rating));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<ReasonRejectedEnm?>(currentUser, request, pReasonRejected, permission, DocConstantModelName.ADJUDICATEDRATING, nameof(request.ReasonRejected)))
@@ -213,9 +213,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.ADJUDICATEDRATING, nameof(request.ReasonRejected)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ReasonRejected)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pReasonRejected) && DocResources.Metadata.IsRequired(DocConstantModelName.ADJUDICATEDRATING, nameof(request.ReasonRejected))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ReasonRejected)} requires a value.");
                     entity.ReasonRejected = pReasonRejected;
-                if(DocPermissionFactory.IsRequested<ReasonRejectedEnm?>(request, pReasonRejected, nameof(request.ReasonRejected)) && !request.VisibleFields.Matches(nameof(request.ReasonRejected), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<ReasonRejectedEnm?>(request, pReasonRejected, nameof(request.ReasonRejected)) && !request.Select.Matches(nameof(request.ReasonRejected), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ReasonRejected));
+                    request.Select.Add(nameof(request.ReasonRejected));
                 }
             }
 
@@ -224,7 +224,7 @@ namespace Services.API
             entity.SaveChanges(permission);
 
 
-            DocPermissionFactory.SetVisibleFields<AdjudicatedRating>(currentUser, nameof(AdjudicatedRating), request.VisibleFields);
+            DocPermissionFactory.SetSelect<AdjudicatedRating>(currentUser, nameof(AdjudicatedRating), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.ADJUDICATEDRATING);
@@ -236,7 +236,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             AdjudicatedRating ret = null;
 
@@ -394,7 +394,7 @@ namespace Services.API
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the AdjudicatedRating to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
             
             AdjudicatedRating ret = null;
             using(Execute)
@@ -488,7 +488,7 @@ namespace Services.API
             AdjudicatedRating ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<AdjudicatedRating>(currentUser, "AdjudicatedRating", request.VisibleFields);
+            DocPermissionFactory.SetSelect<AdjudicatedRating>(currentUser, "AdjudicatedRating", request.Select);
 
             DocEntityAdjudicatedRating entity = null;
             if(id.HasValue)

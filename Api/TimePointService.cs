@@ -146,7 +146,7 @@ namespace Services.API
             TimePoint ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<TimePoint>(currentUser, "TimePoint", request.VisibleFields);
+            DocPermissionFactory.SetSelect<TimePoint>(currentUser, "TimePoint", request.Select);
 
             DocEntityTimePoint entity = null;
             if(id.HasValue)

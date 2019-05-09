@@ -137,7 +137,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "LocaleLookup"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             LocaleLookup ret = null;
             request = _InitAssignValues<LocaleLookup>(request, permission, session);
@@ -176,9 +176,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALELOOKUP, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -188,9 +188,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.Data)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Data)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pData) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALELOOKUP, nameof(request.Data))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Data)} requires a value.");
                     entity.Data = DocSerialize<IpData>.ToString(pData);
-                if(DocPermissionFactory.IsRequested<IpData>(request, pData, nameof(request.Data)) && !request.VisibleFields.Matches(nameof(request.Data), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<IpData>(request, pData, nameof(request.Data)) && !request.Select.Matches(nameof(request.Data), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Data));
+                    request.Select.Add(nameof(request.Data));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pIpAddress, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress)))
@@ -199,9 +199,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IpAddress)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pIpAddress) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALELOOKUP, nameof(request.IpAddress))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IpAddress)} requires a value.");
                     entity.IpAddress = pIpAddress;
-                if(DocPermissionFactory.IsRequested<string>(request, pIpAddress, nameof(request.IpAddress)) && !request.VisibleFields.Matches(nameof(request.IpAddress), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pIpAddress, nameof(request.IpAddress)) && !request.Select.Matches(nameof(request.IpAddress), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.IpAddress));
+                    request.Select.Add(nameof(request.IpAddress));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLocale>(currentUser, request, pLocale, permission, DocConstantModelName.LOCALELOOKUP, nameof(request.Locale)))
@@ -210,9 +210,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALELOOKUP, nameof(request.Locale)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Locale)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pLocale) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALELOOKUP, nameof(request.Locale))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Locale)} requires a value.");
                     entity.Locale = pLocale;
-                if(DocPermissionFactory.IsRequested<DocEntityLocale>(request, pLocale, nameof(request.Locale)) && !request.VisibleFields.Matches(nameof(request.Locale), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLocale>(request, pLocale, nameof(request.Locale)) && !request.Select.Matches(nameof(request.Locale), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Locale));
+                    request.Select.Add(nameof(request.Locale));
                 }
             }
 
@@ -221,7 +221,7 @@ namespace Services.API
             entity.SaveChanges(permission);
 
 
-            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, nameof(LocaleLookup), request.VisibleFields);
+            DocPermissionFactory.SetSelect<LocaleLookup>(currentUser, nameof(LocaleLookup), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.LOCALELOOKUP);
@@ -233,7 +233,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             LocaleLookup ret = null;
 
@@ -338,7 +338,7 @@ namespace Services.API
             LocaleLookup ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<LocaleLookup>(currentUser, "LocaleLookup", request.VisibleFields);
+            DocPermissionFactory.SetSelect<LocaleLookup>(currentUser, "LocaleLookup", request.Select);
 
             DocEntityLocaleLookup entity = null;
             if(id.HasValue)

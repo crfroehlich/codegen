@@ -157,7 +157,7 @@ namespace Services.API
             ValueType ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<ValueType>(currentUser, "ValueType", request.VisibleFields);
+            DocPermissionFactory.SetSelect<ValueType>(currentUser, "ValueType", request.Select);
 
             DocEntityValueType entity = null;
             if(id.HasValue)

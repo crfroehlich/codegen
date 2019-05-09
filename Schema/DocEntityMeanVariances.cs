@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityMeanVariances() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new MeanVariances()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new MeanVariances()));
 
         #region Static Members
         public static DocEntityMeanVariances Get(Reference reference)

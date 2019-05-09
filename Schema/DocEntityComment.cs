@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityComment() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Comment()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Comment()));
 
         #region Static Members
         public static DocEntityComment Get(Reference reference)

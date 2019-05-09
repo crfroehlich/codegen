@@ -159,7 +159,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Glossary"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Glossary ret = null;
             request = _InitAssignValues<Glossary>(request, permission, session);
@@ -200,9 +200,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.GLOSSARY, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.GLOSSARY, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -212,9 +212,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.GLOSSARY, nameof(request.Definition)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Definition)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pDefinition) && DocResources.Metadata.IsRequired(DocConstantModelName.GLOSSARY, nameof(request.Definition))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Definition)} requires a value.");
                     entity.Definition = pDefinition;
-                if(DocPermissionFactory.IsRequested<string>(request, pDefinition, nameof(request.Definition)) && !request.VisibleFields.Matches(nameof(request.Definition), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDefinition, nameof(request.Definition)) && !request.Select.Matches(nameof(request.Definition), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Definition));
+                    request.Select.Add(nameof(request.Definition));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, request, pEnum, permission, DocConstantModelName.GLOSSARY, nameof(request.Enum)))
@@ -223,9 +223,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.GLOSSARY, nameof(request.Enum)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enum)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pEnum) && DocResources.Metadata.IsRequired(DocConstantModelName.GLOSSARY, nameof(request.Enum))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Enum)} requires a value.");
                     entity.Enum = pEnum;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.Select.Matches(nameof(request.Enum), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Enum));
+                    request.Select.Add(nameof(request.Enum));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pIcon, permission, DocConstantModelName.GLOSSARY, nameof(request.Icon)))
@@ -234,9 +234,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.GLOSSARY, nameof(request.Icon)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Icon)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pIcon) && DocResources.Metadata.IsRequired(DocConstantModelName.GLOSSARY, nameof(request.Icon))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Icon)} requires a value.");
                     entity.Icon = pIcon;
-                if(DocPermissionFactory.IsRequested<string>(request, pIcon, nameof(request.Icon)) && !request.VisibleFields.Matches(nameof(request.Icon), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pIcon, nameof(request.Icon)) && !request.Select.Matches(nameof(request.Icon), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Icon));
+                    request.Select.Add(nameof(request.Icon));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityPage>(currentUser, request, pPage, permission, DocConstantModelName.GLOSSARY, nameof(request.Page)))
@@ -245,9 +245,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.GLOSSARY, nameof(request.Page)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Page)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pPage) && DocResources.Metadata.IsRequired(DocConstantModelName.GLOSSARY, nameof(request.Page))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Page)} requires a value.");
                     entity.Page = pPage;
-                if(DocPermissionFactory.IsRequested<DocEntityPage>(request, pPage, nameof(request.Page)) && !request.VisibleFields.Matches(nameof(request.Page), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityPage>(request, pPage, nameof(request.Page)) && !request.Select.Matches(nameof(request.Page), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Page));
+                    request.Select.Add(nameof(request.Page));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTermMaster>(currentUser, request, pTerm, permission, DocConstantModelName.GLOSSARY, nameof(request.Term)))
@@ -256,9 +256,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.GLOSSARY, nameof(request.Term)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Term)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pTerm) && DocResources.Metadata.IsRequired(DocConstantModelName.GLOSSARY, nameof(request.Term))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Term)} requires a value.");
                     entity.Term = pTerm;
-                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pTerm, nameof(request.Term)) && !request.VisibleFields.Matches(nameof(request.Term), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTermMaster>(request, pTerm, nameof(request.Term)) && !request.Select.Matches(nameof(request.Term), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Term));
+                    request.Select.Add(nameof(request.Term));
                 }
             }
 
@@ -267,7 +267,7 @@ namespace Services.API
             entity.SaveChanges(permission);
 
 
-            DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, nameof(Glossary), request.VisibleFields);
+            DocPermissionFactory.SetSelect<Glossary>(currentUser, nameof(Glossary), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.GLOSSARY);
@@ -279,7 +279,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Glossary ret = null;
 
@@ -443,7 +443,7 @@ namespace Services.API
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the Glossary to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
             
             Glossary ret = null;
             using(Execute)
@@ -537,7 +537,7 @@ namespace Services.API
             Glossary ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Glossary>(currentUser, "Glossary", request.VisibleFields);
+            DocPermissionFactory.SetSelect<Glossary>(currentUser, "Glossary", request.Select);
 
             DocEntityGlossary entity = null;
             if(id.HasValue)

@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityTermCategory() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new TermCategory()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new TermCategory()));
 
         #region Static Members
         public static DocEntityTermCategory Get(Reference reference)

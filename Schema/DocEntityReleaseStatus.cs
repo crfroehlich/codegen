@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityReleaseStatus() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new ReleaseStatus()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new ReleaseStatus()));
 
         #region Static Members
         public static DocEntityReleaseStatus Get(Reference reference)

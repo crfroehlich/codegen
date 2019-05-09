@@ -141,7 +141,7 @@ namespace Services.API
             DocumentSetHistory ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.VisibleFields);
+            DocPermissionFactory.SetSelect<DocumentSetHistory>(currentUser, "DocumentSetHistory", request.Select);
 
             DocEntityDocumentSetHistory entity = null;
             if(id.HasValue)

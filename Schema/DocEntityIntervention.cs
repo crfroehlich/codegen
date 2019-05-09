@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityIntervention() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Intervention()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Intervention()));
 
         #region Static Members
         public static DocEntityIntervention Get(Reference reference)

@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityLookupCategory() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new LookupCategory()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new LookupCategory()));
 
         #region Static Members
         public static DocEntityLookupCategory Get(Reference reference)

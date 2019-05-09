@@ -153,7 +153,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "LookupCategory"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             LookupCategory ret = null;
             request = _InitAssignValues<LookupCategory>(request, permission, session);
@@ -193,9 +193,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -205,9 +205,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Category)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Category)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pCategory) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Category))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Category)} requires a value.");
                     entity.Category = pCategory;
-                if(DocPermissionFactory.IsRequested<string>(request, pCategory, nameof(request.Category)) && !request.VisibleFields.Matches(nameof(request.Category), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pCategory, nameof(request.Category)) && !request.Select.Matches(nameof(request.Category), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Category));
+                    request.Select.Add(nameof(request.Category));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTableEnum>(currentUser, request, pEnum, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.Enum)))
@@ -216,9 +216,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Enum)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Enum)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pEnum) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.Enum))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Enum)} requires a value.");
                     entity.Enum = pEnum;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.VisibleFields.Matches(nameof(request.Enum), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupTableEnum>(request, pEnum, nameof(request.Enum)) && !request.Select.Matches(nameof(request.Enum), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Enum));
+                    request.Select.Add(nameof(request.Enum));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupCategory>(currentUser, request, pParentCategory, permission, DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory)))
@@ -227,9 +227,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ParentCategory)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pParentCategory) && DocResources.Metadata.IsRequired(DocConstantModelName.LOOKUPCATEGORY, nameof(request.ParentCategory))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ParentCategory)} requires a value.");
                     entity.ParentCategory = pParentCategory;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupCategory>(request, pParentCategory, nameof(request.ParentCategory)) && !request.VisibleFields.Matches(nameof(request.ParentCategory), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityLookupCategory>(request, pParentCategory, nameof(request.ParentCategory)) && !request.Select.Matches(nameof(request.ParentCategory), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.ParentCategory));
+                    request.Select.Add(nameof(request.ParentCategory));
                 }
             }
 
@@ -276,12 +276,12 @@ namespace Services.API
                         entity.Lookups.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pLookups, nameof(request.Lookups)) && !request.VisibleFields.Matches(nameof(request.Lookups), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pLookups, nameof(request.Lookups)) && !request.Select.Matches(nameof(request.Lookups), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Lookups));
+                    request.Select.Add(nameof(request.Lookups));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<LookupCategory>(currentUser, nameof(LookupCategory), request.VisibleFields);
+            DocPermissionFactory.SetSelect<LookupCategory>(currentUser, nameof(LookupCategory), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.LOOKUPCATEGORY);
@@ -293,7 +293,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             LookupCategory ret = null;
 
@@ -458,7 +458,7 @@ namespace Services.API
         {
             if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the LookupCategory to patch.");
             
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
             
             LookupCategory ret = null;
             using(Execute)
@@ -601,7 +601,7 @@ namespace Services.API
             LookupCategory ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<LookupCategory>(currentUser, "LookupCategory", request.VisibleFields);
+            DocPermissionFactory.SetSelect<LookupCategory>(currentUser, "LookupCategory", request.Select);
 
             DocEntityLookupCategory entity = null;
             if(id.HasValue)

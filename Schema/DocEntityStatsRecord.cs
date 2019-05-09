@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityStatsRecord() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new StatsRecord()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new StatsRecord()));
 
         #region Static Members
         public static DocEntityStatsRecord Get(Reference reference)

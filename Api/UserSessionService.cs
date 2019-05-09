@@ -175,7 +175,7 @@ namespace Services.API
             UserSession ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<UserSession>(currentUser, "UserSession", request.VisibleFields);
+            DocPermissionFactory.SetSelect<UserSession>(currentUser, "UserSession", request.Select);
 
             DocEntityUserSession entity = null;
             if(id.HasValue)

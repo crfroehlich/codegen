@@ -150,32 +150,32 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<Help>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(ConfluenceId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Gestalt),nameof(Icon),nameof(Locked),nameof(Order),nameof(Pages),nameof(PagesCount),nameof(Scopes),nameof(ScopesCount),nameof(Title),nameof(Type),nameof(TypeId),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocWebSession.GetTypeVisibleFields(this);
+                    _Select = DocWebSession.GetTypeSelect(this);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
                 var requested = value ?? new List<string>();
                 var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
-                _VisibleFields = DocPermissionFactory.SetVisibleFields<Help>("Help",exists);
+                _Select = DocPermissionFactory.SetSelect<Help>("Help",exists);
             }
         }
 
@@ -225,17 +225,17 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Updated))); }
 
-        public bool doConfluenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.ConfluenceId))); }
-        public bool doDescription { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Description))); }
-        public bool doIcon { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Icon))); }
-        public bool doOrder { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Order))); }
-        public bool doPages { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Pages))); }
-        public bool doScopes { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Scopes))); }
-        public bool doTitle { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Title))); }
-        public bool doType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(Help.Type))); }
+        public bool doConfluenceId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.ConfluenceId))); }
+        public bool doDescription { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Description))); }
+        public bool doIcon { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Icon))); }
+        public bool doOrder { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Order))); }
+        public bool doPages { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Pages))); }
+        public bool doScopes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Scopes))); }
+        public bool doTitle { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Title))); }
+        public bool doType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Help.Type))); }
     }
 
     [Route("/help/batch", "DELETE, PATCH, POST, PUT")]

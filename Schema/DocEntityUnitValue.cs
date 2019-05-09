@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityUnitValue() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new UnitValue()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new UnitValue()));
 
         #region Static Members
         public static DocEntityUnitValue Get(Reference reference)

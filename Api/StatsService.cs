@@ -149,7 +149,7 @@ namespace Services.API
             Stats ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Stats>(currentUser, "Stats", request.VisibleFields);
+            DocPermissionFactory.SetSelect<Stats>(currentUser, "Stats", request.Select);
 
             DocEntityStats entity = null;
             if(id.HasValue)

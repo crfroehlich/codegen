@@ -177,7 +177,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Update"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Update ret = null;
             request = _InitAssignValues<Update>(request, permission, session);
@@ -225,9 +225,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -237,9 +237,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.Body)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Body)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pBody) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.Body))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Body)} requires a value.");
                     entity.Body = pBody;
-                if(DocPermissionFactory.IsRequested<string>(request, pBody, nameof(request.Body)) && !request.VisibleFields.Matches(nameof(request.Body), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pBody, nameof(request.Body)) && !request.Select.Matches(nameof(request.Body), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Body));
+                    request.Select.Add(nameof(request.Body));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDeliveryStatus, permission, DocConstantModelName.UPDATE, nameof(request.DeliveryStatus)))
@@ -248,9 +248,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.DeliveryStatus)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DeliveryStatus)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pDeliveryStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.DeliveryStatus))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DeliveryStatus)} requires a value.");
                     entity.DeliveryStatus = pDeliveryStatus;
-                if(DocPermissionFactory.IsRequested<string>(request, pDeliveryStatus, nameof(request.DeliveryStatus)) && !request.VisibleFields.Matches(nameof(request.DeliveryStatus), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDeliveryStatus, nameof(request.DeliveryStatus)) && !request.Select.Matches(nameof(request.DeliveryStatus), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.DeliveryStatus));
+                    request.Select.Add(nameof(request.DeliveryStatus));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pEmailAttempts, permission, DocConstantModelName.UPDATE, nameof(request.EmailAttempts)))
@@ -260,9 +260,9 @@ namespace Services.API
                     if (DocTools.IsNullOrEmpty(pEmailAttempts) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.EmailAttempts))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.EmailAttempts)} requires a value.");
                     if(null != pEmailAttempts)
                         entity.EmailAttempts = (int) pEmailAttempts;
-                if(DocPermissionFactory.IsRequested<int?>(request, pEmailAttempts, nameof(request.EmailAttempts)) && !request.VisibleFields.Matches(nameof(request.EmailAttempts), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(request, pEmailAttempts, nameof(request.EmailAttempts)) && !request.Select.Matches(nameof(request.EmailAttempts), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.EmailAttempts));
+                    request.Select.Add(nameof(request.EmailAttempts));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pEmailSent, permission, DocConstantModelName.UPDATE, nameof(request.EmailSent)))
@@ -271,9 +271,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.EmailSent)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.EmailSent)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pEmailSent) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.EmailSent))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.EmailSent)} requires a value.");
                     entity.EmailSent = pEmailSent;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pEmailSent, nameof(request.EmailSent)) && !request.VisibleFields.Matches(nameof(request.EmailSent), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pEmailSent, nameof(request.EmailSent)) && !request.Select.Matches(nameof(request.EmailSent), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.EmailSent));
+                    request.Select.Add(nameof(request.EmailSent));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLink, permission, DocConstantModelName.UPDATE, nameof(request.Link)))
@@ -282,9 +282,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.Link)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Link)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pLink) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.Link))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Link)} requires a value.");
                     entity.Link = pLink;
-                if(DocPermissionFactory.IsRequested<string>(request, pLink, nameof(request.Link)) && !request.VisibleFields.Matches(nameof(request.Link), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pLink, nameof(request.Link)) && !request.Select.Matches(nameof(request.Link), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Link));
+                    request.Select.Add(nameof(request.Link));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pPriority, permission, DocConstantModelName.UPDATE, nameof(request.Priority)))
@@ -294,9 +294,9 @@ namespace Services.API
                     if (DocTools.IsNullOrEmpty(pPriority) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.Priority))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Priority)} requires a value.");
                     if(null != pPriority)
                         entity.Priority = (int) pPriority;
-                if(DocPermissionFactory.IsRequested<int?>(request, pPriority, nameof(request.Priority)) && !request.VisibleFields.Matches(nameof(request.Priority), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<int?>(request, pPriority, nameof(request.Priority)) && !request.Select.Matches(nameof(request.Priority), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Priority));
+                    request.Select.Add(nameof(request.Priority));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pRead, permission, DocConstantModelName.UPDATE, nameof(request.Read)))
@@ -305,9 +305,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.Read)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Read)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pRead) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.Read))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Read)} requires a value.");
                     entity.Read = pRead;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pRead, nameof(request.Read)) && !request.VisibleFields.Matches(nameof(request.Read), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pRead, nameof(request.Read)) && !request.Select.Matches(nameof(request.Read), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Read));
+                    request.Select.Add(nameof(request.Read));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DateTime?>(currentUser, request, pSlackSent, permission, DocConstantModelName.UPDATE, nameof(request.SlackSent)))
@@ -316,9 +316,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.SlackSent)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.SlackSent)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pSlackSent) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.SlackSent))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.SlackSent)} requires a value.");
                     entity.SlackSent = pSlackSent;
-                if(DocPermissionFactory.IsRequested<DateTime?>(request, pSlackSent, nameof(request.SlackSent)) && !request.VisibleFields.Matches(nameof(request.SlackSent), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DateTime?>(request, pSlackSent, nameof(request.SlackSent)) && !request.Select.Matches(nameof(request.SlackSent), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.SlackSent));
+                    request.Select.Add(nameof(request.SlackSent));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSubject, permission, DocConstantModelName.UPDATE, nameof(request.Subject)))
@@ -327,9 +327,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.Subject)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Subject)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pSubject) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.Subject))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Subject)} requires a value.");
                     entity.Subject = pSubject;
-                if(DocPermissionFactory.IsRequested<string>(request, pSubject, nameof(request.Subject)) && !request.VisibleFields.Matches(nameof(request.Subject), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pSubject, nameof(request.Subject)) && !request.Select.Matches(nameof(request.Subject), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Subject));
+                    request.Select.Add(nameof(request.Subject));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTeam>(currentUser, request, pTeam, permission, DocConstantModelName.UPDATE, nameof(request.Team)))
@@ -338,9 +338,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.Team)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Team)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pTeam) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.Team))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Team)} requires a value.");
                     entity.Team = pTeam;
-                if(DocPermissionFactory.IsRequested<DocEntityTeam>(request, pTeam, nameof(request.Team)) && !request.VisibleFields.Matches(nameof(request.Team), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTeam>(request, pTeam, nameof(request.Team)) && !request.Select.Matches(nameof(request.Team), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Team));
+                    request.Select.Add(nameof(request.Team));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityUser>(currentUser, request, pUser, permission, DocConstantModelName.UPDATE, nameof(request.User)))
@@ -349,9 +349,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.UPDATE, nameof(request.User)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.User)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pUser) && DocResources.Metadata.IsRequired(DocConstantModelName.UPDATE, nameof(request.User))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.User)} requires a value.");
                     entity.User = pUser;
-                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.VisibleFields.Matches(nameof(request.User), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.Select.Matches(nameof(request.User), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.User));
+                    request.Select.Add(nameof(request.User));
                 }
             }
 
@@ -398,12 +398,12 @@ namespace Services.API
                         entity.Events.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pEvents, nameof(request.Events)) && !request.VisibleFields.Matches(nameof(request.Events), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pEvents, nameof(request.Events)) && !request.Select.Matches(nameof(request.Events), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Events));
+                    request.Select.Add(nameof(request.Events));
                 }
             }
-            DocPermissionFactory.SetVisibleFields<Update>(currentUser, nameof(Update), request.VisibleFields);
+            DocPermissionFactory.SetSelect<Update>(currentUser, nameof(Update), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.UPDATE);
@@ -415,7 +415,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Update ret = null;
 
@@ -559,7 +559,7 @@ namespace Services.API
             Update ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Update>(currentUser, "Update", request.VisibleFields);
+            DocPermissionFactory.SetSelect<Update>(currentUser, "Update", request.Select);
 
             DocEntityUpdate entity = null;
             if(id.HasValue)

@@ -133,7 +133,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "Locale"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Locale ret = null;
             request = _InitAssignValues<Locale>(request, permission, session);
@@ -172,9 +172,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -184,9 +184,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Country)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Country)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pCountry) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.Country))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Country)} requires a value.");
                     entity.Country = pCountry;
-                if(DocPermissionFactory.IsRequested<string>(request, pCountry, nameof(request.Country)) && !request.VisibleFields.Matches(nameof(request.Country), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pCountry, nameof(request.Country)) && !request.Select.Matches(nameof(request.Country), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Country));
+                    request.Select.Add(nameof(request.Country));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLanguage, permission, DocConstantModelName.LOCALE, nameof(request.Language)))
@@ -195,9 +195,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.Language)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Language)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pLanguage) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.Language))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Language)} requires a value.");
                     entity.Language = pLanguage;
-                if(DocPermissionFactory.IsRequested<string>(request, pLanguage, nameof(request.Language)) && !request.VisibleFields.Matches(nameof(request.Language), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pLanguage, nameof(request.Language)) && !request.Select.Matches(nameof(request.Language), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Language));
+                    request.Select.Add(nameof(request.Language));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pTimeZone, permission, DocConstantModelName.LOCALE, nameof(request.TimeZone)))
@@ -206,9 +206,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.LOCALE, nameof(request.TimeZone)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TimeZone)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pTimeZone) && DocResources.Metadata.IsRequired(DocConstantModelName.LOCALE, nameof(request.TimeZone))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.TimeZone)} requires a value.");
                     entity.TimeZone = pTimeZone;
-                if(DocPermissionFactory.IsRequested<string>(request, pTimeZone, nameof(request.TimeZone)) && !request.VisibleFields.Matches(nameof(request.TimeZone), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pTimeZone, nameof(request.TimeZone)) && !request.Select.Matches(nameof(request.TimeZone), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.TimeZone));
+                    request.Select.Add(nameof(request.TimeZone));
                 }
             }
 
@@ -217,7 +217,7 @@ namespace Services.API
             entity.SaveChanges(permission);
 
 
-            DocPermissionFactory.SetVisibleFields<Locale>(currentUser, nameof(Locale), request.VisibleFields);
+            DocPermissionFactory.SetSelect<Locale>(currentUser, nameof(Locale), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.LOCALE);
@@ -229,7 +229,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             Locale ret = null;
 
@@ -338,7 +338,7 @@ namespace Services.API
             Locale ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Locale>(currentUser, "Locale", request.VisibleFields);
+            DocPermissionFactory.SetSelect<Locale>(currentUser, "Locale", request.Select);
 
             DocEntityLocale entity = null;
             if(id.HasValue)

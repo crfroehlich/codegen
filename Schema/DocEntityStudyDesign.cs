@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityStudyDesign() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new StudyDesign()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new StudyDesign()));
 
         #region Static Members
         public static DocEntityStudyDesign Get(Reference reference)

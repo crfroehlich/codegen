@@ -175,7 +175,7 @@ namespace Services.API
             Event ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<Event>(currentUser, "Event", request.VisibleFields);
+            DocPermissionFactory.SetSelect<Event>(currentUser, "Event", request.Select);
 
             DocEntityEvent entity = null;
             if(id.HasValue)

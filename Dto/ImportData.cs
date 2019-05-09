@@ -231,30 +231,30 @@ namespace Services.Dto
             var manualOverride = _ShouldSerialize(field);
             if(null != manualOverride) return manualOverride;
 
-            if (IgnoredVisibleFields.Matches(field, true)) return false;
-            var ret = MandatoryVisibleFields.Matches(field, true) || true == VisibleFields?.Matches(field, true);
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
             return ret;
         }
 
         public static List<string> Fields => DocTools.Fields<ImportData>();
 
-        private List<string> _VisibleFields;
-        [ApiMember(Name = "VisibleFields", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        private List<string> _Select;
+        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(CompletedOn),nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(ErrorData),nameof(ExtractUrl),nameof(Gestalt),nameof(HighPriority),nameof(ImportFr),nameof(ImportLocation),nameof(ImportLocationId),nameof(ImportNewName),nameof(ImportTable),nameof(ImportText),nameof(ImportType),nameof(ImportTypeId),nameof(IsLegacy),nameof(Locked),nameof(Order),nameof(ReferenceId),nameof(RequestedBy),nameof(RequestedById),nameof(RequestedOn),nameof(StartedOn),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> VisibleFields
+        public new List<string> Select
         {
             get
             {
                 if(null == this) return new List<string>();
-                if(null == _VisibleFields)
+                if(null == _Select)
                 {
-                    _VisibleFields = DocPermissionFactory.RemoveNonEssentialFields(Fields);
+                    _Select = DocPermissionFactory.RemoveNonEssentialFields(Fields);
                 }
-                return _VisibleFields;
+                return _Select;
             }
             set
             {
-                _VisibleFields = Fields;
+                _Select = Fields;
             }
         }
 
@@ -335,28 +335,28 @@ namespace Services.Dto
         public bool ftsBool { get => DocConvert.ToBool(fts); }
         public DateTime ftsDate { get => DocConvert.ToDateTime(fts); }
         public bool isDate { get => ftsDate != DateTime.MinValue; }
-        public bool doCreated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Created))); }
-        public bool doUpdated { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Updated))); }
+        public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Created))); }
+        public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Updated))); }
 
-        public bool doCompletedOn { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.CompletedOn))); }
-        public bool doDocument { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Document))); }
-        public bool doDocumentSets { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.DocumentSets))); }
-        public bool doErrorData { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ErrorData))); }
-        public bool doExtractUrl { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ExtractUrl))); }
-        public bool doHighPriority { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.HighPriority))); }
-        public bool doImportFr { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportFr))); }
-        public bool doImportLocation { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportLocation))); }
-        public bool doImportNewName { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportNewName))); }
-        public bool doImportTable { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportTable))); }
-        public bool doImportText { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportText))); }
-        public bool doImportType { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportType))); }
-        public bool doIsLegacy { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.IsLegacy))); }
-        public bool doOrder { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Order))); }
-        public bool doReferenceId { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ReferenceId))); }
-        public bool doRequestedBy { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.RequestedBy))); }
-        public bool doRequestedOn { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.RequestedOn))); }
-        public bool doStartedOn { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.StartedOn))); }
-        public bool doStatus { get => true == _request.VisibleFields?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Status))); }
+        public bool doCompletedOn { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.CompletedOn))); }
+        public bool doDocument { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Document))); }
+        public bool doDocumentSets { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.DocumentSets))); }
+        public bool doErrorData { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ErrorData))); }
+        public bool doExtractUrl { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ExtractUrl))); }
+        public bool doHighPriority { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.HighPriority))); }
+        public bool doImportFr { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportFr))); }
+        public bool doImportLocation { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportLocation))); }
+        public bool doImportNewName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportNewName))); }
+        public bool doImportTable { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportTable))); }
+        public bool doImportText { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportText))); }
+        public bool doImportType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ImportType))); }
+        public bool doIsLegacy { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.IsLegacy))); }
+        public bool doOrder { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Order))); }
+        public bool doReferenceId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ReferenceId))); }
+        public bool doRequestedBy { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.RequestedBy))); }
+        public bool doRequestedOn { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.RequestedOn))); }
+        public bool doStartedOn { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.StartedOn))); }
+        public bool doStatus { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Status))); }
     }
 
     [Route("/importdata/batch", "DELETE, PATCH, POST, PUT")]

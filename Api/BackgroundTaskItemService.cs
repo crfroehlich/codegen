@@ -188,7 +188,7 @@ namespace Services.API
             BackgroundTaskItem ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.VisibleFields);
+            DocPermissionFactory.SetSelect<BackgroundTaskItem>(currentUser, "BackgroundTaskItem", request.Select);
 
             DocEntityBackgroundTaskItem entity = null;
             if(id.HasValue)

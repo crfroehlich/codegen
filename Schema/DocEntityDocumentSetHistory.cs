@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityDocumentSetHistory() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DocumentSetHistory()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DocumentSetHistory()));
 
         #region Static Members
         public static DocEntityDocumentSetHistory Get(Reference reference)

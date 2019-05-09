@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityQueueChannel() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new QueueChannel()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new QueueChannel()));
 
         #region Static Members
         public static DocEntityQueueChannel Get(Reference reference)

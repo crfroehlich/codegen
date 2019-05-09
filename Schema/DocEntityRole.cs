@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityRole() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Role()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Role()));
 
         #region Static Members
         public static DocEntityRole Get(Reference reference)

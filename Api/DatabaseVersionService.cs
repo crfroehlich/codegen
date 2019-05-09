@@ -131,7 +131,7 @@ namespace Services.API
             DatabaseVersion ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<DatabaseVersion>(currentUser, "DatabaseVersion", request.VisibleFields);
+            DocPermissionFactory.SetSelect<DatabaseVersion>(currentUser, "DatabaseVersion", request.Select);
 
             DocEntityDatabaseVersion entity = null;
             if(id.HasValue)

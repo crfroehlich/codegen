@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityDataTab() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new DataTab()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DataTab()));
 
         #region Static Members
         public static DocEntityDataTab Get(Reference reference)

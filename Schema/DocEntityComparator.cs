@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityComparator() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Comparator()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Comparator()));
 
         #region Static Members
         public static DocEntityComparator Get(Reference reference)

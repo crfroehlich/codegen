@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityImpersonation() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Impersonation()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Impersonation()));
 
         #region Static Members
         public static DocEntityImpersonation Get(Reference reference)

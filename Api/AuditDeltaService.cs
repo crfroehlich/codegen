@@ -135,7 +135,7 @@ namespace Services.API
             if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "AuditDelta"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             AuditDelta ret = null;
             request = _InitAssignValues<AuditDelta>(request, permission, session);
@@ -173,9 +173,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
                     entity.Archived = pArchived;
-                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.VisibleFields.Matches(nameof(request.Archived), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Archived));
+                    request.Select.Add(nameof(request.Archived));
                 }
             }
 
@@ -185,9 +185,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Audit)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Audit)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pAudit) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Audit))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Audit)} requires a value.");
                     entity.Audit = pAudit;
-                if(DocPermissionFactory.IsRequested<DocEntityAuditRecord>(request, pAudit, nameof(request.Audit)) && !request.VisibleFields.Matches(nameof(request.Audit), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityAuditRecord>(request, pAudit, nameof(request.Audit)) && !request.Select.Matches(nameof(request.Audit), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Audit));
+                    request.Select.Add(nameof(request.Audit));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pDelta, permission, DocConstantModelName.AUDITDELTA, nameof(request.Delta)))
@@ -196,9 +196,9 @@ namespace Services.API
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.AUDITDELTA, nameof(request.Delta)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Delta)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pDelta) && DocResources.Metadata.IsRequired(DocConstantModelName.AUDITDELTA, nameof(request.Delta))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Delta)} requires a value.");
                     entity.Delta = pDelta;
-                if(DocPermissionFactory.IsRequested<string>(request, pDelta, nameof(request.Delta)) && !request.VisibleFields.Matches(nameof(request.Delta), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<string>(request, pDelta, nameof(request.Delta)) && !request.Select.Matches(nameof(request.Delta), ignoreSpaces: true))
                 {
-                    request.VisibleFields.Add(nameof(request.Delta));
+                    request.Select.Add(nameof(request.Delta));
                 }
             }
 
@@ -207,7 +207,7 @@ namespace Services.API
             entity.SaveChanges(permission);
 
 
-            DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, nameof(AuditDelta), request.VisibleFields);
+            DocPermissionFactory.SetSelect<AuditDelta>(currentUser, nameof(AuditDelta), request.Select);
             ret = entity.ToDto();
 
             var cacheExpires = DocResources.Metadata.GetCacheExpiration(DocConstantModelName.AUDITDELTA);
@@ -219,7 +219,7 @@ namespace Services.API
         {
             if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
-            request.VisibleFields = request.VisibleFields ?? new List<string>();
+            request.Select = request.Select ?? new List<string>();
 
             AuditDelta ret = null;
 
@@ -320,7 +320,7 @@ namespace Services.API
             AuditDelta ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<AuditDelta>(currentUser, "AuditDelta", request.VisibleFields);
+            DocPermissionFactory.SetSelect<AuditDelta>(currentUser, "AuditDelta", request.Select);
 
             DocEntityAuditDelta entity = null;
             if(id.HasValue)

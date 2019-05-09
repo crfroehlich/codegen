@@ -147,7 +147,7 @@ namespace Services.API
             StatsRecord ret = null;
             var query = DocQuery.ActiveQuery ?? Execute;
 
-            DocPermissionFactory.SetVisibleFields<StatsRecord>(currentUser, "StatsRecord", request.VisibleFields);
+            DocPermissionFactory.SetSelect<StatsRecord>(currentUser, "StatsRecord", request.Select);
 
             DocEntityStatsRecord entity = null;
             if(id.HasValue)

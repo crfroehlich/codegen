@@ -56,7 +56,7 @@ namespace Services.Schema
         public DocEntityBroadcast() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _visibleFields => __vf ?? (__vf = DocWebSession.GetTypeVisibleFields(new Broadcast()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Broadcast()));
 
         #region Static Members
         public static DocEntityBroadcast Get(Reference reference)
