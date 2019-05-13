@@ -127,7 +127,7 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
-        public bool? Delete { get; set; }
+        public bool Delete { get; set; }
 
 
         [Field]
@@ -136,7 +136,7 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = false)]
-        public bool? Edit { get; set; }
+        public bool Edit { get; set; }
 
 
         [Field]
@@ -147,8 +147,8 @@ namespace Services.Schema
         public int? HelpCount { get { return Help.Count(); } private set { var noid = value; } }
 
 
-        [Field]
-        public bool? IsGlobal { get; set; }
+        [Field(DefaultValue = false)]
+        public bool IsGlobal { get; set; }
 
 
         [Field]
@@ -197,7 +197,7 @@ namespace Services.Schema
 
 
         [Field(DefaultValue = true)]
-        public bool? View { get; set; }
+        public bool View { get; set; }
 
 
         [Field]

@@ -55,7 +55,7 @@ namespace Services.Dto
 
         public ScopeBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public ScopeBase(int? pId, Reference pApp, int? pAppId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pBroadcasts, int? pBroadcastsCount, Reference pClient, int? pClientId, bool? pDelete, Reference pDocumentSet, int? pDocumentSetId, bool? pEdit, List<Reference> pHelp, int? pHelpCount, bool? pIsGlobal, List<Reference> pScopedComments, int? pScopedCommentsCount, List<Reference> pScopedTags, int? pScopedTagsCount, List<Reference> pSynonyms, int? pSynonymsCount, Reference pTeam, int? pTeamId, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariableRules, int? pVariableRulesCount, bool? pView, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+        public ScopeBase(int? pId, Reference pApp, int? pAppId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pBroadcasts, int? pBroadcastsCount, Reference pClient, int? pClientId, bool pDelete, Reference pDocumentSet, int? pDocumentSetId, bool pEdit, List<Reference> pHelp, int? pHelpCount, bool pIsGlobal, List<Reference> pScopedComments, int? pScopedCommentsCount, List<Reference> pScopedTags, int? pScopedTagsCount, List<Reference> pSynonyms, int? pSynonymsCount, Reference pTeam, int? pTeamId, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariableRules, int? pVariableRulesCount, bool pView, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
         {
             App = pApp;
             AppId = pAppId;
@@ -113,8 +113,8 @@ namespace Services.Dto
         public int? ClientId { get; set; }
 
 
-        [ApiMember(Name = nameof(Delete), Description = "bool?", IsRequired = false)]
-        public bool? Delete { get; set; }
+        [ApiMember(Name = nameof(Delete), Description = "bool", IsRequired = false)]
+        public bool Delete { get; set; }
 
 
         [ApiMember(Name = nameof(DocumentSet), Description = "DocumentSet", IsRequired = false)]
@@ -123,8 +123,8 @@ namespace Services.Dto
         public int? DocumentSetId { get; set; }
 
 
-        [ApiMember(Name = nameof(Edit), Description = "bool?", IsRequired = false)]
-        public bool? Edit { get; set; }
+        [ApiMember(Name = nameof(Edit), Description = "bool", IsRequired = false)]
+        public bool Edit { get; set; }
 
 
         [ApiMember(Name = nameof(Help), Description = "Help", IsRequired = false)]
@@ -132,8 +132,8 @@ namespace Services.Dto
         public int? HelpCount { get; set; }
 
 
-        [ApiMember(Name = nameof(IsGlobal), Description = "bool?", IsRequired = false)]
-        public bool? IsGlobal { get; set; }
+        [ApiMember(Name = nameof(IsGlobal), Description = "bool", IsRequired = false)]
+        public bool IsGlobal { get; set; }
 
 
         [ApiMember(Name = nameof(ScopedComments), Description = "Comment", IsRequired = false)]
@@ -175,8 +175,8 @@ namespace Services.Dto
         public int? VariableRulesCount { get; set; }
 
 
-        [ApiMember(Name = nameof(View), Description = "bool?", IsRequired = false)]
-        public bool? View { get; set; }
+        [ApiMember(Name = nameof(View), Description = "bool", IsRequired = false)]
+        public bool View { get; set; }
 
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
@@ -185,7 +185,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out Reference pApp, out int? pAppId, out List<Reference> pBindings, out int? pBindingsCount, out List<Reference> pBroadcasts, out int? pBroadcastsCount, out Reference pClient, out int? pClientId, out bool? pDelete, out Reference pDocumentSet, out int? pDocumentSetId, out bool? pEdit, out List<Reference> pHelp, out int? pHelpCount, out bool? pIsGlobal, out List<Reference> pScopedComments, out int? pScopedCommentsCount, out List<Reference> pScopedTags, out int? pScopedTagsCount, out List<Reference> pSynonyms, out int? pSynonymsCount, out Reference pTeam, out int? pTeamId, out Reference pType, out int? pTypeId, out Reference pUser, out int? pUserId, out List<Reference> pVariableRules, out int? pVariableRulesCount, out bool? pView, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+        public void Deconstruct(out Reference pApp, out int? pAppId, out List<Reference> pBindings, out int? pBindingsCount, out List<Reference> pBroadcasts, out int? pBroadcastsCount, out Reference pClient, out int? pClientId, out bool pDelete, out Reference pDocumentSet, out int? pDocumentSetId, out bool pEdit, out List<Reference> pHelp, out int? pHelpCount, out bool pIsGlobal, out List<Reference> pScopedComments, out int? pScopedCommentsCount, out List<Reference> pScopedTags, out int? pScopedTagsCount, out List<Reference> pSynonyms, out int? pSynonymsCount, out Reference pTeam, out int? pTeamId, out Reference pType, out int? pTypeId, out Reference pUser, out int? pUserId, out List<Reference> pVariableRules, out int? pVariableRulesCount, out bool pView, out List<Reference> pWorkflows, out int? pWorkflowsCount)
         {
             pApp = App;
             pAppId = AppId;
@@ -222,7 +222,7 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public ScopeBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, List<Reference> pBroadcasts = Broadcasts, int? pBroadcastsCount = BroadcastsCount, Reference pClient = Client, int? pClientId = ClientId, bool? pDelete = Delete, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, bool? pEdit = Edit, List<Reference> pHelp = Help, int? pHelpCount = HelpCount, bool? pIsGlobal = IsGlobal, List<Reference> pScopedComments = ScopedComments, int? pScopedCommentsCount = ScopedCommentsCount, List<Reference> pScopedTags = ScopedTags, int? pScopedTagsCount = ScopedTagsCount, List<Reference> pSynonyms = Synonyms, int? pSynonymsCount = SynonymsCount, Reference pTeam = Team, int? pTeamId = TeamId, Reference pType = Type, int? pTypeId = TypeId, Reference pUser = User, int? pUserId = UserId, List<Reference> pVariableRules = VariableRules, int? pVariableRulesCount = VariableRulesCount, bool? pView = View, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+        //public ScopeBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, List<Reference> pBindings = Bindings, int? pBindingsCount = BindingsCount, List<Reference> pBroadcasts = Broadcasts, int? pBroadcastsCount = BroadcastsCount, Reference pClient = Client, int? pClientId = ClientId, bool pDelete = Delete, Reference pDocumentSet = DocumentSet, int? pDocumentSetId = DocumentSetId, bool pEdit = Edit, List<Reference> pHelp = Help, int? pHelpCount = HelpCount, bool pIsGlobal = IsGlobal, List<Reference> pScopedComments = ScopedComments, int? pScopedCommentsCount = ScopedCommentsCount, List<Reference> pScopedTags = ScopedTags, int? pScopedTagsCount = ScopedTagsCount, List<Reference> pSynonyms = Synonyms, int? pSynonymsCount = SynonymsCount, Reference pTeam = Team, int? pTeamId = TeamId, Reference pType = Type, int? pTypeId = TypeId, Reference pUser = User, int? pUserId = UserId, List<Reference> pVariableRules = VariableRules, int? pVariableRulesCount = VariableRulesCount, bool pView = View, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
         //	new ScopeBase(pId, pApp, pAppId, pBindings, pBindingsCount, pBroadcasts, pBroadcastsCount, pClient, pClientId, pDelete, pDocumentSet, pDocumentSetId, pEdit, pHelp, pHelpCount, pIsGlobal, pScopedComments, pScopedCommentsCount, pScopedTags, pScopedTagsCount, pSynonyms, pSynonymsCount, pTeam, pTeamId, pType, pTypeId, pUser, pUserId, pVariableRules, pVariableRulesCount, pView, pWorkflows, pWorkflowsCount);
 
     }
@@ -238,7 +238,7 @@ namespace Services.Dto
 
         public Scope(int? id) : base(DocConvert.ToInt(id)) {}
         public Scope(int id) : base(id) {}
-        public Scope(int? pId, Reference pApp, int? pAppId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pBroadcasts, int? pBroadcastsCount, Reference pClient, int? pClientId, bool? pDelete, Reference pDocumentSet, int? pDocumentSetId, bool? pEdit, List<Reference> pHelp, int? pHelpCount, bool? pIsGlobal, List<Reference> pScopedComments, int? pScopedCommentsCount, List<Reference> pScopedTags, int? pScopedTagsCount, List<Reference> pSynonyms, int? pSynonymsCount, Reference pTeam, int? pTeamId, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariableRules, int? pVariableRulesCount, bool? pView, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+        public Scope(int? pId, Reference pApp, int? pAppId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pBroadcasts, int? pBroadcastsCount, Reference pClient, int? pClientId, bool pDelete, Reference pDocumentSet, int? pDocumentSetId, bool pEdit, List<Reference> pHelp, int? pHelpCount, bool pIsGlobal, List<Reference> pScopedComments, int? pScopedCommentsCount, List<Reference> pScopedTags, int? pScopedTagsCount, List<Reference> pSynonyms, int? pSynonymsCount, Reference pTeam, int? pTeamId, Reference pType, int? pTypeId, Reference pUser, int? pUserId, List<Reference> pVariableRules, int? pVariableRulesCount, bool pView, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pApp, pAppId, pBindings, pBindingsCount, pBroadcasts, pBroadcastsCount, pClient, pClientId, pDelete, pDocumentSet, pDocumentSetId, pEdit, pHelp, pHelpCount, pIsGlobal, pScopedComments, pScopedCommentsCount, pScopedTags, pScopedTagsCount, pSynonyms, pSynonymsCount, pTeam, pTeamId, pType, pTypeId, pUser, pUserId, pVariableRules, pVariableRulesCount, pView, pWorkflows, pWorkflowsCount) { }
         #region Fields
 
@@ -298,15 +298,15 @@ namespace Services.Dto
         public List<int> BroadcastsIds { get; set; }
         public Reference Client { get; set; }
         public List<int> ClientIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
-        public List<bool?> Delete { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> Delete { get; set; }
         public Reference DocumentSet { get; set; }
         public List<int> DocumentSetIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
-        public List<bool?> Edit { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> Edit { get; set; }
         public List<int> HelpIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
-        public List<bool?> IsGlobal { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> IsGlobal { get; set; }
         public List<int> ScopedCommentsIds { get; set; }
         public List<int> ScopedTagsIds { get; set; }
         public List<int> SynonymsIds { get; set; }
@@ -319,8 +319,8 @@ namespace Services.Dto
         public Reference User { get; set; }
         public List<int> UserIds { get; set; }
         public List<int> VariableRulesIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false", "null"})]
-        public List<bool?> View { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> View { get; set; }
         public List<int> WorkflowsIds { get; set; }
     }
 
