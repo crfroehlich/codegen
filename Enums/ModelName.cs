@@ -489,6 +489,14 @@ namespace Services.Enums
         public static implicit operator DocConstantModelName(string Val) => new DocConstantModelName(Val);
 
         public static implicit operator string(DocConstantModelName item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantModelName(ModelNameEnm Val) => new DocConstantModelName(Val.ToEnumString());
+
+        public static explicit operator ModelNameEnm(DocConstantModelName item)
+        {
+            Enum.TryParse<ModelNameEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

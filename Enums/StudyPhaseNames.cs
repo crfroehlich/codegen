@@ -129,6 +129,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyPhaseNames(string Val) => new DocConstantStudyPhaseNames(Val);
 
         public static implicit operator string(DocConstantStudyPhaseNames item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyPhaseNames(StudyPhaseNamesEnm Val) => new DocConstantStudyPhaseNames(Val.ToEnumString());
+
+        public static explicit operator StudyPhaseNamesEnm(DocConstantStudyPhaseNames item)
+        {
+            Enum.TryParse<StudyPhaseNamesEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

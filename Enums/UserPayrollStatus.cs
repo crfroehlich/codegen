@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantUserPayrollStatus(string Val) => new DocConstantUserPayrollStatus(Val);
 
         public static implicit operator string(DocConstantUserPayrollStatus item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantUserPayrollStatus(UserPayrollStatusEnm Val) => new DocConstantUserPayrollStatus(Val.ToEnumString());
+
+        public static explicit operator UserPayrollStatusEnm(DocConstantUserPayrollStatus item)
+        {
+            Enum.TryParse<UserPayrollStatusEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

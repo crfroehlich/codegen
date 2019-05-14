@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDefaultUnitType(string Val) => new DocConstantDefaultUnitType(Val);
 
         public static implicit operator string(DocConstantDefaultUnitType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDefaultUnitType(DefaultUnitTypeEnm Val) => new DocConstantDefaultUnitType(Val.ToEnumString());
+
+        public static explicit operator DefaultUnitTypeEnm(DocConstantDefaultUnitType item)
+        {
+            Enum.TryParse<DefaultUnitTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

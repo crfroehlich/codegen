@@ -139,6 +139,14 @@ namespace Services.Enums
         public static implicit operator DocConstantInterventionType(string Val) => new DocConstantInterventionType(Val);
 
         public static implicit operator string(DocConstantInterventionType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantInterventionType(InterventionTypeEnm Val) => new DocConstantInterventionType(Val.ToEnumString());
+
+        public static explicit operator InterventionTypeEnm(DocConstantInterventionType item)
+        {
+            Enum.TryParse<InterventionTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -94,6 +94,14 @@ namespace Services.Enums
         public static implicit operator DocConstantUserPayrollType(string Val) => new DocConstantUserPayrollType(Val);
 
         public static implicit operator string(DocConstantUserPayrollType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantUserPayrollType(UserPayrollTypeEnm Val) => new DocConstantUserPayrollType(Val.ToEnumString());
+
+        public static explicit operator UserPayrollTypeEnm(DocConstantUserPayrollType item)
+        {
+            Enum.TryParse<UserPayrollTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

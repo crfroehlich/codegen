@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantTermSection(string Val) => new DocConstantTermSection(Val);
 
         public static implicit operator string(DocConstantTermSection item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantTermSection(TermSectionEnm Val) => new DocConstantTermSection(Val.ToEnumString());
+
+        public static explicit operator TermSectionEnm(DocConstantTermSection item)
+        {
+            Enum.TryParse<TermSectionEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

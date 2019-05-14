@@ -94,6 +94,14 @@ namespace Services.Enums
         public static implicit operator DocConstantTermClassification(string Val) => new DocConstantTermClassification(Val);
 
         public static implicit operator string(DocConstantTermClassification item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantTermClassification(TermClassificationEnm Val) => new DocConstantTermClassification(Val.ToEnumString());
+
+        public static explicit operator TermClassificationEnm(DocConstantTermClassification item)
+        {
+            Enum.TryParse<TermClassificationEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantPublicationPoolStudies(string Val) => new DocConstantPublicationPoolStudies(Val);
 
         public static implicit operator string(DocConstantPublicationPoolStudies item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantPublicationPoolStudies(PublicationPoolStudiesEnm Val) => new DocConstantPublicationPoolStudies(Val.ToEnumString());
+
+        public static explicit operator PublicationPoolStudiesEnm(DocConstantPublicationPoolStudies item)
+        {
+            Enum.TryParse<PublicationPoolStudiesEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

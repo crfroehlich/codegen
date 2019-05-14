@@ -114,6 +114,14 @@ namespace Services.Enums
         public static implicit operator DocConstantMeanVarianceType(string Val) => new DocConstantMeanVarianceType(Val);
 
         public static implicit operator string(DocConstantMeanVarianceType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantMeanVarianceType(MeanVarianceTypeEnm Val) => new DocConstantMeanVarianceType(Val.ToEnumString());
+
+        public static explicit operator MeanVarianceTypeEnm(DocConstantMeanVarianceType item)
+        {
+            Enum.TryParse<MeanVarianceTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

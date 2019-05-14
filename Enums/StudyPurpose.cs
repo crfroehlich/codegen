@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyPurpose(string Val) => new DocConstantStudyPurpose(Val);
 
         public static implicit operator string(DocConstantStudyPurpose item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyPurpose(StudyPurposeEnm Val) => new DocConstantStudyPurpose(Val.ToEnumString());
+
+        public static explicit operator StudyPurposeEnm(DocConstantStudyPurpose item)
+        {
+            Enum.TryParse<StudyPurposeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

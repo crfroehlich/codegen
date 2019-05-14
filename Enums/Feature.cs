@@ -224,6 +224,14 @@ namespace Services.Enums
         public static implicit operator DocConstantFeature(string Val) => new DocConstantFeature(Val);
 
         public static implicit operator string(DocConstantFeature item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantFeature(FeatureEnm Val) => new DocConstantFeature(Val.ToEnumString());
+
+        public static explicit operator FeatureEnm(DocConstantFeature item)
+        {
+            Enum.TryParse<FeatureEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

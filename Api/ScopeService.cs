@@ -317,13 +317,13 @@ namespace Services.API
                     request.Select.Add(nameof(request.Client));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pDelete, permission, DocConstantModelName.SCOPE, nameof(request.Delete)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pDelete, permission, DocConstantModelName.SCOPE, nameof(request.Delete)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDelete, entity.Delete, nameof(request.Delete)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SCOPE, nameof(request.Delete)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Delete)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pDelete) && DocResources.Metadata.IsRequired(DocConstantModelName.SCOPE, nameof(request.Delete))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Delete)} requires a value.");
                     entity.Delete = pDelete;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pDelete, nameof(request.Delete)) && !request.Select.Matches(nameof(request.Delete), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pDelete, nameof(request.Delete)) && !request.Select.Matches(nameof(request.Delete), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Delete));
                 }
@@ -339,24 +339,24 @@ namespace Services.API
                     request.Select.Add(nameof(request.DocumentSet));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pEdit, permission, DocConstantModelName.SCOPE, nameof(request.Edit)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pEdit, permission, DocConstantModelName.SCOPE, nameof(request.Edit)))
             {
                 if(DocPermissionFactory.IsRequested(request, pEdit, entity.Edit, nameof(request.Edit)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SCOPE, nameof(request.Edit)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Edit)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pEdit) && DocResources.Metadata.IsRequired(DocConstantModelName.SCOPE, nameof(request.Edit))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Edit)} requires a value.");
                     entity.Edit = pEdit;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pEdit, nameof(request.Edit)) && !request.Select.Matches(nameof(request.Edit), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pEdit, nameof(request.Edit)) && !request.Select.Matches(nameof(request.Edit), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Edit));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pIsGlobal, permission, DocConstantModelName.SCOPE, nameof(request.IsGlobal)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pIsGlobal, permission, DocConstantModelName.SCOPE, nameof(request.IsGlobal)))
             {
                 if(DocPermissionFactory.IsRequested(request, pIsGlobal, entity.IsGlobal, nameof(request.IsGlobal)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SCOPE, nameof(request.IsGlobal)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.IsGlobal)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pIsGlobal) && DocResources.Metadata.IsRequired(DocConstantModelName.SCOPE, nameof(request.IsGlobal))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.IsGlobal)} requires a value.");
                     entity.IsGlobal = pIsGlobal;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pIsGlobal, nameof(request.IsGlobal)) && !request.Select.Matches(nameof(request.IsGlobal), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pIsGlobal, nameof(request.IsGlobal)) && !request.Select.Matches(nameof(request.IsGlobal), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.IsGlobal));
                 }
@@ -394,13 +394,13 @@ namespace Services.API
                     request.Select.Add(nameof(request.User));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<bool?>(currentUser, request, pView, permission, DocConstantModelName.SCOPE, nameof(request.View)))
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pView, permission, DocConstantModelName.SCOPE, nameof(request.View)))
             {
                 if(DocPermissionFactory.IsRequested(request, pView, entity.View, nameof(request.View)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.SCOPE, nameof(request.View)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.View)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pView) && DocResources.Metadata.IsRequired(DocConstantModelName.SCOPE, nameof(request.View))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.View)} requires a value.");
                     entity.View = pView;
-                if(DocPermissionFactory.IsRequested<bool?>(request, pView, nameof(request.View)) && !request.Select.Matches(nameof(request.View), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<bool>(request, pView, nameof(request.View)) && !request.Select.Matches(nameof(request.View), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.View));
                 }

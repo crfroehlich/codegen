@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantProtocolFilterType(string Val) => new DocConstantProtocolFilterType(Val);
 
         public static implicit operator string(DocConstantProtocolFilterType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantProtocolFilterType(ProtocolFilterTypeEnm Val) => new DocConstantProtocolFilterType(Val.ToEnumString());
+
+        public static explicit operator ProtocolFilterTypeEnm(DocConstantProtocolFilterType item)
+        {
+            Enum.TryParse<ProtocolFilterTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

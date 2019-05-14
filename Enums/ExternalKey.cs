@@ -114,6 +114,14 @@ namespace Services.Enums
         public static implicit operator DocConstantExternalKey(string Val) => new DocConstantExternalKey(Val);
 
         public static implicit operator string(DocConstantExternalKey item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantExternalKey(ExternalKeyEnm Val) => new DocConstantExternalKey(Val.ToEnumString());
+
+        public static explicit operator ExternalKeyEnm(DocConstantExternalKey item)
+        {
+            Enum.TryParse<ExternalKeyEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

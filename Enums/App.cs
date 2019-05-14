@@ -224,6 +224,14 @@ namespace Services.Enums
         public static implicit operator DocConstantApp(string Val) => new DocConstantApp(Val);
 
         public static implicit operator string(DocConstantApp item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantApp(AppEnm Val) => new DocConstantApp(Val.ToEnumString());
+
+        public static explicit operator AppEnm(DocConstantApp item)
+        {
+            Enum.TryParse<AppEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

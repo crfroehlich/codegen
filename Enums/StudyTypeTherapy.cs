@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyTypeTherapy(string Val) => new DocConstantStudyTypeTherapy(Val);
 
         public static implicit operator string(DocConstantStudyTypeTherapy item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyTypeTherapy(StudyTypeTherapyEnm Val) => new DocConstantStudyTypeTherapy(Val.ToEnumString());
+
+        public static explicit operator StudyTypeTherapyEnm(DocConstantStudyTypeTherapy item)
+        {
+            Enum.TryParse<StudyTypeTherapyEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

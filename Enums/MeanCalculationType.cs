@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantMeanCalculationType(string Val) => new DocConstantMeanCalculationType(Val);
 
         public static implicit operator string(DocConstantMeanCalculationType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantMeanCalculationType(MeanCalculationTypeEnm Val) => new DocConstantMeanCalculationType(Val.ToEnumString());
+
+        public static explicit operator MeanCalculationTypeEnm(DocConstantMeanCalculationType item)
+        {
+            Enum.TryParse<MeanCalculationTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

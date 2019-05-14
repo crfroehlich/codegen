@@ -94,6 +94,14 @@ namespace Services.Enums
         public static implicit operator DocConstantIncidenceRateType(string Val) => new DocConstantIncidenceRateType(Val);
 
         public static implicit operator string(DocConstantIncidenceRateType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantIncidenceRateType(IncidenceRateTypeEnm Val) => new DocConstantIncidenceRateType(Val.ToEnumString());
+
+        public static explicit operator IncidenceRateTypeEnm(DocConstantIncidenceRateType item)
+        {
+            Enum.TryParse<IncidenceRateTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

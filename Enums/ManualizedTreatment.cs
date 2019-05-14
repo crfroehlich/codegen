@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantManualizedTreatment(string Val) => new DocConstantManualizedTreatment(Val);
 
         public static implicit operator string(DocConstantManualizedTreatment item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantManualizedTreatment(ManualizedTreatmentEnm Val) => new DocConstantManualizedTreatment(Val.ToEnumString());
+
+        public static explicit operator ManualizedTreatmentEnm(DocConstantManualizedTreatment item)
+        {
+            Enum.TryParse<ManualizedTreatmentEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

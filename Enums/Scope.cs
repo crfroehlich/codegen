@@ -119,6 +119,14 @@ namespace Services.Enums
         public static implicit operator DocConstantScope(string Val) => new DocConstantScope(Val);
 
         public static implicit operator string(DocConstantScope item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantScope(ScopeEnm Val) => new DocConstantScope(Val.ToEnumString());
+
+        public static explicit operator ScopeEnm(DocConstantScope item)
+        {
+            Enum.TryParse<ScopeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

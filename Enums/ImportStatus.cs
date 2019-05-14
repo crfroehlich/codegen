@@ -119,6 +119,14 @@ namespace Services.Enums
         public static implicit operator DocConstantImportStatus(string Val) => new DocConstantImportStatus(Val);
 
         public static implicit operator string(DocConstantImportStatus item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantImportStatus(ImportStatusEnm Val) => new DocConstantImportStatus(Val.ToEnumString());
+
+        public static explicit operator ImportStatusEnm(DocConstantImportStatus item)
+        {
+            Enum.TryParse<ImportStatusEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

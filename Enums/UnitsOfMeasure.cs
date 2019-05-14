@@ -769,6 +769,14 @@ namespace Services.Enums
         public static implicit operator DocConstantUnitsOfMeasure(string Val) => new DocConstantUnitsOfMeasure(Val);
 
         public static implicit operator string(DocConstantUnitsOfMeasure item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantUnitsOfMeasure(UnitsOfMeasureEnm Val) => new DocConstantUnitsOfMeasure(Val.ToEnumString());
+
+        public static explicit operator UnitsOfMeasureEnm(DocConstantUnitsOfMeasure item)
+        {
+            Enum.TryParse<UnitsOfMeasureEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

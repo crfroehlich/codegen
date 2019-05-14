@@ -364,6 +364,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStatsRecordName(string Val) => new DocConstantStatsRecordName(Val);
 
         public static implicit operator string(DocConstantStatsRecordName item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStatsRecordName(StatsRecordNameEnm Val) => new DocConstantStatsRecordName(Val.ToEnumString());
+
+        public static explicit operator StatsRecordNameEnm(DocConstantStatsRecordName item)
+        {
+            Enum.TryParse<StatsRecordNameEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

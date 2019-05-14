@@ -149,6 +149,14 @@ namespace Services.Enums
         public static implicit operator DocConstantAssociationMeasure(string Val) => new DocConstantAssociationMeasure(Val);
 
         public static implicit operator string(DocConstantAssociationMeasure item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantAssociationMeasure(AssociationMeasureEnm Val) => new DocConstantAssociationMeasure(Val.ToEnumString());
+
+        public static explicit operator AssociationMeasureEnm(DocConstantAssociationMeasure item)
+        {
+            Enum.TryParse<AssociationMeasureEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

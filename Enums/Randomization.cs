@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantRandomization(string Val) => new DocConstantRandomization(Val);
 
         public static implicit operator string(DocConstantRandomization item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantRandomization(RandomizationEnm Val) => new DocConstantRandomization(Val.ToEnumString());
+
+        public static explicit operator RandomizationEnm(DocConstantRandomization item)
+        {
+            Enum.TryParse<RandomizationEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

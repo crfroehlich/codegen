@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantVariableType(string Val) => new DocConstantVariableType(Val);
 
         public static implicit operator string(DocConstantVariableType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantVariableType(VariableTypeEnm Val) => new DocConstantVariableType(Val.ToEnumString());
+
+        public static explicit operator VariableTypeEnm(DocConstantVariableType item)
+        {
+            Enum.TryParse<VariableTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyYears(string Val) => new DocConstantStudyYears(Val);
 
         public static implicit operator string(DocConstantStudyYears item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyYears(StudyYearsEnm Val) => new DocConstantStudyYears(Val.ToEnumString());
+
+        public static explicit operator StudyYearsEnm(DocConstantStudyYears item)
+        {
+            Enum.TryParse<StudyYearsEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

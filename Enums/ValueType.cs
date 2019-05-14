@@ -284,6 +284,14 @@ namespace Services.Enums
         public static implicit operator DocConstantValueType(string Val) => new DocConstantValueType(Val);
 
         public static implicit operator string(DocConstantValueType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantValueType(ValueTypeEnm Val) => new DocConstantValueType(Val.ToEnumString());
+
+        public static explicit operator ValueTypeEnm(DocConstantValueType item)
+        {
+            Enum.TryParse<ValueTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

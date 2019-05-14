@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantTaskType(string Val) => new DocConstantTaskType(Val);
 
         public static implicit operator string(DocConstantTaskType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantTaskType(TaskTypeEnm Val) => new DocConstantTaskType(Val.ToEnumString());
+
+        public static explicit operator TaskTypeEnm(DocConstantTaskType item)
+        {
+            Enum.TryParse<TaskTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

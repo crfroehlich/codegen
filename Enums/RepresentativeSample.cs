@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantRepresentativeSample(string Val) => new DocConstantRepresentativeSample(Val);
 
         public static implicit operator string(DocConstantRepresentativeSample item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantRepresentativeSample(RepresentativeSampleEnm Val) => new DocConstantRepresentativeSample(Val.ToEnumString());
+
+        public static explicit operator RepresentativeSampleEnm(DocConstantRepresentativeSample item)
+        {
+            Enum.TryParse<RepresentativeSampleEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

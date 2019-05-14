@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantConfidenceInterval(string Val) => new DocConstantConfidenceInterval(Val);
 
         public static implicit operator string(DocConstantConfidenceInterval item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantConfidenceInterval(ConfidenceIntervalEnm Val) => new DocConstantConfidenceInterval(Val.ToEnumString());
+
+        public static explicit operator ConfidenceIntervalEnm(DocConstantConfidenceInterval item)
+        {
+            Enum.TryParse<ConfidenceIntervalEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

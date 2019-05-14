@@ -139,6 +139,14 @@ namespace Services.Enums
         public static implicit operator DocConstantSettingType(string Val) => new DocConstantSettingType(Val);
 
         public static implicit operator string(DocConstantSettingType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantSettingType(SettingTypeEnm Val) => new DocConstantSettingType(Val.ToEnumString());
+
+        public static explicit operator SettingTypeEnm(DocConstantSettingType item)
+        {
+            Enum.TryParse<SettingTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

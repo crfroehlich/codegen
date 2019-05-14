@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyImportType(string Val) => new DocConstantStudyImportType(Val);
 
         public static implicit operator string(DocConstantStudyImportType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyImportType(StudyImportTypeEnm Val) => new DocConstantStudyImportType(Val.ToEnumString());
+
+        public static explicit operator StudyImportTypeEnm(DocConstantStudyImportType item)
+        {
+            Enum.TryParse<StudyImportTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

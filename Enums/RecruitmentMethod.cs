@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantRecruitmentMethod(string Val) => new DocConstantRecruitmentMethod(Val);
 
         public static implicit operator string(DocConstantRecruitmentMethod item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantRecruitmentMethod(RecruitmentMethodEnm Val) => new DocConstantRecruitmentMethod(Val.ToEnumString());
+
+        public static explicit operator RecruitmentMethodEnm(DocConstantRecruitmentMethod item)
+        {
+            Enum.TryParse<RecruitmentMethodEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

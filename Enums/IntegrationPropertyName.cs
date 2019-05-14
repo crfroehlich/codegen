@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantIntegrationPropertyName(string Val) => new DocConstantIntegrationPropertyName(Val);
 
         public static implicit operator string(DocConstantIntegrationPropertyName item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantIntegrationPropertyName(IntegrationPropertyNameEnm Val) => new DocConstantIntegrationPropertyName(Val.ToEnumString());
+
+        public static explicit operator IntegrationPropertyNameEnm(DocConstantIntegrationPropertyName item)
+        {
+            Enum.TryParse<IntegrationPropertyNameEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -94,6 +94,14 @@ namespace Services.Enums
         public static implicit operator DocConstantAmPersonCount(string Val) => new DocConstantAmPersonCount(Val);
 
         public static implicit operator string(DocConstantAmPersonCount item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantAmPersonCount(AmPersonCountEnm Val) => new DocConstantAmPersonCount(Val.ToEnumString());
+
+        public static explicit operator AmPersonCountEnm(DocConstantAmPersonCount item)
+        {
+            Enum.TryParse<AmPersonCountEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

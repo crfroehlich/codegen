@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyBias(string Val) => new DocConstantStudyBias(Val);
 
         public static implicit operator string(DocConstantStudyBias item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyBias(StudyBiasEnm Val) => new DocConstantStudyBias(Val.ToEnumString());
+
+        public static explicit operator StudyBiasEnm(DocConstantStudyBias item)
+        {
+            Enum.TryParse<StudyBiasEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -94,6 +94,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDosageProtocol(string Val) => new DocConstantDosageProtocol(Val);
 
         public static implicit operator string(DocConstantDosageProtocol item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDosageProtocol(DosageProtocolEnm Val) => new DocConstantDosageProtocol(Val.ToEnumString());
+
+        public static explicit operator DosageProtocolEnm(DocConstantDosageProtocol item)
+        {
+            Enum.TryParse<DosageProtocolEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

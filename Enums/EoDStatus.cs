@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantEoDStatus(string Val) => new DocConstantEoDStatus(Val);
 
         public static implicit operator string(DocConstantEoDStatus item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantEoDStatus(EoDStatusEnm Val) => new DocConstantEoDStatus(Val.ToEnumString());
+
+        public static explicit operator EoDStatusEnm(DocConstantEoDStatus item)
+        {
+            Enum.TryParse<EoDStatusEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

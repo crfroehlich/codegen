@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantPrevalenceType(string Val) => new DocConstantPrevalenceType(Val);
 
         public static implicit operator string(DocConstantPrevalenceType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantPrevalenceType(PrevalenceTypeEnm Val) => new DocConstantPrevalenceType(Val.ToEnumString());
+
+        public static explicit operator PrevalenceTypeEnm(DocConstantPrevalenceType item)
+        {
+            Enum.TryParse<PrevalenceTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

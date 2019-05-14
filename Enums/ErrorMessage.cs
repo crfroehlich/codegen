@@ -89,6 +89,14 @@ namespace Services.Enums
         public static implicit operator DocConstantErrorMessage(string Val) => new DocConstantErrorMessage(Val);
 
         public static implicit operator string(DocConstantErrorMessage item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantErrorMessage(ErrorMessageEnm Val) => new DocConstantErrorMessage(Val.ToEnumString());
+
+        public static explicit operator ErrorMessageEnm(DocConstantErrorMessage item)
+        {
+            Enum.TryParse<ErrorMessageEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

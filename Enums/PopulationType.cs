@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantPopulationType(string Val) => new DocConstantPopulationType(Val);
 
         public static implicit operator string(DocConstantPopulationType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantPopulationType(PopulationTypeEnm Val) => new DocConstantPopulationType(Val.ToEnumString());
+
+        public static explicit operator PopulationTypeEnm(DocConstantPopulationType item)
+        {
+            Enum.TryParse<PopulationTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

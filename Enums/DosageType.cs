@@ -119,6 +119,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDosageType(string Val) => new DocConstantDosageType(Val);
 
         public static implicit operator string(DocConstantDosageType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDosageType(DosageTypeEnm Val) => new DocConstantDosageType(Val.ToEnumString());
+
+        public static explicit operator DosageTypeEnm(DocConstantDosageType item)
+        {
+            Enum.TryParse<DosageTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

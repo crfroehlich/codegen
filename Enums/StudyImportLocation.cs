@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyImportLocation(string Val) => new DocConstantStudyImportLocation(Val);
 
         public static implicit operator string(DocConstantStudyImportLocation item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyImportLocation(StudyImportLocationEnm Val) => new DocConstantStudyImportLocation(Val.ToEnumString());
+
+        public static explicit operator StudyImportLocationEnm(DocConstantStudyImportLocation item)
+        {
+            Enum.TryParse<StudyImportLocationEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStratificationType(string Val) => new DocConstantStratificationType(Val);
 
         public static implicit operator string(DocConstantStratificationType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStratificationType(StratificationTypeEnm Val) => new DocConstantStratificationType(Val.ToEnumString());
+
+        public static explicit operator StratificationTypeEnm(DocConstantStratificationType item)
+        {
+            Enum.TryParse<StratificationTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

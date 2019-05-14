@@ -94,6 +94,14 @@ namespace Services.Enums
         public static implicit operator DocConstantQuestionCategory(string Val) => new DocConstantQuestionCategory(Val);
 
         public static implicit operator string(DocConstantQuestionCategory item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantQuestionCategory(QuestionCategoryEnm Val) => new DocConstantQuestionCategory(Val.ToEnumString());
+
+        public static explicit operator QuestionCategoryEnm(DocConstantQuestionCategory item)
+        {
+            Enum.TryParse<QuestionCategoryEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

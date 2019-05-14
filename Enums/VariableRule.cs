@@ -124,6 +124,14 @@ namespace Services.Enums
         public static implicit operator DocConstantVariableRule(string Val) => new DocConstantVariableRule(Val);
 
         public static implicit operator string(DocConstantVariableRule item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantVariableRule(VariableRuleEnm Val) => new DocConstantVariableRule(Val.ToEnumString());
+
+        public static explicit operator VariableRuleEnm(DocConstantVariableRule item)
+        {
+            Enum.TryParse<VariableRuleEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

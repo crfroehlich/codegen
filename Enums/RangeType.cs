@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantRangeType(string Val) => new DocConstantRangeType(Val);
 
         public static implicit operator string(DocConstantRangeType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantRangeType(RangeTypeEnm Val) => new DocConstantRangeType(Val.ToEnumString());
+
+        public static explicit operator RangeTypeEnm(DocConstantRangeType item)
+        {
+            Enum.TryParse<RangeTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

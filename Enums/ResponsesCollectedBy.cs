@@ -149,6 +149,14 @@ namespace Services.Enums
         public static implicit operator DocConstantResponsesCollectedBy(string Val) => new DocConstantResponsesCollectedBy(Val);
 
         public static implicit operator string(DocConstantResponsesCollectedBy item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantResponsesCollectedBy(ResponsesCollectedByEnm Val) => new DocConstantResponsesCollectedBy(Val.ToEnumString());
+
+        public static explicit operator ResponsesCollectedByEnm(DocConstantResponsesCollectedBy item)
+        {
+            Enum.TryParse<ResponsesCollectedByEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

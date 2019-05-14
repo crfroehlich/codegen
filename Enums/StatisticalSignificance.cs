@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStatisticalSignificance(string Val) => new DocConstantStatisticalSignificance(Val);
 
         public static implicit operator string(DocConstantStatisticalSignificance item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStatisticalSignificance(StatisticalSignificanceEnm Val) => new DocConstantStatisticalSignificance(Val.ToEnumString());
+
+        public static explicit operator StatisticalSignificanceEnm(DocConstantStatisticalSignificance item)
+        {
+            Enum.TryParse<StatisticalSignificanceEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

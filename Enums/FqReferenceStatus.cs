@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantFqReferenceStatus(string Val) => new DocConstantFqReferenceStatus(Val);
 
         public static implicit operator string(DocConstantFqReferenceStatus item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantFqReferenceStatus(FqReferenceStatusEnm Val) => new DocConstantFqReferenceStatus(Val.ToEnumString());
+
+        public static explicit operator FqReferenceStatusEnm(DocConstantFqReferenceStatus item)
+        {
+            Enum.TryParse<FqReferenceStatusEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

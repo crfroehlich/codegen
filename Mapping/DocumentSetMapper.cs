@@ -124,7 +124,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.StudyDesigns, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.StudyDesigns))))
                 .ForMember(dest => dest.StudyDesignsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.StudyDesignsCount))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Type))))
-                .ForMember(dest => dest.TypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.TypeId))))
                 .ForMember(dest => dest.UpdateFrequency, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.UpdateFrequency))))
                 .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.Users))))
                 .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DocumentSet>(c, nameof(DocEntityDocumentSet.UsersCount))))

@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDataHubSource(string Val) => new DocConstantDataHubSource(Val);
 
         public static implicit operator string(DocConstantDataHubSource item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDataHubSource(DataHubSourceEnm Val) => new DocConstantDataHubSource(Val.ToEnumString());
+
+        public static explicit operator DataHubSourceEnm(DocConstantDataHubSource item)
+        {
+            Enum.TryParse<DataHubSourceEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

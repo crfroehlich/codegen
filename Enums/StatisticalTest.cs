@@ -164,6 +164,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStatisticalTest(string Val) => new DocConstantStatisticalTest(Val);
 
         public static implicit operator string(DocConstantStatisticalTest item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStatisticalTest(StatisticalTestEnm Val) => new DocConstantStatisticalTest(Val.ToEnumString());
+
+        public static explicit operator StatisticalTestEnm(DocConstantStatisticalTest item)
+        {
+            Enum.TryParse<StatisticalTestEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

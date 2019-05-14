@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantJunctionType(string Val) => new DocConstantJunctionType(Val);
 
         public static implicit operator string(DocConstantJunctionType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantJunctionType(JunctionTypeEnm Val) => new DocConstantJunctionType(Val.ToEnumString());
+
+        public static explicit operator JunctionTypeEnm(DocConstantJunctionType item)
+        {
+            Enum.TryParse<JunctionTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

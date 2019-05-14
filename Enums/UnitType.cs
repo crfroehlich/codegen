@@ -159,6 +159,14 @@ namespace Services.Enums
         public static implicit operator DocConstantUnitType(string Val) => new DocConstantUnitType(Val);
 
         public static implicit operator string(DocConstantUnitType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantUnitType(UnitTypeEnm Val) => new DocConstantUnitType(Val.ToEnumString());
+
+        public static explicit operator UnitTypeEnm(DocConstantUnitType item)
+        {
+            Enum.TryParse<UnitTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

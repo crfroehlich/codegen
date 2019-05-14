@@ -94,6 +94,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyGroupType(string Val) => new DocConstantStudyGroupType(Val);
 
         public static implicit operator string(DocConstantStudyGroupType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyGroupType(StudyGroupTypeEnm Val) => new DocConstantStudyGroupType(Val.ToEnumString());
+
+        public static explicit operator StudyGroupTypeEnm(DocConstantStudyGroupType item)
+        {
+            Enum.TryParse<StudyGroupTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

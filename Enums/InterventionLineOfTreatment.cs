@@ -114,6 +114,14 @@ namespace Services.Enums
         public static implicit operator DocConstantInterventionLineOfTreatment(string Val) => new DocConstantInterventionLineOfTreatment(Val);
 
         public static implicit operator string(DocConstantInterventionLineOfTreatment item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantInterventionLineOfTreatment(InterventionLineOfTreatmentEnm Val) => new DocConstantInterventionLineOfTreatment(Val.ToEnumString());
+
+        public static explicit operator InterventionLineOfTreatmentEnm(DocConstantInterventionLineOfTreatment item)
+        {
+            Enum.TryParse<InterventionLineOfTreatmentEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -209,6 +209,14 @@ namespace Services.Enums
         public static implicit operator DocConstantWorkflow(string Val) => new DocConstantWorkflow(Val);
 
         public static implicit operator string(DocConstantWorkflow item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantWorkflow(WorkflowEnm Val) => new DocConstantWorkflow(Val.ToEnumString());
+
+        public static explicit operator WorkflowEnm(DocConstantWorkflow item)
+        {
+            Enum.TryParse<WorkflowEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

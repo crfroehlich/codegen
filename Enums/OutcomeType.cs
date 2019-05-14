@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantOutcomeType(string Val) => new DocConstantOutcomeType(Val);
 
         public static implicit operator string(DocConstantOutcomeType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantOutcomeType(OutcomeTypeEnm Val) => new DocConstantOutcomeType(Val.ToEnumString());
+
+        public static explicit operator OutcomeTypeEnm(DocConstantOutcomeType item)
+        {
+            Enum.TryParse<OutcomeTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

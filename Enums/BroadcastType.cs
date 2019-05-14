@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantBroadcastType(string Val) => new DocConstantBroadcastType(Val);
 
         public static implicit operator string(DocConstantBroadcastType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantBroadcastType(BroadcastTypeEnm Val) => new DocConstantBroadcastType(Val.ToEnumString());
+
+        public static explicit operator BroadcastTypeEnm(DocConstantBroadcastType item)
+        {
+            Enum.TryParse<BroadcastTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

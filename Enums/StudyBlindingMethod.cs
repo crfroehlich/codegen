@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyBlindingMethod(string Val) => new DocConstantStudyBlindingMethod(Val);
 
         public static implicit operator string(DocConstantStudyBlindingMethod item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyBlindingMethod(StudyBlindingMethodEnm Val) => new DocConstantStudyBlindingMethod(Val.ToEnumString());
+
+        public static explicit operator StudyBlindingMethodEnm(DocConstantStudyBlindingMethod item)
+        {
+            Enum.TryParse<StudyBlindingMethodEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

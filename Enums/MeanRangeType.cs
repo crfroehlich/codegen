@@ -124,6 +124,14 @@ namespace Services.Enums
         public static implicit operator DocConstantMeanRangeType(string Val) => new DocConstantMeanRangeType(Val);
 
         public static implicit operator string(DocConstantMeanRangeType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantMeanRangeType(MeanRangeTypeEnm Val) => new DocConstantMeanRangeType(Val.ToEnumString());
+
+        public static explicit operator MeanRangeTypeEnm(DocConstantMeanRangeType item)
+        {
+            Enum.TryParse<MeanRangeTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

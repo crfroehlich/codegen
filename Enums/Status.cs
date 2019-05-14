@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStatus(string Val) => new DocConstantStatus(Val);
 
         public static implicit operator string(DocConstantStatus item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStatus(StatusEnm Val) => new DocConstantStatus(Val.ToEnumString());
+
+        public static explicit operator StatusEnm(DocConstantStatus item)
+        {
+            Enum.TryParse<StatusEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

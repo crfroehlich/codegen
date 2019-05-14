@@ -337,9 +337,8 @@ namespace Services.Schema
         public int? StudyDesignsCount { get { return StudyDesigns.Count(); } private set { var noid = value; } }
 
 
-        [Field]
-        public DocEntityLookupTable Type { get; set; }
-        public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
+        [Field(Nullable = false, DefaultValue = DocumentSetTypeEnm.DATA_SET)]
+        public DocumentSetTypeEnm Type { get; set; }
 
 
         [Field]
@@ -480,10 +479,10 @@ namespace Services.Schema
                     isValid = false;
                     message += " ShowEtw is a required property.";
                 }
-                if(null != Type && Type?.Enum?.Name != "DocumentSetType")
+                if(DocTools.IsNullOrEmpty(Type))
                 {
                     isValid = false;
-                    message += " Type is a " + Type?.Enum?.Name + ", but must be a DocumentSetType.";
+                    message += " Type is a required property.";
                 }
 
                 var ret = new DocValidationMessage(message, isValid);

@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantHelp(string Val) => new DocConstantHelp(Val);
 
         public static implicit operator string(DocConstantHelp item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantHelp(HelpEnm Val) => new DocConstantHelp(Val.ToEnumString());
+
+        public static explicit operator HelpEnm(DocConstantHelp item)
+        {
+            Enum.TryParse<HelpEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

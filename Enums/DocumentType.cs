@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDocumentType(string Val) => new DocConstantDocumentType(Val);
 
         public static implicit operator string(DocConstantDocumentType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDocumentType(DocumentTypeEnm Val) => new DocConstantDocumentType(Val.ToEnumString());
+
+        public static explicit operator DocumentTypeEnm(DocConstantDocumentType item)
+        {
+            Enum.TryParse<DocumentTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

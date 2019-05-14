@@ -124,6 +124,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDatabaseType(string Val) => new DocConstantDatabaseType(Val);
 
         public static implicit operator string(DocConstantDatabaseType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDatabaseType(DatabaseTypeEnm Val) => new DocConstantDatabaseType(Val.ToEnumString());
+
+        public static explicit operator DatabaseTypeEnm(DocConstantDatabaseType item)
+        {
+            Enum.TryParse<DatabaseTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

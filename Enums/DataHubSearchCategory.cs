@@ -129,6 +129,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDataHubSearchCategory(string Val) => new DocConstantDataHubSearchCategory(Val);
 
         public static implicit operator string(DocConstantDataHubSearchCategory item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDataHubSearchCategory(DataHubSearchCategoryEnm Val) => new DocConstantDataHubSearchCategory(Val.ToEnumString());
+
+        public static explicit operator DataHubSearchCategoryEnm(DocConstantDataHubSearchCategory item)
+        {
+            Enum.TryParse<DataHubSearchCategoryEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

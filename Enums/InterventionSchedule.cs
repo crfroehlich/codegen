@@ -194,6 +194,14 @@ namespace Services.Enums
         public static implicit operator DocConstantInterventionSchedule(string Val) => new DocConstantInterventionSchedule(Val);
 
         public static implicit operator string(DocConstantInterventionSchedule item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantInterventionSchedule(InterventionScheduleEnm Val) => new DocConstantInterventionSchedule(Val.ToEnumString());
+
+        public static explicit operator InterventionScheduleEnm(DocConstantInterventionSchedule item)
+        {
+            Enum.TryParse<InterventionScheduleEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

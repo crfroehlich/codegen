@@ -144,6 +144,14 @@ namespace Services.Enums
         public static implicit operator DocConstantAttributeCategory(string Val) => new DocConstantAttributeCategory(Val);
 
         public static implicit operator string(DocConstantAttributeCategory item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantAttributeCategory(AttributeCategoryEnm Val) => new DocConstantAttributeCategory(Val.ToEnumString());
+
+        public static explicit operator AttributeCategoryEnm(DocConstantAttributeCategory item)
+        {
+            Enum.TryParse<AttributeCategoryEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

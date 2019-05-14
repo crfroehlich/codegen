@@ -114,6 +114,14 @@ namespace Services.Enums
         public static implicit operator DocConstantLookupType(string Val) => new DocConstantLookupType(Val);
 
         public static implicit operator string(DocConstantLookupType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantLookupType(LookupTypeEnm Val) => new DocConstantLookupType(Val.ToEnumString());
+
+        public static explicit operator LookupTypeEnm(DocConstantLookupType item)
+        {
+            Enum.TryParse<LookupTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

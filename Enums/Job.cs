@@ -179,6 +179,14 @@ namespace Services.Enums
         public static implicit operator DocConstantJob(string Val) => new DocConstantJob(Val);
 
         public static implicit operator string(DocConstantJob item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantJob(JobEnm Val) => new DocConstantJob(Val.ToEnumString());
+
+        public static explicit operator JobEnm(DocConstantJob item)
+        {
+            Enum.TryParse<JobEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

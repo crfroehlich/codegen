@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyAllocattionMethod(string Val) => new DocConstantStudyAllocattionMethod(Val);
 
         public static implicit operator string(DocConstantStudyAllocattionMethod item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyAllocattionMethod(StudyAllocattionMethodEnm Val) => new DocConstantStudyAllocattionMethod(Val.ToEnumString());
+
+        public static explicit operator StudyAllocattionMethodEnm(DocConstantStudyAllocattionMethod item)
+        {
+            Enum.TryParse<StudyAllocattionMethodEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

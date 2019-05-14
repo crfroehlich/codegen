@@ -119,6 +119,14 @@ namespace Services.Enums
         public static implicit operator DocConstantPubType(string Val) => new DocConstantPubType(Val);
 
         public static implicit operator string(DocConstantPubType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantPubType(PubTypeEnm Val) => new DocConstantPubType(Val.ToEnumString());
+
+        public static explicit operator PubTypeEnm(DocConstantPubType item)
+        {
+            Enum.TryParse<PubTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

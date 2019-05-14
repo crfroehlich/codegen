@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantTimeCardStatus(string Val) => new DocConstantTimeCardStatus(Val);
 
         public static implicit operator string(DocConstantTimeCardStatus item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantTimeCardStatus(TimeCardStatusEnm Val) => new DocConstantTimeCardStatus(Val.ToEnumString());
+
+        public static explicit operator TimeCardStatusEnm(DocConstantTimeCardStatus item)
+        {
+            Enum.TryParse<TimeCardStatusEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

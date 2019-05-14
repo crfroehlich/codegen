@@ -94,6 +94,14 @@ namespace Services.Enums
         public static implicit operator DocConstantInterventionStageSetting(string Val) => new DocConstantInterventionStageSetting(Val);
 
         public static implicit operator string(DocConstantInterventionStageSetting item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantInterventionStageSetting(InterventionStageSettingEnm Val) => new DocConstantInterventionStageSetting(Val.ToEnumString());
+
+        public static explicit operator InterventionStageSettingEnm(DocConstantInterventionStageSetting item)
+        {
+            Enum.TryParse<InterventionStageSettingEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

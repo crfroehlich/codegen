@@ -114,6 +114,14 @@ namespace Services.Enums
         public static implicit operator DocConstantArmPopulationAge(string Val) => new DocConstantArmPopulationAge(Val);
 
         public static implicit operator string(DocConstantArmPopulationAge item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantArmPopulationAge(ArmPopulationAgeEnm Val) => new DocConstantArmPopulationAge(Val.ToEnumString());
+
+        public static explicit operator ArmPopulationAgeEnm(DocConstantArmPopulationAge item)
+        {
+            Enum.TryParse<ArmPopulationAgeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

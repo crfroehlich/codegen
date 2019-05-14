@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDirectionality(string Val) => new DocConstantDirectionality(Val);
 
         public static implicit operator string(DocConstantDirectionality item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDirectionality(DirectionalityEnm Val) => new DocConstantDirectionality(Val.ToEnumString());
+
+        public static explicit operator DirectionalityEnm(DocConstantDirectionality item)
+        {
+            Enum.TryParse<DirectionalityEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

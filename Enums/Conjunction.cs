@@ -124,6 +124,14 @@ namespace Services.Enums
         public static implicit operator DocConstantConjunction(string Val) => new DocConstantConjunction(Val);
 
         public static implicit operator string(DocConstantConjunction item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantConjunction(ConjunctionEnm Val) => new DocConstantConjunction(Val.ToEnumString());
+
+        public static explicit operator ConjunctionEnm(DocConstantConjunction item)
+        {
+            Enum.TryParse<ConjunctionEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

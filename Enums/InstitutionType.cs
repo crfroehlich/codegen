@@ -109,6 +109,14 @@ namespace Services.Enums
         public static implicit operator DocConstantInstitutionType(string Val) => new DocConstantInstitutionType(Val);
 
         public static implicit operator string(DocConstantInstitutionType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantInstitutionType(InstitutionTypeEnm Val) => new DocConstantInstitutionType(Val.ToEnumString());
+
+        public static explicit operator InstitutionTypeEnm(DocConstantInstitutionType item)
+        {
+            Enum.TryParse<InstitutionTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

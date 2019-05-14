@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantYesNoNa(string Val) => new DocConstantYesNoNa(Val);
 
         public static implicit operator string(DocConstantYesNoNa item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantYesNoNa(YesNoNaEnm Val) => new DocConstantYesNoNa(Val.ToEnumString());
+
+        public static explicit operator YesNoNaEnm(DocConstantYesNoNa item)
+        {
+            Enum.TryParse<YesNoNaEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -124,6 +124,14 @@ namespace Services.Enums
         public static implicit operator DocConstantFieldType(string Val) => new DocConstantFieldType(Val);
 
         public static implicit operator string(DocConstantFieldType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantFieldType(FieldTypeEnm Val) => new DocConstantFieldType(Val.ToEnumString());
+
+        public static explicit operator FieldTypeEnm(DocConstantFieldType item)
+        {
+            Enum.TryParse<FieldTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

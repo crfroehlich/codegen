@@ -144,6 +144,14 @@ namespace Services.Enums
         public static implicit operator DocConstantStudyNGA(string Val) => new DocConstantStudyNGA(Val);
 
         public static implicit operator string(DocConstantStudyNGA item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantStudyNGA(StudyNGAEnm Val) => new DocConstantStudyNGA(Val.ToEnumString());
+
+        public static explicit operator StudyNGAEnm(DocConstantStudyNGA item)
+        {
+            Enum.TryParse<StudyNGAEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

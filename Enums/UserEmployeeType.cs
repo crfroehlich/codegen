@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantUserEmployeeType(string Val) => new DocConstantUserEmployeeType(Val);
 
         public static implicit operator string(DocConstantUserEmployeeType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantUserEmployeeType(UserEmployeeTypeEnm Val) => new DocConstantUserEmployeeType(Val.ToEnumString());
+
+        public static explicit operator UserEmployeeTypeEnm(DocConstantUserEmployeeType item)
+        {
+            Enum.TryParse<UserEmployeeTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

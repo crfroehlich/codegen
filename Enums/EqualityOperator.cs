@@ -149,6 +149,14 @@ namespace Services.Enums
         public static implicit operator DocConstantEqualityOperator(string Val) => new DocConstantEqualityOperator(Val);
 
         public static implicit operator string(DocConstantEqualityOperator item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantEqualityOperator(EqualityOperatorEnm Val) => new DocConstantEqualityOperator(Val.ToEnumString());
+
+        public static explicit operator EqualityOperatorEnm(DocConstantEqualityOperator item)
+        {
+            Enum.TryParse<EqualityOperatorEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -194,6 +194,14 @@ namespace Services.Enums
         public static implicit operator DocConstantInterventionRoute(string Val) => new DocConstantInterventionRoute(Val);
 
         public static implicit operator string(DocConstantInterventionRoute item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantInterventionRoute(InterventionRouteEnm Val) => new DocConstantInterventionRoute(Val.ToEnumString());
+
+        public static explicit operator InterventionRouteEnm(DocConstantInterventionRoute item)
+        {
+            Enum.TryParse<InterventionRouteEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantUserType(string Val) => new DocConstantUserType(Val);
 
         public static implicit operator string(DocConstantUserType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantUserType(UserTypeEnm Val) => new DocConstantUserType(Val.ToEnumString());
+
+        public static explicit operator UserTypeEnm(DocConstantUserType item)
+        {
+            Enum.TryParse<UserTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

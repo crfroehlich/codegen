@@ -159,6 +159,14 @@ namespace Services.Enums
         public static implicit operator DocConstantTimepointType(string Val) => new DocConstantTimepointType(Val);
 
         public static implicit operator string(DocConstantTimepointType item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantTimepointType(TimepointTypeEnm Val) => new DocConstantTimepointType(Val.ToEnumString());
+
+        public static explicit operator TimepointTypeEnm(DocConstantTimepointType item)
+        {
+            Enum.TryParse<TimepointTypeEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantMethodOfAnalysis(string Val) => new DocConstantMethodOfAnalysis(Val);
 
         public static implicit operator string(DocConstantMethodOfAnalysis item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantMethodOfAnalysis(MethodOfAnalysisEnm Val) => new DocConstantMethodOfAnalysis(Val.ToEnumString());
+
+        public static explicit operator MethodOfAnalysisEnm(DocConstantMethodOfAnalysis item)
+        {
+            Enum.TryParse<MethodOfAnalysisEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

@@ -104,6 +104,14 @@ namespace Services.Enums
         public static implicit operator DocConstantRating(string Val) => new DocConstantRating(Val);
 
         public static implicit operator string(DocConstantRating item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantRating(RatingEnm Val) => new DocConstantRating(Val.ToEnumString());
+
+        public static explicit operator RatingEnm(DocConstantRating item)
+        {
+            Enum.TryParse<RatingEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

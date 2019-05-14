@@ -119,6 +119,14 @@ namespace Services.Enums
         public static implicit operator DocConstantDefaultTimeUnit(string Val) => new DocConstantDefaultTimeUnit(Val);
 
         public static implicit operator string(DocConstantDefaultTimeUnit item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantDefaultTimeUnit(DefaultTimeUnitEnm Val) => new DocConstantDefaultTimeUnit(Val.ToEnumString());
+
+        public static explicit operator DefaultTimeUnitEnm(DocConstantDefaultTimeUnit item)
+        {
+            Enum.TryParse<DefaultTimeUnitEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

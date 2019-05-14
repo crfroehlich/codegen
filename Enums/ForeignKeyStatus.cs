@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantForeignKeyStatus(string Val) => new DocConstantForeignKeyStatus(Val);
 
         public static implicit operator string(DocConstantForeignKeyStatus item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantForeignKeyStatus(ForeignKeyStatusEnm Val) => new DocConstantForeignKeyStatus(Val.ToEnumString());
+
+        public static explicit operator ForeignKeyStatusEnm(DocConstantForeignKeyStatus item)
+        {
+            Enum.TryParse<ForeignKeyStatusEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

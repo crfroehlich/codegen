@@ -244,6 +244,14 @@ namespace Services.Enums
         public static implicit operator DocConstantQueueChannel(string Val) => new DocConstantQueueChannel(Val);
 
         public static implicit operator string(DocConstantQueueChannel item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantQueueChannel(QueueChannelEnm Val) => new DocConstantQueueChannel(Val.ToEnumString());
+
+        public static explicit operator QueueChannelEnm(DocConstantQueueChannel item)
+        {
+            Enum.TryParse<QueueChannelEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

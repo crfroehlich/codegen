@@ -99,6 +99,14 @@ namespace Services.Enums
         public static implicit operator DocConstantRiskOfBiasAssessment(string Val) => new DocConstantRiskOfBiasAssessment(Val);
 
         public static implicit operator string(DocConstantRiskOfBiasAssessment item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantRiskOfBiasAssessment(RiskOfBiasAssessmentEnm Val) => new DocConstantRiskOfBiasAssessment(Val.ToEnumString());
+
+        public static explicit operator RiskOfBiasAssessmentEnm(DocConstantRiskOfBiasAssessment item)
+        {
+            Enum.TryParse<RiskOfBiasAssessmentEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

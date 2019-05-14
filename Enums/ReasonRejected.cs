@@ -199,6 +199,14 @@ namespace Services.Enums
         public static implicit operator DocConstantReasonRejected(string Val) => new DocConstantReasonRejected(Val);
 
         public static implicit operator string(DocConstantReasonRejected item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantReasonRejected(ReasonRejectedEnm Val) => new DocConstantReasonRejected(Val.ToEnumString());
+
+        public static explicit operator ReasonRejectedEnm(DocConstantReasonRejected item)
+        {
+            Enum.TryParse<ReasonRejectedEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

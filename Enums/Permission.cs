@@ -114,6 +114,14 @@ namespace Services.Enums
         public static implicit operator DocConstantPermission(string Val) => new DocConstantPermission(Val);
 
         public static implicit operator string(DocConstantPermission item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantPermission(PermissionEnm Val) => new DocConstantPermission(Val.ToEnumString());
+
+        public static explicit operator PermissionEnm(DocConstantPermission item)
+        {
+            Enum.TryParse<PermissionEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 

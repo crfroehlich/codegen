@@ -144,6 +144,14 @@ namespace Services.Enums
         public static implicit operator DocConstantArmPopulationN(string Val) => new DocConstantArmPopulationN(Val);
 
         public static implicit operator string(DocConstantArmPopulationN item) => item?.Value ?? string.Empty;
+        
+        public static explicit operator DocConstantArmPopulationN(ArmPopulationNEnm Val) => new DocConstantArmPopulationN(Val.ToEnumString());
+
+        public static explicit operator ArmPopulationNEnm(DocConstantArmPopulationN item)
+        {
+            Enum.TryParse<ArmPopulationNEnm>(item.ToString(), true, out var tryRet);
+            return tryRet;
+        }
 
         public override string ToString() => Value;
 
