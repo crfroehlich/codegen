@@ -1026,13 +1026,6 @@
         ]
       },
       {
-        "Name": "SERVE Evidence Statements",
-        "Title": "Evidence Statements",
-        "Link": "EvidenceStatements",
-        "Icon": "fa-certificate",
-        "Order": 70
-      },
-      {
         "Name": "DOC Search",
         "Title": "DOC Search",
         "Href": "https://search.doctorevidence.com/",

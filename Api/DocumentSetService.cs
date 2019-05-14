@@ -236,6 +236,11 @@ namespace Services.API
                     if(request.ShowEtw.Any(v => v == null)) entities = entities.Where(en => en.ShowEtw.In(request.ShowEtw) || en.ShowEtw == null);
                     else entities = entities.Where(en => en.ShowEtw.In(request.ShowEtw));
                 }
+                if(true == request.ShowPublicationType?.Any())
+                {
+                    if(request.ShowPublicationType.Any(v => v == null)) entities = entities.Where(en => en.ShowPublicationType.In(request.ShowPublicationType) || en.ShowPublicationType == null);
+                    else entities = entities.Where(en => en.ShowPublicationType.In(request.ShowPublicationType));
+                }
                 if(true == request.StatsIds?.Any())
                 {
                     entities = entities.Where(en => en.Stats.Any(r => r.Id.In(request.StatsIds)));
@@ -335,6 +340,7 @@ namespace Services.API
             var pSelectionCriteria = request.SelectionCriteria;
             var pSettings = request.Settings;
             var pShowEtw = request.ShowEtw;
+            var pShowPublicationType = request.ShowPublicationType;
             var pStats = request.Stats?.ToList();
             var pStudyDesigns = request.StudyDesigns?.ToList();
             var pType = request.Type;
@@ -722,6 +728,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pShowEtw, nameof(request.ShowEtw)) && !request.Select.Matches(nameof(request.ShowEtw), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.ShowEtw));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pShowPublicationType, permission, DocConstantModelName.DOCUMENTSET, nameof(request.ShowPublicationType)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pShowPublicationType, entity.ShowPublicationType, nameof(request.ShowPublicationType)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.ShowPublicationType)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ShowPublicationType)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pShowPublicationType) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.ShowPublicationType))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ShowPublicationType)} requires a value.");
+                    entity.ShowPublicationType = pShowPublicationType;
+                if(DocPermissionFactory.IsRequested<bool>(request, pShowPublicationType, nameof(request.ShowPublicationType)) && !request.Select.Matches(nameof(request.ShowPublicationType), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.ShowPublicationType));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocumentSetTypeEnm?>(currentUser, request, pType, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Type)))
@@ -1552,6 +1569,7 @@ namespace Services.API
                     var pSelectionCriteria = entity.SelectionCriteria;
                     var pSettings = entity.Settings;
                     var pShowEtw = entity.ShowEtw;
+                    var pShowPublicationType = entity.ShowPublicationType;
                     var pStats = entity.Stats.ToList();
                     var pStudyDesigns = entity.StudyDesigns.ToList();
                     var pType = entity.Type;
@@ -1594,6 +1612,7 @@ namespace Services.API
                                 , SelectionCriteria = pSelectionCriteria
                                 , Settings = pSettings
                                 , ShowEtw = pShowEtw
+                                , ShowPublicationType = pShowPublicationType
                                 , Type = pType
                                 , UpdateFrequency = pUpdateFrequency
                     };

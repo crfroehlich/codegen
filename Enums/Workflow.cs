@@ -57,6 +57,10 @@ namespace Services.Enums
         CUSTOM_REPORT = 120648707,
         [EnumMember(Value = DocConstantWorkflow.DATA_EXPORT)]
         DATA_EXPORT = 22669313,
+        [EnumMember(Value = DocConstantWorkflow.DEFAULT_FILTER)]
+        DEFAULT_FILTER = 22669357,
+        [EnumMember(Value = DocConstantWorkflow.DEFAULT_NAMESET)]
+        DEFAULT_NAMESET = 22669443,
         [EnumMember(Value = DocConstantWorkflow.DIA_REPORT)]
         DIA_REPORT = 76351811,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_ON_DEMAND)]
@@ -83,6 +87,8 @@ namespace Services.Enums
         META_ANALYSIS = 12627091,
         [EnumMember(Value = DocConstantWorkflow.NAMESET)]
         NAMESET = 17611704,
+        [EnumMember(Value = DocConstantWorkflow.PICO_RATING)]
+        PICO_RATING = 76351813,
         [EnumMember(Value = DocConstantWorkflow.R_SNIPPET)]
         R_SNIPPET = 146157859,
         [EnumMember(Value = DocConstantWorkflow.RAPID_REVIEW)]
@@ -115,6 +121,10 @@ namespace Services.Enums
                     return DocConstantWorkflow.CUSTOM_REPORT;
                 case WorkflowEnm.DATA_EXPORT:
                     return DocConstantWorkflow.DATA_EXPORT;
+                case WorkflowEnm.DEFAULT_FILTER:
+                    return DocConstantWorkflow.DEFAULT_FILTER;
+                case WorkflowEnm.DEFAULT_NAMESET:
+                    return DocConstantWorkflow.DEFAULT_NAMESET;
                 case WorkflowEnm.DIA_REPORT:
                     return DocConstantWorkflow.DIA_REPORT;
                 case WorkflowEnm.EVIDENCE_ON_DEMAND:
@@ -141,6 +151,8 @@ namespace Services.Enums
                     return DocConstantWorkflow.META_ANALYSIS;
                 case WorkflowEnm.NAMESET:
                     return DocConstantWorkflow.NAMESET;
+                case WorkflowEnm.PICO_RATING:
+                    return DocConstantWorkflow.PICO_RATING;
                 case WorkflowEnm.R_SNIPPET:
                     return DocConstantWorkflow.R_SNIPPET;
                 case WorkflowEnm.RAPID_REVIEW:
@@ -168,6 +180,8 @@ namespace Services.Enums
         public const string COHORT_ANALYSIS = "Cohort Analysis";
         public const string CUSTOM_REPORT = "Custom Report";
         public const string DATA_EXPORT = "Data Export";
+        public const string DEFAULT_FILTER = "Default Filter";
+        public const string DEFAULT_NAMESET = "Default Nameset";
         public const string DIA_REPORT = "DIA Report";
         public const string EVIDENCE_ON_DEMAND = "Evidence on Demand";
         public const string EVIDENCE_STATEMENTS = "Evidence Statements";
@@ -181,6 +195,7 @@ namespace Services.Enums
         public const string LIBRARY_RATINGS = "Library Ratings";
         public const string META_ANALYSIS = "Direct Meta Analysis";
         public const string NAMESET = "Nameset";
+        public const string PICO_RATING = "PICO Rating";
         public const string R_SNIPPET = "R Snippet";
         public const string RAPID_REVIEW = "Rapid Review";
         public const string RESPONSE_LETTER = "Response Letter";

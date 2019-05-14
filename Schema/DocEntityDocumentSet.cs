@@ -318,8 +318,12 @@ namespace Services.Schema
         public string Settings { get; set; }
 
 
-        [Field(Nullable = false, DefaultValue = false)]
+        [Field(DefaultValue = false)]
         public bool ShowEtw { get; set; }
+
+
+        [Field(Nullable = false, DefaultValue = false)]
+        public bool ShowPublicationType { get; set; }
 
 
         [Field]
@@ -474,10 +478,10 @@ namespace Services.Schema
                     isValid = false;
                     message += " Name is a required property.";
                 }
-                if(DocTools.IsNullOrEmpty(ShowEtw))
+                if(DocTools.IsNullOrEmpty(ShowPublicationType))
                 {
                     isValid = false;
-                    message += " ShowEtw is a required property.";
+                    message += " ShowPublicationType is a required property.";
                 }
                 if(DocTools.IsNullOrEmpty(Type))
                 {
