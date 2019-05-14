@@ -44,55 +44,55 @@ using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
 namespace Services.Schema
 {
-    [TableMapping(DocConstantModelName.DEFAULT)]
-    public partial class DocEntityDefault : DocEntityBase
+    [TableMapping(DocConstantModelName.THERAPEUTICAREASET)]
+    public partial class DocEntityTherapeuticAreaSet : DocEntityDocumentSet
     {
-        private const string DEFAULT_CACHE = "DefaultCache";
-        public const string TABLE_NAME = DocConstantModelName.DEFAULT;
+        private const string THERAPEUTICAREASET_CACHE = "TherapeuticAreaSetCache";
+        public const string TABLE_NAME = DocConstantModelName.THERAPEUTICAREASET;
         
         #region Constructor
-        public DocEntityDefault(Session session) : base(session) {}
+        public DocEntityTherapeuticAreaSet(Session session) : base(session) {}
 
-        public DocEntityDefault() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityTherapeuticAreaSet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Default()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new TherapeuticAreaSet()));
 
         #region Static Members
-        public static DocEntityDefault Get(Reference reference)
+        public static DocEntityTherapeuticAreaSet Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityDefault Get(int? primaryKey)
+        public static DocEntityTherapeuticAreaSet Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
-            var ret = DocEntityThreadCache<DocEntityDefault>.GetFromCache(primaryKey, DEFAULT_CACHE);
+            var ret = DocEntityThreadCache<DocEntityTherapeuticAreaSet>.GetFromCache(primaryKey, THERAPEUTICAREASET_CACHE);
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityDefault>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
+                ret = query.SelectAll<DocEntityTherapeuticAreaSet>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityDefault>.UpdateCache(ret.Id, ret, DEFAULT_CACHE);
-                    DocEntityThreadCache<DocEntityDefault>.UpdateCache(ret.Hash, ret, DEFAULT_CACHE);
+                    DocEntityThreadCache<DocEntityTherapeuticAreaSet>.UpdateCache(ret.Id, ret, THERAPEUTICAREASET_CACHE);
+                    DocEntityThreadCache<DocEntityTherapeuticAreaSet>.UpdateCache(ret.Hash, ret, THERAPEUTICAREASET_CACHE);
                 }
             }
             return ret;
         }
 
-        public static DocEntityDefault Get(Guid hash)
+        public static DocEntityTherapeuticAreaSet Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
-            var ret = DocEntityThreadCache<DocEntityDefault>.GetFromCache(hash, DEFAULT_CACHE);
+            var ret = DocEntityThreadCache<DocEntityTherapeuticAreaSet>.GetFromCache(hash, THERAPEUTICAREASET_CACHE);
             
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityDefault>().Where(e => e.Hash == hash).FirstOrDefault();
+                ret = query.SelectAll<DocEntityTherapeuticAreaSet>().Where(e => e.Hash == hash).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityDefault>.UpdateCache(ret.Id, ret, DEFAULT_CACHE);
-                    DocEntityThreadCache<DocEntityDefault>.UpdateCache(ret.Hash, ret, DEFAULT_CACHE);
+                    DocEntityThreadCache<DocEntityTherapeuticAreaSet>.UpdateCache(ret.Id, ret, THERAPEUTICAREASET_CACHE);
+                    DocEntityThreadCache<DocEntityTherapeuticAreaSet>.UpdateCache(ret.Hash, ret, THERAPEUTICAREASET_CACHE);
                 }
             }
             return ret;
@@ -100,50 +100,14 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(Nullable = false)]
-        public DocEntityDiseaseStateSet DiseaseState { get; set; }
-        public int? DiseaseStateId { get { return DiseaseState?.Id; } private set { var noid = value; } }
 
-
-        [Field]
-        public DocEntityRole Role { get; set; }
-        public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
-
-
-        [Field(Nullable = false)]
-        public DocEntityScope Scope { get; set; }
-        public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
-
-
-        [Field(Nullable = false)]
-        public DocEntityTherapeuticAreaSet TherapeuticArea { get; set; }
-        public int? TherapeuticAreaId { get { return TherapeuticArea?.Id; } private set { var noid = value; } }
-
-
-        [Field]
-        public override string Gestalt { get; set; }
-
-        [Field(DefaultValue = 0), Version(VersionMode.Manual)]
-        public override int VersionNo { get; set; }
-
-        [Field]
-        public override DateTime? Created { get; set; }
-
-        [Field]
-        public override DateTime? Updated { get; set; }
-
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
-        public override bool Locked { get; set; }
-
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
-        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
 
         public override DocConstantModelName TableName => TABLE_NAME;
 
-        public const string CACHE_KEY_PREFIX = "FindDefaults";
+        public const string CACHE_KEY_PREFIX = "FindTherapeuticAreaSets";
 
         #endregion Overrides of DocEntity
 
@@ -165,7 +129,7 @@ namespace Services.Schema
         {
             if (false == ValidationMessage.IsValid)
             {
-                throw new HttpError(HttpStatusCode.Conflict, $"Default requires: {ValidationMessage.Message}.");
+                throw new HttpError(HttpStatusCode.Conflict, $"TherapeuticAreaSet requires: {ValidationMessage.Message}.");
             }
 
             base.OnValidate();
@@ -197,21 +161,7 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(DiseaseState))
-                {
-                    isValid = false;
-                    message += " DiseaseState is a required property.";
-                }
-                if(DocTools.IsNullOrEmpty(Scope))
-                {
-                    isValid = false;
-                    message += " Scope is a required property.";
-                }
-                if(DocTools.IsNullOrEmpty(TherapeuticArea))
-                {
-                    isValid = false;
-                    message += " TherapeuticArea is a required property.";
-                }
+
 
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;
@@ -221,9 +171,10 @@ namespace Services.Schema
 
         #region Converters
 
-        public Default ToDto() => Mapper.Map<DocEntityDefault, Default>(this);
+        public TherapeuticAreaSet ToDto() => Mapper.Map<DocEntityTherapeuticAreaSet, TherapeuticAreaSet>(this);
 
-        public static explicit operator Default(DocEntityDefault en) => en?.ToDto();
+        public static explicit operator TherapeuticAreaSet(DocEntityTherapeuticAreaSet en) => en?.ToDto();
+        public static explicit operator DocumentSet(DocEntityTherapeuticAreaSet en) => (DocumentSet) en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

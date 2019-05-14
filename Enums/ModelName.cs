@@ -81,12 +81,16 @@ namespace Services.Enums
         DATACLASS = 20235,
         [EnumMember(Value = DocConstantModelName.DATAPROPERTY)]
         DATAPROPERTY = 20255,
+        [EnumMember(Value = DocConstantModelName.DATASET)]
+        DATASET = 20985,
         [EnumMember(Value = DocConstantModelName.DATATAB)]
         DATATAB = 20265,
         [EnumMember(Value = DocConstantModelName.DATETIME)]
         DATETIME = 15278,
         [EnumMember(Value = DocConstantModelName.DEFAULT)]
         DEFAULT = 19435,
+        [EnumMember(Value = DocConstantModelName.DISEASESTATESET)]
+        DISEASESTATESET = 20785,
         [EnumMember(Value = DocConstantModelName.DIVISION)]
         DIVISION = 112,
         [EnumMember(Value = DocConstantModelName.DOCUMENT)]
@@ -121,6 +125,8 @@ namespace Services.Enums
         INTERVENTION = 13420,
         [EnumMember(Value = DocConstantModelName.JUNCTION)]
         JUNCTION = 17619,
+        [EnumMember(Value = DocConstantModelName.LIBRARYSET)]
+        LIBRARYSET = 20885,
         [EnumMember(Value = DocConstantModelName.LOCALE)]
         LOCALE = 19335,
         [EnumMember(Value = DocConstantModelName.LOCALELOOKUP)]
@@ -157,6 +163,8 @@ namespace Services.Enums
         ROLE = 133,
         [EnumMember(Value = DocConstantModelName.SCOPE)]
         SCOPE = 15379,
+        [EnumMember(Value = DocConstantModelName.SERVEPORTALSET)]
+        SERVEPORTALSET = 21085,
         [EnumMember(Value = DocConstantModelName.STATS)]
         STATS = 14273,
         [EnumMember(Value = DocConstantModelName.STATSRECORD)]
@@ -179,6 +187,8 @@ namespace Services.Enums
         TERMMASTER = 147,
         [EnumMember(Value = DocConstantModelName.TERMSYNONYM)]
         TERMSYNONYM = 148,
+        [EnumMember(Value = DocConstantModelName.THERAPEUTICAREASET)]
+        THERAPEUTICAREASET = 20685,
         [EnumMember(Value = DocConstantModelName.TIMECARD)]
         TIMECARD = 17319,
         [EnumMember(Value = DocConstantModelName.TIMEPOINT)]
@@ -251,12 +261,16 @@ namespace Services.Enums
                     return DocConstantModelName.DATACLASS;
                 case ModelNameEnm.DATAPROPERTY:
                     return DocConstantModelName.DATAPROPERTY;
+                case ModelNameEnm.DATASET:
+                    return DocConstantModelName.DATASET;
                 case ModelNameEnm.DATATAB:
                     return DocConstantModelName.DATATAB;
                 case ModelNameEnm.DATETIME:
                     return DocConstantModelName.DATETIME;
                 case ModelNameEnm.DEFAULT:
                     return DocConstantModelName.DEFAULT;
+                case ModelNameEnm.DISEASESTATESET:
+                    return DocConstantModelName.DISEASESTATESET;
                 case ModelNameEnm.DIVISION:
                     return DocConstantModelName.DIVISION;
                 case ModelNameEnm.DOCUMENT:
@@ -291,6 +305,8 @@ namespace Services.Enums
                     return DocConstantModelName.INTERVENTION;
                 case ModelNameEnm.JUNCTION:
                     return DocConstantModelName.JUNCTION;
+                case ModelNameEnm.LIBRARYSET:
+                    return DocConstantModelName.LIBRARYSET;
                 case ModelNameEnm.LOCALE:
                     return DocConstantModelName.LOCALE;
                 case ModelNameEnm.LOCALELOOKUP:
@@ -327,6 +343,8 @@ namespace Services.Enums
                     return DocConstantModelName.ROLE;
                 case ModelNameEnm.SCOPE:
                     return DocConstantModelName.SCOPE;
+                case ModelNameEnm.SERVEPORTALSET:
+                    return DocConstantModelName.SERVEPORTALSET;
                 case ModelNameEnm.STATS:
                     return DocConstantModelName.STATS;
                 case ModelNameEnm.STATSRECORD:
@@ -349,6 +367,8 @@ namespace Services.Enums
                     return DocConstantModelName.TERMMASTER;
                 case ModelNameEnm.TERMSYNONYM:
                     return DocConstantModelName.TERMSYNONYM;
+                case ModelNameEnm.THERAPEUTICAREASET:
+                    return DocConstantModelName.THERAPEUTICAREASET;
                 case ModelNameEnm.TIMECARD:
                     return DocConstantModelName.TIMECARD;
                 case ModelNameEnm.TIMEPOINT:
@@ -404,9 +424,11 @@ namespace Services.Enums
         public const string DATABASEVERSION = "DatabaseVersion";
         public const string DATACLASS = "DataClass";
         public const string DATAPROPERTY = "DataProperty";
+        public const string DATASET = "DataSet";
         public const string DATATAB = "DataTab";
         public const string DATETIME = "DateTime";
         public const string DEFAULT = "Default";
+        public const string DISEASESTATESET = "DiseaseStateSet";
         public const string DIVISION = "Division";
         public const string DOCUMENT = "Document";
         public const string DOCUMENTSET = "DocumentSet";
@@ -424,6 +446,7 @@ namespace Services.Enums
         public const string INTERVAL = "Interval";
         public const string INTERVENTION = "Intervention";
         public const string JUNCTION = "Junction";
+        public const string LIBRARYSET = "LibrarySet";
         public const string LOCALE = "Locale";
         public const string LOCALELOOKUP = "LocaleLookup";
         public const string LOOKUPCATEGORY = "LookupCategory";
@@ -442,6 +465,7 @@ namespace Services.Enums
         public const string RELEASESTATUS = "ReleaseStatus";
         public const string ROLE = "Role";
         public const string SCOPE = "Scope";
+        public const string SERVEPORTALSET = "ServePortalSet";
         public const string STATS = "Stats";
         public const string STATSRECORD = "StatsRecord";
         public const string STATSSTUDYSET = "StatsStudySet";
@@ -453,6 +477,7 @@ namespace Services.Enums
         public const string TERMCATEGORY = "TermCategory";
         public const string TERMMASTER = "TermMaster";
         public const string TERMSYNONYM = "TermSynonym";
+        public const string THERAPEUTICAREASET = "TherapeuticAreaSet";
         public const string TIMECARD = "TimeCard";
         public const string TIMEPOINT = "TimePoint";
         public const string UNITCONVERSIONRULES = "UnitConversionRules";

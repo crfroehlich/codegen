@@ -1,7 +1,12 @@
 {
-  "MaxTypeId": 20585,
-  "NextTypeId": 20685,
+  "MaxTypeId": 21085,
+  "NextTypeId": 21185,
   "Types": {
+    "ServePortalSet": 21085,
+    "DataSet": 20985,
+    "LibrarySet": 20885,
+    "DiseaseStateSet": 20785,
+    "TherapeuticAreaSet": 20685,
     "AdjudicatedRating": 20585,
     "Favorite": 20485,
     "EoD": 20385,

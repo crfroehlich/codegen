@@ -58,9 +58,9 @@ namespace Services.Enums
         [EnumMember(Value = DocConstantWorkflow.DATA_EXPORT)]
         DATA_EXPORT = 22669313,
         [EnumMember(Value = DocConstantWorkflow.DEFAULT_FILTER)]
-        DEFAULT_FILTER = 22669357,
+        DEFAULT_FILTER = 150785541,
         [EnumMember(Value = DocConstantWorkflow.DEFAULT_NAMESET)]
-        DEFAULT_NAMESET = 22669443,
+        DEFAULT_NAMESET = 150785542,
         [EnumMember(Value = DocConstantWorkflow.DIA_REPORT)]
         DIA_REPORT = 76351811,
         [EnumMember(Value = DocConstantWorkflow.EVIDENCE_ON_DEMAND)]

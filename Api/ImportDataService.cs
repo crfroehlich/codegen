@@ -104,6 +104,10 @@ namespace Services.API
                     entities = entities.Where(en => en.CompletedOn <= request.CompletedOnBefore);
                 if(!DocTools.IsNullOrEmpty(request.CompletedOnAfter))
                     entities = entities.Where(en => en.CompletedOn >= request.CompletedOnAfter);
+                if(true == request.DataSetsIds?.Any())
+                {
+                    entities = entities.Where(en => en.DataSets.Any(r => r.Id.In(request.DataSetsIds)));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Document) && !DocTools.IsNullOrEmpty(request.Document.Id))
                 {
                     entities = entities.Where(en => en.Document.Id == request.Document.Id );
@@ -111,10 +115,6 @@ namespace Services.API
                 if(true == request.DocumentIds?.Any())
                 {
                     entities = entities.Where(en => en.Document.Id.In(request.DocumentIds));
-                }
-                if(true == request.DocumentSetsIds?.Any())
-                {
-                    entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
                 }
                 if(!DocTools.IsNullOrEmpty(request.ErrorData))
                     entities = entities.Where(en => en.ErrorData.Contains(request.ErrorData));
@@ -262,8 +262,8 @@ namespace Services.API
             
             //First, assign all the variables, do database lookups and conversions
             var pCompletedOn = request.CompletedOn;
+            var pDataSets = request.DataSets?.ToList();
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
-            var pDocumentSets = request.DocumentSets?.ToList();
             var pErrorData = request.ErrorData;
             var pExtractUrl = request.ExtractUrl;
             var pHighPriority = request.HighPriority;
@@ -516,48 +516,48 @@ namespace Services.API
 
             entity.SaveChanges(permission);
 
-            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocumentSets, permission, DocConstantModelName.IMPORTDATA, nameof(request.DocumentSets)))
+            if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDataSets, permission, DocConstantModelName.IMPORTDATA, nameof(request.DataSets)))
             {
-                if (true == pDocumentSets?.Any() )
+                if (true == pDataSets?.Any() )
                 {
-                    var requestedDocumentSets = pDocumentSets.Select(p => p.Id).Distinct().ToList();
-                    var existsDocumentSets = Execute.SelectAll<DocEntityDocumentSet>().Where(e => e.Id.In(requestedDocumentSets)).Select( e => e.Id ).ToList();
-                    if (existsDocumentSets.Count != requestedDocumentSets.Count)
+                    var requestedDataSets = pDataSets.Select(p => p.Id).Distinct().ToList();
+                    var existsDataSets = Execute.SelectAll<DocEntityDataSet>().Where(e => e.Id.In(requestedDataSets)).Select( e => e.Id ).ToList();
+                    if (existsDataSets.Count != requestedDataSets.Count)
                     {
-                        var nonExists = requestedDocumentSets.Where(id => existsDocumentSets.All(eId => eId != id));
-                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DocumentSets with objects that do not exist. No matching DocumentSets(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
+                        var nonExists = requestedDataSets.Where(id => existsDataSets.All(eId => eId != id));
+                        throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DataSets with objects that do not exist. No matching DataSets(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedDocumentSets.Where(id => entity.DocumentSets.All(e => e.Id != id)).ToList(); 
+                    var toAdd = requestedDataSets.Where(id => entity.DataSets.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityDocumentSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(ImportData)}");
-                        entity.DocumentSets.Add(target);
+                        var target = DocEntityDataSet.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DataSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DataSets)} to {nameof(ImportData)}");
+                        entity.DataSets.Add(target);
                     });
-                    var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
+                    var toRemove = entity.DataSets.Where(e => requestedDataSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityDocumentSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(ImportData)}");
-                        entity.DocumentSets.Remove(target);
+                        var target = DocEntityDataSet.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DataSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DataSets)} from {nameof(ImportData)}");
+                        entity.DataSets.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.DocumentSets.Select(e => e.Id).ToList(); 
+                    var toRemove = entity.DataSets.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityDocumentSet.Get(id);
-                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DocumentSets)))
-                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(ImportData)}");
-                        entity.DocumentSets.Remove(target);
+                        var target = DocEntityDataSet.Get(id);
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(ImportData), columnName: nameof(request.DataSets)))
+                            throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DataSets)} from {nameof(ImportData)}");
+                        entity.DataSets.Remove(target);
                     });
                 }
-                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.Select.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDataSets, nameof(request.DataSets)) && !request.Select.Matches(nameof(request.DataSets), ignoreSpaces: true))
                 {
-                    request.Select.Add(nameof(request.DocumentSets));
+                    request.Select.Add(nameof(request.DataSets));
                 }
             }
             DocPermissionFactory.SetSelect<ImportData>(currentUser, nameof(ImportData), request.Select);
@@ -649,8 +649,8 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pCompletedOn = entity.CompletedOn;
+                    var pDataSets = entity.DataSets.ToList();
                     var pDocument = entity.Document;
-                    var pDocumentSets = entity.DocumentSets.ToList();
                     var pErrorData = entity.ErrorData;
                     var pExtractUrl = entity.ExtractUrl;
                     if(!DocTools.IsNullOrEmpty(pExtractUrl))
@@ -693,9 +693,9 @@ namespace Services.API
                                 , StartedOn = pStartedOn
                                 , Status = pStatus
                     };
-                            foreach(var item in pDocumentSets)
+                            foreach(var item in pDataSets)
                             {
-                                entity.DocumentSets.Add(item);
+                                entity.DataSets.Add(item);
                             }
 
                     #region Custom After copyImportData
@@ -861,8 +861,8 @@ namespace Services.API
             {
                     case "comment":
                         return GetJunctionSearchResult<ImportData, DocEntityImportData, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
-                    case "documentset":
-                        return GetJunctionSearchResult<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "dataset":
+                        return GetJunctionSearchResult<ImportData, DocEntityImportData, DocEntityDataSet, DataSet, DataSetSearch>((int)request.Id, DocConstantModelName.DATASET, "DataSets", request, (ss) => HostContext.ResolveService<DataSetService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<ImportData, DocEntityImportData, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
                     case "tag":
@@ -877,8 +877,8 @@ namespace Services.API
             {
                     case "comment":
                         return AddJunction<ImportData, DocEntityImportData, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
-                    case "documentset":
-                        return AddJunction<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "dataset":
+                        return AddJunction<ImportData, DocEntityImportData, DocEntityDataSet, DataSet, DataSetSearch>((int)request.Id, DocConstantModelName.DATASET, "DataSets", request);
                     case "favorite":
                         return AddJunction<ImportData, DocEntityImportData, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":
@@ -894,8 +894,8 @@ namespace Services.API
             {
                     case "comment":
                         return RemoveJunction<ImportData, DocEntityImportData, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
-                    case "documentset":
-                        return RemoveJunction<ImportData, DocEntityImportData, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request);
+                    case "dataset":
+                        return RemoveJunction<ImportData, DocEntityImportData, DocEntityDataSet, DataSet, DataSetSearch>((int)request.Id, DocConstantModelName.DATASET, "DataSets", request);
                     case "favorite":
                         return RemoveJunction<ImportData, DocEntityImportData, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "tag":

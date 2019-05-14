@@ -55,102 +55,41 @@ namespace Services.Dto
 
         public DocumentSetBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public DocumentSetBase(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pClients, int? pClientsCount, List<Reference> pComparators, int? pComparatorsCount, bool pConfidential, string pDataCollection, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pHistories, int? pHistoriesCount, int? pImportPriority, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, int? pLibraryPackageId, string pName, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, string pOriginalSearch, List<Reference> pOutcomes, int? pOutcomesCount, Reference pOwner, int? pOwnerId, string pParticipants, string pPRISMA, List<Reference> pProjects, int? pProjectsCount, Reference pProjectTeam, int? pProjectTeamId, int? pProtocolReferenceId, string pQUOROM, List<Reference> pScopes, int? pScopesCount, DateTime? pSearchEnd, DateTime? pSearchStart, string pSearchStrategy, DateTime? pSearchUpdated, string pSelectionCriteria, string pSettings, bool pShowEtw, bool pShowPublicationType, List<Reference> pStats, int? pStatsCount, List<Reference> pStudyDesigns, int? pStudyDesignsCount, DocumentSetTypeEnm? pType, int? pUpdateFrequency, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+        public DocumentSetBase(int? pId, List<Reference> pClients, int? pClientsCount, bool pConfidential, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, List<Reference> pHistories, int? pHistoriesCount, string pName, Reference pOwner, int? pOwnerId, Reference pProjectTeam, int? pProjectTeamId, List<Reference> pScopes, int? pScopesCount, string pSettings, List<Reference> pStats, int? pStatsCount, DocumentSetTypeEnm? pType, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
         {
-            AdditionalCriteria = pAdditionalCriteria;
-            Characteristics = pCharacteristics;
-            CharacteristicsCount = pCharacteristicsCount;
             Clients = pClients;
             ClientsCount = pClientsCount;
-            Comparators = pComparators;
-            ComparatorsCount = pComparatorsCount;
             Confidential = pConfidential;
-            DataCollection = pDataCollection;
             Divisions = pDivisions;
             DivisionsCount = pDivisionsCount;
             Documents = pDocuments;
             DocumentsCount = pDocumentsCount;
             DocumentSets = pDocumentSets;
             DocumentSetsCount = pDocumentSetsCount;
-            EvidencePortalId = pEvidencePortalId;
-            ExtractionProtocol = pExtractionProtocol;
-            FqId = pFqId;
-            FramedQuestionId = pFramedQuestionId;
-            GeneralScope = pGeneralScope;
             Histories = pHistories;
             HistoriesCount = pHistoriesCount;
-            ImportPriority = pImportPriority;
-            Imports = pImports;
-            ImportsCount = pImportsCount;
-            Indications = pIndications;
-            Interventions = pInterventions;
-            InterventionsCount = pInterventionsCount;
-            LibraryPackageId = pLibraryPackageId;
             Name = pName;
-            Notes = pNotes;
-            OriginalComparators = pOriginalComparators;
-            OriginalDatabase = pOriginalDatabase;
-            OriginalDesigns = pOriginalDesigns;
-            OriginalInterventions = pOriginalInterventions;
-            OriginalOutcomes = pOriginalOutcomes;
-            OriginalSearch = pOriginalSearch;
-            Outcomes = pOutcomes;
-            OutcomesCount = pOutcomesCount;
             Owner = pOwner;
             OwnerId = pOwnerId;
-            Participants = pParticipants;
-            PRISMA = pPRISMA;
-            Projects = pProjects;
-            ProjectsCount = pProjectsCount;
             ProjectTeam = pProjectTeam;
             ProjectTeamId = pProjectTeamId;
-            ProtocolReferenceId = pProtocolReferenceId;
-            QUOROM = pQUOROM;
             Scopes = pScopes;
             ScopesCount = pScopesCount;
-            SearchEnd = pSearchEnd;
-            SearchStart = pSearchStart;
-            SearchStrategy = pSearchStrategy;
-            SearchUpdated = pSearchUpdated;
-            SelectionCriteria = pSelectionCriteria;
             Settings = pSettings;
-            ShowEtw = pShowEtw;
-            ShowPublicationType = pShowPublicationType;
             Stats = pStats;
             StatsCount = pStatsCount;
-            StudyDesigns = pStudyDesigns;
-            StudyDesignsCount = pStudyDesignsCount;
             Type = pType;
-            UpdateFrequency = pUpdateFrequency;
             Users = pUsers;
             UsersCount = pUsersCount;
         }
-
-        [ApiMember(Name = nameof(AdditionalCriteria), Description = "string", IsRequired = false)]
-        public string AdditionalCriteria { get; set; }
-
-
-        [ApiMember(Name = nameof(Characteristics), Description = "Characteristic", IsRequired = false)]
-        public List<Reference> Characteristics { get; set; }
-        public int? CharacteristicsCount { get; set; }
-
 
         [ApiMember(Name = nameof(Clients), Description = "Client", IsRequired = false)]
         public List<Reference> Clients { get; set; }
         public int? ClientsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Comparators), Description = "Comparator", IsRequired = false)]
-        public List<Reference> Comparators { get; set; }
-        public int? ComparatorsCount { get; set; }
-
-
         [ApiMember(Name = nameof(Confidential), Description = "bool", IsRequired = false)]
         public bool Confidential { get; set; }
-
-
-        [ApiMember(Name = nameof(DataCollection), Description = "string", IsRequired = false)]
-        public string DataCollection { get; set; }
 
 
         [ApiMember(Name = nameof(Divisions), Description = "Division", IsRequired = false)]
@@ -168,88 +107,13 @@ namespace Services.Dto
         public int? DocumentSetsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(EvidencePortalId), Description = "int?", IsRequired = false)]
-        public int? EvidencePortalId { get; set; }
-
-
-        [ApiMember(Name = nameof(ExtractionProtocol), Description = "string", IsRequired = false)]
-        public string ExtractionProtocol { get; set; }
-
-
-        [ApiMember(Name = nameof(FqId), Description = "int?", IsRequired = false)]
-        public int? FqId { get; set; }
-
-
-        [ApiMember(Name = nameof(FramedQuestionId), Description = "int?", IsRequired = false)]
-        public int? FramedQuestionId { get; set; }
-
-
-        [ApiMember(Name = nameof(GeneralScope), Description = "string", IsRequired = false)]
-        public string GeneralScope { get; set; }
-
-
         [ApiMember(Name = nameof(Histories), Description = "DocumentSetHistory", IsRequired = false)]
         public List<Reference> Histories { get; set; }
         public int? HistoriesCount { get; set; }
 
 
-        [ApiMember(Name = nameof(ImportPriority), Description = "int?", IsRequired = false)]
-        public int? ImportPriority { get; set; }
-
-
-        [ApiMember(Name = nameof(Imports), Description = "ImportData", IsRequired = false)]
-        public List<Reference> Imports { get; set; }
-        public int? ImportsCount { get; set; }
-
-
-        [ApiMember(Name = nameof(Indications), Description = "string", IsRequired = false)]
-        public string Indications { get; set; }
-
-
-        [ApiMember(Name = nameof(Interventions), Description = "Intervention", IsRequired = false)]
-        public List<Reference> Interventions { get; set; }
-        public int? InterventionsCount { get; set; }
-
-
-        [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
-        public int? LibraryPackageId { get; set; }
-
-
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-
-
-        [ApiMember(Name = nameof(Notes), Description = "string", IsRequired = false)]
-        public string Notes { get; set; }
-
-
-        [ApiMember(Name = nameof(OriginalComparators), Description = "string", IsRequired = false)]
-        public string OriginalComparators { get; set; }
-
-
-        [ApiMember(Name = nameof(OriginalDatabase), Description = "string", IsRequired = false)]
-        public string OriginalDatabase { get; set; }
-
-
-        [ApiMember(Name = nameof(OriginalDesigns), Description = "string", IsRequired = false)]
-        public string OriginalDesigns { get; set; }
-
-
-        [ApiMember(Name = nameof(OriginalInterventions), Description = "string", IsRequired = false)]
-        public string OriginalInterventions { get; set; }
-
-
-        [ApiMember(Name = nameof(OriginalOutcomes), Description = "string", IsRequired = false)]
-        public string OriginalOutcomes { get; set; }
-
-
-        [ApiMember(Name = nameof(OriginalSearch), Description = "string", IsRequired = false)]
-        public string OriginalSearch { get; set; }
-
-
-        [ApiMember(Name = nameof(Outcomes), Description = "Outcome", IsRequired = false)]
-        public List<Reference> Outcomes { get; set; }
-        public int? OutcomesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "DocumentSet", IsRequired = false)]
@@ -258,31 +122,10 @@ namespace Services.Dto
         public int? OwnerId { get; set; }
 
 
-        [ApiMember(Name = nameof(Participants), Description = "string", IsRequired = false)]
-        public string Participants { get; set; }
-
-
-        [ApiMember(Name = nameof(PRISMA), Description = "string", IsRequired = false)]
-        public string PRISMA { get; set; }
-
-
-        [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
-        public List<Reference> Projects { get; set; }
-        public int? ProjectsCount { get; set; }
-
-
         [ApiMember(Name = nameof(ProjectTeam), Description = "Team", IsRequired = false)]
         public Reference ProjectTeam { get; set; }
         [ApiMember(Name = nameof(ProjectTeamId), Description = "Primary Key of Team", IsRequired = false)]
         public int? ProjectTeamId { get; set; }
-
-
-        [ApiMember(Name = nameof(ProtocolReferenceId), Description = "int?", IsRequired = false)]
-        public int? ProtocolReferenceId { get; set; }
-
-
-        [ApiMember(Name = nameof(QUOROM), Description = "string", IsRequired = false)]
-        public string QUOROM { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
@@ -290,36 +133,8 @@ namespace Services.Dto
         public int? ScopesCount { get; set; }
 
 
-        [ApiMember(Name = nameof(SearchEnd), Description = "DateTime?", IsRequired = false)]
-        public DateTime? SearchEnd { get; set; }
-
-
-        [ApiMember(Name = nameof(SearchStart), Description = "DateTime?", IsRequired = false)]
-        public DateTime? SearchStart { get; set; }
-
-
-        [ApiMember(Name = nameof(SearchStrategy), Description = "string", IsRequired = false)]
-        public string SearchStrategy { get; set; }
-
-
-        [ApiMember(Name = nameof(SearchUpdated), Description = "DateTime?", IsRequired = false)]
-        public DateTime? SearchUpdated { get; set; }
-
-
-        [ApiMember(Name = nameof(SelectionCriteria), Description = "string", IsRequired = false)]
-        public string SelectionCriteria { get; set; }
-
-
         [ApiMember(Name = nameof(Settings), Description = "string", IsRequired = false)]
         public string Settings { get; set; }
-
-
-        [ApiMember(Name = nameof(ShowEtw), Description = "bool", IsRequired = false)]
-        public bool ShowEtw { get; set; }
-
-
-        [ApiMember(Name = nameof(ShowPublicationType), Description = "bool", IsRequired = false)]
-        public bool ShowPublicationType { get; set; }
 
 
         [ApiMember(Name = nameof(Stats), Description = "StatsStudySet", IsRequired = false)]
@@ -327,18 +142,9 @@ namespace Services.Dto
         public int? StatsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(StudyDesigns), Description = "StudyDesign", IsRequired = false)]
-        public List<Reference> StudyDesigns { get; set; }
-        public int? StudyDesignsCount { get; set; }
-
-
         [ApiAllowableValues("Includes", Values = new string[] {@"Data Set",@"Disease State",@"Global",@"Library",@"SERVE Portal",@"Therapeutic Area"})]
         [ApiMember(Name = nameof(Type), Description = "DocumentSetTypeEnm?", IsRequired = false)]
         public DocumentSetTypeEnm? Type { get; set; }
-
-
-        [ApiMember(Name = nameof(UpdateFrequency), Description = "int?", IsRequired = false)]
-        public int? UpdateFrequency { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
@@ -347,80 +153,37 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out string pAdditionalCriteria, out List<Reference> pCharacteristics, out int? pCharacteristicsCount, out List<Reference> pClients, out int? pClientsCount, out List<Reference> pComparators, out int? pComparatorsCount, out bool pConfidential, out string pDataCollection, out List<Reference> pDivisions, out int? pDivisionsCount, out List<Reference> pDocuments, out int? pDocumentsCount, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out int? pEvidencePortalId, out string pExtractionProtocol, out int? pFqId, out int? pFramedQuestionId, out string pGeneralScope, out List<Reference> pHistories, out int? pHistoriesCount, out int? pImportPriority, out List<Reference> pImports, out int? pImportsCount, out string pIndications, out List<Reference> pInterventions, out int? pInterventionsCount, out int? pLibraryPackageId, out string pName, out string pNotes, out string pOriginalComparators, out string pOriginalDatabase, out string pOriginalDesigns, out string pOriginalInterventions, out string pOriginalOutcomes, out string pOriginalSearch, out List<Reference> pOutcomes, out int? pOutcomesCount, out Reference pOwner, out int? pOwnerId, out string pParticipants, out string pPRISMA, out List<Reference> pProjects, out int? pProjectsCount, out Reference pProjectTeam, out int? pProjectTeamId, out int? pProtocolReferenceId, out string pQUOROM, out List<Reference> pScopes, out int? pScopesCount, out DateTime? pSearchEnd, out DateTime? pSearchStart, out string pSearchStrategy, out DateTime? pSearchUpdated, out string pSelectionCriteria, out string pSettings, out bool pShowEtw, out bool pShowPublicationType, out List<Reference> pStats, out int? pStatsCount, out List<Reference> pStudyDesigns, out int? pStudyDesignsCount, out DocumentSetTypeEnm? pType, out int? pUpdateFrequency, out List<Reference> pUsers, out int? pUsersCount)
+        public void Deconstruct(out List<Reference> pClients, out int? pClientsCount, out bool pConfidential, out List<Reference> pDivisions, out int? pDivisionsCount, out List<Reference> pDocuments, out int? pDocumentsCount, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out List<Reference> pHistories, out int? pHistoriesCount, out string pName, out Reference pOwner, out int? pOwnerId, out Reference pProjectTeam, out int? pProjectTeamId, out List<Reference> pScopes, out int? pScopesCount, out string pSettings, out List<Reference> pStats, out int? pStatsCount, out DocumentSetTypeEnm? pType, out List<Reference> pUsers, out int? pUsersCount)
         {
-            pAdditionalCriteria = AdditionalCriteria;
-            pCharacteristics = Characteristics;
-            pCharacteristicsCount = CharacteristicsCount;
             pClients = Clients;
             pClientsCount = ClientsCount;
-            pComparators = Comparators;
-            pComparatorsCount = ComparatorsCount;
             pConfidential = Confidential;
-            pDataCollection = DataCollection;
             pDivisions = Divisions;
             pDivisionsCount = DivisionsCount;
             pDocuments = Documents;
             pDocumentsCount = DocumentsCount;
             pDocumentSets = DocumentSets;
             pDocumentSetsCount = DocumentSetsCount;
-            pEvidencePortalId = EvidencePortalId;
-            pExtractionProtocol = ExtractionProtocol;
-            pFqId = FqId;
-            pFramedQuestionId = FramedQuestionId;
-            pGeneralScope = GeneralScope;
             pHistories = Histories;
             pHistoriesCount = HistoriesCount;
-            pImportPriority = ImportPriority;
-            pImports = Imports;
-            pImportsCount = ImportsCount;
-            pIndications = Indications;
-            pInterventions = Interventions;
-            pInterventionsCount = InterventionsCount;
-            pLibraryPackageId = LibraryPackageId;
             pName = Name;
-            pNotes = Notes;
-            pOriginalComparators = OriginalComparators;
-            pOriginalDatabase = OriginalDatabase;
-            pOriginalDesigns = OriginalDesigns;
-            pOriginalInterventions = OriginalInterventions;
-            pOriginalOutcomes = OriginalOutcomes;
-            pOriginalSearch = OriginalSearch;
-            pOutcomes = Outcomes;
-            pOutcomesCount = OutcomesCount;
             pOwner = Owner;
             pOwnerId = OwnerId;
-            pParticipants = Participants;
-            pPRISMA = PRISMA;
-            pProjects = Projects;
-            pProjectsCount = ProjectsCount;
             pProjectTeam = ProjectTeam;
             pProjectTeamId = ProjectTeamId;
-            pProtocolReferenceId = ProtocolReferenceId;
-            pQUOROM = QUOROM;
             pScopes = Scopes;
             pScopesCount = ScopesCount;
-            pSearchEnd = SearchEnd;
-            pSearchStart = SearchStart;
-            pSearchStrategy = SearchStrategy;
-            pSearchUpdated = SearchUpdated;
-            pSelectionCriteria = SelectionCriteria;
             pSettings = Settings;
-            pShowEtw = ShowEtw;
-            pShowPublicationType = ShowPublicationType;
             pStats = Stats;
             pStatsCount = StatsCount;
-            pStudyDesigns = StudyDesigns;
-            pStudyDesignsCount = StudyDesignsCount;
             pType = Type;
-            pUpdateFrequency = UpdateFrequency;
             pUsers = Users;
             pUsersCount = UsersCount;
         }
 
         //Not ready until C# v8.?
-        //public DocumentSetBase With(int? pId = Id, string pAdditionalCriteria = AdditionalCriteria, List<Reference> pCharacteristics = Characteristics, int? pCharacteristicsCount = CharacteristicsCount, List<Reference> pClients = Clients, int? pClientsCount = ClientsCount, List<Reference> pComparators = Comparators, int? pComparatorsCount = ComparatorsCount, bool pConfidential = Confidential, string pDataCollection = DataCollection, List<Reference> pDivisions = Divisions, int? pDivisionsCount = DivisionsCount, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, int? pEvidencePortalId = EvidencePortalId, string pExtractionProtocol = ExtractionProtocol, int? pFqId = FqId, int? pFramedQuestionId = FramedQuestionId, string pGeneralScope = GeneralScope, List<Reference> pHistories = Histories, int? pHistoriesCount = HistoriesCount, int? pImportPriority = ImportPriority, List<Reference> pImports = Imports, int? pImportsCount = ImportsCount, string pIndications = Indications, List<Reference> pInterventions = Interventions, int? pInterventionsCount = InterventionsCount, int? pLibraryPackageId = LibraryPackageId, string pName = Name, string pNotes = Notes, string pOriginalComparators = OriginalComparators, string pOriginalDatabase = OriginalDatabase, string pOriginalDesigns = OriginalDesigns, string pOriginalInterventions = OriginalInterventions, string pOriginalOutcomes = OriginalOutcomes, string pOriginalSearch = OriginalSearch, List<Reference> pOutcomes = Outcomes, int? pOutcomesCount = OutcomesCount, Reference pOwner = Owner, int? pOwnerId = OwnerId, string pParticipants = Participants, string pPRISMA = PRISMA, List<Reference> pProjects = Projects, int? pProjectsCount = ProjectsCount, Reference pProjectTeam = ProjectTeam, int? pProjectTeamId = ProjectTeamId, int? pProtocolReferenceId = ProtocolReferenceId, string pQUOROM = QUOROM, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, DateTime? pSearchEnd = SearchEnd, DateTime? pSearchStart = SearchStart, string pSearchStrategy = SearchStrategy, DateTime? pSearchUpdated = SearchUpdated, string pSelectionCriteria = SelectionCriteria, string pSettings = Settings, bool pShowEtw = ShowEtw, bool pShowPublicationType = ShowPublicationType, List<Reference> pStats = Stats, int? pStatsCount = StatsCount, List<Reference> pStudyDesigns = StudyDesigns, int? pStudyDesignsCount = StudyDesignsCount, DocumentSetTypeEnm? pType = Type, int? pUpdateFrequency = UpdateFrequency, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
-        //	new DocumentSetBase(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pClients, pClientsCount, pComparators, pComparatorsCount, pConfidential, pDataCollection, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pHistories, pHistoriesCount, pImportPriority, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pLibraryPackageId, pName, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOriginalSearch, pOutcomes, pOutcomesCount, pOwner, pOwnerId, pParticipants, pPRISMA, pProjects, pProjectsCount, pProjectTeam, pProjectTeamId, pProtocolReferenceId, pQUOROM, pScopes, pScopesCount, pSearchEnd, pSearchStart, pSearchStrategy, pSearchUpdated, pSelectionCriteria, pSettings, pShowEtw, pShowPublicationType, pStats, pStatsCount, pStudyDesigns, pStudyDesignsCount, pType, pUpdateFrequency, pUsers, pUsersCount);
+        //public DocumentSetBase With(int? pId = Id, List<Reference> pClients = Clients, int? pClientsCount = ClientsCount, bool pConfidential = Confidential, List<Reference> pDivisions = Divisions, int? pDivisionsCount = DivisionsCount, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, List<Reference> pHistories = Histories, int? pHistoriesCount = HistoriesCount, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, Reference pProjectTeam = ProjectTeam, int? pProjectTeamId = ProjectTeamId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, string pSettings = Settings, List<Reference> pStats = Stats, int? pStatsCount = StatsCount, DocumentSetTypeEnm? pType = Type, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+        //	new DocumentSetBase(pId, pClients, pClientsCount, pConfidential, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pHistories, pHistoriesCount, pName, pOwner, pOwnerId, pProjectTeam, pProjectTeamId, pScopes, pScopesCount, pSettings, pStats, pStatsCount, pType, pUsers, pUsersCount);
 
     }
 
@@ -435,8 +198,8 @@ namespace Services.Dto
 
         public DocumentSet(int? id) : base(DocConvert.ToInt(id)) {}
         public DocumentSet(int id) : base(id) {}
-        public DocumentSet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pClients, int? pClientsCount, List<Reference> pComparators, int? pComparatorsCount, bool pConfidential, string pDataCollection, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pHistories, int? pHistoriesCount, int? pImportPriority, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, int? pLibraryPackageId, string pName, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, string pOriginalSearch, List<Reference> pOutcomes, int? pOutcomesCount, Reference pOwner, int? pOwnerId, string pParticipants, string pPRISMA, List<Reference> pProjects, int? pProjectsCount, Reference pProjectTeam, int? pProjectTeamId, int? pProtocolReferenceId, string pQUOROM, List<Reference> pScopes, int? pScopesCount, DateTime? pSearchEnd, DateTime? pSearchStart, string pSearchStrategy, DateTime? pSearchUpdated, string pSelectionCriteria, string pSettings, bool pShowEtw, bool pShowPublicationType, List<Reference> pStats, int? pStatsCount, List<Reference> pStudyDesigns, int? pStudyDesignsCount, DocumentSetTypeEnm? pType, int? pUpdateFrequency, List<Reference> pUsers, int? pUsersCount) : 
-            base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pClients, pClientsCount, pComparators, pComparatorsCount, pConfidential, pDataCollection, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pHistories, pHistoriesCount, pImportPriority, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pLibraryPackageId, pName, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOriginalSearch, pOutcomes, pOutcomesCount, pOwner, pOwnerId, pParticipants, pPRISMA, pProjects, pProjectsCount, pProjectTeam, pProjectTeamId, pProtocolReferenceId, pQUOROM, pScopes, pScopesCount, pSearchEnd, pSearchStart, pSearchStrategy, pSearchUpdated, pSelectionCriteria, pSettings, pShowEtw, pShowPublicationType, pStats, pStatsCount, pStudyDesigns, pStudyDesignsCount, pType, pUpdateFrequency, pUsers, pUsersCount) { }
+        public DocumentSet(int? pId, List<Reference> pClients, int? pClientsCount, bool pConfidential, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, List<Reference> pHistories, int? pHistoriesCount, string pName, Reference pOwner, int? pOwnerId, Reference pProjectTeam, int? pProjectTeamId, List<Reference> pScopes, int? pScopesCount, string pSettings, List<Reference> pStats, int? pStatsCount, DocumentSetTypeEnm? pType, List<Reference> pUsers, int? pUsersCount) : 
+            base(pId, pClients, pClientsCount, pConfidential, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pHistories, pHistoriesCount, pName, pOwner, pOwnerId, pProjectTeam, pProjectTeamId, pScopes, pScopesCount, pSettings, pStats, pStatsCount, pType, pUsers, pUsersCount) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -454,7 +217,7 @@ namespace Services.Dto
 
         private List<string> _Select;
         [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Clients),nameof(ClientsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(ImportPriority),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(LibraryPackageId),nameof(Locked),nameof(Name),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(OriginalSearch),nameof(Outcomes),nameof(OutcomesCount),nameof(Owner),nameof(OwnerId),nameof(Participants),nameof(PRISMA),nameof(Projects),nameof(ProjectsCount),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(ProtocolReferenceId),nameof(QUOROM),nameof(Scopes),nameof(ScopesCount),nameof(SearchEnd),nameof(SearchStart),nameof(SearchStrategy),nameof(SearchUpdated),nameof(SelectionCriteria),nameof(Settings),nameof(ShowEtw),nameof(ShowPublicationType),nameof(Stats),nameof(StatsCount),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Type),nameof(Updated),nameof(UpdateFrequency),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Clients),nameof(ClientsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(Type),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> Select
         {
             get
@@ -477,7 +240,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(Characteristics), nameof(CharacteristicsCount), nameof(Clients), nameof(ClientsCount), nameof(Comparators), nameof(ComparatorsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Imports), nameof(ImportsCount), nameof(Interventions), nameof(InterventionsCount), nameof(Outcomes), nameof(OutcomesCount), nameof(Projects), nameof(ProjectsCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(StudyDesigns), nameof(StudyDesignsCount), nameof(Users), nameof(UsersCount)
+            nameof(Clients), nameof(ClientsCount), nameof(Divisions), nameof(DivisionsCount), nameof(Documents), nameof(DocumentsCount), nameof(DocumentSets), nameof(DocumentSetsCount), nameof(Histories), nameof(HistoriesCount), nameof(Scopes), nameof(ScopesCount), nameof(Stats), nameof(StatsCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
 
@@ -489,66 +252,22 @@ namespace Services.Dto
     public partial class DocumentSetSearchBase : Search<DocumentSet>
     {
         public int? Id { get; set; }
-        public string AdditionalCriteria { get; set; }
-        public List<int> CharacteristicsIds { get; set; }
         public List<int> ClientsIds { get; set; }
-        public List<int> ComparatorsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> Confidential { get; set; }
-        public string DataCollection { get; set; }
         public List<int> DivisionsIds { get; set; }
         public List<int> DocumentsIds { get; set; }
         public List<int> DocumentSetsIds { get; set; }
-        public int? EvidencePortalId { get; set; }
-        public string ExtractionProtocol { get; set; }
-        public int? FqId { get; set; }
-        public int? FramedQuestionId { get; set; }
-        public string GeneralScope { get; set; }
         public List<int> HistoriesIds { get; set; }
-        public int? ImportPriority { get; set; }
-        public List<int> ImportsIds { get; set; }
-        public string Indications { get; set; }
-        public List<int> InterventionsIds { get; set; }
-        public int? LibraryPackageId { get; set; }
         public string Name { get; set; }
-        public string Notes { get; set; }
-        public string OriginalComparators { get; set; }
-        public string OriginalDatabase { get; set; }
-        public string OriginalDesigns { get; set; }
-        public string OriginalInterventions { get; set; }
-        public string OriginalOutcomes { get; set; }
-        public string OriginalSearch { get; set; }
-        public List<int> OutcomesIds { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
-        public string Participants { get; set; }
-        public string PRISMA { get; set; }
-        public List<int> ProjectsIds { get; set; }
         public Reference ProjectTeam { get; set; }
         public List<int> ProjectTeamIds { get; set; }
-        public int? ProtocolReferenceId { get; set; }
-        public string QUOROM { get; set; }
         public List<int> ScopesIds { get; set; }
-        public DateTime? SearchEnd { get; set; }
-        public DateTime? SearchEndAfter { get; set; }
-        public DateTime? SearchEndBefore { get; set; }
-        public DateTime? SearchStart { get; set; }
-        public DateTime? SearchStartAfter { get; set; }
-        public DateTime? SearchStartBefore { get; set; }
-        public string SearchStrategy { get; set; }
-        public DateTime? SearchUpdated { get; set; }
-        public DateTime? SearchUpdatedAfter { get; set; }
-        public DateTime? SearchUpdatedBefore { get; set; }
-        public string SelectionCriteria { get; set; }
         public string Settings { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> ShowEtw { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
-        public List<bool> ShowPublicationType { get; set; }
         public List<int> StatsIds { get; set; }
-        public List<int> StudyDesignsIds { get; set; }
         public DocumentSetTypeEnm? Type { get; set; }
-        public int? UpdateFrequency { get; set; }
         public List<int> UsersIds { get; set; }
     }
 
@@ -573,55 +292,19 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Created))); }
         public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Updated))); }
 
-        public bool doAdditionalCriteria { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.AdditionalCriteria))); }
-        public bool doCharacteristics { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Characteristics))); }
         public bool doClients { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Clients))); }
-        public bool doComparators { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Comparators))); }
         public bool doConfidential { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Confidential))); }
-        public bool doDataCollection { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.DataCollection))); }
         public bool doDivisions { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Divisions))); }
         public bool doDocuments { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Documents))); }
         public bool doDocumentSets { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.DocumentSets))); }
-        public bool doEvidencePortalId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.EvidencePortalId))); }
-        public bool doExtractionProtocol { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ExtractionProtocol))); }
-        public bool doFqId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.FqId))); }
-        public bool doFramedQuestionId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.FramedQuestionId))); }
-        public bool doGeneralScope { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.GeneralScope))); }
         public bool doHistories { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Histories))); }
-        public bool doImportPriority { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ImportPriority))); }
-        public bool doImports { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Imports))); }
-        public bool doIndications { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Indications))); }
-        public bool doInterventions { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Interventions))); }
-        public bool doLibraryPackageId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.LibraryPackageId))); }
         public bool doName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Name))); }
-        public bool doNotes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Notes))); }
-        public bool doOriginalComparators { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalComparators))); }
-        public bool doOriginalDatabase { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalDatabase))); }
-        public bool doOriginalDesigns { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalDesigns))); }
-        public bool doOriginalInterventions { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalInterventions))); }
-        public bool doOriginalOutcomes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalOutcomes))); }
-        public bool doOriginalSearch { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.OriginalSearch))); }
-        public bool doOutcomes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Outcomes))); }
         public bool doOwner { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Owner))); }
-        public bool doParticipants { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Participants))); }
-        public bool doPRISMA { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.PRISMA))); }
-        public bool doProjects { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Projects))); }
         public bool doProjectTeam { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProjectTeam))); }
-        public bool doProtocolReferenceId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProtocolReferenceId))); }
-        public bool doQUOROM { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.QUOROM))); }
         public bool doScopes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Scopes))); }
-        public bool doSearchEnd { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchEnd))); }
-        public bool doSearchStart { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchStart))); }
-        public bool doSearchStrategy { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchStrategy))); }
-        public bool doSearchUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SearchUpdated))); }
-        public bool doSelectionCriteria { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.SelectionCriteria))); }
         public bool doSettings { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Settings))); }
-        public bool doShowEtw { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ShowEtw))); }
-        public bool doShowPublicationType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ShowPublicationType))); }
         public bool doStats { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Stats))); }
-        public bool doStudyDesigns { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.StudyDesigns))); }
         public bool doType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Type))); }
-        public bool doUpdateFrequency { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.UpdateFrequency))); }
         public bool doUsers { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Users))); }
     }
 

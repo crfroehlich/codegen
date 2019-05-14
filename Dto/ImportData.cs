@@ -55,13 +55,13 @@ namespace Services.Dto
 
         public ImportDataBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public ImportDataBase(int? pId, DateTime? pCompletedOn, Reference pDocument, int? pDocumentId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : this(DocConvert.ToInt(pId)) 
+        public ImportDataBase(int? pId, DateTime? pCompletedOn, List<Reference> pDataSets, int? pDataSetsCount, Reference pDocument, int? pDocumentId, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : this(DocConvert.ToInt(pId)) 
         {
             CompletedOn = pCompletedOn;
+            DataSets = pDataSets;
+            DataSetsCount = pDataSetsCount;
             Document = pDocument;
             DocumentId = pDocumentId;
-            DocumentSets = pDocumentSets;
-            DocumentSetsCount = pDocumentSetsCount;
             ErrorData = pErrorData;
             ExtractUrl = pExtractUrl;
             HighPriority = pHighPriority;
@@ -88,15 +88,15 @@ namespace Services.Dto
         public DateTime? CompletedOn { get; set; }
 
 
+        [ApiMember(Name = nameof(DataSets), Description = "DataSet", IsRequired = false)]
+        public List<Reference> DataSets { get; set; }
+        public int? DataSetsCount { get; set; }
+
+
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
         public Reference Document { get; set; }
         [ApiMember(Name = nameof(DocumentId), Description = "Primary Key of Document", IsRequired = false)]
         public int? DocumentId { get; set; }
-
-
-        [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
-        public List<Reference> DocumentSets { get; set; }
-        public int? DocumentSetsCount { get; set; }
 
 
         [ApiMember(Name = nameof(ErrorData), Description = "string", IsRequired = false)]
@@ -175,13 +175,13 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out DateTime? pCompletedOn, out Reference pDocument, out int? pDocumentId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pErrorData, out string pExtractUrl, out bool pHighPriority, out bool pImportFr, out Reference pImportLocation, out int? pImportLocationId, out bool pImportNewName, out bool pImportTable, out bool pImportText, out Reference pImportType, out int? pImportTypeId, out bool pIsLegacy, out int? pOrder, out int? pReferenceId, out Reference pRequestedBy, out int? pRequestedById, out DateTime? pRequestedOn, out DateTime? pStartedOn, out Reference pStatus, out int? pStatusId)
+        public void Deconstruct(out DateTime? pCompletedOn, out List<Reference> pDataSets, out int? pDataSetsCount, out Reference pDocument, out int? pDocumentId, out string pErrorData, out string pExtractUrl, out bool pHighPriority, out bool pImportFr, out Reference pImportLocation, out int? pImportLocationId, out bool pImportNewName, out bool pImportTable, out bool pImportText, out Reference pImportType, out int? pImportTypeId, out bool pIsLegacy, out int? pOrder, out int? pReferenceId, out Reference pRequestedBy, out int? pRequestedById, out DateTime? pRequestedOn, out DateTime? pStartedOn, out Reference pStatus, out int? pStatusId)
         {
             pCompletedOn = CompletedOn;
+            pDataSets = DataSets;
+            pDataSetsCount = DataSetsCount;
             pDocument = Document;
             pDocumentId = DocumentId;
-            pDocumentSets = DocumentSets;
-            pDocumentSetsCount = DocumentSetsCount;
             pErrorData = ErrorData;
             pExtractUrl = ExtractUrl;
             pHighPriority = HighPriority;
@@ -205,8 +205,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public ImportDataBase With(int? pId = Id, DateTime? pCompletedOn = CompletedOn, Reference pDocument = Document, int? pDocumentId = DocumentId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pErrorData = ErrorData, string pExtractUrl = ExtractUrl, bool pHighPriority = HighPriority, bool pImportFr = ImportFr, Reference pImportLocation = ImportLocation, int? pImportLocationId = ImportLocationId, bool pImportNewName = ImportNewName, bool pImportTable = ImportTable, bool pImportText = ImportText, Reference pImportType = ImportType, int? pImportTypeId = ImportTypeId, bool pIsLegacy = IsLegacy, int? pOrder = Order, int? pReferenceId = ReferenceId, Reference pRequestedBy = RequestedBy, int? pRequestedById = RequestedById, DateTime? pRequestedOn = RequestedOn, DateTime? pStartedOn = StartedOn, Reference pStatus = Status, int? pStatusId = StatusId) => 
-        //	new ImportDataBase(pId, pCompletedOn, pDocument, pDocumentId, pDocumentSets, pDocumentSetsCount, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId);
+        //public ImportDataBase With(int? pId = Id, DateTime? pCompletedOn = CompletedOn, List<Reference> pDataSets = DataSets, int? pDataSetsCount = DataSetsCount, Reference pDocument = Document, int? pDocumentId = DocumentId, string pErrorData = ErrorData, string pExtractUrl = ExtractUrl, bool pHighPriority = HighPriority, bool pImportFr = ImportFr, Reference pImportLocation = ImportLocation, int? pImportLocationId = ImportLocationId, bool pImportNewName = ImportNewName, bool pImportTable = ImportTable, bool pImportText = ImportText, Reference pImportType = ImportType, int? pImportTypeId = ImportTypeId, bool pIsLegacy = IsLegacy, int? pOrder = Order, int? pReferenceId = ReferenceId, Reference pRequestedBy = RequestedBy, int? pRequestedById = RequestedById, DateTime? pRequestedOn = RequestedOn, DateTime? pStartedOn = StartedOn, Reference pStatus = Status, int? pStatusId = StatusId) => 
+        //	new ImportDataBase(pId, pCompletedOn, pDataSets, pDataSetsCount, pDocument, pDocumentId, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId);
 
     }
 
@@ -221,8 +221,8 @@ namespace Services.Dto
 
         public ImportData(int? id) : base(DocConvert.ToInt(id)) {}
         public ImportData(int id) : base(id) {}
-        public ImportData(int? pId, DateTime? pCompletedOn, Reference pDocument, int? pDocumentId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : 
-            base(pId, pCompletedOn, pDocument, pDocumentId, pDocumentSets, pDocumentSetsCount, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId) { }
+        public ImportData(int? pId, DateTime? pCompletedOn, List<Reference> pDataSets, int? pDataSetsCount, Reference pDocument, int? pDocumentId, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : 
+            base(pId, pCompletedOn, pDataSets, pDataSetsCount, pDocument, pDocumentId, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -240,7 +240,7 @@ namespace Services.Dto
 
         private List<string> _Select;
         [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(CompletedOn),nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(ErrorData),nameof(ExtractUrl),nameof(Gestalt),nameof(HighPriority),nameof(ImportFr),nameof(ImportLocation),nameof(ImportLocationId),nameof(ImportNewName),nameof(ImportTable),nameof(ImportText),nameof(ImportType),nameof(ImportTypeId),nameof(IsLegacy),nameof(Locked),nameof(Order),nameof(ReferenceId),nameof(RequestedBy),nameof(RequestedById),nameof(RequestedOn),nameof(StartedOn),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(CompletedOn),nameof(Created),nameof(CreatorId),nameof(DataSets),nameof(DataSetsCount),nameof(Document),nameof(DocumentId),nameof(ErrorData),nameof(ExtractUrl),nameof(Gestalt),nameof(HighPriority),nameof(ImportFr),nameof(ImportLocation),nameof(ImportLocationId),nameof(ImportNewName),nameof(ImportTable),nameof(ImportText),nameof(ImportType),nameof(ImportTypeId),nameof(IsLegacy),nameof(Locked),nameof(Order),nameof(ReferenceId),nameof(RequestedBy),nameof(RequestedById),nameof(RequestedOn),nameof(StartedOn),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
         public new List<string> Select
         {
             get
@@ -261,7 +261,7 @@ namespace Services.Dto
         #endregion Fields
         private List<string> _collections = new List<string>
         {
-            nameof(DocumentSets), nameof(DocumentSetsCount)
+            nameof(DataSets), nameof(DataSetsCount)
         };
         private List<string> collections { get { return _collections; } }
 
@@ -276,9 +276,9 @@ namespace Services.Dto
         public DateTime? CompletedOn { get; set; }
         public DateTime? CompletedOnAfter { get; set; }
         public DateTime? CompletedOnBefore { get; set; }
+        public List<int> DataSetsIds { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
-        public List<int> DocumentSetsIds { get; set; }
         public string ErrorData { get; set; }
         public string ExtractUrl { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
@@ -339,8 +339,8 @@ namespace Services.Dto
         public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Updated))); }
 
         public bool doCompletedOn { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.CompletedOn))); }
+        public bool doDataSets { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.DataSets))); }
         public bool doDocument { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.Document))); }
-        public bool doDocumentSets { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.DocumentSets))); }
         public bool doErrorData { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ErrorData))); }
         public bool doExtractUrl { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.ExtractUrl))); }
         public bool doHighPriority { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ImportData.HighPriority))); }

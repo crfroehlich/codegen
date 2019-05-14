@@ -100,17 +100,6 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(Length = int.MaxValue)]
-        public string AdditionalCriteria { get; set; }
-
-
-        [Field]
-        public DocEntitySet<DocEntityCharacteristic> Characteristics { get; private set; }
-
-
-        public int? CharacteristicsCount { get { return Characteristics.Count(); } private set { var noid = value; } }
-
-
         [Field]
         [Association(PairTo = nameof(DocEntityClient.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityClient> Clients { get; private set; }
@@ -119,19 +108,8 @@ namespace Services.Schema
         public int? ClientsCount { get { return Clients.Count(); } private set { var noid = value; } }
 
 
-        [Field]
-        public DocEntitySet<DocEntityComparator> Comparators { get; private set; }
-
-
-        public int? ComparatorsCount { get { return Comparators.Count(); } private set { var noid = value; } }
-
-
         [Field(Nullable = false, DefaultValue = false)]
         public bool Confidential { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string DataCollection { get; set; }
 
 
         [Field]
@@ -159,26 +137,6 @@ namespace Services.Schema
 
 
         [Field]
-        public int? EvidencePortalId { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string ExtractionProtocol { get; set; }
-
-
-        [Field]
-        public int? FqId { get; set; }
-
-
-        [Field]
-        public int? FramedQuestionId { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string GeneralScope { get; set; }
-
-
-        [Field]
         [Association(PairTo = nameof(DocEntityDocumentSetHistory.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocumentSetHistory> Histories { get; private set; }
 
@@ -186,70 +144,8 @@ namespace Services.Schema
         public int? HistoriesCount { get { return Histories.Count(); } private set { var noid = value; } }
 
 
-        [Field(DefaultValue = 9999)]
-        public int? ImportPriority { get; set; }
-
-
-        [Field]
-        [Association(PairTo = nameof(DocEntityImportData.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
-        public DocEntitySet<DocEntityImportData> Imports { get; private set; }
-
-
-        public int? ImportsCount { get { return Imports.Count(); } private set { var noid = value; } }
-
-
-        [Field(Length = int.MaxValue)]
-        public string Indications { get; set; }
-
-
-        [Field]
-        public DocEntitySet<DocEntityIntervention> Interventions { get; private set; }
-
-
-        public int? InterventionsCount { get { return Interventions.Count(); } private set { var noid = value; } }
-
-
-        [Field]
-        public int? LibraryPackageId { get; set; }
-
-
         [Field(Nullable = false)]
         public string Name { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string Notes { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string OriginalComparators { get; set; }
-
-
-        [Field]
-        public string OriginalDatabase { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string OriginalDesigns { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string OriginalInterventions { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string OriginalOutcomes { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string OriginalSearch { get; set; }
-
-
-        [Field]
-        public DocEntitySet<DocEntityOutcome> Outcomes { get; private set; }
-
-
-        public int? OutcomesCount { get { return Outcomes.Count(); } private set { var noid = value; } }
 
 
         [Field]
@@ -257,33 +153,9 @@ namespace Services.Schema
         public int? OwnerId { get { return Owner?.Id; } private set { var noid = value; } }
 
 
-        [Field(Length = int.MaxValue)]
-        public string Participants { get; set; }
-
-
-        [Field]
-        public string PRISMA { get; set; }
-
-
-        [Field]
-        [Association(PairTo = nameof(DocEntityProject.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
-        public DocEntitySet<DocEntityProject> Projects { get; private set; }
-
-
-        public int? ProjectsCount { get { return Projects.Count(); } private set { var noid = value; } }
-
-
         [Field]
         public DocEntityTeam ProjectTeam { get; set; }
         public int? ProjectTeamId { get { return ProjectTeam?.Id; } private set { var noid = value; } }
-
-
-        [Field]
-        public int? ProtocolReferenceId { get; set; }
-
-
-        [Field]
-        public string QUOROM { get; set; }
 
 
         [Field]
@@ -294,36 +166,8 @@ namespace Services.Schema
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
-        [Field]
-        public DateTime? SearchEnd { get; set; }
-
-
-        [Field]
-        public DateTime? SearchStart { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string SearchStrategy { get; set; }
-
-
-        [Field]
-        public DateTime? SearchUpdated { get; set; }
-
-
-        [Field(Length = int.MaxValue)]
-        public string SelectionCriteria { get; set; }
-
-
         [Field(Length = int.MaxValue)]
         public string Settings { get; set; }
-
-
-        [Field(DefaultValue = false)]
-        public bool ShowEtw { get; set; }
-
-
-        [Field(Nullable = false, DefaultValue = false)]
-        public bool ShowPublicationType { get; set; }
 
 
         [Field]
@@ -334,19 +178,8 @@ namespace Services.Schema
         public int? StatsCount { get { return Stats.Count(); } private set { var noid = value; } }
 
 
-        [Field]
-        public DocEntitySet<DocEntityStudyDesign> StudyDesigns { get; private set; }
-
-
-        public int? StudyDesignsCount { get { return StudyDesigns.Count(); } private set { var noid = value; } }
-
-
         [Field(Nullable = false, DefaultValue = DocumentSetTypeEnm.DATA_SET)]
         public DocumentSetTypeEnm Type { get; set; }
-
-
-        [Field]
-        public int? UpdateFrequency { get; set; }
 
 
         [Field]
@@ -443,9 +276,6 @@ namespace Services.Schema
         public override IDocEntity SaveChanges(bool ignoreCache, DocConstantPermission permission)
         {
             Name = Name?.TrimAndPruneSpaces();
-            OriginalDatabase = OriginalDatabase?.TrimAndPruneSpaces();
-            PRISMA = PRISMA?.TrimAndPruneSpaces();
-            QUOROM = QUOROM?.TrimAndPruneSpaces();
             return base.SaveChanges(ignoreCache, permission);
         }
 
@@ -477,11 +307,6 @@ namespace Services.Schema
                 {
                     isValid = false;
                     message += " Name is a required property.";
-                }
-                if(DocTools.IsNullOrEmpty(ShowPublicationType))
-                {
-                    isValid = false;
-                    message += " ShowPublicationType is a required property.";
                 }
                 if(DocTools.IsNullOrEmpty(Type))
                 {

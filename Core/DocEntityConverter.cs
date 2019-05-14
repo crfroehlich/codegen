@@ -121,6 +121,10 @@ namespace Services.Core
                     var enDataProperty = entity as DocEntityDataProperty;
                     ret = enDataProperty.ToDto() as TDto;
                     break;
+                case DocConstantModelName.DATASET:
+                    var enDataSet = entity as DocEntityDataSet;
+                    ret = enDataSet.ToDto() as TDto;
+                    break;
                 case DocConstantModelName.DATATAB:
                     var enDataTab = entity as DocEntityDataTab;
                     ret = enDataTab.ToDto() as TDto;
@@ -132,6 +136,10 @@ namespace Services.Core
                 case DocConstantModelName.DEFAULT:
                     var enDefault = entity as DocEntityDefault;
                     ret = enDefault.ToDto() as TDto;
+                    break;
+                case DocConstantModelName.DISEASESTATESET:
+                    var enDiseaseStateSet = entity as DocEntityDiseaseStateSet;
+                    ret = enDiseaseStateSet.ToDto() as TDto;
                     break;
                 case DocConstantModelName.DIVISION:
                     var enDivision = entity as DocEntityDivision;
@@ -196,6 +204,10 @@ namespace Services.Core
                 case DocConstantModelName.JUNCTION:
                     var enJunction = entity as DocEntityJunction;
                     ret = enJunction.ToDto() as TDto;
+                    break;
+                case DocConstantModelName.LIBRARYSET:
+                    var enLibrarySet = entity as DocEntityLibrarySet;
+                    ret = enLibrarySet.ToDto() as TDto;
                     break;
                 case DocConstantModelName.LOCALE:
                     var enLocale = entity as DocEntityLocale;
@@ -269,6 +281,10 @@ namespace Services.Core
                     var enScope = entity as DocEntityScope;
                     ret = enScope.ToDto() as TDto;
                     break;
+                case DocConstantModelName.SERVEPORTALSET:
+                    var enServePortalSet = entity as DocEntityServePortalSet;
+                    ret = enServePortalSet.ToDto() as TDto;
+                    break;
                 case DocConstantModelName.STATS:
                     var enStats = entity as DocEntityStats;
                     ret = enStats.ToDto() as TDto;
@@ -312,6 +328,10 @@ namespace Services.Core
                 case DocConstantModelName.TERMSYNONYM:
                     var enTermSynonym = entity as DocEntityTermSynonym;
                     ret = enTermSynonym.ToDto() as TDto;
+                    break;
+                case DocConstantModelName.THERAPEUTICAREASET:
+                    var enTherapeuticAreaSet = entity as DocEntityTherapeuticAreaSet;
+                    ret = enTherapeuticAreaSet.ToDto() as TDto;
                     break;
                 case DocConstantModelName.TIMECARD:
                     var enTimeCard = entity as DocEntityTimeCard;

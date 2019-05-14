@@ -122,7 +122,7 @@ namespace Services.Schema
 
 
         [Field]
-        public DocEntityDocumentSet Dataset { get; set; }
+        public DocEntityDataSet Dataset { get; set; }
         public int? DatasetId { get { return Dataset?.Id; } private set { var noid = value; } }
 
 
@@ -136,6 +136,11 @@ namespace Services.Schema
 
         [Field]
         public int? LegacyPackageId { get; set; }
+
+
+        [Field]
+        public DocEntityLibrarySet Library { get; set; }
+        public int? LibraryId { get { return Library?.Id; } private set { var noid = value; } }
 
 
         [Field]

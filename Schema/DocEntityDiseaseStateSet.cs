@@ -44,55 +44,55 @@ using ValueType = Services.Dto.ValueType;
 using Version = Services.Dto.Version;
 namespace Services.Schema
 {
-    [TableMapping(DocConstantModelName.DEFAULT)]
-    public partial class DocEntityDefault : DocEntityBase
+    [TableMapping(DocConstantModelName.DISEASESTATESET)]
+    public partial class DocEntityDiseaseStateSet : DocEntityDocumentSet
     {
-        private const string DEFAULT_CACHE = "DefaultCache";
-        public const string TABLE_NAME = DocConstantModelName.DEFAULT;
+        private const string DISEASESTATESET_CACHE = "DiseaseStateSetCache";
+        public const string TABLE_NAME = DocConstantModelName.DISEASESTATESET;
         
         #region Constructor
-        public DocEntityDefault(Session session) : base(session) {}
+        public DocEntityDiseaseStateSet(Session session) : base(session) {}
 
-        public DocEntityDefault() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
+        public DocEntityDiseaseStateSet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
         #endregion Constructor
 
-        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Default()));
+        protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DiseaseStateSet()));
 
         #region Static Members
-        public static DocEntityDefault Get(Reference reference)
+        public static DocEntityDiseaseStateSet Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
         }
 
-        public static DocEntityDefault Get(int? primaryKey)
+        public static DocEntityDiseaseStateSet Get(int? primaryKey)
         {
             var query = DocQuery.ActiveQuery;
             if(null == primaryKey) return null;
-            var ret = DocEntityThreadCache<DocEntityDefault>.GetFromCache(primaryKey, DEFAULT_CACHE);
+            var ret = DocEntityThreadCache<DocEntityDiseaseStateSet>.GetFromCache(primaryKey, DISEASESTATESET_CACHE);
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityDefault>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
+                ret = query.SelectAll<DocEntityDiseaseStateSet>().Where(e => e.Id == primaryKey.Value).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityDefault>.UpdateCache(ret.Id, ret, DEFAULT_CACHE);
-                    DocEntityThreadCache<DocEntityDefault>.UpdateCache(ret.Hash, ret, DEFAULT_CACHE);
+                    DocEntityThreadCache<DocEntityDiseaseStateSet>.UpdateCache(ret.Id, ret, DISEASESTATESET_CACHE);
+                    DocEntityThreadCache<DocEntityDiseaseStateSet>.UpdateCache(ret.Hash, ret, DISEASESTATESET_CACHE);
                 }
             }
             return ret;
         }
 
-        public static DocEntityDefault Get(Guid hash)
+        public static DocEntityDiseaseStateSet Get(Guid hash)
         {
             var query = DocQuery.ActiveQuery;
-            var ret = DocEntityThreadCache<DocEntityDefault>.GetFromCache(hash, DEFAULT_CACHE);
+            var ret = DocEntityThreadCache<DocEntityDiseaseStateSet>.GetFromCache(hash, DISEASESTATESET_CACHE);
             
             if(null == ret)
             {
-                ret = query.SelectAll<DocEntityDefault>().Where(e => e.Hash == hash).FirstOrDefault();
+                ret = query.SelectAll<DocEntityDiseaseStateSet>().Where(e => e.Hash == hash).FirstOrDefault();
                 if(null != ret) 
                 {
-                    DocEntityThreadCache<DocEntityDefault>.UpdateCache(ret.Id, ret, DEFAULT_CACHE);
-                    DocEntityThreadCache<DocEntityDefault>.UpdateCache(ret.Hash, ret, DEFAULT_CACHE);
+                    DocEntityThreadCache<DocEntityDiseaseStateSet>.UpdateCache(ret.Id, ret, DISEASESTATESET_CACHE);
+                    DocEntityThreadCache<DocEntityDiseaseStateSet>.UpdateCache(ret.Hash, ret, DISEASESTATESET_CACHE);
                 }
             }
             return ret;
@@ -100,50 +100,14 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(Nullable = false)]
-        public DocEntityDiseaseStateSet DiseaseState { get; set; }
-        public int? DiseaseStateId { get { return DiseaseState?.Id; } private set { var noid = value; } }
 
-
-        [Field]
-        public DocEntityRole Role { get; set; }
-        public int? RoleId { get { return Role?.Id; } private set { var noid = value; } }
-
-
-        [Field(Nullable = false)]
-        public DocEntityScope Scope { get; set; }
-        public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
-
-
-        [Field(Nullable = false)]
-        public DocEntityTherapeuticAreaSet TherapeuticArea { get; set; }
-        public int? TherapeuticAreaId { get { return TherapeuticArea?.Id; } private set { var noid = value; } }
-
-
-        [Field]
-        public override string Gestalt { get; set; }
-
-        [Field(DefaultValue = 0), Version(VersionMode.Manual)]
-        public override int VersionNo { get; set; }
-
-        [Field]
-        public override DateTime? Created { get; set; }
-
-        [Field]
-        public override DateTime? Updated { get; set; }
-
-        [Field(DefaultValue = false), FieldMapping(nameof(Locked))]
-        public override bool Locked { get; set; }
-
-        [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
-        public override bool Archived { get; set; }
         #endregion Properties
 
         #region Overrides of DocEntity
 
         public override DocConstantModelName TableName => TABLE_NAME;
 
-        public const string CACHE_KEY_PREFIX = "FindDefaults";
+        public const string CACHE_KEY_PREFIX = "FindDiseaseStateSets";
 
         #endregion Overrides of DocEntity
 
@@ -165,7 +129,7 @@ namespace Services.Schema
         {
             if (false == ValidationMessage.IsValid)
             {
-                throw new HttpError(HttpStatusCode.Conflict, $"Default requires: {ValidationMessage.Message}.");
+                throw new HttpError(HttpStatusCode.Conflict, $"DiseaseStateSet requires: {ValidationMessage.Message}.");
             }
 
             base.OnValidate();
@@ -197,21 +161,7 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(DocTools.IsNullOrEmpty(DiseaseState))
-                {
-                    isValid = false;
-                    message += " DiseaseState is a required property.";
-                }
-                if(DocTools.IsNullOrEmpty(Scope))
-                {
-                    isValid = false;
-                    message += " Scope is a required property.";
-                }
-                if(DocTools.IsNullOrEmpty(TherapeuticArea))
-                {
-                    isValid = false;
-                    message += " TherapeuticArea is a required property.";
-                }
+
 
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;
@@ -221,9 +171,10 @@ namespace Services.Schema
 
         #region Converters
 
-        public Default ToDto() => Mapper.Map<DocEntityDefault, Default>(this);
+        public DiseaseStateSet ToDto() => Mapper.Map<DocEntityDiseaseStateSet, DiseaseStateSet>(this);
 
-        public static explicit operator Default(DocEntityDefault en) => en?.ToDto();
+        public static explicit operator DiseaseStateSet(DocEntityDiseaseStateSet en) => en?.ToDto();
+        public static explicit operator DocumentSet(DocEntityDiseaseStateSet en) => (DocumentSet) en?.ToDto();
         public override IDto ToIDto() => ToDto();
         #endregion Converters
     }

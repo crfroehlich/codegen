@@ -156,6 +156,18 @@ namespace Services.Dto
     public partial class AdjudicatedRatingSearchBase : Search<AdjudicatedRating>
     {
         public int? Id { get; set; }
+        public Reference Assignee { get; set; }
+        public List<int> AssigneeIds { get; set; }
+        public string Data { get; set; }
+        public string Description { get; set; }
+        public DateTime? DueDate { get; set; }
+        public DateTime? DueDateAfter { get; set; }
+        public DateTime? DueDateBefore { get; set; }
+        public Reference Reporter { get; set; }
+        public List<int> ReporterIds { get; set; }
+        public TaskTypeEnm? Type { get; set; }
+        public Reference Workflow { get; set; }
+        public List<int> WorkflowIds { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
         public RatingEnm? Rating { get; set; }

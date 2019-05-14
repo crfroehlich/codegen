@@ -169,10 +169,10 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<Default>(DocConstantModelName.DEFAULT, nameof(Default), request);
             
             //First, assign all the variables, do database lookups and conversions
-            var pDiseaseState = (request.DiseaseState?.Id > 0) ? DocEntityDocumentSet.Get(request.DiseaseState.Id) : null;
+            var pDiseaseState = (request.DiseaseState?.Id > 0) ? DocEntityDiseaseStateSet.Get(request.DiseaseState.Id) : null;
             var pRole = (request.Role?.Id > 0) ? DocEntityRole.Get(request.Role.Id) : null;
             var pScope = (request.Scope?.Id > 0) ? DocEntityScope.Get(request.Scope.Id) : null;
-            var pTherapeuticArea = (request.TherapeuticArea?.Id > 0) ? DocEntityDocumentSet.Get(request.TherapeuticArea.Id) : null;
+            var pTherapeuticArea = (request.TherapeuticArea?.Id > 0) ? DocEntityTherapeuticAreaSet.Get(request.TherapeuticArea.Id) : null;
 
             DocEntityDefault entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -205,13 +205,13 @@ namespace Services.API
                 }
             }
 
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, request, pDiseaseState, permission, DocConstantModelName.DEFAULT, nameof(request.DiseaseState)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDiseaseStateSet>(currentUser, request, pDiseaseState, permission, DocConstantModelName.DEFAULT, nameof(request.DiseaseState)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDiseaseState, entity.DiseaseState, nameof(request.DiseaseState)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DEFAULT, nameof(request.DiseaseState)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.DiseaseState)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pDiseaseState) && DocResources.Metadata.IsRequired(DocConstantModelName.DEFAULT, nameof(request.DiseaseState))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.DiseaseState)} requires a value.");
                     entity.DiseaseState = pDiseaseState;
-                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pDiseaseState, nameof(request.DiseaseState)) && !request.Select.Matches(nameof(request.DiseaseState), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDiseaseStateSet>(request, pDiseaseState, nameof(request.DiseaseState)) && !request.Select.Matches(nameof(request.DiseaseState), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.DiseaseState));
                 }
@@ -238,13 +238,13 @@ namespace Services.API
                     request.Select.Add(nameof(request.Scope));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, request, pTherapeuticArea, permission, DocConstantModelName.DEFAULT, nameof(request.TherapeuticArea)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTherapeuticAreaSet>(currentUser, request, pTherapeuticArea, permission, DocConstantModelName.DEFAULT, nameof(request.TherapeuticArea)))
             {
                 if(DocPermissionFactory.IsRequested(request, pTherapeuticArea, entity.TherapeuticArea, nameof(request.TherapeuticArea)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DEFAULT, nameof(request.TherapeuticArea)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.TherapeuticArea)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pTherapeuticArea) && DocResources.Metadata.IsRequired(DocConstantModelName.DEFAULT, nameof(request.TherapeuticArea))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.TherapeuticArea)} requires a value.");
                     entity.TherapeuticArea = pTherapeuticArea;
-                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pTherapeuticArea, nameof(request.TherapeuticArea)) && !request.Select.Matches(nameof(request.TherapeuticArea), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityTherapeuticAreaSet>(request, pTherapeuticArea, nameof(request.TherapeuticArea)) && !request.Select.Matches(nameof(request.TherapeuticArea), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.TherapeuticArea));
                 }

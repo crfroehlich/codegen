@@ -105,15 +105,15 @@ namespace Services.Schema
 
 
         [Field]
-        public DocEntityDocument Document { get; set; }
-        public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
+        public DocEntitySet<DocEntityDataSet> DataSets { get; private set; }
+
+
+        public int? DataSetsCount { get { return DataSets.Count(); } private set { var noid = value; } }
 
 
         [Field]
-        public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
-
-
-        public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
+        public DocEntityDocument Document { get; set; }
+        public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
 
         [Field(Length = int.MaxValue)]

@@ -67,9 +67,9 @@ namespace Services.Dto
             TherapeuticAreaId = pTherapeuticAreaId;
         }
 
-        [ApiMember(Name = nameof(DiseaseState), Description = "DocumentSet", IsRequired = true)]
+        [ApiMember(Name = nameof(DiseaseState), Description = "DiseaseStateSet", IsRequired = true)]
         public Reference DiseaseState { get; set; }
-        [ApiMember(Name = nameof(DiseaseStateId), Description = "Primary Key of DocumentSet", IsRequired = false)]
+        [ApiMember(Name = nameof(DiseaseStateId), Description = "Primary Key of DiseaseStateSet", IsRequired = false)]
         public int? DiseaseStateId { get; set; }
 
 
@@ -85,9 +85,9 @@ namespace Services.Dto
         public int? ScopeId { get; set; }
 
 
-        [ApiMember(Name = nameof(TherapeuticArea), Description = "DocumentSet", IsRequired = true)]
+        [ApiMember(Name = nameof(TherapeuticArea), Description = "TherapeuticAreaSet", IsRequired = true)]
         public Reference TherapeuticArea { get; set; }
-        [ApiMember(Name = nameof(TherapeuticAreaId), Description = "Primary Key of DocumentSet", IsRequired = false)]
+        [ApiMember(Name = nameof(TherapeuticAreaId), Description = "Primary Key of TherapeuticAreaSet", IsRequired = false)]
         public int? TherapeuticAreaId { get; set; }
 
 

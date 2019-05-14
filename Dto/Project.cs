@@ -55,7 +55,7 @@ namespace Services.Dto
 
         public ProjectBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public ProjectBase(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pClient, int? pClientId, DateTime? pDatabaseDeadline, string pDatabaseName, Reference pDataset, int? pDatasetId, DateTime? pDeliverableDeadline, int? pFqId, int? pLegacyPackageId, int? pLibraryPackageId, string pLibraryPackageName, string pNumber, string pOperationsDeliverable, string pOpportunityId, string pOpportunityName, Reference pParent, int? pParentId, string pPICO, string pProjectId, string pProjectName, Reference pStatus, int? pStatusId, List<Reference> pTimeCards, int? pTimeCardsCount) : this(DocConvert.ToInt(pId)) 
+        public ProjectBase(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pClient, int? pClientId, DateTime? pDatabaseDeadline, string pDatabaseName, Reference pDataset, int? pDatasetId, DateTime? pDeliverableDeadline, int? pFqId, int? pLegacyPackageId, Reference pLibrary, int? pLibraryId, int? pLibraryPackageId, string pLibraryPackageName, string pNumber, string pOperationsDeliverable, string pOpportunityId, string pOpportunityName, Reference pParent, int? pParentId, string pPICO, string pProjectId, string pProjectName, Reference pStatus, int? pStatusId, List<Reference> pTimeCards, int? pTimeCardsCount) : this(DocConvert.ToInt(pId)) 
         {
             Children = pChildren;
             ChildrenCount = pChildrenCount;
@@ -68,6 +68,8 @@ namespace Services.Dto
             DeliverableDeadline = pDeliverableDeadline;
             FqId = pFqId;
             LegacyPackageId = pLegacyPackageId;
+            Library = pLibrary;
+            LibraryId = pLibraryId;
             LibraryPackageId = pLibraryPackageId;
             LibraryPackageName = pLibraryPackageName;
             Number = pNumber;
@@ -104,9 +106,9 @@ namespace Services.Dto
         public string DatabaseName { get; set; }
 
 
-        [ApiMember(Name = nameof(Dataset), Description = "DocumentSet", IsRequired = false)]
+        [ApiMember(Name = nameof(Dataset), Description = "DataSet", IsRequired = false)]
         public Reference Dataset { get; set; }
-        [ApiMember(Name = nameof(DatasetId), Description = "Primary Key of DocumentSet", IsRequired = false)]
+        [ApiMember(Name = nameof(DatasetId), Description = "Primary Key of DataSet", IsRequired = false)]
         public int? DatasetId { get; set; }
 
 
@@ -120,6 +122,12 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(LegacyPackageId), Description = "int?", IsRequired = false)]
         public int? LegacyPackageId { get; set; }
+
+
+        [ApiMember(Name = nameof(Library), Description = "LibrarySet", IsRequired = false)]
+        public Reference Library { get; set; }
+        [ApiMember(Name = nameof(LibraryId), Description = "Primary Key of LibrarySet", IsRequired = false)]
+        public int? LibraryId { get; set; }
 
 
         [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
@@ -177,7 +185,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out List<Reference> pChildren, out int? pChildrenCount, out Reference pClient, out int? pClientId, out DateTime? pDatabaseDeadline, out string pDatabaseName, out Reference pDataset, out int? pDatasetId, out DateTime? pDeliverableDeadline, out int? pFqId, out int? pLegacyPackageId, out int? pLibraryPackageId, out string pLibraryPackageName, out string pNumber, out string pOperationsDeliverable, out string pOpportunityId, out string pOpportunityName, out Reference pParent, out int? pParentId, out string pPICO, out string pProjectId, out string pProjectName, out Reference pStatus, out int? pStatusId, out List<Reference> pTimeCards, out int? pTimeCardsCount)
+        public void Deconstruct(out List<Reference> pChildren, out int? pChildrenCount, out Reference pClient, out int? pClientId, out DateTime? pDatabaseDeadline, out string pDatabaseName, out Reference pDataset, out int? pDatasetId, out DateTime? pDeliverableDeadline, out int? pFqId, out int? pLegacyPackageId, out Reference pLibrary, out int? pLibraryId, out int? pLibraryPackageId, out string pLibraryPackageName, out string pNumber, out string pOperationsDeliverable, out string pOpportunityId, out string pOpportunityName, out Reference pParent, out int? pParentId, out string pPICO, out string pProjectId, out string pProjectName, out Reference pStatus, out int? pStatusId, out List<Reference> pTimeCards, out int? pTimeCardsCount)
         {
             pChildren = Children;
             pChildrenCount = ChildrenCount;
@@ -190,6 +198,8 @@ namespace Services.Dto
             pDeliverableDeadline = DeliverableDeadline;
             pFqId = FqId;
             pLegacyPackageId = LegacyPackageId;
+            pLibrary = Library;
+            pLibraryId = LibraryId;
             pLibraryPackageId = LibraryPackageId;
             pLibraryPackageName = LibraryPackageName;
             pNumber = Number;
@@ -208,8 +218,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public ProjectBase With(int? pId = Id, List<Reference> pChildren = Children, int? pChildrenCount = ChildrenCount, Reference pClient = Client, int? pClientId = ClientId, DateTime? pDatabaseDeadline = DatabaseDeadline, string pDatabaseName = DatabaseName, Reference pDataset = Dataset, int? pDatasetId = DatasetId, DateTime? pDeliverableDeadline = DeliverableDeadline, int? pFqId = FqId, int? pLegacyPackageId = LegacyPackageId, int? pLibraryPackageId = LibraryPackageId, string pLibraryPackageName = LibraryPackageName, string pNumber = Number, string pOperationsDeliverable = OperationsDeliverable, string pOpportunityId = OpportunityId, string pOpportunityName = OpportunityName, Reference pParent = Parent, int? pParentId = ParentId, string pPICO = PICO, string pProjectId = ProjectId, string pProjectName = ProjectName, Reference pStatus = Status, int? pStatusId = StatusId, List<Reference> pTimeCards = TimeCards, int? pTimeCardsCount = TimeCardsCount) => 
-        //	new ProjectBase(pId, pChildren, pChildrenCount, pClient, pClientId, pDatabaseDeadline, pDatabaseName, pDataset, pDatasetId, pDeliverableDeadline, pFqId, pLegacyPackageId, pLibraryPackageId, pLibraryPackageName, pNumber, pOperationsDeliverable, pOpportunityId, pOpportunityName, pParent, pParentId, pPICO, pProjectId, pProjectName, pStatus, pStatusId, pTimeCards, pTimeCardsCount);
+        //public ProjectBase With(int? pId = Id, List<Reference> pChildren = Children, int? pChildrenCount = ChildrenCount, Reference pClient = Client, int? pClientId = ClientId, DateTime? pDatabaseDeadline = DatabaseDeadline, string pDatabaseName = DatabaseName, Reference pDataset = Dataset, int? pDatasetId = DatasetId, DateTime? pDeliverableDeadline = DeliverableDeadline, int? pFqId = FqId, int? pLegacyPackageId = LegacyPackageId, Reference pLibrary = Library, int? pLibraryId = LibraryId, int? pLibraryPackageId = LibraryPackageId, string pLibraryPackageName = LibraryPackageName, string pNumber = Number, string pOperationsDeliverable = OperationsDeliverable, string pOpportunityId = OpportunityId, string pOpportunityName = OpportunityName, Reference pParent = Parent, int? pParentId = ParentId, string pPICO = PICO, string pProjectId = ProjectId, string pProjectName = ProjectName, Reference pStatus = Status, int? pStatusId = StatusId, List<Reference> pTimeCards = TimeCards, int? pTimeCardsCount = TimeCardsCount) => 
+        //	new ProjectBase(pId, pChildren, pChildrenCount, pClient, pClientId, pDatabaseDeadline, pDatabaseName, pDataset, pDatasetId, pDeliverableDeadline, pFqId, pLegacyPackageId, pLibrary, pLibraryId, pLibraryPackageId, pLibraryPackageName, pNumber, pOperationsDeliverable, pOpportunityId, pOpportunityName, pParent, pParentId, pPICO, pProjectId, pProjectName, pStatus, pStatusId, pTimeCards, pTimeCardsCount);
 
     }
 
@@ -224,8 +234,8 @@ namespace Services.Dto
 
         public Project(int? id) : base(DocConvert.ToInt(id)) {}
         public Project(int id) : base(id) {}
-        public Project(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pClient, int? pClientId, DateTime? pDatabaseDeadline, string pDatabaseName, Reference pDataset, int? pDatasetId, DateTime? pDeliverableDeadline, int? pFqId, int? pLegacyPackageId, int? pLibraryPackageId, string pLibraryPackageName, string pNumber, string pOperationsDeliverable, string pOpportunityId, string pOpportunityName, Reference pParent, int? pParentId, string pPICO, string pProjectId, string pProjectName, Reference pStatus, int? pStatusId, List<Reference> pTimeCards, int? pTimeCardsCount) : 
-            base(pId, pChildren, pChildrenCount, pClient, pClientId, pDatabaseDeadline, pDatabaseName, pDataset, pDatasetId, pDeliverableDeadline, pFqId, pLegacyPackageId, pLibraryPackageId, pLibraryPackageName, pNumber, pOperationsDeliverable, pOpportunityId, pOpportunityName, pParent, pParentId, pPICO, pProjectId, pProjectName, pStatus, pStatusId, pTimeCards, pTimeCardsCount) { }
+        public Project(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pClient, int? pClientId, DateTime? pDatabaseDeadline, string pDatabaseName, Reference pDataset, int? pDatasetId, DateTime? pDeliverableDeadline, int? pFqId, int? pLegacyPackageId, Reference pLibrary, int? pLibraryId, int? pLibraryPackageId, string pLibraryPackageName, string pNumber, string pOperationsDeliverable, string pOpportunityId, string pOpportunityName, Reference pParent, int? pParentId, string pPICO, string pProjectId, string pProjectName, Reference pStatus, int? pStatusId, List<Reference> pTimeCards, int? pTimeCardsCount) : 
+            base(pId, pChildren, pChildrenCount, pClient, pClientId, pDatabaseDeadline, pDatabaseName, pDataset, pDatasetId, pDeliverableDeadline, pFqId, pLegacyPackageId, pLibrary, pLibraryId, pLibraryPackageId, pLibraryPackageName, pNumber, pOperationsDeliverable, pOpportunityId, pOpportunityName, pParent, pParentId, pPICO, pProjectId, pProjectName, pStatus, pStatusId, pTimeCards, pTimeCardsCount) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -243,7 +253,7 @@ namespace Services.Dto
 
         private List<string> _Select;
         [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LegacyPackageId),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(OpportunityId),nameof(OpportunityName),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(ProjectId),nameof(ProjectName),nameof(Status),nameof(StatusId),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Children),nameof(ChildrenCount),nameof(Client),nameof(ClientId),nameof(Created),nameof(CreatorId),nameof(DatabaseDeadline),nameof(DatabaseName),nameof(Dataset),nameof(DatasetId),nameof(DeliverableDeadline),nameof(FqId),nameof(Gestalt),nameof(LegacyPackageId),nameof(Library),nameof(LibraryId),nameof(LibraryPackageId),nameof(LibraryPackageName),nameof(Locked),nameof(Number),nameof(OperationsDeliverable),nameof(OpportunityId),nameof(OpportunityName),nameof(Parent),nameof(ParentId),nameof(PICO),nameof(ProjectId),nameof(ProjectName),nameof(Status),nameof(StatusId),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> Select
         {
             get
@@ -292,6 +302,8 @@ namespace Services.Dto
         public DateTime? DeliverableDeadlineBefore { get; set; }
         public int? FqId { get; set; }
         public int? LegacyPackageId { get; set; }
+        public Reference Library { get; set; }
+        public List<int> LibraryIds { get; set; }
         public int? LibraryPackageId { get; set; }
         public string LibraryPackageName { get; set; }
         public string Number { get; set; }
@@ -339,6 +351,7 @@ namespace Services.Dto
         public bool doDeliverableDeadline { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Project.DeliverableDeadline))); }
         public bool doFqId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Project.FqId))); }
         public bool doLegacyPackageId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Project.LegacyPackageId))); }
+        public bool doLibrary { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Project.Library))); }
         public bool doLibraryPackageId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Project.LibraryPackageId))); }
         public bool doLibraryPackageName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Project.LibraryPackageName))); }
         public bool doNumber { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(Project.Number))); }

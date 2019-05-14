@@ -77,10 +77,6 @@ namespace Services.Enums
         RUN_TIMECARD_RULES = 139850830,
         [EnumMember(Value = DocConstantJob.STUDYSET_HISTORY)]
         STUDYSET_HISTORY = 139850831,
-        [EnumMember(Value = DocConstantJob.SYNC_DATA_SETS)]
-        SYNC_DATA_SETS = 139850834,
-        [EnumMember(Value = DocConstantJob.SYNC_LEGACY_STUDIES)]
-        SYNC_LEGACY_STUDIES = 139850832,
         [EnumMember(Value = DocConstantJob.SYNC_LOOKUP_TABLES)]
         SYNC_LOOKUP_TABLES = 139850833,
         [EnumMember(Value = DocConstantJob.SYNC_USERS)]
@@ -123,10 +119,6 @@ namespace Services.Enums
                     return DocConstantJob.RUN_TIMECARD_RULES;
                 case JobEnm.STUDYSET_HISTORY:
                     return DocConstantJob.STUDYSET_HISTORY;
-                case JobEnm.SYNC_DATA_SETS:
-                    return DocConstantJob.SYNC_DATA_SETS;
-                case JobEnm.SYNC_LEGACY_STUDIES:
-                    return DocConstantJob.SYNC_LEGACY_STUDIES;
                 case JobEnm.SYNC_LOOKUP_TABLES:
                     return DocConstantJob.SYNC_LOOKUP_TABLES;
                 case JobEnm.SYNC_USERS:
@@ -154,8 +146,6 @@ namespace Services.Enums
         public const string REASSIGN_ARCHIVED_USERS = "ReassignArchivedUsers";
         public const string RUN_TIMECARD_RULES = "RunTimecardRules";
         public const string STUDYSET_HISTORY = "StudySetHistory";
-        public const string SYNC_DATA_SETS = "SyncDataSets";
-        public const string SYNC_LEGACY_STUDIES = "SyncLegacyStudies";
         public const string SYNC_LOOKUP_TABLES = "SyncLookupTables";
         public const string SYNC_USERS = "SyncUsers";
         

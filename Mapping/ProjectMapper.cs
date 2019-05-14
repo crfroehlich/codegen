@@ -72,6 +72,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.DeliverableDeadline, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.DeliverableDeadline))))
                 .ForMember(dest => dest.FqId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.FqId))))
                 .ForMember(dest => dest.LegacyPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LegacyPackageId))))
+                .ForMember(dest => dest.Library, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Library))))
+                .ForMember(dest => dest.LibraryId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LibraryId))))
                 .ForMember(dest => dest.LibraryPackageId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LibraryPackageId))))
                 .ForMember(dest => dest.LibraryPackageName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.LibraryPackageName))))
                 .ForMember(dest => dest.Number, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Number))))

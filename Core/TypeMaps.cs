@@ -61,6 +61,11 @@ namespace Services.Schema
     {
         public static List<TypeMap> Maps { get; } = new List<TypeMap>
         {
+            new TypeMap() { SchemaName = typeof(DocEntityServePortalSet).FullName, TypeId = 21085, TableName = DocConstantModelName.SERVEPORTALSET, ClassName = "ServePortalSet", DtoName = nameof(ServePortalSet) },
+            new TypeMap() { SchemaName = typeof(DocEntityDataSet).FullName, TypeId = 20985, TableName = DocConstantModelName.DATASET, ClassName = "DataSet", DtoName = nameof(DataSet) },
+            new TypeMap() { SchemaName = typeof(DocEntityLibrarySet).FullName, TypeId = 20885, TableName = DocConstantModelName.LIBRARYSET, ClassName = "LibrarySet", DtoName = nameof(LibrarySet) },
+            new TypeMap() { SchemaName = typeof(DocEntityDiseaseStateSet).FullName, TypeId = 20785, TableName = DocConstantModelName.DISEASESTATESET, ClassName = "DiseaseStateSet", DtoName = nameof(DiseaseStateSet) },
+            new TypeMap() { SchemaName = typeof(DocEntityTherapeuticAreaSet).FullName, TypeId = 20685, TableName = DocConstantModelName.THERAPEUTICAREASET, ClassName = "TherapeuticAreaSet", DtoName = nameof(TherapeuticAreaSet) },
             new TypeMap() { SchemaName = typeof(DocEntityAdjudicatedRating).FullName, TypeId = 20585, TableName = DocConstantModelName.ADJUDICATEDRATING, ClassName = "AdjudicatedRating", DtoName = nameof(AdjudicatedRating) },
             new TypeMap() { SchemaName = typeof(DocEntityFavorite).FullName, TypeId = 20485, TableName = DocConstantModelName.FAVORITE, ClassName = "Favorite", DtoName = nameof(Favorite) },
             new TypeMap() { SchemaName = typeof(DocEntityEoD).FullName, TypeId = 20385, TableName = DocConstantModelName.EOD, ClassName = "EoD", DtoName = nameof(EoD) },

@@ -63,9 +63,11 @@ namespace Services.Core
             public static Expression<Func<DocEntityDatabaseVersion, bool>> DatabaseVersionIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDataClass, bool>> DataClassIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDataProperty, bool>> DataPropertyIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityDataSet, bool>> DataSetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDataTab, bool>> DataTabIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDateTime, bool>> DateTimeIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDefault, bool>> DefaultIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityDiseaseStateSet, bool>> DiseaseStateSetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDivision, bool>> DivisionIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDocument, bool>> DocumentIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDocumentSet, bool>> DocumentSetIgnoreArchived() => d => d.Archived == false;
@@ -82,6 +84,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityInterval, bool>> IntervalIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityIntervention, bool>> InterventionIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityJunction, bool>> JunctionIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityLibrarySet, bool>> LibrarySetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityLocale, bool>> LocaleIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityLocaleLookup, bool>> LocaleLookupIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityLookupCategory, bool>> LookupCategoryIgnoreArchived() => d => d.Archived == false;
@@ -100,6 +103,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityReleaseStatus, bool>> ReleaseStatusIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityRole, bool>> RoleIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityScope, bool>> ScopeIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityServePortalSet, bool>> ServePortalSetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityStats, bool>> StatsIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityStatsRecord, bool>> StatsRecordIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityStatsStudySet, bool>> StatsStudySetIgnoreArchived() => d => d.Archived == false;
@@ -111,6 +115,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityTermCategory, bool>> TermCategoryIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTermMaster, bool>> TermMasterIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTermSynonym, bool>> TermSynonymIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityTherapeuticAreaSet, bool>> TherapeuticAreaSetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTimeCard, bool>> TimeCardIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityTimePoint, bool>> TimePointIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityUnitConversionRules, bool>> UnitConversionRulesIgnoreArchived() => d => d.Archived == false;

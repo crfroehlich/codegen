@@ -80,8 +80,10 @@ namespace Services.Core
             cfg.AddProfile<DatabaseVersionMapper>();
             cfg.AddProfile<DataClassMapper>();
             cfg.AddProfile<DataPropertyMapper>();
+            cfg.AddProfile<DataSetMapper>();
             cfg.AddProfile<DataTabMapper>();
             cfg.AddProfile<DefaultMapper>();
+            cfg.AddProfile<DiseaseStateSetMapper>();
             cfg.AddProfile<DivisionMapper>();
             cfg.AddProfile<DocumentMapper>();
             cfg.AddProfile<DocumentSetMapper>();
@@ -98,6 +100,7 @@ namespace Services.Core
             cfg.AddProfile<IntervalMapper>();
             cfg.AddProfile<InterventionMapper>();
             cfg.AddProfile<JunctionMapper>();
+            cfg.AddProfile<LibrarySetMapper>();
             cfg.AddProfile<LocaleMapper>();
             cfg.AddProfile<LocaleLookupMapper>();
             cfg.AddProfile<LookupCategoryMapper>();
@@ -116,6 +119,7 @@ namespace Services.Core
             cfg.AddProfile<ReleaseStatusMapper>();
             cfg.AddProfile<RoleMapper>();
             cfg.AddProfile<ScopeMapper>();
+            cfg.AddProfile<ServePortalSetMapper>();
             cfg.AddProfile<StatsMapper>();
             cfg.AddProfile<StatsRecordMapper>();
             cfg.AddProfile<StatsStudySetMapper>();
@@ -127,6 +131,7 @@ namespace Services.Core
             cfg.AddProfile<TermCategoryMapper>();
             cfg.AddProfile<TermMasterMapper>();
             cfg.AddProfile<TermSynonymMapper>();
+            cfg.AddProfile<TherapeuticAreaSetMapper>();
             cfg.AddProfile<TimeCardMapper>();
             cfg.AddProfile<TimePointMapper>();
             cfg.AddProfile<UnitConversionRulesMapper>();

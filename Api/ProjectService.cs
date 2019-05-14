@@ -136,6 +136,14 @@ namespace Services.API
                     entities = entities.Where(en => request.FqId.Value == en.FqId);
                 if(request.LegacyPackageId.HasValue)
                     entities = entities.Where(en => request.LegacyPackageId.Value == en.LegacyPackageId);
+                if(!DocTools.IsNullOrEmpty(request.Library) && !DocTools.IsNullOrEmpty(request.Library.Id))
+                {
+                    entities = entities.Where(en => en.Library.Id == request.Library.Id );
+                }
+                if(true == request.LibraryIds?.Any())
+                {
+                    entities = entities.Where(en => en.Library.Id.In(request.LibraryIds));
+                }
                 if(request.LibraryPackageId.HasValue)
                     entities = entities.Where(en => request.LibraryPackageId.Value == en.LibraryPackageId);
                 if(!DocTools.IsNullOrEmpty(request.LibraryPackageName))
@@ -225,10 +233,11 @@ namespace Services.API
             var pClient = (request.Client?.Id > 0) ? DocEntityClient.Get(request.Client.Id) : null;
             var pDatabaseDeadline = request.DatabaseDeadline;
             var pDatabaseName = request.DatabaseName;
-            var pDataset = (request.Dataset?.Id > 0) ? DocEntityDocumentSet.Get(request.Dataset.Id) : null;
+            var pDataset = (request.Dataset?.Id > 0) ? DocEntityDataSet.Get(request.Dataset.Id) : null;
             var pDeliverableDeadline = request.DeliverableDeadline;
             var pFqId = request.FqId;
             var pLegacyPackageId = request.LegacyPackageId;
+            var pLibrary = (request.Library?.Id > 0) ? DocEntityLibrarySet.Get(request.Library.Id) : null;
             var pLibraryPackageId = request.LibraryPackageId;
             var pLibraryPackageName = request.LibraryPackageName;
             var pNumber = request.Number;
@@ -306,13 +315,13 @@ namespace Services.API
                     request.Select.Add(nameof(request.DatabaseName));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, request, pDataset, permission, DocConstantModelName.PROJECT, nameof(request.Dataset)))
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDataSet>(currentUser, request, pDataset, permission, DocConstantModelName.PROJECT, nameof(request.Dataset)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDataset, entity.Dataset, nameof(request.Dataset)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.PROJECT, nameof(request.Dataset)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Dataset)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pDataset) && DocResources.Metadata.IsRequired(DocConstantModelName.PROJECT, nameof(request.Dataset))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Dataset)} requires a value.");
                     entity.Dataset = pDataset;
-                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pDataset, nameof(request.Dataset)) && !request.Select.Matches(nameof(request.Dataset), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<DocEntityDataSet>(request, pDataset, nameof(request.Dataset)) && !request.Select.Matches(nameof(request.Dataset), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Dataset));
                 }
@@ -348,6 +357,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<int?>(request, pLegacyPackageId, nameof(request.LegacyPackageId)) && !request.Select.Matches(nameof(request.LegacyPackageId), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.LegacyPackageId));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLibrarySet>(currentUser, request, pLibrary, permission, DocConstantModelName.PROJECT, nameof(request.Library)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pLibrary, entity.Library, nameof(request.Library)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.PROJECT, nameof(request.Library)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Library)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pLibrary) && DocResources.Metadata.IsRequired(DocConstantModelName.PROJECT, nameof(request.Library))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Library)} requires a value.");
+                    entity.Library = pLibrary;
+                if(DocPermissionFactory.IsRequested<DocEntityLibrarySet>(request, pLibrary, nameof(request.Library)) && !request.Select.Matches(nameof(request.Library), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Library));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pLibraryPackageId, permission, DocConstantModelName.PROJECT, nameof(request.LibraryPackageId)))
@@ -662,6 +682,7 @@ namespace Services.API
                     var pDeliverableDeadline = entity.DeliverableDeadline;
                     var pFqId = entity.FqId;
                     var pLegacyPackageId = entity.LegacyPackageId;
+                    var pLibrary = entity.Library;
                     var pLibraryPackageId = entity.LibraryPackageId;
                     var pLibraryPackageName = entity.LibraryPackageName;
                     if(!DocTools.IsNullOrEmpty(pLibraryPackageName))
@@ -702,6 +723,7 @@ namespace Services.API
                                 , DeliverableDeadline = pDeliverableDeadline
                                 , FqId = pFqId
                                 , LegacyPackageId = pLegacyPackageId
+                                , Library = pLibrary
                                 , LibraryPackageId = pLibraryPackageId
                                 , LibraryPackageName = pLibraryPackageName
                                 , Number = pNumber

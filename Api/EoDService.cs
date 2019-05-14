@@ -98,6 +98,40 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Locked.In(request.Locked));
                 }
+                if(!DocTools.IsNullOrEmpty(request.Assignee) && !DocTools.IsNullOrEmpty(request.Assignee.Id))
+                {
+                    entities = entities.Where(en => en.Assignee.Id == request.Assignee.Id );
+                }
+                if(true == request.AssigneeIds?.Any())
+                {
+                    entities = entities.Where(en => en.Assignee.Id.In(request.AssigneeIds));
+                }
+                if(!DocTools.IsNullOrEmpty(request.Description))
+                    entities = entities.Where(en => en.Description.Contains(request.Description));
+                if(!DocTools.IsNullOrEmpty(request.DueDate))
+                    entities = entities.Where(en => null != en.DueDate && request.DueDate.Value.Date == en.DueDate.Value.Date);
+                if(!DocTools.IsNullOrEmpty(request.DueDateBefore))
+                    entities = entities.Where(en => en.DueDate <= request.DueDateBefore);
+                if(!DocTools.IsNullOrEmpty(request.DueDateAfter))
+                    entities = entities.Where(en => en.DueDate >= request.DueDateAfter);
+                if(!DocTools.IsNullOrEmpty(request.Reporter) && !DocTools.IsNullOrEmpty(request.Reporter.Id))
+                {
+                    entities = entities.Where(en => en.Reporter.Id == request.Reporter.Id );
+                }
+                if(true == request.ReporterIds?.Any())
+                {
+                    entities = entities.Where(en => en.Reporter.Id.In(request.ReporterIds));
+                }
+                if(request.Type.HasValue)
+                    entities = entities.Where(en => request.Type.Value == en.Type);
+                if(!DocTools.IsNullOrEmpty(request.Workflow) && !DocTools.IsNullOrEmpty(request.Workflow.Id))
+                {
+                    entities = entities.Where(en => en.Workflow.Id == request.Workflow.Id );
+                }
+                if(true == request.WorkflowIds?.Any())
+                {
+                    entities = entities.Where(en => en.Workflow.Id.In(request.WorkflowIds));
+                }
                 if(!DocTools.IsNullOrEmpty(request.Document) && !DocTools.IsNullOrEmpty(request.Document.Id))
                 {
                     entities = entities.Where(en => en.Document.Id == request.Document.Id );
