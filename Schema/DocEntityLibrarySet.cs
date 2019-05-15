@@ -173,7 +173,7 @@ namespace Services.Schema
 
 
         [Field]
-        [Association(PairTo = nameof(DocEntityProject.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
+        [Association(PairTo = nameof(DocEntityProject.Library), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityProject> Projects { get; private set; }
 
 

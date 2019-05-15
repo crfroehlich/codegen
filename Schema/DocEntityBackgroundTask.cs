@@ -146,7 +146,7 @@ namespace Services.Schema
         public bool LogInfo { get; set; }
 
 
-        [Field(Nullable = false)]
+        [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
 
 

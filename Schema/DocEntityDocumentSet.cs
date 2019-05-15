@@ -144,7 +144,7 @@ namespace Services.Schema
         public int? HistoriesCount { get { return Histories.Count(); } private set { var noid = value; } }
 
 
-        [Field(Nullable = false)]
+        [Field(Nullable = false, Length = 400)]
         public string Name { get; set; }
 
 

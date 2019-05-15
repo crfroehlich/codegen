@@ -125,7 +125,7 @@ namespace Services.Schema
         public bool Exclusive { get; set; }
 
 
-        [Field(Nullable = false)]
+        [Field(Nullable = false, Length = 200)]
         public string Name { get; set; }
 
 
