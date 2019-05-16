@@ -185,8 +185,7 @@ namespace Services.Schema
 
 
         [Field]
-        public DocEntityLookupTable Status { get; set; }
-        public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
+        public ForeignKeyStatusEnm? Status { get; set; }
 
 
         [Field]
@@ -289,11 +288,7 @@ namespace Services.Schema
                 var isValid = true;
                 var message = string.Empty;
 
-                if(null != Status && Status?.Enum?.Name != "ForeignKeyStatus")
-                {
-                    isValid = false;
-                    message += " Status is a " + Status?.Enum?.Name + ", but must be a ForeignKeyStatus.";
-                }
+
 
                 var ret = new DocValidationMessage(message, isValid);
                 return ret;

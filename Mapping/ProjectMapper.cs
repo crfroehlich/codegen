@@ -86,7 +86,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.ProjectId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ProjectId))))
                 .ForMember(dest => dest.ProjectName, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.ProjectName))))
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.Status))))
-                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.StatusId))))
                 .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCards))))
                 .ForMember(dest => dest.TimeCardsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Project>(c, nameof(DocEntityProject.TimeCardsCount))))
                 .MaxDepth(2);

@@ -170,22 +170,8 @@ namespace Services.API
                     entities = entities.Where(en => en.ProjectId.Contains(request.ProjectId));
                 if(!DocTools.IsNullOrEmpty(request.ProjectName))
                     entities = entities.Where(en => en.ProjectName.Contains(request.ProjectName));
-                if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Id))
-                {
-                    entities = entities.Where(en => en.Status.Id == request.Status.Id );
-                }
-                if(true == request.StatusIds?.Any())
-                {
-                    entities = entities.Where(en => en.Status.Id.In(request.StatusIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Name))
-                {
-                    entities = entities.Where(en => en.Status.Name == request.Status.Name );
-                }
-                if(true == request.StatusNames?.Any())
-                {
-                    entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
-                }
+                if(request.Status.HasValue)
+                    entities = entities.Where(en => request.Status.Value == en.Status);
                 if(true == request.TimeCardsIds?.Any())
                 {
                     entities = entities.Where(en => en.TimeCards.Any(r => r.Id.In(request.TimeCardsIds)));
@@ -248,7 +234,7 @@ namespace Services.API
             var pPICO = request.PICO;
             var pProjectId = request.ProjectId;
             var pProjectName = request.ProjectName;
-            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.FOREIGNKEYSTATUS, request.Status?.Name, request.Status?.Id);
+            var pStatus = request.Status;
             var pTimeCards = request.TimeCards?.ToList();
 
             DocEntityProject entity = null;
@@ -480,13 +466,13 @@ namespace Services.API
                     request.Select.Add(nameof(request.ProjectName));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.PROJECT, nameof(request.Status)))
+            if (DocPermissionFactory.IsRequestedHasPermission<ForeignKeyStatusEnm?>(currentUser, request, pStatus, permission, DocConstantModelName.PROJECT, nameof(request.Status)))
             {
-                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
+                if(DocPermissionFactory.IsRequested(request, (int?) pStatus, (int?) entity.Status, nameof(request.Status)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.PROJECT, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.PROJECT, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
                     entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.Select.Matches(nameof(request.Status), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<ForeignKeyStatusEnm?>(request, pStatus, nameof(request.Status)) && !request.Select.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Status));
                 }
