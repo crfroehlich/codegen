@@ -105,14 +105,14 @@ namespace Services.Schema
 
 
         [Field]
-        public DocEntitySet<DocEntityCharacteristic> Characteristics { get; private set; }
+        public DocEntitySet<DocEntityTag> Characteristics { get; private set; }
 
 
         public int? CharacteristicsCount { get { return Characteristics.Count(); } private set { var noid = value; } }
 
 
         [Field]
-        public DocEntitySet<DocEntityComparator> Comparators { get; private set; }
+        public DocEntitySet<DocEntityTag> Comparators { get; private set; }
 
 
         public int? ComparatorsCount { get { return Comparators.Count(); } private set { var noid = value; } }
@@ -155,7 +155,7 @@ namespace Services.Schema
 
 
         [Field]
-        public DocEntitySet<DocEntityIntervention> Interventions { get; private set; }
+        public DocEntitySet<DocEntityTag> Interventions { get; private set; }
 
 
         public int? InterventionsCount { get { return Interventions.Count(); } private set { var noid = value; } }
@@ -186,7 +186,7 @@ namespace Services.Schema
 
 
         [Field]
-        public DocEntitySet<DocEntityOutcome> Outcomes { get; private set; }
+        public DocEntitySet<DocEntityTag> Outcomes { get; private set; }
 
 
         public int? OutcomesCount { get { return Outcomes.Count(); } private set { var noid = value; } }

@@ -73,10 +73,8 @@ namespace Services.Core
             cfg.AddProfile<BackgroundTaskHistoryMapper>();
             cfg.AddProfile<BackgroundTaskItemMapper>();
             cfg.AddProfile<BroadcastMapper>();
-            cfg.AddProfile<CharacteristicMapper>();
             cfg.AddProfile<ClientMapper>();
             cfg.AddProfile<CommentMapper>();
-            cfg.AddProfile<ComparatorMapper>();
             cfg.AddProfile<DatabaseVersionMapper>();
             cfg.AddProfile<DataClassMapper>();
             cfg.AddProfile<DataPropertyMapper>();
@@ -98,7 +96,6 @@ namespace Services.Core
             cfg.AddProfile<ImpersonationMapper>();
             cfg.AddProfile<ImportDataMapper>();
             cfg.AddProfile<IntervalMapper>();
-            cfg.AddProfile<InterventionMapper>();
             cfg.AddProfile<JunctionMapper>();
             cfg.AddProfile<LibrarySetMapper>();
             cfg.AddProfile<LocaleMapper>();
@@ -111,12 +108,10 @@ namespace Services.Core
             cfg.AddProfile<MeanRangeValueMapper>();
             cfg.AddProfile<MeanVariancesMapper>();
             cfg.AddProfile<MeanVarianceValueMapper>();
-            cfg.AddProfile<OutcomeMapper>();
             cfg.AddProfile<PageMapper>();
             cfg.AddProfile<ProjectMapper>();
             cfg.AddProfile<QueueChannelMapper>();
             cfg.AddProfile<RatingMapper>();
-            cfg.AddProfile<ReleaseStatusMapper>();
             cfg.AddProfile<RoleMapper>();
             cfg.AddProfile<ScopeMapper>();
             cfg.AddProfile<ServePortalSetMapper>();

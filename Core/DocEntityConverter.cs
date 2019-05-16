@@ -93,10 +93,6 @@ namespace Services.Core
                     var enBroadcast = entity as DocEntityBroadcast;
                     ret = enBroadcast.ToDto() as TDto;
                     break;
-                case DocConstantModelName.CHARACTERISTIC:
-                    var enCharacteristic = entity as DocEntityCharacteristic;
-                    ret = enCharacteristic.ToDto() as TDto;
-                    break;
                 case DocConstantModelName.CLIENT:
                     var enClient = entity as DocEntityClient;
                     ret = enClient.ToDto() as TDto;
@@ -104,10 +100,6 @@ namespace Services.Core
                 case DocConstantModelName.COMMENT:
                     var enComment = entity as DocEntityComment;
                     ret = enComment.ToDto() as TDto;
-                    break;
-                case DocConstantModelName.COMPARATOR:
-                    var enComparator = entity as DocEntityComparator;
-                    ret = enComparator.ToDto() as TDto;
                     break;
                 case DocConstantModelName.DATABASEVERSION:
                     var enDatabaseVersion = entity as DocEntityDatabaseVersion;
@@ -197,10 +189,6 @@ namespace Services.Core
                     var enInterval = entity as DocEntityInterval;
                     ret = enInterval.ToDto() as TDto;
                     break;
-                case DocConstantModelName.INTERVENTION:
-                    var enIntervention = entity as DocEntityIntervention;
-                    ret = enIntervention.ToDto() as TDto;
-                    break;
                 case DocConstantModelName.JUNCTION:
                     var enJunction = entity as DocEntityJunction;
                     ret = enJunction.ToDto() as TDto;
@@ -249,10 +237,6 @@ namespace Services.Core
                     var enMeanVarianceValue = entity as DocEntityMeanVarianceValue;
                     ret = enMeanVarianceValue.ToDto() as TDto;
                     break;
-                case DocConstantModelName.OUTCOME:
-                    var enOutcome = entity as DocEntityOutcome;
-                    ret = enOutcome.ToDto() as TDto;
-                    break;
                 case DocConstantModelName.PAGE:
                     var enPage = entity as DocEntityPage;
                     ret = enPage.ToDto() as TDto;
@@ -268,10 +252,6 @@ namespace Services.Core
                 case DocConstantModelName.RATING:
                     var enRating = entity as DocEntityRating;
                     ret = enRating.ToDto() as TDto;
-                    break;
-                case DocConstantModelName.RELEASESTATUS:
-                    var enReleaseStatus = entity as DocEntityReleaseStatus;
-                    ret = enReleaseStatus.ToDto() as TDto;
                     break;
                 case DocConstantModelName.ROLE:
                     var enRole = entity as DocEntityRole;

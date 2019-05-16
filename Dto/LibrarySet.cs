@@ -92,12 +92,12 @@ namespace Services.Dto
         public string AdditionalCriteria { get; set; }
 
 
-        [ApiMember(Name = nameof(Characteristics), Description = "Characteristic", IsRequired = false)]
+        [ApiMember(Name = nameof(Characteristics), Description = "Tag", IsRequired = false)]
         public List<Reference> Characteristics { get; set; }
         public int? CharacteristicsCount { get; set; }
 
 
-        [ApiMember(Name = nameof(Comparators), Description = "Comparator", IsRequired = false)]
+        [ApiMember(Name = nameof(Comparators), Description = "Tag", IsRequired = false)]
         public List<Reference> Comparators { get; set; }
         public int? ComparatorsCount { get; set; }
 
@@ -110,7 +110,7 @@ namespace Services.Dto
         public string Indications { get; set; }
 
 
-        [ApiMember(Name = nameof(Interventions), Description = "Intervention", IsRequired = false)]
+        [ApiMember(Name = nameof(Interventions), Description = "Tag", IsRequired = false)]
         public List<Reference> Interventions { get; set; }
         public int? InterventionsCount { get; set; }
 
@@ -143,7 +143,7 @@ namespace Services.Dto
         public string OriginalSearch { get; set; }
 
 
-        [ApiMember(Name = nameof(Outcomes), Description = "Outcome", IsRequired = false)]
+        [ApiMember(Name = nameof(Outcomes), Description = "Tag", IsRequired = false)]
         public List<Reference> Outcomes { get; set; }
         public int? OutcomesCount { get; set; }
 

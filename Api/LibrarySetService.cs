@@ -516,7 +516,7 @@ namespace Services.API
                 if (true == pCharacteristics?.Any() )
                 {
                     var requestedCharacteristics = pCharacteristics.Select(p => p.Id).Distinct().ToList();
-                    var existsCharacteristics = Execute.SelectAll<DocEntityCharacteristic>().Where(e => e.Id.In(requestedCharacteristics)).Select( e => e.Id ).ToList();
+                    var existsCharacteristics = Execute.SelectAll<DocEntityTag>().Where(e => e.Id.In(requestedCharacteristics)).Select( e => e.Id ).ToList();
                     if (existsCharacteristics.Count != requestedCharacteristics.Count)
                     {
                         var nonExists = requestedCharacteristics.Where(id => existsCharacteristics.All(eId => eId != id));
@@ -525,7 +525,7 @@ namespace Services.API
                     var toAdd = requestedCharacteristics.Where(id => entity.Characteristics.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityCharacteristic.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Characteristics)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Characteristics)} to {nameof(LibrarySet)}");
                         entity.Characteristics.Add(target);
@@ -533,7 +533,7 @@ namespace Services.API
                     var toRemove = entity.Characteristics.Where(e => requestedCharacteristics.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityCharacteristic.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Characteristics)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Characteristics)} from {nameof(LibrarySet)}");
                         entity.Characteristics.Remove(target);
@@ -544,7 +544,7 @@ namespace Services.API
                     var toRemove = entity.Characteristics.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityCharacteristic.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Characteristics)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Characteristics)} from {nameof(LibrarySet)}");
                         entity.Characteristics.Remove(target);
@@ -560,7 +560,7 @@ namespace Services.API
                 if (true == pComparators?.Any() )
                 {
                     var requestedComparators = pComparators.Select(p => p.Id).Distinct().ToList();
-                    var existsComparators = Execute.SelectAll<DocEntityComparator>().Where(e => e.Id.In(requestedComparators)).Select( e => e.Id ).ToList();
+                    var existsComparators = Execute.SelectAll<DocEntityTag>().Where(e => e.Id.In(requestedComparators)).Select( e => e.Id ).ToList();
                     if (existsComparators.Count != requestedComparators.Count)
                     {
                         var nonExists = requestedComparators.Where(id => existsComparators.All(eId => eId != id));
@@ -569,7 +569,7 @@ namespace Services.API
                     var toAdd = requestedComparators.Where(id => entity.Comparators.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityComparator.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Comparators)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Comparators)} to {nameof(LibrarySet)}");
                         entity.Comparators.Add(target);
@@ -577,7 +577,7 @@ namespace Services.API
                     var toRemove = entity.Comparators.Where(e => requestedComparators.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityComparator.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Comparators)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Comparators)} from {nameof(LibrarySet)}");
                         entity.Comparators.Remove(target);
@@ -588,7 +588,7 @@ namespace Services.API
                     var toRemove = entity.Comparators.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityComparator.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Comparators)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Comparators)} from {nameof(LibrarySet)}");
                         entity.Comparators.Remove(target);
@@ -604,7 +604,7 @@ namespace Services.API
                 if (true == pInterventions?.Any() )
                 {
                     var requestedInterventions = pInterventions.Select(p => p.Id).Distinct().ToList();
-                    var existsInterventions = Execute.SelectAll<DocEntityIntervention>().Where(e => e.Id.In(requestedInterventions)).Select( e => e.Id ).ToList();
+                    var existsInterventions = Execute.SelectAll<DocEntityTag>().Where(e => e.Id.In(requestedInterventions)).Select( e => e.Id ).ToList();
                     if (existsInterventions.Count != requestedInterventions.Count)
                     {
                         var nonExists = requestedInterventions.Where(id => existsInterventions.All(eId => eId != id));
@@ -613,7 +613,7 @@ namespace Services.API
                     var toAdd = requestedInterventions.Where(id => entity.Interventions.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityIntervention.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Interventions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Interventions)} to {nameof(LibrarySet)}");
                         entity.Interventions.Add(target);
@@ -621,7 +621,7 @@ namespace Services.API
                     var toRemove = entity.Interventions.Where(e => requestedInterventions.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityIntervention.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Interventions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Interventions)} from {nameof(LibrarySet)}");
                         entity.Interventions.Remove(target);
@@ -632,7 +632,7 @@ namespace Services.API
                     var toRemove = entity.Interventions.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityIntervention.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Interventions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Interventions)} from {nameof(LibrarySet)}");
                         entity.Interventions.Remove(target);
@@ -648,7 +648,7 @@ namespace Services.API
                 if (true == pOutcomes?.Any() )
                 {
                     var requestedOutcomes = pOutcomes.Select(p => p.Id).Distinct().ToList();
-                    var existsOutcomes = Execute.SelectAll<DocEntityOutcome>().Where(e => e.Id.In(requestedOutcomes)).Select( e => e.Id ).ToList();
+                    var existsOutcomes = Execute.SelectAll<DocEntityTag>().Where(e => e.Id.In(requestedOutcomes)).Select( e => e.Id ).ToList();
                     if (existsOutcomes.Count != requestedOutcomes.Count)
                     {
                         var nonExists = requestedOutcomes.Where(id => existsOutcomes.All(eId => eId != id));
@@ -657,7 +657,7 @@ namespace Services.API
                     var toAdd = requestedOutcomes.Where(id => entity.Outcomes.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
-                        var target = DocEntityOutcome.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Outcomes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Outcomes)} to {nameof(LibrarySet)}");
                         entity.Outcomes.Add(target);
@@ -665,7 +665,7 @@ namespace Services.API
                     var toRemove = entity.Outcomes.Where(e => requestedOutcomes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityOutcome.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Outcomes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Outcomes)} from {nameof(LibrarySet)}");
                         entity.Outcomes.Remove(target);
@@ -676,7 +676,7 @@ namespace Services.API
                     var toRemove = entity.Outcomes.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
-                        var target = DocEntityOutcome.Get(id);
+                        var target = DocEntityTag.Get(id);
                         if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(LibrarySet), columnName: nameof(request.Outcomes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Outcomes)} from {nameof(LibrarySet)}");
                         entity.Outcomes.Remove(target);
@@ -1100,18 +1100,18 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                    case "characteristic":
-                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request, (ss) => HostContext.ResolveService<CharacteristicService>(Request)?.Get(ss));
+                    case "characteristics":
+                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Characteristics", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "comment":
                         return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
-                    case "comparator":
-                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request, (ss) => HostContext.ResolveService<ComparatorService>(Request)?.Get(ss));
+                    case "comparators":
+                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Comparators", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
-                    case "intervention":
-                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request, (ss) => HostContext.ResolveService<InterventionService>(Request)?.Get(ss));
-                    case "outcome":
-                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request, (ss) => HostContext.ResolveService<OutcomeService>(Request)?.Get(ss));
+                    case "interventions":
+                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Interventions", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                    case "outcomes":
+                        return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Outcomes", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
                     case "projectlink":
                         return GetJunctionSearchResult<LibrarySet, DocEntityLibrarySet, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "ProjectLinks", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
                     case "project":
@@ -1126,18 +1126,18 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                    case "characteristic":
-                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
+                    case "characteristics":
+                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Characteristics", request);
                     case "comment":
                         return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
-                    case "comparator":
-                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request);
+                    case "comparators":
+                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Comparators", request);
                     case "favorite":
                         return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                    case "intervention":
-                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request);
-                    case "outcome":
-                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request);
+                    case "interventions":
+                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Interventions", request);
+                    case "outcomes":
+                        return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Outcomes", request);
                     case "studydesign":
                         return AddJunction<LibrarySet, DocEntityLibrarySet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
                     case "tag":
@@ -1151,18 +1151,18 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                    case "characteristic":
-                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityCharacteristic, Characteristic, CharacteristicSearch>((int)request.Id, DocConstantModelName.CHARACTERISTIC, "Characteristics", request);
+                    case "characteristics":
+                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Characteristics", request);
                     case "comment":
                         return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
-                    case "comparator":
-                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityComparator, Comparator, ComparatorSearch>((int)request.Id, DocConstantModelName.COMPARATOR, "Comparators", request);
+                    case "comparators":
+                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Comparators", request);
                     case "favorite":
                         return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                    case "intervention":
-                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityIntervention, Intervention, InterventionSearch>((int)request.Id, DocConstantModelName.INTERVENTION, "Interventions", request);
-                    case "outcome":
-                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityOutcome, Outcome, OutcomeSearch>((int)request.Id, DocConstantModelName.OUTCOME, "Outcomes", request);
+                    case "interventions":
+                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Interventions", request);
+                    case "outcomes":
+                        return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Outcomes", request);
                     case "studydesign":
                         return RemoveJunction<LibrarySet, DocEntityLibrarySet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
                     case "tag":

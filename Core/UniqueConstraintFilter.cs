@@ -56,10 +56,8 @@ namespace Services.Core
             public static Expression<Func<DocEntityBackgroundTaskHistory, bool>> BackgroundTaskHistoryIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityBackgroundTaskItem, bool>> BackgroundTaskItemIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityBroadcast, bool>> BroadcastIgnoreArchived() => d => d.Archived == false;
-            public static Expression<Func<DocEntityCharacteristic, bool>> CharacteristicIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityClient, bool>> ClientIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityComment, bool>> CommentIgnoreArchived() => d => d.Archived == false;
-            public static Expression<Func<DocEntityComparator, bool>> ComparatorIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDatabaseVersion, bool>> DatabaseVersionIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDataClass, bool>> DataClassIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityDataProperty, bool>> DataPropertyIgnoreArchived() => d => d.Archived == false;
@@ -82,7 +80,6 @@ namespace Services.Core
             public static Expression<Func<DocEntityImpersonation, bool>> ImpersonationIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityImportData, bool>> ImportDataIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityInterval, bool>> IntervalIgnoreArchived() => d => d.Archived == false;
-            public static Expression<Func<DocEntityIntervention, bool>> InterventionIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityJunction, bool>> JunctionIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityLibrarySet, bool>> LibrarySetIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityLocale, bool>> LocaleIgnoreArchived() => d => d.Archived == false;
@@ -95,12 +92,10 @@ namespace Services.Core
             public static Expression<Func<DocEntityMeanRangeValue, bool>> MeanRangeValueIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityMeanVariances, bool>> MeanVariancesIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityMeanVarianceValue, bool>> MeanVarianceValueIgnoreArchived() => d => d.Archived == false;
-            public static Expression<Func<DocEntityOutcome, bool>> OutcomeIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityPage, bool>> PageIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityProject, bool>> ProjectIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityQueueChannel, bool>> QueueChannelIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityRating, bool>> RatingIgnoreArchived() => d => d.Archived == false;
-            public static Expression<Func<DocEntityReleaseStatus, bool>> ReleaseStatusIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityRole, bool>> RoleIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityScope, bool>> ScopeIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityServePortalSet, bool>> ServePortalSetIgnoreArchived() => d => d.Archived == false;
