@@ -55,7 +55,7 @@ namespace Services.Dto
 
         public UserBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public UserBase(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, Reference pStatus, int? pStatusId, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
+        public UserBase(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, StatusEnm? pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : this(DocConvert.ToInt(pId)) 
         {
             ClientDepartment = pClientDepartment;
             Division = pDivision;
@@ -92,7 +92,6 @@ namespace Services.Dto
             Slack = pSlack;
             StartDate = pStartDate;
             Status = pStatus;
-            StatusId = pStatusId;
             Teams = pTeams;
             TeamsCount = pTeamsCount;
             TimeCards = pTimeCards;
@@ -217,10 +216,8 @@ namespace Services.Dto
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Disabled",@"Inactive"})]
-        [ApiMember(Name = nameof(Status), Description = "LookupTable", IsRequired = false)]
-        public Reference Status { get; set; }
-        [ApiMember(Name = nameof(StatusId), Description = "Primary Key of LookupTable", IsRequired = false)]
-        public int? StatusId { get; set; }
+        [ApiMember(Name = nameof(Status), Description = "StatusEnm?", IsRequired = false)]
+        public StatusEnm? Status { get; set; }
 
 
         [ApiMember(Name = nameof(Teams), Description = "Team", IsRequired = false)]
@@ -250,7 +247,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out string pClientDepartment, out Reference pDivision, out int? pDivisionId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pEmail, out DateTime? pExpireDate, out int? pFailedLoginCount, out string pFirstName, out string pGravatar, out List<Reference> pHistory, out int? pHistoryCount, out List<Reference> pImpersonated, out int? pImpersonatedCount, out List<Reference> pImpersonating, out int? pImpersonatingCount, out bool? pIsSystemUser, out string pJobTitle, out DateTime? pLastLogin, out string pLastName, out string pLegacyUsername, out Reference pLocale, out int? pLocaleId, out int? pLoginCount, out string pName, out List<Role> pRoles, out int? pRolesCount, out List<Reference> pScopes, out int? pScopesCount, out List<Reference> pSessions, out int? pSessionsCount, out JsonObject pSettings, out string pSlack, out DateTime? pStartDate, out Reference pStatus, out int? pStatusId, out List<Reference> pTeams, out int? pTeamsCount, out List<Reference> pTimeCards, out int? pTimeCardsCount, out List<Reference> pUpdates, out int? pUpdatesCount, out Reference pUserType, out int? pUserTypeId, out List<Reference> pWorkflows, out int? pWorkflowsCount)
+        public void Deconstruct(out string pClientDepartment, out Reference pDivision, out int? pDivisionId, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out string pEmail, out DateTime? pExpireDate, out int? pFailedLoginCount, out string pFirstName, out string pGravatar, out List<Reference> pHistory, out int? pHistoryCount, out List<Reference> pImpersonated, out int? pImpersonatedCount, out List<Reference> pImpersonating, out int? pImpersonatingCount, out bool? pIsSystemUser, out string pJobTitle, out DateTime? pLastLogin, out string pLastName, out string pLegacyUsername, out Reference pLocale, out int? pLocaleId, out int? pLoginCount, out string pName, out List<Role> pRoles, out int? pRolesCount, out List<Reference> pScopes, out int? pScopesCount, out List<Reference> pSessions, out int? pSessionsCount, out JsonObject pSettings, out string pSlack, out DateTime? pStartDate, out StatusEnm? pStatus, out List<Reference> pTeams, out int? pTeamsCount, out List<Reference> pTimeCards, out int? pTimeCardsCount, out List<Reference> pUpdates, out int? pUpdatesCount, out Reference pUserType, out int? pUserTypeId, out List<Reference> pWorkflows, out int? pWorkflowsCount)
         {
             pClientDepartment = ClientDepartment;
             pDivision = Division;
@@ -287,7 +284,6 @@ namespace Services.Dto
             pSlack = Slack;
             pStartDate = StartDate;
             pStatus = Status;
-            pStatusId = StatusId;
             pTeams = Teams;
             pTeamsCount = TeamsCount;
             pTimeCards = TimeCards;
@@ -301,8 +297,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public UserBase With(int? pId = Id, string pClientDepartment = ClientDepartment, Reference pDivision = Division, int? pDivisionId = DivisionId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pEmail = Email, DateTime? pExpireDate = ExpireDate, int? pFailedLoginCount = FailedLoginCount, string pFirstName = FirstName, string pGravatar = Gravatar, List<Reference> pHistory = History, int? pHistoryCount = HistoryCount, List<Reference> pImpersonated = Impersonated, int? pImpersonatedCount = ImpersonatedCount, List<Reference> pImpersonating = Impersonating, int? pImpersonatingCount = ImpersonatingCount, bool? pIsSystemUser = IsSystemUser, string pJobTitle = JobTitle, DateTime? pLastLogin = LastLogin, string pLastName = LastName, string pLegacyUsername = LegacyUsername, Reference pLocale = Locale, int? pLocaleId = LocaleId, int? pLoginCount = LoginCount, string pName = Name, List<Role> pRoles = Roles, int? pRolesCount = RolesCount, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, List<Reference> pSessions = Sessions, int? pSessionsCount = SessionsCount, JsonObject pSettings = Settings, string pSlack = Slack, DateTime? pStartDate = StartDate, Reference pStatus = Status, int? pStatusId = StatusId, List<Reference> pTeams = Teams, int? pTeamsCount = TeamsCount, List<Reference> pTimeCards = TimeCards, int? pTimeCardsCount = TimeCardsCount, List<Reference> pUpdates = Updates, int? pUpdatesCount = UpdatesCount, Reference pUserType = UserType, int? pUserTypeId = UserTypeId, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
-        //	new UserBase(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pStatusId, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount);
+        //public UserBase With(int? pId = Id, string pClientDepartment = ClientDepartment, Reference pDivision = Division, int? pDivisionId = DivisionId, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, string pEmail = Email, DateTime? pExpireDate = ExpireDate, int? pFailedLoginCount = FailedLoginCount, string pFirstName = FirstName, string pGravatar = Gravatar, List<Reference> pHistory = History, int? pHistoryCount = HistoryCount, List<Reference> pImpersonated = Impersonated, int? pImpersonatedCount = ImpersonatedCount, List<Reference> pImpersonating = Impersonating, int? pImpersonatingCount = ImpersonatingCount, bool? pIsSystemUser = IsSystemUser, string pJobTitle = JobTitle, DateTime? pLastLogin = LastLogin, string pLastName = LastName, string pLegacyUsername = LegacyUsername, Reference pLocale = Locale, int? pLocaleId = LocaleId, int? pLoginCount = LoginCount, string pName = Name, List<Role> pRoles = Roles, int? pRolesCount = RolesCount, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, List<Reference> pSessions = Sessions, int? pSessionsCount = SessionsCount, JsonObject pSettings = Settings, string pSlack = Slack, DateTime? pStartDate = StartDate, StatusEnm? pStatus = Status, List<Reference> pTeams = Teams, int? pTeamsCount = TeamsCount, List<Reference> pTimeCards = TimeCards, int? pTimeCardsCount = TimeCardsCount, List<Reference> pUpdates = Updates, int? pUpdatesCount = UpdatesCount, Reference pUserType = UserType, int? pUserTypeId = UserTypeId, List<Reference> pWorkflows = Workflows, int? pWorkflowsCount = WorkflowsCount) => 
+        //	new UserBase(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount);
 
     }
 
@@ -317,8 +313,8 @@ namespace Services.Dto
 
         public User(int? id) : base(DocConvert.ToInt(id)) {}
         public User(int id) : base(id) {}
-        public User(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, Reference pStatus, int? pStatusId, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
-            base(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pStatusId, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount) { }
+        public User(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, StatusEnm? pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
+            base(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -336,7 +332,7 @@ namespace Services.Dto
 
         private List<string> _Select;
         [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(ClientDepartment),nameof(Created),nameof(CreatorId),nameof(Division),nameof(DivisionId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Email),nameof(ExpireDate),nameof(FailedLoginCount),nameof(FirstName),nameof(Gestalt),nameof(Gravatar),nameof(History),nameof(HistoryCount),nameof(Impersonated),nameof(ImpersonatedCount),nameof(Impersonating),nameof(ImpersonatingCount),nameof(IsSystemUser),nameof(JobTitle),nameof(LastLogin),nameof(LastName),nameof(LegacyUsername),nameof(Locale),nameof(LocaleId),nameof(Locked),nameof(LoginCount),nameof(Name),nameof(Roles),nameof(RolesCount),nameof(Scopes),nameof(ScopesCount),nameof(Sessions),nameof(SessionsCount),nameof(Settings),nameof(Slack),nameof(StartDate),nameof(Status),nameof(StatusId),nameof(Teams),nameof(TeamsCount),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(Updates),nameof(UpdatesCount),nameof(UserType),nameof(UserTypeId),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(ClientDepartment),nameof(Created),nameof(CreatorId),nameof(Division),nameof(DivisionId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Email),nameof(ExpireDate),nameof(FailedLoginCount),nameof(FirstName),nameof(Gestalt),nameof(Gravatar),nameof(History),nameof(HistoryCount),nameof(Impersonated),nameof(ImpersonatedCount),nameof(Impersonating),nameof(ImpersonatingCount),nameof(IsSystemUser),nameof(JobTitle),nameof(LastLogin),nameof(LastName),nameof(LegacyUsername),nameof(Locale),nameof(LocaleId),nameof(Locked),nameof(LoginCount),nameof(Name),nameof(Roles),nameof(RolesCount),nameof(Scopes),nameof(ScopesCount),nameof(Sessions),nameof(SessionsCount),nameof(Settings),nameof(Slack),nameof(StartDate),nameof(Status),nameof(Teams),nameof(TeamsCount),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(Updates),nameof(UpdatesCount),nameof(UserType),nameof(UserTypeId),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
         public new List<string> Select
         {
             get
@@ -405,10 +401,7 @@ namespace Services.Dto
         public DateTime? StartDate { get; set; }
         public DateTime? StartDateAfter { get; set; }
         public DateTime? StartDateBefore { get; set; }
-        public Reference Status { get; set; }
-        public List<int> StatusIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Disabled",@"Inactive"})]
-        public List<string> StatusNames { get; set; }
+        public StatusEnm? Status { get; set; }
         public List<int> TeamsIds { get; set; }
         public List<int> TimeCardsIds { get; set; }
         public List<int> UpdatesIds { get; set; }

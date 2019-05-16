@@ -228,9 +228,8 @@ namespace Services.Schema
         public DateTime? StartDate { get; set; }
 
 
-        [Field]
-        public DocEntityLookupTable Status { get; set; }
-        public int? StatusId { get { return Status?.Id; } private set { var noid = value; } }
+        [Field(Nullable = false, DefaultValue = StatusEnm.ACTIVE)]
+        public StatusEnm Status { get; set; }
 
 
         [Field]
@@ -396,10 +395,10 @@ namespace Services.Schema
                     isValid = false;
                     message += " Name is a required property.";
                 }
-                if(null != Status && Status?.Enum?.Name != "Status")
+                if(DocTools.IsNullOrEmpty(Status))
                 {
                     isValid = false;
-                    message += " Status is a " + Status?.Enum?.Name + ", but must be a Status.";
+                    message += " Status is a required property.";
                 }
 
                 var ret = new DocValidationMessage(message, isValid);

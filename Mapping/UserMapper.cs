@@ -96,7 +96,6 @@ namespace Services.Schema
                 .ForMember(dest => dest.Slack, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Slack))))
                 .ForMember(dest => dest.StartDate, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.StartDate))))
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Status))))
-                .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.StatusId))))
                 .ForMember(dest => dest.Teams, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.Teams))))
                 .ForMember(dest => dest.TeamsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.TeamsCount))))
                 .ForMember(dest => dest.TimeCards, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<User>(c, nameof(DocEntityUser.TimeCards))))

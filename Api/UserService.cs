@@ -187,22 +187,8 @@ namespace Services.API
                     entities = entities.Where(en => en.StartDate <= request.StartDateBefore);
                 if(!DocTools.IsNullOrEmpty(request.StartDateAfter))
                     entities = entities.Where(en => en.StartDate >= request.StartDateAfter);
-                if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Id))
-                {
-                    entities = entities.Where(en => en.Status.Id == request.Status.Id );
-                }
-                if(true == request.StatusIds?.Any())
-                {
-                    entities = entities.Where(en => en.Status.Id.In(request.StatusIds));
-                }
-                else if(!DocTools.IsNullOrEmpty(request.Status) && !DocTools.IsNullOrEmpty(request.Status.Name))
-                {
-                    entities = entities.Where(en => en.Status.Name == request.Status.Name );
-                }
-                if(true == request.StatusNames?.Any())
-                {
-                    entities = entities.Where(en => en.Status.Name.In(request.StatusNames));
-                }
+                if(request.Status.HasValue)
+                    entities = entities.Where(en => request.Status.Value == en.Status);
                 if(true == request.TeamsIds?.Any())
                 {
                     entities = entities.Where(en => en.Teams.Any(r => r.Id.In(request.TeamsIds)));
@@ -291,7 +277,7 @@ namespace Services.API
             var pSettings = request.Settings;
             var pSlack = request.Slack;
             var pStartDate = request.StartDate;
-            DocEntityLookupTable pStatus = GetLookup(DocConstantLookupTable.STATUS, request.Status?.Name, request.Status?.Id);
+            var pStatus = request.Status;
             var pTeams = request.Teams?.ToList();
             var pTimeCards = request.TimeCards?.ToList();
             var pUpdates = request.Updates?.ToList();
@@ -518,13 +504,14 @@ namespace Services.API
                     request.Select.Add(nameof(request.StartDate));
                 }
             }
-            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityLookupTable>(currentUser, request, pStatus, permission, DocConstantModelName.USER, nameof(request.Status)))
+            if (DocPermissionFactory.IsRequestedHasPermission<StatusEnm?>(currentUser, request, pStatus, permission, DocConstantModelName.USER, nameof(request.Status)))
             {
-                if(DocPermissionFactory.IsRequested(request, pStatus, entity.Status, nameof(request.Status)))
+                if(DocPermissionFactory.IsRequested(request, (int?) pStatus, (int) entity.Status, nameof(request.Status)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.USER, nameof(request.Status)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Status)} cannot be modified once set.");
                     if (DocTools.IsNullOrEmpty(pStatus) && DocResources.Metadata.IsRequired(DocConstantModelName.USER, nameof(request.Status))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Status)} requires a value.");
-                    entity.Status = pStatus;
-                if(DocPermissionFactory.IsRequested<DocEntityLookupTable>(request, pStatus, nameof(request.Status)) && !request.Select.Matches(nameof(request.Status), ignoreSpaces: true))
+                    if(null != pStatus)
+                        entity.Status = pStatus.Value;
+                if(DocPermissionFactory.IsRequested<StatusEnm?>(request, pStatus, nameof(request.Status)) && !request.Select.Matches(nameof(request.Status), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Status));
                 }
