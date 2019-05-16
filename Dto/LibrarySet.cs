@@ -300,6 +300,7 @@ namespace Services.Dto
         public List<int> DocumentsIds { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public List<int> HistoriesIds { get; set; }
+        public int? LegacyDocumentSetId { get; set; }
         public string Name { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }

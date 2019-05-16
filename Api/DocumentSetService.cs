@@ -123,6 +123,8 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Histories.Any(r => r.Id.In(request.HistoriesIds)));
                 }
+                if(request.LegacyDocumentSetId.HasValue)
+                    entities = entities.Where(en => request.LegacyDocumentSetId.Value == en.LegacyDocumentSetId);
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
@@ -200,6 +202,7 @@ namespace Services.API
             var pDocuments = request.Documents?.ToList();
             var pDocumentSets = request.DocumentSets?.ToList();
             var pHistories = request.Histories?.ToList();
+            var pLegacyDocumentSetId = request.LegacyDocumentSetId;
             var pName = request.Name;
             var pOwner = (request.Owner?.Id > 0) ? DocEntityDocumentSet.Get(request.Owner.Id) : null;
             var pProjectTeam = (request.ProjectTeam?.Id > 0) ? DocEntityTeam.Get(request.ProjectTeam.Id) : null;
@@ -249,6 +252,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pConfidential, nameof(request.Confidential)) && !request.Select.Matches(nameof(request.Confidential), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Confidential));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pLegacyDocumentSetId, permission, DocConstantModelName.DOCUMENTSET, nameof(request.LegacyDocumentSetId)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pLegacyDocumentSetId, entity.LegacyDocumentSetId, nameof(request.LegacyDocumentSetId)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.LegacyDocumentSetId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LegacyDocumentSetId)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pLegacyDocumentSetId) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.LegacyDocumentSetId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LegacyDocumentSetId)} requires a value.");
+                    entity.LegacyDocumentSetId = pLegacyDocumentSetId;
+                if(DocPermissionFactory.IsRequested<int?>(request, pLegacyDocumentSetId, nameof(request.LegacyDocumentSetId)) && !request.Select.Matches(nameof(request.LegacyDocumentSetId), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.LegacyDocumentSetId));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Name)))
@@ -758,6 +772,7 @@ namespace Services.API
                     var pDocuments = entity.Documents.ToList();
                     var pDocumentSets = entity.DocumentSets.ToList();
                     var pHistories = entity.Histories.ToList();
+                    var pLegacyDocumentSetId = entity.LegacyDocumentSetId;
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
@@ -774,6 +789,7 @@ namespace Services.API
                     {
                         Hash = Guid.NewGuid()
                                 , Confidential = pConfidential
+                                , LegacyDocumentSetId = pLegacyDocumentSetId
                                 , Name = pName
                                 , Owner = pOwner
                                 , ProjectTeam = pProjectTeam

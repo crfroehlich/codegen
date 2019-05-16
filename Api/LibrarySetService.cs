@@ -123,6 +123,8 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Histories.Any(r => r.Id.In(request.HistoriesIds)));
                 }
+                if(request.LegacyDocumentSetId.HasValue)
+                    entities = entities.Where(en => request.LegacyDocumentSetId.Value == en.LegacyDocumentSetId);
                 if(!DocTools.IsNullOrEmpty(request.Name))
                     entities = entities.Where(en => en.Name.Contains(request.Name));
                 if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))

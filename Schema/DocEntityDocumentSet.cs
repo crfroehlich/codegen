@@ -144,6 +144,10 @@ namespace Services.Schema
         public int? HistoriesCount { get { return Histories.Count(); } private set { var noid = value; } }
 
 
+        [Field]
+        public int? LegacyDocumentSetId { get; set; }
+
+
         [Field(Nullable = false, Length = 400)]
         public string Name { get; set; }
 

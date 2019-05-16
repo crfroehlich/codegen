@@ -55,7 +55,7 @@ namespace Services.Dto
 
         public DocumentSetBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public DocumentSetBase(int? pId, List<Reference> pClients, int? pClientsCount, bool pConfidential, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, List<Reference> pHistories, int? pHistoriesCount, string pName, Reference pOwner, int? pOwnerId, Reference pProjectTeam, int? pProjectTeamId, List<Reference> pScopes, int? pScopesCount, string pSettings, List<Reference> pStats, int? pStatsCount, DocumentSetTypeEnm? pType, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
+        public DocumentSetBase(int? pId, List<Reference> pClients, int? pClientsCount, bool pConfidential, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, List<Reference> pHistories, int? pHistoriesCount, int? pLegacyDocumentSetId, string pName, Reference pOwner, int? pOwnerId, Reference pProjectTeam, int? pProjectTeamId, List<Reference> pScopes, int? pScopesCount, string pSettings, List<Reference> pStats, int? pStatsCount, DocumentSetTypeEnm? pType, List<Reference> pUsers, int? pUsersCount) : this(DocConvert.ToInt(pId)) 
         {
             Clients = pClients;
             ClientsCount = pClientsCount;
@@ -68,6 +68,7 @@ namespace Services.Dto
             DocumentSetsCount = pDocumentSetsCount;
             Histories = pHistories;
             HistoriesCount = pHistoriesCount;
+            LegacyDocumentSetId = pLegacyDocumentSetId;
             Name = pName;
             Owner = pOwner;
             OwnerId = pOwnerId;
@@ -112,6 +113,10 @@ namespace Services.Dto
         public int? HistoriesCount { get; set; }
 
 
+        [ApiMember(Name = nameof(LegacyDocumentSetId), Description = "int?", IsRequired = false)]
+        public int? LegacyDocumentSetId { get; set; }
+
+
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
 
@@ -153,7 +158,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out List<Reference> pClients, out int? pClientsCount, out bool pConfidential, out List<Reference> pDivisions, out int? pDivisionsCount, out List<Reference> pDocuments, out int? pDocumentsCount, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out List<Reference> pHistories, out int? pHistoriesCount, out string pName, out Reference pOwner, out int? pOwnerId, out Reference pProjectTeam, out int? pProjectTeamId, out List<Reference> pScopes, out int? pScopesCount, out string pSettings, out List<Reference> pStats, out int? pStatsCount, out DocumentSetTypeEnm? pType, out List<Reference> pUsers, out int? pUsersCount)
+        public void Deconstruct(out List<Reference> pClients, out int? pClientsCount, out bool pConfidential, out List<Reference> pDivisions, out int? pDivisionsCount, out List<Reference> pDocuments, out int? pDocumentsCount, out List<Reference> pDocumentSets, out int? pDocumentSetsCount, out List<Reference> pHistories, out int? pHistoriesCount, out int? pLegacyDocumentSetId, out string pName, out Reference pOwner, out int? pOwnerId, out Reference pProjectTeam, out int? pProjectTeamId, out List<Reference> pScopes, out int? pScopesCount, out string pSettings, out List<Reference> pStats, out int? pStatsCount, out DocumentSetTypeEnm? pType, out List<Reference> pUsers, out int? pUsersCount)
         {
             pClients = Clients;
             pClientsCount = ClientsCount;
@@ -166,6 +171,7 @@ namespace Services.Dto
             pDocumentSetsCount = DocumentSetsCount;
             pHistories = Histories;
             pHistoriesCount = HistoriesCount;
+            pLegacyDocumentSetId = LegacyDocumentSetId;
             pName = Name;
             pOwner = Owner;
             pOwnerId = OwnerId;
@@ -182,8 +188,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public DocumentSetBase With(int? pId = Id, List<Reference> pClients = Clients, int? pClientsCount = ClientsCount, bool pConfidential = Confidential, List<Reference> pDivisions = Divisions, int? pDivisionsCount = DivisionsCount, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, List<Reference> pHistories = Histories, int? pHistoriesCount = HistoriesCount, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, Reference pProjectTeam = ProjectTeam, int? pProjectTeamId = ProjectTeamId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, string pSettings = Settings, List<Reference> pStats = Stats, int? pStatsCount = StatsCount, DocumentSetTypeEnm? pType = Type, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
-        //	new DocumentSetBase(pId, pClients, pClientsCount, pConfidential, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pHistories, pHistoriesCount, pName, pOwner, pOwnerId, pProjectTeam, pProjectTeamId, pScopes, pScopesCount, pSettings, pStats, pStatsCount, pType, pUsers, pUsersCount);
+        //public DocumentSetBase With(int? pId = Id, List<Reference> pClients = Clients, int? pClientsCount = ClientsCount, bool pConfidential = Confidential, List<Reference> pDivisions = Divisions, int? pDivisionsCount = DivisionsCount, List<Reference> pDocuments = Documents, int? pDocumentsCount = DocumentsCount, List<Reference> pDocumentSets = DocumentSets, int? pDocumentSetsCount = DocumentSetsCount, List<Reference> pHistories = Histories, int? pHistoriesCount = HistoriesCount, int? pLegacyDocumentSetId = LegacyDocumentSetId, string pName = Name, Reference pOwner = Owner, int? pOwnerId = OwnerId, Reference pProjectTeam = ProjectTeam, int? pProjectTeamId = ProjectTeamId, List<Reference> pScopes = Scopes, int? pScopesCount = ScopesCount, string pSettings = Settings, List<Reference> pStats = Stats, int? pStatsCount = StatsCount, DocumentSetTypeEnm? pType = Type, List<Reference> pUsers = Users, int? pUsersCount = UsersCount) => 
+        //	new DocumentSetBase(pId, pClients, pClientsCount, pConfidential, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pHistories, pHistoriesCount, pLegacyDocumentSetId, pName, pOwner, pOwnerId, pProjectTeam, pProjectTeamId, pScopes, pScopesCount, pSettings, pStats, pStatsCount, pType, pUsers, pUsersCount);
 
     }
 
@@ -198,8 +204,8 @@ namespace Services.Dto
 
         public DocumentSet(int? id) : base(DocConvert.ToInt(id)) {}
         public DocumentSet(int id) : base(id) {}
-        public DocumentSet(int? pId, List<Reference> pClients, int? pClientsCount, bool pConfidential, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, List<Reference> pHistories, int? pHistoriesCount, string pName, Reference pOwner, int? pOwnerId, Reference pProjectTeam, int? pProjectTeamId, List<Reference> pScopes, int? pScopesCount, string pSettings, List<Reference> pStats, int? pStatsCount, DocumentSetTypeEnm? pType, List<Reference> pUsers, int? pUsersCount) : 
-            base(pId, pClients, pClientsCount, pConfidential, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pHistories, pHistoriesCount, pName, pOwner, pOwnerId, pProjectTeam, pProjectTeamId, pScopes, pScopesCount, pSettings, pStats, pStatsCount, pType, pUsers, pUsersCount) { }
+        public DocumentSet(int? pId, List<Reference> pClients, int? pClientsCount, bool pConfidential, List<Reference> pDivisions, int? pDivisionsCount, List<Reference> pDocuments, int? pDocumentsCount, List<Reference> pDocumentSets, int? pDocumentSetsCount, List<Reference> pHistories, int? pHistoriesCount, int? pLegacyDocumentSetId, string pName, Reference pOwner, int? pOwnerId, Reference pProjectTeam, int? pProjectTeamId, List<Reference> pScopes, int? pScopesCount, string pSettings, List<Reference> pStats, int? pStatsCount, DocumentSetTypeEnm? pType, List<Reference> pUsers, int? pUsersCount) : 
+            base(pId, pClients, pClientsCount, pConfidential, pDivisions, pDivisionsCount, pDocuments, pDocumentsCount, pDocumentSets, pDocumentSetsCount, pHistories, pHistoriesCount, pLegacyDocumentSetId, pName, pOwner, pOwnerId, pProjectTeam, pProjectTeamId, pScopes, pScopesCount, pSettings, pStats, pStatsCount, pType, pUsers, pUsersCount) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -217,7 +223,7 @@ namespace Services.Dto
 
         private List<string> _Select;
         [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Clients),nameof(ClientsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(Type),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(Clients),nameof(ClientsCount),nameof(Confidential),nameof(Created),nameof(CreatorId),nameof(Divisions),nameof(DivisionsCount),nameof(Documents),nameof(DocumentsCount),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Gestalt),nameof(Histories),nameof(HistoriesCount),nameof(LegacyDocumentSetId),nameof(Locked),nameof(Name),nameof(Owner),nameof(OwnerId),nameof(ProjectTeam),nameof(ProjectTeamId),nameof(Scopes),nameof(ScopesCount),nameof(Settings),nameof(Stats),nameof(StatsCount),nameof(Type),nameof(Updated),nameof(Users),nameof(UsersCount),nameof(VersionNo)})]
         public new List<string> Select
         {
             get
@@ -259,6 +265,7 @@ namespace Services.Dto
         public List<int> DocumentsIds { get; set; }
         public List<int> DocumentSetsIds { get; set; }
         public List<int> HistoriesIds { get; set; }
+        public int? LegacyDocumentSetId { get; set; }
         public string Name { get; set; }
         public Reference Owner { get; set; }
         public List<int> OwnerIds { get; set; }
@@ -298,6 +305,7 @@ namespace Services.Dto
         public bool doDocuments { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Documents))); }
         public bool doDocumentSets { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.DocumentSets))); }
         public bool doHistories { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Histories))); }
+        public bool doLegacyDocumentSetId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.LegacyDocumentSetId))); }
         public bool doName { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Name))); }
         public bool doOwner { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.Owner))); }
         public bool doProjectTeam { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DocumentSet.ProjectTeam))); }
