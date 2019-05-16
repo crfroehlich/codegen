@@ -545,14 +545,30 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "client":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request, (ss) => HostContext.ResolveService<ClientService>(Request)?.Get(ss));
                     case "comment":
                         return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
+                    case "division":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request, (ss) => HostContext.ResolveService<DivisionService>(Request)?.Get(ss));
+                    case "document":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
+                    case "documentset":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
+                    case "documentsethistory":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityDocumentSetHistory, DocumentSetHistory, DocumentSetHistorySearch>((int)request.Id, DocConstantModelName.DOCUMENTSETHISTORY, "Histories", request, (ss) => HostContext.ResolveService<DocumentSetHistoryService>(Request)?.Get(ss));
                     case "termmaster":
                         return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Interventions", request, (ss) => HostContext.ResolveService<TermMasterService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "statsstudyset":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityStatsStudySet, StatsStudySet, StatsStudySetSearch>((int)request.Id, DocConstantModelName.STATSSTUDYSET, "Stats", request, (ss) => HostContext.ResolveService<StatsStudySetService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                    case "user":
+                        return GetJunctionSearchResult<ServePortalSet, DocEntityServePortalSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for serveportalset/{request.Id}/{request.Junction} was not found");
             }
@@ -561,14 +577,24 @@ namespace Services.API
         {
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "client":
+                        return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
                     case "comment":
                         return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "division":
+                        return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
+                    case "document":
+                        return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
                         return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "termmaster":
                         return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Interventions", request);
+                    case "scope":
+                        return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":
                         return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "user":
+                        return AddJunction<ServePortalSet, DocEntityServePortalSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for serveportalset/{request.Id}/{request.Junction} was not found");
             }
@@ -578,14 +604,24 @@ namespace Services.API
         {    
             switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
+                    case "client":
+                        return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
                     case "comment":
                         return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "division":
+                        return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
+                    case "document":
+                        return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
                         return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "termmaster":
                         return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityTermMaster, TermMaster, TermMasterSearch>((int)request.Id, DocConstantModelName.TERMMASTER, "Interventions", request);
+                    case "scope":
+                        return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "tag":
                         return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "user":
+                        return RemoveJunction<ServePortalSet, DocEntityServePortalSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for serveportalset/{request.Id}/{request.Junction} was not found");
             }

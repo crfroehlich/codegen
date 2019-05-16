@@ -1153,12 +1153,22 @@ namespace Services.API
             {
                     case "characteristics":
                         return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Characteristics", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                    case "client":
+                        return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request, (ss) => HostContext.ResolveService<ClientService>(Request)?.Get(ss));
                     case "comment":
                         return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
                     case "comparators":
                         return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Comparators", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                    case "division":
+                        return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request, (ss) => HostContext.ResolveService<DivisionService>(Request)?.Get(ss));
+                    case "document":
+                        return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
+                    case "documentset":
+                        return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
                     case "favorite":
                         return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
+                    case "documentsethistory":
+                        return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityDocumentSetHistory, DocumentSetHistory, DocumentSetHistorySearch>((int)request.Id, DocConstantModelName.DOCUMENTSETHISTORY, "Histories", request, (ss) => HostContext.ResolveService<DocumentSetHistoryService>(Request)?.Get(ss));
                     case "importdata":
                         return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityImportData, ImportData, ImportDataSearch>((int)request.Id, DocConstantModelName.IMPORTDATA, "Imports", request, (ss) => HostContext.ResolveService<ImportDataService>(Request)?.Get(ss));
                     case "interventions":
@@ -1169,8 +1179,14 @@ namespace Services.API
                         return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "ProjectLinks", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
                     case "project":
                         return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityProject, Project, ProjectSearch>((int)request.Id, DocConstantModelName.PROJECT, "Projects", request, (ss) => HostContext.ResolveService<ProjectService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "statsstudyset":
+                        return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityStatsStudySet, StatsStudySet, StatsStudySetSearch>((int)request.Id, DocConstantModelName.STATSSTUDYSET, "Stats", request, (ss) => HostContext.ResolveService<StatsStudySetService>(Request)?.Get(ss));
                     case "tag":
                         return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                    case "user":
+                        return GetJunctionSearchResult<DataSet, DocEntityDataSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataset/{request.Id}/{request.Junction} was not found");
             }
@@ -1181,20 +1197,30 @@ namespace Services.API
             {
                     case "characteristics":
                         return AddJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Characteristics", request);
+                    case "client":
+                        return AddJunction<DataSet, DocEntityDataSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
                     case "comment":
                         return AddJunction<DataSet, DocEntityDataSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "comparators":
                         return AddJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Comparators", request);
+                    case "division":
+                        return AddJunction<DataSet, DocEntityDataSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
+                    case "document":
+                        return AddJunction<DataSet, DocEntityDataSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
                         return AddJunction<DataSet, DocEntityDataSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "interventions":
                         return AddJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Interventions", request);
                     case "outcomes":
                         return AddJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Outcomes", request);
+                    case "scope":
+                        return AddJunction<DataSet, DocEntityDataSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "studydesign":
                         return AddJunction<DataSet, DocEntityDataSet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
                     case "tag":
                         return AddJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "user":
+                        return AddJunction<DataSet, DocEntityDataSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataset/{request.Id}/{request.Junction} was not found");
             }
@@ -1206,20 +1232,30 @@ namespace Services.API
             {
                     case "characteristics":
                         return RemoveJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Characteristics", request);
+                    case "client":
+                        return RemoveJunction<DataSet, DocEntityDataSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
                     case "comment":
                         return RemoveJunction<DataSet, DocEntityDataSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
                     case "comparators":
                         return RemoveJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Comparators", request);
+                    case "division":
+                        return RemoveJunction<DataSet, DocEntityDataSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
+                    case "document":
+                        return RemoveJunction<DataSet, DocEntityDataSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
                     case "favorite":
                         return RemoveJunction<DataSet, DocEntityDataSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
                     case "interventions":
                         return RemoveJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Interventions", request);
                     case "outcomes":
                         return RemoveJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Outcomes", request);
+                    case "scope":
+                        return RemoveJunction<DataSet, DocEntityDataSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
                     case "studydesign":
                         return RemoveJunction<DataSet, DocEntityDataSet, DocEntityStudyDesign, StudyDesign, StudyDesignSearch>((int)request.Id, DocConstantModelName.STUDYDESIGN, "StudyDesigns", request);
                     case "tag":
                         return RemoveJunction<DataSet, DocEntityDataSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "user":
+                        return RemoveJunction<DataSet, DocEntityDataSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for dataset/{request.Id}/{request.Junction} was not found");
             }
