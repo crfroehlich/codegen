@@ -67,14 +67,10 @@ namespace Services.Enums
         BACKGROUNDTASKITEM = 19935,
         [EnumMember(Value = DocConstantModelName.BROADCAST)]
         BROADCAST = 13962,
-        [EnumMember(Value = DocConstantModelName.CHARACTERISTIC)]
-        CHARACTERISTIC = 14475,
         [EnumMember(Value = DocConstantModelName.CLIENT)]
         CLIENT = 111,
         [EnumMember(Value = DocConstantModelName.COMMENT)]
         COMMENT = 18319,
-        [EnumMember(Value = DocConstantModelName.COMPARATOR)]
-        COMPARATOR = 20035,
         [EnumMember(Value = DocConstantModelName.DATABASEVERSION)]
         DATABASEVERSION = 18819,
         [EnumMember(Value = DocConstantModelName.DATACLASS)]
@@ -121,8 +117,6 @@ namespace Services.Enums
         IMPORTDATA = 12600,
         [EnumMember(Value = DocConstantModelName.INTERVAL)]
         INTERVAL = 15178,
-        [EnumMember(Value = DocConstantModelName.INTERVENTION)]
-        INTERVENTION = 13420,
         [EnumMember(Value = DocConstantModelName.JUNCTION)]
         JUNCTION = 17619,
         [EnumMember(Value = DocConstantModelName.LIBRARYSET)]
@@ -147,8 +141,6 @@ namespace Services.Enums
         MEANVARIANCES = 18219,
         [EnumMember(Value = DocConstantModelName.MEANVARIANCEVALUE)]
         MEANVARIANCEVALUE = 18119,
-        [EnumMember(Value = DocConstantModelName.OUTCOME)]
-        OUTCOME = 13662,
         [EnumMember(Value = DocConstantModelName.PAGE)]
         PAGE = 180,
         [EnumMember(Value = DocConstantModelName.PROJECT)]
@@ -157,8 +149,6 @@ namespace Services.Enums
         QUEUECHANNEL = 18519,
         [EnumMember(Value = DocConstantModelName.RATING)]
         RATING = 20365,
-        [EnumMember(Value = DocConstantModelName.RELEASESTATUS)]
-        RELEASESTATUS = 19835,
         [EnumMember(Value = DocConstantModelName.ROLE)]
         ROLE = 133,
         [EnumMember(Value = DocConstantModelName.SCOPE)]
@@ -247,14 +237,10 @@ namespace Services.Enums
                     return DocConstantModelName.BACKGROUNDTASKITEM;
                 case ModelNameEnm.BROADCAST:
                     return DocConstantModelName.BROADCAST;
-                case ModelNameEnm.CHARACTERISTIC:
-                    return DocConstantModelName.CHARACTERISTIC;
                 case ModelNameEnm.CLIENT:
                     return DocConstantModelName.CLIENT;
                 case ModelNameEnm.COMMENT:
                     return DocConstantModelName.COMMENT;
-                case ModelNameEnm.COMPARATOR:
-                    return DocConstantModelName.COMPARATOR;
                 case ModelNameEnm.DATABASEVERSION:
                     return DocConstantModelName.DATABASEVERSION;
                 case ModelNameEnm.DATACLASS:
@@ -301,8 +287,6 @@ namespace Services.Enums
                     return DocConstantModelName.IMPORTDATA;
                 case ModelNameEnm.INTERVAL:
                     return DocConstantModelName.INTERVAL;
-                case ModelNameEnm.INTERVENTION:
-                    return DocConstantModelName.INTERVENTION;
                 case ModelNameEnm.JUNCTION:
                     return DocConstantModelName.JUNCTION;
                 case ModelNameEnm.LIBRARYSET:
@@ -327,8 +311,6 @@ namespace Services.Enums
                     return DocConstantModelName.MEANVARIANCES;
                 case ModelNameEnm.MEANVARIANCEVALUE:
                     return DocConstantModelName.MEANVARIANCEVALUE;
-                case ModelNameEnm.OUTCOME:
-                    return DocConstantModelName.OUTCOME;
                 case ModelNameEnm.PAGE:
                     return DocConstantModelName.PAGE;
                 case ModelNameEnm.PROJECT:
@@ -337,8 +319,6 @@ namespace Services.Enums
                     return DocConstantModelName.QUEUECHANNEL;
                 case ModelNameEnm.RATING:
                     return DocConstantModelName.RATING;
-                case ModelNameEnm.RELEASESTATUS:
-                    return DocConstantModelName.RELEASESTATUS;
                 case ModelNameEnm.ROLE:
                     return DocConstantModelName.ROLE;
                 case ModelNameEnm.SCOPE:
@@ -417,10 +397,8 @@ namespace Services.Enums
         public const string BACKGROUNDTASKHISTORY = "BackgroundTaskHistory";
         public const string BACKGROUNDTASKITEM = "BackgroundTaskItem";
         public const string BROADCAST = "Broadcast";
-        public const string CHARACTERISTIC = "Characteristic";
         public const string CLIENT = "Client";
         public const string COMMENT = "Comment";
-        public const string COMPARATOR = "Comparator";
         public const string DATABASEVERSION = "DatabaseVersion";
         public const string DATACLASS = "DataClass";
         public const string DATAPROPERTY = "DataProperty";
@@ -444,7 +422,6 @@ namespace Services.Enums
         public const string IMPERSONATION = "Impersonation";
         public const string IMPORTDATA = "ImportData";
         public const string INTERVAL = "Interval";
-        public const string INTERVENTION = "Intervention";
         public const string JUNCTION = "Junction";
         public const string LIBRARYSET = "LibrarySet";
         public const string LOCALE = "Locale";
@@ -457,12 +434,10 @@ namespace Services.Enums
         public const string MEANRANGEVALUE = "MeanRangeValue";
         public const string MEANVARIANCES = "MeanVariances";
         public const string MEANVARIANCEVALUE = "MeanVarianceValue";
-        public const string OUTCOME = "Outcome";
         public const string PAGE = "Page";
         public const string PROJECT = "Project";
         public const string QUEUECHANNEL = "QueueChannel";
         public const string RATING = "Rating";
-        public const string RELEASESTATUS = "ReleaseStatus";
         public const string ROLE = "Role";
         public const string SCOPE = "Scope";
         public const string SERVEPORTALSET = "ServePortalSet";

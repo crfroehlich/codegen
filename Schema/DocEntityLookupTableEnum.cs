@@ -108,7 +108,7 @@ namespace Services.Schema
         public bool IsGlobal { get; set; }
 
 
-        [Field(Nullable = false)]
+        [Field(Nullable = false, Length = 800)]
         public string Name { get; set; }
 
 

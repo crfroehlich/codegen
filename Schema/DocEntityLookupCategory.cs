@@ -100,7 +100,7 @@ namespace Services.Schema
         #endregion Static Members
 
         #region Properties
-        [Field(Nullable = false)]
+        [Field(Nullable = false, Length = 800)]
         public string Category { get; set; }
 
 

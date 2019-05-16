@@ -125,7 +125,7 @@ namespace Services.Schema
         public int? ScopeId { get { return Scope?.Id; } private set { var noid = value; } }
 
 
-        [Field(Nullable = false)]
+        [Field(Nullable = false, Length = 800)]
         public string Synonym { get; set; }
 
 
