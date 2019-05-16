@@ -178,9 +178,8 @@ namespace Services.Schema
         public int? TeamId { get { return Team?.Id; } private set { var noid = value; } }
 
 
-        [Field(Nullable = false)]
-        public DocEntityLookupTable Type { get; set; }
-        public int? TypeId { get { return Type?.Id; } private set { var noid = value; } }
+        [Field(Nullable = false, DefaultValue = ScopeEnm.COMPOUND)]
+        public ScopeEnm Type { get; set; }
 
 
         [Field]
@@ -288,14 +287,6 @@ namespace Services.Schema
                 {
                     isValid = false;
                     message += " Type is a required property.";
-                }
-                else
-                {
-                    if(Type.Enum?.Name != "Scope")
-                    {
-                        isValid = false;
-                        message += " Type is a " + Type.Enum.Name + ", but must be a Scope.";
-                    }
                 }
 
                 var ret = new DocValidationMessage(message, isValid);
