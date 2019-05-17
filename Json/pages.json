@@ -207,19 +207,12 @@
         "Menu": []
       },
       {
-        "Name": "DataSets",
-        "Title": "Data Sets",
+        "Name": "DocumentSets",
+        "Title": "Document Sets",
         "Icon": "fa-database",
-        "Description": "Data Sets",
+        "Description": "Document Sets",
         "Order": 30,
         "Menu": [
-          {
-            "Name": "DRE Admin Study Sets",
-            "Title": "Study Sets",
-            "Link": "StudySets",
-            "Icon": "fa-sitemap",
-            "Order": 0
-          },
           {
             "Name": "DRE Admin TADI",
             "Title": "TADI",
@@ -228,32 +221,74 @@
             "Order": 0
           },
           {
+            "Name": "DRE Admin Projects",
+            "Title": "Projects",
+            "Link": "Projects",
+            "Icon": "fa-dropbox",
+            "Order": 10
+          },
+          {
+            "Name": "DRE Admin Document Sets",
+            "Title": "Document Sets",
+            "Link": "DocumentSets",
+            "Icon": "fa-sitemap",
+            "Order": 10
+          },
+          {
+            "Name": "DRE Admin Therapeutic Areas",
+            "Title": "Therapeutic Areas",
+            "Link": "TherapeuticAreas",
+            "Icon": "fa-sitemap",
+            "Order": 20
+          },
+          {
+            "Name": "DRE Admin Disease States",
+            "Title": "Disease States",
+            "Link": "DiseaseStates",
+            "Icon": "fa-sitemap",
+            "Order": 30
+          },
+          {
+            "Name": "DRE Admin Libraries",
+            "Title": "Libraries",
+            "Link": "Libraries",
+            "Icon": "fa-sitemap",
+            "Order": 40
+          },
+          {
+            "Name": "DRE Admin Data Sets",
+            "Title": "Data Sets",
+            "Link": "DataSets",
+            "Icon": "fa-sitemap",
+            "Order": 50
+          },
+          {
+            "Name": "DRE Admin SERVE Portals",
+            "Title": "SERVE Portals",
+            "Link": "ServePortals",
+            "Icon": "fa-sitemap",
+            "Order": 60
+          },
+          {
             "Name": "DRE Admin Studies",
             "Title": "Studies",
             "Link": "Studies",
             "Icon": "fa-clipboard",
-            "Order": 10
+            "Order": 70
           },
           {
             "Name": "DRE Admin Study Set Stats",
             "Title": "Study Set Stats",
             "Link": "StudySetStats",
             "Icon": "fa-object-group",
-            "Order": 30
+            "Order": 80
           },
           {
             "Name": "DRE Admin Study Import",
             "Title": "Study Import",
             "Link": "StudyImport",
             "Icon": "fa-upload",
-            "Order": 50
-          },
-          {
-            "Name": "DRE Admin Projects",
-            "Title": "Projects",
-            "Link": "Projects",
-            "Icon": "fa-dropbox",
-            "Order": 60
+            "Order": 90
           }
         ]
       },

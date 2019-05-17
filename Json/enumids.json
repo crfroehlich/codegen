@@ -1441,16 +1441,16 @@
     "SURVEY_WIZARD": 59620923,
     "TAG": 76351806
   },
+  "YesNoNa": {
+    "NA": 4958,
+    "NO": 4963,
+    "YES": 4968
+  },
   "WorkflowStatus": {
     "ACCEPTED": 150786181,
     "REJECTED": 150786182,
     "COLLECTED": 150786183,
     "REQUESTED": 150786184,
     "UNAVAILABLE": 150786185
-  },
-  "YesNoNa": {
-    "NA": 4958,
-    "NO": 4963,
-    "YES": 4968
   }
 }
