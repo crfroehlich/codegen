@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityLibrarySet : DocEntityDocumentSet
     {
         private const string LIBRARYSET_CACHE = "LibrarySetCache";
-        public const string TABLE_NAME = DocConstantModelName.LIBRARYSET;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.LIBRARYSET;
         
         #region Constructor
         public DocEntityLibrarySet(Session session) : base(session) {}
@@ -215,7 +215,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindLibrarySets";
 

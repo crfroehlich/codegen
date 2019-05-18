@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityDataTab : DocEntityBase
     {
         private const string DATATAB_CACHE = "DataTabCache";
-        public const string TABLE_NAME = DocConstantModelName.DATATAB;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.DATATAB;
         
         #region Constructor
         public DocEntityDataTab(Session session) : base(session) {}
@@ -138,7 +138,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindDataTabs";
 

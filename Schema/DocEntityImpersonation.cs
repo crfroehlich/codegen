@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityImpersonation : DocEntityBase
     {
         private const string IMPERSONATION_CACHE = "ImpersonationCache";
-        public const string TABLE_NAME = DocConstantModelName.IMPERSONATION;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.IMPERSONATION;
         
         #region Constructor
         public DocEntityImpersonation(Session session) : base(session) {}
@@ -136,7 +136,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindImpersonations";
 

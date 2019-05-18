@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityProject : DocEntityBase
     {
         private const string PROJECT_CACHE = "ProjectCache";
-        public const string TABLE_NAME = DocConstantModelName.PROJECT;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.PROJECT;
         
         #region Constructor
         public DocEntityProject(Session session) : base(session) {}
@@ -217,7 +217,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindProjects";
 

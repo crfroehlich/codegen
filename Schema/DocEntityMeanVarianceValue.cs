@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityMeanVarianceValue : DocEntityBase
     {
         private const string MEANVARIANCEVALUE_CACHE = "MeanVarianceValueCache";
-        public const string TABLE_NAME = DocConstantModelName.MEANVARIANCEVALUE;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.MEANVARIANCEVALUE;
         
         #region Constructor
         public DocEntityMeanVarianceValue(Session session) : base(session) {}
@@ -145,7 +145,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindMeanVarianceValues";
 

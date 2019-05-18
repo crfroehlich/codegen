@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityTimeCard : DocEntityBase
     {
         private const string TIMECARD_CACHE = "TimeCardCache";
-        public const string TABLE_NAME = DocConstantModelName.TIMECARD;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.TIMECARD;
         
         #region Constructor
         public DocEntityTimeCard(Session session) : base(session) {}
@@ -162,7 +162,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindTimeCards";
 

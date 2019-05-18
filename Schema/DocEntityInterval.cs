@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityInterval : DocEntityBase
     {
         private const string INTERVAL_CACHE = "IntervalCache";
-        public const string TABLE_NAME = DocConstantModelName.INTERVAL;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.INTERVAL;
         
         #region Constructor
         public DocEntityInterval(Session session) : base(session) {}
@@ -145,7 +145,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindIntervals";
 

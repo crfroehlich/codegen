@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityLookupTable : DocEntityBase
     {
         private const string LOOKUPTABLE_CACHE = "LookupTableCache";
-        public const string TABLE_NAME = DocConstantModelName.LOOKUPTABLE;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.LOOKUPTABLE;
         
         #region Constructor
         public DocEntityLookupTable(Session session) : base(session) {}
@@ -153,7 +153,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindLookupTables";
 

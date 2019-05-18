@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityAuditRecord : DocEntityBase
     {
         private const string AUDITRECORD_CACHE = "AuditRecordCache";
-        public const string TABLE_NAME = DocConstantModelName.AUDITRECORD;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.AUDITRECORD;
         
         #region Constructor
         public DocEntityAuditRecord(Session session) : base(session) {}
@@ -208,7 +208,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindAuditRecords";
 

@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityDivision : DocEntityBase
     {
         private const string DIVISION_CACHE = "DivisionCache";
-        public const string TABLE_NAME = DocConstantModelName.DIVISION;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.DIVISION;
         
         #region Constructor
         public DocEntityDivision(Session session) : base(session) {}
@@ -159,7 +159,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindDivisions";
 

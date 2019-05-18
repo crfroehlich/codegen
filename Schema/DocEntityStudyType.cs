@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityStudyType : DocEntityBase
     {
         private const string STUDYTYPE_CACHE = "StudyTypeCache";
-        public const string TABLE_NAME = DocConstantModelName.STUDYTYPE;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.STUDYTYPE;
         
         #region Constructor
         public DocEntityStudyType(Session session) : base(session) {}
@@ -126,7 +126,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindStudyTypes";
 

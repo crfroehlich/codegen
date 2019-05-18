@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityDiseaseStateSet : DocEntityDocumentSet
     {
         private const string DISEASESTATESET_CACHE = "DiseaseStateSetCache";
-        public const string TABLE_NAME = DocConstantModelName.DISEASESTATESET;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.DISEASESTATESET;
         
         #region Constructor
         public DocEntityDiseaseStateSet(Session session) : base(session) {}
@@ -105,7 +105,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindDiseaseStateSets";
 

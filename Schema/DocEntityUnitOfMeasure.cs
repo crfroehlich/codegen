@@ -48,7 +48,7 @@ namespace Services.Schema
     public partial class DocEntityUnitOfMeasure : DocEntityBase
     {
         private const string UNITOFMEASURE_CACHE = "UnitOfMeasureCache";
-        public const string TABLE_NAME = DocConstantModelName.UNITOFMEASURE;
+        public const ModelNameEnm CLASS_NAME = ModelNameEnm.UNITOFMEASURE;
         
         #region Constructor
         public DocEntityUnitOfMeasure(Session session) : base(session) {}
@@ -140,7 +140,9 @@ namespace Services.Schema
 
         #region Overrides of DocEntity
 
-        public override DocConstantModelName TableName => TABLE_NAME;
+        public override ModelNameEnm ClassName => CLASS_NAME;
+
+        public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindUnitOfMeasures";
 
