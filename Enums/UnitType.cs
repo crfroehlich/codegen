@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,62 +15,46 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UnitTypeEnm
     {
-        [EnumMember(Value = DocConstantUnitType.AMOUNT)]
+        [EnumMember(Value = DocConstantUnitType.AMOUNT), SCDescript(DocConstantUnitType.AMOUNT), SSDescript(DocConstantUnitType.AMOUNT), SCDisplay(Name = DocConstantUnitType.AMOUNT)]
         AMOUNT = 4553,
-        [EnumMember(Value = DocConstantUnitType.AREA)]
+        [EnumMember(Value = DocConstantUnitType.AREA), SCDescript(DocConstantUnitType.AREA), SSDescript(DocConstantUnitType.AREA), SCDisplay(Name = DocConstantUnitType.AREA)]
         AREA = 4558,
-        [EnumMember(Value = DocConstantUnitType.CONCENTRATION)]
+        [EnumMember(Value = DocConstantUnitType.CONCENTRATION), SCDescript(DocConstantUnitType.CONCENTRATION), SSDescript(DocConstantUnitType.CONCENTRATION), SCDisplay(Name = DocConstantUnitType.CONCENTRATION)]
         CONCENTRATION = 4563,
-        [EnumMember(Value = DocConstantUnitType.CONCENTRATION_MOLAR)]
+        [EnumMember(Value = DocConstantUnitType.CONCENTRATION_MOLAR), SCDescript(DocConstantUnitType.CONCENTRATION_MOLAR), SSDescript(DocConstantUnitType.CONCENTRATION_MOLAR), SCDisplay(Name = DocConstantUnitType.CONCENTRATION_MOLAR)]
         CONCENTRATION_MOLAR = 4568,
-        [EnumMember(Value = DocConstantUnitType.CONCENTRATION_SOLUTION)]
+        [EnumMember(Value = DocConstantUnitType.CONCENTRATION_SOLUTION), SCDescript(DocConstantUnitType.CONCENTRATION_SOLUTION), SSDescript(DocConstantUnitType.CONCENTRATION_SOLUTION), SCDisplay(Name = DocConstantUnitType.CONCENTRATION_SOLUTION)]
         CONCENTRATION_SOLUTION = 4573,
-        [EnumMember(Value = DocConstantUnitType.LABEL)]
+        [EnumMember(Value = DocConstantUnitType.LABEL), SCDescript(DocConstantUnitType.LABEL), SSDescript(DocConstantUnitType.LABEL), SCDisplay(Name = DocConstantUnitType.LABEL)]
         LABEL = 4578,
-        [EnumMember(Value = DocConstantUnitType.LENGTH)]
+        [EnumMember(Value = DocConstantUnitType.LENGTH), SCDescript(DocConstantUnitType.LENGTH), SSDescript(DocConstantUnitType.LENGTH), SCDisplay(Name = DocConstantUnitType.LENGTH)]
         LENGTH = 67058544,
-        [EnumMember(Value = DocConstantUnitType.MASS)]
+        [EnumMember(Value = DocConstantUnitType.MASS), SCDescript(DocConstantUnitType.MASS), SSDescript(DocConstantUnitType.MASS), SCDisplay(Name = DocConstantUnitType.MASS)]
         MASS = 4583,
-        [EnumMember(Value = DocConstantUnitType.MOLES)]
+        [EnumMember(Value = DocConstantUnitType.MOLES), SCDescript(DocConstantUnitType.MOLES), SSDescript(DocConstantUnitType.MOLES), SCDisplay(Name = DocConstantUnitType.MOLES)]
         MOLES = 4588,
-        [EnumMember(Value = DocConstantUnitType.NON_TIME)]
+        [EnumMember(Value = DocConstantUnitType.NON_TIME), SCDescript(DocConstantUnitType.NON_TIME), SSDescript(DocConstantUnitType.NON_TIME), SCDisplay(Name = DocConstantUnitType.NON_TIME)]
         NON_TIME = 4593,
-        [EnumMember(Value = DocConstantUnitType.NON_UNIT)]
+        [EnumMember(Value = DocConstantUnitType.NON_UNIT), SCDescript(DocConstantUnitType.NON_UNIT), SSDescript(DocConstantUnitType.NON_UNIT), SCDisplay(Name = DocConstantUnitType.NON_UNIT)]
         NON_UNIT = 4598,
-        [EnumMember(Value = DocConstantUnitType.RADIATION)]
+        [EnumMember(Value = DocConstantUnitType.RADIATION), SCDescript(DocConstantUnitType.RADIATION), SSDescript(DocConstantUnitType.RADIATION), SCDisplay(Name = DocConstantUnitType.RADIATION)]
         RADIATION = 4603,
-        [EnumMember(Value = DocConstantUnitType.TIME)]
+        [EnumMember(Value = DocConstantUnitType.TIME), SCDescript(DocConstantUnitType.TIME), SSDescript(DocConstantUnitType.TIME), SCDisplay(Name = DocConstantUnitType.TIME)]
         TIME = 4608,
-        [EnumMember(Value = DocConstantUnitType.VOLUME)]
+        [EnumMember(Value = DocConstantUnitType.VOLUME), SCDescript(DocConstantUnitType.VOLUME), SSDescript(DocConstantUnitType.VOLUME), SCDisplay(Name = DocConstantUnitType.VOLUME)]
         VOLUME = 4613,
-        [EnumMember(Value = DocConstantUnitType.WEIGHT)]
+        [EnumMember(Value = DocConstantUnitType.WEIGHT), SCDescript(DocConstantUnitType.WEIGHT), SSDescript(DocConstantUnitType.WEIGHT), SCDisplay(Name = DocConstantUnitType.WEIGHT)]
         WEIGHT = 4618
     }
     
@@ -83,7 +62,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this UnitTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case UnitTypeEnm.AMOUNT:
                     return DocConstantUnitType.AMOUNT;
@@ -118,6 +97,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this UnitTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

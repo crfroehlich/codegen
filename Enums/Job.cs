@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,66 +15,50 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum JobEnm
     {
-        [EnumMember(Value = DocConstantJob.CLEANUP_HISTORY)]
+        [EnumMember(Value = DocConstantJob.CLEANUP_HISTORY), SCDescript(DocConstantJob.CLEANUP_HISTORY), SSDescript(DocConstantJob.CLEANUP_HISTORY), SCDisplay(Name = DocConstantJob.CLEANUP_HISTORY)]
         CLEANUP_HISTORY = 139850818,
-        [EnumMember(Value = DocConstantJob.CREATE_ALL_APPS)]
+        [EnumMember(Value = DocConstantJob.CREATE_ALL_APPS), SCDescript(DocConstantJob.CREATE_ALL_APPS), SSDescript(DocConstantJob.CREATE_ALL_APPS), SCDisplay(Name = DocConstantJob.CREATE_ALL_APPS)]
         CREATE_ALL_APPS = 139850819,
-        [EnumMember(Value = DocConstantJob.CREATE_ALL_ROLE_PERMISSIONS)]
+        [EnumMember(Value = DocConstantJob.CREATE_ALL_ROLE_PERMISSIONS), SCDescript(DocConstantJob.CREATE_ALL_ROLE_PERMISSIONS), SSDescript(DocConstantJob.CREATE_ALL_ROLE_PERMISSIONS), SCDisplay(Name = DocConstantJob.CREATE_ALL_ROLE_PERMISSIONS)]
         CREATE_ALL_ROLE_PERMISSIONS = 139850820,
-        [EnumMember(Value = DocConstantJob.CREATE_ALL_VALUE_TYPES)]
+        [EnumMember(Value = DocConstantJob.CREATE_ALL_VALUE_TYPES), SCDescript(DocConstantJob.CREATE_ALL_VALUE_TYPES), SSDescript(DocConstantJob.CREATE_ALL_VALUE_TYPES), SCDisplay(Name = DocConstantJob.CREATE_ALL_VALUE_TYPES)]
         CREATE_ALL_VALUE_TYPES = 139850821,
-        [EnumMember(Value = DocConstantJob.CREATE_DOCUMENT_SET_QUEUES)]
+        [EnumMember(Value = DocConstantJob.CREATE_DOCUMENT_SET_QUEUES), SCDescript(DocConstantJob.CREATE_DOCUMENT_SET_QUEUES), SSDescript(DocConstantJob.CREATE_DOCUMENT_SET_QUEUES), SCDisplay(Name = DocConstantJob.CREATE_DOCUMENT_SET_QUEUES)]
         CREATE_DOCUMENT_SET_QUEUES = 139850822,
-        [EnumMember(Value = DocConstantJob.EXTRACT_IMPORT)]
+        [EnumMember(Value = DocConstantJob.EXTRACT_IMPORT), SCDescript(DocConstantJob.EXTRACT_IMPORT), SSDescript(DocConstantJob.EXTRACT_IMPORT), SCDisplay(Name = DocConstantJob.EXTRACT_IMPORT)]
         EXTRACT_IMPORT = 139850823,
-        [EnumMember(Value = DocConstantJob.EXTRACT_NOTIFICATIONS)]
+        [EnumMember(Value = DocConstantJob.EXTRACT_NOTIFICATIONS), SCDescript(DocConstantJob.EXTRACT_NOTIFICATIONS), SSDescript(DocConstantJob.EXTRACT_NOTIFICATIONS), SCDisplay(Name = DocConstantJob.EXTRACT_NOTIFICATIONS)]
         EXTRACT_NOTIFICATIONS = 139850824,
-        [EnumMember(Value = DocConstantJob.IMPORT_LIBRARY)]
+        [EnumMember(Value = DocConstantJob.IMPORT_LIBRARY), SCDescript(DocConstantJob.IMPORT_LIBRARY), SSDescript(DocConstantJob.IMPORT_LIBRARY), SCDisplay(Name = DocConstantJob.IMPORT_LIBRARY)]
         IMPORT_LIBRARY = 139850825,
-        [EnumMember(Value = DocConstantJob.IMPORT_PACKAGES)]
+        [EnumMember(Value = DocConstantJob.IMPORT_PACKAGES), SCDescript(DocConstantJob.IMPORT_PACKAGES), SSDescript(DocConstantJob.IMPORT_PACKAGES), SCDisplay(Name = DocConstantJob.IMPORT_PACKAGES)]
         IMPORT_PACKAGES = 139850826,
-        [EnumMember(Value = DocConstantJob.PROCESS_EVENTS)]
+        [EnumMember(Value = DocConstantJob.PROCESS_EVENTS), SCDescript(DocConstantJob.PROCESS_EVENTS), SSDescript(DocConstantJob.PROCESS_EVENTS), SCDisplay(Name = DocConstantJob.PROCESS_EVENTS)]
         PROCESS_EVENTS = 139850827,
-        [EnumMember(Value = DocConstantJob.PROCESS_STATS)]
+        [EnumMember(Value = DocConstantJob.PROCESS_STATS), SCDescript(DocConstantJob.PROCESS_STATS), SSDescript(DocConstantJob.PROCESS_STATS), SCDisplay(Name = DocConstantJob.PROCESS_STATS)]
         PROCESS_STATS = 139850828,
-        [EnumMember(Value = DocConstantJob.PROCESS_UPDATES)]
+        [EnumMember(Value = DocConstantJob.PROCESS_UPDATES), SCDescript(DocConstantJob.PROCESS_UPDATES), SSDescript(DocConstantJob.PROCESS_UPDATES), SCDisplay(Name = DocConstantJob.PROCESS_UPDATES)]
         PROCESS_UPDATES = 139850829,
-        [EnumMember(Value = DocConstantJob.REASSIGN_ARCHIVED_USERS)]
+        [EnumMember(Value = DocConstantJob.REASSIGN_ARCHIVED_USERS), SCDescript(DocConstantJob.REASSIGN_ARCHIVED_USERS), SSDescript(DocConstantJob.REASSIGN_ARCHIVED_USERS), SCDisplay(Name = DocConstantJob.REASSIGN_ARCHIVED_USERS)]
         REASSIGN_ARCHIVED_USERS = 150784176,
-        [EnumMember(Value = DocConstantJob.RUN_TIMECARD_RULES)]
+        [EnumMember(Value = DocConstantJob.RUN_TIMECARD_RULES), SCDescript(DocConstantJob.RUN_TIMECARD_RULES), SSDescript(DocConstantJob.RUN_TIMECARD_RULES), SCDisplay(Name = DocConstantJob.RUN_TIMECARD_RULES)]
         RUN_TIMECARD_RULES = 139850830,
-        [EnumMember(Value = DocConstantJob.STUDYSET_HISTORY)]
+        [EnumMember(Value = DocConstantJob.STUDYSET_HISTORY), SCDescript(DocConstantJob.STUDYSET_HISTORY), SSDescript(DocConstantJob.STUDYSET_HISTORY), SCDisplay(Name = DocConstantJob.STUDYSET_HISTORY)]
         STUDYSET_HISTORY = 139850831,
-        [EnumMember(Value = DocConstantJob.SYNC_LOOKUP_TABLES)]
+        [EnumMember(Value = DocConstantJob.SYNC_LOOKUP_TABLES), SCDescript(DocConstantJob.SYNC_LOOKUP_TABLES), SSDescript(DocConstantJob.SYNC_LOOKUP_TABLES), SCDisplay(Name = DocConstantJob.SYNC_LOOKUP_TABLES)]
         SYNC_LOOKUP_TABLES = 139850833,
-        [EnumMember(Value = DocConstantJob.SYNC_USERS)]
+        [EnumMember(Value = DocConstantJob.SYNC_USERS), SCDescript(DocConstantJob.SYNC_USERS), SSDescript(DocConstantJob.SYNC_USERS), SCDisplay(Name = DocConstantJob.SYNC_USERS)]
         SYNC_USERS = 139850835
     }
     
@@ -87,7 +66,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this JobEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case JobEnm.CLEANUP_HISTORY:
                     return DocConstantJob.CLEANUP_HISTORY;
@@ -126,6 +105,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this JobEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

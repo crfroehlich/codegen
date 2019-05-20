@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,58 +15,42 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ResponsesCollectedByEnm
     {
-        [EnumMember(Value = DocConstantResponsesCollectedBy.CLINICAL_CARE_PROVIDER)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.CLINICAL_CARE_PROVIDER), SCDescript(DocConstantResponsesCollectedBy.CLINICAL_CARE_PROVIDER), SSDescript(DocConstantResponsesCollectedBy.CLINICAL_CARE_PROVIDER), SCDisplay(Name = DocConstantResponsesCollectedBy.CLINICAL_CARE_PROVIDER)]
         CLINICAL_CARE_PROVIDER = 2812,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.LABORATORY_TECH)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.LABORATORY_TECH), SCDescript(DocConstantResponsesCollectedBy.LABORATORY_TECH), SSDescript(DocConstantResponsesCollectedBy.LABORATORY_TECH), SCDisplay(Name = DocConstantResponsesCollectedBy.LABORATORY_TECH)]
         LABORATORY_TECH = 2817,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.MULTIPLE)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.MULTIPLE), SCDescript(DocConstantResponsesCollectedBy.MULTIPLE), SSDescript(DocConstantResponsesCollectedBy.MULTIPLE), SCDisplay(Name = DocConstantResponsesCollectedBy.MULTIPLE)]
         MULTIPLE = 2822,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.NR)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.NR), SCDescript(DocConstantResponsesCollectedBy.NR), SSDescript(DocConstantResponsesCollectedBy.NR), SCDisplay(Name = DocConstantResponsesCollectedBy.NR)]
         NR = 2827,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.OBSERVE)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.OBSERVE), SCDescript(DocConstantResponsesCollectedBy.OBSERVE), SSDescript(DocConstantResponsesCollectedBy.OBSERVE), SCDisplay(Name = DocConstantResponsesCollectedBy.OBSERVE)]
         OBSERVE = 2832,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.PAID_CAREGIVER_STAFF)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.PAID_CAREGIVER_STAFF), SCDescript(DocConstantResponsesCollectedBy.PAID_CAREGIVER_STAFF), SSDescript(DocConstantResponsesCollectedBy.PAID_CAREGIVER_STAFF), SCDisplay(Name = DocConstantResponsesCollectedBy.PAID_CAREGIVER_STAFF)]
         PAID_CAREGIVER_STAFF = 2837,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.RESEARCHER)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.RESEARCHER), SCDescript(DocConstantResponsesCollectedBy.RESEARCHER), SSDescript(DocConstantResponsesCollectedBy.RESEARCHER), SCDisplay(Name = DocConstantResponsesCollectedBy.RESEARCHER)]
         RESEARCHER = 2842,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.SELF)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.SELF), SCDescript(DocConstantResponsesCollectedBy.SELF), SSDescript(DocConstantResponsesCollectedBy.SELF), SCDisplay(Name = DocConstantResponsesCollectedBy.SELF)]
         SELF = 2847,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.STUDY_INVESTIGATOR)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.STUDY_INVESTIGATOR), SCDescript(DocConstantResponsesCollectedBy.STUDY_INVESTIGATOR), SSDescript(DocConstantResponsesCollectedBy.STUDY_INVESTIGATOR), SCDisplay(Name = DocConstantResponsesCollectedBy.STUDY_INVESTIGATOR)]
         STUDY_INVESTIGATOR = 2852,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.SURGEON)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.SURGEON), SCDescript(DocConstantResponsesCollectedBy.SURGEON), SSDescript(DocConstantResponsesCollectedBy.SURGEON), SCDisplay(Name = DocConstantResponsesCollectedBy.SURGEON)]
         SURGEON = 2857,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.TEACHER)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.TEACHER), SCDescript(DocConstantResponsesCollectedBy.TEACHER), SSDescript(DocConstantResponsesCollectedBy.TEACHER), SCDisplay(Name = DocConstantResponsesCollectedBy.TEACHER)]
         TEACHER = 2862,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.UNCLEAR)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.UNCLEAR), SCDescript(DocConstantResponsesCollectedBy.UNCLEAR), SSDescript(DocConstantResponsesCollectedBy.UNCLEAR), SCDisplay(Name = DocConstantResponsesCollectedBy.UNCLEAR)]
         UNCLEAR = 2867,
-        [EnumMember(Value = DocConstantResponsesCollectedBy.UNPAID_CAREGIVER_FAMILY)]
+        [EnumMember(Value = DocConstantResponsesCollectedBy.UNPAID_CAREGIVER_FAMILY), SCDescript(DocConstantResponsesCollectedBy.UNPAID_CAREGIVER_FAMILY), SSDescript(DocConstantResponsesCollectedBy.UNPAID_CAREGIVER_FAMILY), SCDisplay(Name = DocConstantResponsesCollectedBy.UNPAID_CAREGIVER_FAMILY)]
         UNPAID_CAREGIVER_FAMILY = 2872
     }
     
@@ -79,7 +58,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ResponsesCollectedByEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ResponsesCollectedByEnm.CLINICAL_CARE_PROVIDER:
                     return DocConstantResponsesCollectedBy.CLINICAL_CARE_PROVIDER;
@@ -110,6 +89,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ResponsesCollectedByEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

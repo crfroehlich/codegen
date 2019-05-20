@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,56 +15,40 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyNGAEnm
     {
-        [EnumMember(Value = DocConstantStudyNGA.COMPLETED_FINISHED)]
+        [EnumMember(Value = DocConstantStudyNGA.COMPLETED_FINISHED), SCDescript(DocConstantStudyNGA.COMPLETED_FINISHED), SSDescript(DocConstantStudyNGA.COMPLETED_FINISHED), SCDisplay(Name = DocConstantStudyNGA.COMPLETED_FINISHED)]
         COMPLETED_FINISHED = 3413,
-        [EnumMember(Value = DocConstantStudyNGA.CROSSOVER)]
+        [EnumMember(Value = DocConstantStudyNGA.CROSSOVER), SCDescript(DocConstantStudyNGA.CROSSOVER), SSDescript(DocConstantStudyNGA.CROSSOVER), SCDisplay(Name = DocConstantStudyNGA.CROSSOVER)]
         CROSSOVER = 3418,
-        [EnumMember(Value = DocConstantStudyNGA.DRUG_DISCONTINUATION)]
+        [EnumMember(Value = DocConstantStudyNGA.DRUG_DISCONTINUATION), SCDescript(DocConstantStudyNGA.DRUG_DISCONTINUATION), SSDescript(DocConstantStudyNGA.DRUG_DISCONTINUATION), SCDisplay(Name = DocConstantStudyNGA.DRUG_DISCONTINUATION)]
         DRUG_DISCONTINUATION = 3423,
-        [EnumMember(Value = DocConstantStudyNGA.ENROLLED)]
+        [EnumMember(Value = DocConstantStudyNGA.ENROLLED), SCDescript(DocConstantStudyNGA.ENROLLED), SSDescript(DocConstantStudyNGA.ENROLLED), SCDisplay(Name = DocConstantStudyNGA.ENROLLED)]
         ENROLLED = 3428,
-        [EnumMember(Value = DocConstantStudyNGA.ITT)]
+        [EnumMember(Value = DocConstantStudyNGA.ITT), SCDescript(DocConstantStudyNGA.ITT), SSDescript(DocConstantStudyNGA.ITT), SCDisplay(Name = DocConstantStudyNGA.ITT)]
         ITT = 3433,
-        [EnumMember(Value = DocConstantStudyNGA.MODIFIED_ITT)]
+        [EnumMember(Value = DocConstantStudyNGA.MODIFIED_ITT), SCDescript(DocConstantStudyNGA.MODIFIED_ITT), SSDescript(DocConstantStudyNGA.MODIFIED_ITT), SCDisplay(Name = DocConstantStudyNGA.MODIFIED_ITT)]
         MODIFIED_ITT = 3438,
-        [EnumMember(Value = DocConstantStudyNGA.PARTICIPANTS_INITIATED_STUDY)]
+        [EnumMember(Value = DocConstantStudyNGA.PARTICIPANTS_INITIATED_STUDY), SCDescript(DocConstantStudyNGA.PARTICIPANTS_INITIATED_STUDY), SSDescript(DocConstantStudyNGA.PARTICIPANTS_INITIATED_STUDY), SCDisplay(Name = DocConstantStudyNGA.PARTICIPANTS_INITIATED_STUDY)]
         PARTICIPANTS_INITIATED_STUDY = 3443,
-        [EnumMember(Value = DocConstantStudyNGA.PP)]
+        [EnumMember(Value = DocConstantStudyNGA.PP), SCDescript(DocConstantStudyNGA.PP), SSDescript(DocConstantStudyNGA.PP), SCDisplay(Name = DocConstantStudyNGA.PP)]
         PP = 3448,
-        [EnumMember(Value = DocConstantStudyNGA.RECRUITED)]
+        [EnumMember(Value = DocConstantStudyNGA.RECRUITED), SCDescript(DocConstantStudyNGA.RECRUITED), SSDescript(DocConstantStudyNGA.RECRUITED), SCDisplay(Name = DocConstantStudyNGA.RECRUITED)]
         RECRUITED = 3453,
-        [EnumMember(Value = DocConstantStudyNGA.SAFETY)]
+        [EnumMember(Value = DocConstantStudyNGA.SAFETY), SCDescript(DocConstantStudyNGA.SAFETY), SSDescript(DocConstantStudyNGA.SAFETY), SCDisplay(Name = DocConstantStudyNGA.SAFETY)]
         SAFETY = 3458,
-        [EnumMember(Value = DocConstantStudyNGA.SCREENED)]
+        [EnumMember(Value = DocConstantStudyNGA.SCREENED), SCDescript(DocConstantStudyNGA.SCREENED), SSDescript(DocConstantStudyNGA.SCREENED), SCDisplay(Name = DocConstantStudyNGA.SCREENED)]
         SCREENED = 3463,
-        [EnumMember(Value = DocConstantStudyNGA.STUDY_WITHDRAWALS)]
+        [EnumMember(Value = DocConstantStudyNGA.STUDY_WITHDRAWALS), SCDescript(DocConstantStudyNGA.STUDY_WITHDRAWALS), SSDescript(DocConstantStudyNGA.STUDY_WITHDRAWALS), SCDisplay(Name = DocConstantStudyNGA.STUDY_WITHDRAWALS)]
         STUDY_WITHDRAWALS = 3468
     }
     
@@ -77,7 +56,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyNGAEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyNGAEnm.COMPLETED_FINISHED:
                     return DocConstantStudyNGA.COMPLETED_FINISHED;
@@ -106,6 +85,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyNGAEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

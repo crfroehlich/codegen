@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,48 +15,32 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DatabaseTypeEnm
     {
-        [EnumMember(Value = DocConstantDatabaseType.ASCO)]
+        [EnumMember(Value = DocConstantDatabaseType.ASCO), SCDescript(DocConstantDatabaseType.ASCO), SSDescript(DocConstantDatabaseType.ASCO), SCDisplay(Name = DocConstantDatabaseType.ASCO)]
         ASCO = 76351757,
-        [EnumMember(Value = DocConstantDatabaseType.CLINICAL_TRIALS_GOV)]
+        [EnumMember(Value = DocConstantDatabaseType.CLINICAL_TRIALS_GOV), SCDescript(DocConstantDatabaseType.CLINICAL_TRIALS_GOV), SSDescript(DocConstantDatabaseType.CLINICAL_TRIALS_GOV), SCDisplay(Name = DocConstantDatabaseType.CLINICAL_TRIALS_GOV)]
         CLINICAL_TRIALS_GOV = 76351758,
-        [EnumMember(Value = DocConstantDatabaseType.COCHRANE)]
+        [EnumMember(Value = DocConstantDatabaseType.COCHRANE), SCDescript(DocConstantDatabaseType.COCHRANE), SSDescript(DocConstantDatabaseType.COCHRANE), SCDisplay(Name = DocConstantDatabaseType.COCHRANE)]
         COCHRANE = 76351759,
-        [EnumMember(Value = DocConstantDatabaseType.EMBASE)]
+        [EnumMember(Value = DocConstantDatabaseType.EMBASE), SCDescript(DocConstantDatabaseType.EMBASE), SSDescript(DocConstantDatabaseType.EMBASE), SCDisplay(Name = DocConstantDatabaseType.EMBASE)]
         EMBASE = 76351760,
-        [EnumMember(Value = DocConstantDatabaseType.IOVS)]
+        [EnumMember(Value = DocConstantDatabaseType.IOVS), SCDescript(DocConstantDatabaseType.IOVS), SSDescript(DocConstantDatabaseType.IOVS), SCDisplay(Name = DocConstantDatabaseType.IOVS)]
         IOVS = 76351761,
-        [EnumMember(Value = DocConstantDatabaseType.MANUAL_ENTRY)]
+        [EnumMember(Value = DocConstantDatabaseType.MANUAL_ENTRY), SCDescript(DocConstantDatabaseType.MANUAL_ENTRY), SSDescript(DocConstantDatabaseType.MANUAL_ENTRY), SCDisplay(Name = DocConstantDatabaseType.MANUAL_ENTRY)]
         MANUAL_ENTRY = 76351762,
-        [EnumMember(Value = DocConstantDatabaseType.MEDLINE)]
+        [EnumMember(Value = DocConstantDatabaseType.MEDLINE), SCDescript(DocConstantDatabaseType.MEDLINE), SSDescript(DocConstantDatabaseType.MEDLINE), SCDisplay(Name = DocConstantDatabaseType.MEDLINE)]
         MEDLINE = 76351763,
-        [EnumMember(Value = DocConstantDatabaseType.NORTHERN_LIGHT)]
+        [EnumMember(Value = DocConstantDatabaseType.NORTHERN_LIGHT), SCDescript(DocConstantDatabaseType.NORTHERN_LIGHT), SSDescript(DocConstantDatabaseType.NORTHERN_LIGHT), SCDisplay(Name = DocConstantDatabaseType.NORTHERN_LIGHT)]
         NORTHERN_LIGHT = 76351764
     }
     
@@ -69,7 +48,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this DatabaseTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case DatabaseTypeEnm.ASCO:
                     return DocConstantDatabaseType.ASCO;
@@ -90,6 +69,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this DatabaseTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

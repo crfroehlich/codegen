@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,306 +15,290 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UnitsOfMeasureEnm
     {
-        [EnumMember(Value = DocConstantUnitsOfMeasure.ARE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.ARE), SCDescript(DocConstantUnitsOfMeasure.ARE), SSDescript(DocConstantUnitsOfMeasure.ARE), SCDisplay(Name = DocConstantUnitsOfMeasure.ARE)]
         ARE = 3873,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.ATOMS)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.ATOMS), SCDescript(DocConstantUnitsOfMeasure.ATOMS), SSDescript(DocConstantUnitsOfMeasure.ATOMS), SCDisplay(Name = DocConstantUnitsOfMeasure.ATOMS)]
         ATOMS = 3878,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.BECQUEREL)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.BECQUEREL), SCDescript(DocConstantUnitsOfMeasure.BECQUEREL), SSDescript(DocConstantUnitsOfMeasure.BECQUEREL), SCDisplay(Name = DocConstantUnitsOfMeasure.BECQUEREL)]
         BECQUEREL = 3883,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CENTIGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CENTIGRAM), SCDescript(DocConstantUnitsOfMeasure.CENTIGRAM), SSDescript(DocConstantUnitsOfMeasure.CENTIGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.CENTIGRAM)]
         CENTIGRAM = 3888,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CENTILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CENTILITER), SCDescript(DocConstantUnitsOfMeasure.CENTILITER), SSDescript(DocConstantUnitsOfMeasure.CENTILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.CENTILITER)]
         CENTILITER = 3893,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CENTIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CENTIMETER), SCDescript(DocConstantUnitsOfMeasure.CENTIMETER), SSDescript(DocConstantUnitsOfMeasure.CENTIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.CENTIMETER)]
         CENTIMETER = 3898,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_CENTIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_CENTIMETER), SCDescript(DocConstantUnitsOfMeasure.CUBIC_CENTIMETER), SSDescript(DocConstantUnitsOfMeasure.CUBIC_CENTIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_CENTIMETER)]
         CUBIC_CENTIMETER = 3903,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_FOOT)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_FOOT), SCDescript(DocConstantUnitsOfMeasure.CUBIC_FOOT), SSDescript(DocConstantUnitsOfMeasure.CUBIC_FOOT), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_FOOT)]
         CUBIC_FOOT = 3908,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_INCH)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_INCH), SCDescript(DocConstantUnitsOfMeasure.CUBIC_INCH), SSDescript(DocConstantUnitsOfMeasure.CUBIC_INCH), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_INCH)]
         CUBIC_INCH = 3913,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_KILOMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_KILOMETER), SCDescript(DocConstantUnitsOfMeasure.CUBIC_KILOMETER), SSDescript(DocConstantUnitsOfMeasure.CUBIC_KILOMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_KILOMETER)]
         CUBIC_KILOMETER = 3918,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_METER), SCDescript(DocConstantUnitsOfMeasure.CUBIC_METER), SSDescript(DocConstantUnitsOfMeasure.CUBIC_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_METER)]
         CUBIC_METER = 3923,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MICROLITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MICROLITER), SCDescript(DocConstantUnitsOfMeasure.CUBIC_MICROLITER), SSDescript(DocConstantUnitsOfMeasure.CUBIC_MICROLITER), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_MICROLITER)]
         CUBIC_MICROLITER = 3928,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MICROMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MICROMETER), SCDescript(DocConstantUnitsOfMeasure.CUBIC_MICROMETER), SSDescript(DocConstantUnitsOfMeasure.CUBIC_MICROMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_MICROMETER)]
         CUBIC_MICROMETER = 3933,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MILE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MILE), SCDescript(DocConstantUnitsOfMeasure.CUBIC_MILE), SSDescript(DocConstantUnitsOfMeasure.CUBIC_MILE), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_MILE)]
         CUBIC_MILE = 3938,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MILLIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_MILLIMETER), SCDescript(DocConstantUnitsOfMeasure.CUBIC_MILLIMETER), SSDescript(DocConstantUnitsOfMeasure.CUBIC_MILLIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_MILLIMETER)]
         CUBIC_MILLIMETER = 3943,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_NANOMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_NANOMETER), SCDescript(DocConstantUnitsOfMeasure.CUBIC_NANOMETER), SSDescript(DocConstantUnitsOfMeasure.CUBIC_NANOMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_NANOMETER)]
         CUBIC_NANOMETER = 3948,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_YARD)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUBIC_YARD), SCDescript(DocConstantUnitsOfMeasure.CUBIC_YARD), SSDescript(DocConstantUnitsOfMeasure.CUBIC_YARD), SCDisplay(Name = DocConstantUnitsOfMeasure.CUBIC_YARD)]
         CUBIC_YARD = 3953,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CUP)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CUP), SCDescript(DocConstantUnitsOfMeasure.CUP), SSDescript(DocConstantUnitsOfMeasure.CUP), SCDisplay(Name = DocConstantUnitsOfMeasure.CUP)]
         CUP = 3958,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.CURIE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.CURIE), SCDescript(DocConstantUnitsOfMeasure.CURIE), SSDescript(DocConstantUnitsOfMeasure.CURIE), SCDisplay(Name = DocConstantUnitsOfMeasure.CURIE)]
         CURIE = 3963,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.DAY)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.DAY), SCDescript(DocConstantUnitsOfMeasure.DAY), SSDescript(DocConstantUnitsOfMeasure.DAY), SCDisplay(Name = DocConstantUnitsOfMeasure.DAY)]
         DAY = 3968,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.DECIGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.DECIGRAM), SCDescript(DocConstantUnitsOfMeasure.DECIGRAM), SSDescript(DocConstantUnitsOfMeasure.DECIGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.DECIGRAM)]
         DECIGRAM = 3973,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.DECILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.DECILITER), SCDescript(DocConstantUnitsOfMeasure.DECILITER), SSDescript(DocConstantUnitsOfMeasure.DECILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.DECILITER)]
         DECILITER = 3978,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.DEKAGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.DEKAGRAM), SCDescript(DocConstantUnitsOfMeasure.DEKAGRAM), SSDescript(DocConstantUnitsOfMeasure.DEKAGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.DEKAGRAM)]
         DEKAGRAM = 3983,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.EXAGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.EXAGRAM), SCDescript(DocConstantUnitsOfMeasure.EXAGRAM), SSDescript(DocConstantUnitsOfMeasure.EXAGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.EXAGRAM)]
         EXAGRAM = 3988,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.GALLON)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.GALLON), SCDescript(DocConstantUnitsOfMeasure.GALLON), SSDescript(DocConstantUnitsOfMeasure.GALLON), SCDisplay(Name = DocConstantUnitsOfMeasure.GALLON)]
         GALLON = 3993,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.GIGABECQUEREL)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.GIGABECQUEREL), SCDescript(DocConstantUnitsOfMeasure.GIGABECQUEREL), SSDescript(DocConstantUnitsOfMeasure.GIGABECQUEREL), SCDisplay(Name = DocConstantUnitsOfMeasure.GIGABECQUEREL)]
         GIGABECQUEREL = 3998,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.GIGAGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.GIGAGRAM), SCDescript(DocConstantUnitsOfMeasure.GIGAGRAM), SSDescript(DocConstantUnitsOfMeasure.GIGAGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.GIGAGRAM)]
         GIGAGRAM = 4003,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM), SCDescript(DocConstantUnitsOfMeasure.GRAM), SSDescript(DocConstantUnitsOfMeasure.GRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.GRAM)]
         GRAM = 4008,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_CENTIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_CENTIMETER), SCDescript(DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_CENTIMETER), SSDescript(DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_CENTIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_CENTIMETER)]
         GRAM_PER_CUBIC_CENTIMETER = 4013,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_METER), SCDescript(DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_METER), SSDescript(DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.GRAM_PER_CUBIC_METER)]
         GRAM_PER_CUBIC_METER = 4018,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_DECILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_DECILITER), SCDescript(DocConstantUnitsOfMeasure.GRAM_PER_DECILITER), SSDescript(DocConstantUnitsOfMeasure.GRAM_PER_DECILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.GRAM_PER_DECILITER)]
         GRAM_PER_DECILITER = 4023,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.GRAM_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.GRAM_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.GRAM_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.GRAM_PER_LITER)]
         GRAM_PER_LITER = 4028,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.HECTARE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.HECTARE), SCDescript(DocConstantUnitsOfMeasure.HECTARE), SSDescript(DocConstantUnitsOfMeasure.HECTARE), SCDisplay(Name = DocConstantUnitsOfMeasure.HECTARE)]
         HECTARE = 4033,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.HECTOGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.HECTOGRAM), SCDescript(DocConstantUnitsOfMeasure.HECTOGRAM), SSDescript(DocConstantUnitsOfMeasure.HECTOGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.HECTOGRAM)]
         HECTOGRAM = 4038,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.HOUR)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.HOUR), SCDescript(DocConstantUnitsOfMeasure.HOUR), SSDescript(DocConstantUnitsOfMeasure.HOUR), SCDisplay(Name = DocConstantUnitsOfMeasure.HOUR)]
         HOUR = 4043,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.INTERNATIONAL_UNIT_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.INTERNATIONAL_UNIT_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.INTERNATIONAL_UNIT_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.INTERNATIONAL_UNIT_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.INTERNATIONAL_UNIT_PER_LITER)]
         INTERNATIONAL_UNIT_PER_LITER = 4048,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.INTERNATIONALUNIT)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.INTERNATIONALUNIT), SCDescript(DocConstantUnitsOfMeasure.INTERNATIONALUNIT), SSDescript(DocConstantUnitsOfMeasure.INTERNATIONALUNIT), SCDisplay(Name = DocConstantUnitsOfMeasure.INTERNATIONALUNIT)]
         INTERNATIONALUNIT = 4053,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_CENTIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_CENTIMETER), SCDescript(DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_CENTIMETER), SSDescript(DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_CENTIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_CENTIMETER)]
         KILIMOL_PER_CUBIC_CENTIMETER = 4058,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_METER), SCDescript(DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_METER), SSDescript(DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_METER)]
         KILIMOL_PER_CUBIC_METER = 4063,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_MILLIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_MILLIMETER), SCDescript(DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_MILLIMETER), SSDescript(DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_MILLIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILIMOL_PER_CUBIC_MILLIMETER)]
         KILIMOL_PER_CUBIC_MILLIMETER = 4068,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILIMOL_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.KILIMOL_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.KILIMOL_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILIMOL_PER_LITER)]
         KILIMOL_PER_LITER = 4073,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOBECQUEREL)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOBECQUEREL), SCDescript(DocConstantUnitsOfMeasure.KILOBECQUEREL), SSDescript(DocConstantUnitsOfMeasure.KILOBECQUEREL), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOBECQUEREL)]
         KILOBECQUEREL = 4078,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOCURIE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOCURIE), SCDescript(DocConstantUnitsOfMeasure.KILOCURIE), SSDescript(DocConstantUnitsOfMeasure.KILOCURIE), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOCURIE)]
         KILOCURIE = 4083,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM), SCDescript(DocConstantUnitsOfMeasure.KILOGRAM), SSDescript(DocConstantUnitsOfMeasure.KILOGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOGRAM)]
         KILOGRAM = 4088,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_CUBIC_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_CUBIC_METER), SCDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_CUBIC_METER), SSDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_CUBIC_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOGRAM_PER_CUBIC_METER)]
         KILOGRAM_PER_CUBIC_METER = 4093,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_DECILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_DECILITER), SCDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_DECILITER), SSDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_DECILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOGRAM_PER_DECILITER)]
         KILOGRAM_PER_DECILITER = 4098,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOGRAM_PER_LITER)]
         KILOGRAM_PER_LITER = 4103,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_MICROLITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_MICROLITER), SCDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_MICROLITER), SSDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_MICROLITER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOGRAM_PER_MICROLITER)]
         KILOGRAM_PER_MICROLITER = 4108,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_MILLILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_MILLILITER), SCDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_MILLILITER), SSDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_MILLILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOGRAM_PER_MILLILITER)]
         KILOGRAM_PER_MILLILITER = 4113,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_SQUARE_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOGRAM_PER_SQUARE_METER), SCDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_SQUARE_METER), SSDescript(DocConstantUnitsOfMeasure.KILOGRAM_PER_SQUARE_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOGRAM_PER_SQUARE_METER)]
         KILOGRAM_PER_SQUARE_METER = 6677521,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOLITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOLITER), SCDescript(DocConstantUnitsOfMeasure.KILOLITER), SSDescript(DocConstantUnitsOfMeasure.KILOLITER), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOLITER)]
         KILOLITER = 4118,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOMOLE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.KILOMOLE), SCDescript(DocConstantUnitsOfMeasure.KILOMOLE), SSDescript(DocConstantUnitsOfMeasure.KILOMOLE), SCDisplay(Name = DocConstantUnitsOfMeasure.KILOMOLE)]
         KILOMOLE = 4123,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.LITER), SCDescript(DocConstantUnitsOfMeasure.LITER), SSDescript(DocConstantUnitsOfMeasure.LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.LITER)]
         LITER = 4128,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MEGABECQUEREL)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MEGABECQUEREL), SCDescript(DocConstantUnitsOfMeasure.MEGABECQUEREL), SSDescript(DocConstantUnitsOfMeasure.MEGABECQUEREL), SCDisplay(Name = DocConstantUnitsOfMeasure.MEGABECQUEREL)]
         MEGABECQUEREL = 4133,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.METER), SCDescript(DocConstantUnitsOfMeasure.METER), SSDescript(DocConstantUnitsOfMeasure.METER), SCDisplay(Name = DocConstantUnitsOfMeasure.METER)]
         METER = 4138,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICRO_INTERNATIONAL_UNIT_PER_MILLILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICRO_INTERNATIONAL_UNIT_PER_MILLILITER), SCDescript(DocConstantUnitsOfMeasure.MICRO_INTERNATIONAL_UNIT_PER_MILLILITER), SSDescript(DocConstantUnitsOfMeasure.MICRO_INTERNATIONAL_UNIT_PER_MILLILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICRO_INTERNATIONAL_UNIT_PER_MILLILITER)]
         MICRO_INTERNATIONAL_UNIT_PER_MILLILITER = 4143,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROCURIE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROCURIE), SCDescript(DocConstantUnitsOfMeasure.MICROCURIE), SSDescript(DocConstantUnitsOfMeasure.MICROCURIE), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROCURIE)]
         MICROCURIE = 4148,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM), SCDescript(DocConstantUnitsOfMeasure.MICROGRAM), SSDescript(DocConstantUnitsOfMeasure.MICROGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROGRAM)]
         MICROGRAM = 4153,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_DECILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_DECILITER), SCDescript(DocConstantUnitsOfMeasure.MICROGRAM_PER_DECILITER), SSDescript(DocConstantUnitsOfMeasure.MICROGRAM_PER_DECILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROGRAM_PER_DECILITER)]
         MICROGRAM_PER_DECILITER = 4158,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.MICROGRAM_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.MICROGRAM_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROGRAM_PER_LITER)]
         MICROGRAM_PER_LITER = 4163,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_MICROLITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_MICROLITER), SCDescript(DocConstantUnitsOfMeasure.MICROGRAM_PER_MICROLITER), SSDescript(DocConstantUnitsOfMeasure.MICROGRAM_PER_MICROLITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROGRAM_PER_MICROLITER)]
         MICROGRAM_PER_MICROLITER = 4168,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_MILLILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROGRAM_PER_MILLILITER), SCDescript(DocConstantUnitsOfMeasure.MICROGRAM_PER_MILLILITER), SSDescript(DocConstantUnitsOfMeasure.MICROGRAM_PER_MILLILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROGRAM_PER_MILLILITER)]
         MICROGRAM_PER_MILLILITER = 4173,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROLITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROLITER), SCDescript(DocConstantUnitsOfMeasure.MICROLITER), SSDescript(DocConstantUnitsOfMeasure.MICROLITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROLITER)]
         MICROLITER = 4178,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMETER), SCDescript(DocConstantUnitsOfMeasure.MICROMETER), SSDescript(DocConstantUnitsOfMeasure.MICROMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROMETER)]
         MICROMETER = 4183,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_CENTIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_CENTIMETER), SCDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_CENTIMETER), SSDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_CENTIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_CENTIMETER)]
         MICROMOL_PER_CUBIC_CENTIMETER = 4188,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_METER), SCDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_METER), SSDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_METER)]
         MICROMOL_PER_CUBIC_METER = 4193,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_MILLIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_MILLIMETER), SCDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_MILLIMETER), SSDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_MILLIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROMOL_PER_CUBIC_MILLIMETER)]
         MICROMOL_PER_CUBIC_MILLIMETER = 4198,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_DECILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_DECILITER), SCDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_DECILITER), SSDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_DECILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROMOL_PER_DECILITER)]
         MICROMOL_PER_DECILITER = 4203,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOL_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.MICROMOL_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROMOL_PER_LITER)]
         MICROMOL_PER_LITER = 4208,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOLE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MICROMOLE), SCDescript(DocConstantUnitsOfMeasure.MICROMOLE), SSDescript(DocConstantUnitsOfMeasure.MICROMOLE), SCDisplay(Name = DocConstantUnitsOfMeasure.MICROMOLE)]
         MICROMOLE = 4213,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLI_INTERNATIONAL_UNIT_PER_MILLILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLI_INTERNATIONAL_UNIT_PER_MILLILITER), SCDescript(DocConstantUnitsOfMeasure.MILLI_INTERNATIONAL_UNIT_PER_MILLILITER), SSDescript(DocConstantUnitsOfMeasure.MILLI_INTERNATIONAL_UNIT_PER_MILLILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLI_INTERNATIONAL_UNIT_PER_MILLILITER)]
         MILLI_INTERNATIONAL_UNIT_PER_MILLILITER = 4218,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLICURIE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLICURIE), SCDescript(DocConstantUnitsOfMeasure.MILLICURIE), SSDescript(DocConstantUnitsOfMeasure.MILLICURIE), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLICURIE)]
         MILLICURIE = 4223,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIEQUIVALENT)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIEQUIVALENT), SCDescript(DocConstantUnitsOfMeasure.MILLIEQUIVALENT), SSDescript(DocConstantUnitsOfMeasure.MILLIEQUIVALENT), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIEQUIVALENT)]
         MILLIEQUIVALENT = 4228,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM), SCDescript(DocConstantUnitsOfMeasure.MILLIGRAM), SSDescript(DocConstantUnitsOfMeasure.MILLIGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIGRAM)]
         MILLIGRAM = 4233,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_DECILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_DECILITER), SCDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_DECILITER), SSDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_DECILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIGRAM_PER_DECILITER)]
         MILLIGRAM_PER_DECILITER = 4238,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIGRAM_PER_LITER)]
         MILLIGRAM_PER_LITER = 4243,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_MICROLITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_MICROLITER), SCDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_MICROLITER), SSDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_MICROLITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIGRAM_PER_MICROLITER)]
         MILLIGRAM_PER_MICROLITER = 4248,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_MILLILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_MILLILITER), SCDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_MILLILITER), SSDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_MILLILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIGRAM_PER_MILLILITER)]
         MILLIGRAM_PER_MILLILITER = 4253,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_TEASPOON)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIGRAM_PER_TEASPOON), SCDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_TEASPOON), SSDescript(DocConstantUnitsOfMeasure.MILLIGRAM_PER_TEASPOON), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIGRAM_PER_TEASPOON)]
         MILLIGRAM_PER_TEASPOON = 4258,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLILITER), SCDescript(DocConstantUnitsOfMeasure.MILLILITER), SSDescript(DocConstantUnitsOfMeasure.MILLILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLILITER)]
         MILLILITER = 4263,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMETER), SCDescript(DocConstantUnitsOfMeasure.MILLIMETER), SSDescript(DocConstantUnitsOfMeasure.MILLIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIMETER)]
         MILLIMETER = 4268,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMETER_OF_MERCURY)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMETER_OF_MERCURY), SCDescript(DocConstantUnitsOfMeasure.MILLIMETER_OF_MERCURY), SSDescript(DocConstantUnitsOfMeasure.MILLIMETER_OF_MERCURY), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIMETER_OF_MERCURY)]
         MILLIMETER_OF_MERCURY = 4273,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_CENTIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_CENTIMETER), SCDescript(DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_CENTIMETER), SSDescript(DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_CENTIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_CENTIMETER)]
         MILLIMOL_PER_CUBIC_CENTIMETER = 4278,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_METER), SCDescript(DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_METER), SSDescript(DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_METER)]
         MILLIMOL_PER_CUBIC_METER = 4283,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_MILLIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_MILLIMETER), SCDescript(DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_MILLIMETER), SSDescript(DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_MILLIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIMOL_PER_CUBIC_MILLIMETER)]
         MILLIMOL_PER_CUBIC_MILLIMETER = 4288,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOL_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.MILLIMOL_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.MILLIMOL_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIMOL_PER_LITER)]
         MILLIMOL_PER_LITER = 4293,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOLE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIMOLE), SCDescript(DocConstantUnitsOfMeasure.MILLIMOLE), SSDescript(DocConstantUnitsOfMeasure.MILLIMOLE), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIMOLE)]
         MILLIMOLE = 4298,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIONINTERFERONREFERENCEUNIT)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIONINTERFERONREFERENCEUNIT), SCDescript(DocConstantUnitsOfMeasure.MILLIONINTERFERONREFERENCEUNIT), SSDescript(DocConstantUnitsOfMeasure.MILLIONINTERFERONREFERENCEUNIT), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIONINTERFERONREFERENCEUNIT)]
         MILLIONINTERFERONREFERENCEUNIT = 4303,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIONINTERNATIONALUNIT)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLIONINTERNATIONALUNIT), SCDescript(DocConstantUnitsOfMeasure.MILLIONINTERNATIONALUNIT), SSDescript(DocConstantUnitsOfMeasure.MILLIONINTERNATIONALUNIT), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLIONINTERNATIONALUNIT)]
         MILLIONINTERNATIONALUNIT = 4308,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLISECOND)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MILLISECOND), SCDescript(DocConstantUnitsOfMeasure.MILLISECOND), SSDescript(DocConstantUnitsOfMeasure.MILLISECOND), SCDisplay(Name = DocConstantUnitsOfMeasure.MILLISECOND)]
         MILLISECOND = 4313,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MINUTE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MINUTE), SCDescript(DocConstantUnitsOfMeasure.MINUTE), SSDescript(DocConstantUnitsOfMeasure.MINUTE), SCDisplay(Name = DocConstantUnitsOfMeasure.MINUTE)]
         MINUTE = 4318,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_CENTIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_CENTIMETER), SCDescript(DocConstantUnitsOfMeasure.MOL_PER_CUBIC_CENTIMETER), SSDescript(DocConstantUnitsOfMeasure.MOL_PER_CUBIC_CENTIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_CENTIMETER)]
         MOL_PER_CUBIC_CENTIMETER = 4323,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_METER), SCDescript(DocConstantUnitsOfMeasure.MOL_PER_CUBIC_METER), SSDescript(DocConstantUnitsOfMeasure.MOL_PER_CUBIC_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_METER)]
         MOL_PER_CUBIC_METER = 4328,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_MILLIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_MILLIMETER), SCDescript(DocConstantUnitsOfMeasure.MOL_PER_CUBIC_MILLIMETER), SSDescript(DocConstantUnitsOfMeasure.MOL_PER_CUBIC_MILLIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.MOL_PER_CUBIC_MILLIMETER)]
         MOL_PER_CUBIC_MILLIMETER = 4333,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MOL_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.MOL_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.MOL_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.MOL_PER_LITER)]
         MOL_PER_LITER = 4338,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MOLE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MOLE), SCDescript(DocConstantUnitsOfMeasure.MOLE), SSDescript(DocConstantUnitsOfMeasure.MOLE), SCDisplay(Name = DocConstantUnitsOfMeasure.MOLE)]
         MOLE = 4343,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.MONTH)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.MONTH), SCDescript(DocConstantUnitsOfMeasure.MONTH), SSDescript(DocConstantUnitsOfMeasure.MONTH), SCDisplay(Name = DocConstantUnitsOfMeasure.MONTH)]
         MONTH = 4348,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOCURIE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOCURIE), SCDescript(DocConstantUnitsOfMeasure.NANOCURIE), SSDescript(DocConstantUnitsOfMeasure.NANOCURIE), SCDisplay(Name = DocConstantUnitsOfMeasure.NANOCURIE)]
         NANOCURIE = 4353,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM), SCDescript(DocConstantUnitsOfMeasure.NANOGRAM), SSDescript(DocConstantUnitsOfMeasure.NANOGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.NANOGRAM)]
         NANOGRAM = 4358,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_DECILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_DECILITER), SCDescript(DocConstantUnitsOfMeasure.NANOGRAM_PER_DECILITER), SSDescript(DocConstantUnitsOfMeasure.NANOGRAM_PER_DECILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.NANOGRAM_PER_DECILITER)]
         NANOGRAM_PER_DECILITER = 4363,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.NANOGRAM_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.NANOGRAM_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.NANOGRAM_PER_LITER)]
         NANOGRAM_PER_LITER = 4368,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_MICROLITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_MICROLITER), SCDescript(DocConstantUnitsOfMeasure.NANOGRAM_PER_MICROLITER), SSDescript(DocConstantUnitsOfMeasure.NANOGRAM_PER_MICROLITER), SCDisplay(Name = DocConstantUnitsOfMeasure.NANOGRAM_PER_MICROLITER)]
         NANOGRAM_PER_MICROLITER = 4373,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_MILLILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOGRAM_PER_MILLILITER), SCDescript(DocConstantUnitsOfMeasure.NANOGRAM_PER_MILLILITER), SSDescript(DocConstantUnitsOfMeasure.NANOGRAM_PER_MILLILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.NANOGRAM_PER_MILLILITER)]
         NANOGRAM_PER_MILLILITER = 4378,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOMOL_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOMOL_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.NANOMOL_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.NANOMOL_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.NANOMOL_PER_LITER)]
         NANOMOL_PER_LITER = 4383,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOMOLE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.NANOMOLE), SCDescript(DocConstantUnitsOfMeasure.NANOMOLE), SSDescript(DocConstantUnitsOfMeasure.NANOMOLE), SCDisplay(Name = DocConstantUnitsOfMeasure.NANOMOLE)]
         NANOMOLE = 4388,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.OUNCE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.OUNCE), SCDescript(DocConstantUnitsOfMeasure.OUNCE), SSDescript(DocConstantUnitsOfMeasure.OUNCE), SCDisplay(Name = DocConstantUnitsOfMeasure.OUNCE)]
         OUNCE = 4393,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.OUNCES)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.OUNCES), SCDescript(DocConstantUnitsOfMeasure.OUNCES), SSDescript(DocConstantUnitsOfMeasure.OUNCES), SCDisplay(Name = DocConstantUnitsOfMeasure.OUNCES)]
         OUNCES = 4398,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PARTSPERBILLION)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PARTSPERBILLION), SCDescript(DocConstantUnitsOfMeasure.PARTSPERBILLION), SSDescript(DocConstantUnitsOfMeasure.PARTSPERBILLION), SCDisplay(Name = DocConstantUnitsOfMeasure.PARTSPERBILLION)]
         PARTSPERBILLION = 4403,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PARTSPERMILLION)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PARTSPERMILLION), SCDescript(DocConstantUnitsOfMeasure.PARTSPERMILLION), SSDescript(DocConstantUnitsOfMeasure.PARTSPERMILLION), SCDisplay(Name = DocConstantUnitsOfMeasure.PARTSPERMILLION)]
         PARTSPERMILLION = 4408,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM), SCDescript(DocConstantUnitsOfMeasure.PICOGRAM), SSDescript(DocConstantUnitsOfMeasure.PICOGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.PICOGRAM)]
         PICOGRAM = 4413,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_DECILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_DECILITER), SCDescript(DocConstantUnitsOfMeasure.PICOGRAM_PER_DECILITER), SSDescript(DocConstantUnitsOfMeasure.PICOGRAM_PER_DECILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.PICOGRAM_PER_DECILITER)]
         PICOGRAM_PER_DECILITER = 4418,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.PICOGRAM_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.PICOGRAM_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.PICOGRAM_PER_LITER)]
         PICOGRAM_PER_LITER = 4423,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_MICROLITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_MICROLITER), SCDescript(DocConstantUnitsOfMeasure.PICOGRAM_PER_MICROLITER), SSDescript(DocConstantUnitsOfMeasure.PICOGRAM_PER_MICROLITER), SCDisplay(Name = DocConstantUnitsOfMeasure.PICOGRAM_PER_MICROLITER)]
         PICOGRAM_PER_MICROLITER = 4428,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_MILLILITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOGRAM_PER_MILLILITER), SCDescript(DocConstantUnitsOfMeasure.PICOGRAM_PER_MILLILITER), SSDescript(DocConstantUnitsOfMeasure.PICOGRAM_PER_MILLILITER), SCDisplay(Name = DocConstantUnitsOfMeasure.PICOGRAM_PER_MILLILITER)]
         PICOGRAM_PER_MILLILITER = 4433,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOMOL_PER_LITER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOMOL_PER_LITER), SCDescript(DocConstantUnitsOfMeasure.PICOMOL_PER_LITER), SSDescript(DocConstantUnitsOfMeasure.PICOMOL_PER_LITER), SCDisplay(Name = DocConstantUnitsOfMeasure.PICOMOL_PER_LITER)]
         PICOMOL_PER_LITER = 4438,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOMOLE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PICOMOLE), SCDescript(DocConstantUnitsOfMeasure.PICOMOLE), SSDescript(DocConstantUnitsOfMeasure.PICOMOLE), SCDisplay(Name = DocConstantUnitsOfMeasure.PICOMOLE)]
         PICOMOLE = 4443,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.PINT)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.PINT), SCDescript(DocConstantUnitsOfMeasure.PINT), SSDescript(DocConstantUnitsOfMeasure.PINT), SCDisplay(Name = DocConstantUnitsOfMeasure.PINT)]
         PINT = 4448,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.POUND)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.POUND), SCDescript(DocConstantUnitsOfMeasure.POUND), SSDescript(DocConstantUnitsOfMeasure.POUND), SCDisplay(Name = DocConstantUnitsOfMeasure.POUND)]
         POUND = 4453,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.QUART)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.QUART), SCDescript(DocConstantUnitsOfMeasure.QUART), SSDescript(DocConstantUnitsOfMeasure.QUART), SCDisplay(Name = DocConstantUnitsOfMeasure.QUART)]
         QUART = 4458,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SECOND)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SECOND), SCDescript(DocConstantUnitsOfMeasure.SECOND), SSDescript(DocConstantUnitsOfMeasure.SECOND), SCDisplay(Name = DocConstantUnitsOfMeasure.SECOND)]
         SECOND = 4463,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_DEKAMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_DEKAMETER), SCDescript(DocConstantUnitsOfMeasure.SQUARE_DEKAMETER), SSDescript(DocConstantUnitsOfMeasure.SQUARE_DEKAMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_DEKAMETER)]
         SQUARE_DEKAMETER = 4468,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_FOOT)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_FOOT), SCDescript(DocConstantUnitsOfMeasure.SQUARE_FOOT), SSDescript(DocConstantUnitsOfMeasure.SQUARE_FOOT), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_FOOT)]
         SQUARE_FOOT = 4473,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_HECTOMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_HECTOMETER), SCDescript(DocConstantUnitsOfMeasure.SQUARE_HECTOMETER), SSDescript(DocConstantUnitsOfMeasure.SQUARE_HECTOMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_HECTOMETER)]
         SQUARE_HECTOMETER = 4478,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_INCH)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_INCH), SCDescript(DocConstantUnitsOfMeasure.SQUARE_INCH), SSDescript(DocConstantUnitsOfMeasure.SQUARE_INCH), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_INCH)]
         SQUARE_INCH = 4483,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_KILOMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_KILOMETER), SCDescript(DocConstantUnitsOfMeasure.SQUARE_KILOMETER), SSDescript(DocConstantUnitsOfMeasure.SQUARE_KILOMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_KILOMETER)]
         SQUARE_KILOMETER = 4488,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_METER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_METER), SCDescript(DocConstantUnitsOfMeasure.SQUARE_METER), SSDescript(DocConstantUnitsOfMeasure.SQUARE_METER), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_METER)]
         SQUARE_METER = 4493,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MICROMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MICROMETER), SCDescript(DocConstantUnitsOfMeasure.SQUARE_MICROMETER), SSDescript(DocConstantUnitsOfMeasure.SQUARE_MICROMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_MICROMETER)]
         SQUARE_MICROMETER = 4498,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MILE)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MILE), SCDescript(DocConstantUnitsOfMeasure.SQUARE_MILE), SSDescript(DocConstantUnitsOfMeasure.SQUARE_MILE), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_MILE)]
         SQUARE_MILE = 4503,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MILIMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_MILIMETER), SCDescript(DocConstantUnitsOfMeasure.SQUARE_MILIMETER), SSDescript(DocConstantUnitsOfMeasure.SQUARE_MILIMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_MILIMETER)]
         SQUARE_MILIMETER = 4508,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_NANOMETER)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_NANOMETER), SCDescript(DocConstantUnitsOfMeasure.SQUARE_NANOMETER), SSDescript(DocConstantUnitsOfMeasure.SQUARE_NANOMETER), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_NANOMETER)]
         SQUARE_NANOMETER = 4513,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_YARD)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.SQUARE_YARD), SCDescript(DocConstantUnitsOfMeasure.SQUARE_YARD), SSDescript(DocConstantUnitsOfMeasure.SQUARE_YARD), SCDisplay(Name = DocConstantUnitsOfMeasure.SQUARE_YARD)]
         SQUARE_YARD = 4518,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.TABLESPOON)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.TABLESPOON), SCDescript(DocConstantUnitsOfMeasure.TABLESPOON), SSDescript(DocConstantUnitsOfMeasure.TABLESPOON), SCDisplay(Name = DocConstantUnitsOfMeasure.TABLESPOON)]
         TABLESPOON = 4523,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.TEASPOON)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.TEASPOON), SCDescript(DocConstantUnitsOfMeasure.TEASPOON), SSDescript(DocConstantUnitsOfMeasure.TEASPOON), SCDisplay(Name = DocConstantUnitsOfMeasure.TEASPOON)]
         TEASPOON = 4528,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.TERABECQUEREL)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.TERABECQUEREL), SCDescript(DocConstantUnitsOfMeasure.TERABECQUEREL), SSDescript(DocConstantUnitsOfMeasure.TERABECQUEREL), SCDisplay(Name = DocConstantUnitsOfMeasure.TERABECQUEREL)]
         TERABECQUEREL = 4533,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.TERAGRAM)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.TERAGRAM), SCDescript(DocConstantUnitsOfMeasure.TERAGRAM), SSDescript(DocConstantUnitsOfMeasure.TERAGRAM), SCDisplay(Name = DocConstantUnitsOfMeasure.TERAGRAM)]
         TERAGRAM = 4538,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.WEEK)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.WEEK), SCDescript(DocConstantUnitsOfMeasure.WEEK), SSDescript(DocConstantUnitsOfMeasure.WEEK), SCDisplay(Name = DocConstantUnitsOfMeasure.WEEK)]
         WEEK = 4543,
-        [EnumMember(Value = DocConstantUnitsOfMeasure.YEAR)]
+        [EnumMember(Value = DocConstantUnitsOfMeasure.YEAR), SCDescript(DocConstantUnitsOfMeasure.YEAR), SSDescript(DocConstantUnitsOfMeasure.YEAR), SCDisplay(Name = DocConstantUnitsOfMeasure.YEAR)]
         YEAR = 4548
     }
     
@@ -327,7 +306,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this UnitsOfMeasureEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case UnitsOfMeasureEnm.ARE:
                     return DocConstantUnitsOfMeasure.ARE;
@@ -606,6 +585,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this UnitsOfMeasureEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

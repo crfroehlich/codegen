@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ValueStatusEnm
     {
-        [EnumMember(Value = DocConstantValueStatus.COLLECTED)]
+        [EnumMember(Value = DocConstantValueStatus.COLLECTED), SCDescript(DocConstantValueStatus.COLLECTED), SSDescript(DocConstantValueStatus.COLLECTED), SCDisplay(Name = DocConstantValueStatus.COLLECTED)]
         COLLECTED = 4743,
-        [EnumMember(Value = DocConstantValueStatus.NOT_AVAILABLE)]
+        [EnumMember(Value = DocConstantValueStatus.NOT_AVAILABLE), SCDescript(DocConstantValueStatus.NOT_AVAILABLE), SSDescript(DocConstantValueStatus.NOT_AVAILABLE), SCDisplay(Name = DocConstantValueStatus.NOT_AVAILABLE)]
         NOT_AVAILABLE = 146157850,
-        [EnumMember(Value = DocConstantValueStatus.NOT_COLLECTED)]
+        [EnumMember(Value = DocConstantValueStatus.NOT_COLLECTED), SCDescript(DocConstantValueStatus.NOT_COLLECTED), SSDescript(DocConstantValueStatus.NOT_COLLECTED), SCDisplay(Name = DocConstantValueStatus.NOT_COLLECTED)]
         NOT_COLLECTED = 4748,
-        [EnumMember(Value = DocConstantValueStatus.NOT_REPORTED)]
+        [EnumMember(Value = DocConstantValueStatus.NOT_REPORTED), SCDescript(DocConstantValueStatus.NOT_REPORTED), SSDescript(DocConstantValueStatus.NOT_REPORTED), SCDisplay(Name = DocConstantValueStatus.NOT_REPORTED)]
         NOT_REPORTED = 4753,
-        [EnumMember(Value = DocConstantValueStatus.REQUESTED)]
+        [EnumMember(Value = DocConstantValueStatus.REQUESTED), SCDescript(DocConstantValueStatus.REQUESTED), SSDescript(DocConstantValueStatus.REQUESTED), SCDisplay(Name = DocConstantValueStatus.REQUESTED)]
         REQUESTED = 4758
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ValueStatusEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ValueStatusEnm.COLLECTED:
                     return DocConstantValueStatus.COLLECTED;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ValueStatusEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

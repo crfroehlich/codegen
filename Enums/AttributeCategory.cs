@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,56 +15,40 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum AttributeCategoryEnm
     {
-        [EnumMember(Value = DocConstantAttributeCategory.ADVERSE_EVENT)]
+        [EnumMember(Value = DocConstantAttributeCategory.ADVERSE_EVENT), SCDescript(DocConstantAttributeCategory.ADVERSE_EVENT), SSDescript(DocConstantAttributeCategory.ADVERSE_EVENT), SCDisplay(Name = DocConstantAttributeCategory.ADVERSE_EVENT)]
         ADVERSE_EVENT = 11793667,
-        [EnumMember(Value = DocConstantAttributeCategory.CLINICAL_OUTCOME)]
+        [EnumMember(Value = DocConstantAttributeCategory.CLINICAL_OUTCOME), SCDescript(DocConstantAttributeCategory.CLINICAL_OUTCOME), SSDescript(DocConstantAttributeCategory.CLINICAL_OUTCOME), SCDisplay(Name = DocConstantAttributeCategory.CLINICAL_OUTCOME)]
         CLINICAL_OUTCOME = 11793672,
-        [EnumMember(Value = DocConstantAttributeCategory.COST_UTILIZATION)]
+        [EnumMember(Value = DocConstantAttributeCategory.COST_UTILIZATION), SCDescript(DocConstantAttributeCategory.COST_UTILIZATION), SSDescript(DocConstantAttributeCategory.COST_UTILIZATION), SCDisplay(Name = DocConstantAttributeCategory.COST_UTILIZATION)]
         COST_UTILIZATION = 11793677,
-        [EnumMember(Value = DocConstantAttributeCategory.DEMOGRAPHICS)]
+        [EnumMember(Value = DocConstantAttributeCategory.DEMOGRAPHICS), SCDescript(DocConstantAttributeCategory.DEMOGRAPHICS), SSDescript(DocConstantAttributeCategory.DEMOGRAPHICS), SCDisplay(Name = DocConstantAttributeCategory.DEMOGRAPHICS)]
         DEMOGRAPHICS = 11793682,
-        [EnumMember(Value = DocConstantAttributeCategory.LABORATORY_VALUE_DIAGNOSTIC)]
+        [EnumMember(Value = DocConstantAttributeCategory.LABORATORY_VALUE_DIAGNOSTIC), SCDescript(DocConstantAttributeCategory.LABORATORY_VALUE_DIAGNOSTIC), SSDescript(DocConstantAttributeCategory.LABORATORY_VALUE_DIAGNOSTIC), SCDisplay(Name = DocConstantAttributeCategory.LABORATORY_VALUE_DIAGNOSTIC)]
         LABORATORY_VALUE_DIAGNOSTIC = 17610629,
-        [EnumMember(Value = DocConstantAttributeCategory.MEDICAL_HISTORY)]
+        [EnumMember(Value = DocConstantAttributeCategory.MEDICAL_HISTORY), SCDescript(DocConstantAttributeCategory.MEDICAL_HISTORY), SSDescript(DocConstantAttributeCategory.MEDICAL_HISTORY), SCDisplay(Name = DocConstantAttributeCategory.MEDICAL_HISTORY)]
         MEDICAL_HISTORY = 11793697,
-        [EnumMember(Value = DocConstantAttributeCategory.MEDICATIONS)]
+        [EnumMember(Value = DocConstantAttributeCategory.MEDICATIONS), SCDescript(DocConstantAttributeCategory.MEDICATIONS), SSDescript(DocConstantAttributeCategory.MEDICATIONS), SCDisplay(Name = DocConstantAttributeCategory.MEDICATIONS)]
         MEDICATIONS = 11793702,
-        [EnumMember(Value = DocConstantAttributeCategory.MISCELLANEOUS)]
+        [EnumMember(Value = DocConstantAttributeCategory.MISCELLANEOUS), SCDescript(DocConstantAttributeCategory.MISCELLANEOUS), SSDescript(DocConstantAttributeCategory.MISCELLANEOUS), SCDisplay(Name = DocConstantAttributeCategory.MISCELLANEOUS)]
         MISCELLANEOUS = 11793707,
-        [EnumMember(Value = DocConstantAttributeCategory.MORTALITY)]
+        [EnumMember(Value = DocConstantAttributeCategory.MORTALITY), SCDescript(DocConstantAttributeCategory.MORTALITY), SSDescript(DocConstantAttributeCategory.MORTALITY), SCDisplay(Name = DocConstantAttributeCategory.MORTALITY)]
         MORTALITY = 11793712,
-        [EnumMember(Value = DocConstantAttributeCategory.SCALES_SCORES)]
+        [EnumMember(Value = DocConstantAttributeCategory.SCALES_SCORES), SCDescript(DocConstantAttributeCategory.SCALES_SCORES), SSDescript(DocConstantAttributeCategory.SCALES_SCORES), SCDisplay(Name = DocConstantAttributeCategory.SCALES_SCORES)]
         SCALES_SCORES = 11793717,
-        [EnumMember(Value = DocConstantAttributeCategory.SOCIAL_HISTORY)]
+        [EnumMember(Value = DocConstantAttributeCategory.SOCIAL_HISTORY), SCDescript(DocConstantAttributeCategory.SOCIAL_HISTORY), SSDescript(DocConstantAttributeCategory.SOCIAL_HISTORY), SCDisplay(Name = DocConstantAttributeCategory.SOCIAL_HISTORY)]
         SOCIAL_HISTORY = 11793722,
-        [EnumMember(Value = DocConstantAttributeCategory.WITHDRAWAL_DRUG_DISCONTINUATION)]
+        [EnumMember(Value = DocConstantAttributeCategory.WITHDRAWAL_DRUG_DISCONTINUATION), SCDescript(DocConstantAttributeCategory.WITHDRAWAL_DRUG_DISCONTINUATION), SSDescript(DocConstantAttributeCategory.WITHDRAWAL_DRUG_DISCONTINUATION), SCDisplay(Name = DocConstantAttributeCategory.WITHDRAWAL_DRUG_DISCONTINUATION)]
         WITHDRAWAL_DRUG_DISCONTINUATION = 17610634
     }
     
@@ -77,7 +56,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this AttributeCategoryEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case AttributeCategoryEnm.ADVERSE_EVENT:
                     return DocConstantAttributeCategory.ADVERSE_EVENT;
@@ -106,6 +85,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this AttributeCategoryEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

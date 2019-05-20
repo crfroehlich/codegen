@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,88 +15,72 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum AppEnm
     {
-        [EnumMember(Value = DocConstantApp.BAMBOO)]
+        [EnumMember(Value = DocConstantApp.BAMBOO), SCDescript(DocConstantApp.BAMBOO), SSDescript(DocConstantApp.BAMBOO), SCDisplay(Name = DocConstantApp.BAMBOO)]
         BAMBOO = 139850785,
-        [EnumMember(Value = DocConstantApp.BITBUCKET)]
+        [EnumMember(Value = DocConstantApp.BITBUCKET), SCDescript(DocConstantApp.BITBUCKET), SSDescript(DocConstantApp.BITBUCKET), SCDisplay(Name = DocConstantApp.BITBUCKET)]
         BITBUCKET = 139850784,
-        [EnumMember(Value = DocConstantApp.CONFLUENCE)]
+        [EnumMember(Value = DocConstantApp.CONFLUENCE), SCDescript(DocConstantApp.CONFLUENCE), SSDescript(DocConstantApp.CONFLUENCE), SCDisplay(Name = DocConstantApp.CONFLUENCE)]
         CONFLUENCE = 139850783,
-        [EnumMember(Value = DocConstantApp.DOC_CREATE)]
+        [EnumMember(Value = DocConstantApp.DOC_CREATE), SCDescript(DocConstantApp.DOC_CREATE), SSDescript(DocConstantApp.DOC_CREATE), SCDisplay(Name = DocConstantApp.DOC_CREATE)]
         DOC_CREATE = 139850769,
-        [EnumMember(Value = DocConstantApp.DOC_DASHBOARD)]
+        [EnumMember(Value = DocConstantApp.DOC_DASHBOARD), SCDescript(DocConstantApp.DOC_DASHBOARD), SSDescript(DocConstantApp.DOC_DASHBOARD), SCDisplay(Name = DocConstantApp.DOC_DASHBOARD)]
         DOC_DASHBOARD = 139850786,
-        [EnumMember(Value = DocConstantApp.DOC_DATA_ADMIN)]
+        [EnumMember(Value = DocConstantApp.DOC_DATA_ADMIN), SCDescript(DocConstantApp.DOC_DATA_ADMIN), SSDescript(DocConstantApp.DOC_DATA_ADMIN), SCDisplay(Name = DocConstantApp.DOC_DATA_ADMIN)]
         DOC_DATA_ADMIN = 139850759,
-        [EnumMember(Value = DocConstantApp.DOC_DATA_V1)]
+        [EnumMember(Value = DocConstantApp.DOC_DATA_V1), SCDescript(DocConstantApp.DOC_DATA_V1), SSDescript(DocConstantApp.DOC_DATA_V1), SCDisplay(Name = DocConstantApp.DOC_DATA_V1)]
         DOC_DATA_V1 = 139850767,
-        [EnumMember(Value = DocConstantApp.DOC_DATA_V2)]
+        [EnumMember(Value = DocConstantApp.DOC_DATA_V2), SCDescript(DocConstantApp.DOC_DATA_V2), SSDescript(DocConstantApp.DOC_DATA_V2), SCDisplay(Name = DocConstantApp.DOC_DATA_V2)]
         DOC_DATA_V2 = 139850768,
-        [EnumMember(Value = DocConstantApp.DOC_DEVELOPMENT)]
+        [EnumMember(Value = DocConstantApp.DOC_DEVELOPMENT), SCDescript(DocConstantApp.DOC_DEVELOPMENT), SSDescript(DocConstantApp.DOC_DEVELOPMENT), SCDisplay(Name = DocConstantApp.DOC_DEVELOPMENT)]
         DOC_DEVELOPMENT = 139850777,
-        [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V1)]
+        [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V1), SCDescript(DocConstantApp.DOC_EXTRACT_V1), SSDescript(DocConstantApp.DOC_EXTRACT_V1), SCDisplay(Name = DocConstantApp.DOC_EXTRACT_V1)]
         DOC_EXTRACT_V1 = 139850761,
-        [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V2)]
+        [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V2), SCDescript(DocConstantApp.DOC_EXTRACT_V2), SSDescript(DocConstantApp.DOC_EXTRACT_V2), SCDisplay(Name = DocConstantApp.DOC_EXTRACT_V2)]
         DOC_EXTRACT_V2 = 139850762,
-        [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V3)]
+        [EnumMember(Value = DocConstantApp.DOC_EXTRACT_V3), SCDescript(DocConstantApp.DOC_EXTRACT_V3), SSDescript(DocConstantApp.DOC_EXTRACT_V3), SCDisplay(Name = DocConstantApp.DOC_EXTRACT_V3)]
         DOC_EXTRACT_V3 = 139850763,
-        [EnumMember(Value = DocConstantApp.DOC_LABEL)]
+        [EnumMember(Value = DocConstantApp.DOC_LABEL), SCDescript(DocConstantApp.DOC_LABEL), SSDescript(DocConstantApp.DOC_LABEL), SCDisplay(Name = DocConstantApp.DOC_LABEL)]
         DOC_LABEL = 139850770,
-        [EnumMember(Value = DocConstantApp.DOC_LIBRARY)]
+        [EnumMember(Value = DocConstantApp.DOC_LIBRARY), SCDescript(DocConstantApp.DOC_LIBRARY), SSDescript(DocConstantApp.DOC_LIBRARY), SCDisplay(Name = DocConstantApp.DOC_LIBRARY)]
         DOC_LIBRARY = 139850766,
-        [EnumMember(Value = DocConstantApp.DOC_NHANES)]
+        [EnumMember(Value = DocConstantApp.DOC_NHANES), SCDescript(DocConstantApp.DOC_NHANES), SSDescript(DocConstantApp.DOC_NHANES), SCDisplay(Name = DocConstantApp.DOC_NHANES)]
         DOC_NHANES = 139850771,
-        [EnumMember(Value = DocConstantApp.DOC_SEARCH)]
+        [EnumMember(Value = DocConstantApp.DOC_SEARCH), SCDescript(DocConstantApp.DOC_SEARCH), SSDescript(DocConstantApp.DOC_SEARCH), SCDisplay(Name = DocConstantApp.DOC_SEARCH)]
         DOC_SEARCH = 139850773,
-        [EnumMember(Value = DocConstantApp.DOC_TIMELY)]
+        [EnumMember(Value = DocConstantApp.DOC_TIMELY), SCDescript(DocConstantApp.DOC_TIMELY), SSDescript(DocConstantApp.DOC_TIMELY), SCDisplay(Name = DocConstantApp.DOC_TIMELY)]
         DOC_TIMELY = 139850780,
-        [EnumMember(Value = DocConstantApp.DOC_TRACK)]
+        [EnumMember(Value = DocConstantApp.DOC_TRACK), SCDescript(DocConstantApp.DOC_TRACK), SSDescript(DocConstantApp.DOC_TRACK), SCDisplay(Name = DocConstantApp.DOC_TRACK)]
         DOC_TRACK = 139850781,
-        [EnumMember(Value = DocConstantApp.DRE_ADMIN)]
+        [EnumMember(Value = DocConstantApp.DRE_ADMIN), SCDescript(DocConstantApp.DRE_ADMIN), SSDescript(DocConstantApp.DRE_ADMIN), SCDisplay(Name = DocConstantApp.DRE_ADMIN)]
         DRE_ADMIN = 139850760,
-        [EnumMember(Value = DocConstantApp.GRADE)]
+        [EnumMember(Value = DocConstantApp.GRADE), SCDescript(DocConstantApp.GRADE), SSDescript(DocConstantApp.GRADE), SCDisplay(Name = DocConstantApp.GRADE)]
         GRADE = 139850772,
-        [EnumMember(Value = DocConstantApp.GROWTH)]
+        [EnumMember(Value = DocConstantApp.GROWTH), SCDescript(DocConstantApp.GROWTH), SSDescript(DocConstantApp.GROWTH), SCDisplay(Name = DocConstantApp.GROWTH)]
         GROWTH = 139850774,
-        [EnumMember(Value = DocConstantApp.JIRA)]
+        [EnumMember(Value = DocConstantApp.JIRA), SCDescript(DocConstantApp.JIRA), SSDescript(DocConstantApp.JIRA), SCDisplay(Name = DocConstantApp.JIRA)]
         JIRA = 139850782,
-        [EnumMember(Value = DocConstantApp.LAUNCH)]
+        [EnumMember(Value = DocConstantApp.LAUNCH), SCDescript(DocConstantApp.LAUNCH), SSDescript(DocConstantApp.LAUNCH), SCDisplay(Name = DocConstantApp.LAUNCH)]
         LAUNCH = 139850779,
-        [EnumMember(Value = DocConstantApp.LMS)]
+        [EnumMember(Value = DocConstantApp.LMS), SCDescript(DocConstantApp.LMS), SSDescript(DocConstantApp.LMS), SCDisplay(Name = DocConstantApp.LMS)]
         LMS = 139850764,
-        [EnumMember(Value = DocConstantApp.LOGIN)]
+        [EnumMember(Value = DocConstantApp.LOGIN), SCDescript(DocConstantApp.LOGIN), SSDescript(DocConstantApp.LOGIN), SCDisplay(Name = DocConstantApp.LOGIN)]
         LOGIN = 139850778,
-        [EnumMember(Value = DocConstantApp.MISC)]
+        [EnumMember(Value = DocConstantApp.MISC), SCDescript(DocConstantApp.MISC), SSDescript(DocConstantApp.MISC), SCDisplay(Name = DocConstantApp.MISC)]
         MISC = 139850776,
-        [EnumMember(Value = DocConstantApp.REPORTS)]
+        [EnumMember(Value = DocConstantApp.REPORTS), SCDescript(DocConstantApp.REPORTS), SSDescript(DocConstantApp.REPORTS), SCDisplay(Name = DocConstantApp.REPORTS)]
         REPORTS = 139850775,
-        [EnumMember(Value = DocConstantApp.SERVE)]
+        [EnumMember(Value = DocConstantApp.SERVE), SCDescript(DocConstantApp.SERVE), SSDescript(DocConstantApp.SERVE), SCDisplay(Name = DocConstantApp.SERVE)]
         SERVE = 146157827
     }
     
@@ -109,7 +88,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this AppEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case AppEnm.BAMBOO:
                     return DocConstantApp.BAMBOO;
@@ -170,6 +149,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this AppEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

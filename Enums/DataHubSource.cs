@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataHubSourceEnm
     {
-        [EnumMember(Value = DocConstantDataHubSource.AdditionalDataSources)]
+        [EnumMember(Value = DocConstantDataHubSource.AdditionalDataSources), SCDescript(DocConstantDataHubSource.AdditionalDataSources), SSDescript(DocConstantDataHubSource.AdditionalDataSources), SCDisplay(Name = DocConstantDataHubSource.AdditionalDataSources)]
         AdditionalDataSources = 657,
-        [EnumMember(Value = DocConstantDataHubSource.DigitizedData)]
+        [EnumMember(Value = DocConstantDataHubSource.DigitizedData), SCDescript(DocConstantDataHubSource.DigitizedData), SSDescript(DocConstantDataHubSource.DigitizedData), SCDisplay(Name = DocConstantDataHubSource.DigitizedData)]
         DigitizedData = 662,
-        [EnumMember(Value = DocConstantDataHubSource.EpidemiologicalData)]
+        [EnumMember(Value = DocConstantDataHubSource.EpidemiologicalData), SCDescript(DocConstantDataHubSource.EpidemiologicalData), SSDescript(DocConstantDataHubSource.EpidemiologicalData), SCDisplay(Name = DocConstantDataHubSource.EpidemiologicalData)]
         EpidemiologicalData = 667,
-        [EnumMember(Value = DocConstantDataHubSource.LabelingData)]
+        [EnumMember(Value = DocConstantDataHubSource.LabelingData), SCDescript(DocConstantDataHubSource.LabelingData), SSDescript(DocConstantDataHubSource.LabelingData), SCDisplay(Name = DocConstantDataHubSource.LabelingData)]
         LabelingData = 672,
-        [EnumMember(Value = DocConstantDataHubSource.PublishedLiterature)]
+        [EnumMember(Value = DocConstantDataHubSource.PublishedLiterature), SCDescript(DocConstantDataHubSource.PublishedLiterature), SSDescript(DocConstantDataHubSource.PublishedLiterature), SCDisplay(Name = DocConstantDataHubSource.PublishedLiterature)]
         PublishedLiterature = 677
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this DataHubSourceEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case DataHubSourceEnm.AdditionalDataSources:
                     return DocConstantDataHubSource.AdditionalDataSources;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this DataHubSourceEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

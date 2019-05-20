@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,112 +15,96 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ValueTypeEnm
     {
-        [EnumMember(Value = DocConstantValueType.ASSOCIATIONMEASURE)]
+        [EnumMember(Value = DocConstantValueType.ASSOCIATIONMEASURE), SCDescript(DocConstantValueType.ASSOCIATIONMEASURE), SSDescript(DocConstantValueType.ASSOCIATIONMEASURE), SCDisplay(Name = DocConstantValueType.ASSOCIATIONMEASURE)]
         ASSOCIATIONMEASURE = 4763,
-        [EnumMember(Value = DocConstantValueType.BOOLEAN)]
+        [EnumMember(Value = DocConstantValueType.BOOLEAN), SCDescript(DocConstantValueType.BOOLEAN), SSDescript(DocConstantValueType.BOOLEAN), SCDisplay(Name = DocConstantValueType.BOOLEAN)]
         BOOLEAN = 4768,
-        [EnumMember(Value = DocConstantValueType.CALENDARDATE)]
+        [EnumMember(Value = DocConstantValueType.CALENDARDATE), SCDescript(DocConstantValueType.CALENDARDATE), SSDescript(DocConstantValueType.CALENDARDATE), SCDisplay(Name = DocConstantValueType.CALENDARDATE)]
         CALENDARDATE = 96669231,
-        [EnumMember(Value = DocConstantValueType.CALENDARDATES)]
+        [EnumMember(Value = DocConstantValueType.CALENDARDATES), SCDescript(DocConstantValueType.CALENDARDATES), SSDescript(DocConstantValueType.CALENDARDATES), SCDisplay(Name = DocConstantValueType.CALENDARDATES)]
         CALENDARDATES = 96669232,
-        [EnumMember(Value = DocConstantValueType.CONTACT)]
+        [EnumMember(Value = DocConstantValueType.CONTACT), SCDescript(DocConstantValueType.CONTACT), SSDescript(DocConstantValueType.CONTACT), SCDisplay(Name = DocConstantValueType.CONTACT)]
         CONTACT = 146157851,
-        [EnumMember(Value = DocConstantValueType.DATETIME)]
+        [EnumMember(Value = DocConstantValueType.DATETIME), SCDescript(DocConstantValueType.DATETIME), SSDescript(DocConstantValueType.DATETIME), SCDisplay(Name = DocConstantValueType.DATETIME)]
         DATETIME = 4773,
-        [EnumMember(Value = DocConstantValueType.DATETIMERANGE)]
+        [EnumMember(Value = DocConstantValueType.DATETIMERANGE), SCDescript(DocConstantValueType.DATETIMERANGE), SSDescript(DocConstantValueType.DATETIMERANGE), SCDisplay(Name = DocConstantValueType.DATETIMERANGE)]
         DATETIMERANGE = 46350624,
-        [EnumMember(Value = DocConstantValueType.DECIMAL)]
+        [EnumMember(Value = DocConstantValueType.DECIMAL), SCDescript(DocConstantValueType.DECIMAL), SSDescript(DocConstantValueType.DECIMAL), SCDisplay(Name = DocConstantValueType.DECIMAL)]
         DECIMAL = 4778,
-        [EnumMember(Value = DocConstantValueType.DECIMALRANGE)]
+        [EnumMember(Value = DocConstantValueType.DECIMALRANGE), SCDescript(DocConstantValueType.DECIMALRANGE), SSDescript(DocConstantValueType.DECIMALRANGE), SCDisplay(Name = DocConstantValueType.DECIMALRANGE)]
         DECIMALRANGE = 4783,
-        [EnumMember(Value = DocConstantValueType.DESIGNNESTEDSTUDYIDLINK)]
+        [EnumMember(Value = DocConstantValueType.DESIGNNESTEDSTUDYIDLINK), SCDescript(DocConstantValueType.DESIGNNESTEDSTUDYIDLINK), SSDescript(DocConstantValueType.DESIGNNESTEDSTUDYIDLINK), SCDisplay(Name = DocConstantValueType.DESIGNNESTEDSTUDYIDLINK)]
         DESIGNNESTEDSTUDYIDLINK = 67058545,
-        [EnumMember(Value = DocConstantValueType.EVENTCOUNTS)]
+        [EnumMember(Value = DocConstantValueType.EVENTCOUNTS), SCDescript(DocConstantValueType.EVENTCOUNTS), SSDescript(DocConstantValueType.EVENTCOUNTS), SCDisplay(Name = DocConstantValueType.EVENTCOUNTS)]
         EVENTCOUNTS = 146157852,
-        [EnumMember(Value = DocConstantValueType.FACILITY)]
+        [EnumMember(Value = DocConstantValueType.FACILITY), SCDescript(DocConstantValueType.FACILITY), SSDescript(DocConstantValueType.FACILITY), SCDisplay(Name = DocConstantValueType.FACILITY)]
         FACILITY = 146157853,
-        [EnumMember(Value = DocConstantValueType.FIXEDDOSEINTERVENTION)]
+        [EnumMember(Value = DocConstantValueType.FIXEDDOSEINTERVENTION), SCDescript(DocConstantValueType.FIXEDDOSEINTERVENTION), SSDescript(DocConstantValueType.FIXEDDOSEINTERVENTION), SCDisplay(Name = DocConstantValueType.FIXEDDOSEINTERVENTION)]
         FIXEDDOSEINTERVENTION = 74232450,
-        [EnumMember(Value = DocConstantValueType.FLAG)]
+        [EnumMember(Value = DocConstantValueType.FLAG), SCDescript(DocConstantValueType.FLAG), SSDescript(DocConstantValueType.FLAG), SCDisplay(Name = DocConstantValueType.FLAG)]
         FLAG = 23807267,
-        [EnumMember(Value = DocConstantValueType.FUNDING)]
+        [EnumMember(Value = DocConstantValueType.FUNDING), SCDescript(DocConstantValueType.FUNDING), SSDescript(DocConstantValueType.FUNDING), SCDisplay(Name = DocConstantValueType.FUNDING)]
         FUNDING = 4793,
-        [EnumMember(Value = DocConstantValueType.INTEGER)]
+        [EnumMember(Value = DocConstantValueType.INTEGER), SCDescript(DocConstantValueType.INTEGER), SSDescript(DocConstantValueType.INTEGER), SCDisplay(Name = DocConstantValueType.INTEGER)]
         INTEGER = 4798,
-        [EnumMember(Value = DocConstantValueType.INTERVAL)]
+        [EnumMember(Value = DocConstantValueType.INTERVAL), SCDescript(DocConstantValueType.INTERVAL), SSDescript(DocConstantValueType.INTERVAL), SCDisplay(Name = DocConstantValueType.INTERVAL)]
         INTERVAL = 4803,
-        [EnumMember(Value = DocConstantValueType.INTERVALS)]
+        [EnumMember(Value = DocConstantValueType.INTERVALS), SCDescript(DocConstantValueType.INTERVALS), SSDescript(DocConstantValueType.INTERVALS), SCDisplay(Name = DocConstantValueType.INTERVALS)]
         INTERVALS = 96669233,
-        [EnumMember(Value = DocConstantValueType.LOOKUP)]
+        [EnumMember(Value = DocConstantValueType.LOOKUP), SCDescript(DocConstantValueType.LOOKUP), SSDescript(DocConstantValueType.LOOKUP), SCDisplay(Name = DocConstantValueType.LOOKUP)]
         LOOKUP = 4808,
-        [EnumMember(Value = DocConstantValueType.MEMO)]
+        [EnumMember(Value = DocConstantValueType.MEMO), SCDescript(DocConstantValueType.MEMO), SSDescript(DocConstantValueType.MEMO), SCDisplay(Name = DocConstantValueType.MEMO)]
         MEMO = 4813,
-        [EnumMember(Value = DocConstantValueType.NPERSONS)]
+        [EnumMember(Value = DocConstantValueType.NPERSONS), SCDescript(DocConstantValueType.NPERSONS), SSDescript(DocConstantValueType.NPERSONS), SCDisplay(Name = DocConstantValueType.NPERSONS)]
         NPERSONS = 4818,
-        [EnumMember(Value = DocConstantValueType.PARTICIPANT)]
+        [EnumMember(Value = DocConstantValueType.PARTICIPANT), SCDescript(DocConstantValueType.PARTICIPANT), SSDescript(DocConstantValueType.PARTICIPANT), SCDisplay(Name = DocConstantValueType.PARTICIPANT)]
         PARTICIPANT = 4823,
-        [EnumMember(Value = DocConstantValueType.PARTICIPANTS)]
+        [EnumMember(Value = DocConstantValueType.PARTICIPANTS), SCDescript(DocConstantValueType.PARTICIPANTS), SSDescript(DocConstantValueType.PARTICIPANTS), SCDisplay(Name = DocConstantValueType.PARTICIPANTS)]
         PARTICIPANTS = 4828,
-        [EnumMember(Value = DocConstantValueType.POPULATIONANALYZED)]
+        [EnumMember(Value = DocConstantValueType.POPULATIONANALYZED), SCDescript(DocConstantValueType.POPULATIONANALYZED), SSDescript(DocConstantValueType.POPULATIONANALYZED), SCDisplay(Name = DocConstantValueType.POPULATIONANALYZED)]
         POPULATIONANALYZED = 146157854,
-        [EnumMember(Value = DocConstantValueType.PVALUE)]
+        [EnumMember(Value = DocConstantValueType.PVALUE), SCDescript(DocConstantValueType.PVALUE), SSDescript(DocConstantValueType.PVALUE), SCDisplay(Name = DocConstantValueType.PVALUE)]
         PVALUE = 4833,
-        [EnumMember(Value = DocConstantValueType.RATE)]
+        [EnumMember(Value = DocConstantValueType.RATE), SCDescript(DocConstantValueType.RATE), SSDescript(DocConstantValueType.RATE), SCDisplay(Name = DocConstantValueType.RATE)]
         RATE = 4838,
-        [EnumMember(Value = DocConstantValueType.SETTINGLOCATION)]
+        [EnumMember(Value = DocConstantValueType.SETTINGLOCATION), SCDescript(DocConstantValueType.SETTINGLOCATION), SSDescript(DocConstantValueType.SETTINGLOCATION), SCDisplay(Name = DocConstantValueType.SETTINGLOCATION)]
         SETTINGLOCATION = 4843,
-        [EnumMember(Value = DocConstantValueType.SETTINGLOCATIONTOTAL)]
+        [EnumMember(Value = DocConstantValueType.SETTINGLOCATIONTOTAL), SCDescript(DocConstantValueType.SETTINGLOCATIONTOTAL), SSDescript(DocConstantValueType.SETTINGLOCATIONTOTAL), SCDisplay(Name = DocConstantValueType.SETTINGLOCATIONTOTAL)]
         SETTINGLOCATIONTOTAL = 4848,
-        [EnumMember(Value = DocConstantValueType.STUDYDOC)]
+        [EnumMember(Value = DocConstantValueType.STUDYDOC), SCDescript(DocConstantValueType.STUDYDOC), SSDescript(DocConstantValueType.STUDYDOC), SCDisplay(Name = DocConstantValueType.STUDYDOC)]
         STUDYDOC = 146157855,
-        [EnumMember(Value = DocConstantValueType.STUDYOBJECTIVE)]
+        [EnumMember(Value = DocConstantValueType.STUDYOBJECTIVE), SCDescript(DocConstantValueType.STUDYOBJECTIVE), SSDescript(DocConstantValueType.STUDYOBJECTIVE), SCDisplay(Name = DocConstantValueType.STUDYOBJECTIVE)]
         STUDYOBJECTIVE = 67058546,
-        [EnumMember(Value = DocConstantValueType.STUDYREFERENCE)]
+        [EnumMember(Value = DocConstantValueType.STUDYREFERENCE), SCDescript(DocConstantValueType.STUDYREFERENCE), SSDescript(DocConstantValueType.STUDYREFERENCE), SCDisplay(Name = DocConstantValueType.STUDYREFERENCE)]
         STUDYREFERENCE = 146157856,
-        [EnumMember(Value = DocConstantValueType.SUBGROUPDESCRIPTOR)]
+        [EnumMember(Value = DocConstantValueType.SUBGROUPDESCRIPTOR), SCDescript(DocConstantValueType.SUBGROUPDESCRIPTOR), SSDescript(DocConstantValueType.SUBGROUPDESCRIPTOR), SCDisplay(Name = DocConstantValueType.SUBGROUPDESCRIPTOR)]
         SUBGROUPDESCRIPTOR = 4853,
-        [EnumMember(Value = DocConstantValueType.TIMEPOINT)]
+        [EnumMember(Value = DocConstantValueType.TIMEPOINT), SCDescript(DocConstantValueType.TIMEPOINT), SSDescript(DocConstantValueType.TIMEPOINT), SCDisplay(Name = DocConstantValueType.TIMEPOINT)]
         TIMEPOINT = 4858,
-        [EnumMember(Value = DocConstantValueType.TIMEPOINTS)]
+        [EnumMember(Value = DocConstantValueType.TIMEPOINTS), SCDescript(DocConstantValueType.TIMEPOINTS), SSDescript(DocConstantValueType.TIMEPOINTS), SCDisplay(Name = DocConstantValueType.TIMEPOINTS)]
         TIMEPOINTS = 96669234,
-        [EnumMember(Value = DocConstantValueType.UNCOLLECTEDVALUE)]
+        [EnumMember(Value = DocConstantValueType.UNCOLLECTEDVALUE), SCDescript(DocConstantValueType.UNCOLLECTEDVALUE), SSDescript(DocConstantValueType.UNCOLLECTEDVALUE), SCDisplay(Name = DocConstantValueType.UNCOLLECTEDVALUE)]
         UNCOLLECTEDVALUE = 4863,
-        [EnumMember(Value = DocConstantValueType.UNITRANGE)]
+        [EnumMember(Value = DocConstantValueType.UNITRANGE), SCDescript(DocConstantValueType.UNITRANGE), SSDescript(DocConstantValueType.UNITRANGE), SCDisplay(Name = DocConstantValueType.UNITRANGE)]
         UNITRANGE = 4868,
-        [EnumMember(Value = DocConstantValueType.UNITS)]
+        [EnumMember(Value = DocConstantValueType.UNITS), SCDescript(DocConstantValueType.UNITS), SSDescript(DocConstantValueType.UNITS), SCDisplay(Name = DocConstantValueType.UNITS)]
         UNITS = 4873,
-        [EnumMember(Value = DocConstantValueType.UNITSRANGE)]
+        [EnumMember(Value = DocConstantValueType.UNITSRANGE), SCDescript(DocConstantValueType.UNITSRANGE), SSDescript(DocConstantValueType.UNITSRANGE), SCDisplay(Name = DocConstantValueType.UNITSRANGE)]
         UNITSRANGE = 4878,
-        [EnumMember(Value = DocConstantValueType.UNITVALUE)]
+        [EnumMember(Value = DocConstantValueType.UNITVALUE), SCDescript(DocConstantValueType.UNITVALUE), SSDescript(DocConstantValueType.UNITVALUE), SCDisplay(Name = DocConstantValueType.UNITVALUE)]
         UNITVALUE = 4883,
-        [EnumMember(Value = DocConstantValueType.YESNONA)]
+        [EnumMember(Value = DocConstantValueType.YESNONA), SCDescript(DocConstantValueType.YESNONA), SSDescript(DocConstantValueType.YESNONA), SCDisplay(Name = DocConstantValueType.YESNONA)]
         YESNONA = 4893
     }
     
@@ -133,7 +112,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ValueTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ValueTypeEnm.ASSOCIATIONMEASURE:
                     return DocConstantValueType.ASSOCIATIONMEASURE;
@@ -218,6 +197,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ValueTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

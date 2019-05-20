@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,74 +15,58 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyObjectiveEnm
     {
-        [EnumMember(Value = DocConstantStudyObjective.OTHERS)]
+        [EnumMember(Value = DocConstantStudyObjective.OTHERS), SCDescript(DocConstantStudyObjective.OTHERS), SSDescript(DocConstantStudyObjective.OTHERS), SCDisplay(Name = DocConstantStudyObjective.OTHERS)]
         OTHERS = 3473,
-        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_EFFICACY_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_EFFICACY_OUTCOME), SCDescript(DocConstantStudyObjective.PRIMARY_EFFICACY_OUTCOME), SSDescript(DocConstantStudyObjective.PRIMARY_EFFICACY_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.PRIMARY_EFFICACY_OUTCOME)]
         PRIMARY_EFFICACY_OUTCOME = 3478,
-        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_ENDPOINT)]
+        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_ENDPOINT), SCDescript(DocConstantStudyObjective.PRIMARY_ENDPOINT), SSDescript(DocConstantStudyObjective.PRIMARY_ENDPOINT), SCDisplay(Name = DocConstantStudyObjective.PRIMARY_ENDPOINT)]
         PRIMARY_ENDPOINT = 3483,
-        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_ENDPOINT_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_ENDPOINT_OUTCOME), SCDescript(DocConstantStudyObjective.PRIMARY_ENDPOINT_OUTCOME), SSDescript(DocConstantStudyObjective.PRIMARY_ENDPOINT_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.PRIMARY_ENDPOINT_OUTCOME)]
         PRIMARY_ENDPOINT_OUTCOME = 3488,
-        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_OBJECTIVE)]
+        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_OBJECTIVE), SCDescript(DocConstantStudyObjective.PRIMARY_OBJECTIVE), SSDescript(DocConstantStudyObjective.PRIMARY_OBJECTIVE), SCDisplay(Name = DocConstantStudyObjective.PRIMARY_OBJECTIVE)]
         PRIMARY_OBJECTIVE = 3493,
-        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_SAFETY_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.PRIMARY_SAFETY_OUTCOME), SCDescript(DocConstantStudyObjective.PRIMARY_SAFETY_OUTCOME), SSDescript(DocConstantStudyObjective.PRIMARY_SAFETY_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.PRIMARY_SAFETY_OUTCOME)]
         PRIMARY_SAFETY_OUTCOME = 3498,
-        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_EFFICACY_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_EFFICACY_OUTCOME), SCDescript(DocConstantStudyObjective.SECONDARY_EFFICACY_OUTCOME), SSDescript(DocConstantStudyObjective.SECONDARY_EFFICACY_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.SECONDARY_EFFICACY_OUTCOME)]
         SECONDARY_EFFICACY_OUTCOME = 3503,
-        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_ENDPOINT)]
+        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_ENDPOINT), SCDescript(DocConstantStudyObjective.SECONDARY_ENDPOINT), SSDescript(DocConstantStudyObjective.SECONDARY_ENDPOINT), SCDisplay(Name = DocConstantStudyObjective.SECONDARY_ENDPOINT)]
         SECONDARY_ENDPOINT = 3508,
-        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_ENDPOINT_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_ENDPOINT_OUTCOME), SCDescript(DocConstantStudyObjective.SECONDARY_ENDPOINT_OUTCOME), SSDescript(DocConstantStudyObjective.SECONDARY_ENDPOINT_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.SECONDARY_ENDPOINT_OUTCOME)]
         SECONDARY_ENDPOINT_OUTCOME = 3513,
-        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_OBJECTIVE)]
+        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_OBJECTIVE), SCDescript(DocConstantStudyObjective.SECONDARY_OBJECTIVE), SSDescript(DocConstantStudyObjective.SECONDARY_OBJECTIVE), SCDisplay(Name = DocConstantStudyObjective.SECONDARY_OBJECTIVE)]
         SECONDARY_OBJECTIVE = 3518,
-        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_SAFETY_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.SECONDARY_SAFETY_OUTCOME), SCDescript(DocConstantStudyObjective.SECONDARY_SAFETY_OUTCOME), SSDescript(DocConstantStudyObjective.SECONDARY_SAFETY_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.SECONDARY_SAFETY_OUTCOME)]
         SECONDARY_SAFETY_OUTCOME = 3523,
-        [EnumMember(Value = DocConstantStudyObjective.STUDY_AIM)]
+        [EnumMember(Value = DocConstantStudyObjective.STUDY_AIM), SCDescript(DocConstantStudyObjective.STUDY_AIM), SSDescript(DocConstantStudyObjective.STUDY_AIM), SCDisplay(Name = DocConstantStudyObjective.STUDY_AIM)]
         STUDY_AIM = 3528,
-        [EnumMember(Value = DocConstantStudyObjective.STUDY_HYPOTHESIS)]
+        [EnumMember(Value = DocConstantStudyObjective.STUDY_HYPOTHESIS), SCDescript(DocConstantStudyObjective.STUDY_HYPOTHESIS), SSDescript(DocConstantStudyObjective.STUDY_HYPOTHESIS), SCDisplay(Name = DocConstantStudyObjective.STUDY_HYPOTHESIS)]
         STUDY_HYPOTHESIS = 3533,
-        [EnumMember(Value = DocConstantStudyObjective.STUDY_OBJECTIVE)]
+        [EnumMember(Value = DocConstantStudyObjective.STUDY_OBJECTIVE), SCDescript(DocConstantStudyObjective.STUDY_OBJECTIVE), SSDescript(DocConstantStudyObjective.STUDY_OBJECTIVE), SCDisplay(Name = DocConstantStudyObjective.STUDY_OBJECTIVE)]
         STUDY_OBJECTIVE = 3538,
-        [EnumMember(Value = DocConstantStudyObjective.STUDY_PURPOSE)]
+        [EnumMember(Value = DocConstantStudyObjective.STUDY_PURPOSE), SCDescript(DocConstantStudyObjective.STUDY_PURPOSE), SSDescript(DocConstantStudyObjective.STUDY_PURPOSE), SCDisplay(Name = DocConstantStudyObjective.STUDY_PURPOSE)]
         STUDY_PURPOSE = 3543,
-        [EnumMember(Value = DocConstantStudyObjective.STUDY_QUESTION)]
+        [EnumMember(Value = DocConstantStudyObjective.STUDY_QUESTION), SCDescript(DocConstantStudyObjective.STUDY_QUESTION), SSDescript(DocConstantStudyObjective.STUDY_QUESTION), SCDisplay(Name = DocConstantStudyObjective.STUDY_QUESTION)]
         STUDY_QUESTION = 3548,
-        [EnumMember(Value = DocConstantStudyObjective.TERIARY_ENDPOINT)]
+        [EnumMember(Value = DocConstantStudyObjective.TERIARY_ENDPOINT), SCDescript(DocConstantStudyObjective.TERIARY_ENDPOINT), SSDescript(DocConstantStudyObjective.TERIARY_ENDPOINT), SCDisplay(Name = DocConstantStudyObjective.TERIARY_ENDPOINT)]
         TERIARY_ENDPOINT = 3553,
-        [EnumMember(Value = DocConstantStudyObjective.TERTIARY_EFFICACY_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.TERTIARY_EFFICACY_OUTCOME), SCDescript(DocConstantStudyObjective.TERTIARY_EFFICACY_OUTCOME), SSDescript(DocConstantStudyObjective.TERTIARY_EFFICACY_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.TERTIARY_EFFICACY_OUTCOME)]
         TERTIARY_EFFICACY_OUTCOME = 3558,
-        [EnumMember(Value = DocConstantStudyObjective.TERTIARY_ENDPOINT_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.TERTIARY_ENDPOINT_OUTCOME), SCDescript(DocConstantStudyObjective.TERTIARY_ENDPOINT_OUTCOME), SSDescript(DocConstantStudyObjective.TERTIARY_ENDPOINT_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.TERTIARY_ENDPOINT_OUTCOME)]
         TERTIARY_ENDPOINT_OUTCOME = 3563,
-        [EnumMember(Value = DocConstantStudyObjective.TERTIARY_OBJECTIVE)]
+        [EnumMember(Value = DocConstantStudyObjective.TERTIARY_OBJECTIVE), SCDescript(DocConstantStudyObjective.TERTIARY_OBJECTIVE), SSDescript(DocConstantStudyObjective.TERTIARY_OBJECTIVE), SCDisplay(Name = DocConstantStudyObjective.TERTIARY_OBJECTIVE)]
         TERTIARY_OBJECTIVE = 3568,
-        [EnumMember(Value = DocConstantStudyObjective.TERTIARY_SAFETY_OUTCOME)]
+        [EnumMember(Value = DocConstantStudyObjective.TERTIARY_SAFETY_OUTCOME), SCDescript(DocConstantStudyObjective.TERTIARY_SAFETY_OUTCOME), SSDescript(DocConstantStudyObjective.TERTIARY_SAFETY_OUTCOME), SCDisplay(Name = DocConstantStudyObjective.TERTIARY_SAFETY_OUTCOME)]
         TERTIARY_SAFETY_OUTCOME = 3573
     }
     
@@ -95,7 +74,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyObjectiveEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyObjectiveEnm.OTHERS:
                     return DocConstantStudyObjective.OTHERS;
@@ -142,6 +121,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyObjectiveEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

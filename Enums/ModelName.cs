@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,194 +15,178 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ModelNameEnm
     {
-        [EnumMember(Value = DocConstantModelName.ADJUDICATEDRATING)]
+        [EnumMember(Value = DocConstantModelName.ADJUDICATEDRATING), SCDescript(DocConstantModelName.ADJUDICATEDRATING), SSDescript(DocConstantModelName.ADJUDICATEDRATING), SCDisplay(Name = DocConstantModelName.ADJUDICATEDRATING)]
         ADJUDICATEDRATING = 20585,
-        [EnumMember(Value = DocConstantModelName.APP)]
+        [EnumMember(Value = DocConstantModelName.APP), SCDescript(DocConstantModelName.APP), SSDescript(DocConstantModelName.APP), SCDisplay(Name = DocConstantModelName.APP)]
         APP = 14173,
-        [EnumMember(Value = DocConstantModelName.ATTRIBUTE)]
+        [EnumMember(Value = DocConstantModelName.ATTRIBUTE), SCDescript(DocConstantModelName.ATTRIBUTE), SSDescript(DocConstantModelName.ATTRIBUTE), SCDisplay(Name = DocConstantModelName.ATTRIBUTE)]
         ATTRIBUTE = 102,
-        [EnumMember(Value = DocConstantModelName.ATTRIBUTEINTERVAL)]
+        [EnumMember(Value = DocConstantModelName.ATTRIBUTEINTERVAL), SCDescript(DocConstantModelName.ATTRIBUTEINTERVAL), SSDescript(DocConstantModelName.ATTRIBUTEINTERVAL), SCDisplay(Name = DocConstantModelName.ATTRIBUTEINTERVAL)]
         ATTRIBUTEINTERVAL = 104,
-        [EnumMember(Value = DocConstantModelName.AUDITDELTA)]
+        [EnumMember(Value = DocConstantModelName.AUDITDELTA), SCDescript(DocConstantModelName.AUDITDELTA), SSDescript(DocConstantModelName.AUDITDELTA), SCDisplay(Name = DocConstantModelName.AUDITDELTA)]
         AUDITDELTA = 19019,
-        [EnumMember(Value = DocConstantModelName.AUDITRECORD)]
+        [EnumMember(Value = DocConstantModelName.AUDITRECORD), SCDescript(DocConstantModelName.AUDITRECORD), SSDescript(DocConstantModelName.AUDITRECORD), SCDisplay(Name = DocConstantModelName.AUDITRECORD)]
         AUDITRECORD = 108,
-        [EnumMember(Value = DocConstantModelName.BACKGROUNDTASK)]
+        [EnumMember(Value = DocConstantModelName.BACKGROUNDTASK), SCDescript(DocConstantModelName.BACKGROUNDTASK), SSDescript(DocConstantModelName.BACKGROUNDTASK), SCDisplay(Name = DocConstantModelName.BACKGROUNDTASK)]
         BACKGROUNDTASK = 14375,
-        [EnumMember(Value = DocConstantModelName.BACKGROUNDTASKHISTORY)]
+        [EnumMember(Value = DocConstantModelName.BACKGROUNDTASKHISTORY), SCDescript(DocConstantModelName.BACKGROUNDTASKHISTORY), SSDescript(DocConstantModelName.BACKGROUNDTASKHISTORY), SCDisplay(Name = DocConstantModelName.BACKGROUNDTASKHISTORY)]
         BACKGROUNDTASKHISTORY = 18919,
-        [EnumMember(Value = DocConstantModelName.BACKGROUNDTASKITEM)]
+        [EnumMember(Value = DocConstantModelName.BACKGROUNDTASKITEM), SCDescript(DocConstantModelName.BACKGROUNDTASKITEM), SSDescript(DocConstantModelName.BACKGROUNDTASKITEM), SCDisplay(Name = DocConstantModelName.BACKGROUNDTASKITEM)]
         BACKGROUNDTASKITEM = 19935,
-        [EnumMember(Value = DocConstantModelName.BROADCAST)]
+        [EnumMember(Value = DocConstantModelName.BROADCAST), SCDescript(DocConstantModelName.BROADCAST), SSDescript(DocConstantModelName.BROADCAST), SCDisplay(Name = DocConstantModelName.BROADCAST)]
         BROADCAST = 13962,
-        [EnumMember(Value = DocConstantModelName.CLIENT)]
+        [EnumMember(Value = DocConstantModelName.CLIENT), SCDescript(DocConstantModelName.CLIENT), SSDescript(DocConstantModelName.CLIENT), SCDisplay(Name = DocConstantModelName.CLIENT)]
         CLIENT = 111,
-        [EnumMember(Value = DocConstantModelName.COMMENT)]
+        [EnumMember(Value = DocConstantModelName.COMMENT), SCDescript(DocConstantModelName.COMMENT), SSDescript(DocConstantModelName.COMMENT), SCDisplay(Name = DocConstantModelName.COMMENT)]
         COMMENT = 18319,
-        [EnumMember(Value = DocConstantModelName.DATABASEVERSION)]
+        [EnumMember(Value = DocConstantModelName.DATABASEVERSION), SCDescript(DocConstantModelName.DATABASEVERSION), SSDescript(DocConstantModelName.DATABASEVERSION), SCDisplay(Name = DocConstantModelName.DATABASEVERSION)]
         DATABASEVERSION = 18819,
-        [EnumMember(Value = DocConstantModelName.DATACLASS)]
+        [EnumMember(Value = DocConstantModelName.DATACLASS), SCDescript(DocConstantModelName.DATACLASS), SSDescript(DocConstantModelName.DATACLASS), SCDisplay(Name = DocConstantModelName.DATACLASS)]
         DATACLASS = 20235,
-        [EnumMember(Value = DocConstantModelName.DATAPROPERTY)]
+        [EnumMember(Value = DocConstantModelName.DATAPROPERTY), SCDescript(DocConstantModelName.DATAPROPERTY), SSDescript(DocConstantModelName.DATAPROPERTY), SCDisplay(Name = DocConstantModelName.DATAPROPERTY)]
         DATAPROPERTY = 20255,
-        [EnumMember(Value = DocConstantModelName.DATASET)]
+        [EnumMember(Value = DocConstantModelName.DATASET), SCDescript(DocConstantModelName.DATASET), SSDescript(DocConstantModelName.DATASET), SCDisplay(Name = DocConstantModelName.DATASET)]
         DATASET = 20985,
-        [EnumMember(Value = DocConstantModelName.DATATAB)]
+        [EnumMember(Value = DocConstantModelName.DATATAB), SCDescript(DocConstantModelName.DATATAB), SSDescript(DocConstantModelName.DATATAB), SCDisplay(Name = DocConstantModelName.DATATAB)]
         DATATAB = 20265,
-        [EnumMember(Value = DocConstantModelName.DATETIME)]
+        [EnumMember(Value = DocConstantModelName.DATETIME), SCDescript(DocConstantModelName.DATETIME), SSDescript(DocConstantModelName.DATETIME), SCDisplay(Name = DocConstantModelName.DATETIME)]
         DATETIME = 15278,
-        [EnumMember(Value = DocConstantModelName.DEFAULT)]
+        [EnumMember(Value = DocConstantModelName.DEFAULT), SCDescript(DocConstantModelName.DEFAULT), SSDescript(DocConstantModelName.DEFAULT), SCDisplay(Name = DocConstantModelName.DEFAULT)]
         DEFAULT = 19435,
-        [EnumMember(Value = DocConstantModelName.DISEASESTATESET)]
+        [EnumMember(Value = DocConstantModelName.DISEASESTATESET), SCDescript(DocConstantModelName.DISEASESTATESET), SSDescript(DocConstantModelName.DISEASESTATESET), SCDisplay(Name = DocConstantModelName.DISEASESTATESET)]
         DISEASESTATESET = 20785,
-        [EnumMember(Value = DocConstantModelName.DIVISION)]
+        [EnumMember(Value = DocConstantModelName.DIVISION), SCDescript(DocConstantModelName.DIVISION), SSDescript(DocConstantModelName.DIVISION), SCDisplay(Name = DocConstantModelName.DIVISION)]
         DIVISION = 112,
-        [EnumMember(Value = DocConstantModelName.DOCUMENT)]
+        [EnumMember(Value = DocConstantModelName.DOCUMENT), SCDescript(DocConstantModelName.DOCUMENT), SSDescript(DocConstantModelName.DOCUMENT), SCDisplay(Name = DocConstantModelName.DOCUMENT)]
         DOCUMENT = 136,
-        [EnumMember(Value = DocConstantModelName.DOCUMENTSET)]
+        [EnumMember(Value = DocConstantModelName.DOCUMENTSET), SCDescript(DocConstantModelName.DOCUMENTSET), SSDescript(DocConstantModelName.DOCUMENTSET), SCDisplay(Name = DocConstantModelName.DOCUMENTSET)]
         DOCUMENTSET = 142,
-        [EnumMember(Value = DocConstantModelName.DOCUMENTSETHISTORY)]
+        [EnumMember(Value = DocConstantModelName.DOCUMENTSETHISTORY), SCDescript(DocConstantModelName.DOCUMENTSETHISTORY), SSDescript(DocConstantModelName.DOCUMENTSETHISTORY), SCDisplay(Name = DocConstantModelName.DOCUMENTSETHISTORY)]
         DOCUMENTSETHISTORY = 13320,
-        [EnumMember(Value = DocConstantModelName.ENTITIES)]
+        [EnumMember(Value = DocConstantModelName.ENTITIES), SCDescript(DocConstantModelName.ENTITIES), SSDescript(DocConstantModelName.ENTITIES), SCDisplay(Name = DocConstantModelName.ENTITIES)]
         ENTITIES = 13364,
-        [EnumMember(Value = DocConstantModelName.EOD)]
+        [EnumMember(Value = DocConstantModelName.EOD), SCDescript(DocConstantModelName.EOD), SSDescript(DocConstantModelName.EOD), SCDisplay(Name = DocConstantModelName.EOD)]
         EOD = 20385,
-        [EnumMember(Value = DocConstantModelName.EVENT)]
+        [EnumMember(Value = DocConstantModelName.EVENT), SCDescript(DocConstantModelName.EVENT), SSDescript(DocConstantModelName.EVENT), SCDisplay(Name = DocConstantModelName.EVENT)]
         EVENT = 19219,
-        [EnumMember(Value = DocConstantModelName.FAVORITE)]
+        [EnumMember(Value = DocConstantModelName.FAVORITE), SCDescript(DocConstantModelName.FAVORITE), SSDescript(DocConstantModelName.FAVORITE), SCDisplay(Name = DocConstantModelName.FAVORITE)]
         FAVORITE = 20485,
-        [EnumMember(Value = DocConstantModelName.FEATURESET)]
+        [EnumMember(Value = DocConstantModelName.FEATURESET), SCDescript(DocConstantModelName.FEATURESET), SSDescript(DocConstantModelName.FEATURESET), SCDisplay(Name = DocConstantModelName.FEATURESET)]
         FEATURESET = 116,
-        [EnumMember(Value = DocConstantModelName.GLOSSARY)]
+        [EnumMember(Value = DocConstantModelName.GLOSSARY), SCDescript(DocConstantModelName.GLOSSARY), SSDescript(DocConstantModelName.GLOSSARY), SCDisplay(Name = DocConstantModelName.GLOSSARY)]
         GLOSSARY = 14977,
-        [EnumMember(Value = DocConstantModelName.HELP)]
+        [EnumMember(Value = DocConstantModelName.HELP), SCDescript(DocConstantModelName.HELP), SSDescript(DocConstantModelName.HELP), SCDisplay(Name = DocConstantModelName.HELP)]
         HELP = 14978,
-        [EnumMember(Value = DocConstantModelName.HISTORY)]
+        [EnumMember(Value = DocConstantModelName.HISTORY), SCDescript(DocConstantModelName.HISTORY), SSDescript(DocConstantModelName.HISTORY), SCDisplay(Name = DocConstantModelName.HISTORY)]
         HISTORY = 15885,
-        [EnumMember(Value = DocConstantModelName.IMPERSONATION)]
+        [EnumMember(Value = DocConstantModelName.IMPERSONATION), SCDescript(DocConstantModelName.IMPERSONATION), SSDescript(DocConstantModelName.IMPERSONATION), SCDisplay(Name = DocConstantModelName.IMPERSONATION)]
         IMPERSONATION = 19319,
-        [EnumMember(Value = DocConstantModelName.IMPORTDATA)]
+        [EnumMember(Value = DocConstantModelName.IMPORTDATA), SCDescript(DocConstantModelName.IMPORTDATA), SSDescript(DocConstantModelName.IMPORTDATA), SCDisplay(Name = DocConstantModelName.IMPORTDATA)]
         IMPORTDATA = 12600,
-        [EnumMember(Value = DocConstantModelName.INTERVAL)]
+        [EnumMember(Value = DocConstantModelName.INTERVAL), SCDescript(DocConstantModelName.INTERVAL), SSDescript(DocConstantModelName.INTERVAL), SCDisplay(Name = DocConstantModelName.INTERVAL)]
         INTERVAL = 15178,
-        [EnumMember(Value = DocConstantModelName.JUNCTION)]
+        [EnumMember(Value = DocConstantModelName.JUNCTION), SCDescript(DocConstantModelName.JUNCTION), SSDescript(DocConstantModelName.JUNCTION), SCDisplay(Name = DocConstantModelName.JUNCTION)]
         JUNCTION = 17619,
-        [EnumMember(Value = DocConstantModelName.LIBRARYSET)]
+        [EnumMember(Value = DocConstantModelName.LIBRARYSET), SCDescript(DocConstantModelName.LIBRARYSET), SSDescript(DocConstantModelName.LIBRARYSET), SCDisplay(Name = DocConstantModelName.LIBRARYSET)]
         LIBRARYSET = 20885,
-        [EnumMember(Value = DocConstantModelName.LOCALE)]
+        [EnumMember(Value = DocConstantModelName.LOCALE), SCDescript(DocConstantModelName.LOCALE), SSDescript(DocConstantModelName.LOCALE), SCDisplay(Name = DocConstantModelName.LOCALE)]
         LOCALE = 19335,
-        [EnumMember(Value = DocConstantModelName.LOCALELOOKUP)]
+        [EnumMember(Value = DocConstantModelName.LOCALELOOKUP), SCDescript(DocConstantModelName.LOCALELOOKUP), SSDescript(DocConstantModelName.LOCALELOOKUP), SCDisplay(Name = DocConstantModelName.LOCALELOOKUP)]
         LOCALELOOKUP = 19325,
-        [EnumMember(Value = DocConstantModelName.LOOKUPCATEGORY)]
+        [EnumMember(Value = DocConstantModelName.LOOKUPCATEGORY), SCDescript(DocConstantModelName.LOOKUPCATEGORY), SSDescript(DocConstantModelName.LOOKUPCATEGORY), SCDisplay(Name = DocConstantModelName.LOOKUPCATEGORY)]
         LOOKUPCATEGORY = 17419,
-        [EnumMember(Value = DocConstantModelName.LOOKUPTABLE)]
+        [EnumMember(Value = DocConstantModelName.LOOKUPTABLE), SCDescript(DocConstantModelName.LOOKUPTABLE), SSDescript(DocConstantModelName.LOOKUPTABLE), SCDisplay(Name = DocConstantModelName.LOOKUPTABLE)]
         LOOKUPTABLE = 127,
-        [EnumMember(Value = DocConstantModelName.LOOKUPTABLEBINDING)]
+        [EnumMember(Value = DocConstantModelName.LOOKUPTABLEBINDING), SCDescript(DocConstantModelName.LOOKUPTABLEBINDING), SSDescript(DocConstantModelName.LOOKUPTABLEBINDING), SCDisplay(Name = DocConstantModelName.LOOKUPTABLEBINDING)]
         LOOKUPTABLEBINDING = 15380,
-        [EnumMember(Value = DocConstantModelName.LOOKUPTABLEENUM)]
+        [EnumMember(Value = DocConstantModelName.LOOKUPTABLEENUM), SCDescript(DocConstantModelName.LOOKUPTABLEENUM), SSDescript(DocConstantModelName.LOOKUPTABLEENUM), SCDisplay(Name = DocConstantModelName.LOOKUPTABLEENUM)]
         LOOKUPTABLEENUM = 128,
-        [EnumMember(Value = DocConstantModelName.MEANRANGES)]
+        [EnumMember(Value = DocConstantModelName.MEANRANGES), SCDescript(DocConstantModelName.MEANRANGES), SSDescript(DocConstantModelName.MEANRANGES), SCDisplay(Name = DocConstantModelName.MEANRANGES)]
         MEANRANGES = 130,
-        [EnumMember(Value = DocConstantModelName.MEANRANGEVALUE)]
+        [EnumMember(Value = DocConstantModelName.MEANRANGEVALUE), SCDescript(DocConstantModelName.MEANRANGEVALUE), SSDescript(DocConstantModelName.MEANRANGEVALUE), SCDisplay(Name = DocConstantModelName.MEANRANGEVALUE)]
         MEANRANGEVALUE = 129,
-        [EnumMember(Value = DocConstantModelName.MEANVARIANCES)]
+        [EnumMember(Value = DocConstantModelName.MEANVARIANCES), SCDescript(DocConstantModelName.MEANVARIANCES), SSDescript(DocConstantModelName.MEANVARIANCES), SCDisplay(Name = DocConstantModelName.MEANVARIANCES)]
         MEANVARIANCES = 18219,
-        [EnumMember(Value = DocConstantModelName.MEANVARIANCEVALUE)]
+        [EnumMember(Value = DocConstantModelName.MEANVARIANCEVALUE), SCDescript(DocConstantModelName.MEANVARIANCEVALUE), SSDescript(DocConstantModelName.MEANVARIANCEVALUE), SCDisplay(Name = DocConstantModelName.MEANVARIANCEVALUE)]
         MEANVARIANCEVALUE = 18119,
-        [EnumMember(Value = DocConstantModelName.PAGE)]
+        [EnumMember(Value = DocConstantModelName.PAGE), SCDescript(DocConstantModelName.PAGE), SSDescript(DocConstantModelName.PAGE), SCDisplay(Name = DocConstantModelName.PAGE)]
         PAGE = 180,
-        [EnumMember(Value = DocConstantModelName.PROJECT)]
+        [EnumMember(Value = DocConstantModelName.PROJECT), SCDescript(DocConstantModelName.PROJECT), SSDescript(DocConstantModelName.PROJECT), SCDisplay(Name = DocConstantModelName.PROJECT)]
         PROJECT = 20135,
-        [EnumMember(Value = DocConstantModelName.QUEUECHANNEL)]
+        [EnumMember(Value = DocConstantModelName.QUEUECHANNEL), SCDescript(DocConstantModelName.QUEUECHANNEL), SSDescript(DocConstantModelName.QUEUECHANNEL), SCDisplay(Name = DocConstantModelName.QUEUECHANNEL)]
         QUEUECHANNEL = 18519,
-        [EnumMember(Value = DocConstantModelName.RATING)]
+        [EnumMember(Value = DocConstantModelName.RATING), SCDescript(DocConstantModelName.RATING), SSDescript(DocConstantModelName.RATING), SCDisplay(Name = DocConstantModelName.RATING)]
         RATING = 20365,
-        [EnumMember(Value = DocConstantModelName.ROLE)]
+        [EnumMember(Value = DocConstantModelName.ROLE), SCDescript(DocConstantModelName.ROLE), SSDescript(DocConstantModelName.ROLE), SCDisplay(Name = DocConstantModelName.ROLE)]
         ROLE = 133,
-        [EnumMember(Value = DocConstantModelName.SCOPE)]
+        [EnumMember(Value = DocConstantModelName.SCOPE), SCDescript(DocConstantModelName.SCOPE), SSDescript(DocConstantModelName.SCOPE), SCDisplay(Name = DocConstantModelName.SCOPE)]
         SCOPE = 15379,
-        [EnumMember(Value = DocConstantModelName.SERVEPORTALSET)]
+        [EnumMember(Value = DocConstantModelName.SERVEPORTALSET), SCDescript(DocConstantModelName.SERVEPORTALSET), SSDescript(DocConstantModelName.SERVEPORTALSET), SCDisplay(Name = DocConstantModelName.SERVEPORTALSET)]
         SERVEPORTALSET = 21085,
-        [EnumMember(Value = DocConstantModelName.STATS)]
+        [EnumMember(Value = DocConstantModelName.STATS), SCDescript(DocConstantModelName.STATS), SSDescript(DocConstantModelName.STATS), SCDisplay(Name = DocConstantModelName.STATS)]
         STATS = 14273,
-        [EnumMember(Value = DocConstantModelName.STATSRECORD)]
+        [EnumMember(Value = DocConstantModelName.STATSRECORD), SCDescript(DocConstantModelName.STATSRECORD), SSDescript(DocConstantModelName.STATSRECORD), SCDisplay(Name = DocConstantModelName.STATSRECORD)]
         STATSRECORD = 14275,
-        [EnumMember(Value = DocConstantModelName.STATSSTUDYSET)]
+        [EnumMember(Value = DocConstantModelName.STATSSTUDYSET), SCDescript(DocConstantModelName.STATSSTUDYSET), SSDescript(DocConstantModelName.STATSSTUDYSET), SCDisplay(Name = DocConstantModelName.STATSSTUDYSET)]
         STATSSTUDYSET = 14274,
-        [EnumMember(Value = DocConstantModelName.STUDYDESIGN)]
+        [EnumMember(Value = DocConstantModelName.STUDYDESIGN), SCDescript(DocConstantModelName.STUDYDESIGN), SSDescript(DocConstantModelName.STUDYDESIGN), SCDisplay(Name = DocConstantModelName.STUDYDESIGN)]
         STUDYDESIGN = 137,
-        [EnumMember(Value = DocConstantModelName.STUDYTYPE)]
+        [EnumMember(Value = DocConstantModelName.STUDYTYPE), SCDescript(DocConstantModelName.STUDYTYPE), SSDescript(DocConstantModelName.STUDYTYPE), SCDisplay(Name = DocConstantModelName.STUDYTYPE)]
         STUDYTYPE = 143,
-        [EnumMember(Value = DocConstantModelName.TAG)]
+        [EnumMember(Value = DocConstantModelName.TAG), SCDescript(DocConstantModelName.TAG), SSDescript(DocConstantModelName.TAG), SCDisplay(Name = DocConstantModelName.TAG)]
         TAG = 18019,
-        [EnumMember(Value = DocConstantModelName.TASK)]
+        [EnumMember(Value = DocConstantModelName.TASK), SCDescript(DocConstantModelName.TASK), SSDescript(DocConstantModelName.TASK), SCDisplay(Name = DocConstantModelName.TASK)]
         TASK = 18719,
-        [EnumMember(Value = DocConstantModelName.TEAM)]
+        [EnumMember(Value = DocConstantModelName.TEAM), SCDescript(DocConstantModelName.TEAM), SSDescript(DocConstantModelName.TEAM), SCDisplay(Name = DocConstantModelName.TEAM)]
         TEAM = 15881,
-        [EnumMember(Value = DocConstantModelName.TERMCATEGORY)]
+        [EnumMember(Value = DocConstantModelName.TERMCATEGORY), SCDescript(DocConstantModelName.TERMCATEGORY), SSDescript(DocConstantModelName.TERMCATEGORY), SCDisplay(Name = DocConstantModelName.TERMCATEGORY)]
         TERMCATEGORY = 146,
-        [EnumMember(Value = DocConstantModelName.TERMMASTER)]
+        [EnumMember(Value = DocConstantModelName.TERMMASTER), SCDescript(DocConstantModelName.TERMMASTER), SSDescript(DocConstantModelName.TERMMASTER), SCDisplay(Name = DocConstantModelName.TERMMASTER)]
         TERMMASTER = 147,
-        [EnumMember(Value = DocConstantModelName.TERMSYNONYM)]
+        [EnumMember(Value = DocConstantModelName.TERMSYNONYM), SCDescript(DocConstantModelName.TERMSYNONYM), SSDescript(DocConstantModelName.TERMSYNONYM), SCDisplay(Name = DocConstantModelName.TERMSYNONYM)]
         TERMSYNONYM = 148,
-        [EnumMember(Value = DocConstantModelName.THERAPEUTICAREASET)]
+        [EnumMember(Value = DocConstantModelName.THERAPEUTICAREASET), SCDescript(DocConstantModelName.THERAPEUTICAREASET), SSDescript(DocConstantModelName.THERAPEUTICAREASET), SCDisplay(Name = DocConstantModelName.THERAPEUTICAREASET)]
         THERAPEUTICAREASET = 20685,
-        [EnumMember(Value = DocConstantModelName.TIMECARD)]
+        [EnumMember(Value = DocConstantModelName.TIMECARD), SCDescript(DocConstantModelName.TIMECARD), SSDescript(DocConstantModelName.TIMECARD), SCDisplay(Name = DocConstantModelName.TIMECARD)]
         TIMECARD = 17319,
-        [EnumMember(Value = DocConstantModelName.TIMEPOINT)]
+        [EnumMember(Value = DocConstantModelName.TIMEPOINT), SCDescript(DocConstantModelName.TIMEPOINT), SSDescript(DocConstantModelName.TIMEPOINT), SCDisplay(Name = DocConstantModelName.TIMEPOINT)]
         TIMEPOINT = 15078,
-        [EnumMember(Value = DocConstantModelName.UNITCONVERSIONRULES)]
+        [EnumMember(Value = DocConstantModelName.UNITCONVERSIONRULES), SCDescript(DocConstantModelName.UNITCONVERSIONRULES), SSDescript(DocConstantModelName.UNITCONVERSIONRULES), SCDisplay(Name = DocConstantModelName.UNITCONVERSIONRULES)]
         UNITCONVERSIONRULES = 149,
-        [EnumMember(Value = DocConstantModelName.UNITOFMEASURE)]
+        [EnumMember(Value = DocConstantModelName.UNITOFMEASURE), SCDescript(DocConstantModelName.UNITOFMEASURE), SSDescript(DocConstantModelName.UNITOFMEASURE), SCDisplay(Name = DocConstantModelName.UNITOFMEASURE)]
         UNITOFMEASURE = 150,
-        [EnumMember(Value = DocConstantModelName.UNITS)]
+        [EnumMember(Value = DocConstantModelName.UNITS), SCDescript(DocConstantModelName.UNITS), SSDescript(DocConstantModelName.UNITS), SCDisplay(Name = DocConstantModelName.UNITS)]
         UNITS = 152,
-        [EnumMember(Value = DocConstantModelName.UNITVALUE)]
+        [EnumMember(Value = DocConstantModelName.UNITVALUE), SCDescript(DocConstantModelName.UNITVALUE), SSDescript(DocConstantModelName.UNITVALUE), SCDisplay(Name = DocConstantModelName.UNITVALUE)]
         UNITVALUE = 151,
-        [EnumMember(Value = DocConstantModelName.UPDATE)]
+        [EnumMember(Value = DocConstantModelName.UPDATE), SCDescript(DocConstantModelName.UPDATE), SSDescript(DocConstantModelName.UPDATE), SCDisplay(Name = DocConstantModelName.UPDATE)]
         UPDATE = 19119,
-        [EnumMember(Value = DocConstantModelName.USER)]
+        [EnumMember(Value = DocConstantModelName.USER), SCDescript(DocConstantModelName.USER), SSDescript(DocConstantModelName.USER), SCDisplay(Name = DocConstantModelName.USER)]
         USER = 153,
-        [EnumMember(Value = DocConstantModelName.USERREQUEST)]
+        [EnumMember(Value = DocConstantModelName.USERREQUEST), SCDescript(DocConstantModelName.USERREQUEST), SSDescript(DocConstantModelName.USERREQUEST), SCDisplay(Name = DocConstantModelName.USERREQUEST)]
         USERREQUEST = 18619,
-        [EnumMember(Value = DocConstantModelName.USERSESSION)]
+        [EnumMember(Value = DocConstantModelName.USERSESSION), SCDescript(DocConstantModelName.USERSESSION), SSDescript(DocConstantModelName.USERSESSION), SCDisplay(Name = DocConstantModelName.USERSESSION)]
         USERSESSION = 18419,
-        [EnumMember(Value = DocConstantModelName.USERTYPE)]
+        [EnumMember(Value = DocConstantModelName.USERTYPE), SCDescript(DocConstantModelName.USERTYPE), SSDescript(DocConstantModelName.USERTYPE), SCDisplay(Name = DocConstantModelName.USERTYPE)]
         USERTYPE = 17919,
-        [EnumMember(Value = DocConstantModelName.VALUETYPE)]
+        [EnumMember(Value = DocConstantModelName.VALUETYPE), SCDescript(DocConstantModelName.VALUETYPE), SSDescript(DocConstantModelName.VALUETYPE), SCDisplay(Name = DocConstantModelName.VALUETYPE)]
         VALUETYPE = 171,
-        [EnumMember(Value = DocConstantModelName.VARIABLEINSTANCE)]
+        [EnumMember(Value = DocConstantModelName.VARIABLEINSTANCE), SCDescript(DocConstantModelName.VARIABLEINSTANCE), SSDescript(DocConstantModelName.VARIABLEINSTANCE), SCDisplay(Name = DocConstantModelName.VARIABLEINSTANCE)]
         VARIABLEINSTANCE = 15781,
-        [EnumMember(Value = DocConstantModelName.VARIABLERULE)]
+        [EnumMember(Value = DocConstantModelName.VARIABLERULE), SCDescript(DocConstantModelName.VARIABLERULE), SSDescript(DocConstantModelName.VARIABLERULE), SCDisplay(Name = DocConstantModelName.VARIABLERULE)]
         VARIABLERULE = 15680,
-        [EnumMember(Value = DocConstantModelName.WORKFLOW)]
+        [EnumMember(Value = DocConstantModelName.WORKFLOW), SCDescript(DocConstantModelName.WORKFLOW), SSDescript(DocConstantModelName.WORKFLOW), SCDisplay(Name = DocConstantModelName.WORKFLOW)]
         WORKFLOW = 15378
     }
     
@@ -215,7 +194,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ModelNameEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ModelNameEnm.ADJUDICATEDRATING:
                     return DocConstantModelName.ADJUDICATEDRATING;
@@ -382,6 +361,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ModelNameEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

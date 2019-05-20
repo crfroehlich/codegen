@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,48 +15,32 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum FieldTypeEnm
     {
-        [EnumMember(Value = DocConstantFieldType.BINARY)]
+        [EnumMember(Value = DocConstantFieldType.BINARY), SCDescript(DocConstantFieldType.BINARY), SSDescript(DocConstantFieldType.BINARY), SCDisplay(Name = DocConstantFieldType.BINARY)]
         BINARY = 1027,
-        [EnumMember(Value = DocConstantFieldType.CONTINUOUS)]
+        [EnumMember(Value = DocConstantFieldType.CONTINUOUS), SCDescript(DocConstantFieldType.CONTINUOUS), SSDescript(DocConstantFieldType.CONTINUOUS), SCDisplay(Name = DocConstantFieldType.CONTINUOUS)]
         CONTINUOUS = 1032,
-        [EnumMember(Value = DocConstantFieldType.COUNT)]
+        [EnumMember(Value = DocConstantFieldType.COUNT), SCDescript(DocConstantFieldType.COUNT), SSDescript(DocConstantFieldType.COUNT), SCDisplay(Name = DocConstantFieldType.COUNT)]
         COUNT = 1037,
-        [EnumMember(Value = DocConstantFieldType.INDIVIDUAL)]
+        [EnumMember(Value = DocConstantFieldType.INDIVIDUAL), SCDescript(DocConstantFieldType.INDIVIDUAL), SSDescript(DocConstantFieldType.INDIVIDUAL), SCDisplay(Name = DocConstantFieldType.INDIVIDUAL)]
         INDIVIDUAL = 14739713,
-        [EnumMember(Value = DocConstantFieldType.KAPLAN_MEIER)]
+        [EnumMember(Value = DocConstantFieldType.KAPLAN_MEIER), SCDescript(DocConstantFieldType.KAPLAN_MEIER), SSDescript(DocConstantFieldType.KAPLAN_MEIER), SCDisplay(Name = DocConstantFieldType.KAPLAN_MEIER)]
         KAPLAN_MEIER = 77893240,
-        [EnumMember(Value = DocConstantFieldType.RANGE)]
+        [EnumMember(Value = DocConstantFieldType.RANGE), SCDescript(DocConstantFieldType.RANGE), SSDescript(DocConstantFieldType.RANGE), SCDisplay(Name = DocConstantFieldType.RANGE)]
         RANGE = 1042,
-        [EnumMember(Value = DocConstantFieldType.RATE)]
+        [EnumMember(Value = DocConstantFieldType.RATE), SCDescript(DocConstantFieldType.RATE), SSDescript(DocConstantFieldType.RATE), SCDisplay(Name = DocConstantFieldType.RATE)]
         RATE = 25812406,
-        [EnumMember(Value = DocConstantFieldType.YES_NO_NA)]
+        [EnumMember(Value = DocConstantFieldType.YES_NO_NA), SCDescript(DocConstantFieldType.YES_NO_NA), SSDescript(DocConstantFieldType.YES_NO_NA), SCDisplay(Name = DocConstantFieldType.YES_NO_NA)]
         YES_NO_NA = 1047
     }
     
@@ -69,7 +48,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this FieldTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case FieldTypeEnm.BINARY:
                     return DocConstantFieldType.BINARY;
@@ -90,6 +69,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this FieldTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

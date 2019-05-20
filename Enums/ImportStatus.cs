@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,46 +15,30 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ImportStatusEnm
     {
-        [EnumMember(Value = DocConstantImportStatus.ALREADY_IMPORTED)]
+        [EnumMember(Value = DocConstantImportStatus.ALREADY_IMPORTED), SCDescript(DocConstantImportStatus.ALREADY_IMPORTED), SSDescript(DocConstantImportStatus.ALREADY_IMPORTED), SCDisplay(Name = DocConstantImportStatus.ALREADY_IMPORTED)]
         ALREADY_IMPORTED = 1062,
-        [EnumMember(Value = DocConstantImportStatus.CANCELLED)]
+        [EnumMember(Value = DocConstantImportStatus.CANCELLED), SCDescript(DocConstantImportStatus.CANCELLED), SSDescript(DocConstantImportStatus.CANCELLED), SCDisplay(Name = DocConstantImportStatus.CANCELLED)]
         CANCELLED = 69422902,
-        [EnumMember(Value = DocConstantImportStatus.FAILED)]
+        [EnumMember(Value = DocConstantImportStatus.FAILED), SCDescript(DocConstantImportStatus.FAILED), SSDescript(DocConstantImportStatus.FAILED), SCDisplay(Name = DocConstantImportStatus.FAILED)]
         FAILED = 1067,
-        [EnumMember(Value = DocConstantImportStatus.NO_JSON_FOUND)]
+        [EnumMember(Value = DocConstantImportStatus.NO_JSON_FOUND), SCDescript(DocConstantImportStatus.NO_JSON_FOUND), SSDescript(DocConstantImportStatus.NO_JSON_FOUND), SCDisplay(Name = DocConstantImportStatus.NO_JSON_FOUND)]
         NO_JSON_FOUND = 59620845,
-        [EnumMember(Value = DocConstantImportStatus.PROCESSING)]
+        [EnumMember(Value = DocConstantImportStatus.PROCESSING), SCDescript(DocConstantImportStatus.PROCESSING), SSDescript(DocConstantImportStatus.PROCESSING), SCDisplay(Name = DocConstantImportStatus.PROCESSING)]
         PROCESSING = 1072,
-        [EnumMember(Value = DocConstantImportStatus.QUEUED)]
+        [EnumMember(Value = DocConstantImportStatus.QUEUED), SCDescript(DocConstantImportStatus.QUEUED), SSDescript(DocConstantImportStatus.QUEUED), SCDisplay(Name = DocConstantImportStatus.QUEUED)]
         QUEUED = 1077,
-        [EnumMember(Value = DocConstantImportStatus.SUCCEEDED)]
+        [EnumMember(Value = DocConstantImportStatus.SUCCEEDED), SCDescript(DocConstantImportStatus.SUCCEEDED), SSDescript(DocConstantImportStatus.SUCCEEDED), SCDisplay(Name = DocConstantImportStatus.SUCCEEDED)]
         SUCCEEDED = 1082
     }
     
@@ -67,7 +46,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ImportStatusEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ImportStatusEnm.ALREADY_IMPORTED:
                     return DocConstantImportStatus.ALREADY_IMPORTED;
@@ -86,6 +65,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ImportStatusEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

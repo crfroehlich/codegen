@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,54 +15,38 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum SettingTypeEnm
     {
-        [EnumMember(Value = DocConstantSettingType.CRIMINAL_JUSTICE_SYSTEM)]
+        [EnumMember(Value = DocConstantSettingType.CRIMINAL_JUSTICE_SYSTEM), SCDescript(DocConstantSettingType.CRIMINAL_JUSTICE_SYSTEM), SSDescript(DocConstantSettingType.CRIMINAL_JUSTICE_SYSTEM), SCDisplay(Name = DocConstantSettingType.CRIMINAL_JUSTICE_SYSTEM)]
         CRIMINAL_JUSTICE_SYSTEM = 2887,
-        [EnumMember(Value = DocConstantSettingType.EDUCATION_SYSTEM)]
+        [EnumMember(Value = DocConstantSettingType.EDUCATION_SYSTEM), SCDescript(DocConstantSettingType.EDUCATION_SYSTEM), SSDescript(DocConstantSettingType.EDUCATION_SYSTEM), SCDisplay(Name = DocConstantSettingType.EDUCATION_SYSTEM)]
         EDUCATION_SYSTEM = 2892,
-        [EnumMember(Value = DocConstantSettingType.HOME)]
+        [EnumMember(Value = DocConstantSettingType.HOME), SCDescript(DocConstantSettingType.HOME), SSDescript(DocConstantSettingType.HOME), SCDisplay(Name = DocConstantSettingType.HOME)]
         HOME = 2897,
-        [EnumMember(Value = DocConstantSettingType.INPATIENT)]
+        [EnumMember(Value = DocConstantSettingType.INPATIENT), SCDescript(DocConstantSettingType.INPATIENT), SSDescript(DocConstantSettingType.INPATIENT), SCDisplay(Name = DocConstantSettingType.INPATIENT)]
         INPATIENT = 2902,
-        [EnumMember(Value = DocConstantSettingType.MIXED)]
+        [EnumMember(Value = DocConstantSettingType.MIXED), SCDescript(DocConstantSettingType.MIXED), SSDescript(DocConstantSettingType.MIXED), SCDisplay(Name = DocConstantSettingType.MIXED)]
         MIXED = 2907,
-        [EnumMember(Value = DocConstantSettingType.NA)]
+        [EnumMember(Value = DocConstantSettingType.NA), SCDescript(DocConstantSettingType.NA), SSDescript(DocConstantSettingType.NA), SCDisplay(Name = DocConstantSettingType.NA)]
         NA = 2912,
-        [EnumMember(Value = DocConstantSettingType.NR)]
+        [EnumMember(Value = DocConstantSettingType.NR), SCDescript(DocConstantSettingType.NR), SSDescript(DocConstantSettingType.NR), SCDisplay(Name = DocConstantSettingType.NR)]
         NR = 2917,
-        [EnumMember(Value = DocConstantSettingType.OTHER)]
+        [EnumMember(Value = DocConstantSettingType.OTHER), SCDescript(DocConstantSettingType.OTHER), SSDescript(DocConstantSettingType.OTHER), SCDisplay(Name = DocConstantSettingType.OTHER)]
         OTHER = 2922,
-        [EnumMember(Value = DocConstantSettingType.OUTPATIENT)]
+        [EnumMember(Value = DocConstantSettingType.OUTPATIENT), SCDescript(DocConstantSettingType.OUTPATIENT), SSDescript(DocConstantSettingType.OUTPATIENT), SCDisplay(Name = DocConstantSettingType.OUTPATIENT)]
         OUTPATIENT = 2927,
-        [EnumMember(Value = DocConstantSettingType.SURVEY)]
+        [EnumMember(Value = DocConstantSettingType.SURVEY), SCDescript(DocConstantSettingType.SURVEY), SSDescript(DocConstantSettingType.SURVEY), SCDisplay(Name = DocConstantSettingType.SURVEY)]
         SURVEY = 2932,
-        [EnumMember(Value = DocConstantSettingType.UNCLEAR)]
+        [EnumMember(Value = DocConstantSettingType.UNCLEAR), SCDescript(DocConstantSettingType.UNCLEAR), SSDescript(DocConstantSettingType.UNCLEAR), SCDisplay(Name = DocConstantSettingType.UNCLEAR)]
         UNCLEAR = 2937
     }
     
@@ -75,7 +54,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this SettingTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case SettingTypeEnm.CRIMINAL_JUSTICE_SYSTEM:
                     return DocConstantSettingType.CRIMINAL_JUSTICE_SYSTEM;
@@ -102,6 +81,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this SettingTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

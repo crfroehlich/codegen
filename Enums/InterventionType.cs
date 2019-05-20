@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,54 +15,38 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum InterventionTypeEnm
     {
-        [EnumMember(Value = DocConstantInterventionType.ACCURACY_OUTCOMES)]
+        [EnumMember(Value = DocConstantInterventionType.ACCURACY_OUTCOMES), SCDescript(DocConstantInterventionType.ACCURACY_OUTCOMES), SSDescript(DocConstantInterventionType.ACCURACY_OUTCOMES), SCDisplay(Name = DocConstantInterventionType.ACCURACY_OUTCOMES)]
         ACCURACY_OUTCOMES = 96669191,
-        [EnumMember(Value = DocConstantInterventionType.CLINICAL_OUTCOMES)]
+        [EnumMember(Value = DocConstantInterventionType.CLINICAL_OUTCOMES), SCDescript(DocConstantInterventionType.CLINICAL_OUTCOMES), SSDescript(DocConstantInterventionType.CLINICAL_OUTCOMES), SCDisplay(Name = DocConstantInterventionType.CLINICAL_OUTCOMES)]
         CLINICAL_OUTCOMES = 96669192,
-        [EnumMember(Value = DocConstantInterventionType.COST_EFFECTIVENESS)]
+        [EnumMember(Value = DocConstantInterventionType.COST_EFFECTIVENESS), SCDescript(DocConstantInterventionType.COST_EFFECTIVENESS), SSDescript(DocConstantInterventionType.COST_EFFECTIVENESS), SCDisplay(Name = DocConstantInterventionType.COST_EFFECTIVENESS)]
         COST_EFFECTIVENESS = 96669193,
-        [EnumMember(Value = DocConstantInterventionType.GENE_TRANSFER)]
+        [EnumMember(Value = DocConstantInterventionType.GENE_TRANSFER), SCDescript(DocConstantInterventionType.GENE_TRANSFER), SSDescript(DocConstantInterventionType.GENE_TRANSFER), SCDisplay(Name = DocConstantInterventionType.GENE_TRANSFER)]
         GENE_TRANSFER = 96669194,
-        [EnumMember(Value = DocConstantInterventionType.INFORMATIONAL_MATERIAL)]
+        [EnumMember(Value = DocConstantInterventionType.INFORMATIONAL_MATERIAL), SCDescript(DocConstantInterventionType.INFORMATIONAL_MATERIAL), SSDescript(DocConstantInterventionType.INFORMATIONAL_MATERIAL), SCDisplay(Name = DocConstantInterventionType.INFORMATIONAL_MATERIAL)]
         INFORMATIONAL_MATERIAL = 1502,
-        [EnumMember(Value = DocConstantInterventionType.MINERALS)]
+        [EnumMember(Value = DocConstantInterventionType.MINERALS), SCDescript(DocConstantInterventionType.MINERALS), SSDescript(DocConstantInterventionType.MINERALS), SCDisplay(Name = DocConstantInterventionType.MINERALS)]
         MINERALS = 96669195,
-        [EnumMember(Value = DocConstantInterventionType.QUALITY_OF_LIFE)]
+        [EnumMember(Value = DocConstantInterventionType.QUALITY_OF_LIFE), SCDescript(DocConstantInterventionType.QUALITY_OF_LIFE), SSDescript(DocConstantInterventionType.QUALITY_OF_LIFE), SCDisplay(Name = DocConstantInterventionType.QUALITY_OF_LIFE)]
         QUALITY_OF_LIFE = 96669196,
-        [EnumMember(Value = DocConstantInterventionType.RECOMBINANT_DNA)]
+        [EnumMember(Value = DocConstantInterventionType.RECOMBINANT_DNA), SCDescript(DocConstantInterventionType.RECOMBINANT_DNA), SSDescript(DocConstantInterventionType.RECOMBINANT_DNA), SCDisplay(Name = DocConstantInterventionType.RECOMBINANT_DNA)]
         RECOMBINANT_DNA = 96669197,
-        [EnumMember(Value = DocConstantInterventionType.SESSION_MEETING)]
+        [EnumMember(Value = DocConstantInterventionType.SESSION_MEETING), SCDescript(DocConstantInterventionType.SESSION_MEETING), SSDescript(DocConstantInterventionType.SESSION_MEETING), SCDisplay(Name = DocConstantInterventionType.SESSION_MEETING)]
         SESSION_MEETING = 1507,
-        [EnumMember(Value = DocConstantInterventionType.STEM_CELL)]
+        [EnumMember(Value = DocConstantInterventionType.STEM_CELL), SCDescript(DocConstantInterventionType.STEM_CELL), SSDescript(DocConstantInterventionType.STEM_CELL), SCDisplay(Name = DocConstantInterventionType.STEM_CELL)]
         STEM_CELL = 96669198,
-        [EnumMember(Value = DocConstantInterventionType.VITAMINS)]
+        [EnumMember(Value = DocConstantInterventionType.VITAMINS), SCDescript(DocConstantInterventionType.VITAMINS), SSDescript(DocConstantInterventionType.VITAMINS), SCDisplay(Name = DocConstantInterventionType.VITAMINS)]
         VITAMINS = 96669199
     }
     
@@ -75,7 +54,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this InterventionTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case InterventionTypeEnm.ACCURACY_OUTCOMES:
                     return DocConstantInterventionType.ACCURACY_OUTCOMES;
@@ -102,6 +81,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this InterventionTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,50 +15,34 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyFundingEnm
     {
-        [EnumMember(Value = DocConstantStudyFunding.ACKNOWLEDGEMENT)]
+        [EnumMember(Value = DocConstantStudyFunding.ACKNOWLEDGEMENT), SCDescript(DocConstantStudyFunding.ACKNOWLEDGEMENT), SSDescript(DocConstantStudyFunding.ACKNOWLEDGEMENT), SCDisplay(Name = DocConstantStudyFunding.ACKNOWLEDGEMENT)]
         ACKNOWLEDGEMENT = 3343,
-        [EnumMember(Value = DocConstantStudyFunding.AUTHOR_EMPLOYMENT)]
+        [EnumMember(Value = DocConstantStudyFunding.AUTHOR_EMPLOYMENT), SCDescript(DocConstantStudyFunding.AUTHOR_EMPLOYMENT), SSDescript(DocConstantStudyFunding.AUTHOR_EMPLOYMENT), SCDisplay(Name = DocConstantStudyFunding.AUTHOR_EMPLOYMENT)]
         AUTHOR_EMPLOYMENT = 3348,
-        [EnumMember(Value = DocConstantStudyFunding.CONFLICT_OF_INTEREST)]
+        [EnumMember(Value = DocConstantStudyFunding.CONFLICT_OF_INTEREST), SCDescript(DocConstantStudyFunding.CONFLICT_OF_INTEREST), SSDescript(DocConstantStudyFunding.CONFLICT_OF_INTEREST), SCDisplay(Name = DocConstantStudyFunding.CONFLICT_OF_INTEREST)]
         CONFLICT_OF_INTEREST = 3353,
-        [EnumMember(Value = DocConstantStudyFunding.FINANCIAL_INTEREST)]
+        [EnumMember(Value = DocConstantStudyFunding.FINANCIAL_INTEREST), SCDescript(DocConstantStudyFunding.FINANCIAL_INTEREST), SSDescript(DocConstantStudyFunding.FINANCIAL_INTEREST), SCDisplay(Name = DocConstantStudyFunding.FINANCIAL_INTEREST)]
         FINANCIAL_INTEREST = 3358,
-        [EnumMember(Value = DocConstantStudyFunding.FUNDED_BY)]
+        [EnumMember(Value = DocConstantStudyFunding.FUNDED_BY), SCDescript(DocConstantStudyFunding.FUNDED_BY), SSDescript(DocConstantStudyFunding.FUNDED_BY), SCDisplay(Name = DocConstantStudyFunding.FUNDED_BY)]
         FUNDED_BY = 3363,
-        [EnumMember(Value = DocConstantStudyFunding.NR)]
+        [EnumMember(Value = DocConstantStudyFunding.NR), SCDescript(DocConstantStudyFunding.NR), SSDescript(DocConstantStudyFunding.NR), SCDisplay(Name = DocConstantStudyFunding.NR)]
         NR = 3368,
-        [EnumMember(Value = DocConstantStudyFunding.SPONSORED_BY)]
+        [EnumMember(Value = DocConstantStudyFunding.SPONSORED_BY), SCDescript(DocConstantStudyFunding.SPONSORED_BY), SSDescript(DocConstantStudyFunding.SPONSORED_BY), SCDisplay(Name = DocConstantStudyFunding.SPONSORED_BY)]
         SPONSORED_BY = 3373,
-        [EnumMember(Value = DocConstantStudyFunding.SUPPORTED_BY)]
+        [EnumMember(Value = DocConstantStudyFunding.SUPPORTED_BY), SCDescript(DocConstantStudyFunding.SUPPORTED_BY), SSDescript(DocConstantStudyFunding.SUPPORTED_BY), SCDisplay(Name = DocConstantStudyFunding.SUPPORTED_BY)]
         SUPPORTED_BY = 3378,
-        [EnumMember(Value = DocConstantStudyFunding.UNCLEAR)]
+        [EnumMember(Value = DocConstantStudyFunding.UNCLEAR), SCDescript(DocConstantStudyFunding.UNCLEAR), SSDescript(DocConstantStudyFunding.UNCLEAR), SCDisplay(Name = DocConstantStudyFunding.UNCLEAR)]
         UNCLEAR = 3383
     }
     
@@ -71,7 +50,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyFundingEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyFundingEnm.ACKNOWLEDGEMENT:
                     return DocConstantStudyFunding.ACKNOWLEDGEMENT;
@@ -94,6 +73,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyFundingEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

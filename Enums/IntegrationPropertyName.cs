@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,38 +15,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum IntegrationPropertyNameEnm
     {
-        [EnumMember(Value = DocConstantIntegrationPropertyName.ACCOUNT)]
+        [EnumMember(Value = DocConstantIntegrationPropertyName.ACCOUNT), SCDescript(DocConstantIntegrationPropertyName.ACCOUNT), SSDescript(DocConstantIntegrationPropertyName.ACCOUNT), SCDisplay(Name = DocConstantIntegrationPropertyName.ACCOUNT)]
         ACCOUNT = 76351776,
-        [EnumMember(Value = DocConstantIntegrationPropertyName.OPPORTUNITY)]
+        [EnumMember(Value = DocConstantIntegrationPropertyName.OPPORTUNITY), SCDescript(DocConstantIntegrationPropertyName.OPPORTUNITY), SSDescript(DocConstantIntegrationPropertyName.OPPORTUNITY), SCDisplay(Name = DocConstantIntegrationPropertyName.OPPORTUNITY)]
         OPPORTUNITY = 76351774,
-        [EnumMember(Value = DocConstantIntegrationPropertyName.PROJECT)]
+        [EnumMember(Value = DocConstantIntegrationPropertyName.PROJECT), SCDescript(DocConstantIntegrationPropertyName.PROJECT), SSDescript(DocConstantIntegrationPropertyName.PROJECT), SCDisplay(Name = DocConstantIntegrationPropertyName.PROJECT)]
         PROJECT = 94162434
     }
     
@@ -59,7 +38,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this IntegrationPropertyNameEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case IntegrationPropertyNameEnm.ACCOUNT:
                     return DocConstantIntegrationPropertyName.ACCOUNT;
@@ -70,6 +49,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this IntegrationPropertyNameEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

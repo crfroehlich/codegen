@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,46 +15,30 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DefaultTimeUnitEnm
     {
-        [EnumMember(Value = DocConstantDefaultTimeUnit.DAYS)]
+        [EnumMember(Value = DocConstantDefaultTimeUnit.DAYS), SCDescript(DocConstantDefaultTimeUnit.DAYS), SSDescript(DocConstantDefaultTimeUnit.DAYS), SCDisplay(Name = DocConstantDefaultTimeUnit.DAYS)]
         DAYS = 682,
-        [EnumMember(Value = DocConstantDefaultTimeUnit.HOURS)]
+        [EnumMember(Value = DocConstantDefaultTimeUnit.HOURS), SCDescript(DocConstantDefaultTimeUnit.HOURS), SSDescript(DocConstantDefaultTimeUnit.HOURS), SCDisplay(Name = DocConstantDefaultTimeUnit.HOURS)]
         HOURS = 687,
-        [EnumMember(Value = DocConstantDefaultTimeUnit.MINUTES)]
+        [EnumMember(Value = DocConstantDefaultTimeUnit.MINUTES), SCDescript(DocConstantDefaultTimeUnit.MINUTES), SSDescript(DocConstantDefaultTimeUnit.MINUTES), SCDisplay(Name = DocConstantDefaultTimeUnit.MINUTES)]
         MINUTES = 692,
-        [EnumMember(Value = DocConstantDefaultTimeUnit.SECONDS)]
+        [EnumMember(Value = DocConstantDefaultTimeUnit.SECONDS), SCDescript(DocConstantDefaultTimeUnit.SECONDS), SSDescript(DocConstantDefaultTimeUnit.SECONDS), SCDisplay(Name = DocConstantDefaultTimeUnit.SECONDS)]
         SECONDS = 697,
-        [EnumMember(Value = DocConstantDefaultTimeUnit.STUDY_SET_DEFAULT)]
+        [EnumMember(Value = DocConstantDefaultTimeUnit.STUDY_SET_DEFAULT), SCDescript(DocConstantDefaultTimeUnit.STUDY_SET_DEFAULT), SSDescript(DocConstantDefaultTimeUnit.STUDY_SET_DEFAULT), SCDisplay(Name = DocConstantDefaultTimeUnit.STUDY_SET_DEFAULT)]
         STUDY_SET_DEFAULT = 702,
-        [EnumMember(Value = DocConstantDefaultTimeUnit.WEEKS)]
+        [EnumMember(Value = DocConstantDefaultTimeUnit.WEEKS), SCDescript(DocConstantDefaultTimeUnit.WEEKS), SSDescript(DocConstantDefaultTimeUnit.WEEKS), SCDisplay(Name = DocConstantDefaultTimeUnit.WEEKS)]
         WEEKS = 707,
-        [EnumMember(Value = DocConstantDefaultTimeUnit.YEARS)]
+        [EnumMember(Value = DocConstantDefaultTimeUnit.YEARS), SCDescript(DocConstantDefaultTimeUnit.YEARS), SSDescript(DocConstantDefaultTimeUnit.YEARS), SCDisplay(Name = DocConstantDefaultTimeUnit.YEARS)]
         YEARS = 712
     }
     
@@ -67,7 +46,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this DefaultTimeUnitEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case DefaultTimeUnitEnm.DAYS:
                     return DocConstantDefaultTimeUnit.DAYS;
@@ -86,6 +65,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this DefaultTimeUnitEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

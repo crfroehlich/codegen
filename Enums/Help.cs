@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,40 +15,24 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum HelpEnm
     {
-        [EnumMember(Value = DocConstantHelp.DIALOG)]
+        [EnumMember(Value = DocConstantHelp.DIALOG), SCDescript(DocConstantHelp.DIALOG), SSDescript(DocConstantHelp.DIALOG), SCDisplay(Name = DocConstantHelp.DIALOG)]
         DIALOG = 61884870,
-        [EnumMember(Value = DocConstantHelp.MANUAL)]
+        [EnumMember(Value = DocConstantHelp.MANUAL), SCDescript(DocConstantHelp.MANUAL), SSDescript(DocConstantHelp.MANUAL), SCDisplay(Name = DocConstantHelp.MANUAL)]
         MANUAL = 74232466,
-        [EnumMember(Value = DocConstantHelp.SECTION)]
+        [EnumMember(Value = DocConstantHelp.SECTION), SCDescript(DocConstantHelp.SECTION), SSDescript(DocConstantHelp.SECTION), SCDisplay(Name = DocConstantHelp.SECTION)]
         SECTION = 74232467,
-        [EnumMember(Value = DocConstantHelp.SIDEBAR)]
+        [EnumMember(Value = DocConstantHelp.SIDEBAR), SCDescript(DocConstantHelp.SIDEBAR), SSDescript(DocConstantHelp.SIDEBAR), SCDisplay(Name = DocConstantHelp.SIDEBAR)]
         SIDEBAR = 61884876
     }
     
@@ -61,7 +40,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this HelpEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case HelpEnm.DIALOG:
                     return DocConstantHelp.DIALOG;
@@ -74,6 +53,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this HelpEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

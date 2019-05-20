@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,40 +15,24 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum RepresentativeSampleEnm
     {
-        [EnumMember(Value = DocConstantRepresentativeSample.NA)]
+        [EnumMember(Value = DocConstantRepresentativeSample.NA), SCDescript(DocConstantRepresentativeSample.NA), SSDescript(DocConstantRepresentativeSample.NA), SCDisplay(Name = DocConstantRepresentativeSample.NA)]
         NA = 2792,
-        [EnumMember(Value = DocConstantRepresentativeSample.NO)]
+        [EnumMember(Value = DocConstantRepresentativeSample.NO), SCDescript(DocConstantRepresentativeSample.NO), SSDescript(DocConstantRepresentativeSample.NO), SCDisplay(Name = DocConstantRepresentativeSample.NO)]
         NO = 2797,
-        [EnumMember(Value = DocConstantRepresentativeSample.NR)]
+        [EnumMember(Value = DocConstantRepresentativeSample.NR), SCDescript(DocConstantRepresentativeSample.NR), SSDescript(DocConstantRepresentativeSample.NR), SCDisplay(Name = DocConstantRepresentativeSample.NR)]
         NR = 2802,
-        [EnumMember(Value = DocConstantRepresentativeSample.YES)]
+        [EnumMember(Value = DocConstantRepresentativeSample.YES), SCDescript(DocConstantRepresentativeSample.YES), SSDescript(DocConstantRepresentativeSample.YES), SCDisplay(Name = DocConstantRepresentativeSample.YES)]
         YES = 2807
     }
     
@@ -61,7 +40,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this RepresentativeSampleEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case RepresentativeSampleEnm.NA:
                     return DocConstantRepresentativeSample.NA;
@@ -74,6 +53,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this RepresentativeSampleEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

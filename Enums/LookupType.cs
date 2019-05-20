@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,44 +15,28 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum LookupTypeEnm
     {
-        [EnumMember(Value = DocConstantLookupType.CHARACTERISTIC)]
+        [EnumMember(Value = DocConstantLookupType.CHARACTERISTIC), SCDescript(DocConstantLookupType.CHARACTERISTIC), SSDescript(DocConstantLookupType.CHARACTERISTIC), SCDisplay(Name = DocConstantLookupType.CHARACTERISTIC)]
         CHARACTERISTIC = 46350952,
-        [EnumMember(Value = DocConstantLookupType.COMPARATOR)]
+        [EnumMember(Value = DocConstantLookupType.COMPARATOR), SCDescript(DocConstantLookupType.COMPARATOR), SSDescript(DocConstantLookupType.COMPARATOR), SCDisplay(Name = DocConstantLookupType.COMPARATOR)]
         COMPARATOR = 46350957,
-        [EnumMember(Value = DocConstantLookupType.INTERVENTION)]
+        [EnumMember(Value = DocConstantLookupType.INTERVENTION), SCDescript(DocConstantLookupType.INTERVENTION), SSDescript(DocConstantLookupType.INTERVENTION), SCDisplay(Name = DocConstantLookupType.INTERVENTION)]
         INTERVENTION = 46350962,
-        [EnumMember(Value = DocConstantLookupType.OUTCOME)]
+        [EnumMember(Value = DocConstantLookupType.OUTCOME), SCDescript(DocConstantLookupType.OUTCOME), SSDescript(DocConstantLookupType.OUTCOME), SCDisplay(Name = DocConstantLookupType.OUTCOME)]
         OUTCOME = 46350967,
-        [EnumMember(Value = DocConstantLookupType.STUDY_DESIGN)]
+        [EnumMember(Value = DocConstantLookupType.STUDY_DESIGN), SCDescript(DocConstantLookupType.STUDY_DESIGN), SSDescript(DocConstantLookupType.STUDY_DESIGN), SCDisplay(Name = DocConstantLookupType.STUDY_DESIGN)]
         STUDY_DESIGN = 46350973,
-        [EnumMember(Value = DocConstantLookupType.STUDY_TYPE)]
+        [EnumMember(Value = DocConstantLookupType.STUDY_TYPE), SCDescript(DocConstantLookupType.STUDY_TYPE), SSDescript(DocConstantLookupType.STUDY_TYPE), SCDisplay(Name = DocConstantLookupType.STUDY_TYPE)]
         STUDY_TYPE = 46350979
     }
     
@@ -65,7 +44,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this LookupTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case LookupTypeEnm.CHARACTERISTIC:
                     return DocConstantLookupType.CHARACTERISTIC;
@@ -82,6 +61,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this LookupTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

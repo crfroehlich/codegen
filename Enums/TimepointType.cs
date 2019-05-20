@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,62 +15,46 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum TimepointTypeEnm
     {
-        [EnumMember(Value = DocConstantTimepointType.AFTER)]
+        [EnumMember(Value = DocConstantTimepointType.AFTER), SCDescript(DocConstantTimepointType.AFTER), SSDescript(DocConstantTimepointType.AFTER), SCDisplay(Name = DocConstantTimepointType.AFTER)]
         AFTER = 10709242,
-        [EnumMember(Value = DocConstantTimepointType.AVERAGE)]
+        [EnumMember(Value = DocConstantTimepointType.AVERAGE), SCDescript(DocConstantTimepointType.AVERAGE), SSDescript(DocConstantTimepointType.AVERAGE), SCDisplay(Name = DocConstantTimepointType.AVERAGE)]
         AVERAGE = 3813,
-        [EnumMember(Value = DocConstantTimepointType.BEFORE)]
+        [EnumMember(Value = DocConstantTimepointType.BEFORE), SCDescript(DocConstantTimepointType.BEFORE), SSDescript(DocConstantTimepointType.BEFORE), SCDisplay(Name = DocConstantTimepointType.BEFORE)]
         BEFORE = 11793786,
-        [EnumMember(Value = DocConstantTimepointType.DURATION)]
+        [EnumMember(Value = DocConstantTimepointType.DURATION), SCDescript(DocConstantTimepointType.DURATION), SSDescript(DocConstantTimepointType.DURATION), SCDisplay(Name = DocConstantTimepointType.DURATION)]
         DURATION = 3818,
-        [EnumMember(Value = DocConstantTimepointType.DURING)]
+        [EnumMember(Value = DocConstantTimepointType.DURING), SCDescript(DocConstantTimepointType.DURING), SSDescript(DocConstantTimepointType.DURING), SCDisplay(Name = DocConstantTimepointType.DURING)]
         DURING = 11793791,
-        [EnumMember(Value = DocConstantTimepointType.MAX_RANGE)]
+        [EnumMember(Value = DocConstantTimepointType.MAX_RANGE), SCDescript(DocConstantTimepointType.MAX_RANGE), SSDescript(DocConstantTimepointType.MAX_RANGE), SCDisplay(Name = DocConstantTimepointType.MAX_RANGE)]
         MAX_RANGE = 3823,
-        [EnumMember(Value = DocConstantTimepointType.MAXIMUM)]
+        [EnumMember(Value = DocConstantTimepointType.MAXIMUM), SCDescript(DocConstantTimepointType.MAXIMUM), SSDescript(DocConstantTimepointType.MAXIMUM), SCDisplay(Name = DocConstantTimepointType.MAXIMUM)]
         MAXIMUM = 3828,
-        [EnumMember(Value = DocConstantTimepointType.MEAN)]
+        [EnumMember(Value = DocConstantTimepointType.MEAN), SCDescript(DocConstantTimepointType.MEAN), SSDescript(DocConstantTimepointType.MEAN), SCDisplay(Name = DocConstantTimepointType.MEAN)]
         MEAN = 3833,
-        [EnumMember(Value = DocConstantTimepointType.MEDIAN)]
+        [EnumMember(Value = DocConstantTimepointType.MEDIAN), SCDescript(DocConstantTimepointType.MEDIAN), SSDescript(DocConstantTimepointType.MEDIAN), SCDisplay(Name = DocConstantTimepointType.MEDIAN)]
         MEDIAN = 3838,
-        [EnumMember(Value = DocConstantTimepointType.NA)]
+        [EnumMember(Value = DocConstantTimepointType.NA), SCDescript(DocConstantTimepointType.NA), SSDescript(DocConstantTimepointType.NA), SCDisplay(Name = DocConstantTimepointType.NA)]
         NA = 3843,
-        [EnumMember(Value = DocConstantTimepointType.NONE)]
+        [EnumMember(Value = DocConstantTimepointType.NONE), SCDescript(DocConstantTimepointType.NONE), SSDescript(DocConstantTimepointType.NONE), SCDisplay(Name = DocConstantTimepointType.NONE)]
         NONE = 3848,
-        [EnumMember(Value = DocConstantTimepointType.NR)]
+        [EnumMember(Value = DocConstantTimepointType.NR), SCDescript(DocConstantTimepointType.NR), SSDescript(DocConstantTimepointType.NR), SCDisplay(Name = DocConstantTimepointType.NR)]
         NR = 3853,
-        [EnumMember(Value = DocConstantTimepointType.TIME_ZERO)]
+        [EnumMember(Value = DocConstantTimepointType.TIME_ZERO), SCDescript(DocConstantTimepointType.TIME_ZERO), SSDescript(DocConstantTimepointType.TIME_ZERO), SCDisplay(Name = DocConstantTimepointType.TIME_ZERO)]
         TIME_ZERO = 3858,
-        [EnumMember(Value = DocConstantTimepointType.TOTAL)]
+        [EnumMember(Value = DocConstantTimepointType.TOTAL), SCDescript(DocConstantTimepointType.TOTAL), SSDescript(DocConstantTimepointType.TOTAL), SCDisplay(Name = DocConstantTimepointType.TOTAL)]
         TOTAL = 3863,
-        [EnumMember(Value = DocConstantTimepointType.VARIES)]
+        [EnumMember(Value = DocConstantTimepointType.VARIES), SCDescript(DocConstantTimepointType.VARIES), SSDescript(DocConstantTimepointType.VARIES), SCDisplay(Name = DocConstantTimepointType.VARIES)]
         VARIES = 9377173
     }
     
@@ -83,7 +62,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this TimepointTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case TimepointTypeEnm.AFTER:
                     return DocConstantTimepointType.AFTER;
@@ -118,6 +97,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this TimepointTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

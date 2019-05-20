@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyRandomizationMethodEnm
     {
-        [EnumMember(Value = DocConstantStudyRandomizationMethod.CLUSTER)]
+        [EnumMember(Value = DocConstantStudyRandomizationMethod.CLUSTER), SCDescript(DocConstantStudyRandomizationMethod.CLUSTER), SSDescript(DocConstantStudyRandomizationMethod.CLUSTER), SCDisplay(Name = DocConstantStudyRandomizationMethod.CLUSTER)]
         CLUSTER = 3658,
-        [EnumMember(Value = DocConstantStudyRandomizationMethod.INDIVIDUAL)]
+        [EnumMember(Value = DocConstantStudyRandomizationMethod.INDIVIDUAL), SCDescript(DocConstantStudyRandomizationMethod.INDIVIDUAL), SSDescript(DocConstantStudyRandomizationMethod.INDIVIDUAL), SCDisplay(Name = DocConstantStudyRandomizationMethod.INDIVIDUAL)]
         INDIVIDUAL = 3663,
-        [EnumMember(Value = DocConstantStudyRandomizationMethod.INDIVIDUAL_CLUSTER)]
+        [EnumMember(Value = DocConstantStudyRandomizationMethod.INDIVIDUAL_CLUSTER), SCDescript(DocConstantStudyRandomizationMethod.INDIVIDUAL_CLUSTER), SSDescript(DocConstantStudyRandomizationMethod.INDIVIDUAL_CLUSTER), SCDisplay(Name = DocConstantStudyRandomizationMethod.INDIVIDUAL_CLUSTER)]
         INDIVIDUAL_CLUSTER = 3668,
-        [EnumMember(Value = DocConstantStudyRandomizationMethod.N_A)]
+        [EnumMember(Value = DocConstantStudyRandomizationMethod.N_A), SCDescript(DocConstantStudyRandomizationMethod.N_A), SSDescript(DocConstantStudyRandomizationMethod.N_A), SCDisplay(Name = DocConstantStudyRandomizationMethod.N_A)]
         N_A = 3673,
-        [EnumMember(Value = DocConstantStudyRandomizationMethod.NR)]
+        [EnumMember(Value = DocConstantStudyRandomizationMethod.NR), SCDescript(DocConstantStudyRandomizationMethod.NR), SSDescript(DocConstantStudyRandomizationMethod.NR), SCDisplay(Name = DocConstantStudyRandomizationMethod.NR)]
         NR = 3678
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyRandomizationMethodEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyRandomizationMethodEnm.CLUSTER:
                     return DocConstantStudyRandomizationMethod.CLUSTER;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyRandomizationMethodEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

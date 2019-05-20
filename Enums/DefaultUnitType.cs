@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,38 +15,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DefaultUnitTypeEnm
     {
-        [EnumMember(Value = DocConstantDefaultUnitType.SI)]
+        [EnumMember(Value = DocConstantDefaultUnitType.SI), SCDescript(DocConstantDefaultUnitType.SI), SSDescript(DocConstantDefaultUnitType.SI), SCDisplay(Name = DocConstantDefaultUnitType.SI)]
         SI = 717,
-        [EnumMember(Value = DocConstantDefaultUnitType.STUDY_SET_DEFAULT)]
+        [EnumMember(Value = DocConstantDefaultUnitType.STUDY_SET_DEFAULT), SCDescript(DocConstantDefaultUnitType.STUDY_SET_DEFAULT), SSDescript(DocConstantDefaultUnitType.STUDY_SET_DEFAULT), SCDisplay(Name = DocConstantDefaultUnitType.STUDY_SET_DEFAULT)]
         STUDY_SET_DEFAULT = 722,
-        [EnumMember(Value = DocConstantDefaultUnitType.US)]
+        [EnumMember(Value = DocConstantDefaultUnitType.US), SCDescript(DocConstantDefaultUnitType.US), SSDescript(DocConstantDefaultUnitType.US), SCDisplay(Name = DocConstantDefaultUnitType.US)]
         US = 727
     }
     
@@ -59,7 +38,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this DefaultUnitTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case DefaultUnitTypeEnm.SI:
                     return DocConstantDefaultUnitType.SI;
@@ -70,6 +49,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this DefaultUnitTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,56 +15,40 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ArmPopulationNEnm
     {
-        [EnumMember(Value = DocConstantArmPopulationN.COMPLETED)]
+        [EnumMember(Value = DocConstantArmPopulationN.COMPLETED), SCDescript(DocConstantArmPopulationN.COMPLETED), SSDescript(DocConstantArmPopulationN.COMPLETED), SCDisplay(Name = DocConstantArmPopulationN.COMPLETED)]
         COMPLETED = 183,
-        [EnumMember(Value = DocConstantArmPopulationN.CROSSOVER)]
+        [EnumMember(Value = DocConstantArmPopulationN.CROSSOVER), SCDescript(DocConstantArmPopulationN.CROSSOVER), SSDescript(DocConstantArmPopulationN.CROSSOVER), SCDisplay(Name = DocConstantArmPopulationN.CROSSOVER)]
         CROSSOVER = 188,
-        [EnumMember(Value = DocConstantArmPopulationN.ENROLLED)]
+        [EnumMember(Value = DocConstantArmPopulationN.ENROLLED), SCDescript(DocConstantArmPopulationN.ENROLLED), SSDescript(DocConstantArmPopulationN.ENROLLED), SCDisplay(Name = DocConstantArmPopulationN.ENROLLED)]
         ENROLLED = 193,
-        [EnumMember(Value = DocConstantArmPopulationN.INITIATED_STUDY)]
+        [EnumMember(Value = DocConstantArmPopulationN.INITIATED_STUDY), SCDescript(DocConstantArmPopulationN.INITIATED_STUDY), SSDescript(DocConstantArmPopulationN.INITIATED_STUDY), SCDisplay(Name = DocConstantArmPopulationN.INITIATED_STUDY)]
         INITIATED_STUDY = 198,
-        [EnumMember(Value = DocConstantArmPopulationN.ITT)]
+        [EnumMember(Value = DocConstantArmPopulationN.ITT), SCDescript(DocConstantArmPopulationN.ITT), SSDescript(DocConstantArmPopulationN.ITT), SCDisplay(Name = DocConstantArmPopulationN.ITT)]
         ITT = 203,
-        [EnumMember(Value = DocConstantArmPopulationN.MODIFIED_ITT)]
+        [EnumMember(Value = DocConstantArmPopulationN.MODIFIED_ITT), SCDescript(DocConstantArmPopulationN.MODIFIED_ITT), SSDescript(DocConstantArmPopulationN.MODIFIED_ITT), SCDisplay(Name = DocConstantArmPopulationN.MODIFIED_ITT)]
         MODIFIED_ITT = 208,
-        [EnumMember(Value = DocConstantArmPopulationN.PARTICIPANTS)]
+        [EnumMember(Value = DocConstantArmPopulationN.PARTICIPANTS), SCDescript(DocConstantArmPopulationN.PARTICIPANTS), SSDescript(DocConstantArmPopulationN.PARTICIPANTS), SCDisplay(Name = DocConstantArmPopulationN.PARTICIPANTS)]
         PARTICIPANTS = 213,
-        [EnumMember(Value = DocConstantArmPopulationN.PP)]
+        [EnumMember(Value = DocConstantArmPopulationN.PP), SCDescript(DocConstantArmPopulationN.PP), SSDescript(DocConstantArmPopulationN.PP), SCDisplay(Name = DocConstantArmPopulationN.PP)]
         PP = 218,
-        [EnumMember(Value = DocConstantArmPopulationN.RANDOMIZED)]
+        [EnumMember(Value = DocConstantArmPopulationN.RANDOMIZED), SCDescript(DocConstantArmPopulationN.RANDOMIZED), SSDescript(DocConstantArmPopulationN.RANDOMIZED), SCDisplay(Name = DocConstantArmPopulationN.RANDOMIZED)]
         RANDOMIZED = 223,
-        [EnumMember(Value = DocConstantArmPopulationN.RECRUITED)]
+        [EnumMember(Value = DocConstantArmPopulationN.RECRUITED), SCDescript(DocConstantArmPopulationN.RECRUITED), SSDescript(DocConstantArmPopulationN.RECRUITED), SCDisplay(Name = DocConstantArmPopulationN.RECRUITED)]
         RECRUITED = 228,
-        [EnumMember(Value = DocConstantArmPopulationN.SAFETY)]
+        [EnumMember(Value = DocConstantArmPopulationN.SAFETY), SCDescript(DocConstantArmPopulationN.SAFETY), SSDescript(DocConstantArmPopulationN.SAFETY), SCDisplay(Name = DocConstantArmPopulationN.SAFETY)]
         SAFETY = 233,
-        [EnumMember(Value = DocConstantArmPopulationN.SCREENED)]
+        [EnumMember(Value = DocConstantArmPopulationN.SCREENED), SCDescript(DocConstantArmPopulationN.SCREENED), SSDescript(DocConstantArmPopulationN.SCREENED), SCDisplay(Name = DocConstantArmPopulationN.SCREENED)]
         SCREENED = 238
     }
     
@@ -77,7 +56,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ArmPopulationNEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ArmPopulationNEnm.COMPLETED:
                     return DocConstantArmPopulationN.COMPLETED;
@@ -106,6 +85,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ArmPopulationNEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

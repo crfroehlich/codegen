@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,38 +15,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ProtocolFilterTypeEnm
     {
-        [EnumMember(Value = DocConstantProtocolFilterType.ATTRIBUTE)]
+        [EnumMember(Value = DocConstantProtocolFilterType.ATTRIBUTE), SCDescript(DocConstantProtocolFilterType.ATTRIBUTE), SSDescript(DocConstantProtocolFilterType.ATTRIBUTE), SCDisplay(Name = DocConstantProtocolFilterType.ATTRIBUTE)]
         ATTRIBUTE = 9093573,
-        [EnumMember(Value = DocConstantProtocolFilterType.ATTRIBUTE_LABEL)]
+        [EnumMember(Value = DocConstantProtocolFilterType.ATTRIBUTE_LABEL), SCDescript(DocConstantProtocolFilterType.ATTRIBUTE_LABEL), SSDescript(DocConstantProtocolFilterType.ATTRIBUTE_LABEL), SCDisplay(Name = DocConstantProtocolFilterType.ATTRIBUTE_LABEL)]
         ATTRIBUTE_LABEL = 9093578,
-        [EnumMember(Value = DocConstantProtocolFilterType.FIRST_CLASS)]
+        [EnumMember(Value = DocConstantProtocolFilterType.FIRST_CLASS), SCDescript(DocConstantProtocolFilterType.FIRST_CLASS), SSDescript(DocConstantProtocolFilterType.FIRST_CLASS), SCDisplay(Name = DocConstantProtocolFilterType.FIRST_CLASS)]
         FIRST_CLASS = 9093583
     }
     
@@ -59,7 +38,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ProtocolFilterTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ProtocolFilterTypeEnm.ATTRIBUTE:
                     return DocConstantProtocolFilterType.ATTRIBUTE;
@@ -70,6 +49,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ProtocolFilterTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

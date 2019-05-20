@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,38 +15,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum TimeCardStatusEnm
     {
-        [EnumMember(Value = DocConstantTimeCardStatus.APPROVED)]
+        [EnumMember(Value = DocConstantTimeCardStatus.APPROVED), SCDescript(DocConstantTimeCardStatus.APPROVED), SSDescript(DocConstantTimeCardStatus.APPROVED), SCDisplay(Name = DocConstantTimeCardStatus.APPROVED)]
         APPROVED = 90640203,
-        [EnumMember(Value = DocConstantTimeCardStatus.PENDING)]
+        [EnumMember(Value = DocConstantTimeCardStatus.PENDING), SCDescript(DocConstantTimeCardStatus.PENDING), SSDescript(DocConstantTimeCardStatus.PENDING), SCDisplay(Name = DocConstantTimeCardStatus.PENDING)]
         PENDING = 90640202,
-        [EnumMember(Value = DocConstantTimeCardStatus.REJECTED)]
+        [EnumMember(Value = DocConstantTimeCardStatus.REJECTED), SCDescript(DocConstantTimeCardStatus.REJECTED), SSDescript(DocConstantTimeCardStatus.REJECTED), SCDisplay(Name = DocConstantTimeCardStatus.REJECTED)]
         REJECTED = 90640204
     }
     
@@ -59,7 +38,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this TimeCardStatusEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case TimeCardStatusEnm.APPROVED:
                     return DocConstantTimeCardStatus.APPROVED;
@@ -70,6 +49,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this TimeCardStatusEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

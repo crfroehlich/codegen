@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,48 +15,32 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum VariableRuleEnm
     {
-        [EnumMember(Value = DocConstantVariableRule.ADDITION)]
+        [EnumMember(Value = DocConstantVariableRule.ADDITION), SCDescript(DocConstantVariableRule.ADDITION), SSDescript(DocConstantVariableRule.ADDITION), SCDisplay(Name = DocConstantVariableRule.ADDITION)]
         ADDITION = 69422931,
-        [EnumMember(Value = DocConstantVariableRule.AGGREGATION)]
+        [EnumMember(Value = DocConstantVariableRule.AGGREGATION), SCDescript(DocConstantVariableRule.AGGREGATION), SSDescript(DocConstantVariableRule.AGGREGATION), SCDisplay(Name = DocConstantVariableRule.AGGREGATION)]
         AGGREGATION = 69422932,
-        [EnumMember(Value = DocConstantVariableRule.AUTHOR_ERROR)]
+        [EnumMember(Value = DocConstantVariableRule.AUTHOR_ERROR), SCDescript(DocConstantVariableRule.AUTHOR_ERROR), SSDescript(DocConstantVariableRule.AUTHOR_ERROR), SCDisplay(Name = DocConstantVariableRule.AUTHOR_ERROR)]
         AUTHOR_ERROR = 69422933,
-        [EnumMember(Value = DocConstantVariableRule.CORRECTION)]
+        [EnumMember(Value = DocConstantVariableRule.CORRECTION), SCDescript(DocConstantVariableRule.CORRECTION), SSDescript(DocConstantVariableRule.CORRECTION), SCDisplay(Name = DocConstantVariableRule.CORRECTION)]
         CORRECTION = 69422934,
-        [EnumMember(Value = DocConstantVariableRule.CUSTOMIZATION)]
+        [EnumMember(Value = DocConstantVariableRule.CUSTOMIZATION), SCDescript(DocConstantVariableRule.CUSTOMIZATION), SSDescript(DocConstantVariableRule.CUSTOMIZATION), SCDisplay(Name = DocConstantVariableRule.CUSTOMIZATION)]
         CUSTOMIZATION = 69422935,
-        [EnumMember(Value = DocConstantVariableRule.INVERSION)]
+        [EnumMember(Value = DocConstantVariableRule.INVERSION), SCDescript(DocConstantVariableRule.INVERSION), SSDescript(DocConstantVariableRule.INVERSION), SCDisplay(Name = DocConstantVariableRule.INVERSION)]
         INVERSION = 69422936,
-        [EnumMember(Value = DocConstantVariableRule.NORMALIZATION)]
+        [EnumMember(Value = DocConstantVariableRule.NORMALIZATION), SCDescript(DocConstantVariableRule.NORMALIZATION), SSDescript(DocConstantVariableRule.NORMALIZATION), SCDisplay(Name = DocConstantVariableRule.NORMALIZATION)]
         NORMALIZATION = 69422937,
-        [EnumMember(Value = DocConstantVariableRule.STUDY_EDIT)]
+        [EnumMember(Value = DocConstantVariableRule.STUDY_EDIT), SCDescript(DocConstantVariableRule.STUDY_EDIT), SSDescript(DocConstantVariableRule.STUDY_EDIT), SCDisplay(Name = DocConstantVariableRule.STUDY_EDIT)]
         STUDY_EDIT = 69422938
     }
     
@@ -69,7 +48,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this VariableRuleEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case VariableRuleEnm.ADDITION:
                     return DocConstantVariableRule.ADDITION;
@@ -90,6 +69,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this VariableRuleEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

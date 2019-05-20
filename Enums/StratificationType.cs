@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,38 +15,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StratificationTypeEnm
     {
-        [EnumMember(Value = DocConstantStratificationType.AGE)]
+        [EnumMember(Value = DocConstantStratificationType.AGE), SCDescript(DocConstantStratificationType.AGE), SSDescript(DocConstantStratificationType.AGE), SCDisplay(Name = DocConstantStratificationType.AGE)]
         AGE = 3057,
-        [EnumMember(Value = DocConstantStratificationType.ETHNICITY)]
+        [EnumMember(Value = DocConstantStratificationType.ETHNICITY), SCDescript(DocConstantStratificationType.ETHNICITY), SSDescript(DocConstantStratificationType.ETHNICITY), SCDisplay(Name = DocConstantStratificationType.ETHNICITY)]
         ETHNICITY = 3062,
-        [EnumMember(Value = DocConstantStratificationType.GENDER)]
+        [EnumMember(Value = DocConstantStratificationType.GENDER), SCDescript(DocConstantStratificationType.GENDER), SSDescript(DocConstantStratificationType.GENDER), SCDisplay(Name = DocConstantStratificationType.GENDER)]
         GENDER = 3067
     }
     
@@ -59,7 +38,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StratificationTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StratificationTypeEnm.AGE:
                     return DocConstantStratificationType.AGE;
@@ -70,6 +49,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StratificationTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

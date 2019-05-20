@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,38 +15,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum UserPayrollStatusEnm
     {
-        [EnumMember(Value = DocConstantUserPayrollStatus.CONTRACT)]
+        [EnumMember(Value = DocConstantUserPayrollStatus.CONTRACT), SCDescript(DocConstantUserPayrollStatus.CONTRACT), SSDescript(DocConstantUserPayrollStatus.CONTRACT), SCDisplay(Name = DocConstantUserPayrollStatus.CONTRACT)]
         CONTRACT = 76351795,
-        [EnumMember(Value = DocConstantUserPayrollStatus.FULL_TIME)]
+        [EnumMember(Value = DocConstantUserPayrollStatus.FULL_TIME), SCDescript(DocConstantUserPayrollStatus.FULL_TIME), SSDescript(DocConstantUserPayrollStatus.FULL_TIME), SCDisplay(Name = DocConstantUserPayrollStatus.FULL_TIME)]
         FULL_TIME = 76351793,
-        [EnumMember(Value = DocConstantUserPayrollStatus.PART_TIME)]
+        [EnumMember(Value = DocConstantUserPayrollStatus.PART_TIME), SCDescript(DocConstantUserPayrollStatus.PART_TIME), SSDescript(DocConstantUserPayrollStatus.PART_TIME), SCDisplay(Name = DocConstantUserPayrollStatus.PART_TIME)]
         PART_TIME = 76351794
     }
     
@@ -59,7 +38,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this UserPayrollStatusEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case UserPayrollStatusEnm.CONTRACT:
                     return DocConstantUserPayrollStatus.CONTRACT;
@@ -70,6 +49,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this UserPayrollStatusEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

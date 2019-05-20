@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,38 +15,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum PrevalenceTypeEnm
     {
-        [EnumMember(Value = DocConstantPrevalenceType.LIFETIME)]
+        [EnumMember(Value = DocConstantPrevalenceType.LIFETIME), SCDescript(DocConstantPrevalenceType.LIFETIME), SSDescript(DocConstantPrevalenceType.LIFETIME), SCDisplay(Name = DocConstantPrevalenceType.LIFETIME)]
         LIFETIME = 21514047,
-        [EnumMember(Value = DocConstantPrevalenceType.PERIOD)]
+        [EnumMember(Value = DocConstantPrevalenceType.PERIOD), SCDescript(DocConstantPrevalenceType.PERIOD), SSDescript(DocConstantPrevalenceType.PERIOD), SCDisplay(Name = DocConstantPrevalenceType.PERIOD)]
         PERIOD = 21514052,
-        [EnumMember(Value = DocConstantPrevalenceType.POINT)]
+        [EnumMember(Value = DocConstantPrevalenceType.POINT), SCDescript(DocConstantPrevalenceType.POINT), SSDescript(DocConstantPrevalenceType.POINT), SCDisplay(Name = DocConstantPrevalenceType.POINT)]
         POINT = 21514057
     }
     
@@ -59,7 +38,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this PrevalenceTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case PrevalenceTypeEnm.LIFETIME:
                     return DocConstantPrevalenceType.LIFETIME;
@@ -70,6 +49,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this PrevalenceTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

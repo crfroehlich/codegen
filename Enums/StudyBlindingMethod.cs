@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,40 +15,24 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyBlindingMethodEnm
     {
-        [EnumMember(Value = DocConstantStudyBlindingMethod.DOUBLE_BLIND)]
+        [EnumMember(Value = DocConstantStudyBlindingMethod.DOUBLE_BLIND), SCDescript(DocConstantStudyBlindingMethod.DOUBLE_BLIND), SSDescript(DocConstantStudyBlindingMethod.DOUBLE_BLIND), SCDisplay(Name = DocConstantStudyBlindingMethod.DOUBLE_BLIND)]
         DOUBLE_BLIND = 3117,
-        [EnumMember(Value = DocConstantStudyBlindingMethod.OPEN_BLINDED_ENDPOINT)]
+        [EnumMember(Value = DocConstantStudyBlindingMethod.OPEN_BLINDED_ENDPOINT), SCDescript(DocConstantStudyBlindingMethod.OPEN_BLINDED_ENDPOINT), SSDescript(DocConstantStudyBlindingMethod.OPEN_BLINDED_ENDPOINT), SCDisplay(Name = DocConstantStudyBlindingMethod.OPEN_BLINDED_ENDPOINT)]
         OPEN_BLINDED_ENDPOINT = 3122,
-        [EnumMember(Value = DocConstantStudyBlindingMethod.OPEN_NO_BLINDING)]
+        [EnumMember(Value = DocConstantStudyBlindingMethod.OPEN_NO_BLINDING), SCDescript(DocConstantStudyBlindingMethod.OPEN_NO_BLINDING), SSDescript(DocConstantStudyBlindingMethod.OPEN_NO_BLINDING), SCDisplay(Name = DocConstantStudyBlindingMethod.OPEN_NO_BLINDING)]
         OPEN_NO_BLINDING = 3127,
-        [EnumMember(Value = DocConstantStudyBlindingMethod.SINGLE_BLIND)]
+        [EnumMember(Value = DocConstantStudyBlindingMethod.SINGLE_BLIND), SCDescript(DocConstantStudyBlindingMethod.SINGLE_BLIND), SSDescript(DocConstantStudyBlindingMethod.SINGLE_BLIND), SCDisplay(Name = DocConstantStudyBlindingMethod.SINGLE_BLIND)]
         SINGLE_BLIND = 3132
     }
     
@@ -61,7 +40,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyBlindingMethodEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyBlindingMethodEnm.DOUBLE_BLIND:
                     return DocConstantStudyBlindingMethod.DOUBLE_BLIND;
@@ -74,6 +53,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyBlindingMethodEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,50 +15,34 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DataHubSearchCategoryEnm
     {
-        [EnumMember(Value = DocConstantDataHubSearchCategory.CharacteristicVariables)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.CharacteristicVariables), SCDescript(DocConstantDataHubSearchCategory.CharacteristicVariables), SSDescript(DocConstantDataHubSearchCategory.CharacteristicVariables), SCDisplay(Name = DocConstantDataHubSearchCategory.CharacteristicVariables)]
         CharacteristicVariables = 612,
-        [EnumMember(Value = DocConstantDataHubSearchCategory.InterventionalStudies)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.InterventionalStudies), SCDescript(DocConstantDataHubSearchCategory.InterventionalStudies), SSDescript(DocConstantDataHubSearchCategory.InterventionalStudies), SCDisplay(Name = DocConstantDataHubSearchCategory.InterventionalStudies)]
         InterventionalStudies = 617,
-        [EnumMember(Value = DocConstantDataHubSearchCategory.NhanesPrevalence)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.NhanesPrevalence), SCDescript(DocConstantDataHubSearchCategory.NhanesPrevalence), SSDescript(DocConstantDataHubSearchCategory.NhanesPrevalence), SCDisplay(Name = DocConstantDataHubSearchCategory.NhanesPrevalence)]
         NhanesPrevalence = 622,
-        [EnumMember(Value = DocConstantDataHubSearchCategory.ObservationalStudies)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.ObservationalStudies), SCDescript(DocConstantDataHubSearchCategory.ObservationalStudies), SSDescript(DocConstantDataHubSearchCategory.ObservationalStudies), SCDisplay(Name = DocConstantDataHubSearchCategory.ObservationalStudies)]
         ObservationalStudies = 627,
-        [EnumMember(Value = DocConstantDataHubSearchCategory.OutcomeVariables)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.OutcomeVariables), SCDescript(DocConstantDataHubSearchCategory.OutcomeVariables), SSDescript(DocConstantDataHubSearchCategory.OutcomeVariables), SCDisplay(Name = DocConstantDataHubSearchCategory.OutcomeVariables)]
         OutcomeVariables = 632,
-        [EnumMember(Value = DocConstantDataHubSearchCategory.TitleOnly)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.TitleOnly), SCDescript(DocConstantDataHubSearchCategory.TitleOnly), SSDescript(DocConstantDataHubSearchCategory.TitleOnly), SCDisplay(Name = DocConstantDataHubSearchCategory.TitleOnly)]
         TitleOnly = 637,
-        [EnumMember(Value = DocConstantDataHubSearchCategory.TitlesAndAbstracts)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.TitlesAndAbstracts), SCDescript(DocConstantDataHubSearchCategory.TitlesAndAbstracts), SSDescript(DocConstantDataHubSearchCategory.TitlesAndAbstracts), SCDisplay(Name = DocConstantDataHubSearchCategory.TitlesAndAbstracts)]
         TitlesAndAbstracts = 642,
-        [EnumMember(Value = DocConstantDataHubSearchCategory.UkProductLabels)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.UkProductLabels), SCDescript(DocConstantDataHubSearchCategory.UkProductLabels), SSDescript(DocConstantDataHubSearchCategory.UkProductLabels), SCDisplay(Name = DocConstantDataHubSearchCategory.UkProductLabels)]
         UkProductLabels = 647,
-        [EnumMember(Value = DocConstantDataHubSearchCategory.UsProductLabels)]
+        [EnumMember(Value = DocConstantDataHubSearchCategory.UsProductLabels), SCDescript(DocConstantDataHubSearchCategory.UsProductLabels), SSDescript(DocConstantDataHubSearchCategory.UsProductLabels), SCDisplay(Name = DocConstantDataHubSearchCategory.UsProductLabels)]
         UsProductLabels = 652
     }
     
@@ -71,7 +50,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this DataHubSearchCategoryEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case DataHubSearchCategoryEnm.CharacteristicVariables:
                     return DocConstantDataHubSearchCategory.CharacteristicVariables;
@@ -94,6 +73,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this DataHubSearchCategoryEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

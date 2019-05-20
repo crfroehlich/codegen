@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum WorkflowStatusEnm
     {
-        [EnumMember(Value = DocConstantWorkflowStatus.ACCEPTED)]
+        [EnumMember(Value = DocConstantWorkflowStatus.ACCEPTED), SCDescript(DocConstantWorkflowStatus.ACCEPTED), SSDescript(DocConstantWorkflowStatus.ACCEPTED), SCDisplay(Name = DocConstantWorkflowStatus.ACCEPTED)]
         ACCEPTED = 150786181,
-        [EnumMember(Value = DocConstantWorkflowStatus.COLLECTED)]
+        [EnumMember(Value = DocConstantWorkflowStatus.COLLECTED), SCDescript(DocConstantWorkflowStatus.COLLECTED), SSDescript(DocConstantWorkflowStatus.COLLECTED), SCDisplay(Name = DocConstantWorkflowStatus.COLLECTED)]
         COLLECTED = 150786183,
-        [EnumMember(Value = DocConstantWorkflowStatus.REJECTED)]
+        [EnumMember(Value = DocConstantWorkflowStatus.REJECTED), SCDescript(DocConstantWorkflowStatus.REJECTED), SSDescript(DocConstantWorkflowStatus.REJECTED), SCDisplay(Name = DocConstantWorkflowStatus.REJECTED)]
         REJECTED = 150786182,
-        [EnumMember(Value = DocConstantWorkflowStatus.REQUESTED)]
+        [EnumMember(Value = DocConstantWorkflowStatus.REQUESTED), SCDescript(DocConstantWorkflowStatus.REQUESTED), SSDescript(DocConstantWorkflowStatus.REQUESTED), SCDisplay(Name = DocConstantWorkflowStatus.REQUESTED)]
         REQUESTED = 150786184,
-        [EnumMember(Value = DocConstantWorkflowStatus.UNAVAILABLE)]
+        [EnumMember(Value = DocConstantWorkflowStatus.UNAVAILABLE), SCDescript(DocConstantWorkflowStatus.UNAVAILABLE), SSDescript(DocConstantWorkflowStatus.UNAVAILABLE), SCDisplay(Name = DocConstantWorkflowStatus.UNAVAILABLE)]
         UNAVAILABLE = 150786185
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this WorkflowStatusEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case WorkflowStatusEnm.ACCEPTED:
                     return DocConstantWorkflowStatus.ACCEPTED;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this WorkflowStatusEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

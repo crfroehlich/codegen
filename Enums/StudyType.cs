@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,50 +15,34 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyTypeEnm
     {
-        [EnumMember(Value = DocConstantStudyType.CAUSATION_ETIOLOGY)]
+        [EnumMember(Value = DocConstantStudyType.CAUSATION_ETIOLOGY), SCDescript(DocConstantStudyType.CAUSATION_ETIOLOGY), SSDescript(DocConstantStudyType.CAUSATION_ETIOLOGY), SCDisplay(Name = DocConstantStudyType.CAUSATION_ETIOLOGY)]
         CAUSATION_ETIOLOGY = 3688,
-        [EnumMember(Value = DocConstantStudyType.DIAGNOSIS)]
+        [EnumMember(Value = DocConstantStudyType.DIAGNOSIS), SCDescript(DocConstantStudyType.DIAGNOSIS), SSDescript(DocConstantStudyType.DIAGNOSIS), SCDisplay(Name = DocConstantStudyType.DIAGNOSIS)]
         DIAGNOSIS = 3693,
-        [EnumMember(Value = DocConstantStudyType.HARM)]
+        [EnumMember(Value = DocConstantStudyType.HARM), SCDescript(DocConstantStudyType.HARM), SSDescript(DocConstantStudyType.HARM), SCDisplay(Name = DocConstantStudyType.HARM)]
         HARM = 3698,
-        [EnumMember(Value = DocConstantStudyType.MODELING)]
+        [EnumMember(Value = DocConstantStudyType.MODELING), SCDescript(DocConstantStudyType.MODELING), SSDescript(DocConstantStudyType.MODELING), SCDisplay(Name = DocConstantStudyType.MODELING)]
         MODELING = 3703,
-        [EnumMember(Value = DocConstantStudyType.OTHER)]
+        [EnumMember(Value = DocConstantStudyType.OTHER), SCDescript(DocConstantStudyType.OTHER), SSDescript(DocConstantStudyType.OTHER), SCDisplay(Name = DocConstantStudyType.OTHER)]
         OTHER = 3708,
-        [EnumMember(Value = DocConstantStudyType.PREVALENCE)]
+        [EnumMember(Value = DocConstantStudyType.PREVALENCE), SCDescript(DocConstantStudyType.PREVALENCE), SSDescript(DocConstantStudyType.PREVALENCE), SCDisplay(Name = DocConstantStudyType.PREVALENCE)]
         PREVALENCE = 3713,
-        [EnumMember(Value = DocConstantStudyType.PREVENTION_RISK)]
+        [EnumMember(Value = DocConstantStudyType.PREVENTION_RISK), SCDescript(DocConstantStudyType.PREVENTION_RISK), SSDescript(DocConstantStudyType.PREVENTION_RISK), SCDisplay(Name = DocConstantStudyType.PREVENTION_RISK)]
         PREVENTION_RISK = 3718,
-        [EnumMember(Value = DocConstantStudyType.PROGNOSIS)]
+        [EnumMember(Value = DocConstantStudyType.PROGNOSIS), SCDescript(DocConstantStudyType.PROGNOSIS), SSDescript(DocConstantStudyType.PROGNOSIS), SCDisplay(Name = DocConstantStudyType.PROGNOSIS)]
         PROGNOSIS = 3723,
-        [EnumMember(Value = DocConstantStudyType.THERAPY)]
+        [EnumMember(Value = DocConstantStudyType.THERAPY), SCDescript(DocConstantStudyType.THERAPY), SSDescript(DocConstantStudyType.THERAPY), SCDisplay(Name = DocConstantStudyType.THERAPY)]
         THERAPY = 3728
     }
     
@@ -71,7 +50,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyTypeEnm.CAUSATION_ETIOLOGY:
                     return DocConstantStudyType.CAUSATION_ETIOLOGY;
@@ -94,6 +73,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

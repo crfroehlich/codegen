@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,40 +15,24 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum BroadcastTypeEnm
     {
-        [EnumMember(Value = DocConstantBroadcastType.CHANGE_LOG)]
+        [EnumMember(Value = DocConstantBroadcastType.CHANGE_LOG), SCDescript(DocConstantBroadcastType.CHANGE_LOG), SSDescript(DocConstantBroadcastType.CHANGE_LOG), SCDisplay(Name = DocConstantBroadcastType.CHANGE_LOG)]
         CHANGE_LOG = 25812391,
-        [EnumMember(Value = DocConstantBroadcastType.SCOPE_SPECIFIC)]
+        [EnumMember(Value = DocConstantBroadcastType.SCOPE_SPECIFIC), SCDescript(DocConstantBroadcastType.SCOPE_SPECIFIC), SSDescript(DocConstantBroadcastType.SCOPE_SPECIFIC), SCDisplay(Name = DocConstantBroadcastType.SCOPE_SPECIFIC)]
         SCOPE_SPECIFIC = 74232465,
-        [EnumMember(Value = DocConstantBroadcastType.SYSTEM_ALERT)]
+        [EnumMember(Value = DocConstantBroadcastType.SYSTEM_ALERT), SCDescript(DocConstantBroadcastType.SYSTEM_ALERT), SSDescript(DocConstantBroadcastType.SYSTEM_ALERT), SCDisplay(Name = DocConstantBroadcastType.SYSTEM_ALERT)]
         SYSTEM_ALERT = 25812396,
-        [EnumMember(Value = DocConstantBroadcastType.TERMS_OF_SERVICE)]
+        [EnumMember(Value = DocConstantBroadcastType.TERMS_OF_SERVICE), SCDescript(DocConstantBroadcastType.TERMS_OF_SERVICE), SSDescript(DocConstantBroadcastType.TERMS_OF_SERVICE), SCDisplay(Name = DocConstantBroadcastType.TERMS_OF_SERVICE)]
         TERMS_OF_SERVICE = 25812401
     }
     
@@ -61,7 +40,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this BroadcastTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case BroadcastTypeEnm.CHANGE_LOG:
                     return DocConstantBroadcastType.CHANGE_LOG;
@@ -74,6 +53,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this BroadcastTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

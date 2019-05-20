@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ManualizedTreatmentEnm
     {
-        [EnumMember(Value = DocConstantManualizedTreatment.NA)]
+        [EnumMember(Value = DocConstantManualizedTreatment.NA), SCDescript(DocConstantManualizedTreatment.NA), SSDescript(DocConstantManualizedTreatment.NA), SCDisplay(Name = DocConstantManualizedTreatment.NA)]
         NA = 2072,
-        [EnumMember(Value = DocConstantManualizedTreatment.NO)]
+        [EnumMember(Value = DocConstantManualizedTreatment.NO), SCDescript(DocConstantManualizedTreatment.NO), SSDescript(DocConstantManualizedTreatment.NO), SCDisplay(Name = DocConstantManualizedTreatment.NO)]
         NO = 2077,
-        [EnumMember(Value = DocConstantManualizedTreatment.NR)]
+        [EnumMember(Value = DocConstantManualizedTreatment.NR), SCDescript(DocConstantManualizedTreatment.NR), SSDescript(DocConstantManualizedTreatment.NR), SCDisplay(Name = DocConstantManualizedTreatment.NR)]
         NR = 2082,
-        [EnumMember(Value = DocConstantManualizedTreatment.UNCLEAR)]
+        [EnumMember(Value = DocConstantManualizedTreatment.UNCLEAR), SCDescript(DocConstantManualizedTreatment.UNCLEAR), SSDescript(DocConstantManualizedTreatment.UNCLEAR), SCDisplay(Name = DocConstantManualizedTreatment.UNCLEAR)]
         UNCLEAR = 2087,
-        [EnumMember(Value = DocConstantManualizedTreatment.YES)]
+        [EnumMember(Value = DocConstantManualizedTreatment.YES), SCDescript(DocConstantManualizedTreatment.YES), SSDescript(DocConstantManualizedTreatment.YES), SCDisplay(Name = DocConstantManualizedTreatment.YES)]
         YES = 2092
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ManualizedTreatmentEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ManualizedTreatmentEnm.NA:
                     return DocConstantManualizedTreatment.NA;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ManualizedTreatmentEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

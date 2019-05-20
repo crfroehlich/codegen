@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ProtocolFilterOwnerEnm
     {
-        [EnumMember(Value = DocConstantProtocolFilterOwner.ATTRIBUTE)]
+        [EnumMember(Value = DocConstantProtocolFilterOwner.ATTRIBUTE), SCDescript(DocConstantProtocolFilterOwner.ATTRIBUTE), SSDescript(DocConstantProtocolFilterOwner.ATTRIBUTE), SCDisplay(Name = DocConstantProtocolFilterOwner.ATTRIBUTE)]
         ATTRIBUTE = 9093548,
-        [EnumMember(Value = DocConstantProtocolFilterOwner.DOSAGE_VALUE)]
+        [EnumMember(Value = DocConstantProtocolFilterOwner.DOSAGE_VALUE), SCDescript(DocConstantProtocolFilterOwner.DOSAGE_VALUE), SSDescript(DocConstantProtocolFilterOwner.DOSAGE_VALUE), SCDisplay(Name = DocConstantProtocolFilterOwner.DOSAGE_VALUE)]
         DOSAGE_VALUE = 9093553,
-        [EnumMember(Value = DocConstantProtocolFilterOwner.GROUP)]
+        [EnumMember(Value = DocConstantProtocolFilterOwner.GROUP), SCDescript(DocConstantProtocolFilterOwner.GROUP), SSDescript(DocConstantProtocolFilterOwner.GROUP), SCDisplay(Name = DocConstantProtocolFilterOwner.GROUP)]
         GROUP = 9093558,
-        [EnumMember(Value = DocConstantProtocolFilterOwner.INTERVENTION)]
+        [EnumMember(Value = DocConstantProtocolFilterOwner.INTERVENTION), SCDescript(DocConstantProtocolFilterOwner.INTERVENTION), SSDescript(DocConstantProtocolFilterOwner.INTERVENTION), SCDisplay(Name = DocConstantProtocolFilterOwner.INTERVENTION)]
         INTERVENTION = 9093563,
-        [EnumMember(Value = DocConstantProtocolFilterOwner.STUDY)]
+        [EnumMember(Value = DocConstantProtocolFilterOwner.STUDY), SCDescript(DocConstantProtocolFilterOwner.STUDY), SSDescript(DocConstantProtocolFilterOwner.STUDY), SCDisplay(Name = DocConstantProtocolFilterOwner.STUDY)]
         STUDY = 9093568
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ProtocolFilterOwnerEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ProtocolFilterOwnerEnm.ATTRIBUTE:
                     return DocConstantProtocolFilterOwner.ATTRIBUTE;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ProtocolFilterOwnerEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,40 +15,24 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum RatingEnm
     {
-        [EnumMember(Value = DocConstantRating.MAYBE_RELEVANT)]
+        [EnumMember(Value = DocConstantRating.MAYBE_RELEVANT), SCDescript(DocConstantRating.MAYBE_RELEVANT), SSDescript(DocConstantRating.MAYBE_RELEVANT), SCDisplay(Name = DocConstantRating.MAYBE_RELEVANT)]
         MAYBE_RELEVANT = 77289739,
-        [EnumMember(Value = DocConstantRating.NOT_RATED)]
+        [EnumMember(Value = DocConstantRating.NOT_RATED), SCDescript(DocConstantRating.NOT_RATED), SSDescript(DocConstantRating.NOT_RATED), SCDisplay(Name = DocConstantRating.NOT_RATED)]
         NOT_RATED = 77289740,
-        [EnumMember(Value = DocConstantRating.NOT_RELEVANT)]
+        [EnumMember(Value = DocConstantRating.NOT_RELEVANT), SCDescript(DocConstantRating.NOT_RELEVANT), SSDescript(DocConstantRating.NOT_RELEVANT), SCDisplay(Name = DocConstantRating.NOT_RELEVANT)]
         NOT_RELEVANT = 77289738,
-        [EnumMember(Value = DocConstantRating.RELEVANT)]
+        [EnumMember(Value = DocConstantRating.RELEVANT), SCDescript(DocConstantRating.RELEVANT), SSDescript(DocConstantRating.RELEVANT), SCDisplay(Name = DocConstantRating.RELEVANT)]
         RELEVANT = 77289737
     }
     
@@ -61,7 +40,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this RatingEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case RatingEnm.MAYBE_RELEVANT:
                     return DocConstantRating.MAYBE_RELEVANT;
@@ -74,6 +53,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this RatingEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

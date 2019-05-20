@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum FqReferenceStatusEnm
     {
-        [EnumMember(Value = DocConstantFqReferenceStatus.ASSIGNED)]
+        [EnumMember(Value = DocConstantFqReferenceStatus.ASSIGNED), SCDescript(DocConstantFqReferenceStatus.ASSIGNED), SSDescript(DocConstantFqReferenceStatus.ASSIGNED), SCDisplay(Name = DocConstantFqReferenceStatus.ASSIGNED)]
         ASSIGNED = 77289732,
-        [EnumMember(Value = DocConstantFqReferenceStatus.HOLD)]
+        [EnumMember(Value = DocConstantFqReferenceStatus.HOLD), SCDescript(DocConstantFqReferenceStatus.HOLD), SSDescript(DocConstantFqReferenceStatus.HOLD), SCDisplay(Name = DocConstantFqReferenceStatus.HOLD)]
         HOLD = 77289733,
-        [EnumMember(Value = DocConstantFqReferenceStatus.REJECTED)]
+        [EnumMember(Value = DocConstantFqReferenceStatus.REJECTED), SCDescript(DocConstantFqReferenceStatus.REJECTED), SSDescript(DocConstantFqReferenceStatus.REJECTED), SCDisplay(Name = DocConstantFqReferenceStatus.REJECTED)]
         REJECTED = 77289735,
-        [EnumMember(Value = DocConstantFqReferenceStatus.REVIEW)]
+        [EnumMember(Value = DocConstantFqReferenceStatus.REVIEW), SCDescript(DocConstantFqReferenceStatus.REVIEW), SSDescript(DocConstantFqReferenceStatus.REVIEW), SCDisplay(Name = DocConstantFqReferenceStatus.REVIEW)]
         REVIEW = 77289734,
-        [EnumMember(Value = DocConstantFqReferenceStatus.UPLOADED)]
+        [EnumMember(Value = DocConstantFqReferenceStatus.UPLOADED), SCDescript(DocConstantFqReferenceStatus.UPLOADED), SSDescript(DocConstantFqReferenceStatus.UPLOADED), SCDisplay(Name = DocConstantFqReferenceStatus.UPLOADED)]
         UPLOADED = 77289736
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this FqReferenceStatusEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case FqReferenceStatusEnm.ASSIGNED:
                     return DocConstantFqReferenceStatus.ASSIGNED;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this FqReferenceStatusEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

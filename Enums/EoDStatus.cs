@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum EoDStatusEnm
     {
-        [EnumMember(Value = DocConstantEoDStatus.ACCEPTED)]
+        [EnumMember(Value = DocConstantEoDStatus.ACCEPTED), SCDescript(DocConstantEoDStatus.ACCEPTED), SSDescript(DocConstantEoDStatus.ACCEPTED), SCDisplay(Name = DocConstantEoDStatus.ACCEPTED)]
         ACCEPTED = 147180163,
-        [EnumMember(Value = DocConstantEoDStatus.COLLECTED)]
+        [EnumMember(Value = DocConstantEoDStatus.COLLECTED), SCDescript(DocConstantEoDStatus.COLLECTED), SSDescript(DocConstantEoDStatus.COLLECTED), SCDisplay(Name = DocConstantEoDStatus.COLLECTED)]
         COLLECTED = 128789899,
-        [EnumMember(Value = DocConstantEoDStatus.REJECTED)]
+        [EnumMember(Value = DocConstantEoDStatus.REJECTED), SCDescript(DocConstantEoDStatus.REJECTED), SSDescript(DocConstantEoDStatus.REJECTED), SCDisplay(Name = DocConstantEoDStatus.REJECTED)]
         REJECTED = 76351815,
-        [EnumMember(Value = DocConstantEoDStatus.REQUESTED)]
+        [EnumMember(Value = DocConstantEoDStatus.REQUESTED), SCDescript(DocConstantEoDStatus.REQUESTED), SSDescript(DocConstantEoDStatus.REQUESTED), SCDisplay(Name = DocConstantEoDStatus.REQUESTED)]
         REQUESTED = 128789898,
-        [EnumMember(Value = DocConstantEoDStatus.UNAVAILABLE)]
+        [EnumMember(Value = DocConstantEoDStatus.UNAVAILABLE), SCDescript(DocConstantEoDStatus.UNAVAILABLE), SSDescript(DocConstantEoDStatus.UNAVAILABLE), SCDisplay(Name = DocConstantEoDStatus.UNAVAILABLE)]
         UNAVAILABLE = 128789900
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this EoDStatusEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case EoDStatusEnm.ACCEPTED:
                     return DocConstantEoDStatus.ACCEPTED;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this EoDStatusEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

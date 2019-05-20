@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,64 +15,48 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StatisticalTestEnm
     {
-        [EnumMember(Value = DocConstantStatisticalTest.BINOMIAL_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.BINOMIAL_TEST), SCDescript(DocConstantStatisticalTest.BINOMIAL_TEST), SSDescript(DocConstantStatisticalTest.BINOMIAL_TEST), SCDisplay(Name = DocConstantStatisticalTest.BINOMIAL_TEST)]
         BINOMIAL_TEST = 2977,
-        [EnumMember(Value = DocConstantStatisticalTest.CHI_SQUARE_GOODNESS_OF_FIT)]
+        [EnumMember(Value = DocConstantStatisticalTest.CHI_SQUARE_GOODNESS_OF_FIT), SCDescript(DocConstantStatisticalTest.CHI_SQUARE_GOODNESS_OF_FIT), SSDescript(DocConstantStatisticalTest.CHI_SQUARE_GOODNESS_OF_FIT), SCDisplay(Name = DocConstantStatisticalTest.CHI_SQUARE_GOODNESS_OF_FIT)]
         CHI_SQUARE_GOODNESS_OF_FIT = 2982,
-        [EnumMember(Value = DocConstantStatisticalTest.CHI_SQUARE_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.CHI_SQUARE_TEST), SCDescript(DocConstantStatisticalTest.CHI_SQUARE_TEST), SSDescript(DocConstantStatisticalTest.CHI_SQUARE_TEST), SCDisplay(Name = DocConstantStatisticalTest.CHI_SQUARE_TEST)]
         CHI_SQUARE_TEST = 2987,
-        [EnumMember(Value = DocConstantStatisticalTest.FISHERS_EXACT_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.FISHERS_EXACT_TEST), SCDescript(DocConstantStatisticalTest.FISHERS_EXACT_TEST), SSDescript(DocConstantStatisticalTest.FISHERS_EXACT_TEST), SCDisplay(Name = DocConstantStatisticalTest.FISHERS_EXACT_TEST)]
         FISHERS_EXACT_TEST = 2992,
-        [EnumMember(Value = DocConstantStatisticalTest.INDEPENDENT)]
+        [EnumMember(Value = DocConstantStatisticalTest.INDEPENDENT), SCDescript(DocConstantStatisticalTest.INDEPENDENT), SSDescript(DocConstantStatisticalTest.INDEPENDENT), SCDisplay(Name = DocConstantStatisticalTest.INDEPENDENT)]
         INDEPENDENT = 2997,
-        [EnumMember(Value = DocConstantStatisticalTest.KRUSKAL_WALLIS)]
+        [EnumMember(Value = DocConstantStatisticalTest.KRUSKAL_WALLIS), SCDescript(DocConstantStatisticalTest.KRUSKAL_WALLIS), SSDescript(DocConstantStatisticalTest.KRUSKAL_WALLIS), SCDisplay(Name = DocConstantStatisticalTest.KRUSKAL_WALLIS)]
         KRUSKAL_WALLIS = 3002,
-        [EnumMember(Value = DocConstantStatisticalTest.MCNEMAR)]
+        [EnumMember(Value = DocConstantStatisticalTest.MCNEMAR), SCDescript(DocConstantStatisticalTest.MCNEMAR), SSDescript(DocConstantStatisticalTest.MCNEMAR), SCDisplay(Name = DocConstantStatisticalTest.MCNEMAR)]
         MCNEMAR = 3007,
-        [EnumMember(Value = DocConstantStatisticalTest.ONE_SAMPLE_MEDIAN)]
+        [EnumMember(Value = DocConstantStatisticalTest.ONE_SAMPLE_MEDIAN), SCDescript(DocConstantStatisticalTest.ONE_SAMPLE_MEDIAN), SSDescript(DocConstantStatisticalTest.ONE_SAMPLE_MEDIAN), SCDisplay(Name = DocConstantStatisticalTest.ONE_SAMPLE_MEDIAN)]
         ONE_SAMPLE_MEDIAN = 3012,
-        [EnumMember(Value = DocConstantStatisticalTest.ONE_SAMPLE_T_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.ONE_SAMPLE_T_TEST), SCDescript(DocConstantStatisticalTest.ONE_SAMPLE_T_TEST), SSDescript(DocConstantStatisticalTest.ONE_SAMPLE_T_TEST), SCDisplay(Name = DocConstantStatisticalTest.ONE_SAMPLE_T_TEST)]
         ONE_SAMPLE_T_TEST = 3017,
-        [EnumMember(Value = DocConstantStatisticalTest.ONE_WAY_ANOVA)]
+        [EnumMember(Value = DocConstantStatisticalTest.ONE_WAY_ANOVA), SCDescript(DocConstantStatisticalTest.ONE_WAY_ANOVA), SSDescript(DocConstantStatisticalTest.ONE_WAY_ANOVA), SCDisplay(Name = DocConstantStatisticalTest.ONE_WAY_ANOVA)]
         ONE_WAY_ANOVA = 3022,
-        [EnumMember(Value = DocConstantStatisticalTest.OVERLAPPING_TWO_SAMPLE_T_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.OVERLAPPING_TWO_SAMPLE_T_TEST), SCDescript(DocConstantStatisticalTest.OVERLAPPING_TWO_SAMPLE_T_TEST), SSDescript(DocConstantStatisticalTest.OVERLAPPING_TWO_SAMPLE_T_TEST), SCDisplay(Name = DocConstantStatisticalTest.OVERLAPPING_TWO_SAMPLE_T_TEST)]
         OVERLAPPING_TWO_SAMPLE_T_TEST = 3027,
-        [EnumMember(Value = DocConstantStatisticalTest.PAIRED_T_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.PAIRED_T_TEST), SCDescript(DocConstantStatisticalTest.PAIRED_T_TEST), SSDescript(DocConstantStatisticalTest.PAIRED_T_TEST), SCDisplay(Name = DocConstantStatisticalTest.PAIRED_T_TEST)]
         PAIRED_T_TEST = 3032,
-        [EnumMember(Value = DocConstantStatisticalTest.SAMPLE_T_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.SAMPLE_T_TEST), SCDescript(DocConstantStatisticalTest.SAMPLE_T_TEST), SSDescript(DocConstantStatisticalTest.SAMPLE_T_TEST), SCDisplay(Name = DocConstantStatisticalTest.SAMPLE_T_TEST)]
         SAMPLE_T_TEST = 3037,
-        [EnumMember(Value = DocConstantStatisticalTest.STUDENT_T_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.STUDENT_T_TEST), SCDescript(DocConstantStatisticalTest.STUDENT_T_TEST), SSDescript(DocConstantStatisticalTest.STUDENT_T_TEST), SCDisplay(Name = DocConstantStatisticalTest.STUDENT_T_TEST)]
         STUDENT_T_TEST = 3042,
-        [EnumMember(Value = DocConstantStatisticalTest.WILCOXON_MANN_WHITNEY_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.WILCOXON_MANN_WHITNEY_TEST), SCDescript(DocConstantStatisticalTest.WILCOXON_MANN_WHITNEY_TEST), SSDescript(DocConstantStatisticalTest.WILCOXON_MANN_WHITNEY_TEST), SCDisplay(Name = DocConstantStatisticalTest.WILCOXON_MANN_WHITNEY_TEST)]
         WILCOXON_MANN_WHITNEY_TEST = 3047,
-        [EnumMember(Value = DocConstantStatisticalTest.WILCOXON_SIGNED_RANKS_TEST)]
+        [EnumMember(Value = DocConstantStatisticalTest.WILCOXON_SIGNED_RANKS_TEST), SCDescript(DocConstantStatisticalTest.WILCOXON_SIGNED_RANKS_TEST), SSDescript(DocConstantStatisticalTest.WILCOXON_SIGNED_RANKS_TEST), SCDisplay(Name = DocConstantStatisticalTest.WILCOXON_SIGNED_RANKS_TEST)]
         WILCOXON_SIGNED_RANKS_TEST = 3052
     }
     
@@ -85,7 +64,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StatisticalTestEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StatisticalTestEnm.BINOMIAL_TEST:
                     return DocConstantStatisticalTest.BINOMIAL_TEST;
@@ -122,6 +101,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StatisticalTestEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

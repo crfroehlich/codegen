@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,40 +15,24 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum JunctionTypeEnm
     {
-        [EnumMember(Value = DocConstantJunctionType.APPROVAL)]
+        [EnumMember(Value = DocConstantJunctionType.APPROVAL), SCDescript(DocConstantJunctionType.APPROVAL), SSDescript(DocConstantJunctionType.APPROVAL), SCDisplay(Name = DocConstantJunctionType.APPROVAL)]
         APPROVAL = 74232474,
-        [EnumMember(Value = DocConstantJunctionType.COMMENT)]
+        [EnumMember(Value = DocConstantJunctionType.COMMENT), SCDescript(DocConstantJunctionType.COMMENT), SSDescript(DocConstantJunctionType.COMMENT), SCDisplay(Name = DocConstantJunctionType.COMMENT)]
         COMMENT = 74232475,
-        [EnumMember(Value = DocConstantJunctionType.FLAGGED_FOR_APPROVAL)]
+        [EnumMember(Value = DocConstantJunctionType.FLAGGED_FOR_APPROVAL), SCDescript(DocConstantJunctionType.FLAGGED_FOR_APPROVAL), SSDescript(DocConstantJunctionType.FLAGGED_FOR_APPROVAL), SCDisplay(Name = DocConstantJunctionType.FLAGGED_FOR_APPROVAL)]
         FLAGGED_FOR_APPROVAL = 74232476,
-        [EnumMember(Value = DocConstantJunctionType.RATING)]
+        [EnumMember(Value = DocConstantJunctionType.RATING), SCDescript(DocConstantJunctionType.RATING), SSDescript(DocConstantJunctionType.RATING), SCDisplay(Name = DocConstantJunctionType.RATING)]
         RATING = 74232477
     }
     
@@ -61,7 +40,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this JunctionTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case JunctionTypeEnm.APPROVAL:
                     return DocConstantJunctionType.APPROVAL;
@@ -74,6 +53,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this JunctionTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

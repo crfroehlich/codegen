@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,44 +15,28 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum PermissionEnm
     {
-        [EnumMember(Value = DocConstantPermission.ADD)]
+        [EnumMember(Value = DocConstantPermission.ADD), SCDescript(DocConstantPermission.ADD), SSDescript(DocConstantPermission.ADD), SCDisplay(Name = DocConstantPermission.ADD)]
         ADD = 17611229,
-        [EnumMember(Value = DocConstantPermission.DELETE)]
+        [EnumMember(Value = DocConstantPermission.DELETE), SCDescript(DocConstantPermission.DELETE), SSDescript(DocConstantPermission.DELETE), SCDisplay(Name = DocConstantPermission.DELETE)]
         DELETE = 17611234,
-        [EnumMember(Value = DocConstantPermission.EDIT)]
+        [EnumMember(Value = DocConstantPermission.EDIT), SCDescript(DocConstantPermission.EDIT), SSDescript(DocConstantPermission.EDIT), SCDisplay(Name = DocConstantPermission.EDIT)]
         EDIT = 10483119,
-        [EnumMember(Value = DocConstantPermission.REMOVE)]
+        [EnumMember(Value = DocConstantPermission.REMOVE), SCDescript(DocConstantPermission.REMOVE), SSDescript(DocConstantPermission.REMOVE), SCDisplay(Name = DocConstantPermission.REMOVE)]
         REMOVE = 107893902,
-        [EnumMember(Value = DocConstantPermission.UNLOCK)]
+        [EnumMember(Value = DocConstantPermission.UNLOCK), SCDescript(DocConstantPermission.UNLOCK), SSDescript(DocConstantPermission.UNLOCK), SCDisplay(Name = DocConstantPermission.UNLOCK)]
         UNLOCK = 90640194,
-        [EnumMember(Value = DocConstantPermission.VIEW)]
+        [EnumMember(Value = DocConstantPermission.VIEW), SCDescript(DocConstantPermission.VIEW), SSDescript(DocConstantPermission.VIEW), SCDisplay(Name = DocConstantPermission.VIEW)]
         VIEW = 10483124
     }
     
@@ -65,7 +44,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this PermissionEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case PermissionEnm.ADD:
                     return DocConstantPermission.ADD;
@@ -82,6 +61,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this PermissionEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

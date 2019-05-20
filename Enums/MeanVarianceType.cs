@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,44 +15,28 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum MeanVarianceTypeEnm
     {
-        [EnumMember(Value = DocConstantMeanVarianceType.CV)]
+        [EnumMember(Value = DocConstantMeanVarianceType.CV), SCDescript(DocConstantMeanVarianceType.CV), SSDescript(DocConstantMeanVarianceType.CV), SCDisplay(Name = DocConstantMeanVarianceType.CV)]
         CV = 95113988,
-        [EnumMember(Value = DocConstantMeanVarianceType.IQR_DIFFERENCE)]
+        [EnumMember(Value = DocConstantMeanVarianceType.IQR_DIFFERENCE), SCDescript(DocConstantMeanVarianceType.IQR_DIFFERENCE), SSDescript(DocConstantMeanVarianceType.IQR_DIFFERENCE), SCDisplay(Name = DocConstantMeanVarianceType.IQR_DIFFERENCE)]
         IQR_DIFFERENCE = 17618177,
-        [EnumMember(Value = DocConstantMeanVarianceType.SD)]
+        [EnumMember(Value = DocConstantMeanVarianceType.SD), SCDescript(DocConstantMeanVarianceType.SD), SSDescript(DocConstantMeanVarianceType.SD), SCDisplay(Name = DocConstantMeanVarianceType.SD)]
         SD = 2172,
-        [EnumMember(Value = DocConstantMeanVarianceType.SE)]
+        [EnumMember(Value = DocConstantMeanVarianceType.SE), SCDescript(DocConstantMeanVarianceType.SE), SSDescript(DocConstantMeanVarianceType.SE), SCDisplay(Name = DocConstantMeanVarianceType.SE)]
         SE = 2177,
-        [EnumMember(Value = DocConstantMeanVarianceType.SEMI_IQR)]
+        [EnumMember(Value = DocConstantMeanVarianceType.SEMI_IQR), SCDescript(DocConstantMeanVarianceType.SEMI_IQR), SSDescript(DocConstantMeanVarianceType.SEMI_IQR), SCDisplay(Name = DocConstantMeanVarianceType.SEMI_IQR)]
         SEMI_IQR = 2182,
-        [EnumMember(Value = DocConstantMeanVarianceType.UNKNOWN)]
+        [EnumMember(Value = DocConstantMeanVarianceType.UNKNOWN), SCDescript(DocConstantMeanVarianceType.UNKNOWN), SSDescript(DocConstantMeanVarianceType.UNKNOWN), SCDisplay(Name = DocConstantMeanVarianceType.UNKNOWN)]
         UNKNOWN = 2187
     }
     
@@ -65,7 +44,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this MeanVarianceTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case MeanVarianceTypeEnm.CV:
                     return DocConstantMeanVarianceType.CV;
@@ -82,6 +61,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this MeanVarianceTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

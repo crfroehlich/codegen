@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyBiasEnm
     {
-        [EnumMember(Value = DocConstantStudyBias.AHRQ)]
+        [EnumMember(Value = DocConstantStudyBias.AHRQ), SCDescript(DocConstantStudyBias.AHRQ), SSDescript(DocConstantStudyBias.AHRQ), SCDisplay(Name = DocConstantStudyBias.AHRQ)]
         AHRQ = 3092,
-        [EnumMember(Value = DocConstantStudyBias.COMPLIANCE)]
+        [EnumMember(Value = DocConstantStudyBias.COMPLIANCE), SCDescript(DocConstantStudyBias.COMPLIANCE), SSDescript(DocConstantStudyBias.COMPLIANCE), SCDisplay(Name = DocConstantStudyBias.COMPLIANCE)]
         COMPLIANCE = 3097,
-        [EnumMember(Value = DocConstantStudyBias.GRADE)]
+        [EnumMember(Value = DocConstantStudyBias.GRADE), SCDescript(DocConstantStudyBias.GRADE), SSDescript(DocConstantStudyBias.GRADE), SCDisplay(Name = DocConstantStudyBias.GRADE)]
         GRADE = 3102,
-        [EnumMember(Value = DocConstantStudyBias.JADAD)]
+        [EnumMember(Value = DocConstantStudyBias.JADAD), SCDescript(DocConstantStudyBias.JADAD), SSDescript(DocConstantStudyBias.JADAD), SCDisplay(Name = DocConstantStudyBias.JADAD)]
         JADAD = 3107,
-        [EnumMember(Value = DocConstantStudyBias.ROB)]
+        [EnumMember(Value = DocConstantStudyBias.ROB), SCDescript(DocConstantStudyBias.ROB), SSDescript(DocConstantStudyBias.ROB), SCDisplay(Name = DocConstantStudyBias.ROB)]
         ROB = 3112
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyBiasEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyBiasEnm.AHRQ:
                     return DocConstantStudyBias.AHRQ;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyBiasEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

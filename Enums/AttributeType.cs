@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,46 +15,30 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum AttributeTypeEnm
     {
-        [EnumMember(Value = DocConstantAttributeType.CHANGE)]
+        [EnumMember(Value = DocConstantAttributeType.CHANGE), SCDescript(DocConstantAttributeType.CHANGE), SSDescript(DocConstantAttributeType.CHANGE), SCDisplay(Name = DocConstantAttributeType.CHANGE)]
         CHANGE = 322,
-        [EnumMember(Value = DocConstantAttributeType.DURATION)]
+        [EnumMember(Value = DocConstantAttributeType.DURATION), SCDescript(DocConstantAttributeType.DURATION), SSDescript(DocConstantAttributeType.DURATION), SCDisplay(Name = DocConstantAttributeType.DURATION)]
         DURATION = 327,
-        [EnumMember(Value = DocConstantAttributeType.NOT_IN_STUDY)]
+        [EnumMember(Value = DocConstantAttributeType.NOT_IN_STUDY), SCDescript(DocConstantAttributeType.NOT_IN_STUDY), SSDescript(DocConstantAttributeType.NOT_IN_STUDY), SCDisplay(Name = DocConstantAttributeType.NOT_IN_STUDY)]
         NOT_IN_STUDY = 332,
-        [EnumMember(Value = DocConstantAttributeType.PERCENT_CHANGE)]
+        [EnumMember(Value = DocConstantAttributeType.PERCENT_CHANGE), SCDescript(DocConstantAttributeType.PERCENT_CHANGE), SSDescript(DocConstantAttributeType.PERCENT_CHANGE), SCDisplay(Name = DocConstantAttributeType.PERCENT_CHANGE)]
         PERCENT_CHANGE = 337,
-        [EnumMember(Value = DocConstantAttributeType.STANDARD)]
+        [EnumMember(Value = DocConstantAttributeType.STANDARD), SCDescript(DocConstantAttributeType.STANDARD), SSDescript(DocConstantAttributeType.STANDARD), SCDisplay(Name = DocConstantAttributeType.STANDARD)]
         STANDARD = 342,
-        [EnumMember(Value = DocConstantAttributeType.TIME_SINCE)]
+        [EnumMember(Value = DocConstantAttributeType.TIME_SINCE), SCDescript(DocConstantAttributeType.TIME_SINCE), SSDescript(DocConstantAttributeType.TIME_SINCE), SCDisplay(Name = DocConstantAttributeType.TIME_SINCE)]
         TIME_SINCE = 347,
-        [EnumMember(Value = DocConstantAttributeType.TIME_TO)]
+        [EnumMember(Value = DocConstantAttributeType.TIME_TO), SCDescript(DocConstantAttributeType.TIME_TO), SSDescript(DocConstantAttributeType.TIME_TO), SCDisplay(Name = DocConstantAttributeType.TIME_TO)]
         TIME_TO = 352
     }
     
@@ -67,7 +46,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this AttributeTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case AttributeTypeEnm.CHANGE:
                     return DocConstantAttributeType.CHANGE;
@@ -86,6 +65,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this AttributeTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

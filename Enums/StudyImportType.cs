@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,38 +15,22 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyImportTypeEnm
     {
-        [EnumMember(Value = DocConstantStudyImportType.CLINICAL_TRIALS_GOV)]
+        [EnumMember(Value = DocConstantStudyImportType.CLINICAL_TRIALS_GOV), SCDescript(DocConstantStudyImportType.CLINICAL_TRIALS_GOV), SSDescript(DocConstantStudyImportType.CLINICAL_TRIALS_GOV), SCDisplay(Name = DocConstantStudyImportType.CLINICAL_TRIALS_GOV)]
         CLINICAL_TRIALS_GOV = 146157849,
-        [EnumMember(Value = DocConstantStudyImportType.EXTRACT)]
+        [EnumMember(Value = DocConstantStudyImportType.EXTRACT), SCDescript(DocConstantStudyImportType.EXTRACT), SSDescript(DocConstantStudyImportType.EXTRACT), SCDisplay(Name = DocConstantStudyImportType.EXTRACT)]
         EXTRACT = 3403,
-        [EnumMember(Value = DocConstantStudyImportType.LEGACY)]
+        [EnumMember(Value = DocConstantStudyImportType.LEGACY), SCDescript(DocConstantStudyImportType.LEGACY), SSDescript(DocConstantStudyImportType.LEGACY), SCDisplay(Name = DocConstantStudyImportType.LEGACY)]
         LEGACY = 3408
     }
     
@@ -59,7 +38,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyImportTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyImportTypeEnm.CLINICAL_TRIALS_GOV:
                     return DocConstantStudyImportType.CLINICAL_TRIALS_GOV;
@@ -70,6 +49,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyImportTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

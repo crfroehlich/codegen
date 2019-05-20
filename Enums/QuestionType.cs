@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,44 +15,28 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum QuestionTypeEnm
     {
-        [EnumMember(Value = DocConstantQuestionType.DATE)]
+        [EnumMember(Value = DocConstantQuestionType.DATE), SCDescript(DocConstantQuestionType.DATE), SSDescript(DocConstantQuestionType.DATE), SCDisplay(Name = DocConstantQuestionType.DATE)]
         DATE = 46351049,
-        [EnumMember(Value = DocConstantQuestionType.DATE_TIME)]
+        [EnumMember(Value = DocConstantQuestionType.DATE_TIME), SCDescript(DocConstantQuestionType.DATE_TIME), SSDescript(DocConstantQuestionType.DATE_TIME), SCDisplay(Name = DocConstantQuestionType.DATE_TIME)]
         DATE_TIME = 46351055,
-        [EnumMember(Value = DocConstantQuestionType.MEMO)]
+        [EnumMember(Value = DocConstantQuestionType.MEMO), SCDescript(DocConstantQuestionType.MEMO), SSDescript(DocConstantQuestionType.MEMO), SCDisplay(Name = DocConstantQuestionType.MEMO)]
         MEMO = 46351061,
-        [EnumMember(Value = DocConstantQuestionType.NUMBER)]
+        [EnumMember(Value = DocConstantQuestionType.NUMBER), SCDescript(DocConstantQuestionType.NUMBER), SSDescript(DocConstantQuestionType.NUMBER), SCDisplay(Name = DocConstantQuestionType.NUMBER)]
         NUMBER = 46351066,
-        [EnumMember(Value = DocConstantQuestionType.YES_NO)]
+        [EnumMember(Value = DocConstantQuestionType.YES_NO), SCDescript(DocConstantQuestionType.YES_NO), SSDescript(DocConstantQuestionType.YES_NO), SCDisplay(Name = DocConstantQuestionType.YES_NO)]
         YES_NO = 46351072,
-        [EnumMember(Value = DocConstantQuestionType.YES_NO_NA)]
+        [EnumMember(Value = DocConstantQuestionType.YES_NO_NA), SCDescript(DocConstantQuestionType.YES_NO_NA), SSDescript(DocConstantQuestionType.YES_NO_NA), SCDisplay(Name = DocConstantQuestionType.YES_NO_NA)]
         YES_NO_NA = 46351078
     }
     
@@ -65,7 +44,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this QuestionTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case QuestionTypeEnm.DATE:
                     return DocConstantQuestionType.DATE;
@@ -82,6 +61,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this QuestionTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

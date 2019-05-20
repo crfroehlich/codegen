@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,272 +15,256 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum LookupTableEnm
     {
-        [EnumMember(Value = DocConstantLookupTable.AMPERSONCOUNT)]
+        [EnumMember(Value = DocConstantLookupTable.AMPERSONCOUNT), SCDescript(DocConstantLookupTable.AMPERSONCOUNT), SSDescript(DocConstantLookupTable.AMPERSONCOUNT), SCDisplay(Name = DocConstantLookupTable.AMPERSONCOUNT)]
         AMPERSONCOUNT = 31621672,
-        [EnumMember(Value = DocConstantLookupTable.APP)]
+        [EnumMember(Value = DocConstantLookupTable.APP), SCDescript(DocConstantLookupTable.APP), SSDescript(DocConstantLookupTable.APP), SCDisplay(Name = DocConstantLookupTable.APP)]
         APP = 35775432,
-        [EnumMember(Value = DocConstantLookupTable.ARMPOPULATIONAGE)]
+        [EnumMember(Value = DocConstantLookupTable.ARMPOPULATIONAGE), SCDescript(DocConstantLookupTable.ARMPOPULATIONAGE), SSDescript(DocConstantLookupTable.ARMPOPULATIONAGE), SCDisplay(Name = DocConstantLookupTable.ARMPOPULATIONAGE)]
         ARMPOPULATIONAGE = 1577,
-        [EnumMember(Value = DocConstantLookupTable.ARMPOPULATIONN)]
+        [EnumMember(Value = DocConstantLookupTable.ARMPOPULATIONN), SCDescript(DocConstantLookupTable.ARMPOPULATIONN), SSDescript(DocConstantLookupTable.ARMPOPULATIONN), SCDisplay(Name = DocConstantLookupTable.ARMPOPULATIONN)]
         ARMPOPULATIONN = 1582,
-        [EnumMember(Value = DocConstantLookupTable.ASSOCIATIONMEASURE)]
+        [EnumMember(Value = DocConstantLookupTable.ASSOCIATIONMEASURE), SCDescript(DocConstantLookupTable.ASSOCIATIONMEASURE), SSDescript(DocConstantLookupTable.ASSOCIATIONMEASURE), SCDisplay(Name = DocConstantLookupTable.ASSOCIATIONMEASURE)]
         ASSOCIATIONMEASURE = 1587,
-        [EnumMember(Value = DocConstantLookupTable.ATTRIBUTECATEGORY)]
+        [EnumMember(Value = DocConstantLookupTable.ATTRIBUTECATEGORY), SCDescript(DocConstantLookupTable.ATTRIBUTECATEGORY), SSDescript(DocConstantLookupTable.ATTRIBUTECATEGORY), SCDisplay(Name = DocConstantLookupTable.ATTRIBUTECATEGORY)]
         ATTRIBUTECATEGORY = 11793742,
-        [EnumMember(Value = DocConstantLookupTable.ATTRIBUTETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.ATTRIBUTETYPE), SCDescript(DocConstantLookupTable.ATTRIBUTETYPE), SSDescript(DocConstantLookupTable.ATTRIBUTETYPE), SCDisplay(Name = DocConstantLookupTable.ATTRIBUTETYPE)]
         ATTRIBUTETYPE = 1607,
-        [EnumMember(Value = DocConstantLookupTable.BROADCASTSTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.BROADCASTSTATUS), SCDescript(DocConstantLookupTable.BROADCASTSTATUS), SSDescript(DocConstantLookupTable.BROADCASTSTATUS), SCDisplay(Name = DocConstantLookupTable.BROADCASTSTATUS)]
         BROADCASTSTATUS = 67058499,
-        [EnumMember(Value = DocConstantLookupTable.BROADCASTTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.BROADCASTTYPE), SCDescript(DocConstantLookupTable.BROADCASTTYPE), SSDescript(DocConstantLookupTable.BROADCASTTYPE), SCDisplay(Name = DocConstantLookupTable.BROADCASTTYPE)]
         BROADCASTTYPE = 25812426,
-        [EnumMember(Value = DocConstantLookupTable.CONFIDENCEINTERVAL)]
+        [EnumMember(Value = DocConstantLookupTable.CONFIDENCEINTERVAL), SCDescript(DocConstantLookupTable.CONFIDENCEINTERVAL), SSDescript(DocConstantLookupTable.CONFIDENCEINTERVAL), SCDisplay(Name = DocConstantLookupTable.CONFIDENCEINTERVAL)]
         CONFIDENCEINTERVAL = 1617,
-        [EnumMember(Value = DocConstantLookupTable.CONJUNCTION)]
+        [EnumMember(Value = DocConstantLookupTable.CONJUNCTION), SCDescript(DocConstantLookupTable.CONJUNCTION), SSDescript(DocConstantLookupTable.CONJUNCTION), SCDisplay(Name = DocConstantLookupTable.CONJUNCTION)]
         CONJUNCTION = 1622,
-        [EnumMember(Value = DocConstantLookupTable.DATABASETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.DATABASETYPE), SCDescript(DocConstantLookupTable.DATABASETYPE), SSDescript(DocConstantLookupTable.DATABASETYPE), SCDisplay(Name = DocConstantLookupTable.DATABASETYPE)]
         DATABASETYPE = 90640170,
-        [EnumMember(Value = DocConstantLookupTable.DATAHUBSEARCHCATEGORY)]
+        [EnumMember(Value = DocConstantLookupTable.DATAHUBSEARCHCATEGORY), SCDescript(DocConstantLookupTable.DATAHUBSEARCHCATEGORY), SSDescript(DocConstantLookupTable.DATAHUBSEARCHCATEGORY), SCDisplay(Name = DocConstantLookupTable.DATAHUBSEARCHCATEGORY)]
         DATAHUBSEARCHCATEGORY = 1627,
-        [EnumMember(Value = DocConstantLookupTable.DATAHUBSOURCE)]
+        [EnumMember(Value = DocConstantLookupTable.DATAHUBSOURCE), SCDescript(DocConstantLookupTable.DATAHUBSOURCE), SSDescript(DocConstantLookupTable.DATAHUBSOURCE), SCDisplay(Name = DocConstantLookupTable.DATAHUBSOURCE)]
         DATAHUBSOURCE = 1632,
-        [EnumMember(Value = DocConstantLookupTable.DEFAULTTIMEUNIT)]
+        [EnumMember(Value = DocConstantLookupTable.DEFAULTTIMEUNIT), SCDescript(DocConstantLookupTable.DEFAULTTIMEUNIT), SSDescript(DocConstantLookupTable.DEFAULTTIMEUNIT), SCDisplay(Name = DocConstantLookupTable.DEFAULTTIMEUNIT)]
         DEFAULTTIMEUNIT = 1637,
-        [EnumMember(Value = DocConstantLookupTable.DEFAULTUNITTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.DEFAULTUNITTYPE), SCDescript(DocConstantLookupTable.DEFAULTUNITTYPE), SSDescript(DocConstantLookupTable.DEFAULTUNITTYPE), SCDisplay(Name = DocConstantLookupTable.DEFAULTUNITTYPE)]
         DEFAULTUNITTYPE = 1642,
-        [EnumMember(Value = DocConstantLookupTable.DIRECTIONALITY)]
+        [EnumMember(Value = DocConstantLookupTable.DIRECTIONALITY), SCDescript(DocConstantLookupTable.DIRECTIONALITY), SSDescript(DocConstantLookupTable.DIRECTIONALITY), SCDisplay(Name = DocConstantLookupTable.DIRECTIONALITY)]
         DIRECTIONALITY = 90640171,
-        [EnumMember(Value = DocConstantLookupTable.DOCUMENTSETTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.DOCUMENTSETTYPE), SCDescript(DocConstantLookupTable.DOCUMENTSETTYPE), SSDescript(DocConstantLookupTable.DOCUMENTSETTYPE), SCDisplay(Name = DocConstantLookupTable.DOCUMENTSETTYPE)]
         DOCUMENTSETTYPE = 90640172,
-        [EnumMember(Value = DocConstantLookupTable.DOCUMENTTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.DOCUMENTTYPE), SCDescript(DocConstantLookupTable.DOCUMENTTYPE), SSDescript(DocConstantLookupTable.DOCUMENTTYPE), SCDisplay(Name = DocConstantLookupTable.DOCUMENTTYPE)]
         DOCUMENTTYPE = 90640173,
-        [EnumMember(Value = DocConstantLookupTable.DOSAGEPROTOCOL)]
+        [EnumMember(Value = DocConstantLookupTable.DOSAGEPROTOCOL), SCDescript(DocConstantLookupTable.DOSAGEPROTOCOL), SSDescript(DocConstantLookupTable.DOSAGEPROTOCOL), SCDisplay(Name = DocConstantLookupTable.DOSAGEPROTOCOL)]
         DOSAGEPROTOCOL = 1647,
-        [EnumMember(Value = DocConstantLookupTable.DOSAGETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.DOSAGETYPE), SCDescript(DocConstantLookupTable.DOSAGETYPE), SSDescript(DocConstantLookupTable.DOSAGETYPE), SCDisplay(Name = DocConstantLookupTable.DOSAGETYPE)]
         DOSAGETYPE = 1652,
-        [EnumMember(Value = DocConstantLookupTable.EODSTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.EODSTATUS), SCDescript(DocConstantLookupTable.EODSTATUS), SSDescript(DocConstantLookupTable.EODSTATUS), SCDisplay(Name = DocConstantLookupTable.EODSTATUS)]
         EODSTATUS = 150785325,
-        [EnumMember(Value = DocConstantLookupTable.EQUALITYOPERATOR)]
+        [EnumMember(Value = DocConstantLookupTable.EQUALITYOPERATOR), SCDescript(DocConstantLookupTable.EQUALITYOPERATOR), SSDescript(DocConstantLookupTable.EQUALITYOPERATOR), SCDisplay(Name = DocConstantLookupTable.EQUALITYOPERATOR)]
         EQUALITYOPERATOR = 1657,
-        [EnumMember(Value = DocConstantLookupTable.ERRORMESSAGE)]
+        [EnumMember(Value = DocConstantLookupTable.ERRORMESSAGE), SCDescript(DocConstantLookupTable.ERRORMESSAGE), SSDescript(DocConstantLookupTable.ERRORMESSAGE), SCDisplay(Name = DocConstantLookupTable.ERRORMESSAGE)]
         ERRORMESSAGE = 67058501,
-        [EnumMember(Value = DocConstantLookupTable.EXTERNALKEY)]
+        [EnumMember(Value = DocConstantLookupTable.EXTERNALKEY), SCDescript(DocConstantLookupTable.EXTERNALKEY), SSDescript(DocConstantLookupTable.EXTERNALKEY), SCDisplay(Name = DocConstantLookupTable.EXTERNALKEY)]
         EXTERNALKEY = 1662,
-        [EnumMember(Value = DocConstantLookupTable.FEATURE)]
+        [EnumMember(Value = DocConstantLookupTable.FEATURE), SCDescript(DocConstantLookupTable.FEATURE), SSDescript(DocConstantLookupTable.FEATURE), SCDisplay(Name = DocConstantLookupTable.FEATURE)]
         FEATURE = 1667,
-        [EnumMember(Value = DocConstantLookupTable.FIELDTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.FIELDTYPE), SCDescript(DocConstantLookupTable.FIELDTYPE), SSDescript(DocConstantLookupTable.FIELDTYPE), SCDisplay(Name = DocConstantLookupTable.FIELDTYPE)]
         FIELDTYPE = 1677,
-        [EnumMember(Value = DocConstantLookupTable.FOREIGNKEYSTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.FOREIGNKEYSTATUS), SCDescript(DocConstantLookupTable.FOREIGNKEYSTATUS), SSDescript(DocConstantLookupTable.FOREIGNKEYSTATUS), SCDisplay(Name = DocConstantLookupTable.FOREIGNKEYSTATUS)]
         FOREIGNKEYSTATUS = 90640174,
-        [EnumMember(Value = DocConstantLookupTable.FQREFERENCESTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.FQREFERENCESTATUS), SCDescript(DocConstantLookupTable.FQREFERENCESTATUS), SSDescript(DocConstantLookupTable.FQREFERENCESTATUS), SCDisplay(Name = DocConstantLookupTable.FQREFERENCESTATUS)]
         FQREFERENCESTATUS = 90640175,
-        [EnumMember(Value = DocConstantLookupTable.HELP)]
+        [EnumMember(Value = DocConstantLookupTable.HELP), SCDescript(DocConstantLookupTable.HELP), SSDescript(DocConstantLookupTable.HELP), SCDisplay(Name = DocConstantLookupTable.HELP)]
         HELP = 61884906,
-        [EnumMember(Value = DocConstantLookupTable.IMPORTSTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.IMPORTSTATUS), SCDescript(DocConstantLookupTable.IMPORTSTATUS), SSDescript(DocConstantLookupTable.IMPORTSTATUS), SCDisplay(Name = DocConstantLookupTable.IMPORTSTATUS)]
         IMPORTSTATUS = 1692,
-        [EnumMember(Value = DocConstantLookupTable.INCIDENCERATETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.INCIDENCERATETYPE), SCDescript(DocConstantLookupTable.INCIDENCERATETYPE), SSDescript(DocConstantLookupTable.INCIDENCERATETYPE), SCDisplay(Name = DocConstantLookupTable.INCIDENCERATETYPE)]
         INCIDENCERATETYPE = 21514023,
-        [EnumMember(Value = DocConstantLookupTable.INSTITUTIONTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.INSTITUTIONTYPE), SCDescript(DocConstantLookupTable.INSTITUTIONTYPE), SSDescript(DocConstantLookupTable.INSTITUTIONTYPE), SCDisplay(Name = DocConstantLookupTable.INSTITUTIONTYPE)]
         INSTITUTIONTYPE = 1697,
-        [EnumMember(Value = DocConstantLookupTable.INTEGRATIONNAME)]
+        [EnumMember(Value = DocConstantLookupTable.INTEGRATIONNAME), SCDescript(DocConstantLookupTable.INTEGRATIONNAME), SSDescript(DocConstantLookupTable.INTEGRATIONNAME), SCDisplay(Name = DocConstantLookupTable.INTEGRATIONNAME)]
         INTEGRATIONNAME = 90640176,
-        [EnumMember(Value = DocConstantLookupTable.INTEGRATIONPROPERTYNAME)]
+        [EnumMember(Value = DocConstantLookupTable.INTEGRATIONPROPERTYNAME), SCDescript(DocConstantLookupTable.INTEGRATIONPROPERTYNAME), SSDescript(DocConstantLookupTable.INTEGRATIONPROPERTYNAME), SCDisplay(Name = DocConstantLookupTable.INTEGRATIONPROPERTYNAME)]
         INTEGRATIONPROPERTYNAME = 90640177,
-        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONLINEOFTREATMENT)]
+        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONLINEOFTREATMENT), SCDescript(DocConstantLookupTable.INTERVENTIONLINEOFTREATMENT), SSDescript(DocConstantLookupTable.INTERVENTIONLINEOFTREATMENT), SCDisplay(Name = DocConstantLookupTable.INTERVENTIONLINEOFTREATMENT)]
         INTERVENTIONLINEOFTREATMENT = 74232478,
-        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONMEDIUM)]
+        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONMEDIUM), SCDescript(DocConstantLookupTable.INTERVENTIONMEDIUM), SSDescript(DocConstantLookupTable.INTERVENTIONMEDIUM), SCDisplay(Name = DocConstantLookupTable.INTERVENTIONMEDIUM)]
         INTERVENTIONMEDIUM = 1712,
-        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONPROVIDER)]
+        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONPROVIDER), SCDescript(DocConstantLookupTable.INTERVENTIONPROVIDER), SSDescript(DocConstantLookupTable.INTERVENTIONPROVIDER), SCDisplay(Name = DocConstantLookupTable.INTERVENTIONPROVIDER)]
         INTERVENTIONPROVIDER = 1717,
-        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONROUTE)]
+        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONROUTE), SCDescript(DocConstantLookupTable.INTERVENTIONROUTE), SSDescript(DocConstantLookupTable.INTERVENTIONROUTE), SCDisplay(Name = DocConstantLookupTable.INTERVENTIONROUTE)]
         INTERVENTIONROUTE = 1722,
-        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONSCHEDULE)]
+        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONSCHEDULE), SCDescript(DocConstantLookupTable.INTERVENTIONSCHEDULE), SSDescript(DocConstantLookupTable.INTERVENTIONSCHEDULE), SCDisplay(Name = DocConstantLookupTable.INTERVENTIONSCHEDULE)]
         INTERVENTIONSCHEDULE = 1727,
-        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONSTAGESETTING)]
+        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONSTAGESETTING), SCDescript(DocConstantLookupTable.INTERVENTIONSTAGESETTING), SSDescript(DocConstantLookupTable.INTERVENTIONSTAGESETTING), SCDisplay(Name = DocConstantLookupTable.INTERVENTIONSTAGESETTING)]
         INTERVENTIONSTAGESETTING = 1732,
-        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.INTERVENTIONTYPE), SCDescript(DocConstantLookupTable.INTERVENTIONTYPE), SSDescript(DocConstantLookupTable.INTERVENTIONTYPE), SCDisplay(Name = DocConstantLookupTable.INTERVENTIONTYPE)]
         INTERVENTIONTYPE = 1737,
-        [EnumMember(Value = DocConstantLookupTable.JOB)]
+        [EnumMember(Value = DocConstantLookupTable.JOB), SCDescript(DocConstantLookupTable.JOB), SSDescript(DocConstantLookupTable.JOB), SCDisplay(Name = DocConstantLookupTable.JOB)]
         JOB = 1742,
-        [EnumMember(Value = DocConstantLookupTable.JUNCTIONTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.JUNCTIONTYPE), SCDescript(DocConstantLookupTable.JUNCTIONTYPE), SSDescript(DocConstantLookupTable.JUNCTIONTYPE), SCDisplay(Name = DocConstantLookupTable.JUNCTIONTYPE)]
         JUNCTIONTYPE = 74232479,
-        [EnumMember(Value = DocConstantLookupTable.LOOKUPTABLE)]
+        [EnumMember(Value = DocConstantLookupTable.LOOKUPTABLE), SCDescript(DocConstantLookupTable.LOOKUPTABLE), SSDescript(DocConstantLookupTable.LOOKUPTABLE), SCDisplay(Name = DocConstantLookupTable.LOOKUPTABLE)]
         LOOKUPTABLE = 1752,
-        [EnumMember(Value = DocConstantLookupTable.LOOKUPTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.LOOKUPTYPE), SCDescript(DocConstantLookupTable.LOOKUPTYPE), SSDescript(DocConstantLookupTable.LOOKUPTYPE), SCDisplay(Name = DocConstantLookupTable.LOOKUPTYPE)]
         LOOKUPTYPE = 46350926,
-        [EnumMember(Value = DocConstantLookupTable.MANUALIZEDTREATMENT)]
+        [EnumMember(Value = DocConstantLookupTable.MANUALIZEDTREATMENT), SCDescript(DocConstantLookupTable.MANUALIZEDTREATMENT), SSDescript(DocConstantLookupTable.MANUALIZEDTREATMENT), SCDisplay(Name = DocConstantLookupTable.MANUALIZEDTREATMENT)]
         MANUALIZEDTREATMENT = 1757,
-        [EnumMember(Value = DocConstantLookupTable.MEANCALCULATIONTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.MEANCALCULATIONTYPE), SCDescript(DocConstantLookupTable.MEANCALCULATIONTYPE), SSDescript(DocConstantLookupTable.MEANCALCULATIONTYPE), SCDisplay(Name = DocConstantLookupTable.MEANCALCULATIONTYPE)]
         MEANCALCULATIONTYPE = 6677506,
-        [EnumMember(Value = DocConstantLookupTable.MEANRANGETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.MEANRANGETYPE), SCDescript(DocConstantLookupTable.MEANRANGETYPE), SSDescript(DocConstantLookupTable.MEANRANGETYPE), SCDisplay(Name = DocConstantLookupTable.MEANRANGETYPE)]
         MEANRANGETYPE = 1762,
-        [EnumMember(Value = DocConstantLookupTable.MEANVARIABLETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.MEANVARIABLETYPE), SCDescript(DocConstantLookupTable.MEANVARIABLETYPE), SSDescript(DocConstantLookupTable.MEANVARIABLETYPE), SCDisplay(Name = DocConstantLookupTable.MEANVARIABLETYPE)]
         MEANVARIABLETYPE = 1767,
-        [EnumMember(Value = DocConstantLookupTable.MEANVARIANCETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.MEANVARIANCETYPE), SCDescript(DocConstantLookupTable.MEANVARIANCETYPE), SSDescript(DocConstantLookupTable.MEANVARIANCETYPE), SCDisplay(Name = DocConstantLookupTable.MEANVARIANCETYPE)]
         MEANVARIANCETYPE = 1772,
-        [EnumMember(Value = DocConstantLookupTable.METHODOFANALYSIS)]
+        [EnumMember(Value = DocConstantLookupTable.METHODOFANALYSIS), SCDescript(DocConstantLookupTable.METHODOFANALYSIS), SSDescript(DocConstantLookupTable.METHODOFANALYSIS), SCDisplay(Name = DocConstantLookupTable.METHODOFANALYSIS)]
         METHODOFANALYSIS = 1777,
-        [EnumMember(Value = DocConstantLookupTable.MODELNAME)]
+        [EnumMember(Value = DocConstantLookupTable.MODELNAME), SCDescript(DocConstantLookupTable.MODELNAME), SSDescript(DocConstantLookupTable.MODELNAME), SCDisplay(Name = DocConstantLookupTable.MODELNAME)]
         MODELNAME = 1782,
-        [EnumMember(Value = DocConstantLookupTable.OUTCOMECATEGORY)]
+        [EnumMember(Value = DocConstantLookupTable.OUTCOMECATEGORY), SCDescript(DocConstantLookupTable.OUTCOMECATEGORY), SSDescript(DocConstantLookupTable.OUTCOMECATEGORY), SCDisplay(Name = DocConstantLookupTable.OUTCOMECATEGORY)]
         OUTCOMECATEGORY = 1787,
-        [EnumMember(Value = DocConstantLookupTable.OUTCOMETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.OUTCOMETYPE), SCDescript(DocConstantLookupTable.OUTCOMETYPE), SSDescript(DocConstantLookupTable.OUTCOMETYPE), SCDisplay(Name = DocConstantLookupTable.OUTCOMETYPE)]
         OUTCOMETYPE = 1792,
-        [EnumMember(Value = DocConstantLookupTable.PERMISSION)]
+        [EnumMember(Value = DocConstantLookupTable.PERMISSION), SCDescript(DocConstantLookupTable.PERMISSION), SSDescript(DocConstantLookupTable.PERMISSION), SCDisplay(Name = DocConstantLookupTable.PERMISSION)]
         PERMISSION = 10483104,
-        [EnumMember(Value = DocConstantLookupTable.POPULATIONTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.POPULATIONTYPE), SCDescript(DocConstantLookupTable.POPULATIONTYPE), SSDescript(DocConstantLookupTable.POPULATIONTYPE), SCDisplay(Name = DocConstantLookupTable.POPULATIONTYPE)]
         POPULATIONTYPE = 11793747,
-        [EnumMember(Value = DocConstantLookupTable.PREVALENCETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.PREVALENCETYPE), SCDescript(DocConstantLookupTable.PREVALENCETYPE), SSDescript(DocConstantLookupTable.PREVALENCETYPE), SCDisplay(Name = DocConstantLookupTable.PREVALENCETYPE)]
         PREVALENCETYPE = 21514028,
-        [EnumMember(Value = DocConstantLookupTable.PROTOCOLFILTEROWNER)]
+        [EnumMember(Value = DocConstantLookupTable.PROTOCOLFILTEROWNER), SCDescript(DocConstantLookupTable.PROTOCOLFILTEROWNER), SSDescript(DocConstantLookupTable.PROTOCOLFILTEROWNER), SCDisplay(Name = DocConstantLookupTable.PROTOCOLFILTEROWNER)]
         PROTOCOLFILTEROWNER = 9093523,
-        [EnumMember(Value = DocConstantLookupTable.PROTOCOLFILTERTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.PROTOCOLFILTERTYPE), SCDescript(DocConstantLookupTable.PROTOCOLFILTERTYPE), SSDescript(DocConstantLookupTable.PROTOCOLFILTERTYPE), SCDisplay(Name = DocConstantLookupTable.PROTOCOLFILTERTYPE)]
         PROTOCOLFILTERTYPE = 9093528,
-        [EnumMember(Value = DocConstantLookupTable.PROTOCOLTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.PROTOCOLTYPE), SCDescript(DocConstantLookupTable.PROTOCOLTYPE), SSDescript(DocConstantLookupTable.PROTOCOLTYPE), SCDisplay(Name = DocConstantLookupTable.PROTOCOLTYPE)]
         PROTOCOLTYPE = 46350931,
-        [EnumMember(Value = DocConstantLookupTable.PUBLICATIONPOOLSTUDIES)]
+        [EnumMember(Value = DocConstantLookupTable.PUBLICATIONPOOLSTUDIES), SCDescript(DocConstantLookupTable.PUBLICATIONPOOLSTUDIES), SSDescript(DocConstantLookupTable.PUBLICATIONPOOLSTUDIES), SCDisplay(Name = DocConstantLookupTable.PUBLICATIONPOOLSTUDIES)]
         PUBLICATIONPOOLSTUDIES = 1802,
-        [EnumMember(Value = DocConstantLookupTable.PUBTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.PUBTYPE), SCDescript(DocConstantLookupTable.PUBTYPE), SSDescript(DocConstantLookupTable.PUBTYPE), SCDisplay(Name = DocConstantLookupTable.PUBTYPE)]
         PUBTYPE = 93510279,
-        [EnumMember(Value = DocConstantLookupTable.QUESTION)]
+        [EnumMember(Value = DocConstantLookupTable.QUESTION), SCDescript(DocConstantLookupTable.QUESTION), SSDescript(DocConstantLookupTable.QUESTION), SCDisplay(Name = DocConstantLookupTable.QUESTION)]
         QUESTION = 46350936,
-        [EnumMember(Value = DocConstantLookupTable.QUESTIONCATEGORY)]
+        [EnumMember(Value = DocConstantLookupTable.QUESTIONCATEGORY), SCDescript(DocConstantLookupTable.QUESTIONCATEGORY), SSDescript(DocConstantLookupTable.QUESTIONCATEGORY), SCDisplay(Name = DocConstantLookupTable.QUESTIONCATEGORY)]
         QUESTIONCATEGORY = 46350942,
-        [EnumMember(Value = DocConstantLookupTable.QUESTIONTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.QUESTIONTYPE), SCDescript(DocConstantLookupTable.QUESTIONTYPE), SSDescript(DocConstantLookupTable.QUESTIONTYPE), SCDisplay(Name = DocConstantLookupTable.QUESTIONTYPE)]
         QUESTIONTYPE = 46350947,
-        [EnumMember(Value = DocConstantLookupTable.QUEUECHANNEL)]
+        [EnumMember(Value = DocConstantLookupTable.QUEUECHANNEL), SCDescript(DocConstantLookupTable.QUEUECHANNEL), SSDescript(DocConstantLookupTable.QUEUECHANNEL), SCDisplay(Name = DocConstantLookupTable.QUEUECHANNEL)]
         QUEUECHANNEL = 96669200,
-        [EnumMember(Value = DocConstantLookupTable.RANDOMIZATION)]
+        [EnumMember(Value = DocConstantLookupTable.RANDOMIZATION), SCDescript(DocConstantLookupTable.RANDOMIZATION), SSDescript(DocConstantLookupTable.RANDOMIZATION), SCDisplay(Name = DocConstantLookupTable.RANDOMIZATION)]
         RANDOMIZATION = 1807,
-        [EnumMember(Value = DocConstantLookupTable.RANGETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.RANGETYPE), SCDescript(DocConstantLookupTable.RANGETYPE), SSDescript(DocConstantLookupTable.RANGETYPE), SCDisplay(Name = DocConstantLookupTable.RANGETYPE)]
         RANGETYPE = 1812,
-        [EnumMember(Value = DocConstantLookupTable.RATING)]
+        [EnumMember(Value = DocConstantLookupTable.RATING), SCDescript(DocConstantLookupTable.RATING), SSDescript(DocConstantLookupTable.RATING), SCDisplay(Name = DocConstantLookupTable.RATING)]
         RATING = 90640178,
-        [EnumMember(Value = DocConstantLookupTable.REASONREJECTED)]
+        [EnumMember(Value = DocConstantLookupTable.REASONREJECTED), SCDescript(DocConstantLookupTable.REASONREJECTED), SSDescript(DocConstantLookupTable.REASONREJECTED), SCDisplay(Name = DocConstantLookupTable.REASONREJECTED)]
         REASONREJECTED = 90640179,
-        [EnumMember(Value = DocConstantLookupTable.RECRUITMENTMETHOD)]
+        [EnumMember(Value = DocConstantLookupTable.RECRUITMENTMETHOD), SCDescript(DocConstantLookupTable.RECRUITMENTMETHOD), SSDescript(DocConstantLookupTable.RECRUITMENTMETHOD), SCDisplay(Name = DocConstantLookupTable.RECRUITMENTMETHOD)]
         RECRUITMENTMETHOD = 1817,
-        [EnumMember(Value = DocConstantLookupTable.REPRESENTATIVESAMPLE)]
+        [EnumMember(Value = DocConstantLookupTable.REPRESENTATIVESAMPLE), SCDescript(DocConstantLookupTable.REPRESENTATIVESAMPLE), SSDescript(DocConstantLookupTable.REPRESENTATIVESAMPLE), SCDisplay(Name = DocConstantLookupTable.REPRESENTATIVESAMPLE)]
         REPRESENTATIVESAMPLE = 1822,
-        [EnumMember(Value = DocConstantLookupTable.RESPONSESCOLLECTEDBY)]
+        [EnumMember(Value = DocConstantLookupTable.RESPONSESCOLLECTEDBY), SCDescript(DocConstantLookupTable.RESPONSESCOLLECTEDBY), SSDescript(DocConstantLookupTable.RESPONSESCOLLECTEDBY), SCDisplay(Name = DocConstantLookupTable.RESPONSESCOLLECTEDBY)]
         RESPONSESCOLLECTEDBY = 1827,
-        [EnumMember(Value = DocConstantLookupTable.RESULTSCATEGORY)]
+        [EnumMember(Value = DocConstantLookupTable.RESULTSCATEGORY), SCDescript(DocConstantLookupTable.RESULTSCATEGORY), SSDescript(DocConstantLookupTable.RESULTSCATEGORY), SCDisplay(Name = DocConstantLookupTable.RESULTSCATEGORY)]
         RESULTSCATEGORY = 90640180,
-        [EnumMember(Value = DocConstantLookupTable.RISKOFBIASASSESSMENT)]
+        [EnumMember(Value = DocConstantLookupTable.RISKOFBIASASSESSMENT), SCDescript(DocConstantLookupTable.RISKOFBIASASSESSMENT), SSDescript(DocConstantLookupTable.RISKOFBIASASSESSMENT), SCDisplay(Name = DocConstantLookupTable.RISKOFBIASASSESSMENT)]
         RISKOFBIASASSESSMENT = 150784177,
-        [EnumMember(Value = DocConstantLookupTable.SCOPE)]
+        [EnumMember(Value = DocConstantLookupTable.SCOPE), SCDescript(DocConstantLookupTable.SCOPE), SSDescript(DocConstantLookupTable.SCOPE), SCDisplay(Name = DocConstantLookupTable.SCOPE)]
         SCOPE = 67058503,
-        [EnumMember(Value = DocConstantLookupTable.SETTINGTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.SETTINGTYPE), SCDescript(DocConstantLookupTable.SETTINGTYPE), SSDescript(DocConstantLookupTable.SETTINGTYPE), SCDisplay(Name = DocConstantLookupTable.SETTINGTYPE)]
         SETTINGTYPE = 1842,
-        [EnumMember(Value = DocConstantLookupTable.STATISTICALSIGNIFICANCE)]
+        [EnumMember(Value = DocConstantLookupTable.STATISTICALSIGNIFICANCE), SCDescript(DocConstantLookupTable.STATISTICALSIGNIFICANCE), SSDescript(DocConstantLookupTable.STATISTICALSIGNIFICANCE), SCDisplay(Name = DocConstantLookupTable.STATISTICALSIGNIFICANCE)]
         STATISTICALSIGNIFICANCE = 1857,
-        [EnumMember(Value = DocConstantLookupTable.STATISTICALTEST)]
+        [EnumMember(Value = DocConstantLookupTable.STATISTICALTEST), SCDescript(DocConstantLookupTable.STATISTICALTEST), SSDescript(DocConstantLookupTable.STATISTICALTEST), SCDisplay(Name = DocConstantLookupTable.STATISTICALTEST)]
         STATISTICALTEST = 1862,
-        [EnumMember(Value = DocConstantLookupTable.STATSRECORDNAME)]
+        [EnumMember(Value = DocConstantLookupTable.STATSRECORDNAME), SCDescript(DocConstantLookupTable.STATSRECORDNAME), SSDescript(DocConstantLookupTable.STATSRECORDNAME), SCDisplay(Name = DocConstantLookupTable.STATSRECORDNAME)]
         STATSRECORDNAME = 41790206,
-        [EnumMember(Value = DocConstantLookupTable.STATUS)]
+        [EnumMember(Value = DocConstantLookupTable.STATUS), SCDescript(DocConstantLookupTable.STATUS), SSDescript(DocConstantLookupTable.STATUS), SCDisplay(Name = DocConstantLookupTable.STATUS)]
         STATUS = 21514033,
-        [EnumMember(Value = DocConstantLookupTable.STRATIFICATIONTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.STRATIFICATIONTYPE), SCDescript(DocConstantLookupTable.STRATIFICATIONTYPE), SSDescript(DocConstantLookupTable.STRATIFICATIONTYPE), SCDisplay(Name = DocConstantLookupTable.STRATIFICATIONTYPE)]
         STRATIFICATIONTYPE = 1867,
-        [EnumMember(Value = DocConstantLookupTable.STUDYALLOCATTIONMETHOD)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYALLOCATTIONMETHOD), SCDescript(DocConstantLookupTable.STUDYALLOCATTIONMETHOD), SSDescript(DocConstantLookupTable.STUDYALLOCATTIONMETHOD), SCDisplay(Name = DocConstantLookupTable.STUDYALLOCATTIONMETHOD)]
         STUDYALLOCATTIONMETHOD = 1872,
-        [EnumMember(Value = DocConstantLookupTable.STUDYBIAS)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYBIAS), SCDescript(DocConstantLookupTable.STUDYBIAS), SSDescript(DocConstantLookupTable.STUDYBIAS), SCDisplay(Name = DocConstantLookupTable.STUDYBIAS)]
         STUDYBIAS = 1877,
-        [EnumMember(Value = DocConstantLookupTable.STUDYBLINDINGMETHOD)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYBLINDINGMETHOD), SCDescript(DocConstantLookupTable.STUDYBLINDINGMETHOD), SSDescript(DocConstantLookupTable.STUDYBLINDINGMETHOD), SCDisplay(Name = DocConstantLookupTable.STUDYBLINDINGMETHOD)]
         STUDYBLINDINGMETHOD = 1882,
-        [EnumMember(Value = DocConstantLookupTable.STUDYCOMPLIANCE)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYCOMPLIANCE), SCDescript(DocConstantLookupTable.STUDYCOMPLIANCE), SSDescript(DocConstantLookupTable.STUDYCOMPLIANCE), SCDisplay(Name = DocConstantLookupTable.STUDYCOMPLIANCE)]
         STUDYCOMPLIANCE = 1887,
-        [EnumMember(Value = DocConstantLookupTable.STUDYDESIGN)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYDESIGN), SCDescript(DocConstantLookupTable.STUDYDESIGN), SSDescript(DocConstantLookupTable.STUDYDESIGN), SCDisplay(Name = DocConstantLookupTable.STUDYDESIGN)]
         STUDYDESIGN = 1892,
-        [EnumMember(Value = DocConstantLookupTable.STUDYDOCUMENTTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYDOCUMENTTYPE), SCDescript(DocConstantLookupTable.STUDYDOCUMENTTYPE), SSDescript(DocConstantLookupTable.STUDYDOCUMENTTYPE), SCDisplay(Name = DocConstantLookupTable.STUDYDOCUMENTTYPE)]
         STUDYDOCUMENTTYPE = 1897,
-        [EnumMember(Value = DocConstantLookupTable.STUDYFUNDING)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYFUNDING), SCDescript(DocConstantLookupTable.STUDYFUNDING), SSDescript(DocConstantLookupTable.STUDYFUNDING), SCDisplay(Name = DocConstantLookupTable.STUDYFUNDING)]
         STUDYFUNDING = 1902,
-        [EnumMember(Value = DocConstantLookupTable.STUDYGROUPTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYGROUPTYPE), SCDescript(DocConstantLookupTable.STUDYGROUPTYPE), SSDescript(DocConstantLookupTable.STUDYGROUPTYPE), SCDisplay(Name = DocConstantLookupTable.STUDYGROUPTYPE)]
         STUDYGROUPTYPE = 1912,
-        [EnumMember(Value = DocConstantLookupTable.STUDYIMPORTLOCATION)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYIMPORTLOCATION), SCDescript(DocConstantLookupTable.STUDYIMPORTLOCATION), SSDescript(DocConstantLookupTable.STUDYIMPORTLOCATION), SCDisplay(Name = DocConstantLookupTable.STUDYIMPORTLOCATION)]
         STUDYIMPORTLOCATION = 150784178,
-        [EnumMember(Value = DocConstantLookupTable.STUDYIMPORTTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYIMPORTTYPE), SCDescript(DocConstantLookupTable.STUDYIMPORTTYPE), SSDescript(DocConstantLookupTable.STUDYIMPORTTYPE), SCDisplay(Name = DocConstantLookupTable.STUDYIMPORTTYPE)]
         STUDYIMPORTTYPE = 1917,
-        [EnumMember(Value = DocConstantLookupTable.STUDYNGA)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYNGA), SCDescript(DocConstantLookupTable.STUDYNGA), SSDescript(DocConstantLookupTable.STUDYNGA), SCDisplay(Name = DocConstantLookupTable.STUDYNGA)]
         STUDYNGA = 1922,
-        [EnumMember(Value = DocConstantLookupTable.STUDYOBJECTIVE)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYOBJECTIVE), SCDescript(DocConstantLookupTable.STUDYOBJECTIVE), SSDescript(DocConstantLookupTable.STUDYOBJECTIVE), SCDisplay(Name = DocConstantLookupTable.STUDYOBJECTIVE)]
         STUDYOBJECTIVE = 1927,
-        [EnumMember(Value = DocConstantLookupTable.STUDYPHASENAMES)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYPHASENAMES), SCDescript(DocConstantLookupTable.STUDYPHASENAMES), SSDescript(DocConstantLookupTable.STUDYPHASENAMES), SCDisplay(Name = DocConstantLookupTable.STUDYPHASENAMES)]
         STUDYPHASENAMES = 1947,
-        [EnumMember(Value = DocConstantLookupTable.STUDYPURPOSE)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYPURPOSE), SCDescript(DocConstantLookupTable.STUDYPURPOSE), SSDescript(DocConstantLookupTable.STUDYPURPOSE), SCDisplay(Name = DocConstantLookupTable.STUDYPURPOSE)]
         STUDYPURPOSE = 1952,
-        [EnumMember(Value = DocConstantLookupTable.STUDYRANDOMIZATIONMETHOD)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYRANDOMIZATIONMETHOD), SCDescript(DocConstantLookupTable.STUDYRANDOMIZATIONMETHOD), SSDescript(DocConstantLookupTable.STUDYRANDOMIZATIONMETHOD), SCDisplay(Name = DocConstantLookupTable.STUDYRANDOMIZATIONMETHOD)]
         STUDYRANDOMIZATIONMETHOD = 1957,
-        [EnumMember(Value = DocConstantLookupTable.STUDYTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYTYPE), SCDescript(DocConstantLookupTable.STUDYTYPE), SSDescript(DocConstantLookupTable.STUDYTYPE), SCDisplay(Name = DocConstantLookupTable.STUDYTYPE)]
         STUDYTYPE = 1967,
-        [EnumMember(Value = DocConstantLookupTable.STUDYTYPEHARMETIOLOGY)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYTYPEHARMETIOLOGY), SCDescript(DocConstantLookupTable.STUDYTYPEHARMETIOLOGY), SSDescript(DocConstantLookupTable.STUDYTYPEHARMETIOLOGY), SCDisplay(Name = DocConstantLookupTable.STUDYTYPEHARMETIOLOGY)]
         STUDYTYPEHARMETIOLOGY = 1972,
-        [EnumMember(Value = DocConstantLookupTable.STUDYTYPETHERAPY)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYTYPETHERAPY), SCDescript(DocConstantLookupTable.STUDYTYPETHERAPY), SSDescript(DocConstantLookupTable.STUDYTYPETHERAPY), SCDisplay(Name = DocConstantLookupTable.STUDYTYPETHERAPY)]
         STUDYTYPETHERAPY = 1977,
-        [EnumMember(Value = DocConstantLookupTable.STUDYYEARS)]
+        [EnumMember(Value = DocConstantLookupTable.STUDYYEARS), SCDescript(DocConstantLookupTable.STUDYYEARS), SSDescript(DocConstantLookupTable.STUDYYEARS), SCDisplay(Name = DocConstantLookupTable.STUDYYEARS)]
         STUDYYEARS = 1982,
-        [EnumMember(Value = DocConstantLookupTable.TASKTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.TASKTYPE), SCDescript(DocConstantLookupTable.TASKTYPE), SSDescript(DocConstantLookupTable.TASKTYPE), SCDisplay(Name = DocConstantLookupTable.TASKTYPE)]
         TASKTYPE = 150785326,
-        [EnumMember(Value = DocConstantLookupTable.TERMCLASSIFICATION)]
+        [EnumMember(Value = DocConstantLookupTable.TERMCLASSIFICATION), SCDescript(DocConstantLookupTable.TERMCLASSIFICATION), SSDescript(DocConstantLookupTable.TERMCLASSIFICATION), SCDisplay(Name = DocConstantLookupTable.TERMCLASSIFICATION)]
         TERMCLASSIFICATION = 90640181,
-        [EnumMember(Value = DocConstantLookupTable.TERMSECTION)]
+        [EnumMember(Value = DocConstantLookupTable.TERMSECTION), SCDescript(DocConstantLookupTable.TERMSECTION), SSDescript(DocConstantLookupTable.TERMSECTION), SCDisplay(Name = DocConstantLookupTable.TERMSECTION)]
         TERMSECTION = 90640182,
-        [EnumMember(Value = DocConstantLookupTable.TIMECARDSTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.TIMECARDSTATUS), SCDescript(DocConstantLookupTable.TIMECARDSTATUS), SSDescript(DocConstantLookupTable.TIMECARDSTATUS), SCDisplay(Name = DocConstantLookupTable.TIMECARDSTATUS)]
         TIMECARDSTATUS = 90640183,
-        [EnumMember(Value = DocConstantLookupTable.TIMEPOINTTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.TIMEPOINTTYPE), SCDescript(DocConstantLookupTable.TIMEPOINTTYPE), SSDescript(DocConstantLookupTable.TIMEPOINTTYPE), SCDisplay(Name = DocConstantLookupTable.TIMEPOINTTYPE)]
         TIMEPOINTTYPE = 2007,
-        [EnumMember(Value = DocConstantLookupTable.UNITSOFMEASURE)]
+        [EnumMember(Value = DocConstantLookupTable.UNITSOFMEASURE), SCDescript(DocConstantLookupTable.UNITSOFMEASURE), SSDescript(DocConstantLookupTable.UNITSOFMEASURE), SCDisplay(Name = DocConstantLookupTable.UNITSOFMEASURE)]
         UNITSOFMEASURE = 2017,
-        [EnumMember(Value = DocConstantLookupTable.UNITTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.UNITTYPE), SCDescript(DocConstantLookupTable.UNITTYPE), SSDescript(DocConstantLookupTable.UNITTYPE), SCDisplay(Name = DocConstantLookupTable.UNITTYPE)]
         UNITTYPE = 2022,
-        [EnumMember(Value = DocConstantLookupTable.USEREMPLOYEETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.USEREMPLOYEETYPE), SCDescript(DocConstantLookupTable.USEREMPLOYEETYPE), SSDescript(DocConstantLookupTable.USEREMPLOYEETYPE), SCDisplay(Name = DocConstantLookupTable.USEREMPLOYEETYPE)]
         USEREMPLOYEETYPE = 90640184,
-        [EnumMember(Value = DocConstantLookupTable.USERPAYROLLSTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.USERPAYROLLSTATUS), SCDescript(DocConstantLookupTable.USERPAYROLLSTATUS), SSDescript(DocConstantLookupTable.USERPAYROLLSTATUS), SCDisplay(Name = DocConstantLookupTable.USERPAYROLLSTATUS)]
         USERPAYROLLSTATUS = 90640185,
-        [EnumMember(Value = DocConstantLookupTable.USERPAYROLLTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.USERPAYROLLTYPE), SCDescript(DocConstantLookupTable.USERPAYROLLTYPE), SSDescript(DocConstantLookupTable.USERPAYROLLTYPE), SCDisplay(Name = DocConstantLookupTable.USERPAYROLLTYPE)]
         USERPAYROLLTYPE = 90640186,
-        [EnumMember(Value = DocConstantLookupTable.USERTYPE)]
+        [EnumMember(Value = DocConstantLookupTable.USERTYPE), SCDescript(DocConstantLookupTable.USERTYPE), SSDescript(DocConstantLookupTable.USERTYPE), SCDisplay(Name = DocConstantLookupTable.USERTYPE)]
         USERTYPE = 2052,
-        [EnumMember(Value = DocConstantLookupTable.VALUESTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.VALUESTATUS), SCDescript(DocConstantLookupTable.VALUESTATUS), SSDescript(DocConstantLookupTable.VALUESTATUS), SCDisplay(Name = DocConstantLookupTable.VALUESTATUS)]
         VALUESTATUS = 2057,
-        [EnumMember(Value = DocConstantLookupTable.VALUETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.VALUETYPE), SCDescript(DocConstantLookupTable.VALUETYPE), SSDescript(DocConstantLookupTable.VALUETYPE), SCDisplay(Name = DocConstantLookupTable.VALUETYPE)]
         VALUETYPE = 2062,
-        [EnumMember(Value = DocConstantLookupTable.VARIABLERULE)]
+        [EnumMember(Value = DocConstantLookupTable.VARIABLERULE), SCDescript(DocConstantLookupTable.VARIABLERULE), SSDescript(DocConstantLookupTable.VARIABLERULE), SCDisplay(Name = DocConstantLookupTable.VARIABLERULE)]
         VARIABLERULE = 69422903,
-        [EnumMember(Value = DocConstantLookupTable.VARIABLETYPE)]
+        [EnumMember(Value = DocConstantLookupTable.VARIABLETYPE), SCDescript(DocConstantLookupTable.VARIABLETYPE), SSDescript(DocConstantLookupTable.VARIABLETYPE), SCDisplay(Name = DocConstantLookupTable.VARIABLETYPE)]
         VARIABLETYPE = 73104015,
-        [EnumMember(Value = DocConstantLookupTable.WORKFLOW)]
+        [EnumMember(Value = DocConstantLookupTable.WORKFLOW), SCDescript(DocConstantLookupTable.WORKFLOW), SSDescript(DocConstantLookupTable.WORKFLOW), SCDisplay(Name = DocConstantLookupTable.WORKFLOW)]
         WORKFLOW = 10483109,
-        [EnumMember(Value = DocConstantLookupTable.WORKFLOWSTATUS)]
+        [EnumMember(Value = DocConstantLookupTable.WORKFLOWSTATUS), SCDescript(DocConstantLookupTable.WORKFLOWSTATUS), SSDescript(DocConstantLookupTable.WORKFLOWSTATUS), SCDisplay(Name = DocConstantLookupTable.WORKFLOWSTATUS)]
         WORKFLOWSTATUS = 90640187,
-        [EnumMember(Value = DocConstantLookupTable.YESNONA)]
+        [EnumMember(Value = DocConstantLookupTable.YESNONA), SCDescript(DocConstantLookupTable.YESNONA), SSDescript(DocConstantLookupTable.YESNONA), SCDisplay(Name = DocConstantLookupTable.YESNONA)]
         YESNONA = 2067
     }
     
@@ -293,7 +272,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this LookupTableEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case LookupTableEnm.AMPERSONCOUNT:
                     return DocConstantLookupTable.AMPERSONCOUNT;
@@ -538,6 +517,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this LookupTableEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

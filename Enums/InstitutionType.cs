@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,42 +15,26 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum InstitutionTypeEnm
     {
-        [EnumMember(Value = DocConstantInstitutionType.ACADEMIC)]
+        [EnumMember(Value = DocConstantInstitutionType.ACADEMIC), SCDescript(DocConstantInstitutionType.ACADEMIC), SSDescript(DocConstantInstitutionType.ACADEMIC), SCDisplay(Name = DocConstantInstitutionType.ACADEMIC)]
         ACADEMIC = 1087,
-        [EnumMember(Value = DocConstantInstitutionType.COMMERCIAL)]
+        [EnumMember(Value = DocConstantInstitutionType.COMMERCIAL), SCDescript(DocConstantInstitutionType.COMMERCIAL), SSDescript(DocConstantInstitutionType.COMMERCIAL), SCDisplay(Name = DocConstantInstitutionType.COMMERCIAL)]
         COMMERCIAL = 1092,
-        [EnumMember(Value = DocConstantInstitutionType.NA)]
+        [EnumMember(Value = DocConstantInstitutionType.NA), SCDescript(DocConstantInstitutionType.NA), SSDescript(DocConstantInstitutionType.NA), SCDisplay(Name = DocConstantInstitutionType.NA)]
         NA = 1097,
-        [EnumMember(Value = DocConstantInstitutionType.NON_PROFIT)]
+        [EnumMember(Value = DocConstantInstitutionType.NON_PROFIT), SCDescript(DocConstantInstitutionType.NON_PROFIT), SSDescript(DocConstantInstitutionType.NON_PROFIT), SCDisplay(Name = DocConstantInstitutionType.NON_PROFIT)]
         NON_PROFIT = 1102,
-        [EnumMember(Value = DocConstantInstitutionType.UNKNOWN)]
+        [EnumMember(Value = DocConstantInstitutionType.UNKNOWN), SCDescript(DocConstantInstitutionType.UNKNOWN), SSDescript(DocConstantInstitutionType.UNKNOWN), SCDisplay(Name = DocConstantInstitutionType.UNKNOWN)]
         UNKNOWN = 1107
     }
     
@@ -63,7 +42,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this InstitutionTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case InstitutionTypeEnm.ACADEMIC:
                     return DocConstantInstitutionType.ACADEMIC;
@@ -78,6 +57,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this InstitutionTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

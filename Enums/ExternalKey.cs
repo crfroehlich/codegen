@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,44 +15,28 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ExternalKeyEnm
     {
-        [EnumMember(Value = DocConstantExternalKey.ATTRIBUTE_NAME_ID)]
+        [EnumMember(Value = DocConstantExternalKey.ATTRIBUTE_NAME_ID), SCDescript(DocConstantExternalKey.ATTRIBUTE_NAME_ID), SSDescript(DocConstantExternalKey.ATTRIBUTE_NAME_ID), SCDisplay(Name = DocConstantExternalKey.ATTRIBUTE_NAME_ID)]
         ATTRIBUTE_NAME_ID = 842,
-        [EnumMember(Value = DocConstantExternalKey.FILTER)]
+        [EnumMember(Value = DocConstantExternalKey.FILTER), SCDescript(DocConstantExternalKey.FILTER), SSDescript(DocConstantExternalKey.FILTER), SCDisplay(Name = DocConstantExternalKey.FILTER)]
         FILTER = 10483075,
-        [EnumMember(Value = DocConstantExternalKey.FRAMED_QUESTION_ID)]
+        [EnumMember(Value = DocConstantExternalKey.FRAMED_QUESTION_ID), SCDescript(DocConstantExternalKey.FRAMED_QUESTION_ID), SSDescript(DocConstantExternalKey.FRAMED_QUESTION_ID), SCDisplay(Name = DocConstantExternalKey.FRAMED_QUESTION_ID)]
         FRAMED_QUESTION_ID = 847,
-        [EnumMember(Value = DocConstantExternalKey.PROJECT)]
+        [EnumMember(Value = DocConstantExternalKey.PROJECT), SCDescript(DocConstantExternalKey.PROJECT), SSDescript(DocConstantExternalKey.PROJECT), SCDisplay(Name = DocConstantExternalKey.PROJECT)]
         PROJECT = 10483080,
-        [EnumMember(Value = DocConstantExternalKey.STUDY_DESIGN_ID)]
+        [EnumMember(Value = DocConstantExternalKey.STUDY_DESIGN_ID), SCDescript(DocConstantExternalKey.STUDY_DESIGN_ID), SSDescript(DocConstantExternalKey.STUDY_DESIGN_ID), SCDisplay(Name = DocConstantExternalKey.STUDY_DESIGN_ID)]
         STUDY_DESIGN_ID = 852,
-        [EnumMember(Value = DocConstantExternalKey.STUDY_TYPE_ID)]
+        [EnumMember(Value = DocConstantExternalKey.STUDY_TYPE_ID), SCDescript(DocConstantExternalKey.STUDY_TYPE_ID), SSDescript(DocConstantExternalKey.STUDY_TYPE_ID), SCDisplay(Name = DocConstantExternalKey.STUDY_TYPE_ID)]
         STUDY_TYPE_ID = 857
     }
     
@@ -65,7 +44,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ExternalKeyEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ExternalKeyEnm.ATTRIBUTE_NAME_ID:
                     return DocConstantExternalKey.ATTRIBUTE_NAME_ID;
@@ -82,6 +61,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ExternalKeyEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

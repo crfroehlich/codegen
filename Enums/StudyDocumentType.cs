@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,64 +15,48 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyDocumentTypeEnm
     {
-        [EnumMember(Value = DocConstantStudyDocumentType.CLINICAL_STUDY_REPORT)]
+        [EnumMember(Value = DocConstantStudyDocumentType.CLINICAL_STUDY_REPORT), SCDescript(DocConstantStudyDocumentType.CLINICAL_STUDY_REPORT), SSDescript(DocConstantStudyDocumentType.CLINICAL_STUDY_REPORT), SCDisplay(Name = DocConstantStudyDocumentType.CLINICAL_STUDY_REPORT)]
         CLINICAL_STUDY_REPORT = 3263,
-        [EnumMember(Value = DocConstantStudyDocumentType.CLINICAL_TRIALS_GOV)]
+        [EnumMember(Value = DocConstantStudyDocumentType.CLINICAL_TRIALS_GOV), SCDescript(DocConstantStudyDocumentType.CLINICAL_TRIALS_GOV), SSDescript(DocConstantStudyDocumentType.CLINICAL_TRIALS_GOV), SCDisplay(Name = DocConstantStudyDocumentType.CLINICAL_TRIALS_GOV)]
         CLINICAL_TRIALS_GOV = 3268,
-        [EnumMember(Value = DocConstantStudyDocumentType.DOC_DATA_DIRECT_META_ANALYSIS)]
+        [EnumMember(Value = DocConstantStudyDocumentType.DOC_DATA_DIRECT_META_ANALYSIS), SCDescript(DocConstantStudyDocumentType.DOC_DATA_DIRECT_META_ANALYSIS), SSDescript(DocConstantStudyDocumentType.DOC_DATA_DIRECT_META_ANALYSIS), SCDisplay(Name = DocConstantStudyDocumentType.DOC_DATA_DIRECT_META_ANALYSIS)]
         DOC_DATA_DIRECT_META_ANALYSIS = 3308,
-        [EnumMember(Value = DocConstantStudyDocumentType.FDA_ADVISORY_COMMITTEE_SUBMISSION)]
+        [EnumMember(Value = DocConstantStudyDocumentType.FDA_ADVISORY_COMMITTEE_SUBMISSION), SCDescript(DocConstantStudyDocumentType.FDA_ADVISORY_COMMITTEE_SUBMISSION), SSDescript(DocConstantStudyDocumentType.FDA_ADVISORY_COMMITTEE_SUBMISSION), SCDisplay(Name = DocConstantStudyDocumentType.FDA_ADVISORY_COMMITTEE_SUBMISSION)]
         FDA_ADVISORY_COMMITTEE_SUBMISSION = 3273,
-        [EnumMember(Value = DocConstantStudyDocumentType.FDA_APPROVAL_DOCUMENTS)]
+        [EnumMember(Value = DocConstantStudyDocumentType.FDA_APPROVAL_DOCUMENTS), SCDescript(DocConstantStudyDocumentType.FDA_APPROVAL_DOCUMENTS), SSDescript(DocConstantStudyDocumentType.FDA_APPROVAL_DOCUMENTS), SCDisplay(Name = DocConstantStudyDocumentType.FDA_APPROVAL_DOCUMENTS)]
         FDA_APPROVAL_DOCUMENTS = 3278,
-        [EnumMember(Value = DocConstantStudyDocumentType.GOVERNMENT_REPORT)]
+        [EnumMember(Value = DocConstantStudyDocumentType.GOVERNMENT_REPORT), SCDescript(DocConstantStudyDocumentType.GOVERNMENT_REPORT), SSDescript(DocConstantStudyDocumentType.GOVERNMENT_REPORT), SCDisplay(Name = DocConstantStudyDocumentType.GOVERNMENT_REPORT)]
         GOVERNMENT_REPORT = 3283,
-        [EnumMember(Value = DocConstantStudyDocumentType.GUIDELINE)]
+        [EnumMember(Value = DocConstantStudyDocumentType.GUIDELINE), SCDescript(DocConstantStudyDocumentType.GUIDELINE), SSDescript(DocConstantStudyDocumentType.GUIDELINE), SCDisplay(Name = DocConstantStudyDocumentType.GUIDELINE)]
         GUIDELINE = 3288,
-        [EnumMember(Value = DocConstantStudyDocumentType.JOURNAL_ARTICLE)]
+        [EnumMember(Value = DocConstantStudyDocumentType.JOURNAL_ARTICLE), SCDescript(DocConstantStudyDocumentType.JOURNAL_ARTICLE), SSDescript(DocConstantStudyDocumentType.JOURNAL_ARTICLE), SCDisplay(Name = DocConstantStudyDocumentType.JOURNAL_ARTICLE)]
         JOURNAL_ARTICLE = 3293,
-        [EnumMember(Value = DocConstantStudyDocumentType.LETTER_TO_THE_EDITOR)]
+        [EnumMember(Value = DocConstantStudyDocumentType.LETTER_TO_THE_EDITOR), SCDescript(DocConstantStudyDocumentType.LETTER_TO_THE_EDITOR), SSDescript(DocConstantStudyDocumentType.LETTER_TO_THE_EDITOR), SCDisplay(Name = DocConstantStudyDocumentType.LETTER_TO_THE_EDITOR)]
         LETTER_TO_THE_EDITOR = 3298,
-        [EnumMember(Value = DocConstantStudyDocumentType.MEETING_ABSTRACT)]
+        [EnumMember(Value = DocConstantStudyDocumentType.MEETING_ABSTRACT), SCDescript(DocConstantStudyDocumentType.MEETING_ABSTRACT), SSDescript(DocConstantStudyDocumentType.MEETING_ABSTRACT), SCDisplay(Name = DocConstantStudyDocumentType.MEETING_ABSTRACT)]
         MEETING_ABSTRACT = 3303,
-        [EnumMember(Value = DocConstantStudyDocumentType.POSTER)]
+        [EnumMember(Value = DocConstantStudyDocumentType.POSTER), SCDescript(DocConstantStudyDocumentType.POSTER), SSDescript(DocConstantStudyDocumentType.POSTER), SCDisplay(Name = DocConstantStudyDocumentType.POSTER)]
         POSTER = 3313,
-        [EnumMember(Value = DocConstantStudyDocumentType.POWER_POINT)]
+        [EnumMember(Value = DocConstantStudyDocumentType.POWER_POINT), SCDescript(DocConstantStudyDocumentType.POWER_POINT), SSDescript(DocConstantStudyDocumentType.POWER_POINT), SCDisplay(Name = DocConstantStudyDocumentType.POWER_POINT)]
         POWER_POINT = 3318,
-        [EnumMember(Value = DocConstantStudyDocumentType.PRESS_RELEASE)]
+        [EnumMember(Value = DocConstantStudyDocumentType.PRESS_RELEASE), SCDescript(DocConstantStudyDocumentType.PRESS_RELEASE), SSDescript(DocConstantStudyDocumentType.PRESS_RELEASE), SCDisplay(Name = DocConstantStudyDocumentType.PRESS_RELEASE)]
         PRESS_RELEASE = 3323,
-        [EnumMember(Value = DocConstantStudyDocumentType.REVIEW)]
+        [EnumMember(Value = DocConstantStudyDocumentType.REVIEW), SCDescript(DocConstantStudyDocumentType.REVIEW), SSDescript(DocConstantStudyDocumentType.REVIEW), SCDisplay(Name = DocConstantStudyDocumentType.REVIEW)]
         REVIEW = 3328,
-        [EnumMember(Value = DocConstantStudyDocumentType.SYSTEMATIC_REVIEW_META_ANALYSIS)]
+        [EnumMember(Value = DocConstantStudyDocumentType.SYSTEMATIC_REVIEW_META_ANALYSIS), SCDescript(DocConstantStudyDocumentType.SYSTEMATIC_REVIEW_META_ANALYSIS), SSDescript(DocConstantStudyDocumentType.SYSTEMATIC_REVIEW_META_ANALYSIS), SCDisplay(Name = DocConstantStudyDocumentType.SYSTEMATIC_REVIEW_META_ANALYSIS)]
         SYSTEMATIC_REVIEW_META_ANALYSIS = 3333,
-        [EnumMember(Value = DocConstantStudyDocumentType.THESIS)]
+        [EnumMember(Value = DocConstantStudyDocumentType.THESIS), SCDescript(DocConstantStudyDocumentType.THESIS), SSDescript(DocConstantStudyDocumentType.THESIS), SCDisplay(Name = DocConstantStudyDocumentType.THESIS)]
         THESIS = 3338
     }
     
@@ -85,7 +64,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyDocumentTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyDocumentTypeEnm.CLINICAL_STUDY_REPORT:
                     return DocConstantStudyDocumentType.CLINICAL_STUDY_REPORT;
@@ -122,6 +101,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyDocumentTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,40 +15,24 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum StudyImportLocationEnm
     {
-        [EnumMember(Value = DocConstantStudyImportLocation.DEFAULT)]
+        [EnumMember(Value = DocConstantStudyImportLocation.DEFAULT), SCDescript(DocConstantStudyImportLocation.DEFAULT), SSDescript(DocConstantStudyImportLocation.DEFAULT), SCDisplay(Name = DocConstantStudyImportLocation.DEFAULT)]
         DEFAULT = 150784189,
-        [EnumMember(Value = DocConstantStudyImportLocation.DOCDATA)]
+        [EnumMember(Value = DocConstantStudyImportLocation.DOCDATA), SCDescript(DocConstantStudyImportLocation.DOCDATA), SSDescript(DocConstantStudyImportLocation.DOCDATA), SCDisplay(Name = DocConstantStudyImportLocation.DOCDATA)]
         DOCDATA = 150784190,
-        [EnumMember(Value = DocConstantStudyImportLocation.EXTRACT)]
+        [EnumMember(Value = DocConstantStudyImportLocation.EXTRACT), SCDescript(DocConstantStudyImportLocation.EXTRACT), SSDescript(DocConstantStudyImportLocation.EXTRACT), SCDisplay(Name = DocConstantStudyImportLocation.EXTRACT)]
         EXTRACT = 150784191,
-        [EnumMember(Value = DocConstantStudyImportLocation.IMPORT_DATA)]
+        [EnumMember(Value = DocConstantStudyImportLocation.IMPORT_DATA), SCDescript(DocConstantStudyImportLocation.IMPORT_DATA), SSDescript(DocConstantStudyImportLocation.IMPORT_DATA), SCDisplay(Name = DocConstantStudyImportLocation.IMPORT_DATA)]
         IMPORT_DATA = 150784192
     }
     
@@ -61,7 +40,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this StudyImportLocationEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case StudyImportLocationEnm.DEFAULT:
                     return DocConstantStudyImportLocation.DEFAULT;
@@ -74,6 +53,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this StudyImportLocationEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

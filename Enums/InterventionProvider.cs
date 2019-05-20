@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,74 +15,58 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum InterventionProviderEnm
     {
-        [EnumMember(Value = DocConstantInterventionProvider.ALLIED_HEALTH_CARE_PROVIDER)]
+        [EnumMember(Value = DocConstantInterventionProvider.ALLIED_HEALTH_CARE_PROVIDER), SCDescript(DocConstantInterventionProvider.ALLIED_HEALTH_CARE_PROVIDER), SSDescript(DocConstantInterventionProvider.ALLIED_HEALTH_CARE_PROVIDER), SCDisplay(Name = DocConstantInterventionProvider.ALLIED_HEALTH_CARE_PROVIDER)]
         ALLIED_HEALTH_CARE_PROVIDER = 1167,
-        [EnumMember(Value = DocConstantInterventionProvider.CARE_PROVIDER)]
+        [EnumMember(Value = DocConstantInterventionProvider.CARE_PROVIDER), SCDescript(DocConstantInterventionProvider.CARE_PROVIDER), SSDescript(DocConstantInterventionProvider.CARE_PROVIDER), SCDisplay(Name = DocConstantInterventionProvider.CARE_PROVIDER)]
         CARE_PROVIDER = 1172,
-        [EnumMember(Value = DocConstantInterventionProvider.CLINICIAN)]
+        [EnumMember(Value = DocConstantInterventionProvider.CLINICIAN), SCDescript(DocConstantInterventionProvider.CLINICIAN), SSDescript(DocConstantInterventionProvider.CLINICIAN), SCDisplay(Name = DocConstantInterventionProvider.CLINICIAN)]
         CLINICIAN = 1177,
-        [EnumMember(Value = DocConstantInterventionProvider.DOCTOR)]
+        [EnumMember(Value = DocConstantInterventionProvider.DOCTOR), SCDescript(DocConstantInterventionProvider.DOCTOR), SSDescript(DocConstantInterventionProvider.DOCTOR), SCDisplay(Name = DocConstantInterventionProvider.DOCTOR)]
         DOCTOR = 1182,
-        [EnumMember(Value = DocConstantInterventionProvider.DOCTORAL_STUDENT)]
+        [EnumMember(Value = DocConstantInterventionProvider.DOCTORAL_STUDENT), SCDescript(DocConstantInterventionProvider.DOCTORAL_STUDENT), SSDescript(DocConstantInterventionProvider.DOCTORAL_STUDENT), SCDisplay(Name = DocConstantInterventionProvider.DOCTORAL_STUDENT)]
         DOCTORAL_STUDENT = 1187,
-        [EnumMember(Value = DocConstantInterventionProvider.FOSTER_PARENT)]
+        [EnumMember(Value = DocConstantInterventionProvider.FOSTER_PARENT), SCDescript(DocConstantInterventionProvider.FOSTER_PARENT), SSDescript(DocConstantInterventionProvider.FOSTER_PARENT), SCDisplay(Name = DocConstantInterventionProvider.FOSTER_PARENT)]
         FOSTER_PARENT = 1192,
-        [EnumMember(Value = DocConstantInterventionProvider.GENERAL_PRACTICIONER)]
+        [EnumMember(Value = DocConstantInterventionProvider.GENERAL_PRACTICIONER), SCDescript(DocConstantInterventionProvider.GENERAL_PRACTICIONER), SSDescript(DocConstantInterventionProvider.GENERAL_PRACTICIONER), SCDisplay(Name = DocConstantInterventionProvider.GENERAL_PRACTICIONER)]
         GENERAL_PRACTICIONER = 1197,
-        [EnumMember(Value = DocConstantInterventionProvider.GRADUATE_STUDENT)]
+        [EnumMember(Value = DocConstantInterventionProvider.GRADUATE_STUDENT), SCDescript(DocConstantInterventionProvider.GRADUATE_STUDENT), SSDescript(DocConstantInterventionProvider.GRADUATE_STUDENT), SCDisplay(Name = DocConstantInterventionProvider.GRADUATE_STUDENT)]
         GRADUATE_STUDENT = 1202,
-        [EnumMember(Value = DocConstantInterventionProvider.MULTIPLE_INDIVIDUALS)]
+        [EnumMember(Value = DocConstantInterventionProvider.MULTIPLE_INDIVIDUALS), SCDescript(DocConstantInterventionProvider.MULTIPLE_INDIVIDUALS), SSDescript(DocConstantInterventionProvider.MULTIPLE_INDIVIDUALS), SCDisplay(Name = DocConstantInterventionProvider.MULTIPLE_INDIVIDUALS)]
         MULTIPLE_INDIVIDUALS = 1207,
-        [EnumMember(Value = DocConstantInterventionProvider.N_A)]
+        [EnumMember(Value = DocConstantInterventionProvider.N_A), SCDescript(DocConstantInterventionProvider.N_A), SSDescript(DocConstantInterventionProvider.N_A), SCDisplay(Name = DocConstantInterventionProvider.N_A)]
         N_A = 1212,
-        [EnumMember(Value = DocConstantInterventionProvider.NR)]
+        [EnumMember(Value = DocConstantInterventionProvider.NR), SCDescript(DocConstantInterventionProvider.NR), SSDescript(DocConstantInterventionProvider.NR), SCDisplay(Name = DocConstantInterventionProvider.NR)]
         NR = 1217,
-        [EnumMember(Value = DocConstantInterventionProvider.NURSE)]
+        [EnumMember(Value = DocConstantInterventionProvider.NURSE), SCDescript(DocConstantInterventionProvider.NURSE), SSDescript(DocConstantInterventionProvider.NURSE), SCDisplay(Name = DocConstantInterventionProvider.NURSE)]
         NURSE = 1222,
-        [EnumMember(Value = DocConstantInterventionProvider.PAID_CAREGIVER)]
+        [EnumMember(Value = DocConstantInterventionProvider.PAID_CAREGIVER), SCDescript(DocConstantInterventionProvider.PAID_CAREGIVER), SSDescript(DocConstantInterventionProvider.PAID_CAREGIVER), SCDisplay(Name = DocConstantInterventionProvider.PAID_CAREGIVER)]
         PAID_CAREGIVER = 1227,
-        [EnumMember(Value = DocConstantInterventionProvider.PHARMACIST)]
+        [EnumMember(Value = DocConstantInterventionProvider.PHARMACIST), SCDescript(DocConstantInterventionProvider.PHARMACIST), SSDescript(DocConstantInterventionProvider.PHARMACIST), SCDisplay(Name = DocConstantInterventionProvider.PHARMACIST)]
         PHARMACIST = 1232,
-        [EnumMember(Value = DocConstantInterventionProvider.PSYCHIATRIST)]
+        [EnumMember(Value = DocConstantInterventionProvider.PSYCHIATRIST), SCDescript(DocConstantInterventionProvider.PSYCHIATRIST), SSDescript(DocConstantInterventionProvider.PSYCHIATRIST), SCDisplay(Name = DocConstantInterventionProvider.PSYCHIATRIST)]
         PSYCHIATRIST = 1237,
-        [EnumMember(Value = DocConstantInterventionProvider.PSYCHOLOGIST)]
+        [EnumMember(Value = DocConstantInterventionProvider.PSYCHOLOGIST), SCDescript(DocConstantInterventionProvider.PSYCHOLOGIST), SSDescript(DocConstantInterventionProvider.PSYCHOLOGIST), SCDisplay(Name = DocConstantInterventionProvider.PSYCHOLOGIST)]
         PSYCHOLOGIST = 1242,
-        [EnumMember(Value = DocConstantInterventionProvider.SELF)]
+        [EnumMember(Value = DocConstantInterventionProvider.SELF), SCDescript(DocConstantInterventionProvider.SELF), SSDescript(DocConstantInterventionProvider.SELF), SCDisplay(Name = DocConstantInterventionProvider.SELF)]
         SELF = 1247,
-        [EnumMember(Value = DocConstantInterventionProvider.TEACHER)]
+        [EnumMember(Value = DocConstantInterventionProvider.TEACHER), SCDescript(DocConstantInterventionProvider.TEACHER), SSDescript(DocConstantInterventionProvider.TEACHER), SCDisplay(Name = DocConstantInterventionProvider.TEACHER)]
         TEACHER = 1252,
-        [EnumMember(Value = DocConstantInterventionProvider.TEAM)]
+        [EnumMember(Value = DocConstantInterventionProvider.TEAM), SCDescript(DocConstantInterventionProvider.TEAM), SSDescript(DocConstantInterventionProvider.TEAM), SCDisplay(Name = DocConstantInterventionProvider.TEAM)]
         TEAM = 1257,
-        [EnumMember(Value = DocConstantInterventionProvider.THERAPIST)]
+        [EnumMember(Value = DocConstantInterventionProvider.THERAPIST), SCDescript(DocConstantInterventionProvider.THERAPIST), SSDescript(DocConstantInterventionProvider.THERAPIST), SCDisplay(Name = DocConstantInterventionProvider.THERAPIST)]
         THERAPIST = 1262,
-        [EnumMember(Value = DocConstantInterventionProvider.UNPAID_CAREGIVER)]
+        [EnumMember(Value = DocConstantInterventionProvider.UNPAID_CAREGIVER), SCDescript(DocConstantInterventionProvider.UNPAID_CAREGIVER), SSDescript(DocConstantInterventionProvider.UNPAID_CAREGIVER), SCDisplay(Name = DocConstantInterventionProvider.UNPAID_CAREGIVER)]
         UNPAID_CAREGIVER = 1267
     }
     
@@ -95,7 +74,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this InterventionProviderEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case InterventionProviderEnm.ALLIED_HEALTH_CARE_PROVIDER:
                     return DocConstantInterventionProvider.ALLIED_HEALTH_CARE_PROVIDER;
@@ -142,6 +121,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this InterventionProviderEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

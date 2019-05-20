@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,44 +15,28 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DocumentSetTypeEnm
     {
-        [EnumMember(Value = DocConstantDocumentSetType.DATA_SET)]
+        [EnumMember(Value = DocConstantDocumentSetType.DATA_SET), SCDescript(DocConstantDocumentSetType.DATA_SET), SSDescript(DocConstantDocumentSetType.DATA_SET), SCDisplay(Name = DocConstantDocumentSetType.DATA_SET)]
         DATA_SET = 41789739,
-        [EnumMember(Value = DocConstantDocumentSetType.DISEASE_STATE)]
+        [EnumMember(Value = DocConstantDocumentSetType.DISEASE_STATE), SCDescript(DocConstantDocumentSetType.DISEASE_STATE), SSDescript(DocConstantDocumentSetType.DISEASE_STATE), SCDisplay(Name = DocConstantDocumentSetType.DISEASE_STATE)]
         DISEASE_STATE = 41790593,
-        [EnumMember(Value = DocConstantDocumentSetType.GLOBAL)]
+        [EnumMember(Value = DocConstantDocumentSetType.GLOBAL), SCDescript(DocConstantDocumentSetType.GLOBAL), SSDescript(DocConstantDocumentSetType.GLOBAL), SCDisplay(Name = DocConstantDocumentSetType.GLOBAL)]
         GLOBAL = 41790600,
-        [EnumMember(Value = DocConstantDocumentSetType.LIBRARY)]
+        [EnumMember(Value = DocConstantDocumentSetType.LIBRARY), SCDescript(DocConstantDocumentSetType.LIBRARY), SSDescript(DocConstantDocumentSetType.LIBRARY), SCDisplay(Name = DocConstantDocumentSetType.LIBRARY)]
         LIBRARY = 150784620,
-        [EnumMember(Value = DocConstantDocumentSetType.SERVE_PORTAL)]
+        [EnumMember(Value = DocConstantDocumentSetType.SERVE_PORTAL), SCDescript(DocConstantDocumentSetType.SERVE_PORTAL), SSDescript(DocConstantDocumentSetType.SERVE_PORTAL), SCDisplay(Name = DocConstantDocumentSetType.SERVE_PORTAL)]
         SERVE_PORTAL = 146157828,
-        [EnumMember(Value = DocConstantDocumentSetType.THERAPEUTIC_AREA)]
+        [EnumMember(Value = DocConstantDocumentSetType.THERAPEUTIC_AREA), SCDescript(DocConstantDocumentSetType.THERAPEUTIC_AREA), SSDescript(DocConstantDocumentSetType.THERAPEUTIC_AREA), SCDisplay(Name = DocConstantDocumentSetType.THERAPEUTIC_AREA)]
         THERAPEUTIC_AREA = 41790607
     }
     
@@ -65,7 +44,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this DocumentSetTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case DocumentSetTypeEnm.DATA_SET:
                     return DocConstantDocumentSetType.DATA_SET;
@@ -82,6 +61,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this DocumentSetTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

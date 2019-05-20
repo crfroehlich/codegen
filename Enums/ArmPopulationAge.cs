@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,44 +15,28 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ArmPopulationAgeEnm
     {
-        [EnumMember(Value = DocConstantArmPopulationAge.MEAN_RANGE)]
+        [EnumMember(Value = DocConstantArmPopulationAge.MEAN_RANGE), SCDescript(DocConstantArmPopulationAge.MEAN_RANGE), SSDescript(DocConstantArmPopulationAge.MEAN_RANGE), SCDisplay(Name = DocConstantArmPopulationAge.MEAN_RANGE)]
         MEAN_RANGE = 153,
-        [EnumMember(Value = DocConstantArmPopulationAge.MEAN_SD)]
+        [EnumMember(Value = DocConstantArmPopulationAge.MEAN_SD), SCDescript(DocConstantArmPopulationAge.MEAN_SD), SSDescript(DocConstantArmPopulationAge.MEAN_SD), SCDisplay(Name = DocConstantArmPopulationAge.MEAN_SD)]
         MEAN_SD = 158,
-        [EnumMember(Value = DocConstantArmPopulationAge.MEAN_SE)]
+        [EnumMember(Value = DocConstantArmPopulationAge.MEAN_SE), SCDescript(DocConstantArmPopulationAge.MEAN_SE), SSDescript(DocConstantArmPopulationAge.MEAN_SE), SCDisplay(Name = DocConstantArmPopulationAge.MEAN_SE)]
         MEAN_SE = 163,
-        [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_RANGE)]
+        [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_RANGE), SCDescript(DocConstantArmPopulationAge.MEDIAN_RANGE), SSDescript(DocConstantArmPopulationAge.MEDIAN_RANGE), SCDisplay(Name = DocConstantArmPopulationAge.MEDIAN_RANGE)]
         MEDIAN_RANGE = 168,
-        [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_SD)]
+        [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_SD), SCDescript(DocConstantArmPopulationAge.MEDIAN_SD), SSDescript(DocConstantArmPopulationAge.MEDIAN_SD), SCDisplay(Name = DocConstantArmPopulationAge.MEDIAN_SD)]
         MEDIAN_SD = 173,
-        [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_SE)]
+        [EnumMember(Value = DocConstantArmPopulationAge.MEDIAN_SE), SCDescript(DocConstantArmPopulationAge.MEDIAN_SE), SSDescript(DocConstantArmPopulationAge.MEDIAN_SE), SCDisplay(Name = DocConstantArmPopulationAge.MEDIAN_SE)]
         MEDIAN_SE = 178
     }
     
@@ -65,7 +44,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ArmPopulationAgeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ArmPopulationAgeEnm.MEAN_RANGE:
                     return DocConstantArmPopulationAge.MEAN_RANGE;
@@ -82,6 +61,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ArmPopulationAgeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

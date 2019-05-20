@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,46 +15,30 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum ScopeEnm
     {
-        [EnumMember(Value = DocConstantScope.APP)]
+        [EnumMember(Value = DocConstantScope.APP), SCDescript(DocConstantScope.APP), SSDescript(DocConstantScope.APP), SCDisplay(Name = DocConstantScope.APP)]
         APP = 76351785,
-        [EnumMember(Value = DocConstantScope.CLIENT)]
+        [EnumMember(Value = DocConstantScope.CLIENT), SCDescript(DocConstantScope.CLIENT), SSDescript(DocConstantScope.CLIENT), SCDisplay(Name = DocConstantScope.CLIENT)]
         CLIENT = 67058051,
-        [EnumMember(Value = DocConstantScope.COMPOUND)]
+        [EnumMember(Value = DocConstantScope.COMPOUND), SCDescript(DocConstantScope.COMPOUND), SSDescript(DocConstantScope.COMPOUND), SCDisplay(Name = DocConstantScope.COMPOUND)]
         COMPOUND = 76351620,
-        [EnumMember(Value = DocConstantScope.DOCUMENTSET)]
+        [EnumMember(Value = DocConstantScope.DOCUMENTSET), SCDescript(DocConstantScope.DOCUMENTSET), SSDescript(DocConstantScope.DOCUMENTSET), SCDisplay(Name = DocConstantScope.DOCUMENTSET)]
         DOCUMENTSET = 67058052,
-        [EnumMember(Value = DocConstantScope.GLOBAL)]
+        [EnumMember(Value = DocConstantScope.GLOBAL), SCDescript(DocConstantScope.GLOBAL), SSDescript(DocConstantScope.GLOBAL), SCDisplay(Name = DocConstantScope.GLOBAL)]
         GLOBAL = 76351784,
-        [EnumMember(Value = DocConstantScope.TEAM)]
+        [EnumMember(Value = DocConstantScope.TEAM), SCDescript(DocConstantScope.TEAM), SSDescript(DocConstantScope.TEAM), SCDisplay(Name = DocConstantScope.TEAM)]
         TEAM = 76351786,
-        [EnumMember(Value = DocConstantScope.USER)]
+        [EnumMember(Value = DocConstantScope.USER), SCDescript(DocConstantScope.USER), SSDescript(DocConstantScope.USER), SCDisplay(Name = DocConstantScope.USER)]
         USER = 67058050
     }
     
@@ -67,7 +46,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this ScopeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case ScopeEnm.APP:
                     return DocConstantScope.APP;
@@ -86,6 +65,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this ScopeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 

@@ -4,15 +4,10 @@
 //    All other changes to this file will cause incorrect behavior and will be lost when the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-using AutoMapper;
-
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Linq.Expressions;
-using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -20,48 +15,32 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 using Services.Core;
-using Services.Db;
-using Services.Dto;
-using Services.Dto.internals;
-using Services.Dto.Security;
-using Services.Enums;
-using Services.Models;
-using Services.Schema;
 
 using ServiceStack;
-using ServiceStack.Text;
 
-using Typed;
-using Typed.Bindings;
-using Typed.Notifications;
-using Typed.Settings;
-
-using Xtensive.Orm;
-using Xtensive.Orm.Model;
-
-using Attribute = Services.Dto.Attribute;
-using ValueType = Services.Dto.ValueType;
-using Version = Services.Dto.Version;
+using SCDescript = System.ComponentModel.DescriptionAttribute;
+using SCDisplay = System.ComponentModel.DataAnnotations.DisplayAttribute;
+using SSDescript = ServiceStack.DataAnnotations.DescriptionAttribute;
 namespace Services.Enums
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum MeanRangeTypeEnm
     {
-        [EnumMember(Value = DocConstantMeanRangeType.CI)]
+        [EnumMember(Value = DocConstantMeanRangeType.CI), SCDescript(DocConstantMeanRangeType.CI), SSDescript(DocConstantMeanRangeType.CI), SCDisplay(Name = DocConstantMeanRangeType.CI)]
         CI = 2097,
-        [EnumMember(Value = DocConstantMeanRangeType.IQR)]
+        [EnumMember(Value = DocConstantMeanRangeType.IQR), SCDescript(DocConstantMeanRangeType.IQR), SSDescript(DocConstantMeanRangeType.IQR), SCDisplay(Name = DocConstantMeanRangeType.IQR)]
         IQR = 2102,
-        [EnumMember(Value = DocConstantMeanRangeType.PERCENTILE)]
+        [EnumMember(Value = DocConstantMeanRangeType.PERCENTILE), SCDescript(DocConstantMeanRangeType.PERCENTILE), SSDescript(DocConstantMeanRangeType.PERCENTILE), SCDisplay(Name = DocConstantMeanRangeType.PERCENTILE)]
         PERCENTILE = 2107,
-        [EnumMember(Value = DocConstantMeanRangeType.TOTAL)]
+        [EnumMember(Value = DocConstantMeanRangeType.TOTAL), SCDescript(DocConstantMeanRangeType.TOTAL), SSDescript(DocConstantMeanRangeType.TOTAL), SCDisplay(Name = DocConstantMeanRangeType.TOTAL)]
         TOTAL = 2112,
-        [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_CI)]
+        [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_CI), SCDescript(DocConstantMeanRangeType.VARIANCE_CI), SSDescript(DocConstantMeanRangeType.VARIANCE_CI), SCDisplay(Name = DocConstantMeanRangeType.VARIANCE_CI)]
         VARIANCE_CI = 2117,
-        [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_IQR)]
+        [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_IQR), SCDescript(DocConstantMeanRangeType.VARIANCE_IQR), SSDescript(DocConstantMeanRangeType.VARIANCE_IQR), SCDisplay(Name = DocConstantMeanRangeType.VARIANCE_IQR)]
         VARIANCE_IQR = 2122,
-        [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_PERCENTILE)]
+        [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_PERCENTILE), SCDescript(DocConstantMeanRangeType.VARIANCE_PERCENTILE), SSDescript(DocConstantMeanRangeType.VARIANCE_PERCENTILE), SCDisplay(Name = DocConstantMeanRangeType.VARIANCE_PERCENTILE)]
         VARIANCE_PERCENTILE = 2127,
-        [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_TOTAL)]
+        [EnumMember(Value = DocConstantMeanRangeType.VARIANCE_TOTAL), SCDescript(DocConstantMeanRangeType.VARIANCE_TOTAL), SSDescript(DocConstantMeanRangeType.VARIANCE_TOTAL), SCDisplay(Name = DocConstantMeanRangeType.VARIANCE_TOTAL)]
         VARIANCE_TOTAL = 2132
     }
     
@@ -69,7 +48,7 @@ namespace Services.Enums
     {
         public static string ToEnumString(this MeanRangeTypeEnm instance)
         {
-            switch(instance) 
+            switch(instance)
             {
                 case MeanRangeTypeEnm.CI:
                     return DocConstantMeanRangeType.CI;
@@ -90,6 +69,12 @@ namespace Services.Enums
                 default:
                     return string.Empty;
             }
+        }
+
+        public static string ToEnumString(this MeanRangeTypeEnm? instance)
+        {
+            if(null == instance) return string.Empty;
+            return instance.Value.ToEnumString();
         }
     }
 
