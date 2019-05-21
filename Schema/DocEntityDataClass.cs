@@ -87,6 +87,10 @@ namespace Services.Schema
         public bool AllSelectByDefault { get; set; }
 
 
+        [Field]
+        public ModelNameEnm? Base { get; set; }
+
+
         [Field(Nullable = false, DefaultValue = 5)]
         public int CacheDuration { get; set; }
 

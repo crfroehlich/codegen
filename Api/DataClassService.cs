@@ -90,6 +90,8 @@ namespace Services.API
                     if(request.AllSelectByDefault.Any(v => v == null)) entities = entities.Where(en => en.AllSelectByDefault.In(request.AllSelectByDefault) || en.AllSelectByDefault == null);
                     else entities = entities.Where(en => en.AllSelectByDefault.In(request.AllSelectByDefault));
                 }
+                if(request.Base.HasValue)
+                    entities = entities.Where(en => request.Base.Value == en.Base);
                 if(request.CacheDuration.HasValue)
                     entities = entities.Where(en => request.CacheDuration.Value == en.CacheDuration);
                 if(request.ClassId.HasValue)
@@ -201,6 +203,7 @@ namespace Services.API
             //First, assign all the variables, do database lookups and conversions
             var pAllowDelete = request.AllowDelete;
             var pAllSelectByDefault = request.AllSelectByDefault;
+            var pBase = request.Base;
             var pCacheDuration = request.CacheDuration;
             var pClassId = request.ClassId;
             var pCustomCollections = request.CustomCollections?.ToList();
@@ -271,6 +274,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<bool>(request, pAllSelectByDefault, nameof(request.AllSelectByDefault)) && !request.Select.Matches(nameof(request.AllSelectByDefault), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.AllSelectByDefault));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<ModelNameEnm?>(currentUser, request, pBase, permission, DocConstantModelName.DATACLASS, nameof(request.Base)))
+            {
+                if(DocPermissionFactory.IsRequested(request, (int?) pBase, (int?) entity.Base, nameof(request.Base)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATACLASS, nameof(request.Base)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Base)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pBase) && DocResources.Metadata.IsRequired(DocConstantModelName.DATACLASS, nameof(request.Base))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Base)} requires a value.");
+                    entity.Base = pBase;
+                if(DocPermissionFactory.IsRequested<ModelNameEnm?>(request, pBase, nameof(request.Base)) && !request.Select.Matches(nameof(request.Base), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Base));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pCacheDuration, permission, DocConstantModelName.DATACLASS, nameof(request.CacheDuration)))

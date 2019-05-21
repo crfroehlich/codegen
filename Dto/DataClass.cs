@@ -34,10 +34,11 @@ namespace Services.Dto
 
         public DataClassBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public DataClassBase(int? pId, bool pAllowDelete, bool pAllSelectByDefault, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : this(DocConvert.ToInt(pId)) 
+        public DataClassBase(int? pId, bool pAllowDelete, bool pAllSelectByDefault, ModelNameEnm? pBase, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : this(DocConvert.ToInt(pId)) 
         {
             AllowDelete = pAllowDelete;
             AllSelectByDefault = pAllSelectByDefault;
+            Base = pBase;
             CacheDuration = pCacheDuration;
             ClassId = pClassId;
             CustomCollections = pCustomCollections;
@@ -69,6 +70,11 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(AllSelectByDefault), Description = "bool", IsRequired = false)]
         public bool AllSelectByDefault { get; set; }
+
+
+        [ApiAllowableValues("Includes", Values = new string[] {@"AdjudicatedRating",@"App",@"Attribute",@"AttributeInterval",@"AuditDelta",@"AuditRecord",@"BackgroundTask",@"BackgroundTaskHistory",@"BackgroundTaskItem",@"Broadcast",@"Client",@"Comment",@"DatabaseVersion",@"DataClass",@"DataProperty",@"DataSet",@"DataTab",@"DateTime",@"Default",@"DiseaseStateSet",@"Division",@"Document",@"DocumentSet",@"DocumentSetHistory",@"Entities",@"EoD",@"Event",@"Favorite",@"FeatureSet",@"Glossary",@"Help",@"History",@"Impersonation",@"ImportData",@"Interval",@"Junction",@"LibrarySet",@"Locale",@"LocaleLookup",@"LookupCategory",@"LookupTable",@"LookupTableBinding",@"LookupTableEnum",@"MeanRanges",@"MeanRangeValue",@"MeanVariances",@"MeanVarianceValue",@"Page",@"Project",@"QueueChannel",@"Rating",@"Role",@"Scope",@"ServePortalSet",@"Stats",@"StatsRecord",@"StatsStudySet",@"StudyDesign",@"StudyType",@"Tag",@"Task",@"Team",@"TermCategory",@"TermMaster",@"TermSynonym",@"TherapeuticAreaSet",@"TimeCard",@"TimePoint",@"UnitConversionRules",@"UnitOfMeasure",@"Units",@"UnitValue",@"Update",@"User",@"UserRequest",@"UserSession",@"UserType",@"ValueType",@"VariableInstance",@"VariableRule",@"Workflow"})]
+        [ApiMember(Name = nameof(Base), Description = "ModelNameEnm?", IsRequired = false)]
+        public ModelNameEnm? Base { get; set; }
 
 
         [ApiMember(Name = nameof(CacheDuration), Description = "int?", IsRequired = false)]
@@ -149,10 +155,11 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out bool pAllowDelete, out bool pAllSelectByDefault, out int? pCacheDuration, out int? pClassId, out List<Reference> pCustomCollections, out int? pCustomCollectionsCount, out bool pDELETE, out string pDescription, out List<Reference> pDontFlattenProperties, out int? pDontFlattenPropertiesCount, out string pDtoSuffix, out bool pFlattenReferences, out bool pGET, out List<Reference> pIgnoreProps, out int? pIgnorePropsCount, out bool pIsInsertOnly, out bool pIsReadOnly, out string pName, out bool pPATCH, out bool pPOST, out List<DataProperty> pProperties, out int? pPropertiesCount, out bool pPUT, out List<DataTab> pTabs, out int? pTabsCount)
+        public void Deconstruct(out bool pAllowDelete, out bool pAllSelectByDefault, out ModelNameEnm? pBase, out int? pCacheDuration, out int? pClassId, out List<Reference> pCustomCollections, out int? pCustomCollectionsCount, out bool pDELETE, out string pDescription, out List<Reference> pDontFlattenProperties, out int? pDontFlattenPropertiesCount, out string pDtoSuffix, out bool pFlattenReferences, out bool pGET, out List<Reference> pIgnoreProps, out int? pIgnorePropsCount, out bool pIsInsertOnly, out bool pIsReadOnly, out string pName, out bool pPATCH, out bool pPOST, out List<DataProperty> pProperties, out int? pPropertiesCount, out bool pPUT, out List<DataTab> pTabs, out int? pTabsCount)
         {
             pAllowDelete = AllowDelete;
             pAllSelectByDefault = AllSelectByDefault;
+            pBase = Base;
             pCacheDuration = CacheDuration;
             pClassId = ClassId;
             pCustomCollections = CustomCollections;
@@ -179,8 +186,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public DataClassBase With(int? pId = Id, bool pAllowDelete = AllowDelete, bool pAllSelectByDefault = AllSelectByDefault, int? pCacheDuration = CacheDuration, int? pClassId = ClassId, List<Reference> pCustomCollections = CustomCollections, int? pCustomCollectionsCount = CustomCollectionsCount, bool pDELETE = DELETE, string pDescription = Description, List<Reference> pDontFlattenProperties = DontFlattenProperties, int? pDontFlattenPropertiesCount = DontFlattenPropertiesCount, string pDtoSuffix = DtoSuffix, bool pFlattenReferences = FlattenReferences, bool pGET = GET, List<Reference> pIgnoreProps = IgnoreProps, int? pIgnorePropsCount = IgnorePropsCount, bool pIsInsertOnly = IsInsertOnly, bool pIsReadOnly = IsReadOnly, string pName = Name, bool pPATCH = PATCH, bool pPOST = POST, List<DataProperty> pProperties = Properties, int? pPropertiesCount = PropertiesCount, bool pPUT = PUT, List<DataTab> pTabs = Tabs, int? pTabsCount = TabsCount) => 
-        //	new DataClassBase(pId, pAllowDelete, pAllSelectByDefault, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount);
+        //public DataClassBase With(int? pId = Id, bool pAllowDelete = AllowDelete, bool pAllSelectByDefault = AllSelectByDefault, ModelNameEnm? pBase = Base, int? pCacheDuration = CacheDuration, int? pClassId = ClassId, List<Reference> pCustomCollections = CustomCollections, int? pCustomCollectionsCount = CustomCollectionsCount, bool pDELETE = DELETE, string pDescription = Description, List<Reference> pDontFlattenProperties = DontFlattenProperties, int? pDontFlattenPropertiesCount = DontFlattenPropertiesCount, string pDtoSuffix = DtoSuffix, bool pFlattenReferences = FlattenReferences, bool pGET = GET, List<Reference> pIgnoreProps = IgnoreProps, int? pIgnorePropsCount = IgnorePropsCount, bool pIsInsertOnly = IsInsertOnly, bool pIsReadOnly = IsReadOnly, string pName = Name, bool pPATCH = PATCH, bool pPOST = POST, List<DataProperty> pProperties = Properties, int? pPropertiesCount = PropertiesCount, bool pPUT = PUT, List<DataTab> pTabs = Tabs, int? pTabsCount = TabsCount) => 
+        //	new DataClassBase(pId, pAllowDelete, pAllSelectByDefault, pBase, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount);
 
     }
 
@@ -194,8 +201,8 @@ namespace Services.Dto
 
         public DataClass(int? id) : base(DocConvert.ToInt(id)) {}
         public DataClass(int id) : base(id) {}
-        public DataClass(int? pId, bool pAllowDelete, bool pAllSelectByDefault, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : 
-            base(pId, pAllowDelete, pAllSelectByDefault, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount) { }
+        public DataClass(int? pId, bool pAllowDelete, bool pAllSelectByDefault, ModelNameEnm? pBase, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : 
+            base(pId, pAllowDelete, pAllSelectByDefault, pBase, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -213,7 +220,7 @@ namespace Services.Dto
 
         private List<string> _Select;
         [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllSelectByDefault),nameof(CacheDuration),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AllowDelete),nameof(AllSelectByDefault),nameof(Base),nameof(CacheDuration),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(CustomCollections),nameof(CustomCollectionsCount),nameof(DELETE),nameof(Description),nameof(DontFlattenProperties),nameof(DontFlattenPropertiesCount),nameof(DtoSuffix),nameof(FlattenReferences),nameof(Gestalt),nameof(GET),nameof(IgnoreProps),nameof(IgnorePropsCount),nameof(IsInsertOnly),nameof(IsReadOnly),nameof(Locked),nameof(Name),nameof(PATCH),nameof(POST),nameof(Properties),nameof(PropertiesCount),nameof(PUT),nameof(Tabs),nameof(TabsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> Select
         {
             get
@@ -250,6 +257,7 @@ namespace Services.Dto
         public List<bool> AllowDelete { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> AllSelectByDefault { get; set; }
+        public ModelNameEnm? Base { get; set; }
         public int? CacheDuration { get; set; }
         public int? ClassId { get; set; }
         public List<int> CustomCollectionsIds { get; set; }
@@ -301,6 +309,7 @@ namespace Services.Dto
 
         public bool doAllowDelete { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataClass.AllowDelete))); }
         public bool doAllSelectByDefault { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataClass.AllSelectByDefault))); }
+        public bool doBase { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataClass.Base))); }
         public bool doCacheDuration { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataClass.CacheDuration))); }
         public bool doClassId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataClass.ClassId))); }
         public bool doCustomCollections { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataClass.CustomCollections))); }
