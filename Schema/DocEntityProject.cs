@@ -114,6 +114,11 @@ namespace Services.Schema
 
 
         [Field]
+        public DocEntityWorkflow FqWorkflow { get; set; }
+        public int? FqWorkflowId { get { return FqWorkflow?.Id; } private set { var noid = value; } }
+
+
+        [Field]
         public int? LegacyPackageId { get; set; }
 
 

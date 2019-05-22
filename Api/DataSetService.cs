@@ -187,6 +187,14 @@ namespace Services.API
                 }
                 if(!DocTools.IsNullOrEmpty(request.Participants))
                     entities = entities.Where(en => en.Participants.Contains(request.Participants));
+                if(!DocTools.IsNullOrEmpty(request.PrismaWorkflow) && !DocTools.IsNullOrEmpty(request.PrismaWorkflow.Id))
+                {
+                    entities = entities.Where(en => en.PrismaWorkflow.Id == request.PrismaWorkflow.Id );
+                }
+                if(true == request.PrismaWorkflowIds?.Any())
+                {
+                    entities = entities.Where(en => en.PrismaWorkflow.Id.In(request.PrismaWorkflowIds));
+                }
                 if(true == request.ProjectsIds?.Any())
                 {
                     entities = entities.Where(en => en.Projects.Any(r => r.Id.In(request.ProjectsIds)));
@@ -264,6 +272,7 @@ namespace Services.API
             var pOriginalOutcomes = request.OriginalOutcomes;
             var pOutcomes = request.Outcomes?.ToList();
             var pParticipants = request.Participants;
+            var pPrismaWorkflow = (request.PrismaWorkflow?.Id > 0) ? DocEntityWorkflow.Get(request.PrismaWorkflow.Id) : null;
             var pProjects = request.Projects?.ToList();
             var pShowEtw = request.ShowEtw;
             var pShowPublicationType = request.ShowPublicationType;
@@ -463,6 +472,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pParticipants, nameof(request.Participants)) && !request.Select.Matches(nameof(request.Participants), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Participants));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityWorkflow>(currentUser, request, pPrismaWorkflow, permission, DocConstantModelName.DATASET, nameof(request.PrismaWorkflow)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pPrismaWorkflow, entity.PrismaWorkflow, nameof(request.PrismaWorkflow)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DATASET, nameof(request.PrismaWorkflow)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.PrismaWorkflow)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pPrismaWorkflow) && DocResources.Metadata.IsRequired(DocConstantModelName.DATASET, nameof(request.PrismaWorkflow))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.PrismaWorkflow)} requires a value.");
+                    entity.PrismaWorkflow = pPrismaWorkflow;
+                if(DocPermissionFactory.IsRequested<DocEntityWorkflow>(request, pPrismaWorkflow, nameof(request.PrismaWorkflow)) && !request.Select.Matches(nameof(request.PrismaWorkflow), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.PrismaWorkflow));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pShowEtw, permission, DocConstantModelName.DATASET, nameof(request.ShowEtw)))
@@ -910,6 +930,7 @@ namespace Services.API
                     var pOriginalOutcomes = entity.OriginalOutcomes;
                     var pOutcomes = entity.Outcomes.ToList();
                     var pParticipants = entity.Participants;
+                    var pPrismaWorkflow = entity.PrismaWorkflow;
                     var pProjects = entity.Projects.ToList();
                     var pShowEtw = entity.ShowEtw;
                     var pShowPublicationType = entity.ShowPublicationType;
@@ -934,6 +955,7 @@ namespace Services.API
                                 , OriginalInterventions = pOriginalInterventions
                                 , OriginalOutcomes = pOriginalOutcomes
                                 , Participants = pParticipants
+                                , PrismaWorkflow = pPrismaWorkflow
                                 , ShowEtw = pShowEtw
                                 , ShowPublicationType = pShowPublicationType
                     };

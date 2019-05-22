@@ -54,6 +54,8 @@ namespace Services.Schema
                 .ForMember(dest => dest.Outcomes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataSet>(c, nameof(DocEntityDataSet.Outcomes))))
                 .ForMember(dest => dest.OutcomesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataSet>(c, nameof(DocEntityDataSet.OutcomesCount))))
                 .ForMember(dest => dest.Participants, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataSet>(c, nameof(DocEntityDataSet.Participants))))
+                .ForMember(dest => dest.PrismaWorkflow, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataSet>(c, nameof(DocEntityDataSet.PrismaWorkflow))))
+                .ForMember(dest => dest.PrismaWorkflowId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataSet>(c, nameof(DocEntityDataSet.PrismaWorkflowId))))
                 .ForMember(dest => dest.Projects, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataSet>(c, nameof(DocEntityDataSet.Projects))))
                 .ForMember(dest => dest.ProjectsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataSet>(c, nameof(DocEntityDataSet.ProjectsCount))))
                 .ForMember(dest => dest.ShowEtw, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataSet>(c, nameof(DocEntityDataSet.ShowEtw))))

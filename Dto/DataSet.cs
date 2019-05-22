@@ -34,7 +34,7 @@ namespace Services.Dto
 
         public DataSetBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public DataSetBase(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pDataCollection, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, List<Reference> pProjects, int? pProjectsCount, bool pShowEtw, bool pShowPublicationType, List<Reference> pStudyDesigns, int? pStudyDesignsCount) : this(DocConvert.ToInt(pId)) 
+        public DataSetBase(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pDataCollection, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, Reference pPrismaWorkflow, int? pPrismaWorkflowId, List<Reference> pProjects, int? pProjectsCount, bool pShowEtw, bool pShowPublicationType, List<Reference> pStudyDesigns, int? pStudyDesignsCount) : this(DocConvert.ToInt(pId)) 
         {
             AdditionalCriteria = pAdditionalCriteria;
             Characteristics = pCharacteristics;
@@ -61,6 +61,8 @@ namespace Services.Dto
             Outcomes = pOutcomes;
             OutcomesCount = pOutcomesCount;
             Participants = pParticipants;
+            PrismaWorkflow = pPrismaWorkflow;
+            PrismaWorkflowId = pPrismaWorkflowId;
             Projects = pProjects;
             ProjectsCount = pProjectsCount;
             ShowEtw = pShowEtw;
@@ -154,6 +156,12 @@ namespace Services.Dto
         public string Participants { get; set; }
 
 
+        [ApiMember(Name = nameof(PrismaWorkflow), Description = "Workflow", IsRequired = false)]
+        public Reference PrismaWorkflow { get; set; }
+        [ApiMember(Name = nameof(PrismaWorkflowId), Description = "Primary Key of Workflow", IsRequired = false)]
+        public int? PrismaWorkflowId { get; set; }
+
+
         [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
         public List<Reference> Projects { get; set; }
         public int? ProjectsCount { get; set; }
@@ -173,7 +181,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out string pAdditionalCriteria, out List<Reference> pCharacteristics, out int? pCharacteristicsCount, out List<Reference> pComparators, out int? pComparatorsCount, out string pDataCollection, out int? pEvidencePortalId, out string pExtractionProtocol, out int? pFqId, out int? pFramedQuestionId, out string pGeneralScope, out List<Reference> pImports, out int? pImportsCount, out string pIndications, out List<Reference> pInterventions, out int? pInterventionsCount, out string pNotes, out string pOriginalComparators, out string pOriginalDatabase, out string pOriginalDesigns, out string pOriginalInterventions, out string pOriginalOutcomes, out List<Reference> pOutcomes, out int? pOutcomesCount, out string pParticipants, out List<Reference> pProjects, out int? pProjectsCount, out bool pShowEtw, out bool pShowPublicationType, out List<Reference> pStudyDesigns, out int? pStudyDesignsCount)
+        public void Deconstruct(out string pAdditionalCriteria, out List<Reference> pCharacteristics, out int? pCharacteristicsCount, out List<Reference> pComparators, out int? pComparatorsCount, out string pDataCollection, out int? pEvidencePortalId, out string pExtractionProtocol, out int? pFqId, out int? pFramedQuestionId, out string pGeneralScope, out List<Reference> pImports, out int? pImportsCount, out string pIndications, out List<Reference> pInterventions, out int? pInterventionsCount, out string pNotes, out string pOriginalComparators, out string pOriginalDatabase, out string pOriginalDesigns, out string pOriginalInterventions, out string pOriginalOutcomes, out List<Reference> pOutcomes, out int? pOutcomesCount, out string pParticipants, out Reference pPrismaWorkflow, out int? pPrismaWorkflowId, out List<Reference> pProjects, out int? pProjectsCount, out bool pShowEtw, out bool pShowPublicationType, out List<Reference> pStudyDesigns, out int? pStudyDesignsCount)
         {
             pAdditionalCriteria = AdditionalCriteria;
             pCharacteristics = Characteristics;
@@ -200,6 +208,8 @@ namespace Services.Dto
             pOutcomes = Outcomes;
             pOutcomesCount = OutcomesCount;
             pParticipants = Participants;
+            pPrismaWorkflow = PrismaWorkflow;
+            pPrismaWorkflowId = PrismaWorkflowId;
             pProjects = Projects;
             pProjectsCount = ProjectsCount;
             pShowEtw = ShowEtw;
@@ -209,8 +219,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public DataSetBase With(int? pId = Id, string pAdditionalCriteria = AdditionalCriteria, List<Reference> pCharacteristics = Characteristics, int? pCharacteristicsCount = CharacteristicsCount, List<Reference> pComparators = Comparators, int? pComparatorsCount = ComparatorsCount, string pDataCollection = DataCollection, int? pEvidencePortalId = EvidencePortalId, string pExtractionProtocol = ExtractionProtocol, int? pFqId = FqId, int? pFramedQuestionId = FramedQuestionId, string pGeneralScope = GeneralScope, List<Reference> pImports = Imports, int? pImportsCount = ImportsCount, string pIndications = Indications, List<Reference> pInterventions = Interventions, int? pInterventionsCount = InterventionsCount, string pNotes = Notes, string pOriginalComparators = OriginalComparators, string pOriginalDatabase = OriginalDatabase, string pOriginalDesigns = OriginalDesigns, string pOriginalInterventions = OriginalInterventions, string pOriginalOutcomes = OriginalOutcomes, List<Reference> pOutcomes = Outcomes, int? pOutcomesCount = OutcomesCount, string pParticipants = Participants, List<Reference> pProjects = Projects, int? pProjectsCount = ProjectsCount, bool pShowEtw = ShowEtw, bool pShowPublicationType = ShowPublicationType, List<Reference> pStudyDesigns = StudyDesigns, int? pStudyDesignsCount = StudyDesignsCount) => 
-        //	new DataSetBase(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pComparators, pComparatorsCount, pDataCollection, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOutcomes, pOutcomesCount, pParticipants, pProjects, pProjectsCount, pShowEtw, pShowPublicationType, pStudyDesigns, pStudyDesignsCount);
+        //public DataSetBase With(int? pId = Id, string pAdditionalCriteria = AdditionalCriteria, List<Reference> pCharacteristics = Characteristics, int? pCharacteristicsCount = CharacteristicsCount, List<Reference> pComparators = Comparators, int? pComparatorsCount = ComparatorsCount, string pDataCollection = DataCollection, int? pEvidencePortalId = EvidencePortalId, string pExtractionProtocol = ExtractionProtocol, int? pFqId = FqId, int? pFramedQuestionId = FramedQuestionId, string pGeneralScope = GeneralScope, List<Reference> pImports = Imports, int? pImportsCount = ImportsCount, string pIndications = Indications, List<Reference> pInterventions = Interventions, int? pInterventionsCount = InterventionsCount, string pNotes = Notes, string pOriginalComparators = OriginalComparators, string pOriginalDatabase = OriginalDatabase, string pOriginalDesigns = OriginalDesigns, string pOriginalInterventions = OriginalInterventions, string pOriginalOutcomes = OriginalOutcomes, List<Reference> pOutcomes = Outcomes, int? pOutcomesCount = OutcomesCount, string pParticipants = Participants, Reference pPrismaWorkflow = PrismaWorkflow, int? pPrismaWorkflowId = PrismaWorkflowId, List<Reference> pProjects = Projects, int? pProjectsCount = ProjectsCount, bool pShowEtw = ShowEtw, bool pShowPublicationType = ShowPublicationType, List<Reference> pStudyDesigns = StudyDesigns, int? pStudyDesignsCount = StudyDesignsCount) => 
+        //	new DataSetBase(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pComparators, pComparatorsCount, pDataCollection, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOutcomes, pOutcomesCount, pParticipants, pPrismaWorkflow, pPrismaWorkflowId, pProjects, pProjectsCount, pShowEtw, pShowPublicationType, pStudyDesigns, pStudyDesignsCount);
 
     }
 
@@ -225,8 +235,8 @@ namespace Services.Dto
 
         public DataSet(int? id) : base(DocConvert.ToInt(id)) {}
         public DataSet(int id) : base(id) {}
-        public DataSet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pDataCollection, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, List<Reference> pProjects, int? pProjectsCount, bool pShowEtw, bool pShowPublicationType, List<Reference> pStudyDesigns, int? pStudyDesignsCount) : 
-            base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pComparators, pComparatorsCount, pDataCollection, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOutcomes, pOutcomesCount, pParticipants, pProjects, pProjectsCount, pShowEtw, pShowPublicationType, pStudyDesigns, pStudyDesignsCount) { }
+        public DataSet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pDataCollection, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, Reference pPrismaWorkflow, int? pPrismaWorkflowId, List<Reference> pProjects, int? pProjectsCount, bool pShowEtw, bool pShowPublicationType, List<Reference> pStudyDesigns, int? pStudyDesignsCount) : 
+            base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pComparators, pComparatorsCount, pDataCollection, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOutcomes, pOutcomesCount, pParticipants, pPrismaWorkflow, pPrismaWorkflowId, pProjects, pProjectsCount, pShowEtw, pShowPublicationType, pStudyDesigns, pStudyDesignsCount) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -244,7 +254,7 @@ namespace Services.Dto
 
         private List<string> _Select;
         [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(Locked),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(Outcomes),nameof(OutcomesCount),nameof(Participants),nameof(Projects),nameof(ProjectsCount),nameof(ShowEtw),nameof(ShowPublicationType),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(Locked),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(Outcomes),nameof(OutcomesCount),nameof(Participants),nameof(PrismaWorkflow),nameof(PrismaWorkflowId),nameof(Projects),nameof(ProjectsCount),nameof(ShowEtw),nameof(ShowPublicationType),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Updated),nameof(VersionNo)})]
         public new List<string> Select
         {
             get
@@ -319,6 +329,8 @@ namespace Services.Dto
         public string OriginalOutcomes { get; set; }
         public List<int> OutcomesIds { get; set; }
         public string Participants { get; set; }
+        public Reference PrismaWorkflow { get; set; }
+        public List<int> PrismaWorkflowIds { get; set; }
         public List<int> ProjectsIds { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> ShowEtw { get; set; }
@@ -368,6 +380,7 @@ namespace Services.Dto
         public bool doOriginalOutcomes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataSet.OriginalOutcomes))); }
         public bool doOutcomes { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataSet.Outcomes))); }
         public bool doParticipants { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataSet.Participants))); }
+        public bool doPrismaWorkflow { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataSet.PrismaWorkflow))); }
         public bool doProjects { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataSet.Projects))); }
         public bool doShowEtw { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataSet.ShowEtw))); }
         public bool doShowPublicationType { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(DataSet.ShowPublicationType))); }

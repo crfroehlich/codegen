@@ -176,6 +176,11 @@ namespace Services.Schema
 
 
         [Field]
+        public DocEntityWorkflow PrismaWorkflow { get; set; }
+        public int? PrismaWorkflowId { get { return PrismaWorkflow?.Id; } private set { var noid = value; } }
+
+
+        [Field]
         [Association(PairTo = nameof(DocEntityProject.Dataset), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityProject> Projects { get; private set; }
 
