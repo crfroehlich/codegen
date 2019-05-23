@@ -17,6 +17,11 @@ using Services.Enums;
 using Services.Schema;
 
 using ServiceStack;
+using ServiceStack.Text;
+
+using Typed;
+using Typed.Bindings;
+using Typed.Notifications;
 
 using Xtensive.Orm;
 namespace Services.API
@@ -27,140 +32,140 @@ namespace Services.API
         {
             request = InitSearch<DocumentSet, DocumentSetSearch>(request);
             IQueryable<DocEntityDocumentSet> entities = null;
-            query.Run(session =>
-           {
-               entities = query.SelectAll<DocEntityDocumentSet>();
-               if (!DocTools.IsNullOrEmpty(request.FullTextSearch))
-               {
-                   var fts = new DocumentSetFullTextSearch(request);
-                   entities = GetFullTextSearch<DocEntityDocumentSet, DocumentSetFullTextSearch>(fts, entities);
-               }
+            query.Run( session => 
+            {
+                entities = query.SelectAll<DocEntityDocumentSet>();
+                if(!DocTools.IsNullOrEmpty(request.FullTextSearch))
+                {
+                    var fts = new DocumentSetFullTextSearch(request);
+                    entities = GetFullTextSearch<DocEntityDocumentSet,DocumentSetFullTextSearch>(fts, entities);
+                }
 
-               if (null != request.Ids && request.Ids.Any())
-                   entities = entities.Where(en => en.Id.In(request.Ids));
+                if(null != request.Ids && request.Ids.Any())
+                    entities = entities.Where(en => en.Id.In(request.Ids));
 
-               if (!DocTools.IsNullOrEmpty(request.Updated))
-               {
-                   entities = entities.Where(e => null != e.Updated && e.Updated.Value.Date == request.Updated.Value.Date);
-               }
-               if (!DocTools.IsNullOrEmpty(request.UpdatedBefore))
-               {
-                   entities = entities.Where(e => null != e.Updated && e.Updated <= request.UpdatedBefore);
-               }
-               if (!DocTools.IsNullOrEmpty(request.UpdatedAfter))
-               {
-                   entities = entities.Where(e => null != e.Updated && e.Updated >= request.UpdatedAfter);
-               }
-               if (!DocTools.IsNullOrEmpty(request.Created))
-               {
-                   entities = entities.Where(e => null != e.Created && e.Created.Value.Date == request.Created.Value.Date);
-               }
-               if (!DocTools.IsNullOrEmpty(request.CreatedBefore))
-               {
-                   entities = entities.Where(e => null != e.Created && e.Created <= request.CreatedBefore);
-               }
-               if (!DocTools.IsNullOrEmpty(request.CreatedAfter))
-               {
-                   entities = entities.Where(e => null != e.Created && e.Created >= request.CreatedAfter);
-               }
-               if (true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.DOCUMENTSET, nameof(Reference.Archived), DocConstantPermission.VIEW))
-               {
-                   entities = entities.Where(en => en.Archived.In(request.Archived));
-               }
-               else
-               {
-                   entities = entities.Where(en => !en.Archived);
-               }
-               if (true == request.Locked?.Any())
-               {
-                   entities = entities.Where(en => en.Locked.In(request.Locked));
-               }
-               if (true == request.ClientsIds?.Any())
-               {
-                   entities = entities.Where(en => en.Clients.Any(r => r.Id.In(request.ClientsIds)));
-               }
-               if (true == request.Confidential?.Any())
-               {
-                   if (request.Confidential.Any(v => v == null)) entities = entities.Where(en => en.Confidential.In(request.Confidential) || en.Confidential == null);
-                   else entities = entities.Where(en => en.Confidential.In(request.Confidential));
-               }
-               if (true == request.DivisionsIds?.Any())
-               {
-                   entities = entities.Where(en => en.Divisions.Any(r => r.Id.In(request.DivisionsIds)));
-               }
-               if (true == request.DocumentsIds?.Any())
-               {
-                   entities = entities.Where(en => en.Documents.Any(r => r.Id.In(request.DocumentsIds)));
-               }
-               if (true == request.DocumentSetsIds?.Any())
-               {
-                   entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
-               }
-               if (true == request.HistoriesIds?.Any())
-               {
-                   entities = entities.Where(en => en.Histories.Any(r => r.Id.In(request.HistoriesIds)));
-               }
-               if (request.LegacyDocumentSetId.HasValue)
-                   entities = entities.Where(en => request.LegacyDocumentSetId.Value == en.LegacyDocumentSetId);
-               if (!DocTools.IsNullOrEmpty(request.Name))
-                   entities = entities.Where(en => en.Name.Contains(request.Name));
-               if (!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
-               {
-                   entities = entities.Where(en => en.Owner.Id == request.Owner.Id);
-               }
-               if (true == request.OwnerIds?.Any())
-               {
-                   entities = entities.Where(en => en.Owner.Id.In(request.OwnerIds));
-               }
-               if (!DocTools.IsNullOrEmpty(request.ProjectTeam) && !DocTools.IsNullOrEmpty(request.ProjectTeam.Id))
-               {
-                   entities = entities.Where(en => en.ProjectTeam.Id == request.ProjectTeam.Id);
-               }
-               if (true == request.ProjectTeamIds?.Any())
-               {
-                   entities = entities.Where(en => en.ProjectTeam.Id.In(request.ProjectTeamIds));
-               }
-               if (true == request.ScopesIds?.Any())
-               {
-                   entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
-               }
-               if (true == request.StatsIds?.Any())
-               {
-                   entities = entities.Where(en => en.Stats.Any(r => r.Id.In(request.StatsIds)));
-               }
-               if (request.Type.HasValue)
-                   entities = entities.Where(en => request.Type.Value == en.Type);
-               if (true == request.UsersIds?.Any())
-               {
-                   entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
-               }
+                if (!DocTools.IsNullOrEmpty(request.Updated))
+                {
+                    entities = entities.Where(e => null != e.Updated && e.Updated.Value.Date == request.Updated.Value.Date);
+                }
+                if (!DocTools.IsNullOrEmpty(request.UpdatedBefore))
+                {
+                    entities = entities.Where(e => null != e.Updated && e.Updated <= request.UpdatedBefore);
+                }
+                if( !DocTools.IsNullOrEmpty( request.UpdatedAfter ) )
+                {
+                    entities = entities.Where(e => null != e.Updated && e.Updated >= request.UpdatedAfter);
+                }
+                if (!DocTools.IsNullOrEmpty(request.Created))
+                {
+                    entities = entities.Where(e => null!= e.Created && e.Created.Value.Date == request.Created.Value.Date);
+                }
+                if (!DocTools.IsNullOrEmpty(request.CreatedBefore))
+                {
+                    entities = entities.Where(e => null!= e.Created && e.Created <= request.CreatedBefore);
+                }
+                if( !DocTools.IsNullOrEmpty( request.CreatedAfter ) )
+                {
+                    entities = entities.Where(e => null!= e.Created && e.Created >= request.CreatedAfter);
+                }
+                if(true == request.Archived?.Any() && currentUser.HasProperty(DocConstantModelName.DOCUMENTSET, nameof(Reference.Archived), DocConstantPermission.VIEW))
+                {
+                    entities = entities.Where(en => en.Archived.In(request.Archived));
+                }
+                else
+                {
+                    entities = entities.Where(en => !en.Archived);
+                }
+                if(true == request.Locked?.Any())
+                {
+                    entities = entities.Where(en => en.Locked.In(request.Locked));
+                }
+                if(true == request.ClientsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Clients.Any(r => r.Id.In(request.ClientsIds)));
+                }
+                if(true == request.Confidential?.Any())
+                {
+                    if(request.Confidential.Any(v => v == null)) entities = entities.Where(en => en.Confidential.In(request.Confidential) || en.Confidential == null);
+                    else entities = entities.Where(en => en.Confidential.In(request.Confidential));
+                }
+                if(true == request.DivisionsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Divisions.Any(r => r.Id.In(request.DivisionsIds)));
+                }
+                if(true == request.DocumentsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Documents.Any(r => r.Id.In(request.DocumentsIds)));
+                }
+                if(true == request.DocumentSetsIds?.Any())
+                {
+                    entities = entities.Where(en => en.DocumentSets.Any(r => r.Id.In(request.DocumentSetsIds)));
+                }
+                if(true == request.HistoriesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Histories.Any(r => r.Id.In(request.HistoriesIds)));
+                }
+                if(request.LegacyDocumentSetId.HasValue)
+                    entities = entities.Where(en => request.LegacyDocumentSetId.Value == en.LegacyDocumentSetId);
+                if(!DocTools.IsNullOrEmpty(request.Name))
+                    entities = entities.Where(en => en.Name.Contains(request.Name));
+                if(!DocTools.IsNullOrEmpty(request.Owner) && !DocTools.IsNullOrEmpty(request.Owner.Id))
+                {
+                    entities = entities.Where(en => en.Owner.Id == request.Owner.Id );
+                }
+                if(true == request.OwnerIds?.Any())
+                {
+                    entities = entities.Where(en => en.Owner.Id.In(request.OwnerIds));
+                }
+                if(!DocTools.IsNullOrEmpty(request.ProjectTeam) && !DocTools.IsNullOrEmpty(request.ProjectTeam.Id))
+                {
+                    entities = entities.Where(en => en.ProjectTeam.Id == request.ProjectTeam.Id );
+                }
+                if(true == request.ProjectTeamIds?.Any())
+                {
+                    entities = entities.Where(en => en.ProjectTeam.Id.In(request.ProjectTeamIds));
+                }
+                if(true == request.ScopesIds?.Any())
+                {
+                    entities = entities.Where(en => en.Scopes.Any(r => r.Id.In(request.ScopesIds)));
+                }
+                if(true == request.StatsIds?.Any())
+                {
+                    entities = entities.Where(en => en.Stats.Any(r => r.Id.In(request.StatsIds)));
+                }
+                if(request.Type.HasValue)
+                    entities = entities.Where(en => request.Type.Value == en.Type);
+                if(true == request.UsersIds?.Any())
+                {
+                    entities = entities.Where(en => en.Users.Any(r => r.Id.In(request.UsersIds)));
+                }
 
-               entities = ApplyFilters<DocEntityDocumentSet, DocumentSetSearch>(request, entities);
+                entities = ApplyFilters<DocEntityDocumentSet,DocumentSetSearch>(request, entities);
 
-               if (request.Skip > 0)
-                   entities = entities.Skip(request.Skip.Value);
-               if (request.Take > 0)
-                   entities = entities.Take(request.Take.Value);
-               if (true == request?.OrderBy?.Any())
-                   entities = entities.OrderBy(request.OrderBy);
-               if (true == request?.OrderByDesc?.Any())
-                   entities = entities.OrderByDescending(request.OrderByDesc);
-           });
+                if(request.Skip > 0)
+                    entities = entities.Skip(request.Skip.Value);
+                if(request.Take > 0)
+                    entities = entities.Take(request.Take.Value);
+                if(true == request?.OrderBy?.Any())
+                    entities = entities.OrderBy(request.OrderBy);
+                if(true == request?.OrderByDesc?.Any())
+                    entities = entities.OrderByDescending(request.OrderByDesc);
+            });
             return entities;
         }
 
         public object Post(DocumentSetSearch request) => Get(request);
 
-        public object Get(DocumentSetSearch request) => GetSearchResultWithCache<DocumentSet, DocEntityDocumentSet, DocumentSetSearch>(DocConstantModelName.DOCUMENTSET, request, _ExecSearch);
+        public object Get(DocumentSetSearch request) => GetSearchResultWithCache<DocumentSet,DocEntityDocumentSet,DocumentSetSearch>(DocConstantModelName.DOCUMENTSET, request, _ExecSearch);
 
         public object Get(DocumentSet request) => GetEntityWithCache<DocumentSet>(DocConstantModelName.DOCUMENTSET, request, GetDocumentSet);
 
         private DocumentSet _AssignValues(DocumentSet request, DocConstantPermission permission, Session session)
         {
-            if (permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
+            if(permission != DocConstantPermission.ADD && (request == null || request.Id <= 0))
                 throw new HttpError(HttpStatusCode.NotFound, $"No record");
 
-            if (permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "DocumentSet"))
+            if(permission == DocConstantPermission.ADD && !DocPermissionFactory.HasPermissionTryAdd(currentUser, "DocumentSet"))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
             request.Select = request.Select ?? new List<string>();
@@ -168,10 +173,10 @@ namespace Services.API
             DocumentSet ret = null;
             request = _InitAssignValues<DocumentSet>(request, permission, session);
             //In case init assign handles create for us, return it
-            if (permission == DocConstantPermission.ADD && request.Id > 0) return request;
-
+            if(permission == DocConstantPermission.ADD && request.Id > 0) return request;
+            
             var cacheKey = GetApiCacheKey<DocumentSet>(DocConstantModelName.DOCUMENTSET, nameof(DocumentSet), request);
-
+            
             //First, assign all the variables, do database lookups and conversions
             var pClients = request.Clients?.ToList();
             var pConfidential = request.Confidential;
@@ -190,10 +195,11 @@ namespace Services.API
             var pUsers = request.Users?.ToList();
 
             DocEntityDocumentSet entity = null;
-            if (permission == DocConstantPermission.ADD)
+            if(permission == DocConstantPermission.ADD)
             {
                 var now = DateTime.UtcNow;
-                entity = new DocEntityDocumentSet(session) {
+                entity = new DocEntityDocumentSet(session)
+                {
                     Created = now,
                     Updated = now
                 };
@@ -201,7 +207,7 @@ namespace Services.API
             else
             {
                 entity = DocEntityDocumentSet.Get(request.Id);
-                if (null == entity)
+                if(null == entity)
                     throw new HttpError(HttpStatusCode.NotFound, $"No record");
             }
 
@@ -209,11 +215,11 @@ namespace Services.API
             var pArchived = true == request.Archived;
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pArchived, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Archived)))
             {
-                if (DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
+                if(DocPermissionFactory.IsRequested(request, pArchived, entity.Archived, nameof(request.Archived)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.Archived)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Archived)} cannot be modified once set.");
-                if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
-                entity.Archived = pArchived;
-                if (DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
+                    if (DocTools.IsNullOrEmpty(pArchived) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Archived))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Archived)} requires a value.");
+                    entity.Archived = pArchived;
+                if(DocPermissionFactory.IsRequested<bool>(request, pArchived, nameof(request.Archived)) && !request.Select.Matches(nameof(request.Archived), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Archived));
                 }
@@ -221,78 +227,78 @@ namespace Services.API
 
             if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pConfidential, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Confidential)))
             {
-                if (DocPermissionFactory.IsRequested(request, pConfidential, entity.Confidential, nameof(request.Confidential)))
+                if(DocPermissionFactory.IsRequested(request, pConfidential, entity.Confidential, nameof(request.Confidential)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.Confidential)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Confidential)} cannot be modified once set.");
-                if (DocTools.IsNullOrEmpty(pConfidential) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Confidential))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Confidential)} requires a value.");
-                entity.Confidential = pConfidential;
-                if (DocPermissionFactory.IsRequested<bool>(request, pConfidential, nameof(request.Confidential)) && !request.Select.Matches(nameof(request.Confidential), ignoreSpaces: true))
+                    if (DocTools.IsNullOrEmpty(pConfidential) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Confidential))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Confidential)} requires a value.");
+                    entity.Confidential = pConfidential;
+                if(DocPermissionFactory.IsRequested<bool>(request, pConfidential, nameof(request.Confidential)) && !request.Select.Matches(nameof(request.Confidential), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Confidential));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<int?>(currentUser, request, pLegacyDocumentSetId, permission, DocConstantModelName.DOCUMENTSET, nameof(request.LegacyDocumentSetId)))
             {
-                if (DocPermissionFactory.IsRequested(request, pLegacyDocumentSetId, entity.LegacyDocumentSetId, nameof(request.LegacyDocumentSetId)))
+                if(DocPermissionFactory.IsRequested(request, pLegacyDocumentSetId, entity.LegacyDocumentSetId, nameof(request.LegacyDocumentSetId)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.LegacyDocumentSetId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.LegacyDocumentSetId)} cannot be modified once set.");
-                if (DocTools.IsNullOrEmpty(pLegacyDocumentSetId) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.LegacyDocumentSetId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LegacyDocumentSetId)} requires a value.");
-                entity.LegacyDocumentSetId = pLegacyDocumentSetId;
-                if (DocPermissionFactory.IsRequested<int?>(request, pLegacyDocumentSetId, nameof(request.LegacyDocumentSetId)) && !request.Select.Matches(nameof(request.LegacyDocumentSetId), ignoreSpaces: true))
+                    if (DocTools.IsNullOrEmpty(pLegacyDocumentSetId) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.LegacyDocumentSetId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.LegacyDocumentSetId)} requires a value.");
+                    entity.LegacyDocumentSetId = pLegacyDocumentSetId;
+                if(DocPermissionFactory.IsRequested<int?>(request, pLegacyDocumentSetId, nameof(request.LegacyDocumentSetId)) && !request.Select.Matches(nameof(request.LegacyDocumentSetId), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.LegacyDocumentSetId));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pName, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Name)))
             {
-                if (DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
+                if(DocPermissionFactory.IsRequested(request, pName, entity.Name, nameof(request.Name)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.Name)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Name)} cannot be modified once set.");
-                if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
-                entity.Name = pName;
-                if (DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.Select.Matches(nameof(request.Name), ignoreSpaces: true))
+                    if (DocTools.IsNullOrEmpty(pName) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Name))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Name)} requires a value.");
+                    entity.Name = pName;
+                if(DocPermissionFactory.IsRequested<string>(request, pName, nameof(request.Name)) && !request.Select.Matches(nameof(request.Name), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Name));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocumentSet>(currentUser, request, pOwner, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Owner)))
             {
-                if (DocPermissionFactory.IsRequested(request, pOwner, entity.Owner, nameof(request.Owner)))
+                if(DocPermissionFactory.IsRequested(request, pOwner, entity.Owner, nameof(request.Owner)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.Owner)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Owner)} cannot be modified once set.");
-                if (DocTools.IsNullOrEmpty(pOwner) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Owner))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Owner)} requires a value.");
-                entity.Owner = pOwner;
-                if (DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pOwner, nameof(request.Owner)) && !request.Select.Matches(nameof(request.Owner), ignoreSpaces: true))
+                    if (DocTools.IsNullOrEmpty(pOwner) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Owner))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Owner)} requires a value.");
+                    entity.Owner = pOwner;
+                if(DocPermissionFactory.IsRequested<DocEntityDocumentSet>(request, pOwner, nameof(request.Owner)) && !request.Select.Matches(nameof(request.Owner), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Owner));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityTeam>(currentUser, request, pProjectTeam, permission, DocConstantModelName.DOCUMENTSET, nameof(request.ProjectTeam)))
             {
-                if (DocPermissionFactory.IsRequested(request, pProjectTeam, entity.ProjectTeam, nameof(request.ProjectTeam)))
+                if(DocPermissionFactory.IsRequested(request, pProjectTeam, entity.ProjectTeam, nameof(request.ProjectTeam)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.ProjectTeam)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ProjectTeam)} cannot be modified once set.");
-                if (DocTools.IsNullOrEmpty(pProjectTeam) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.ProjectTeam))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ProjectTeam)} requires a value.");
-                entity.ProjectTeam = pProjectTeam;
-                if (DocPermissionFactory.IsRequested<DocEntityTeam>(request, pProjectTeam, nameof(request.ProjectTeam)) && !request.Select.Matches(nameof(request.ProjectTeam), ignoreSpaces: true))
+                    if (DocTools.IsNullOrEmpty(pProjectTeam) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.ProjectTeam))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ProjectTeam)} requires a value.");
+                    entity.ProjectTeam = pProjectTeam;
+                if(DocPermissionFactory.IsRequested<DocEntityTeam>(request, pProjectTeam, nameof(request.ProjectTeam)) && !request.Select.Matches(nameof(request.ProjectTeam), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.ProjectTeam));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pSettings, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Settings)))
             {
-                if (DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
+                if(DocPermissionFactory.IsRequested(request, pSettings, entity.Settings, nameof(request.Settings)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.Settings)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Settings)} cannot be modified once set.");
-                if (DocTools.IsNullOrEmpty(pSettings) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Settings))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Settings)} requires a value.");
-                entity.Settings = pSettings;
-                if (DocPermissionFactory.IsRequested<string>(request, pSettings, nameof(request.Settings)) && !request.Select.Matches(nameof(request.Settings), ignoreSpaces: true))
+                    if (DocTools.IsNullOrEmpty(pSettings) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Settings))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Settings)} requires a value.");
+                    entity.Settings = pSettings;
+                if(DocPermissionFactory.IsRequested<string>(request, pSettings, nameof(request.Settings)) && !request.Select.Matches(nameof(request.Settings), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Settings));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<DocumentSetTypeEnm?>(currentUser, request, pType, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Type)))
             {
-                if (DocPermissionFactory.IsRequested(request, (int?)pType, (int)entity.Type, nameof(request.Type)))
+                if(DocPermissionFactory.IsRequested(request, (int?) pType, (int) entity.Type, nameof(request.Type)))
                     if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENTSET, nameof(request.Type)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Type)} cannot be modified once set.");
-                if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
-                if (null != pType)
-                    entity.Type = pType.Value;
-                if (DocPermissionFactory.IsRequested<DocumentSetTypeEnm?>(request, pType, nameof(request.Type)) && !request.Select.Matches(nameof(request.Type), ignoreSpaces: true))
+                    if (DocTools.IsNullOrEmpty(pType) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENTSET, nameof(request.Type))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Type)} requires a value.");
+                    if(null != pType)
+                        entity.Type = pType.Value;
+                if(DocPermissionFactory.IsRequested<DocumentSetTypeEnm?>(request, pType, nameof(request.Type)) && !request.Select.Matches(nameof(request.Type), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Type));
                 }
@@ -304,352 +310,352 @@ namespace Services.API
 
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pClients, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Clients)))
             {
-                if (true == pClients?.Any())
+                if (true == pClients?.Any() )
                 {
                     var requestedClients = pClients.Select(p => p.Id).Distinct().ToList();
-                    var existsClients = Execute.SelectAll<DocEntityClient>().Where(e => e.Id.In(requestedClients)).Select(e => e.Id).ToList();
+                    var existsClients = Execute.SelectAll<DocEntityClient>().Where(e => e.Id.In(requestedClients)).Select( e => e.Id ).ToList();
                     if (existsClients.Count != requestedClients.Count)
                     {
                         var nonExists = requestedClients.Where(id => existsClients.All(eId => eId != id));
                         throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Clients with objects that do not exist. No matching Clients(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedClients.Where(id => entity.Clients.All(e => e.Id != id)).ToList();
+                    var toAdd = requestedClients.Where(id => entity.Clients.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityClient.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Clients)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Clients)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Clients)} to {nameof(DocumentSet)}");
                         entity.Clients.Add(target);
                     });
-                    var toRemove = entity.Clients.Where(e => requestedClients.All(id => e.Id != id)).Select(e => e.Id).ToList();
+                    var toRemove = entity.Clients.Where(e => requestedClients.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityClient.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Clients)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Clients)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Clients)} from {nameof(DocumentSet)}");
                         entity.Clients.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Clients.Select(e => e.Id).ToList();
+                    var toRemove = entity.Clients.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityClient.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Clients)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Clients)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Clients)} from {nameof(DocumentSet)}");
                         entity.Clients.Remove(target);
                     });
                 }
-                if (DocPermissionFactory.IsRequested<List<Reference>>(request, pClients, nameof(request.Clients)) && !request.Select.Matches(nameof(request.Clients), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pClients, nameof(request.Clients)) && !request.Select.Matches(nameof(request.Clients), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Clients));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDivisions, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Divisions)))
             {
-                if (true == pDivisions?.Any())
+                if (true == pDivisions?.Any() )
                 {
                     var requestedDivisions = pDivisions.Select(p => p.Id).Distinct().ToList();
-                    var existsDivisions = Execute.SelectAll<DocEntityDivision>().Where(e => e.Id.In(requestedDivisions)).Select(e => e.Id).ToList();
+                    var existsDivisions = Execute.SelectAll<DocEntityDivision>().Where(e => e.Id.In(requestedDivisions)).Select( e => e.Id ).ToList();
                     if (existsDivisions.Count != requestedDivisions.Count)
                     {
                         var nonExists = requestedDivisions.Where(id => existsDivisions.All(eId => eId != id));
                         throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Divisions with objects that do not exist. No matching Divisions(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedDivisions.Where(id => entity.Divisions.All(e => e.Id != id)).ToList();
+                    var toAdd = requestedDivisions.Where(id => entity.Divisions.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityDivision.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Divisions)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Divisions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Divisions)} to {nameof(DocumentSet)}");
                         entity.Divisions.Add(target);
                     });
-                    var toRemove = entity.Divisions.Where(e => requestedDivisions.All(id => e.Id != id)).Select(e => e.Id).ToList();
+                    var toRemove = entity.Divisions.Where(e => requestedDivisions.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDivision.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Divisions)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Divisions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Divisions)} from {nameof(DocumentSet)}");
                         entity.Divisions.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Divisions.Select(e => e.Id).ToList();
+                    var toRemove = entity.Divisions.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDivision.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Divisions)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Divisions)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Divisions)} from {nameof(DocumentSet)}");
                         entity.Divisions.Remove(target);
                     });
                 }
-                if (DocPermissionFactory.IsRequested<List<Reference>>(request, pDivisions, nameof(request.Divisions)) && !request.Select.Matches(nameof(request.Divisions), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDivisions, nameof(request.Divisions)) && !request.Select.Matches(nameof(request.Divisions), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Divisions));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocuments, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Documents)))
             {
-                if (true == pDocuments?.Any())
+                if (true == pDocuments?.Any() )
                 {
                     var requestedDocuments = pDocuments.Select(p => p.Id).Distinct().ToList();
-                    var existsDocuments = Execute.SelectAll<DocEntityDocument>().Where(e => e.Id.In(requestedDocuments)).Select(e => e.Id).ToList();
+                    var existsDocuments = Execute.SelectAll<DocEntityDocument>().Where(e => e.Id.In(requestedDocuments)).Select( e => e.Id ).ToList();
                     if (existsDocuments.Count != requestedDocuments.Count)
                     {
                         var nonExists = requestedDocuments.Where(id => existsDocuments.All(eId => eId != id));
                         throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Documents with objects that do not exist. No matching Documents(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedDocuments.Where(id => entity.Documents.All(e => e.Id != id)).ToList();
+                    var toAdd = requestedDocuments.Where(id => entity.Documents.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityDocument.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Documents)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Documents)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Documents)} to {nameof(DocumentSet)}");
                         entity.Documents.Add(target);
                     });
-                    var toRemove = entity.Documents.Where(e => requestedDocuments.All(id => e.Id != id)).Select(e => e.Id).ToList();
+                    var toRemove = entity.Documents.Where(e => requestedDocuments.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocument.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Documents)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Documents)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Documents)} from {nameof(DocumentSet)}");
                         entity.Documents.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Documents.Select(e => e.Id).ToList();
+                    var toRemove = entity.Documents.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocument.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Documents)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Documents)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Documents)} from {nameof(DocumentSet)}");
                         entity.Documents.Remove(target);
                     });
                 }
-                if (DocPermissionFactory.IsRequested<List<Reference>>(request, pDocuments, nameof(request.Documents)) && !request.Select.Matches(nameof(request.Documents), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocuments, nameof(request.Documents)) && !request.Select.Matches(nameof(request.Documents), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Documents));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pDocumentSets, permission, DocConstantModelName.DOCUMENTSET, nameof(request.DocumentSets)))
             {
-                if (true == pDocumentSets?.Any())
+                if (true == pDocumentSets?.Any() )
                 {
                     var requestedDocumentSets = pDocumentSets.Select(p => p.Id).Distinct().ToList();
-                    var existsDocumentSets = Execute.SelectAll<DocEntityDocumentSet>().Where(e => e.Id.In(requestedDocumentSets)).Select(e => e.Id).ToList();
+                    var existsDocumentSets = Execute.SelectAll<DocEntityDocumentSet>().Where(e => e.Id.In(requestedDocumentSets)).Select( e => e.Id ).ToList();
                     if (existsDocumentSets.Count != requestedDocumentSets.Count)
                     {
                         var nonExists = requestedDocumentSets.Where(id => existsDocumentSets.All(eId => eId != id));
                         throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection DocumentSets with objects that do not exist. No matching DocumentSets(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedDocumentSets.Where(id => entity.DocumentSets.All(e => e.Id != id)).ToList();
+                    var toAdd = requestedDocumentSets.Where(id => entity.DocumentSets.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.DocumentSets)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.DocumentSets)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.DocumentSets)} to {nameof(DocumentSet)}");
                         entity.DocumentSets.Add(target);
                     });
-                    var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList();
+                    var toRemove = entity.DocumentSets.Where(e => requestedDocumentSets.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.DocumentSets)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.DocumentSets)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(DocumentSet)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.DocumentSets.Select(e => e.Id).ToList();
+                    var toRemove = entity.DocumentSets.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocumentSet.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.DocumentSets)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.DocumentSets)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.DocumentSets)} from {nameof(DocumentSet)}");
                         entity.DocumentSets.Remove(target);
                     });
                 }
-                if (DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.Select.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pDocumentSets, nameof(request.DocumentSets)) && !request.Select.Matches(nameof(request.DocumentSets), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.DocumentSets));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pHistories, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Histories)))
             {
-                if (true == pHistories?.Any())
+                if (true == pHistories?.Any() )
                 {
                     var requestedHistories = pHistories.Select(p => p.Id).Distinct().ToList();
-                    var existsHistories = Execute.SelectAll<DocEntityDocumentSetHistory>().Where(e => e.Id.In(requestedHistories)).Select(e => e.Id).ToList();
+                    var existsHistories = Execute.SelectAll<DocEntityDocumentSetHistory>().Where(e => e.Id.In(requestedHistories)).Select( e => e.Id ).ToList();
                     if (existsHistories.Count != requestedHistories.Count)
                     {
                         var nonExists = requestedHistories.Where(id => existsHistories.All(eId => eId != id));
                         throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Histories with objects that do not exist. No matching Histories(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedHistories.Where(id => entity.Histories.All(e => e.Id != id)).ToList();
+                    var toAdd = requestedHistories.Where(id => entity.Histories.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityDocumentSetHistory.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Histories)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Histories)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Histories)} to {nameof(DocumentSet)}");
                         entity.Histories.Add(target);
                     });
-                    var toRemove = entity.Histories.Where(e => requestedHistories.All(id => e.Id != id)).Select(e => e.Id).ToList();
+                    var toRemove = entity.Histories.Where(e => requestedHistories.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocumentSetHistory.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Histories)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Histories)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Histories)} from {nameof(DocumentSet)}");
                         entity.Histories.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Histories.Select(e => e.Id).ToList();
+                    var toRemove = entity.Histories.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityDocumentSetHistory.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Histories)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Histories)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Histories)} from {nameof(DocumentSet)}");
                         entity.Histories.Remove(target);
                     });
                 }
-                if (DocPermissionFactory.IsRequested<List<Reference>>(request, pHistories, nameof(request.Histories)) && !request.Select.Matches(nameof(request.Histories), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pHistories, nameof(request.Histories)) && !request.Select.Matches(nameof(request.Histories), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Histories));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pScopes, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Scopes)))
             {
-                if (true == pScopes?.Any())
+                if (true == pScopes?.Any() )
                 {
                     var requestedScopes = pScopes.Select(p => p.Id).Distinct().ToList();
-                    var existsScopes = Execute.SelectAll<DocEntityScope>().Where(e => e.Id.In(requestedScopes)).Select(e => e.Id).ToList();
+                    var existsScopes = Execute.SelectAll<DocEntityScope>().Where(e => e.Id.In(requestedScopes)).Select( e => e.Id ).ToList();
                     if (existsScopes.Count != requestedScopes.Count)
                     {
                         var nonExists = requestedScopes.Where(id => existsScopes.All(eId => eId != id));
                         throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Scopes with objects that do not exist. No matching Scopes(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedScopes.Where(id => entity.Scopes.All(e => e.Id != id)).ToList();
+                    var toAdd = requestedScopes.Where(id => entity.Scopes.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityScope.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Scopes)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Scopes)} to {nameof(DocumentSet)}");
                         entity.Scopes.Add(target);
                     });
-                    var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList();
+                    var toRemove = entity.Scopes.Where(e => requestedScopes.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityScope.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Scopes)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(DocumentSet)}");
                         entity.Scopes.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Scopes.Select(e => e.Id).ToList();
+                    var toRemove = entity.Scopes.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityScope.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Scopes)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Scopes)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Scopes)} from {nameof(DocumentSet)}");
                         entity.Scopes.Remove(target);
                     });
                 }
-                if (DocPermissionFactory.IsRequested<List<Reference>>(request, pScopes, nameof(request.Scopes)) && !request.Select.Matches(nameof(request.Scopes), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pScopes, nameof(request.Scopes)) && !request.Select.Matches(nameof(request.Scopes), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Scopes));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pStats, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Stats)))
             {
-                if (true == pStats?.Any())
+                if (true == pStats?.Any() )
                 {
                     var requestedStats = pStats.Select(p => p.Id).Distinct().ToList();
-                    var existsStats = Execute.SelectAll<DocEntityStatsStudySet>().Where(e => e.Id.In(requestedStats)).Select(e => e.Id).ToList();
+                    var existsStats = Execute.SelectAll<DocEntityStatsStudySet>().Where(e => e.Id.In(requestedStats)).Select( e => e.Id ).ToList();
                     if (existsStats.Count != requestedStats.Count)
                     {
                         var nonExists = requestedStats.Where(id => existsStats.All(eId => eId != id));
                         throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Stats with objects that do not exist. No matching Stats(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedStats.Where(id => entity.Stats.All(e => e.Id != id)).ToList();
+                    var toAdd = requestedStats.Where(id => entity.Stats.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityStatsStudySet.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Stats)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Stats)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Stats)} to {nameof(DocumentSet)}");
                         entity.Stats.Add(target);
                     });
-                    var toRemove = entity.Stats.Where(e => requestedStats.All(id => e.Id != id)).Select(e => e.Id).ToList();
+                    var toRemove = entity.Stats.Where(e => requestedStats.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityStatsStudySet.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Stats)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Stats)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Stats)} from {nameof(DocumentSet)}");
                         entity.Stats.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Stats.Select(e => e.Id).ToList();
+                    var toRemove = entity.Stats.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityStatsStudySet.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Stats)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Stats)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Stats)} from {nameof(DocumentSet)}");
                         entity.Stats.Remove(target);
                     });
                 }
-                if (DocPermissionFactory.IsRequested<List<Reference>>(request, pStats, nameof(request.Stats)) && !request.Select.Matches(nameof(request.Stats), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pStats, nameof(request.Stats)) && !request.Select.Matches(nameof(request.Stats), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Stats));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<List<Reference>>(currentUser, request, pUsers, permission, DocConstantModelName.DOCUMENTSET, nameof(request.Users)))
             {
-                if (true == pUsers?.Any())
+                if (true == pUsers?.Any() )
                 {
                     var requestedUsers = pUsers.Select(p => p.Id).Distinct().ToList();
-                    var existsUsers = Execute.SelectAll<DocEntityUser>().Where(e => e.Id.In(requestedUsers)).Select(e => e.Id).ToList();
+                    var existsUsers = Execute.SelectAll<DocEntityUser>().Where(e => e.Id.In(requestedUsers)).Select( e => e.Id ).ToList();
                     if (existsUsers.Count != requestedUsers.Count)
                     {
                         var nonExists = requestedUsers.Where(id => existsUsers.All(eId => eId != id));
                         throw new HttpError(HttpStatusCode.NotFound, $"Cannot patch collection Users with objects that do not exist. No matching Users(s) could be found for Ids: {nonExists.ToDelimitedString()}.");
                     }
-                    var toAdd = requestedUsers.Where(id => entity.Users.All(e => e.Id != id)).ToList();
+                    var toAdd = requestedUsers.Where(id => entity.Users.All(e => e.Id != id)).ToList(); 
                     toAdd?.ForEach(id =>
                     {
                         var target = DocEntityUser.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Users)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Users)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to add {nameof(request.Users)} to {nameof(DocumentSet)}");
                         entity.Users.Add(target);
                     });
-                    var toRemove = entity.Users.Where(e => requestedUsers.All(id => e.Id != id)).Select(e => e.Id).ToList();
+                    var toRemove = entity.Users.Where(e => requestedUsers.All(id => e.Id != id)).Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityUser.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Users)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Users)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(DocumentSet)}");
                         entity.Users.Remove(target);
                     });
                 }
                 else
                 {
-                    var toRemove = entity.Users.Select(e => e.Id).ToList();
+                    var toRemove = entity.Users.Select(e => e.Id).ToList(); 
                     toRemove.ForEach(id =>
                     {
                         var target = DocEntityUser.Get(id);
-                        if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Users)))
+                        if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.REMOVE, targetEntity: target, targetName: nameof(DocumentSet), columnName: nameof(request.Users)))
                             throw new HttpError(HttpStatusCode.Forbidden, "You do not have permission to remove {nameof(request.Users)} from {nameof(DocumentSet)}");
                         entity.Users.Remove(target);
                     });
                 }
-                if (DocPermissionFactory.IsRequested<List<Reference>>(request, pUsers, nameof(request.Users)) && !request.Select.Matches(nameof(request.Users), ignoreSpaces: true))
+                if(DocPermissionFactory.IsRequested<List<Reference>>(request, pUsers, nameof(request.Users)) && !request.Select.Matches(nameof(request.Users), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Users));
                 }
@@ -664,17 +670,17 @@ namespace Services.API
         }
         public DocumentSet Post(DocumentSet request)
         {
-            if (request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
+            if(request == null) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be null.");
 
             request.Select = request.Select ?? new List<string>();
 
             DocumentSet ret = null;
 
-            using (Execute)
+            using(Execute)
             {
                 Execute.Run(ssn =>
                 {
-                    if (!DocPermissionFactory.HasPermissionTryAdd(currentUser, "DocumentSet"))
+                    if(!DocPermissionFactory.HasPermissionTryAdd(currentUser, "DocumentSet")) 
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     ret = _AssignValues(request, DocConstantPermission.ADD, ssn);
@@ -682,10 +688,10 @@ namespace Services.API
             }
             return ret;
         }
-
+   
         public List<DocumentSet> Post(DocumentSetBatch request)
         {
-            if (true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
             var ret = new List<DocumentSet>();
             var errors = new List<ResponseError>();
@@ -702,7 +708,8 @@ namespace Services.API
                 catch (Exception ex)
                 {
                     errorMap[$"{i}"] = null;
-                    errors.Add(new ResponseError() {
+                    errors.Add(new ResponseError()
+                    {
                         Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
                         ErrorCode = $"{i}"
                     });
@@ -712,9 +719,12 @@ namespace Services.API
             base.Response.AddHeader("X-AutoBatch-Completed", $"{ret.Count} succeeded");
             if (errors.Any())
             {
-                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch") {
-                    Response = new ErrorResponse() {
-                        ResponseStatus = new ResponseStatus {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
                             ErrorCode = nameof(HttpError),
                             Meta = errorMap,
                             Message = "Incomplete request",
@@ -729,13 +739,13 @@ namespace Services.API
         public DocumentSet Post(DocumentSetCopy request)
         {
             DocumentSet ret = null;
-            using (Execute)
+            using(Execute)
             {
                 Execute.Run(ssn =>
                 {
                     var entity = DocEntityDocumentSet.Get(request?.Id);
-                    if (null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
-                    if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
+                    if(null == entity) throw new HttpError(HttpStatusCode.NoContent, "The COPY request did not succeed.");
+                    if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pClients = entity.Clients.ToList();
@@ -746,7 +756,7 @@ namespace Services.API
                     var pHistories = entity.Histories.ToList();
                     var pLegacyDocumentSetId = entity.LegacyDocumentSetId;
                     var pName = entity.Name;
-                    if (!DocTools.IsNullOrEmpty(pName))
+                    if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
                     var pOwner = entity.Owner;
                     var pProjectTeam = entity.ProjectTeam;
@@ -757,62 +767,56 @@ namespace Services.API
                     var pUsers = entity.Users.ToList();
                     #region Custom Before copyDocumentSet
                     #endregion Custom Before copyDocumentSet
-                    var copy = new DocEntityDocumentSet(ssn) {
+                    var copy = new DocEntityDocumentSet(ssn)
+                    {
                         Hash = Guid.NewGuid()
-                                ,
-                        Confidential = pConfidential
-                                ,
-                        LegacyDocumentSetId = pLegacyDocumentSetId
-                                ,
-                        Name = pName
-                                ,
-                        Owner = pOwner
-                                ,
-                        ProjectTeam = pProjectTeam
-                                ,
-                        Settings = pSettings
-                                ,
-                        Type = pType
+                                , Confidential = pConfidential
+                                , LegacyDocumentSetId = pLegacyDocumentSetId
+                                , Name = pName
+                                , Owner = pOwner
+                                , ProjectTeam = pProjectTeam
+                                , Settings = pSettings
+                                , Type = pType
                     };
-                    foreach (var item in pClients)
-                    {
-                        entity.Clients.Add(item);
-                    }
+                            foreach(var item in pClients)
+                            {
+                                entity.Clients.Add(item);
+                            }
 
-                    foreach (var item in pDivisions)
-                    {
-                        entity.Divisions.Add(item);
-                    }
+                            foreach(var item in pDivisions)
+                            {
+                                entity.Divisions.Add(item);
+                            }
 
-                    foreach (var item in pDocuments)
-                    {
-                        entity.Documents.Add(item);
-                    }
+                            foreach(var item in pDocuments)
+                            {
+                                entity.Documents.Add(item);
+                            }
 
-                    foreach (var item in pDocumentSets)
-                    {
-                        entity.DocumentSets.Add(item);
-                    }
+                            foreach(var item in pDocumentSets)
+                            {
+                                entity.DocumentSets.Add(item);
+                            }
 
-                    foreach (var item in pHistories)
-                    {
-                        entity.Histories.Add(item);
-                    }
+                            foreach(var item in pHistories)
+                            {
+                                entity.Histories.Add(item);
+                            }
 
-                    foreach (var item in pScopes)
-                    {
-                        entity.Scopes.Add(item);
-                    }
+                            foreach(var item in pScopes)
+                            {
+                                entity.Scopes.Add(item);
+                            }
 
-                    foreach (var item in pStats)
-                    {
-                        entity.Stats.Add(item);
-                    }
+                            foreach(var item in pStats)
+                            {
+                                entity.Stats.Add(item);
+                            }
 
-                    foreach (var item in pUsers)
-                    {
-                        entity.Users.Add(item);
-                    }
+                            foreach(var item in pUsers)
+                            {
+                                entity.Users.Add(item);
+                            }
 
                     #region Custom After copyDocumentSet
                     #endregion Custom After copyDocumentSet
@@ -834,7 +838,7 @@ namespace Services.API
         }
         public List<DocumentSet> Patch(DocumentSetBatch request)
         {
-            if (true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
             var ret = new List<DocumentSet>();
             var errors = new List<ResponseError>();
@@ -851,7 +855,8 @@ namespace Services.API
                 catch (Exception ex)
                 {
                     errorMap[$"{i}"] = $"false";
-                    errors.Add(new ResponseError() {
+                    errors.Add(new ResponseError()
+                    {
                         Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
                         ErrorCode = $"{i}"
                     });
@@ -861,9 +866,12 @@ namespace Services.API
             base.Response.AddHeader("X-AutoBatch-Completed", $"{ret.Count} succeeded");
             if (errors.Any())
             {
-                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch") {
-                    Response = new ErrorResponse() {
-                        ResponseStatus = new ResponseStatus {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
                             ErrorCode = nameof(HttpError),
                             Meta = errorMap,
                             Message = "Incomplete request",
@@ -877,12 +885,12 @@ namespace Services.API
 
         public DocumentSet Patch(DocumentSet request)
         {
-            if (true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the DocumentSet to patch.");
-
+            if(true != (request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, "Please specify a valid Id of the DocumentSet to patch.");
+            
             request.Select = request.Select ?? new List<string>();
-
+            
             DocumentSet ret = null;
-            using (Execute)
+            using(Execute)
             {
                 Execute.Run(ssn =>
                 {
@@ -893,7 +901,7 @@ namespace Services.API
         }
         public void Delete(DocumentSetBatch request)
         {
-            if (true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
+            if(true != request?.Any()) throw new HttpError(HttpStatusCode.NotFound, "Request cannot be empty.");
 
             var errors = new List<ResponseError>();
             var errorMap = new Dictionary<string, string>();
@@ -908,19 +916,23 @@ namespace Services.API
                 catch (Exception ex)
                 {
                     errorMap[$"{i}"] = $"false";
-                    errors.Add(new ResponseError() {
+                    errors.Add(new ResponseError()
+                    {
                         Message = $"{ex.Message}{Environment.NewLine}{ex.InnerException?.Message}",
                         ErrorCode = $"{i}"
                     });
                 }
                 i += 1;
             });
-            base.Response.AddHeader("X-AutoBatch-Completed", $"{request.Count - errors.Count} succeeded");
+            base.Response.AddHeader("X-AutoBatch-Completed", $"{request.Count-errors.Count} succeeded");
             if (errors.Any())
             {
-                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch") {
-                    Response = new ErrorResponse() {
-                        ResponseStatus = new ResponseStatus {
+                throw new HttpError(HttpStatusCode.BadRequest, $"{errors.Count} failed in batch")
+                {
+                    Response = new ErrorResponse()
+                    {
+                        ResponseStatus = new ResponseStatus
+                        {
                             ErrorCode = nameof(HttpError),
                             Meta = errorMap,
                             Message = "Incomplete request",
@@ -933,19 +945,19 @@ namespace Services.API
 
         public void Delete(DocumentSet request)
         {
-            using (Execute)
+            using(Execute)
             {
                 Execute.Run(ssn =>
                 {
-                    if (!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
+                    if(!(request?.Id > 0)) throw new HttpError(HttpStatusCode.NotFound, $"No Id provided for delete.");
 
                     var en = DocEntityDocumentSet.Get(request?.Id);
-                    if (null == en) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet could be found for Id {request?.Id}.");
-                    if (en.IsRemoved) return;
-
-                    if (!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
+                    if(null == en) throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet could be found for Id {request?.Id}.");
+                    if(en.IsRemoved) return;
+                
+                    if(!DocPermissionFactory.HasPermission(en, currentUser, DocConstantPermission.DELETE))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have DELETE permission for this route.");
-
+                
                     en.Remove();
 
                     DocCacheClient.RemoveSearch(DocConstantModelName.DOCUMENTSET);
@@ -957,7 +969,7 @@ namespace Services.API
         public void Delete(DocumentSetSearch request)
         {
             var matches = Get(request) as List<DocumentSet>;
-            if (true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
+            if(true != matches?.Any()) throw new HttpError(HttpStatusCode.NotFound, "No matches for request");
             matches.ForEach(match =>
             {
                 Delete(match);
@@ -965,83 +977,83 @@ namespace Services.API
         }
         public object Get(DocumentSetJunction request)
         {
-            switch (request.Junction.ToLower().TrimAndPruneSpaces())
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                case "lookuptablebinding":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
-                case "client":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request, (ss) => HostContext.ResolveService<ClientService>(Request)?.Get(ss));
-                case "comment":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
-                case "division":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request, (ss) => HostContext.ResolveService<DivisionService>(Request)?.Get(ss));
-                case "document":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
-                case "documentset":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
-                case "favorite":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
-                case "documentsethistory":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocumentSetHistory, DocumentSetHistory, DocumentSetHistorySearch>((int)request.Id, DocConstantModelName.DOCUMENTSETHISTORY, "Histories", request, (ss) => HostContext.ResolveService<DocumentSetHistoryService>(Request)?.Get(ss));
-                case "scope":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
-                case "statsstudyset":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityStatsStudySet, StatsStudySet, StatsStudySetSearch>((int)request.Id, DocConstantModelName.STATSSTUDYSET, "Stats", request, (ss) => HostContext.ResolveService<StatsStudySetService>(Request)?.Get(ss));
-                case "tag":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
-                case "user":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
-                case "workflow":
-                    return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
+                    case "lookuptablebinding":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityLookupTableBinding, LookupTableBinding, LookupTableBindingSearch>((int)request.Id, DocConstantModelName.LOOKUPTABLEBINDING, "Bindings", request, (ss) => HostContext.ResolveService<LookupTableBindingService>(Request)?.Get(ss));
+                    case "client":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request, (ss) => HostContext.ResolveService<ClientService>(Request)?.Get(ss));
+                    case "comment":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request, (ss) => HostContext.ResolveService<CommentService>(Request)?.Get(ss));
+                    case "division":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request, (ss) => HostContext.ResolveService<DivisionService>(Request)?.Get(ss));
+                    case "document":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request, (ss) => HostContext.ResolveService<DocumentService>(Request)?.Get(ss));
+                    case "documentset":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocumentSet, DocumentSet, DocumentSetSearch>((int)request.Id, DocConstantModelName.DOCUMENTSET, "DocumentSets", request, (ss) => HostContext.ResolveService<DocumentSetService>(Request)?.Get(ss));
+                    case "favorite":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request, (ss) => HostContext.ResolveService<FavoriteService>(Request)?.Get(ss));
+                    case "documentsethistory":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityDocumentSetHistory, DocumentSetHistory, DocumentSetHistorySearch>((int)request.Id, DocConstantModelName.DOCUMENTSETHISTORY, "Histories", request, (ss) => HostContext.ResolveService<DocumentSetHistoryService>(Request)?.Get(ss));
+                    case "scope":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request, (ss) => HostContext.ResolveService<ScopeService>(Request)?.Get(ss));
+                    case "statsstudyset":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityStatsStudySet, StatsStudySet, StatsStudySetSearch>((int)request.Id, DocConstantModelName.STATSSTUDYSET, "Stats", request, (ss) => HostContext.ResolveService<StatsStudySetService>(Request)?.Get(ss));
+                    case "tag":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request, (ss) => HostContext.ResolveService<TagService>(Request)?.Get(ss));
+                    case "user":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request, (ss) => HostContext.ResolveService<UserService>(Request)?.Get(ss));
+                    case "workflow":
+                        return GetJunctionSearchResult<DocumentSet, DocEntityDocumentSet, DocEntityWorkflow, Workflow, WorkflowSearch>((int)request.Id, DocConstantModelName.WORKFLOW, "Workflows", request, (ss) => HostContext.ResolveService<WorkflowService>(Request)?.Get(ss));
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
             }
         }
         public object Post(DocumentSetJunction request)
         {
-            switch (request.Junction.ToLower().TrimAndPruneSpaces())
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                case "client":
-                    return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
-                case "comment":
-                    return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
-                case "division":
-                    return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
-                case "document":
-                    return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
-                case "favorite":
-                    return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                case "scope":
-                    return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                case "tag":
-                    return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
-                case "user":
-                    return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
+                    case "client":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
+                    case "comment":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "division":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
+                    case "document":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "favorite":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "scope":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "user":
+                        return AddJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
             }
         }
 
         public object Delete(DocumentSetJunction request)
-        {
-            switch (request.Junction.ToLower().TrimAndPruneSpaces())
+        {    
+            switch(request.Junction.ToLower().TrimAndPruneSpaces())
             {
-                case "client":
-                    return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
-                case "comment":
-                    return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
-                case "division":
-                    return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
-                case "document":
-                    return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
-                case "favorite":
-                    return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
-                case "scope":
-                    return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
-                case "tag":
-                    return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
-                case "user":
-                    return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
+                    case "client":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityClient, Client, ClientSearch>((int)request.Id, DocConstantModelName.CLIENT, "Clients", request);
+                    case "comment":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityComment, Comment, CommentSearch>((int)request.Id, DocConstantModelName.COMMENT, "Comments", request);
+                    case "division":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDivision, Division, DivisionSearch>((int)request.Id, DocConstantModelName.DIVISION, "Divisions", request);
+                    case "document":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityDocument, Document, DocumentSearch>((int)request.Id, DocConstantModelName.DOCUMENT, "Documents", request);
+                    case "favorite":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityFavorite, Favorite, FavoriteSearch>((int)request.Id, DocConstantModelName.FAVORITE, "Favorites", request);
+                    case "scope":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityScope, Scope, ScopeSearch>((int)request.Id, DocConstantModelName.SCOPE, "Scopes", request);
+                    case "tag":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityTag, Tag, TagSearch>((int)request.Id, DocConstantModelName.TAG, "Tags", request);
+                    case "user":
+                        return RemoveJunction<DocumentSet, DocEntityDocumentSet, DocEntityUser, User, UserSearch>((int)request.Id, DocConstantModelName.USER, "Users", request);
                 default:
                     throw new HttpError(HttpStatusCode.NotFound, $"Route for documentset/{request.Id}/{request.Junction} was not found");
             }
@@ -1055,16 +1067,16 @@ namespace Services.API
             DocPermissionFactory.SetSelect<DocumentSet>(currentUser, "DocumentSet", request.Select);
 
             DocEntityDocumentSet entity = null;
-            if (id.HasValue)
+            if(id.HasValue)
             {
                 entity = DocEntityDocumentSet.Get(id.Value);
             }
-            if (null == entity)
+            if(null == entity)
                 throw new HttpError(HttpStatusCode.NotFound, $"No DocumentSet found for Id {id.Value}");
 
-            if (!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.VIEW))
+            if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.VIEW))
                 throw new HttpError(HttpStatusCode.Forbidden, "You do not have VIEW permission for this route.");
-
+            
             ret = entity?.ToDto();
             return ret;
         }

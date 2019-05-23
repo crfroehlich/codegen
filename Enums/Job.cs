@@ -46,6 +46,8 @@ namespace Services.Enums
         IMPORT_PACKAGES = 139850826,
         [EnumMember(Value = DocConstantJob.PROCESS_EVENTS), SCDescript(DocConstantJob.PROCESS_EVENTS), SSDescript(DocConstantJob.PROCESS_EVENTS), SCDisplay(Name = DocConstantJob.PROCESS_EVENTS)]
         PROCESS_EVENTS = 139850827,
+        [EnumMember(Value = DocConstantJob.PROCESS_LIBRARY_RATINGS), SCDescript(DocConstantJob.PROCESS_LIBRARY_RATINGS), SSDescript(DocConstantJob.PROCESS_LIBRARY_RATINGS), SCDisplay(Name = DocConstantJob.PROCESS_LIBRARY_RATINGS)]
+        PROCESS_LIBRARY_RATINGS = 139850871,
         [EnumMember(Value = DocConstantJob.PROCESS_STATS), SCDescript(DocConstantJob.PROCESS_STATS), SSDescript(DocConstantJob.PROCESS_STATS), SCDisplay(Name = DocConstantJob.PROCESS_STATS)]
         PROCESS_STATS = 139850828,
         [EnumMember(Value = DocConstantJob.PROCESS_UPDATES), SCDescript(DocConstantJob.PROCESS_UPDATES), SSDescript(DocConstantJob.PROCESS_UPDATES), SCDisplay(Name = DocConstantJob.PROCESS_UPDATES)]
@@ -88,6 +90,8 @@ namespace Services.Enums
                     return DocConstantJob.IMPORT_PACKAGES;
                 case JobEnm.PROCESS_EVENTS:
                     return DocConstantJob.PROCESS_EVENTS;
+                case JobEnm.PROCESS_LIBRARY_RATINGS:
+                    return DocConstantJob.PROCESS_LIBRARY_RATINGS;
                 case JobEnm.PROCESS_STATS:
                     return DocConstantJob.PROCESS_STATS;
                 case JobEnm.PROCESS_UPDATES:
@@ -126,6 +130,7 @@ namespace Services.Enums
         public const string IMPORT_LIBRARY = "ImportLibrary";
         public const string IMPORT_PACKAGES = "ImportPackages";
         public const string PROCESS_EVENTS = "ProcessEvents";
+        public const string PROCESS_LIBRARY_RATINGS = "ProcessLibraryRatings";
         public const string PROCESS_STATS = "ProcessStats";
         public const string PROCESS_UPDATES = "ProcessUpdates";
         public const string REASSIGN_ARCHIVED_USERS = "ReassignArchivedUsers";
