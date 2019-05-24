@@ -136,6 +136,7 @@ namespace Services.API
             var pScopes = request.Scopes?.ToList();
             var pText = request.Text;
             var pUser = (request.User?.Id > 0) ? DocEntityUser.Get(request.User.Id) : null;
+            var pOwner = (request.Owner?.Id > 0) ? DocEntityBase.Get(request.Owner.Id) : null;
 
             DocEntityComment entity = null;
             if(permission == DocConstantPermission.ADD)
@@ -188,6 +189,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<DocEntityUser>(request, pUser, nameof(request.User)) && !request.Select.Matches(nameof(request.User), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.User));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<DocEntityBase>(currentUser, request, pOwner, permission, DocConstantModelName.COMMENT, nameof(request.Owner)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pOwner, entity.Owner, nameof(request.Owner)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.COMMENT, nameof(request.Owner)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.Owner)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pOwner) && DocResources.Metadata.IsRequired(DocConstantModelName.COMMENT, nameof(request.Owner))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.Owner)} requires a value.");
+                    entity.Owner = pOwner;
+                if(DocPermissionFactory.IsRequested<DocEntityBase>(request, pOwner, nameof(request.Owner)) && !request.Select.Matches(nameof(request.Owner), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.Owner));
                 }
             }
 
