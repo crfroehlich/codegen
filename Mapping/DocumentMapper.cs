@@ -32,6 +32,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Abstract, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Abstract))))
                 .ForMember(dest => dest.AccessionID, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.AccessionID))))
                 .ForMember(dest => dest.Acronym, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Acronym))))
+                .ForMember(dest => dest.ArticleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.ArticleId))))
                 .ForMember(dest => dest.Authors, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Authors))))
                 .ForMember(dest => dest.CochraneID, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.CochraneID))))
                 .ForMember(dest => dest.CorporateAuthor, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.CorporateAuthor))))

@@ -91,6 +91,10 @@ namespace Services.Schema
         public string Acronym { get; set; }
 
 
+        [Field(Length = 100)]
+        public string ArticleId { get; set; }
+
+
         [Field]
         public string Authors { get; set; }
 
@@ -334,6 +338,7 @@ namespace Services.Schema
         {
             AccessionID = AccessionID?.TrimAndPruneSpaces();
             Acronym = Acronym?.TrimAndPruneSpaces();
+            ArticleId = ArticleId?.TrimAndPruneSpaces();
             Authors = Authors?.TrimAndPruneSpaces();
             CochraneID = CochraneID?.TrimAndPruneSpaces();
             CorporateAuthor = CorporateAuthor?.TrimAndPruneSpaces();

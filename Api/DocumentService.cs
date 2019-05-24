@@ -86,6 +86,8 @@ namespace Services.API
                     entities = entities.Where(en => en.AccessionID.Contains(request.AccessionID));
                 if(!DocTools.IsNullOrEmpty(request.Acronym))
                     entities = entities.Where(en => en.Acronym.Contains(request.Acronym));
+                if(!DocTools.IsNullOrEmpty(request.ArticleId))
+                    entities = entities.Where(en => en.ArticleId.Contains(request.ArticleId));
                 if(!DocTools.IsNullOrEmpty(request.Authors))
                     entities = entities.Where(en => en.Authors.Contains(request.Authors));
                 if(!DocTools.IsNullOrEmpty(request.CochraneID))
@@ -260,6 +262,7 @@ namespace Services.API
             var pAbstract = request.Abstract;
             var pAccessionID = request.AccessionID;
             var pAcronym = request.Acronym;
+            var pArticleId = request.ArticleId;
             var pAuthors = request.Authors;
             var pCochraneID = request.CochraneID;
             var pCorporateAuthor = request.CorporateAuthor;
@@ -363,6 +366,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<string>(request, pAcronym, nameof(request.Acronym)) && !request.Select.Matches(nameof(request.Acronym), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.Acronym));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pArticleId, permission, DocConstantModelName.DOCUMENT, nameof(request.ArticleId)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pArticleId, entity.ArticleId, nameof(request.ArticleId)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.DOCUMENT, nameof(request.ArticleId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ArticleId)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pArticleId) && DocResources.Metadata.IsRequired(DocConstantModelName.DOCUMENT, nameof(request.ArticleId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ArticleId)} requires a value.");
+                    entity.ArticleId = pArticleId;
+                if(DocPermissionFactory.IsRequested<string>(request, pArticleId, nameof(request.ArticleId)) && !request.Select.Matches(nameof(request.ArticleId), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.ArticleId));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pAuthors, permission, DocConstantModelName.DOCUMENT, nameof(request.Authors)))
@@ -1005,6 +1019,9 @@ namespace Services.API
                     var pAcronym = entity.Acronym;
                     if(!DocTools.IsNullOrEmpty(pAcronym))
                         pAcronym += " (Copy)";
+                    var pArticleId = entity.ArticleId;
+                    if(!DocTools.IsNullOrEmpty(pArticleId))
+                        pArticleId += " (Copy)";
                     var pAuthors = entity.Authors;
                     if(!DocTools.IsNullOrEmpty(pAuthors))
                         pAuthors += " (Copy)";
@@ -1099,6 +1116,7 @@ namespace Services.API
                                 , Abstract = pAbstract
                                 , AccessionID = pAccessionID
                                 , Acronym = pAcronym
+                                , ArticleId = pArticleId
                                 , Authors = pAuthors
                                 , CochraneID = pCochraneID
                                 , CorporateAuthor = pCorporateAuthor
