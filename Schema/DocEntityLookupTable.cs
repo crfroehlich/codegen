@@ -84,11 +84,17 @@ namespace Services.Schema
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
 
+        public List<int> BindingsIds => Bindings.Select(e => e.Id).ToList();
+
+
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
         [Field]
         public DocEntitySet<DocEntityLookupCategory> Categories { get; private set; }
+
+
+        public List<int> CategoriesIds => Categories.Select(e => e.Id).ToList();
 
 
         public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
@@ -97,6 +103,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityDocument.LookupTables), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
+
+
+        public List<int> DocumentsIds => Documents.Select(e => e.Id).ToList();
 
 
         public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }

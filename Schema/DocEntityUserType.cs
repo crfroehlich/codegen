@@ -98,6 +98,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityUser> Users { get; private set; }
 
 
+        public List<int> UsersIds => Users.Select(e => e.Id).ToList();
+
+
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }
 
 

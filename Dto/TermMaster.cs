@@ -58,6 +58,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Categories), Description = "TermCategory", IsRequired = false)]
         public List<TermCategory> Categories { get; set; }
+        public List<int> CategoriesIds { get; set; }
         public int? CategoriesCount { get; set; }
 
 
@@ -89,6 +90,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Synonyms), Description = "TermSynonym", IsRequired = false)]
         public List<Reference> Synonyms { get; set; }
+        public List<int> SynonymsIds { get; set; }
         public int? SynonymsCount { get; set; }
 
 

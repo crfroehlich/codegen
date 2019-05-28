@@ -92,6 +92,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
+        public List<int> DocumentSetsIds => DocumentSets.Select(e => e.Id).ToList();
+
+
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
 
@@ -120,6 +123,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityHistory> History { get; private set; }
 
 
+        public List<int> HistoryIds => History.Select(e => e.Id).ToList();
+
+
         public int? HistoryCount { get { return History.Count(); } private set { var noid = value; } }
 
 
@@ -128,12 +134,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityImpersonation> Impersonated { get; private set; }
 
 
+        public List<int> ImpersonatedIds => Impersonated.Select(e => e.Id).ToList();
+
+
         public int? ImpersonatedCount { get { return Impersonated.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityImpersonation.AuthenticatedUser), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityImpersonation> Impersonating { get; private set; }
+
+
+        public List<int> ImpersonatingIds => Impersonating.Select(e => e.Id).ToList();
 
 
         public int? ImpersonatingCount { get { return Impersonating.Count(); } private set { var noid = value; } }
@@ -176,6 +188,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
 
 
+        public List<int> RolesIds => Roles.Select(e => e.Id).ToList();
+
+
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
 
 
@@ -184,12 +199,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
+        public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
+
+
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityUserSession.User), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUserSession> Sessions { get; private set; }
+
+
+        public List<int> SessionsIds => Sessions.Select(e => e.Id).ToList();
 
 
         public int? SessionsCount { get { return Sessions.Count(); } private set { var noid = value; } }
@@ -216,6 +237,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTeam> Teams { get; private set; }
 
 
+        public List<int> TeamsIds => Teams.Select(e => e.Id).ToList();
+
+
         public int? TeamsCount { get { return Teams.Count(); } private set { var noid = value; } }
 
 
@@ -224,12 +248,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTimeCard> TimeCards { get; private set; }
 
 
+        public List<int> TimeCardsIds => TimeCards.Select(e => e.Id).ToList();
+
+
         public int? TimeCardsCount { get { return TimeCards.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityUpdate.User), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUpdate> Updates { get; private set; }
+
+
+        public List<int> UpdatesIds => Updates.Select(e => e.Id).ToList();
 
 
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
@@ -243,6 +273,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.User), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
+
+
+        public List<int> WorkflowsIds => Workflows.Select(e => e.Id).ToList();
 
 
         public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }

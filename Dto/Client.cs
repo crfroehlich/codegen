@@ -61,11 +61,13 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Divisions), Description = "Division", IsRequired = false)]
         public List<Reference> Divisions { get; set; }
+        public List<int> DivisionsIds { get; set; }
         public int? DivisionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
+        public List<int> DocumentSetsIds { get; set; }
         public int? DocumentSetsCount { get; set; }
 
 
@@ -75,6 +77,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
         public List<Reference> Projects { get; set; }
+        public List<int> ProjectsIds { get; set; }
         public int? ProjectsCount { get; set; }
 
 
@@ -90,6 +93,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
+        public List<int> ScopesIds { get; set; }
         public int? ScopesCount { get; set; }
 
 

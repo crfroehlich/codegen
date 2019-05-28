@@ -89,12 +89,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
 
+        public List<int> BindingsIds => Bindings.Select(e => e.Id).ToList();
+
+
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityBroadcast.Scopes), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityBroadcast> Broadcasts { get; private set; }
+
+
+        public List<int> BroadcastsIds => Broadcasts.Select(e => e.Id).ToList();
 
 
         public int? BroadcastsCount { get { return Broadcasts.Count(); } private set { var noid = value; } }
@@ -123,6 +129,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityHelp> Help { get; private set; }
 
 
+        public List<int> HelpIds => Help.Select(e => e.Id).ToList();
+
+
         public int? HelpCount { get { return Help.Count(); } private set { var noid = value; } }
 
 
@@ -134,11 +143,17 @@ namespace Services.Schema
         public DocEntitySet<DocEntityComment> ScopedComments { get; private set; }
 
 
+        public List<int> ScopedCommentsIds => ScopedComments.Select(e => e.Id).ToList();
+
+
         public int? ScopedCommentsCount { get { return ScopedComments.Count(); } private set { var noid = value; } }
 
 
         [Field]
         public DocEntitySet<DocEntityTag> ScopedTags { get; private set; }
+
+
+        public List<int> ScopedTagsIds => ScopedTags.Select(e => e.Id).ToList();
 
 
         public int? ScopedTagsCount { get { return ScopedTags.Count(); } private set { var noid = value; } }
@@ -147,6 +162,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Scope), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
+
+
+        public List<int> SynonymsIds => Synonyms.Select(e => e.Id).ToList();
 
 
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
@@ -171,6 +189,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityVariableRule> VariableRules { get; private set; }
 
 
+        public List<int> VariableRulesIds => VariableRules.Select(e => e.Id).ToList();
+
+
         public int? VariableRulesCount { get { return VariableRules.Count(); } private set { var noid = value; } }
 
 
@@ -180,6 +201,9 @@ namespace Services.Schema
 
         [Field]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
+
+
+        public List<int> WorkflowsIds => Workflows.Select(e => e.Id).ToList();
 
 
         public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }

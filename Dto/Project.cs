@@ -69,6 +69,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Children), Description = "Project", IsRequired = false)]
         public List<Reference> Children { get; set; }
+        public List<int> ChildrenIds { get; set; }
         public int? ChildrenCount { get; set; }
 
 
@@ -165,6 +166,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(TimeCards), Description = "TimeCard", IsRequired = false)]
         public List<Reference> TimeCards { get; set; }
+        public List<int> TimeCardsIds { get; set; }
         public int? TimeCardsCount { get; set; }
 
 

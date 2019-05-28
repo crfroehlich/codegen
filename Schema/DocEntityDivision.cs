@@ -93,6 +93,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
+        public List<int> DocumentSetsIds => DocumentSets.Select(e => e.Id).ToList();
+
+
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
 
@@ -112,6 +115,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityUser.Division), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
+
+
+        public List<int> UsersIds => Users.Select(e => e.Id).ToList();
 
 
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }

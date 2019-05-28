@@ -69,6 +69,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         public List<Reference> Users { get; set; }
+        public List<int> UsersIds { get; set; }
         public int? UsersCount { get; set; }
 
 

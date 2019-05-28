@@ -84,6 +84,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityVariableRule> Children { get; private set; }
 
 
+        public List<int> ChildrenIds => Children.Select(e => e.Id).ToList();
+
+
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
 
@@ -94,6 +97,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityVariableInstance.Rule), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableInstance> Instances { get; private set; }
+
+
+        public List<int> InstancesIds => Instances.Select(e => e.Id).ToList();
 
 
         public int? InstancesCount { get { return Instances.Count(); } private set { var noid = value; } }
@@ -115,6 +121,9 @@ namespace Services.Schema
 
         [Field]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
+
+
+        public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
 
 
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }

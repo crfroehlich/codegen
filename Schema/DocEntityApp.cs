@@ -92,6 +92,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityPage> Pages { get; private set; }
 
 
+        public List<int> PagesIds => Pages.Select(e => e.Id).ToList();
+
+
         public int? PagesCount { get { return Pages.Count(); } private set { var noid = value; } }
 
 
@@ -100,12 +103,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
 
 
+        public List<int> RolesIds => Roles.Select(e => e.Id).ToList();
+
+
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityScope.App), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
+
+
+        public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
 
 
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }

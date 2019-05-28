@@ -64,6 +64,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
+        public List<int> DocumentSetsIds { get; set; }
         public int? DocumentSetsCount { get; set; }
 
 
@@ -83,6 +84,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         public List<Reference> Users { get; set; }
+        public List<int> UsersIds { get; set; }
         public int? UsersCount { get; set; }
 
 

@@ -77,11 +77,13 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
+        public List<int> BindingsIds { get; set; }
         public int? BindingsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Broadcasts), Description = "Broadcast", IsRequired = false)]
         public List<Reference> Broadcasts { get; set; }
+        public List<int> BroadcastsIds { get; set; }
         public int? BroadcastsCount { get; set; }
 
 
@@ -107,6 +109,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Help), Description = "Help", IsRequired = false)]
         public List<Reference> Help { get; set; }
+        public List<int> HelpIds { get; set; }
         public int? HelpCount { get; set; }
 
 
@@ -116,16 +119,19 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ScopedComments), Description = "Comment", IsRequired = false)]
         public List<Reference> ScopedComments { get; set; }
+        public List<int> ScopedCommentsIds { get; set; }
         public int? ScopedCommentsCount { get; set; }
 
 
         [ApiMember(Name = nameof(ScopedTags), Description = "Tag", IsRequired = false)]
         public List<Reference> ScopedTags { get; set; }
+        public List<int> ScopedTagsIds { get; set; }
         public int? ScopedTagsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Synonyms), Description = "TermSynonym", IsRequired = false)]
         public List<Reference> Synonyms { get; set; }
+        public List<int> SynonymsIds { get; set; }
         public int? SynonymsCount { get; set; }
 
 
@@ -148,6 +154,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(VariableRules), Description = "VariableRule", IsRequired = false)]
         public List<Reference> VariableRules { get; set; }
+        public List<int> VariableRulesIds { get; set; }
         public int? VariableRulesCount { get; set; }
 
 
@@ -157,6 +164,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
         public List<Reference> Workflows { get; set; }
+        public List<int> WorkflowsIds { get; set; }
         public int? WorkflowsCount { get; set; }
 
 

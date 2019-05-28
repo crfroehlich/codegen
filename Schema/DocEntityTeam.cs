@@ -84,6 +84,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityRole> AdminRoles { get; private set; }
 
 
+        public List<int> AdminRolesIds => AdminRoles.Select(e => e.Id).ToList();
+
+
         public int? AdminRolesCount { get { return AdminRoles.Count(); } private set { var noid = value; } }
 
 
@@ -113,6 +116,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
+        public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
+
+
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
@@ -129,11 +135,17 @@ namespace Services.Schema
         public DocEntitySet<DocEntityUpdate> Updates { get; private set; }
 
 
+        public List<int> UpdatesIds => Updates.Select(e => e.Id).ToList();
+
+
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
 
 
         [Field]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
+
+
+        public List<int> UsersIds => Users.Select(e => e.Id).ToList();
 
 
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }

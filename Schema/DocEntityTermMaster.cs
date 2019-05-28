@@ -87,6 +87,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTermCategory> Categories { get; private set; }
 
 
+        public List<int> CategoriesIds => Categories.Select(e => e.Id).ToList();
+
+
         public int? CategoriesCount { get { return Categories.Count(); } private set { var noid = value; } }
 
 
@@ -118,6 +121,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityTermSynonym.Master), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
+
+
+        public List<int> SynonymsIds => Synonyms.Select(e => e.Id).ToList();
 
 
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }

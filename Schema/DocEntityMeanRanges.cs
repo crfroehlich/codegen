@@ -84,6 +84,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityMeanRangeValue> Ranges { get; private set; }
 
 
+        public List<int> RangesIds => Ranges.Select(e => e.Id).ToList();
+
+
         public int? RangesCount { get { return Ranges.Count(); } private set { var noid = value; } }
 
 

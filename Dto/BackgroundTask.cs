@@ -87,6 +87,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Items), Description = "BackgroundTaskItem", IsRequired = false)]
         public List<Reference> Items { get; set; }
+        public List<int> ItemsIds { get; set; }
         public int? ItemsCount { get; set; }
 
 
@@ -120,6 +121,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(TaskHistory), Description = "BackgroundTaskHistory", IsRequired = false)]
         public List<Reference> TaskHistory { get; set; }
+        public List<int> TaskHistoryIds { get; set; }
         public int? TaskHistoryCount { get; set; }
 
 

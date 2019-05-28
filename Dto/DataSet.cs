@@ -77,11 +77,13 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Characteristics), Description = "Tag", IsRequired = false)]
         public List<Reference> Characteristics { get; set; }
+        public List<int> CharacteristicsIds { get; set; }
         public int? CharacteristicsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Comparators), Description = "Tag", IsRequired = false)]
         public List<Reference> Comparators { get; set; }
+        public List<int> ComparatorsIds { get; set; }
         public int? ComparatorsCount { get; set; }
 
 
@@ -111,6 +113,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Imports), Description = "ImportData", IsRequired = false)]
         public List<Reference> Imports { get; set; }
+        public List<int> ImportsIds { get; set; }
         public int? ImportsCount { get; set; }
 
 
@@ -120,6 +123,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Interventions), Description = "Tag", IsRequired = false)]
         public List<Reference> Interventions { get; set; }
+        public List<int> InterventionsIds { get; set; }
         public int? InterventionsCount { get; set; }
 
 
@@ -149,6 +153,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Outcomes), Description = "Tag", IsRequired = false)]
         public List<Reference> Outcomes { get; set; }
+        public List<int> OutcomesIds { get; set; }
         public int? OutcomesCount { get; set; }
 
 
@@ -164,6 +169,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Projects), Description = "Project", IsRequired = false)]
         public List<Reference> Projects { get; set; }
+        public List<int> ProjectsIds { get; set; }
         public int? ProjectsCount { get; set; }
 
 
@@ -177,6 +183,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(StudyDesigns), Description = "StudyDesign", IsRequired = false)]
         public List<Reference> StudyDesigns { get; set; }
+        public List<int> StudyDesignsIds { get; set; }
         public int? StudyDesignsCount { get; set; }
 
 

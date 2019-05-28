@@ -87,6 +87,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
 
+        public List<int> BindingsIds => Bindings.Select(e => e.Id).ToList();
+
+
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 

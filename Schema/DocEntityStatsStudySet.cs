@@ -120,6 +120,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityStatsRecord> Records { get; private set; }
 
 
+        public List<int> RecordsIds => Records.Select(e => e.Id).ToList();
+
+
         public int? RecordsCount { get { return Records.Count(); } private set { var noid = value; } }
 
 

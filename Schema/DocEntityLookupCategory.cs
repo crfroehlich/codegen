@@ -93,6 +93,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityLookupTable> Lookups { get; private set; }
 
 
+        public List<int> LookupsIds => Lookups.Select(e => e.Id).ToList();
+
+
         public int? LookupsCount { get { return Lookups.Count(); } private set { var noid = value; } }
 
 

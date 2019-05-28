@@ -103,6 +103,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(TaskHistory), Description = "BackgroundTaskHistory", IsRequired = false)]
         public List<Reference> TaskHistory { get; set; }
+        public List<int> TaskHistoryIds { get; set; }
         public int? TaskHistoryCount { get; set; }
 
 

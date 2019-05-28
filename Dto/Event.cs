@@ -69,16 +69,19 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Teams), Description = "Team", IsRequired = false)]
         public List<Reference> Teams { get; set; }
+        public List<int> TeamsIds { get; set; }
         public int? TeamsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Updates), Description = "Update", IsRequired = false)]
         public List<Reference> Updates { get; set; }
+        public List<int> UpdatesIds { get; set; }
         public int? UpdatesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         public List<Reference> Users { get; set; }
+        public List<int> UsersIds { get; set; }
         public int? UsersCount { get; set; }
 
 

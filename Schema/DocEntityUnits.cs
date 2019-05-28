@@ -84,6 +84,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityUnitValue> Units { get; private set; }
 
 
+        public List<int> UnitsIds => Units.Select(e => e.Id).ToList();
+
+
         public int? UnitsCount { get { return Units.Count(); } private set { var noid = value; } }
 
 

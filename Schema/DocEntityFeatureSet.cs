@@ -95,6 +95,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
 
 
+        public List<int> RolesIds => Roles.Select(e => e.Id).ToList();
+
+
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }
 
 

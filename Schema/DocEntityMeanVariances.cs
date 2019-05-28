@@ -84,6 +84,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityMeanVarianceValue> Variances { get; private set; }
 
 
+        public List<int> VariancesIds => Variances.Select(e => e.Id).ToList();
+
+
         public int? VariancesCount { get { return Variances.Count(); } private set { var noid = value; } }
 
 

@@ -100,6 +100,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityMeanVariances> Owners { get; private set; }
 
 
+        public List<int> OwnersIds => Owners.Select(e => e.Id).ToList();
+
+
         public int? OwnersCount { get { return Owners.Count(); } private set { var noid = value; } }
 
 

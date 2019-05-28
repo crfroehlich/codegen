@@ -126,6 +126,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityBackgroundTaskItem> Items { get; private set; }
 
 
+        public List<int> ItemsIds => Items.Select(e => e.Id).ToList();
+
+
         public int? ItemsCount { get { return Items.Count(); } private set { var noid = value; } }
 
 

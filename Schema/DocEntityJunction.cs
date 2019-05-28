@@ -84,6 +84,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityJunction> Children { get; private set; }
 
 
+        public List<int> ChildrenIds => Children.Select(e => e.Id).ToList();
+
+
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
 

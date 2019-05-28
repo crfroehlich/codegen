@@ -96,6 +96,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityMeanRanges> Owners { get; private set; }
 
 
+        public List<int> OwnersIds => Owners.Select(e => e.Id).ToList();
+
+
         public int? OwnersCount { get { return Owners.Count(); } private set { var noid = value; } }
 
 

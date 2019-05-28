@@ -102,12 +102,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTermSynonym> Synonyms { get; private set; }
 
 
+        public List<int> SynonymsIds => Synonyms.Select(e => e.Id).ToList();
+
+
         public int? SynonymsCount { get { return Synonyms.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.Bindings), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
+
+
+        public List<int> WorkflowsIds => Workflows.Select(e => e.Id).ToList();
 
 
         public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }

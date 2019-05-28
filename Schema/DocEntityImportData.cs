@@ -87,6 +87,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDataSet> DataSets { get; private set; }
 
 
+        public List<int> DataSetsIds => DataSets.Select(e => e.Id).ToList();
+
+
         public int? DataSetsCount { get { return DataSets.Count(); } private set { var noid = value; } }
 
 

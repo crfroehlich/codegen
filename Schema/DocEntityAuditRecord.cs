@@ -116,6 +116,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityAuditDelta> Deltas { get; private set; }
 
 
+        public List<int> DeltasIds => Deltas.Select(e => e.Id).ToList();
+
+
         public int? DeltasCount { get { return Deltas.Count(); } private set { var noid = value; } }
 
 
@@ -134,6 +137,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityEvent.AuditRecord), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityEvent> Events { get; private set; }
+
+
+        public List<int> EventsIds => Events.Select(e => e.Id).ToList();
 
 
         public int? EventsCount { get { return Events.Count(); } private set { var noid = value; } }

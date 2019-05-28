@@ -54,6 +54,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Children), Description = "VariableRule", IsRequired = false)]
         public List<Reference> Children { get; set; }
+        public List<int> ChildrenIds { get; set; }
         public int? ChildrenCount { get; set; }
 
 
@@ -63,6 +64,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Instances), Description = "VariableInstance", IsRequired = false)]
         public List<Reference> Instances { get; set; }
+        public List<int> InstancesIds { get; set; }
         public int? InstancesCount { get; set; }
 
 
@@ -85,6 +87,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
+        public List<int> ScopesIds { get; set; }
         public int? ScopesCount { get; set; }
 
 

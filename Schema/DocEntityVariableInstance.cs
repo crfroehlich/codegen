@@ -98,6 +98,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
 
 
+        public List<int> WorkflowsIds => Workflows.Select(e => e.Id).ToList();
+
+
         public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }
 
 

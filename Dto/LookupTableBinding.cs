@@ -70,11 +70,13 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Synonyms), Description = "TermSynonym", IsRequired = false)]
         public List<Reference> Synonyms { get; set; }
+        public List<int> SynonymsIds { get; set; }
         public int? SynonymsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
         public List<Reference> Workflows { get; set; }
+        public List<int> WorkflowsIds { get; set; }
         public int? WorkflowsCount { get; set; }
 
 

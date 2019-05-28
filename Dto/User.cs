@@ -95,6 +95,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
+        public List<int> DocumentSetsIds { get; set; }
         public int? DocumentSetsCount { get; set; }
 
 
@@ -120,16 +121,19 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(History), Description = "History", IsRequired = false)]
         public List<Reference> History { get; set; }
+        public List<int> HistoryIds { get; set; }
         public int? HistoryCount { get; set; }
 
 
         [ApiMember(Name = nameof(Impersonated), Description = "Impersonation", IsRequired = false)]
         public List<Reference> Impersonated { get; set; }
+        public List<int> ImpersonatedIds { get; set; }
         public int? ImpersonatedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Impersonating), Description = "Impersonation", IsRequired = false)]
         public List<Reference> Impersonating { get; set; }
+        public List<int> ImpersonatingIds { get; set; }
         public int? ImpersonatingCount { get; set; }
 
 
@@ -169,16 +173,19 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Roles), Description = "Role", IsRequired = false)]
         public List<Role> Roles { get; set; }
+        public List<int> RolesIds { get; set; }
         public int? RolesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
+        public List<int> ScopesIds { get; set; }
         public int? ScopesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Sessions), Description = "UserSession", IsRequired = false)]
         public List<Reference> Sessions { get; set; }
+        public List<int> SessionsIds { get; set; }
         public int? SessionsCount { get; set; }
 
 
@@ -201,16 +208,19 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Teams), Description = "Team", IsRequired = false)]
         public List<Reference> Teams { get; set; }
+        public List<int> TeamsIds { get; set; }
         public int? TeamsCount { get; set; }
 
 
         [ApiMember(Name = nameof(TimeCards), Description = "TimeCard", IsRequired = false)]
         public List<Reference> TimeCards { get; set; }
+        public List<int> TimeCardsIds { get; set; }
         public int? TimeCardsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Updates), Description = "Update", IsRequired = false)]
         public List<Reference> Updates { get; set; }
+        public List<int> UpdatesIds { get; set; }
         public int? UpdatesCount { get; set; }
 
 
@@ -222,6 +232,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
         public List<Reference> Workflows { get; set; }
+        public List<int> WorkflowsIds { get; set; }
         public int? WorkflowsCount { get; set; }
 
 

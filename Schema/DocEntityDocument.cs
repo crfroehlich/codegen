@@ -124,6 +124,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
+        public List<int> DocumentSetsIds => DocumentSets.Select(e => e.Id).ToList();
+
+
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
 
@@ -188,6 +191,9 @@ namespace Services.Schema
 
         [Field]
         public DocEntitySet<DocEntityLookupTable> LookupTables { get; private set; }
+
+
+        public List<int> LookupTablesIds => LookupTables.Select(e => e.Id).ToList();
 
 
         public int? LookupTablesCount { get { return LookupTables.Count(); } private set { var noid = value; } }
@@ -271,6 +277,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityVariableInstance.Document), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityVariableInstance> VariableData { get; private set; }
+
+
+        public List<int> VariableDataIds => VariableData.Select(e => e.Id).ToList();
 
 
         public int? VariableDataCount { get { return VariableData.Count(); } private set { var noid = value; } }

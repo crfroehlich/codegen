@@ -71,6 +71,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Events), Description = "Event", IsRequired = false)]
         public List<Reference> Events { get; set; }
+        public List<int> EventsIds { get; set; }
         public int? EventsCount { get; set; }
 
 

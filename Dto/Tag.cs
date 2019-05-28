@@ -48,6 +48,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
+        public List<int> ScopesIds { get; set; }
         public int? ScopesCount { get; set; }
 
 

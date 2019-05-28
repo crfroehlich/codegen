@@ -84,6 +84,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityProject> Children { get; private set; }
 
 
+        public List<int> ChildrenIds => Children.Select(e => e.Id).ToList();
+
+
         public int? ChildrenCount { get { return Children.Count(); } private set { var noid = value; } }
 
 
@@ -175,6 +178,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityTimeCard.Project), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTimeCard> TimeCards { get; private set; }
+
+
+        public List<int> TimeCardsIds => TimeCards.Select(e => e.Id).ToList();
 
 
         public int? TimeCardsCount { get { return TimeCards.Count(); } private set { var noid = value; } }

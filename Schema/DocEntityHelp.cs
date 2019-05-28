@@ -99,11 +99,17 @@ namespace Services.Schema
         public DocEntitySet<DocEntityPage> Pages { get; private set; }
 
 
+        public List<int> PagesIds => Pages.Select(e => e.Id).ToList();
+
+
         public int? PagesCount { get { return Pages.Count(); } private set { var noid = value; } }
 
 
         [Field]
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
+
+
+        public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
 
 
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }

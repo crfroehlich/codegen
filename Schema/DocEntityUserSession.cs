@@ -92,6 +92,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityImpersonation> Impersonations { get; private set; }
 
 
+        public List<int> ImpersonationsIds => Impersonations.Select(e => e.Id).ToList();
+
+
         public int? ImpersonationsCount { get { return Impersonations.Count(); } private set { var noid = value; } }
 
 
@@ -102,6 +105,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityUserRequest.UserSession), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
         public DocEntitySet<DocEntityUserRequest> Requests { get; private set; }
+
+
+        public List<int> RequestsIds => Requests.Select(e => e.Id).ToList();
 
 
         public int? RequestsCount { get { return Requests.Count(); } private set { var noid = value; } }
@@ -123,6 +129,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityHistory.UserSession), OnOwnerRemove = OnRemoveAction.Deny, OnTargetRemove = OnRemoveAction.Deny)]
         public DocEntitySet<DocEntityHistory> UserHistory { get; private set; }
+
+
+        public List<int> UserHistoryIds => UserHistory.Select(e => e.Id).ToList();
 
 
         public int? UserHistoryCount { get { return UserHistory.Count(); } private set { var noid = value; } }

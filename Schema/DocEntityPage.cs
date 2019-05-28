@@ -83,6 +83,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityApp> Apps { get; private set; }
 
 
+        public List<int> AppsIds => Apps.Select(e => e.Id).ToList();
+
+
         public int? AppsCount { get { return Apps.Count(); } private set { var noid = value; } }
 
 
@@ -95,12 +98,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityGlossary> Glossary { get; private set; }
 
 
+        public List<int> GlossaryIds => Glossary.Select(e => e.Id).ToList();
+
+
         public int? GlossaryCount { get { return Glossary.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityHelp.Pages), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityHelp> Help { get; private set; }
+
+
+        public List<int> HelpIds => Help.Select(e => e.Id).ToList();
 
 
         public int? HelpCount { get { return Help.Count(); } private set { var noid = value; } }
@@ -113,6 +122,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityRole.Pages), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityRole> Roles { get; private set; }
+
+
+        public List<int> RolesIds => Roles.Select(e => e.Id).ToList();
 
 
         public int? RolesCount { get { return Roles.Count(); } private set { var noid = value; } }

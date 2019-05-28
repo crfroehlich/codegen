@@ -61,6 +61,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Impersonations), Description = "Impersonation", IsRequired = false)]
         public List<Reference> Impersonations { get; set; }
+        public List<int> ImpersonationsIds { get; set; }
         public int? ImpersonationsCount { get; set; }
 
 
@@ -70,6 +71,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Requests), Description = "UserRequest", IsRequired = false)]
         public List<Reference> Requests { get; set; }
+        public List<int> RequestsIds { get; set; }
         public int? RequestsCount { get; set; }
 
 
@@ -89,6 +91,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(UserHistory), Description = "History", IsRequired = false)]
         public List<Reference> UserHistory { get; set; }
+        public List<int> UserHistoryIds { get; set; }
         public int? UserHistoryCount { get; set; }
 
 

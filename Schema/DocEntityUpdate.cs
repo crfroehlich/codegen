@@ -100,6 +100,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityEvent> Events { get; private set; }
 
 
+        public List<int> EventsIds => Events.Select(e => e.Id).ToList();
+
+
         public int? EventsCount { get { return Events.Count(); } private set { var noid = value; } }
 
 

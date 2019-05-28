@@ -53,6 +53,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Children), Description = "Junction", IsRequired = false)]
         public List<Reference> Children { get; set; }
+        public List<int> ChildrenIds { get; set; }
         public int? ChildrenCount { get; set; }
 
 

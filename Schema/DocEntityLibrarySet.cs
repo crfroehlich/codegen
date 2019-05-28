@@ -87,11 +87,17 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTag> Characteristics { get; private set; }
 
 
+        public List<int> CharacteristicsIds => Characteristics.Select(e => e.Id).ToList();
+
+
         public int? CharacteristicsCount { get { return Characteristics.Count(); } private set { var noid = value; } }
 
 
         [Field]
         public DocEntitySet<DocEntityTag> Comparators { get; private set; }
+
+
+        public List<int> ComparatorsIds => Comparators.Select(e => e.Id).ToList();
 
 
         public int? ComparatorsCount { get { return Comparators.Count(); } private set { var noid = value; } }
@@ -107,6 +113,9 @@ namespace Services.Schema
 
         [Field]
         public DocEntitySet<DocEntityTag> Interventions { get; private set; }
+
+
+        public List<int> InterventionsIds => Interventions.Select(e => e.Id).ToList();
 
 
         public int? InterventionsCount { get { return Interventions.Count(); } private set { var noid = value; } }
@@ -144,6 +153,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTag> Outcomes { get; private set; }
 
 
+        public List<int> OutcomesIds => Outcomes.Select(e => e.Id).ToList();
+
+
         public int? OutcomesCount { get { return Outcomes.Count(); } private set { var noid = value; } }
 
 
@@ -154,6 +166,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityProject.Library), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityProject> Projects { get; private set; }
+
+
+        public List<int> ProjectsIds => Projects.Select(e => e.Id).ToList();
 
 
         public int? ProjectsCount { get { return Projects.Count(); } private set { var noid = value; } }
@@ -181,6 +196,9 @@ namespace Services.Schema
 
         [Field]
         public DocEntitySet<DocEntityStudyDesign> StudyDesigns { get; private set; }
+
+
+        public List<int> StudyDesignsIds => StudyDesigns.Select(e => e.Id).ToList();
 
 
         public int? StudyDesignsCount { get { return StudyDesigns.Count(); } private set { var noid = value; } }

@@ -134,6 +134,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
+        public List<int> DocumentSetsIds { get; set; }
         public int? DocumentSetsCount { get; set; }
 
 
@@ -203,6 +204,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(LookupTables), Description = "LookupTable", IsRequired = false)]
         public List<Reference> LookupTables { get; set; }
+        public List<int> LookupTablesIds { get; set; }
         public int? LookupTablesCount { get; set; }
 
 
@@ -272,6 +274,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(VariableData), Description = "VariableInstance", IsRequired = false)]
         public List<Reference> VariableData { get; set; }
+        public List<int> VariableDataIds { get; set; }
         public int? VariableDataCount { get; set; }
 
 

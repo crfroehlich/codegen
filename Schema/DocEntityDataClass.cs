@@ -103,6 +103,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDataProperty> CustomCollections { get; private set; }
 
 
+        public List<int> CustomCollectionsIds => CustomCollections.Select(e => e.Id).ToList();
+
+
         public int? CustomCollectionsCount { get { return CustomCollections.Count(); } private set { var noid = value; } }
 
 
@@ -116,6 +119,9 @@ namespace Services.Schema
 
         [Field]
         public DocEntitySet<DocEntityDataProperty> DontFlattenProperties { get; private set; }
+
+
+        public List<int> DontFlattenPropertiesIds => DontFlattenProperties.Select(e => e.Id).ToList();
 
 
         public int? DontFlattenPropertiesCount { get { return DontFlattenProperties.Count(); } private set { var noid = value; } }
@@ -135,6 +141,9 @@ namespace Services.Schema
 
         [Field]
         public DocEntitySet<DocEntityDataProperty> IgnoreProps { get; private set; }
+
+
+        public List<int> IgnorePropsIds => IgnoreProps.Select(e => e.Id).ToList();
 
 
         public int? IgnorePropsCount { get { return IgnoreProps.Count(); } private set { var noid = value; } }
@@ -165,6 +174,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDataProperty> Properties { get; private set; }
 
 
+        public List<int> PropertiesIds => Properties.Select(e => e.Id).ToList();
+
+
         public int? PropertiesCount { get { return Properties.Count(); } private set { var noid = value; } }
 
 
@@ -175,6 +187,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityDataTab.Class), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDataTab> Tabs { get; private set; }
+
+
+        public List<int> TabsIds => Tabs.Select(e => e.Id).ToList();
 
 
         public int? TabsCount { get { return Tabs.Count(); } private set { var noid = value; } }

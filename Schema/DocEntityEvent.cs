@@ -100,6 +100,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTeam> Teams { get; private set; }
 
 
+        public List<int> TeamsIds => Teams.Select(e => e.Id).ToList();
+
+
         public int? TeamsCount { get { return Teams.Count(); } private set { var noid = value; } }
 
 
@@ -107,11 +110,17 @@ namespace Services.Schema
         public DocEntitySet<DocEntityUpdate> Updates { get; private set; }
 
 
+        public List<int> UpdatesIds => Updates.Select(e => e.Id).ToList();
+
+
         public int? UpdatesCount { get { return Updates.Count(); } private set { var noid = value; } }
 
 
         [Field]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
+
+
+        public List<int> UsersIds => Users.Select(e => e.Id).ToList();
 
 
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }

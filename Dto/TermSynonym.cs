@@ -53,6 +53,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
+        public List<int> BindingsIds { get; set; }
         public int? BindingsCount { get; set; }
 
 

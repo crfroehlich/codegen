@@ -61,6 +61,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
+        public List<int> BindingsIds { get; set; }
         public int? BindingsCount { get; set; }
 
 
@@ -74,6 +75,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Documents), Description = "Document", IsRequired = false)]
         public List<Reference> Documents { get; set; }
+        public List<int> DocumentsIds { get; set; }
         public int? DocumentsCount { get; set; }
 
 
@@ -89,6 +91,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
+        public List<int> ScopesIds { get; set; }
         public int? ScopesCount { get; set; }
 
 
@@ -99,6 +102,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Tasks), Description = "Task", IsRequired = false)]
         public List<Reference> Tasks { get; set; }
+        public List<int> TasksIds { get; set; }
         public int? TasksCount { get; set; }
 
 
@@ -115,11 +119,13 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Variables), Description = "VariableInstance", IsRequired = false)]
         public List<Reference> Variables { get; set; }
+        public List<int> VariablesIds { get; set; }
         public int? VariablesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Workflows), Description = "Workflow", IsRequired = false)]
         public List<Reference> Workflows { get; set; }
+        public List<int> WorkflowsIds { get; set; }
         public int? WorkflowsCount { get; set; }
 
 

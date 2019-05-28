@@ -49,16 +49,19 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
         public List<Reference> Bindings { get; set; }
+        public List<int> BindingsIds { get; set; }
         public int? BindingsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Categories), Description = "LookupCategory", IsRequired = false)]
         public List<Reference> Categories { get; set; }
+        public List<int> CategoriesIds { get; set; }
         public int? CategoriesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Documents), Description = "Document", IsRequired = false)]
         public List<Reference> Documents { get; set; }
+        public List<int> DocumentsIds { get; set; }
         public int? DocumentsCount { get; set; }
 
 

@@ -57,6 +57,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Lookups), Description = "LookupTable", IsRequired = false)]
         public List<Reference> Lookups { get; set; }
+        public List<int> LookupsIds { get; set; }
         public int? LookupsCount { get; set; }
 
 

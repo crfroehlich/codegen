@@ -84,6 +84,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityClient> Clients { get; private set; }
 
 
+        public List<int> ClientsIds => Clients.Select(e => e.Id).ToList();
+
+
         public int? ClientsCount { get { return Clients.Count(); } private set { var noid = value; } }
 
 
@@ -96,12 +99,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDivision> Divisions { get; private set; }
 
 
+        public List<int> DivisionsIds => Divisions.Select(e => e.Id).ToList();
+
+
         public int? DivisionsCount { get { return Divisions.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityDocument.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
+
+
+        public List<int> DocumentsIds => Documents.Select(e => e.Id).ToList();
 
 
         public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }
@@ -112,12 +121,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityDocumentSet> DocumentSets { get; private set; }
 
 
+        public List<int> DocumentSetsIds => DocumentSets.Select(e => e.Id).ToList();
+
+
         public int? DocumentSetsCount { get { return DocumentSets.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityDocumentSetHistory.DocumentSet), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityDocumentSetHistory> Histories { get; private set; }
+
+
+        public List<int> HistoriesIds => Histories.Select(e => e.Id).ToList();
 
 
         public int? HistoriesCount { get { return Histories.Count(); } private set { var noid = value; } }
@@ -146,6 +161,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
+        public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
+
+
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
@@ -158,6 +176,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityStatsStudySet> Stats { get; private set; }
 
 
+        public List<int> StatsIds => Stats.Select(e => e.Id).ToList();
+
+
         public int? StatsCount { get { return Stats.Count(); } private set { var noid = value; } }
 
 
@@ -168,6 +189,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityUser.DocumentSets), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
+
+
+        public List<int> UsersIds => Users.Select(e => e.Id).ToList();
 
 
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }

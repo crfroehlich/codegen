@@ -62,6 +62,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Apps), Description = "App", IsRequired = false)]
         public List<Reference> Apps { get; set; }
+        public List<int> AppsIds { get; set; }
         public int? AppsCount { get; set; }
 
 
@@ -75,6 +76,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(FeatureSets), Description = "FeatureSet", IsRequired = false)]
         public List<Reference> FeatureSets { get; set; }
+        public List<int> FeatureSetsIds { get; set; }
         public int? FeatureSetsCount { get; set; }
 
 
@@ -92,6 +94,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Pages), Description = "Page", IsRequired = false)]
         public List<Reference> Pages { get; set; }
+        public List<int> PagesIds { get; set; }
         public int? PagesCount { get; set; }
 
 
@@ -101,6 +104,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         public List<Reference> Users { get; set; }
+        public List<int> UsersIds { get; set; }
         public int? UsersCount { get; set; }
 
 

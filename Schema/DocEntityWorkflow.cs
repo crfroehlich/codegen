@@ -83,6 +83,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityLookupTableBinding> Bindings { get; private set; }
 
 
+        public List<int> BindingsIds => Bindings.Select(e => e.Id).ToList();
+
+
         public int? BindingsCount { get { return Bindings.Count(); } private set { var noid = value; } }
 
 
@@ -96,6 +99,9 @@ namespace Services.Schema
 
         [Field]
         public DocEntitySet<DocEntityDocument> Documents { get; private set; }
+
+
+        public List<int> DocumentsIds => Documents.Select(e => e.Id).ToList();
 
 
         public int? DocumentsCount { get { return Documents.Count(); } private set { var noid = value; } }
@@ -115,6 +121,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
+        public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
+
+
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 
@@ -125,6 +134,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityTask.Workflow), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityTask> Tasks { get; private set; }
+
+
+        public List<int> TasksIds => Tasks.Select(e => e.Id).ToList();
 
 
         public int? TasksCount { get { return Tasks.Count(); } private set { var noid = value; } }
@@ -143,12 +155,18 @@ namespace Services.Schema
         public DocEntitySet<DocEntityVariableInstance> Variables { get; private set; }
 
 
+        public List<int> VariablesIds => Variables.Select(e => e.Id).ToList();
+
+
         public int? VariablesCount { get { return Variables.Count(); } private set { var noid = value; } }
 
 
         [Field]
         [Association(PairTo = nameof(DocEntityWorkflow.Owner), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityWorkflow> Workflows { get; private set; }
+
+
+        public List<int> WorkflowsIds => Workflows.Select(e => e.Id).ToList();
 
 
         public int? WorkflowsCount { get { return Workflows.Count(); } private set { var noid = value; } }

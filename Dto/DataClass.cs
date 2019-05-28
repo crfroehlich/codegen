@@ -87,6 +87,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(CustomCollections), Description = "DataProperty", IsRequired = false)]
         public List<Reference> CustomCollections { get; set; }
+        public List<int> CustomCollectionsIds { get; set; }
         public int? CustomCollectionsCount { get; set; }
 
 
@@ -100,6 +101,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DontFlattenProperties), Description = "DataProperty", IsRequired = false)]
         public List<Reference> DontFlattenProperties { get; set; }
+        public List<int> DontFlattenPropertiesIds { get; set; }
         public int? DontFlattenPropertiesCount { get; set; }
 
 
@@ -117,6 +119,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IgnoreProps), Description = "DataProperty", IsRequired = false)]
         public List<Reference> IgnoreProps { get; set; }
+        public List<int> IgnorePropsIds { get; set; }
         public int? IgnorePropsCount { get; set; }
 
 
@@ -142,6 +145,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Properties), Description = "DataProperty", IsRequired = false)]
         public List<DataProperty> Properties { get; set; }
+        public List<int> PropertiesIds { get; set; }
         public int? PropertiesCount { get; set; }
 
 
@@ -151,6 +155,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Tabs), Description = "DataTab", IsRequired = false)]
         public List<DataTab> Tabs { get; set; }
+        public List<int> TabsIds { get; set; }
         public int? TabsCount { get; set; }
 
 

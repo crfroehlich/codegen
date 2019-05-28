@@ -83,6 +83,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTermMaster> Interventions { get; private set; }
 
 
+        public List<int> InterventionsIds => Interventions.Select(e => e.Id).ToList();
+
+
         public int? InterventionsCount { get { return Interventions.Count(); } private set { var noid = value; } }
 
 

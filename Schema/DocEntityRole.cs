@@ -88,6 +88,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityApp> Apps { get; private set; }
 
 
+        public List<int> AppsIds => Apps.Select(e => e.Id).ToList();
+
+
         public int? AppsCount { get { return Apps.Count(); } private set { var noid = value; } }
 
 
@@ -102,6 +105,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityFeatureSet.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityFeatureSet> FeatureSets { get; private set; }
+
+
+        public List<int> FeatureSetsIds => FeatureSets.Select(e => e.Id).ToList();
 
 
         public int? FeatureSetsCount { get { return FeatureSets.Count(); } private set { var noid = value; } }
@@ -123,6 +129,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityPage> Pages { get; private set; }
 
 
+        public List<int> PagesIds => Pages.Select(e => e.Id).ToList();
+
+
         public int? PagesCount { get { return Pages.Count(); } private set { var noid = value; } }
 
 
@@ -133,6 +142,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityUser.Roles), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUser> Users { get; private set; }
+
+
+        public List<int> UsersIds => Users.Select(e => e.Id).ToList();
 
 
         public int? UsersCount { get { return Users.Count(); } private set { var noid = value; } }

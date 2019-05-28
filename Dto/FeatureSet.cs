@@ -57,6 +57,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Roles), Description = "Role", IsRequired = false)]
         public List<Reference> Roles { get; set; }
+        public List<int> RolesIds { get; set; }
         public int? RolesCount { get; set; }
 
 

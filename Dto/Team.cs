@@ -56,6 +56,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(AdminRoles), Description = "Role", IsRequired = false)]
         public List<Reference> AdminRoles { get; set; }
+        public List<int> AdminRolesIds { get; set; }
         public int? AdminRolesCount { get; set; }
 
 
@@ -83,6 +84,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
+        public List<int> ScopesIds { get; set; }
         public int? ScopesCount { get; set; }
 
 
@@ -96,11 +98,13 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Updates), Description = "Update", IsRequired = false)]
         public List<Reference> Updates { get; set; }
+        public List<int> UpdatesIds { get; set; }
         public int? UpdatesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         public List<Reference> Users { get; set; }
+        public List<int> UsersIds { get; set; }
         public int? UsersCount { get; set; }
 
 

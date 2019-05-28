@@ -110,6 +110,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityBackgroundTaskItem> Items { get; private set; }
 
 
+        public List<int> ItemsIds => Items.Select(e => e.Id).ToList();
+
+
         public int? ItemsCount { get { return Items.Count(); } private set { var noid = value; } }
 
 
@@ -144,6 +147,9 @@ namespace Services.Schema
         [Field]
         [Association(PairTo = nameof(DocEntityBackgroundTaskHistory.Task), OnOwnerRemove = OnRemoveAction.Cascade, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityBackgroundTaskHistory> TaskHistory { get; private set; }
+
+
+        public List<int> TaskHistoryIds => TaskHistory.Select(e => e.Id).ToList();
 
 
         public int? TaskHistoryCount { get { return TaskHistory.Count(); } private set { var noid = value; } }

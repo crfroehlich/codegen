@@ -67,11 +67,13 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Pages), Description = "Page", IsRequired = false)]
         public List<Reference> Pages { get; set; }
+        public List<int> PagesIds { get; set; }
         public int? PagesCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
+        public List<int> ScopesIds { get; set; }
         public int? ScopesCount { get; set; }
 
 

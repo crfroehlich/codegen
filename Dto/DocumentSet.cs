@@ -65,6 +65,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Clients), Description = "Client", IsRequired = false)]
         public List<Reference> Clients { get; set; }
+        public List<int> ClientsIds { get; set; }
         public int? ClientsCount { get; set; }
 
 
@@ -74,21 +75,25 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Divisions), Description = "Division", IsRequired = false)]
         public List<Reference> Divisions { get; set; }
+        public List<int> DivisionsIds { get; set; }
         public int? DivisionsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Documents), Description = "Document", IsRequired = false)]
         public List<Reference> Documents { get; set; }
+        public List<int> DocumentsIds { get; set; }
         public int? DocumentsCount { get; set; }
 
 
         [ApiMember(Name = nameof(DocumentSets), Description = "DocumentSet", IsRequired = false)]
         public List<Reference> DocumentSets { get; set; }
+        public List<int> DocumentSetsIds { get; set; }
         public int? DocumentSetsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Histories), Description = "DocumentSetHistory", IsRequired = false)]
         public List<Reference> Histories { get; set; }
+        public List<int> HistoriesIds { get; set; }
         public int? HistoriesCount { get; set; }
 
 
@@ -114,6 +119,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
         public List<Reference> Scopes { get; set; }
+        public List<int> ScopesIds { get; set; }
         public int? ScopesCount { get; set; }
 
 
@@ -123,6 +129,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Stats), Description = "StatsStudySet", IsRequired = false)]
         public List<Reference> Stats { get; set; }
+        public List<int> StatsIds { get; set; }
         public int? StatsCount { get; set; }
 
 
@@ -133,6 +140,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Users), Description = "User", IsRequired = false)]
         public List<Reference> Users { get; set; }
+        public List<int> UsersIds { get; set; }
         public int? UsersCount { get; set; }
 
 

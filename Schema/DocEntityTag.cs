@@ -88,6 +88,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityScope> Scopes { get; private set; }
 
 
+        public List<int> ScopesIds => Scopes.Select(e => e.Id).ToList();
+
+
         public int? ScopesCount { get { return Scopes.Count(); } private set { var noid = value; } }
 
 

@@ -69,6 +69,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DataSets), Description = "DataSet", IsRequired = false)]
         public List<Reference> DataSets { get; set; }
+        public List<int> DataSetsIds { get; set; }
         public int? DataSetsCount { get; set; }
 
 

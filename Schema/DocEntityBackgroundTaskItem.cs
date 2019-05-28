@@ -140,6 +140,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityBackgroundTaskHistory> TaskHistory { get; private set; }
 
 
+        public List<int> TaskHistoryIds => TaskHistory.Select(e => e.Id).ToList();
+
+
         public int? TaskHistoryCount { get { return TaskHistory.Count(); } private set { var noid = value; } }
 
 

@@ -58,6 +58,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Terms), Description = "TermMaster", IsRequired = false)]
         public List<Reference> Terms { get; set; }
+        public List<int> TermsIds { get; set; }
         public int? TermsCount { get; set; }
 
 

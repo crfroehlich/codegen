@@ -84,6 +84,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Deltas), Description = "AuditDelta", IsRequired = false)]
         public List<Reference> Deltas { get; set; }
+        public List<int> DeltasIds { get; set; }
         public int? DeltasCount { get; set; }
 
 
@@ -101,6 +102,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Events), Description = "Event", IsRequired = false)]
         public List<Reference> Events { get; set; }
+        public List<int> EventsIds { get; set; }
         public int? EventsCount { get; set; }
 
 

@@ -99,6 +99,9 @@ namespace Services.Schema
         public DocEntitySet<DocEntityTermMaster> Terms { get; private set; }
 
 
+        public List<int> TermsIds => Terms.Select(e => e.Id).ToList();
+
+
         public int? TermsCount { get { return Terms.Count(); } private set { var noid = value; } }
 
 

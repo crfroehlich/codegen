@@ -66,6 +66,7 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Owners), Description = "MeanVariances", IsRequired = false)]
         public List<MeanVariances> Owners { get; set; }
+        public List<int> OwnersIds { get; set; }
         public int? OwnersCount { get; set; }
 
 
