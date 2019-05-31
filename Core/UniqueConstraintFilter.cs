@@ -62,6 +62,7 @@ namespace Services.Core
             public static Expression<Func<DocEntityProject, bool>> ProjectIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityQueueChannel, bool>> QueueChannelIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityRating, bool>> RatingIgnoreArchived() => d => d.Archived == false;
+            public static Expression<Func<DocEntityReconcileDocument, bool>> ReconcileDocumentIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityRole, bool>> RoleIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityScope, bool>> ScopeIgnoreArchived() => d => d.Archived == false;
             public static Expression<Func<DocEntityServePortalSet, bool>> ServePortalSetIgnoreArchived() => d => d.Archived == false;

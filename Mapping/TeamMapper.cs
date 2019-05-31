@@ -31,6 +31,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, "Updated")))
                 .ForMember(dest => dest.AdminRoles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.AdminRoles))))
                 .ForMember(dest => dest.AdminRolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.AdminRolesCount))))
+                .ForMember(dest => dest.AdminRolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.AdminRolesIds))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Description))))
                 .ForMember(dest => dest.Email, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Email))))
                 .ForMember(dest => dest.IsInternal, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.IsInternal))))
@@ -39,12 +40,15 @@ namespace Services.Schema
                 .ForMember(dest => dest.OwnerId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.OwnerId))))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.ScopesCount))))
+                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.ScopesIds))))
                 .ForMember(dest => dest.Settings, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Settings))))
                 .ForMember(dest => dest.Slack, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Slack))))
                 .ForMember(dest => dest.Updates, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Updates))))
                 .ForMember(dest => dest.UpdatesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.UpdatesCount))))
+                .ForMember(dest => dest.UpdatesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.UpdatesIds))))
                 .ForMember(dest => dest.Users, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.Users))))
                 .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.UsersCount))))
+                .ForMember(dest => dest.UsersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Team>(c, nameof(DocEntityTeam.UsersIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Team,DocEntityTeam>()
                 .MaxDepth(2);

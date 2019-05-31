@@ -36,6 +36,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.Order))))
                 .ForMember(dest => dest.Owners, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.Owners))))
                 .ForMember(dest => dest.OwnersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.OwnersCount))))
+                .ForMember(dest => dest.OwnersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanVarianceValue>(c, nameof(DocEntityMeanVarianceValue.OwnersIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<MeanVarianceValue,DocEntityMeanVarianceValue>()
                 .MaxDepth(2);

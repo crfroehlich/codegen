@@ -42,6 +42,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.DatabaseTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DatabaseTypeId))))
                 .ForMember(dest => dest.DocumentSets, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DocumentSets))))
                 .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DocumentSetsCount))))
+                .ForMember(dest => dest.DocumentSetsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DocumentSetsIds))))
                 .ForMember(dest => dest.DocumentType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DocumentType))))
                 .ForMember(dest => dest.DocumentTypeId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DocumentTypeId))))
                 .ForMember(dest => dest.DOI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.DOI))))
@@ -61,6 +62,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.LegacySync, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LegacySync))))
                 .ForMember(dest => dest.LookupTables, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LookupTables))))
                 .ForMember(dest => dest.LookupTablesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LookupTablesCount))))
+                .ForMember(dest => dest.LookupTablesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.LookupTablesIds))))
                 .ForMember(dest => dest.MedlineID, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.MedlineID))))
                 .ForMember(dest => dest.MeSH, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.MeSH))))
                 .ForMember(dest => dest.Pages, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Pages))))
@@ -79,6 +81,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.TrialOutcome, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.TrialOutcome))))
                 .ForMember(dest => dest.VariableData, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.VariableData))))
                 .ForMember(dest => dest.VariableDataCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.VariableDataCount))))
+                .ForMember(dest => dest.VariableDataCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.VariableDataIds))))
                 .ForMember(dest => dest.Volume, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Document>(c, nameof(DocEntityDocument.Volume))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Document,DocEntityDocument>()

@@ -36,6 +36,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Failed, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskHistory>(c, nameof(DocEntityBackgroundTaskHistory.Failed))))
                 .ForMember(dest => dest.Items, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskHistory>(c, nameof(DocEntityBackgroundTaskHistory.Items))))
                 .ForMember(dest => dest.ItemsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskHistory>(c, nameof(DocEntityBackgroundTaskHistory.ItemsCount))))
+                .ForMember(dest => dest.ItemsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskHistory>(c, nameof(DocEntityBackgroundTaskHistory.ItemsIds))))
                 .ForMember(dest => dest.Logs, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskHistory>(c, nameof(DocEntityBackgroundTaskHistory.Logs))))
                 .ForMember(dest => dest.Succeeded, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskHistory>(c, nameof(DocEntityBackgroundTaskHistory.Succeeded))))
                 .ForMember(dest => dest.Summary, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskHistory>(c, nameof(DocEntityBackgroundTaskHistory.Summary))))

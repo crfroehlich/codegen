@@ -44,6 +44,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.TaskId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.TaskId))))
                 .ForMember(dest => dest.TaskHistory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.TaskHistory))))
                 .ForMember(dest => dest.TaskHistoryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.TaskHistoryCount))))
+                .ForMember(dest => dest.TaskHistoryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTaskItem>(c, nameof(DocEntityBackgroundTaskItem.TaskHistoryIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<BackgroundTaskItem,DocEntityBackgroundTaskItem>()
                 .MaxDepth(2);

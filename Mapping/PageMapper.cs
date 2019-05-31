@@ -31,14 +31,18 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, "Updated")))
                 .ForMember(dest => dest.Apps, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Apps))))
                 .ForMember(dest => dest.AppsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.AppsCount))))
+                .ForMember(dest => dest.AppsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.AppsIds))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Description))))
                 .ForMember(dest => dest.Glossary, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Glossary))))
                 .ForMember(dest => dest.GlossaryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.GlossaryCount))))
+                .ForMember(dest => dest.GlossaryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.GlossaryIds))))
                 .ForMember(dest => dest.Help, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Help))))
                 .ForMember(dest => dest.HelpCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.HelpCount))))
+                .ForMember(dest => dest.HelpCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.HelpIds))))
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Name))))
                 .ForMember(dest => dest.Roles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.Roles))))
                 .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.RolesCount))))
+                .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Page>(c, nameof(DocEntityPage.RolesIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Page,DocEntityPage>()
                 .MaxDepth(2);

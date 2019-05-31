@@ -31,6 +31,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ServePortalSet>(c, "Updated")))
                 .ForMember(dest => dest.Interventions, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ServePortalSet>(c, nameof(DocEntityServePortalSet.Interventions))))
                 .ForMember(dest => dest.InterventionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ServePortalSet>(c, nameof(DocEntityServePortalSet.InterventionsCount))))
+                .ForMember(dest => dest.InterventionsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ServePortalSet>(c, nameof(DocEntityServePortalSet.InterventionsIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<ServePortalSet,DocEntityServePortalSet>()
                 .MaxDepth(2);

@@ -30,6 +30,8 @@ namespace Services.Enums
         DOCUMENT_ADJUDICATION = 150785334,
         [EnumMember(Value = DocConstantTaskType.DOCUMENT_RATING), SCDescript(DocConstantTaskType.DOCUMENT_RATING), SSDescript(DocConstantTaskType.DOCUMENT_RATING), SCDisplay(Name = DocConstantTaskType.DOCUMENT_RATING)]
         DOCUMENT_RATING = 150785333,
+        [EnumMember(Value = DocConstantTaskType.DOCUMENT_SEARCH_RECONCILIATION), SCDescript(DocConstantTaskType.DOCUMENT_SEARCH_RECONCILIATION), SSDescript(DocConstantTaskType.DOCUMENT_SEARCH_RECONCILIATION), SCDisplay(Name = DocConstantTaskType.DOCUMENT_SEARCH_RECONCILIATION)]
+        DOCUMENT_SEARCH_RECONCILIATION = 157821102,
         [EnumMember(Value = DocConstantTaskType.EVIDENCE_ON_DEMAND), SCDescript(DocConstantTaskType.EVIDENCE_ON_DEMAND), SSDescript(DocConstantTaskType.EVIDENCE_ON_DEMAND), SCDisplay(Name = DocConstantTaskType.EVIDENCE_ON_DEMAND)]
         EVIDENCE_ON_DEMAND = 96669235
     }
@@ -44,6 +46,8 @@ namespace Services.Enums
                     return DocConstantTaskType.DOCUMENT_ADJUDICATION;
                 case TaskTypeEnm.DOCUMENT_RATING:
                     return DocConstantTaskType.DOCUMENT_RATING;
+                case TaskTypeEnm.DOCUMENT_SEARCH_RECONCILIATION:
+                    return DocConstantTaskType.DOCUMENT_SEARCH_RECONCILIATION;
                 case TaskTypeEnm.EVIDENCE_ON_DEMAND:
                     return DocConstantTaskType.EVIDENCE_ON_DEMAND;
                 default:
@@ -62,6 +66,7 @@ namespace Services.Enums
     {
         public const string DOCUMENT_ADJUDICATION = "Document Adjudication";
         public const string DOCUMENT_RATING = "Document Rating";
+        public const string DOCUMENT_SEARCH_RECONCILIATION = "Document Search Reconciliation";
         public const string EVIDENCE_ON_DEMAND = "Evidence on Demand";
         
         #region Internals

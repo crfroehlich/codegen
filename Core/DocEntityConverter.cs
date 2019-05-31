@@ -219,6 +219,10 @@ namespace Services.Core
                     var enRating = entity as DocEntityRating;
                     ret = enRating.ToDto() as TDto;
                     break;
+                case DocConstantModelName.RECONCILEDOCUMENT:
+                    var enReconcileDocument = entity as DocEntityReconcileDocument;
+                    ret = enReconcileDocument.ToDto() as TDto;
+                    break;
                 case DocConstantModelName.ROLE:
                     var enRole = entity as DocEntityRole;
                     ret = enRole.ToDto() as TDto;

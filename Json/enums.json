@@ -172,6 +172,7 @@
     "THERAPEUTIC_AREA": "Therapeutic Area",
     "DISEASE_STATE": "Disease State",
     "DATA_SET": "Data Set",
+    "LIBRARY": "Library",
     "SERVE_PORTAL": "SERVE Portal"
   },
   "DocumentType": {
@@ -193,6 +194,13 @@
     "ENDING_DOSE": "Ending Dose",
     "THERAPEUTIC_DOSE": "Therapeutic Dose",
     "PROPHYLACTIC_DOSE": "Prophylactic Dose"
+  },
+  "EoDStatus": {
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected",
+    "COLLECTED": "Collected",
+    "REQUESTED": "Requested",
+    "UNAVAILABLE": "Unavailable"
   },
   "EqualityOperator": {
     "APPROXIMATELY_EQUALS": "~=",
@@ -419,13 +427,12 @@
     "IMPORT_LIBRARY": "ImportLibrary",
     "IMPORT_PACKAGES": "ImportPackages",
     "PROCESS_EVENTS": "ProcessEvents",
+    "PROCESS_LIBRARY_RATINGS": "ProcessLibraryRatings",
     "PROCESS_STATS": "ProcessStats",
     "PROCESS_UPDATES": "ProcessUpdates",
     "REASSIGN_ARCHIVED_USERS": "ReassignArchivedUsers",
     "RUN_TIMECARD_RULES": "RunTimecardRules",
     "STUDYSET_HISTORY": "StudySetHistory",
-    "SYNC_DATA_SETS": "SyncDataSets",
-    "SYNC_LEGACY_STUDIES": "SyncLegacyStudies",
     "SYNC_LOOKUP_TABLES": "SyncLookupTables",
     "SYNC_USERS": "SyncUsers"
   },
@@ -457,6 +464,7 @@
     "DOCUMENTTYPE": "DocumentType",
     "DOSAGEPROTOCOL": "DosageProtocol",
     "DOSAGETYPE": "DosageType",
+    "EODSTATUS": "EoDStatus",
     "EQUALITYOPERATOR": "EqualityOperator",
     "ERRORMESSAGE": "ErrorMessage",
     "EXTERNALKEY": "ExternalKey",
@@ -506,6 +514,7 @@
     "RANGETYPE": "RangeType",
     "RATING": "Rating",
     "REASONREJECTED": "ReasonRejected",
+    "RECONCILIATIONSTATUS": "ReconciliationStatus",
     "RECRUITMENTMETHOD": "RecruitmentMethod",
     "REPRESENTATIVESAMPLE": "RepresentativeSample",
     "RESPONSESCOLLECTEDBY": "ResponsesCollectedBy",
@@ -537,6 +546,7 @@
     "STUDYTYPEHARMETIOLOGY": "StudyTypeHarmEtiology",
     "STUDYTYPETHERAPY": "StudyTypeTherapy",
     "STUDYYEARS": "StudyYears",
+    "TASKTYPE": "TaskType",
     "TERMCLASSIFICATION": "TermClassification",
     "TERMSECTION": "TermSection",
     "TIMECARDSTATUS": "TimeCardStatus",
@@ -553,7 +563,6 @@
     "VARIABLETYPE": "VariableType",
     "WORKFLOW": "Workflow",
     "WORKFLOWSTATUS": "WorkflowStatus",
-    "WORKFLOWTASKTYPE": "WorkflowTaskType",
     "YESNONA": "YesNoNa"
   },
   "LookupType": {
@@ -610,6 +619,7 @@
   },
   "ModelName": {
     "ENTITIES": "Entities",
+    "ADJUDICATEDRATING": "AdjudicatedRating",
     "APP": "App",
     "ATTRIBUTE": "Attribute",
     "ATTRIBUTEINTERVAL": "AttributeInterval",
@@ -619,20 +629,23 @@
     "BACKGROUNDTASKHISTORY": "BackgroundTaskHistory",
     "BACKGROUNDTASKITEM": "BackgroundTaskItem",
     "BROADCAST": "Broadcast",
-    "CHARACTERISTIC": "Characteristic",
     "CLIENT": "Client",
-    "COMPARATOR": "Comparator",
+    "COMMENT": "Comment",
     "DATABASEVERSION": "DatabaseVersion",
     "DATACLASS": "DataClass",
     "DATAPROPERTY": "DataProperty",
+    "DATASET": "DataSet",
     "DATATAB": "DataTab",
     "DATETIME": "DateTime",
     "DEFAULT": "Default",
+    "DISEASESTATESET": "DiseaseStateSet",
     "DIVISION": "Division",
     "DOCUMENT": "Document",
     "DOCUMENTSET": "DocumentSet",
     "DOCUMENTSETHISTORY": "DocumentSetHistory",
+    "EOD": "EoD",
     "EVENT": "Event",
+    "FAVORITE": "Favorite",
     "FEATURESET": "FeatureSet",
     "GLOSSARY": "Glossary",
     "HELP": "Help",
@@ -640,8 +653,8 @@
     "IMPERSONATION": "Impersonation",
     "IMPORTDATA": "ImportData",
     "INTERVAL": "Interval",
-    "INTERVENTION": "Intervention",
     "JUNCTION": "Junction",
+    "LIBRARYSET": "LibrarySet",
     "LOCALE": "Locale",
     "LOCALELOOKUP": "LocaleLookup",
     "LOOKUPCATEGORY": "LookupCategory",
@@ -652,23 +665,26 @@
     "MEANRANGEVALUE": "MeanRangeValue",
     "MEANVARIANCES": "MeanVariances",
     "MEANVARIANCEVALUE": "MeanVarianceValue",
-    "OUTCOME": "Outcome",
     "PAGE": "Page",
     "PROJECT": "Project",
     "QUEUECHANNEL": "QueueChannel",
-    "RELEASESTATUS": "ReleaseStatus",
+    "RATING": "Rating",
+    "RECONCILEDOCUMENT": "ReconcileDocument",
     "ROLE": "Role",
     "SCOPE": "Scope",
+    "SERVEPORTALSET": "ServePortalSet",
     "STATS": "Stats",
     "STATSRECORD": "StatsRecord",
     "STATSSTUDYSET": "StatsStudySet",
     "STUDYDESIGN": "StudyDesign",
     "STUDYTYPE": "StudyType",
     "TAG": "Tag",
+    "TASK": "Task",
     "TEAM": "Team",
     "TERMCATEGORY": "TermCategory",
     "TERMMASTER": "TermMaster",
     "TERMSYNONYM": "TermSynonym",
+    "THERAPEUTICAREASET": "TherapeuticAreaSet",
     "TIMECARD": "TimeCard",
     "TIMEPOINT": "TimePoint",
     "UNITCONVERSIONRULES": "UnitConversionRules",
@@ -683,9 +699,7 @@
     "VALUETYPE": "ValueType",
     "VARIABLEINSTANCE": "VariableInstance",
     "VARIABLERULE": "VariableRule",
-    "WORKFLOW": "Workflow",
-    "WORKFLOWCOMMENT": "WorkflowComment",
-    "WORKFLOWTASK": "WorkflowTask"
+    "WORKFLOW": "Workflow"
   },
   "OutcomeCategory": {
     "ADVERSE_EVENT": "Adverse Event",
@@ -799,7 +813,8 @@
     "SERVICES_USER_UPDATE_DOCUMENT_SET_ASSIGNMENT": "services_user_update_document_set_assignment",
     "SERVICES_USER_UPDATE_ROLES": "services_user_update_roles",
     "SERVICES_USER_UPDATE_SHARING": "services_user_update_sharing",
-    "SERVICES_USER_UPDATE_TEAMS": "services_user_update_teams"
+    "SERVICES_USER_UPDATE_TEAMS": "services_user_update_teams",
+    "SERVICES_WORKFLOW_UPDATE": "services_workflow_update"
   },
   "Randomization": {
     "NR": "Not Reported",
@@ -812,10 +827,10 @@
     "UNIT": "Unit"
   },
   "Rating": {
-    "RELEVANT": "Relevant",
-    "NOT_RELEVANT": "Not Relevant",
     "MAYBE_RELEVANT": "Maybe Relevant",
-    "NOT_RATED": "Not Rated"
+    "NOT_RATED": "Not Rated",
+    "NOT_RELEVANT": "Not Relevant",
+    "RELEVANT": "Relevant"
   },
   "ReasonRejected": {
     "DOES_NOT_MEET_PROTOCOL": "Does not meet protocol",
@@ -841,6 +856,11 @@
     "ABSTRACT_INSUFFICIENT_INFORMATION": "Abstract with Insufficient Information",
     "STUDY_FITS_PROTOCOL_ADD_LATER": "Study fits protocol, to be possibly added later",
     "RELEVANT_MISCLASSIFIED_REFERENCE": "Relevant misclassified reference"
+  },
+  "ReconciliationStatus": {
+    "NO_MATCH": "No Match",
+    "MATCHED": "Matched",
+    "MULTIPLE_MATCHES": "Multiple Matches"
   },
   "RecruitmentMethod": {
     "EMAIL": "Email",
@@ -1192,6 +1212,12 @@
     "ENROLLMENT": "Enrollment",
     "RECRUITMENT": "Recruitment"
   },
+  "TaskType": {
+    "DOCUMENT_ADJUDICATION": "Document Adjudication",
+    "DOCUMENT_RATING": "Document Rating",
+    "EVIDENCE_ON_DEMAND": "Evidence on Demand",
+    "DOCUMENT_SEARCH_RECONCILIATION": "Document Search Reconciliation"
+  },
   "TermClassification": {
     "OUTCOME": "Outcome",
     "CHARACTERISTIC": "Characteristic"
@@ -1483,12 +1509,14 @@
     "FRAMED_QUESTION_LIBRARY": "Framed Question Library",
     "FREQUENTIST_ANALYSIS": "Frequentist NMA",
     "HTA": "HTA",
+    "LIBRARY_RATINGS": "Library Ratings",
     "META_ANALYSIS": "Direct Meta Analysis",
     "NAMESET": "Nameset",
     "PICO_RATING": "PICO Rating",
     "R_SNIPPET": "R Snippet",
     "RAPID_REVIEW": "Rapid Review",
     "RESPONSE_LETTER": "Response Letter",
+    "RECONCILIATION": "Reconciliation",
     "RISK_OF_BIAS": "Risk of Bias",
     "RMD_SNIPPET": "RMD Snippet",
     "SYSTEMATIC_REVIEW": "Systematic Review",
@@ -1500,9 +1528,6 @@
     "COLLECTED": "Collected",
     "REQUESTED": "Requested",
     "UNAVAILABLE": "Unavailable"
-  },
-  "WorkflowTaskType": {
-    "EVIDENCE_ON_DEMAND": "Evidence on Demand"
   },
   "YesNoNa": {
     "NA": "N/A",

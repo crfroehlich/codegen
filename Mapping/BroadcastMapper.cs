@@ -37,6 +37,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Reprocessed, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Reprocessed))))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.ScopesCount))))
+                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.ScopesIds))))
                 .ForMember(dest => dest.Status, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Status))))
                 .ForMember(dest => dest.StatusId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.StatusId))))
                 .ForMember(dest => dest.Type, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Broadcast>(c, nameof(DocEntityBroadcast.Type))))
