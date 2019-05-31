@@ -114,6 +114,8 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Workflow.Id.In(request.WorkflowIds));
                 }
+                if(!DocTools.IsNullOrEmpty(request.ArticleId))
+                    entities = entities.Where(en => en.ArticleId.Contains(request.ArticleId));
                 if(!DocTools.IsNullOrEmpty(request.Document) && !DocTools.IsNullOrEmpty(request.Document.Id))
                 {
                     entities = entities.Where(en => en.Document.Id == request.Document.Id );
@@ -165,6 +167,7 @@ namespace Services.API
             var cacheKey = GetApiCacheKey<ReconcileDocument>(DocConstantModelName.RECONCILEDOCUMENT, nameof(ReconcileDocument), request);
             
             //First, assign all the variables, do database lookups and conversions
+            var pArticleId = request.ArticleId;
             var pDocument = (request.Document?.Id > 0) ? DocEntityDocument.Get(request.Document.Id) : null;
             var pSearchLink = request.SearchLink;
             var pStatus = request.Status;
@@ -200,6 +203,17 @@ namespace Services.API
                 }
             }
 
+            if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pArticleId, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleId)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pArticleId, entity.ArticleId, nameof(request.ArticleId)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleId)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.ArticleId)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pArticleId) && DocResources.Metadata.IsRequired(DocConstantModelName.RECONCILEDOCUMENT, nameof(request.ArticleId))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.ArticleId)} requires a value.");
+                    entity.ArticleId = pArticleId;
+                if(DocPermissionFactory.IsRequested<string>(request, pArticleId, nameof(request.ArticleId)) && !request.Select.Matches(nameof(request.ArticleId), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.ArticleId));
+                }
+            }
             if (DocPermissionFactory.IsRequestedHasPermission<DocEntityDocument>(currentUser, request, pDocument, permission, DocConstantModelName.RECONCILEDOCUMENT, nameof(request.Document)))
             {
                 if(DocPermissionFactory.IsRequested(request, pDocument, entity.Document, nameof(request.Document)))
@@ -328,6 +342,9 @@ namespace Services.API
                     if(!DocPermissionFactory.HasPermission(entity, currentUser, DocConstantPermission.ADD))
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
+                    var pArticleId = entity.ArticleId;
+                    if(!DocTools.IsNullOrEmpty(pArticleId))
+                        pArticleId += " (Copy)";
                     var pDocument = entity.Document;
                     var pSearchLink = entity.SearchLink;
                     if(!DocTools.IsNullOrEmpty(pSearchLink))
@@ -338,6 +355,7 @@ namespace Services.API
                     var copy = new DocEntityReconcileDocument(ssn)
                     {
                         Hash = Guid.NewGuid()
+                                , ArticleId = pArticleId
                                 , Document = pDocument
                                 , SearchLink = pSearchLink
                                 , Status = pStatus

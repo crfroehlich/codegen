@@ -29,6 +29,7 @@ namespace Services.Schema
             _EntityToDto = CreateMap<DocEntityReconcileDocument,ReconcileDocument>()
                 .ForMember(dest => dest.Created, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReconcileDocument>(c, "Created")))
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReconcileDocument>(c, "Updated")))
+                .ForMember(dest => dest.ArticleId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReconcileDocument>(c, nameof(DocEntityReconcileDocument.ArticleId))))
                 .ForMember(dest => dest.Document, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReconcileDocument>(c, nameof(DocEntityReconcileDocument.Document))))
                 .ForMember(dest => dest.DocumentId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReconcileDocument>(c, nameof(DocEntityReconcileDocument.DocumentId))))
                 .ForMember(dest => dest.SearchLink, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<ReconcileDocument>(c, nameof(DocEntityReconcileDocument.SearchLink))))

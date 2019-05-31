@@ -34,13 +34,18 @@ namespace Services.Dto
 
         public ReconcileDocumentBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public ReconcileDocumentBase(int? pId, Reference pDocument, int? pDocumentId, string pSearchLink, ReconciliationStatusEnm? pStatus) : this(DocConvert.ToInt(pId)) 
+        public ReconcileDocumentBase(int? pId, string pArticleId, Reference pDocument, int? pDocumentId, string pSearchLink, ReconciliationStatusEnm? pStatus) : this(DocConvert.ToInt(pId)) 
         {
+            ArticleId = pArticleId;
             Document = pDocument;
             DocumentId = pDocumentId;
             SearchLink = pSearchLink;
             Status = pStatus;
         }
+
+        [ApiMember(Name = nameof(ArticleId), Description = "string", IsRequired = false)]
+        public string ArticleId { get; set; }
+
 
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
         public Reference Document { get; set; }
@@ -58,8 +63,9 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out Reference pDocument, out int? pDocumentId, out string pSearchLink, out ReconciliationStatusEnm? pStatus)
+        public void Deconstruct(out string pArticleId, out Reference pDocument, out int? pDocumentId, out string pSearchLink, out ReconciliationStatusEnm? pStatus)
         {
+            pArticleId = ArticleId;
             pDocument = Document;
             pDocumentId = DocumentId;
             pSearchLink = SearchLink;
@@ -67,8 +73,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public ReconcileDocumentBase With(int? pId = Id, Reference pDocument = Document, int? pDocumentId = DocumentId, string pSearchLink = SearchLink, ReconciliationStatusEnm? pStatus = Status) => 
-        //	new ReconcileDocumentBase(pId, pDocument, pDocumentId, pSearchLink, pStatus);
+        //public ReconcileDocumentBase With(int? pId = Id, string pArticleId = ArticleId, Reference pDocument = Document, int? pDocumentId = DocumentId, string pSearchLink = SearchLink, ReconciliationStatusEnm? pStatus = Status) => 
+        //	new ReconcileDocumentBase(pId, pArticleId, pDocument, pDocumentId, pSearchLink, pStatus);
 
     }
 
@@ -83,8 +89,8 @@ namespace Services.Dto
 
         public ReconcileDocument(int? id) : base(DocConvert.ToInt(id)) {}
         public ReconcileDocument(int id) : base(id) {}
-        public ReconcileDocument(int? pId, Reference pDocument, int? pDocumentId, string pSearchLink, ReconciliationStatusEnm? pStatus) : 
-            base(pId, pDocument, pDocumentId, pSearchLink, pStatus) { }
+        public ReconcileDocument(int? pId, string pArticleId, Reference pDocument, int? pDocumentId, string pSearchLink, ReconciliationStatusEnm? pStatus) : 
+            base(pId, pArticleId, pDocument, pDocumentId, pSearchLink, pStatus) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -102,7 +108,7 @@ namespace Services.Dto
 
         private List<string> _Select;
         [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(Gestalt),nameof(Locked),nameof(SearchLink),nameof(Status),nameof(Updated),nameof(VersionNo)})]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(ArticleId),nameof(Created),nameof(CreatorId),nameof(Document),nameof(DocumentId),nameof(Gestalt),nameof(Locked),nameof(SearchLink),nameof(Status),nameof(Updated),nameof(VersionNo)})]
         public new List<string> Select
         {
             get
@@ -146,6 +152,7 @@ namespace Services.Dto
         public TaskTypeEnm? Type { get; set; }
         public Reference Workflow { get; set; }
         public List<int> WorkflowIds { get; set; }
+        public string ArticleId { get; set; }
         public Reference Document { get; set; }
         public List<int> DocumentIds { get; set; }
         public string SearchLink { get; set; }
@@ -173,6 +180,7 @@ namespace Services.Dto
         public bool doCreated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ReconcileDocument.Created))); }
         public bool doUpdated { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ReconcileDocument.Updated))); }
 
+        public bool doArticleId { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ReconcileDocument.ArticleId))); }
         public bool doDocument { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ReconcileDocument.Document))); }
         public bool doSearchLink { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ReconcileDocument.SearchLink))); }
         public bool doStatus { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(ReconcileDocument.Status))); }

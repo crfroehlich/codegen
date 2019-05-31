@@ -80,6 +80,10 @@ namespace Services.Schema
 
         #region Properties
         [Field]
+        public string ArticleId { get; set; }
+
+
+        [Field]
         public DocEntityDocument Document { get; set; }
         public int? DocumentId { get { return Document?.Id; } private set { var noid = value; } }
 
@@ -131,6 +135,7 @@ namespace Services.Schema
 
         public override IDocEntity SaveChanges(bool ignoreCache, DocConstantPermission permission)
         {
+            ArticleId = ArticleId?.TrimAndPruneSpaces();
             SearchLink = SearchLink?.TrimAndPruneSpaces();
             return base.SaveChanges(ignoreCache, permission);
         }
