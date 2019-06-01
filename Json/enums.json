@@ -1451,6 +1451,8 @@
     "FIXEDDOSEINTERVENTION": "FixedDoseIntervention",
     "FLAG": "Flag",
     "FUNDING": "Funding",
+    "IMPORTERROR": "ImportError",
+    "IMPORTERRORS": "ImportErrors",
     "INTEGER": "Integer",
     "INTERVAL": "Interval",
     "INTERVALS": "Intervals",

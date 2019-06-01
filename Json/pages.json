@@ -649,6 +649,13 @@
             "Link": "UnitReport",
             "Icon": "fa-calculator",
             "Order": 100
+          },
+          {
+            "Name": "DOC Data Error Report",
+            "Title": "Error Report",
+            "Link": "ErrorReport",
+            "Icon": "fa-exclamation-triangle",
+            "Order": 110
           }
         ]
       },

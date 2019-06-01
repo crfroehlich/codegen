@@ -57,6 +57,10 @@ namespace Services.Enums
         FLAG = 23807267,
         [EnumMember(Value = DocConstantValueType.FUNDING), SCDescript(DocConstantValueType.FUNDING), SSDescript(DocConstantValueType.FUNDING), SCDisplay(Name = DocConstantValueType.FUNDING)]
         FUNDING = 4793,
+        [EnumMember(Value = DocConstantValueType.IMPORTERROR), SCDescript(DocConstantValueType.IMPORTERROR), SSDescript(DocConstantValueType.IMPORTERROR), SCDisplay(Name = DocConstantValueType.IMPORTERROR)]
+        IMPORTERROR = 4837,
+        [EnumMember(Value = DocConstantValueType.IMPORTERRORS), SCDescript(DocConstantValueType.IMPORTERRORS), SSDescript(DocConstantValueType.IMPORTERRORS), SCDisplay(Name = DocConstantValueType.IMPORTERRORS)]
+        IMPORTERRORS = 4923,
         [EnumMember(Value = DocConstantValueType.INTEGER), SCDescript(DocConstantValueType.INTEGER), SSDescript(DocConstantValueType.INTEGER), SCDisplay(Name = DocConstantValueType.INTEGER)]
         INTEGER = 4798,
         [EnumMember(Value = DocConstantValueType.INTERVAL), SCDescript(DocConstantValueType.INTERVAL), SSDescript(DocConstantValueType.INTERVAL), SCDisplay(Name = DocConstantValueType.INTERVAL)]
@@ -145,6 +149,10 @@ namespace Services.Enums
                     return DocConstantValueType.FLAG;
                 case ValueTypeEnm.FUNDING:
                     return DocConstantValueType.FUNDING;
+                case ValueTypeEnm.IMPORTERROR:
+                    return DocConstantValueType.IMPORTERROR;
+                case ValueTypeEnm.IMPORTERRORS:
+                    return DocConstantValueType.IMPORTERRORS;
                 case ValueTypeEnm.INTEGER:
                     return DocConstantValueType.INTEGER;
                 case ValueTypeEnm.INTERVAL:
@@ -224,6 +232,8 @@ namespace Services.Enums
         public const string FIXEDDOSEINTERVENTION = "FixedDoseIntervention";
         public const string FLAG = "Flag";
         public const string FUNDING = "Funding";
+        public const string IMPORTERROR = "ImportError";
+        public const string IMPORTERRORS = "ImportErrors";
         public const string INTEGER = "Integer";
         public const string INTERVAL = "Interval";
         public const string INTERVALS = "Intervals";
