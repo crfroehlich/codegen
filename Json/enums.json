@@ -858,9 +858,10 @@
     "RELEVANT_MISCLASSIFIED_REFERENCE": "Relevant misclassified reference"
   },
   "ReconciliationStatus": {
-    "NO_MATCH": "No Match",
     "MATCHED": "Matched",
-    "MULTIPLE_MATCHES": "Multiple Matches"
+    "MULTIPLE_MATCHES": "Multiple Matches",
+    "NO_MATCH": "No Match",
+    "ONE_MATCH": "One Match"
   },
   "RecruitmentMethod": {
     "EMAIL": "Email",
