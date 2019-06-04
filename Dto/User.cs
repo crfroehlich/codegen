@@ -326,9 +326,9 @@ namespace Services.Dto
         public static List<string> Fields => DocTools.Fields<User>();
 
         private List<string> _Select;
-        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(ClientDepartment),nameof(Created),nameof(CreatorId),nameof(Division),nameof(DivisionId),nameof(DocumentSets),nameof(DocumentSetsCount),nameof(Email),nameof(ExpireDate),nameof(FailedLoginCount),nameof(FirstName),nameof(Gestalt),nameof(Gravatar),nameof(History),nameof(HistoryCount),nameof(Impersonated),nameof(ImpersonatedCount),nameof(Impersonating),nameof(ImpersonatingCount),nameof(IsSystemUser),nameof(JobTitle),nameof(LastLogin),nameof(LastName),nameof(LegacyUsername),nameof(Locale),nameof(LocaleId),nameof(Locked),nameof(LoginCount),nameof(Name),nameof(Roles),nameof(RolesCount),nameof(Scopes),nameof(ScopesCount),nameof(Sessions),nameof(SessionsCount),nameof(Settings),nameof(Slack),nameof(StartDate),nameof(Status),nameof(Teams),nameof(TeamsCount),nameof(TimeCards),nameof(TimeCardsCount),nameof(Updated),nameof(Updates),nameof(UpdatesCount),nameof(UserType),nameof(UserTypeId),nameof(VersionNo),nameof(Workflows),nameof(WorkflowsCount)})]
-        public new List<string> Select
+        public override List<string> Select
         {
             get
             {
@@ -352,6 +352,9 @@ namespace Services.Dto
 
             }
         }
+
+        [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
+        public override List<string> VisibleFields { get => Select; set => Select = value; }
 
         #endregion Fields
 

@@ -224,9 +224,9 @@ namespace Services.Dto
         public static List<string> Fields => DocTools.Fields<ImportData>();
 
         private List<string> _Select;
-        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(CompletedOn),nameof(Created),nameof(CreatorId),nameof(DataSets),nameof(DataSetsCount),nameof(Document),nameof(DocumentId),nameof(ErrorData),nameof(ExtractUrl),nameof(Gestalt),nameof(HighPriority),nameof(ImportFr),nameof(ImportLocation),nameof(ImportLocationId),nameof(ImportNewName),nameof(ImportTable),nameof(ImportText),nameof(ImportType),nameof(ImportTypeId),nameof(IsLegacy),nameof(Locked),nameof(Order),nameof(ReferenceId),nameof(RequestedBy),nameof(RequestedById),nameof(RequestedOn),nameof(StartedOn),nameof(Status),nameof(StatusId),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> Select
+        public override List<string> Select
         {
             get
             {
@@ -248,6 +248,9 @@ namespace Services.Dto
 
             }
         }
+
+        [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
+        public override List<string> VisibleFields { get => Select; set => Select = value; }
 
         #endregion Fields
 

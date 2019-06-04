@@ -82,8 +82,6 @@ namespace Services.Core
                     return requestedFields.Any() ? StudyDesign.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : StudyDesign.Fields;
                 case "studytype":
                     return requestedFields.Any() ? StudyType.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : StudyType.Fields;
-                case "termcategory":
-                    return requestedFields.Any() ? TermCategory.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : TermCategory.Fields;
                 case "timepoint":
                     return requestedFields.Any() ? TimePoint.Fields.Intersect(requestedFields, System.StringComparer.InvariantCultureIgnoreCase).ToList() : TimePoint.Fields;
                 case "unitconversionrules":

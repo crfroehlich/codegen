@@ -174,9 +174,9 @@ namespace Services.Dto
         public static List<string> Fields => DocTools.Fields<StatsStudySet>();
 
         private List<string> _Select;
-        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(BoundTerms),nameof(Characteristics),nameof(Created),nameof(CreatorId),nameof(DataPoints),nameof(DesignCount),nameof(DesignList),nameof(DocumentSet),nameof(DocumentSetId),nameof(Gestalt),nameof(Interventions),nameof(Locked),nameof(Outcomes),nameof(OutcomesReported),nameof(Stat),nameof(StatId),nameof(Studies),nameof(TypeCount),nameof(TypeList),nameof(UnboundTerms),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> Select
+        public override List<string> Select
         {
             get
             {
@@ -198,6 +198,9 @@ namespace Services.Dto
 
             }
         }
+
+        [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
+        public override List<string> VisibleFields { get => Select; set => Select = value; }
 
         #endregion Fields
 

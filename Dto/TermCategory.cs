@@ -113,9 +113,9 @@ namespace Services.Dto
         public static List<string> Fields => DocTools.Fields<TermCategory>();
 
         private List<string> _Select;
-        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(Created),nameof(CreatorId),nameof(Gestalt),nameof(Locked),nameof(ParentCategory),nameof(ParentCategoryId),nameof(Scope),nameof(ScopeId),nameof(Terms),nameof(TermsCount),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> Select
+        public override List<string> Select
         {
             get
             {
@@ -123,8 +123,8 @@ namespace Services.Dto
                 if(null == _Select)
                 {
 
-                    _Select = DocPermissionFactory.RemoveNonEssentialFields(Fields);
 
+                    _Select = DocWebSession.GetTypeSelect(this);
 
                 }
                 return _Select;
@@ -132,11 +132,16 @@ namespace Services.Dto
             set
             {
 
-                _Select = Fields;
 
+                var requested = value ?? new List<string>();
+                var exists = requested.Where( r => Fields.Any( f => DocTools.AreEqual(r, f) ) ).ToList();
+                _Select = DocPermissionFactory.SetSelect<TermCategory>("TermCategory",exists);
 
             }
         }
+
+        [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
+        public override List<string> VisibleFields { get => Select; set => Select = value; }
 
         #endregion Fields
 

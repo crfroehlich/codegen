@@ -350,9 +350,9 @@ namespace Services.Dto
         public static List<string> Fields => DocTools.Fields<DataProperty>();
 
         private List<string> _Select;
-        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(AutoCreateMissing),nameof(Children),nameof(ChildrenCount),nameof(Class),nameof(ClassId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(DisplayName),nameof(Gestalt),nameof(IsAllowAddInForm),nameof(IsAllowCreateInForm),nameof(IsAllowEditInForm),nameof(IsAllowFreeText),nameof(IsAllowRemoveInForm),nameof(IsAudited),nameof(IsCompressed),nameof(IsDisplayInForm),nameof(IsDisplayInGrid),nameof(IsEditColumn),nameof(IsInsertOnly),nameof(IsJSON),nameof(IsLazy),nameof(IsNullOnUpgrade),nameof(IsReadOnly),nameof(IsRelationship),nameof(IsRequired),nameof(IsRequiredInForm),nameof(IsVirtual),nameof(JsonType),nameof(Locked),nameof(LookupTableEnum),nameof(LookupTableEnumId),nameof(Name),nameof(Order),nameof(Owner),nameof(OwnerId),nameof(Precision),nameof(RelationshipOnOwnerRemove),nameof(RelationshipOnTargetRemove),nameof(RelationshipPairTo),nameof(RelationshipPairToId),nameof(Scale),nameof(SetDefaultValue),nameof(Tab),nameof(TabId),nameof(Target),nameof(TargetAlias),nameof(TargetId),nameof(Type),nameof(UIType),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> Select
+        public override List<string> Select
         {
             get
             {
@@ -376,6 +376,9 @@ namespace Services.Dto
 
             }
         }
+
+        [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
+        public override List<string> VisibleFields { get => Select; set => Select = value; }
 
         #endregion Fields
 

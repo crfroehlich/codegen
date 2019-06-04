@@ -37,7 +37,7 @@ namespace Services.Dto
 
         public BackgroundTaskBase(int? id) : this(DocConvert.ToInt(id)) {}
 
-        public BackgroundTaskBase(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : this(DocConvert.ToInt(pId)) 
+        public BackgroundTaskBase(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, bool pKeepHistory, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : this(DocConvert.ToInt(pId)) 
         {
             App = pApp;
             AppId = pAppId;
@@ -49,6 +49,7 @@ namespace Services.Dto
             HistoryRetention = pHistoryRetention;
             Items = pItems;
             ItemsCount = pItemsCount;
+            KeepHistory = pKeepHistory;
             LastRunVersion = pLastRunVersion;
             LogError = pLogError;
             LogInfo = pLogInfo;
@@ -94,6 +95,10 @@ namespace Services.Dto
         public int? ItemsCount { get; set; }
 
 
+        [ApiMember(Name = nameof(KeepHistory), Description = "bool", IsRequired = false)]
+        public bool KeepHistory { get; set; }
+
+
         [ApiMember(Name = nameof(LastRunVersion), Description = "string", IsRequired = false)]
         public string LastRunVersion { get; set; }
 
@@ -129,7 +134,7 @@ namespace Services.Dto
 
 
 
-        public void Deconstruct(out Reference pApp, out int? pAppId, out Reference pChannel, out int? pChannelId, out string pDescription, out bool pEnabled, out int? pFrequency, out int? pHistoryRetention, out List<Reference> pItems, out int? pItemsCount, out string pLastRunVersion, out bool pLogError, out bool pLogInfo, out string pName, out int? pRowsToProcessPerIteration, out bool pRunNow, out string pStartAt, out List<Reference> pTaskHistory, out int? pTaskHistoryCount)
+        public void Deconstruct(out Reference pApp, out int? pAppId, out Reference pChannel, out int? pChannelId, out string pDescription, out bool pEnabled, out int? pFrequency, out int? pHistoryRetention, out List<Reference> pItems, out int? pItemsCount, out bool pKeepHistory, out string pLastRunVersion, out bool pLogError, out bool pLogInfo, out string pName, out int? pRowsToProcessPerIteration, out bool pRunNow, out string pStartAt, out List<Reference> pTaskHistory, out int? pTaskHistoryCount)
         {
             pApp = App;
             pAppId = AppId;
@@ -141,6 +146,7 @@ namespace Services.Dto
             pHistoryRetention = HistoryRetention;
             pItems = Items;
             pItemsCount = ItemsCount;
+            pKeepHistory = KeepHistory;
             pLastRunVersion = LastRunVersion;
             pLogError = LogError;
             pLogInfo = LogInfo;
@@ -153,8 +159,8 @@ namespace Services.Dto
         }
 
         //Not ready until C# v8.?
-        //public BackgroundTaskBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, Reference pChannel = Channel, int? pChannelId = ChannelId, string pDescription = Description, bool pEnabled = Enabled, int? pFrequency = Frequency, int? pHistoryRetention = HistoryRetention, List<Reference> pItems = Items, int? pItemsCount = ItemsCount, string pLastRunVersion = LastRunVersion, bool pLogError = LogError, bool pLogInfo = LogInfo, string pName = Name, int? pRowsToProcessPerIteration = RowsToProcessPerIteration, bool pRunNow = RunNow, string pStartAt = StartAt, List<Reference> pTaskHistory = TaskHistory, int? pTaskHistoryCount = TaskHistoryCount) => 
-        //	new BackgroundTaskBase(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount);
+        //public BackgroundTaskBase With(int? pId = Id, Reference pApp = App, int? pAppId = AppId, Reference pChannel = Channel, int? pChannelId = ChannelId, string pDescription = Description, bool pEnabled = Enabled, int? pFrequency = Frequency, int? pHistoryRetention = HistoryRetention, List<Reference> pItems = Items, int? pItemsCount = ItemsCount, bool pKeepHistory = KeepHistory, string pLastRunVersion = LastRunVersion, bool pLogError = LogError, bool pLogInfo = LogInfo, string pName = Name, int? pRowsToProcessPerIteration = RowsToProcessPerIteration, bool pRunNow = RunNow, string pStartAt = StartAt, List<Reference> pTaskHistory = TaskHistory, int? pTaskHistoryCount = TaskHistoryCount) => 
+        //	new BackgroundTaskBase(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pKeepHistory, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount);
 
     }
 
@@ -170,8 +176,8 @@ namespace Services.Dto
 
         public BackgroundTask(int? id) : base(DocConvert.ToInt(id)) {}
         public BackgroundTask(int id) : base(id) {}
-        public BackgroundTask(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : 
-            base(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount) { }
+        public BackgroundTask(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, bool pKeepHistory, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : 
+            base(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pKeepHistory, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount) { }
         #region Fields
 
         public new bool? ShouldSerialize(string field)
@@ -188,9 +194,9 @@ namespace Services.Dto
         public static List<string> Fields => DocTools.Fields<BackgroundTask>();
 
         private List<string> _Select;
-        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
-        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Channel),nameof(ChannelId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Enabled),nameof(Frequency),nameof(Gestalt),nameof(HistoryRetention),nameof(Items),nameof(ItemsCount),nameof(LastRunVersion),nameof(Locked),nameof(LogError),nameof(LogInfo),nameof(Name),nameof(RowsToProcessPerIteration),nameof(RunNow),nameof(StartAt),nameof(TaskHistory),nameof(TaskHistoryCount),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> Select
+        [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        [ApiAllowableValues("Includes", Values = new string[] {nameof(App),nameof(AppId),nameof(Channel),nameof(ChannelId),nameof(Created),nameof(CreatorId),nameof(Description),nameof(Enabled),nameof(Frequency),nameof(Gestalt),nameof(HistoryRetention),nameof(Items),nameof(ItemsCount),nameof(KeepHistory),nameof(LastRunVersion),nameof(Locked),nameof(LogError),nameof(LogInfo),nameof(Name),nameof(RowsToProcessPerIteration),nameof(RunNow),nameof(StartAt),nameof(TaskHistory),nameof(TaskHistoryCount),nameof(Updated),nameof(VersionNo)})]
+        public override List<string> Select
         {
             get
             {
@@ -214,6 +220,9 @@ namespace Services.Dto
 
             }
         }
+
+        [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
+        public override List<string> VisibleFields { get => Select; set => Select = value; }
 
         #endregion Fields
 
@@ -242,6 +251,8 @@ namespace Services.Dto
         public int? Frequency { get; set; }
         public int? HistoryRetention { get; set; }
         public List<int> ItemsIds { get; set; }
+        [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
+        public List<bool> KeepHistory { get; set; }
         public string LastRunVersion { get; set; }
         [ApiAllowableValues("Includes", Values = new string[] {"true", "false"})]
         public List<bool> LogError { get; set; }
@@ -285,6 +296,7 @@ namespace Services.Dto
         public bool doFrequency { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Frequency))); }
         public bool doHistoryRetention { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.HistoryRetention))); }
         public bool doItems { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.Items))); }
+        public bool doKeepHistory { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.KeepHistory))); }
         public bool doLastRunVersion { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.LastRunVersion))); }
         public bool doLogError { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.LogError))); }
         public bool doLogInfo { get => true == _request.Select?.Any(v => DocTools.AreEqual(v, nameof(BackgroundTask.LogInfo))); }

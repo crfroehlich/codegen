@@ -125,6 +125,10 @@ namespace Services.Schema
         public int? ItemsCount { get { return Items.Count(); } private set { var noid = value; } }
 
 
+        [Field(Nullable = false, DefaultValue = true)]
+        public bool KeepHistory { get; set; }
+
+
         [Field]
         public string LastRunVersion { get; set; }
 
@@ -272,6 +276,11 @@ namespace Services.Schema
                 {
                     isValid = false;
                     message += " Enabled is a required property.";
+                }
+                if(DocTools.IsNullOrEmpty(KeepHistory))
+                {
+                    isValid = false;
+                    message += " KeepHistory is a required property.";
                 }
                 if(DocTools.IsNullOrEmpty(LogError))
                 {

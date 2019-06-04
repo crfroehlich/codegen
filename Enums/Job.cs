@@ -45,6 +45,8 @@ namespace Services.Enums
         IMPORT_LIBRARY = 139850825,
         [EnumMember(Value = DocConstantJob.IMPORT_PACKAGES), SCDescript(DocConstantJob.IMPORT_PACKAGES), SSDescript(DocConstantJob.IMPORT_PACKAGES), SCDisplay(Name = DocConstantJob.IMPORT_PACKAGES)]
         IMPORT_PACKAGES = 139850826,
+        [EnumMember(Value = DocConstantJob.INVALIDATE_EXPIRED_CACHE), SCDescript(DocConstantJob.INVALIDATE_EXPIRED_CACHE), SSDescript(DocConstantJob.INVALIDATE_EXPIRED_CACHE), SCDisplay(Name = DocConstantJob.INVALIDATE_EXPIRED_CACHE)]
+        INVALIDATE_EXPIRED_CACHE = 139850870,
         [EnumMember(Value = DocConstantJob.PROCESS_EVENTS), SCDescript(DocConstantJob.PROCESS_EVENTS), SSDescript(DocConstantJob.PROCESS_EVENTS), SCDisplay(Name = DocConstantJob.PROCESS_EVENTS)]
         PROCESS_EVENTS = 139850827,
         [EnumMember(Value = DocConstantJob.PROCESS_LIBRARY_RATINGS), SCDescript(DocConstantJob.PROCESS_LIBRARY_RATINGS), SSDescript(DocConstantJob.PROCESS_LIBRARY_RATINGS), SCDisplay(Name = DocConstantJob.PROCESS_LIBRARY_RATINGS)]
@@ -89,6 +91,8 @@ namespace Services.Enums
                     return DocConstantJob.IMPORT_LIBRARY;
                 case JobEnm.IMPORT_PACKAGES:
                     return DocConstantJob.IMPORT_PACKAGES;
+                case JobEnm.INVALIDATE_EXPIRED_CACHE:
+                    return DocConstantJob.INVALIDATE_EXPIRED_CACHE;
                 case JobEnm.PROCESS_EVENTS:
                     return DocConstantJob.PROCESS_EVENTS;
                 case JobEnm.PROCESS_LIBRARY_RATINGS:
@@ -130,6 +134,7 @@ namespace Services.Enums
         public const string EXTRACT_NOTIFICATIONS = "ExtractNotifications";
         public const string IMPORT_LIBRARY = "ImportLibrary";
         public const string IMPORT_PACKAGES = "ImportPackages";
+        public const string INVALIDATE_EXPIRED_CACHE = "InvalidateExpiredCache";
         public const string PROCESS_EVENTS = "ProcessEvents";
         public const string PROCESS_LIBRARY_RATINGS = "ProcessLibraryRatings";
         public const string PROCESS_STATS = "ProcessStats";

@@ -426,6 +426,7 @@
     "EXTRACT_NOTIFICATIONS": "ExtractNotifications",
     "IMPORT_LIBRARY": "ImportLibrary",
     "IMPORT_PACKAGES": "ImportPackages",
+    "INVALIDATE_EXPIRED_CACHE": "InvalidateExpiredCache",
     "PROCESS_EVENTS": "ProcessEvents",
     "PROCESS_LIBRARY_RATINGS": "ProcessLibraryRatings",
     "PROCESS_STATS": "ProcessStats",

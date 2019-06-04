@@ -161,9 +161,9 @@ namespace Services.Dto
         public static List<string> Fields => DocTools.Fields<TermMaster>();
 
         private List<string> _Select;
-        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(BioPortal),nameof(Categories),nameof(CategoriesCount),nameof(Created),nameof(CreatorId),nameof(CUI),nameof(Enum),nameof(EnumId),nameof(Gestalt),nameof(Locked),nameof(MedDRA),nameof(Name),nameof(RxNorm),nameof(SNOWMED),nameof(Synonyms),nameof(SynonymsCount),nameof(TUI),nameof(Updated),nameof(URI),nameof(VersionNo)})]
-        public new List<string> Select
+        public override List<string> Select
         {
             get
             {
@@ -187,6 +187,9 @@ namespace Services.Dto
 
             }
         }
+
+        [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
+        public override List<string> VisibleFields { get => Select; set => Select = value; }
 
         #endregion Fields
 

@@ -265,9 +265,9 @@ namespace Services.Dto
         public static List<string> Fields => DocTools.Fields<DataSet>();
 
         private List<string> _Select;
-        [ApiMember(Name = "Select", Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
+        [ApiMember(Name = nameof(Select), Description = "The list of fields to include in the response", AllowMultiple = true, IsRequired = true)]
         [ApiAllowableValues("Includes", Values = new string[] {nameof(AdditionalCriteria),nameof(Characteristics),nameof(CharacteristicsCount),nameof(Comparators),nameof(ComparatorsCount),nameof(Created),nameof(CreatorId),nameof(DataCollection),nameof(EvidencePortalId),nameof(ExtractionProtocol),nameof(FqId),nameof(FramedQuestionId),nameof(GeneralScope),nameof(Gestalt),nameof(Imports),nameof(ImportsCount),nameof(Indications),nameof(Interventions),nameof(InterventionsCount),nameof(Locked),nameof(Notes),nameof(OriginalComparators),nameof(OriginalDatabase),nameof(OriginalDesigns),nameof(OriginalInterventions),nameof(OriginalOutcomes),nameof(Outcomes),nameof(OutcomesCount),nameof(Participants),nameof(PrismaWorkflow),nameof(PrismaWorkflowId),nameof(Projects),nameof(ProjectsCount),nameof(ShowEtw),nameof(ShowPublicationType),nameof(StudyDesigns),nameof(StudyDesignsCount),nameof(Updated),nameof(VersionNo)})]
-        public new List<string> Select
+        public override List<string> Select
         {
             get
             {
@@ -291,6 +291,9 @@ namespace Services.Dto
 
             }
         }
+
+        [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
+        public override List<string> VisibleFields { get => Select; set => Select = value; }
 
         #endregion Fields
 

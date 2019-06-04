@@ -115,6 +115,11 @@ namespace Services.API
                 {
                     entities = entities.Where(en => en.Items.Any(r => r.Id.In(request.ItemsIds)));
                 }
+                if(true == request.KeepHistory?.Any())
+                {
+                    if(request.KeepHistory.Any(v => v == null)) entities = entities.Where(en => en.KeepHistory.In(request.KeepHistory) || en.KeepHistory == null);
+                    else entities = entities.Where(en => en.KeepHistory.In(request.KeepHistory));
+                }
                 if(!DocTools.IsNullOrEmpty(request.LastRunVersion))
                     entities = entities.Where(en => en.LastRunVersion.Contains(request.LastRunVersion));
                 if(true == request.LogError?.Any())
@@ -190,6 +195,7 @@ namespace Services.API
             var pFrequency = request.Frequency;
             var pHistoryRetention = request.HistoryRetention;
             var pItems = request.Items?.ToList();
+            var pKeepHistory = request.KeepHistory;
             var pLastRunVersion = request.LastRunVersion;
             var pLogError = request.LogError;
             var pLogInfo = request.LogInfo;
@@ -295,6 +301,17 @@ namespace Services.API
                 if(DocPermissionFactory.IsRequested<int?>(request, pHistoryRetention, nameof(request.HistoryRetention)) && !request.Select.Matches(nameof(request.HistoryRetention), ignoreSpaces: true))
                 {
                     request.Select.Add(nameof(request.HistoryRetention));
+                }
+            }
+            if (DocPermissionFactory.IsRequestedHasPermission<bool>(currentUser, request, pKeepHistory, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.KeepHistory)))
+            {
+                if(DocPermissionFactory.IsRequested(request, pKeepHistory, entity.KeepHistory, nameof(request.KeepHistory)))
+                    if (DocResources.Metadata.IsInsertOnly(DocConstantModelName.BACKGROUNDTASK, nameof(request.KeepHistory)) && DocConstantPermission.ADD != permission) throw new HttpError(HttpStatusCode.Forbidden, $"{nameof(request.KeepHistory)} cannot be modified once set.");
+                    if (DocTools.IsNullOrEmpty(pKeepHistory) && DocResources.Metadata.IsRequired(DocConstantModelName.BACKGROUNDTASK, nameof(request.KeepHistory))) throw new HttpError(HttpStatusCode.BadRequest, $"{nameof(request.KeepHistory)} requires a value.");
+                    entity.KeepHistory = pKeepHistory;
+                if(DocPermissionFactory.IsRequested<bool>(request, pKeepHistory, nameof(request.KeepHistory)) && !request.Select.Matches(nameof(request.KeepHistory), ignoreSpaces: true))
+                {
+                    request.Select.Add(nameof(request.KeepHistory));
                 }
             }
             if (DocPermissionFactory.IsRequestedHasPermission<string>(currentUser, request, pLastRunVersion, permission, DocConstantModelName.BACKGROUNDTASK, nameof(request.LastRunVersion)))
