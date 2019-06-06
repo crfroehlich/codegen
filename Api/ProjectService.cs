@@ -708,8 +708,6 @@ namespace Services.API
                         pProjectName += " (Copy)";
                     var pStatus = entity.Status;
                     var pTimeCards = entity.TimeCards.ToList();
-                    #region Custom Before copyProject
-                    #endregion Custom Before copyProject
                     var copy = new DocEntityProject(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -744,8 +742,6 @@ namespace Services.API
                                 entity.TimeCards.Add(item);
                             }
 
-                    #region Custom After copyProject
-                    #endregion Custom After copyProject
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

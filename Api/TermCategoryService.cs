@@ -373,8 +373,6 @@ namespace Services.API
                     var pParentCategory = entity.ParentCategory;
                     var pScope = entity.Scope;
                     var pTerms = entity.Terms.ToList();
-                    #region Custom Before copyTermCategory
-                    #endregion Custom Before copyTermCategory
                     var copy = new DocEntityTermCategory(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -387,8 +385,6 @@ namespace Services.API
                                 entity.Terms.Add(item);
                             }
 
-                    #region Custom After copyTermCategory
-                    #endregion Custom After copyTermCategory
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

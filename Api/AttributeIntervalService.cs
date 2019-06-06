@@ -256,16 +256,12 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pInterval = entity.Interval;
-                    #region Custom Before copyAttributeInterval
-                    #endregion Custom Before copyAttributeInterval
                     var copy = new DocEntityAttributeInterval(ssn)
                     {
                         Hash = Guid.NewGuid()
                                 , Interval = pInterval
                     };
 
-                    #region Custom After copyAttributeInterval
-                    #endregion Custom After copyAttributeInterval
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

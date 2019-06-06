@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string MEANVARIANCES_CACHE = "MeanVariancesCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.MEANVARIANCES;
         
-        #region Constructor
         public DocEntityMeanVariances(Session session) : base(session) {}
 
         public DocEntityMeanVariances() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new MeanVariances()));
 
-        #region Static Members
         public static DocEntityMeanVariances Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field]
         [Association(PairTo = nameof(DocEntityMeanVarianceValue.Owners), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityMeanVarianceValue> Variances { get; private set; }
@@ -118,9 +113,7 @@ namespace Services.Schema
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -128,9 +121,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindMeanVariancess";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -170,9 +161,7 @@ namespace Services.Schema
             base.FlushCache();
 
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -186,15 +175,12 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public MeanVariances ToDto() => Mapper.Map<DocEntityMeanVariances, MeanVariances>(this);
 
         public static explicit operator MeanVariances(DocEntityMeanVariances en) => en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

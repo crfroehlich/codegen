@@ -336,8 +336,6 @@ namespace Services.API
                     var pURI = entity.URI;
                     if(!DocTools.IsNullOrEmpty(pURI))
                         pURI += " (Copy)";
-                    #region Custom Before copyTag
-                    #endregion Custom Before copyTag
                     var copy = new DocEntityTag(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -349,8 +347,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                    #region Custom After copyTag
-                    #endregion Custom After copyTag
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

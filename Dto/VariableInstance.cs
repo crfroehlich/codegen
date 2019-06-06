@@ -103,7 +103,6 @@ namespace Services.Dto
         public VariableInstance(int id) : base(id) {}
         public VariableInstance(int? pId, string pData, Reference pDocument, int? pDocumentId, Reference pRule, int? pRuleId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pData, pDocument, pDocumentId, pRule, pRuleId, pWorkflows, pWorkflowsCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -149,7 +148,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

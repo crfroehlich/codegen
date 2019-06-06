@@ -65,7 +65,6 @@ namespace Services.Enums
         public const string STUDY_SET_DEFAULT = "Study Set Default";
         public const string US = "US";
         
-        #region Internals
         
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantDefaultUnitType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
@@ -96,9 +95,7 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-        #endregion Internals
 
-        #region IEquatable
 
         public bool Equals(DocConstantDefaultUnitType obj) => this == obj;
 
@@ -126,6 +123,5 @@ namespace Services.Enums
                 
         public int GetHashCode(DocConstantDefaultUnitType obj) => obj?.GetHashCode() ?? -17;
 
-        #endregion IEquatable
     }
 }

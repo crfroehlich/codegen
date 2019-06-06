@@ -104,7 +104,6 @@ namespace Services.Dto
         public UnitOfMeasure(int id) : base(id) {}
         public UnitOfMeasure(int? pId, bool pIsSI, Reference pName, int? pNameId, Reference pType, int? pTypeId, Reference pUnit, int? pUnitId) : 
             base(pId, pIsSI, pName, pNameId, pType, pTypeId, pUnit, pUnitId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -148,7 +147,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<UnitOfMeasure>();

@@ -274,8 +274,6 @@ namespace Services.API
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
-                    #region Custom Before copyLookupTableEnum
-                    #endregion Custom Before copyLookupTableEnum
                     var copy = new DocEntityLookupTableEnum(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -284,8 +282,6 @@ namespace Services.API
                                 , Name = pName
                     };
 
-                    #region Custom After copyLookupTableEnum
-                    #endregion Custom After copyLookupTableEnum
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

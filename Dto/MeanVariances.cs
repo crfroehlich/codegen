@@ -68,7 +68,6 @@ namespace Services.Dto
         public MeanVariances(int id) : base(id) {}
         public MeanVariances(int? pId, bool isDummyParam) : 
             base(pId, isDummyParam) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -112,7 +111,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

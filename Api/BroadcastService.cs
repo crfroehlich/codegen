@@ -452,8 +452,6 @@ namespace Services.API
                     var pScopes = entity.Scopes.ToList();
                     var pStatus = entity.Status;
                     var pType = entity.Type;
-                    #region Custom Before copyBroadcast
-                    #endregion Custom Before copyBroadcast
                     var copy = new DocEntityBroadcast(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -470,8 +468,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                    #region Custom After copyBroadcast
-                    #endregion Custom After copyBroadcast
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

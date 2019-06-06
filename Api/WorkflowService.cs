@@ -672,8 +672,6 @@ namespace Services.API
                     var pUser = entity.User;
                     var pVariables = entity.Variables.ToList();
                     var pWorkflows = entity.Workflows.ToList();
-                    #region Custom Before copyWorkflow
-                    #endregion Custom Before copyWorkflow
                     var copy = new DocEntityWorkflow(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -715,8 +713,6 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-                    #region Custom After copyWorkflow
-                    #endregion Custom After copyWorkflow
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

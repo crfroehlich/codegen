@@ -115,7 +115,6 @@ namespace Services.Enums
         public const string UNCLEAR = "Unclear";
         public const string UNPAID_CAREGIVER_FAMILY = "Unpaid caregiver/Family";
         
-        #region Internals
         
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantResponsesCollectedBy).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
@@ -146,9 +145,7 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-        #endregion Internals
 
-        #region IEquatable
 
         public bool Equals(DocConstantResponsesCollectedBy obj) => this == obj;
 
@@ -176,6 +173,5 @@ namespace Services.Enums
                 
         public int GetHashCode(DocConstantResponsesCollectedBy obj) => obj?.GetHashCode() ?? -17;
 
-        #endregion IEquatable
     }
 }

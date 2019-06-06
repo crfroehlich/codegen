@@ -659,8 +659,6 @@ namespace Services.API
                     var pRequestedOn = entity.RequestedOn;
                     var pStartedOn = entity.StartedOn;
                     var pStatus = entity.Status;
-                    #region Custom Before copyImportData
-                    #endregion Custom Before copyImportData
                     var copy = new DocEntityImportData(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -688,8 +686,6 @@ namespace Services.API
                                 entity.DataSets.Add(item);
                             }
 
-                    #region Custom After copyImportData
-                    #endregion Custom After copyImportData
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

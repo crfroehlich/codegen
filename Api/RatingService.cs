@@ -339,8 +339,6 @@ namespace Services.API
                     var pDocument = entity.Document;
                     var pRating = entity.Rating;
                     var pReasonRejected = entity.ReasonRejected;
-                    #region Custom Before copyRating
-                    #endregion Custom Before copyRating
                     var copy = new DocEntityRating(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -349,8 +347,6 @@ namespace Services.API
                                 , ReasonRejected = pReasonRejected
                     };
 
-                    #region Custom After copyRating
-                    #endregion Custom After copyRating
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

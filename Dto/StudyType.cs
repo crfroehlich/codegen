@@ -75,7 +75,6 @@ namespace Services.Dto
         public StudyType(int id) : base(id) {}
         public StudyType(int? pId, Reference pType, int? pTypeId) : 
             base(pId, pType, pTypeId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -119,7 +118,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<StudyType>();

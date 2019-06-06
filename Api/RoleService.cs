@@ -558,8 +558,6 @@ namespace Services.API
                     var pPages = entity.Pages.ToList();
                     var pPermissions = entity.Permissions;
                     var pUsers = entity.Users.ToList();
-                    #region Custom Before copyRole
-                    #endregion Custom Before copyRole
                     var copy = new DocEntityRole(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -591,8 +589,6 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                    #region Custom After copyRole
-                    #endregion Custom After copyRole
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

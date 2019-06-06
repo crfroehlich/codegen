@@ -122,7 +122,6 @@ namespace Services.Dto
         public Task(int id) : base(id) {}
         public Task(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, TaskTypeEnm? pType, Reference pWorkflow, int? pWorkflowId) : 
             base(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pType, pWorkflow, pWorkflowId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -168,7 +167,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<Task>();

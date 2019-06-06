@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string DISEASESTATESET_CACHE = "DiseaseStateSetCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.DISEASESTATESET;
         
-        #region Constructor
         public DocEntityDiseaseStateSet(Session session) : base(session) {}
 
         public DocEntityDiseaseStateSet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DiseaseStateSet()));
 
-        #region Static Members
         public static DocEntityDiseaseStateSet Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,14 +82,10 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
-
-        #region Properties
 
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
+
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -100,9 +93,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindDiseaseStateSets";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -142,9 +133,7 @@ namespace Services.Schema
             base.FlushCache();
             DocCacheClient.RemoveById(Id);
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -158,9 +147,7 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public DiseaseStateSet ToDto() => Mapper.Map<DocEntityDiseaseStateSet, DiseaseStateSet>(this);
 
@@ -169,6 +156,5 @@ namespace Services.Schema
         public static explicit operator DocumentSet(DocEntityDiseaseStateSet en) => (DocumentSet) en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

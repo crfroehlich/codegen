@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string IMPORTDATA_CACHE = "ImportDataCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.IMPORTDATA;
         
-        #region Constructor
         public DocEntityImportData(Session session) : base(session) {}
 
         public DocEntityImportData() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new ImportData()));
 
-        #region Static Members
         public static DocEntityImportData Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field]
         public DateTime? CompletedOn { get; set; }
 
@@ -194,9 +189,7 @@ namespace Services.Schema
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -204,9 +197,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindImportDatas";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -246,9 +237,7 @@ namespace Services.Schema
             base.FlushCache();
 
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -294,15 +283,12 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public ImportData ToDto() => Mapper.Map<DocEntityImportData, ImportData>(this);
 
         public static explicit operator ImportData(DocEntityImportData en) => en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

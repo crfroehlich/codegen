@@ -773,8 +773,6 @@ namespace Services.API
                     var pStats = entity.Stats.ToList();
                     var pType = entity.Type;
                     var pUsers = entity.Users.ToList();
-                    #region Custom Before copyDocumentSet
-                    #endregion Custom Before copyDocumentSet
                     var copy = new DocEntityDocumentSet(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -826,8 +824,6 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                    #region Custom After copyDocumentSet
-                    #endregion Custom After copyDocumentSet
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

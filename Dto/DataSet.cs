@@ -249,7 +249,6 @@ namespace Services.Dto
         public DataSet(int id) : base(id) {}
         public DataSet(int? pId, string pAdditionalCriteria, List<Reference> pCharacteristics, int? pCharacteristicsCount, List<Reference> pComparators, int? pComparatorsCount, string pDataCollection, int? pEvidencePortalId, string pExtractionProtocol, int? pFqId, int? pFramedQuestionId, string pGeneralScope, List<Reference> pImports, int? pImportsCount, string pIndications, List<Reference> pInterventions, int? pInterventionsCount, string pNotes, string pOriginalComparators, string pOriginalDatabase, string pOriginalDesigns, string pOriginalInterventions, string pOriginalOutcomes, List<Reference> pOutcomes, int? pOutcomesCount, string pParticipants, Reference pPrismaWorkflow, int? pPrismaWorkflowId, List<Reference> pProjects, int? pProjectsCount, bool pShowEtw, bool pShowPublicationType, List<Reference> pStudyDesigns, int? pStudyDesignsCount) : 
             base(pId, pAdditionalCriteria, pCharacteristics, pCharacteristicsCount, pComparators, pComparatorsCount, pDataCollection, pEvidencePortalId, pExtractionProtocol, pFqId, pFramedQuestionId, pGeneralScope, pImports, pImportsCount, pIndications, pInterventions, pInterventionsCount, pNotes, pOriginalComparators, pOriginalDatabase, pOriginalDesigns, pOriginalInterventions, pOriginalOutcomes, pOutcomes, pOutcomesCount, pParticipants, pPrismaWorkflow, pPrismaWorkflowId, pProjects, pProjectsCount, pShowEtw, pShowPublicationType, pStudyDesigns, pStudyDesignsCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -295,7 +294,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

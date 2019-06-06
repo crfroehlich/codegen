@@ -77,7 +77,6 @@ namespace Services.Dto
         public ServePortalSet(int id) : base(id) {}
         public ServePortalSet(int? pId, List<Reference> pInterventions, int? pInterventionsCount) : 
             base(pId, pInterventions, pInterventionsCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -123,7 +122,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

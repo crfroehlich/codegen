@@ -380,8 +380,6 @@ namespace Services.API
                     var pName = entity.Name;
                     if(!DocTools.IsNullOrEmpty(pName))
                         pName += " (Copy)";
-                    #region Custom Before copyQueueChannel
-                    #endregion Custom Before copyQueueChannel
                     var copy = new DocEntityQueueChannel(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -394,8 +392,6 @@ namespace Services.API
                                 , Name = pName
                     };
 
-                    #region Custom After copyQueueChannel
-                    #endregion Custom After copyQueueChannel
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

@@ -186,7 +186,6 @@ namespace Services.Dto
         public AuditRecord(int id) : base(id) {}
         public AuditRecord(int? pId, string pAction, Reference pBackgroundTask, int? pBackgroundTaskId, DateTime? pChangedOnDate, string pData, string pDatabaseSessionId, List<Reference> pDeltas, int? pDeltasCount, int? pEntityId, string pEntityType, int? pEntityVersion, List<Reference> pEvents, int? pEventsCount, Reference pImpersonation, int? pImpersonationId, int? pTargetId, string pTargetType, int? pTargetVersion, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId) : 
             base(pId, pAction, pBackgroundTask, pBackgroundTaskId, pChangedOnDate, pData, pDatabaseSessionId, pDeltas, pDeltasCount, pEntityId, pEntityType, pEntityVersion, pEvents, pEventsCount, pImpersonation, pImpersonationId, pTargetId, pTargetType, pTargetVersion, pUser, pUserId, pUserSession, pUserSessionId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -232,7 +231,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

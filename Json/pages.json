@@ -28,6 +28,14 @@
         "Menu": []
       },
       {
+        "Name": "Doc Data Admin Ratings",
+        "Title": "Ratings",
+        "Link": "Ratings",
+        "Icon": "fa-gavel",
+        "Order": 0, 
+        "Menu": []
+      },
+      {
         "Name": "BindingsManagement",
         "Title": "Bindings Management",
         "Icon": "fa-leanpub",

@@ -113,7 +113,6 @@ namespace Services.Dto
         public Interval(int id) : base(id) {}
         public Interval(int? pId, DateTimeDto pCalendarDateEnd, int? pCalendarDateEndId, DateTimeDto pCalendarDateStart, int? pCalendarDateStartId, string pCalendarType, TimePoint pFollowUp, int? pFollowUpId, TimePoint pTimeOfDay, int? pTimeOfDayId) : 
             base(pId, pCalendarDateEnd, pCalendarDateEndId, pCalendarDateStart, pCalendarDateStartId, pCalendarType, pFollowUp, pFollowUpId, pTimeOfDay, pTimeOfDayId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -157,7 +156,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<Interval>();

@@ -334,7 +334,6 @@ namespace Services.Dto
         public DataProperty(int id) : base(id) {}
         public DataProperty(int? pId, bool pAutoCreateMissing, List<Reference> pChildren, int? pChildrenCount, Reference pClass, int? pClassId, string pDescription, string pDisplayName, bool pIsAllowAddInForm, bool pIsAllowCreateInForm, bool pIsAllowEditInForm, bool pIsAllowFreeText, bool pIsAllowRemoveInForm, bool pIsAudited, bool pIsCompressed, bool pIsDisplayInForm, bool pIsDisplayInGrid, bool pIsEditColumn, bool pIsInsertOnly, bool pIsJSON, bool pIsLazy, bool pIsNullOnUpgrade, bool pIsReadOnly, bool pIsRelationship, bool pIsRequired, bool pIsRequiredInForm, bool pIsVirtual, string pJsonType, Reference pLookupTableEnum, int? pLookupTableEnumId, string pName, int? pOrder, Reference pOwner, int? pOwnerId, int? pPrecision, OnRemoveAction? pRelationshipOnOwnerRemove, OnRemoveAction? pRelationshipOnTargetRemove, Reference pRelationshipPairTo, int? pRelationshipPairToId, int? pScale, string pSetDefaultValue, Reference pTab, int? pTabId, Reference pTarget, int? pTargetId, string pTargetAlias, DataType? pType, UiType? pUIType) : 
             base(pId, pAutoCreateMissing, pChildren, pChildrenCount, pClass, pClassId, pDescription, pDisplayName, pIsAllowAddInForm, pIsAllowCreateInForm, pIsAllowEditInForm, pIsAllowFreeText, pIsAllowRemoveInForm, pIsAudited, pIsCompressed, pIsDisplayInForm, pIsDisplayInGrid, pIsEditColumn, pIsInsertOnly, pIsJSON, pIsLazy, pIsNullOnUpgrade, pIsReadOnly, pIsRelationship, pIsRequired, pIsRequiredInForm, pIsVirtual, pJsonType, pLookupTableEnum, pLookupTableEnumId, pName, pOrder, pOwner, pOwnerId, pPrecision, pRelationshipOnOwnerRemove, pRelationshipOnTargetRemove, pRelationshipPairTo, pRelationshipPairToId, pScale, pSetDefaultValue, pTab, pTabId, pTarget, pTargetId, pTargetAlias, pType, pUIType) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -380,7 +379,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

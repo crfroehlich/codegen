@@ -432,8 +432,6 @@ namespace Services.API
                     var pScope = entity.Scope;
                     var pSynonyms = entity.Synonyms.ToList();
                     var pWorkflows = entity.Workflows.ToList();
-                    #region Custom Before copyLookupTableBinding
-                    #endregion Custom Before copyLookupTableBinding
                     var copy = new DocEntityLookupTableBinding(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -452,8 +450,6 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-                    #region Custom After copyLookupTableBinding
-                    #endregion Custom After copyLookupTableBinding
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

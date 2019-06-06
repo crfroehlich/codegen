@@ -286,16 +286,12 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pScope = entity.Scope;
-                    #region Custom Before copyFavorite
-                    #endregion Custom Before copyFavorite
                     var copy = new DocEntityFavorite(ssn)
                     {
                         Hash = Guid.NewGuid()
                                 , Scope = pScope
                     };
 
-                    #region Custom After copyFavorite
-                    #endregion Custom After copyFavorite
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

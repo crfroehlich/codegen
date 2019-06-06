@@ -195,7 +195,6 @@ namespace Services.Enums
         public const string SYSTEMATIC_REVIEW = "Systematic Review";
         public const string VIEW = "View";
         
-        #region Internals
         
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantWorkflow).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
@@ -226,9 +225,7 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-        #endregion Internals
 
-        #region IEquatable
 
         public bool Equals(DocConstantWorkflow obj) => this == obj;
 
@@ -256,6 +253,5 @@ namespace Services.Enums
                 
         public int GetHashCode(DocConstantWorkflow obj) => obj?.GetHashCode() ?? -17;
 
-        #endregion IEquatable
     }
 }

@@ -417,8 +417,6 @@ namespace Services.API
                     var pParent = entity.Parent;
                     var pRootTerm = entity.RootTerm;
                     var pSourceUnit = entity.SourceUnit;
-                    #region Custom Before copyUnitConversionRules
-                    #endregion Custom Before copyUnitConversionRules
                     var copy = new DocEntityUnitConversionRules(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -432,8 +430,6 @@ namespace Services.API
                                 , SourceUnit = pSourceUnit
                     };
 
-                    #region Custom After copyUnitConversionRules
-                    #endregion Custom After copyUnitConversionRules
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

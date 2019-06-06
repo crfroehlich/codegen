@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string UNITCONVERSIONRULES_CACHE = "UnitConversionRulesCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.UNITCONVERSIONRULES;
         
-        #region Constructor
         public DocEntityUnitConversionRules(Session session) : base(session) {}
 
         public DocEntityUnitConversionRules() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new UnitConversionRules()));
 
-        #region Static Members
         public static DocEntityUnitConversionRules Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field(Nullable = false)]
         public DocEntityUnitOfMeasure DestinationUnit { get; set; }
         public int? DestinationUnitId { get { return DestinationUnit?.Id; } private set { var noid = value; } }
@@ -144,9 +139,7 @@ namespace Services.Schema
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -154,9 +147,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindUnitConversionRuless";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -196,9 +187,7 @@ namespace Services.Schema
             base.FlushCache();
             DocCacheClient.RemoveById(Id);
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -231,15 +220,12 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public UnitConversionRules ToDto() => Mapper.Map<DocEntityUnitConversionRules, UnitConversionRules>(this);
 
         public static explicit operator UnitConversionRules(DocEntityUnitConversionRules en) => en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

@@ -133,7 +133,6 @@ namespace Services.Dto
         public Broadcast(int id) : base(id) {}
         public Broadcast(int? pId, Reference pApp, int? pAppId, string pConfluenceId, string pName, bool pReprocess, DateTime? pReprocessed, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId) : 
             base(pId, pApp, pAppId, pConfluenceId, pName, pReprocess, pReprocessed, pScopes, pScopesCount, pStatus, pStatusId, pType, pTypeId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -179,7 +178,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

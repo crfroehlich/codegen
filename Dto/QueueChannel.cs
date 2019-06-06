@@ -113,7 +113,6 @@ namespace Services.Dto
         public QueueChannel(int id) : base(id) {}
         public QueueChannel(int? pId, bool pAutoDelete, Reference pBackgroundTask, int? pBackgroundTaskId, string pDescription, bool pDurable, bool pEnabled, bool pExclusive, string pName) : 
             base(pId, pAutoDelete, pBackgroundTask, pBackgroundTaskId, pDescription, pDurable, pEnabled, pExclusive, pName) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -159,7 +158,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<QueueChannel>();

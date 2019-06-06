@@ -136,7 +136,6 @@ namespace Services.Dto
         public UserSession(int id) : base(id) {}
         public UserSession(int? pId, string pClientId, int? pHits, List<Reference> pImpersonations, int? pImpersonationsCount, string pIpAddress, List<Reference> pRequests, int? pRequestsCount, string pSessionId, string pTemporarySessionId, Reference pUser, int? pUserId, List<Reference> pUserHistory, int? pUserHistoryCount) : 
             base(pId, pClientId, pHits, pImpersonations, pImpersonationsCount, pIpAddress, pRequests, pRequestsCount, pSessionId, pTemporarySessionId, pUser, pUserId, pUserHistory, pUserHistoryCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -182,7 +181,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

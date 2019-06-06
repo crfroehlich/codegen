@@ -129,7 +129,6 @@ namespace Services.Dto
         public Division(int id) : base(id) {}
         public Division(int? pId, Reference pClient, int? pClientId, Reference pDefaultLocale, int? pDefaultLocaleId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pName, Reference pRole, int? pRoleId, DivisionSettings pSettings, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pClient, pClientId, pDefaultLocale, pDefaultLocaleId, pDocumentSets, pDocumentSetsCount, pName, pRole, pRoleId, pSettings, pUsers, pUsersCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -175,7 +174,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

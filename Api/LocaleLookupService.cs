@@ -304,8 +304,6 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pIpAddress))
                         pIpAddress += " (Copy)";
                     var pLocale = entity.Locale;
-                    #region Custom Before copyLocaleLookup
-                    #endregion Custom Before copyLocaleLookup
                     var copy = new DocEntityLocaleLookup(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -314,8 +312,6 @@ namespace Services.API
                                 , Locale = pLocale
                     };
 
-                    #region Custom After copyLocaleLookup
-                    #endregion Custom After copyLocaleLookup
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

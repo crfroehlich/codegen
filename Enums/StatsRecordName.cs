@@ -330,7 +330,6 @@ namespace Services.Enums
         public const string UNCOLLECTEDMAINGROUPS = "Uncollected MainGroups";
         public const string UNCOLLECTEDOUTCOMEVARIABLES = "Uncollected Outcome Variables";
         
-        #region Internals
         
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantStatsRecordName).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
@@ -361,9 +360,7 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-        #endregion Internals
 
-        #region IEquatable
 
         public bool Equals(DocConstantStatsRecordName obj) => this == obj;
 
@@ -391,6 +388,5 @@ namespace Services.Enums
                 
         public int GetHashCode(DocConstantStatsRecordName obj) => obj?.GetHashCode() ?? -17;
 
-        #endregion IEquatable
     }
 }

@@ -110,7 +110,6 @@ namespace Services.Dto
         public UserType(int id) : base(id) {}
         public UserType(int? pId, Reference pPayrollStatus, int? pPayrollStatusId, Reference pPayrollType, int? pPayrollTypeId, Reference pType, int? pTypeId, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pPayrollStatus, pPayrollStatusId, pPayrollType, pPayrollTypeId, pType, pTypeId, pUsers, pUsersCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -156,7 +155,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

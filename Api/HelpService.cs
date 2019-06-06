@@ -464,8 +464,6 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pTitle))
                         pTitle += " (Copy)";
                     var pType = entity.Type;
-                    #region Custom Before copyHelp
-                    #endregion Custom Before copyHelp
                     var copy = new DocEntityHelp(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -486,8 +484,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                    #region Custom After copyHelp
-                    #endregion Custom After copyHelp
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

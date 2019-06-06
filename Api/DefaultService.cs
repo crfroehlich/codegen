@@ -337,8 +337,6 @@ namespace Services.API
                     var pRole = entity.Role;
                     var pScope = entity.Scope;
                     var pTherapeuticArea = entity.TherapeuticArea;
-                    #region Custom Before copyDefault
-                    #endregion Custom Before copyDefault
                     var copy = new DocEntityDefault(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -348,8 +346,6 @@ namespace Services.API
                                 , TherapeuticArea = pTherapeuticArea
                     };
 
-                    #region Custom After copyDefault
-                    #endregion Custom After copyDefault
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

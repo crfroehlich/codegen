@@ -103,7 +103,6 @@ namespace Services.Dto
         public UnitValue(int id) : base(id) {}
         public UnitValue(int? pId, Reference pEqualityOperator, int? pEqualityOperatorId, int? pMultiplier, decimal? pNumber, int? pOrder, UnitOfMeasure pUnit, int? pUnitId) : 
             base(pId, pEqualityOperator, pEqualityOperatorId, pMultiplier, pNumber, pOrder, pUnit, pUnitId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -147,7 +146,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

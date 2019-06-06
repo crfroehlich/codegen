@@ -1116,8 +1116,6 @@ namespace Services.API
                     var pVolume = entity.Volume;
                     if(!DocTools.IsNullOrEmpty(pVolume))
                         pVolume += " (Copy)";
-                    #region Custom Before copyDocument
-                    #endregion Custom Before copyDocument
                     var copy = new DocEntityDocument(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -1178,8 +1176,6 @@ namespace Services.API
                                 entity.VariableData.Add(item);
                             }
 
-                    #region Custom After copyDocument
-                    #endregion Custom After copyDocument
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

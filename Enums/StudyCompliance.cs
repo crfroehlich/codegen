@@ -70,7 +70,6 @@ namespace Services.Enums
         public const string INCLUDED_NON_COMPLIANT = "Included non-compliant";
         public const string NOT_SPECIFIED = "Not specified";
         
-        #region Internals
         
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantStudyCompliance).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
@@ -101,9 +100,7 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-        #endregion Internals
 
-        #region IEquatable
 
         public bool Equals(DocConstantStudyCompliance obj) => this == obj;
 
@@ -131,6 +128,5 @@ namespace Services.Enums
                 
         public int GetHashCode(DocConstantStudyCompliance obj) => obj?.GetHashCode() ?? -17;
 
-        #endregion IEquatable
     }
 }

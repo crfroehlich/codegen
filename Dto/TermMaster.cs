@@ -145,7 +145,6 @@ namespace Services.Dto
         public TermMaster(int id) : base(id) {}
         public TermMaster(int? pId, string pBioPortal, List<TermCategory> pCategories, int? pCategoriesCount, string pCUI, Reference pEnum, int? pEnumId, string pMedDRA, string pName, string pRxNorm, string pSNOWMED, List<Reference> pSynonyms, int? pSynonymsCount, string pTUI, string pURI) : 
             base(pId, pBioPortal, pCategories, pCategoriesCount, pCUI, pEnum, pEnumId, pMedDRA, pName, pRxNorm, pSNOWMED, pSynonyms, pSynonymsCount, pTUI, pURI) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -191,7 +190,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

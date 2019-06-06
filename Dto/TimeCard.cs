@@ -142,7 +142,6 @@ namespace Services.Dto
         public TimeCard(int id) : base(id) {}
         public TimeCard(int? pId, string pDescription, Reference pDocument, int? pDocumentId, DateTime? pEnd, Reference pProject, int? pProjectId, int? pReferenceId, DateTime? pStart, Reference pStatus, int? pStatusId, Reference pUser, int? pUserId, Reference pWorkType, int? pWorkTypeId) : 
             base(pId, pDescription, pDocument, pDocumentId, pEnd, pProject, pProjectId, pReferenceId, pStart, pStatus, pStatusId, pUser, pUserId, pWorkType, pWorkTypeId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -188,7 +187,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<TimeCard>();

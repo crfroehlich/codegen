@@ -417,8 +417,6 @@ namespace Services.API
                     var pUser = entity.User;
                     var pUserSession = entity.UserSession;
                     var pWorkflow = entity.Workflow;
-                    #region Custom Before copyHistory
-                    #endregion Custom Before copyHistory
                     var copy = new DocEntityHistory(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -432,8 +430,6 @@ namespace Services.API
                                 , Workflow = pWorkflow
                     };
 
-                    #region Custom After copyHistory
-                    #endregion Custom After copyHistory
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

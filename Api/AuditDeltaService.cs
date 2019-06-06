@@ -287,8 +287,6 @@ namespace Services.API
 
                     var pAudit = entity.Audit;
                     var pDelta = entity.Delta;
-                    #region Custom Before copyAuditDelta
-                    #endregion Custom Before copyAuditDelta
                     var copy = new DocEntityAuditDelta(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -296,8 +294,6 @@ namespace Services.API
                                 , Delta = pDelta
                     };
 
-                    #region Custom After copyAuditDelta
-                    #endregion Custom After copyAuditDelta
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

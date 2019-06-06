@@ -93,7 +93,6 @@ namespace Services.Dto
         public Comment(int id) : base(id) {}
         public Comment(int? pId, List<Reference> pScopes, int? pScopesCount, string pText, Reference pUser, int? pUserId) : 
             base(pId, pScopes, pScopesCount, pText, pUser, pUserId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -139,7 +138,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

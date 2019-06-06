@@ -541,8 +541,6 @@ namespace Services.API
                         pSalesforceAccountId += " (Copy)";
                     var pScopes = entity.Scopes.ToList();
                     var pSettings = entity.Settings;
-                    #region Custom Before copyClient
-                    #endregion Custom Before copyClient
                     var copy = new DocEntityClient(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -572,8 +570,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                    #region Custom After copyClient
-                    #endregion Custom After copyClient
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

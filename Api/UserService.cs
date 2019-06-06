@@ -1143,8 +1143,6 @@ namespace Services.API
                     var pUpdates = entity.Updates.ToList();
                     var pUserType = entity.UserType;
                     var pWorkflows = entity.Workflows.ToList();
-                    #region Custom Before copyUser
-                    #endregion Custom Before copyUser
                     var copy = new DocEntityUser(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -1224,8 +1222,6 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-                    #region Custom After copyUser
-                    #endregion Custom After copyUser
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

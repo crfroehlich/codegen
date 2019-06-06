@@ -397,8 +397,6 @@ namespace Services.API
                     var pSynonym = entity.Synonym;
                     if(!DocTools.IsNullOrEmpty(pSynonym))
                         pSynonym += " (Copy)";
-                    #region Custom Before copyTermSynonym
-                    #endregion Custom Before copyTermSynonym
                     var copy = new DocEntityTermSynonym(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -413,8 +411,6 @@ namespace Services.API
                                 entity.Bindings.Add(item);
                             }
 
-                    #region Custom After copyTermSynonym
-                    #endregion Custom After copyTermSynonym
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

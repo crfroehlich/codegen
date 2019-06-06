@@ -115,7 +115,6 @@ namespace Services.Dto
         public TermSynonym(int id) : base(id) {}
         public TermSynonym(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) : 
             base(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -161,7 +160,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

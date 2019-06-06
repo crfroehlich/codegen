@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string DATASET_CACHE = "DataSetCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.DATASET;
         
-        #region Constructor
         public DocEntityDataSet(Session session) : base(session) {}
 
         public DocEntityDataSet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DataSet()));
 
-        #region Static Members
         public static DocEntityDataSet Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field(Length = int.MaxValue)]
         public string AdditionalCriteria { get; set; }
 
@@ -234,9 +229,7 @@ namespace Services.Schema
 
 
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -244,9 +237,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindDataSets";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -286,9 +277,7 @@ namespace Services.Schema
             base.FlushCache();
             DocCacheClient.RemoveById(Id);
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -311,9 +300,7 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public DataSet ToDto() => Mapper.Map<DocEntityDataSet, DataSet>(this);
 
@@ -322,6 +309,5 @@ namespace Services.Schema
         public static explicit operator DocumentSet(DocEntityDataSet en) => (DocumentSet) en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

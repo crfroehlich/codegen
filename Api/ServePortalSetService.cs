@@ -362,8 +362,6 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
                     var pInterventions = entity.Interventions.ToList();
-                    #region Custom Before copyServePortalSet
-                    #endregion Custom Before copyServePortalSet
                     var copy = new DocEntityServePortalSet(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -374,8 +372,6 @@ namespace Services.API
                                 entity.Interventions.Add(item);
                             }
 
-                    #region Custom After copyServePortalSet
-                    #endregion Custom After copyServePortalSet
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

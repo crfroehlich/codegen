@@ -943,8 +943,6 @@ namespace Services.API
                     var pShowEtw = entity.ShowEtw;
                     var pShowPublicationType = entity.ShowPublicationType;
                     var pStudyDesigns = entity.StudyDesigns.ToList();
-                    #region Custom Before copyDataSet
-                    #endregion Custom Before copyDataSet
                     var copy = new DocEntityDataSet(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -1002,8 +1000,6 @@ namespace Services.API
                                 entity.StudyDesigns.Add(item);
                             }
 
-                    #region Custom After copyDataSet
-                    #endregion Custom After copyDataSet
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

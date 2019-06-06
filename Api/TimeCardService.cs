@@ -446,8 +446,6 @@ namespace Services.API
                     var pStatus = entity.Status;
                     var pUser = entity.User;
                     var pWorkType = entity.WorkType;
-                    #region Custom Before copyTimeCard
-                    #endregion Custom Before copyTimeCard
                     var copy = new DocEntityTimeCard(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -462,8 +460,6 @@ namespace Services.API
                                 , WorkType = pWorkType
                     };
 
-                    #region Custom After copyTimeCard
-                    #endregion Custom After copyTimeCard
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

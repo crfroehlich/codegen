@@ -75,7 +75,6 @@ namespace Services.Enums
         public const string REFERRAL = "Referral";
         public const string REGISTRY = "Registry";
         
-        #region Internals
         
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantRecruitmentMethod).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
@@ -106,9 +105,7 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-        #endregion Internals
 
-        #region IEquatable
 
         public bool Equals(DocConstantRecruitmentMethod obj) => this == obj;
 
@@ -136,6 +133,5 @@ namespace Services.Enums
                 
         public int GetHashCode(DocConstantRecruitmentMethod obj) => obj?.GetHashCode() ?? -17;
 
-        #endregion IEquatable
     }
 }

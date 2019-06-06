@@ -141,7 +141,6 @@ namespace Services.Dto
         public VariableRule(int id) : base(id) {}
         public VariableRule(int? pId, List<Reference> pChildren, int? pChildrenCount, string pDefinition, List<Reference> pInstances, int? pInstancesCount, string pName, Reference pOwner, int? pOwnerId, Reference pRule, int? pRuleId, List<Reference> pScopes, int? pScopesCount, Reference pType, int? pTypeId) : 
             base(pId, pChildren, pChildrenCount, pDefinition, pInstances, pInstancesCount, pName, pOwner, pOwnerId, pRule, pRuleId, pScopes, pScopesCount, pType, pTypeId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -187,7 +186,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

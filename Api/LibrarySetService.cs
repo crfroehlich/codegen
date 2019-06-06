@@ -878,8 +878,6 @@ namespace Services.API
                     var pSelectionCriteria = entity.SelectionCriteria;
                     var pStudyDesigns = entity.StudyDesigns.ToList();
                     var pUpdateFrequency = entity.UpdateFrequency;
-                    #region Custom Before copyLibrarySet
-                    #endregion Custom Before copyLibrarySet
                     var copy = new DocEntityLibrarySet(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -931,8 +929,6 @@ namespace Services.API
                                 entity.StudyDesigns.Add(item);
                             }
 
-                    #region Custom After copyLibrarySet
-                    #endregion Custom After copyLibrarySet
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

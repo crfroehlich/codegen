@@ -113,7 +113,6 @@ namespace Services.Dto
         public LookupTable(int id) : base(id) {}
         public LookupTable(int? pId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pCategories, int? pCategoriesCount, List<Reference> pDocuments, int? pDocumentsCount, Reference pEnum, int? pEnumId, string pName) : 
             base(pId, pBindings, pBindingsCount, pCategories, pCategoriesCount, pDocuments, pDocumentsCount, pEnum, pEnumId, pName) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -157,7 +156,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

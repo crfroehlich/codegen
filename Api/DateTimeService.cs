@@ -317,8 +317,6 @@ namespace Services.API
                     var pDateMonth = entity.DateMonth;
                     var pDateTime = entity.DateTime;
                     var pDateYear = entity.DateYear;
-                    #region Custom Before copyDateTime
-                    #endregion Custom Before copyDateTime
                     var copy = new DocEntityDateTime(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -328,8 +326,6 @@ namespace Services.API
                                 , DateYear = pDateYear
                     };
 
-                    #region Custom After copyDateTime
-                    #endregion Custom After copyDateTime
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

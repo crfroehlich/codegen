@@ -90,7 +90,6 @@ namespace Services.Dto
         public ValueType(int id) : base(id) {}
         public ValueType(int? pId, Reference pFieldType, int? pFieldTypeId, Reference pName, int? pNameId) : 
             base(pId, pFieldType, pFieldTypeId, pName, pNameId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -134,7 +133,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<ValueType>();

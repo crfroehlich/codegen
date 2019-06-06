@@ -845,8 +845,6 @@ namespace Services.API
                     var pVariableRules = entity.VariableRules.ToList();
                     var pView = entity.View;
                     var pWorkflows = entity.Workflows.ToList();
-                    #region Custom Before copyScope
-                    #endregion Custom Before copyScope
                     var copy = new DocEntityScope(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -901,8 +899,6 @@ namespace Services.API
                                 entity.Workflows.Add(item);
                             }
 
-                    #region Custom After copyScope
-                    #endregion Custom After copyScope
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

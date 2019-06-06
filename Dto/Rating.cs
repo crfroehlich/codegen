@@ -91,7 +91,6 @@ namespace Services.Dto
         public Rating(int id) : base(id) {}
         public Rating(int? pId, Reference pDocument, int? pDocumentId, RatingEnm? pRating, ReasonRejectedEnm? pReasonRejected) : 
             base(pId, pDocument, pDocumentId, pRating, pReasonRejected) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -137,7 +136,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<Rating>();

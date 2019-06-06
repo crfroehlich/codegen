@@ -101,7 +101,6 @@ namespace Services.Dto
         public TimePoint(int id) : base(id) {}
         public TimePoint(int? pId, bool pIsAbsolute, TypeMeanBase pMeanValue, TypeUnitValue pSingleValue, TypeUnitRange pTotalValue, Reference pType, int? pTypeId) : 
             base(pId, pIsAbsolute, pMeanValue, pSingleValue, pTotalValue, pType, pTypeId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -145,7 +144,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<TimePoint>();

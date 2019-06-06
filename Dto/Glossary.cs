@@ -109,7 +109,6 @@ namespace Services.Dto
         public Glossary(int id) : base(id) {}
         public Glossary(int? pId, string pDefinition, Reference pEnum, int? pEnumId, string pIcon, Reference pPage, int? pPageId, Reference pTerm, int? pTermId) : 
             base(pId, pDefinition, pEnum, pEnumId, pIcon, pPage, pPageId, pTerm, pTermId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -155,7 +154,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<Glossary>();

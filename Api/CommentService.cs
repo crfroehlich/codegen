@@ -350,8 +350,6 @@ namespace Services.API
                     var pScopes = entity.Scopes.ToList();
                     var pText = entity.Text;
                     var pUser = entity.User;
-                    #region Custom Before copyComment
-                    #endregion Custom Before copyComment
                     var copy = new DocEntityComment(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -363,8 +361,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                    #region Custom After copyComment
-                    #endregion Custom After copyComment
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

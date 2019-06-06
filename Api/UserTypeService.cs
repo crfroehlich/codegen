@@ -389,8 +389,6 @@ namespace Services.API
                     var pPayrollType = entity.PayrollType;
                     var pType = entity.Type;
                     var pUsers = entity.Users.ToList();
-                    #region Custom Before copyUserType
-                    #endregion Custom Before copyUserType
                     var copy = new DocEntityUserType(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -403,8 +401,6 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                    #region Custom After copyUserType
-                    #endregion Custom After copyUserType
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

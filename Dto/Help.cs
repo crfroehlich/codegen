@@ -128,7 +128,6 @@ namespace Services.Dto
         public Help(int id) : base(id) {}
         public Help(int? pId, string pConfluenceId, string pDescription, string pIcon, int? pOrder, List<Reference> pPages, int? pPagesCount, List<Reference> pScopes, int? pScopesCount, string pTitle, Reference pType, int? pTypeId) : 
             base(pId, pConfluenceId, pDescription, pIcon, pOrder, pPages, pPagesCount, pScopes, pScopesCount, pTitle, pType, pTypeId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -174,7 +173,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

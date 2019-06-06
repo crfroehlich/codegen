@@ -65,7 +65,6 @@ namespace Services.Enums
         public const string ARCHIVED = "Archived";
         public const string INACTIVE = "Inactive";
         
-        #region Internals
         
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantForeignKeyStatus).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
@@ -96,9 +95,7 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-        #endregion Internals
 
-        #region IEquatable
 
         public bool Equals(DocConstantForeignKeyStatus obj) => this == obj;
 
@@ -126,6 +123,5 @@ namespace Services.Enums
                 
         public int GetHashCode(DocConstantForeignKeyStatus obj) => obj?.GetHashCode() ?? -17;
 
-        #endregion IEquatable
     }
 }

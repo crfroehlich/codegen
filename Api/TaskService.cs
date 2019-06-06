@@ -381,8 +381,6 @@ namespace Services.API
                     var pReporter = entity.Reporter;
                     var pType = entity.Type;
                     var pWorkflow = entity.Workflow;
-                    #region Custom Before copyTask
-                    #endregion Custom Before copyTask
                     var copy = new DocEntityTask(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -395,8 +393,6 @@ namespace Services.API
                                 , Workflow = pWorkflow
                     };
 
-                    #region Custom After copyTask
-                    #endregion Custom After copyTask
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

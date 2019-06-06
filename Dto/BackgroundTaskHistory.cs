@@ -134,7 +134,6 @@ namespace Services.Dto
         public BackgroundTaskHistory(int id) : base(id) {}
         public BackgroundTaskHistory(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) : 
             base(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -180,7 +179,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

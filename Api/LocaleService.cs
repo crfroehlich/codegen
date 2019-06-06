@@ -304,8 +304,6 @@ namespace Services.API
                     var pTimeZone = entity.TimeZone;
                     if(!DocTools.IsNullOrEmpty(pTimeZone))
                         pTimeZone += " (Copy)";
-                    #region Custom Before copyLocale
-                    #endregion Custom Before copyLocale
                     var copy = new DocEntityLocale(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -314,8 +312,6 @@ namespace Services.API
                                 , TimeZone = pTimeZone
                     };
 
-                    #region Custom After copyLocale
-                    #endregion Custom After copyLocale
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

@@ -358,8 +358,6 @@ namespace Services.API
                     var pName = entity.Name;
                     var pType = entity.Type;
                     var pUnit = entity.Unit;
-                    #region Custom Before copyUnitOfMeasure
-                    #endregion Custom Before copyUnitOfMeasure
                     var copy = new DocEntityUnitOfMeasure(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -369,8 +367,6 @@ namespace Services.API
                                 , Unit = pUnit
                     };
 
-                    #region Custom After copyUnitOfMeasure
-                    #endregion Custom After copyUnitOfMeasure
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

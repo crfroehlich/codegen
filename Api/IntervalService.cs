@@ -354,8 +354,6 @@ namespace Services.API
                         pCalendarType += " (Copy)";
                     var pFollowUp = entity.FollowUp;
                     var pTimeOfDay = entity.TimeOfDay;
-                    #region Custom Before copyInterval
-                    #endregion Custom Before copyInterval
                     var copy = new DocEntityInterval(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -366,8 +364,6 @@ namespace Services.API
                                 , TimeOfDay = pTimeOfDay
                     };
 
-                    #region Custom After copyInterval
-                    #endregion Custom After copyInterval
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

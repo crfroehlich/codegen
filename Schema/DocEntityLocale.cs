@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string LOCALE_CACHE = "LocaleCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.LOCALE;
         
-        #region Constructor
         public DocEntityLocale(Session session) : base(session) {}
 
         public DocEntityLocale() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Locale()));
 
-        #region Static Members
         public static DocEntityLocale Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field(Nullable = false)]
         public string Country { get; set; }
 
@@ -119,9 +114,7 @@ namespace Services.Schema
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -129,9 +122,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindLocales";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -173,9 +164,7 @@ namespace Services.Schema
             base.FlushCache();
 
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -203,15 +192,12 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public Locale ToDto() => Mapper.Map<DocEntityLocale, Locale>(this);
 
         public static explicit operator Locale(DocEntityLocale en) => en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

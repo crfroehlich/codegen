@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string UNITS_CACHE = "UnitsCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.UNITS;
         
-        #region Constructor
         public DocEntityUnits(Session session) : base(session) {}
 
         public DocEntityUnits() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new UnitsDto()));
 
-        #region Static Members
         public static DocEntityUnits Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field]
         [Association(PairTo = nameof(DocEntityUnitValue.Owners), OnOwnerRemove = OnRemoveAction.Clear, OnTargetRemove = OnRemoveAction.Clear)]
         public DocEntitySet<DocEntityUnitValue> Units { get; private set; }
@@ -118,9 +113,7 @@ namespace Services.Schema
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -128,9 +121,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindUnitss";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -170,9 +161,7 @@ namespace Services.Schema
             base.FlushCache();
 
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -186,15 +175,12 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public UnitsDto ToDto() => Mapper.Map<DocEntityUnits, UnitsDto>(this);
 
         public static explicit operator UnitsDto(DocEntityUnits en) => en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

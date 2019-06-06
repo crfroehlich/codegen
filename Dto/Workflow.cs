@@ -179,7 +179,6 @@ namespace Services.Dto
         public Workflow(int id) : base(id) {}
         public Workflow(int? pId, List<Reference> pBindings, int? pBindingsCount, string pData, string pDescription, List<Reference> pDocuments, int? pDocumentsCount, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, WorkflowStatusEnm? pStatus, List<Reference> pTasks, int? pTasksCount, WorkflowEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariables, int? pVariablesCount, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pBindings, pBindingsCount, pData, pDescription, pDocuments, pDocumentsCount, pName, pOwner, pOwnerId, pScopes, pScopesCount, pStatus, pTasks, pTasksCount, pType, pUser, pUserId, pVariables, pVariablesCount, pWorkflows, pWorkflowsCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -225,7 +224,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

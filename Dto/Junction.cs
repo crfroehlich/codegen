@@ -138,7 +138,6 @@ namespace Services.Dto
         public Junction(int id) : base(id) {}
         public Junction(int? pId, List<Reference> pChildren, int? pChildrenCount, string pData, int? pOwnerId, string pOwnerType, Reference pParent, int? pParentId, int? pTargetId, string pTargetType, Reference pType, int? pTypeId, Reference pUser, int? pUserId) : 
             base(pId, pChildren, pChildrenCount, pData, pOwnerId, pOwnerType, pParent, pParentId, pTargetId, pTargetType, pType, pTypeId, pUser, pUserId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -184,7 +183,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

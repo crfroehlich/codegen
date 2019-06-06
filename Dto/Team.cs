@@ -153,7 +153,6 @@ namespace Services.Dto
         public Team(int id) : base(id) {}
         public Team(int? pId, List<Reference> pAdminRoles, int? pAdminRolesCount, string pDescription, string pEmail, bool pIsInternal, string pName, Reference pOwner, int? pOwnerId, List<Reference> pScopes, int? pScopesCount, TeamSettings pSettings, string pSlack, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pAdminRoles, pAdminRolesCount, pDescription, pEmail, pIsInternal, pName, pOwner, pOwnerId, pScopes, pScopesCount, pSettings, pSlack, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -199,7 +198,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

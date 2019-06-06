@@ -124,7 +124,6 @@ namespace Services.Dto
         public Event(int id) : base(id) {}
         public Event(int? pId, Reference pAuditRecord, int? pAuditRecordId, string pDescription, DateTime? pProcessed, string pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pAuditRecord, pAuditRecordId, pDescription, pProcessed, pStatus, pTeams, pTeamsCount, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -170,7 +169,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

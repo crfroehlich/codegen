@@ -208,7 +208,6 @@ namespace Services.Dto
         public ImportData(int id) : base(id) {}
         public ImportData(int? pId, DateTime? pCompletedOn, List<Reference> pDataSets, int? pDataSetsCount, Reference pDocument, int? pDocumentId, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : 
             base(pId, pCompletedOn, pDataSets, pDataSetsCount, pDocument, pDocumentId, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -252,7 +251,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

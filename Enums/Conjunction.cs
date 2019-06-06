@@ -90,7 +90,6 @@ namespace Services.Enums
         public const string OR_NOT = "or not";
         public const string WITH_WITHOUT = "+/-";
         
-        #region Internals
         
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantConjunction).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
@@ -121,9 +120,7 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
-        #endregion Internals
 
-        #region IEquatable
 
         public bool Equals(DocConstantConjunction obj) => this == obj;
 
@@ -151,6 +148,5 @@ namespace Services.Enums
                 
         public int GetHashCode(DocConstantConjunction obj) => obj?.GetHashCode() ?? -17;
 
-        #endregion IEquatable
     }
 }

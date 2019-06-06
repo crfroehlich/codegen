@@ -95,7 +95,6 @@ namespace Services.Dto
         public StatsRecord(int id) : base(id) {}
         public StatsRecord(int? pId, Reference pName, int? pNameId, int? pOwnerId, string pOwnerType, decimal pValue) : 
             base(pId, pName, pNameId, pOwnerId, pOwnerType, pValue) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -139,7 +138,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<StatsRecord>();

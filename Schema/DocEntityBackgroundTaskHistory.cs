@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string BACKGROUNDTASKHISTORY_CACHE = "BackgroundTaskHistoryCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.BACKGROUNDTASKHISTORY;
         
-        #region Constructor
         public DocEntityBackgroundTaskHistory(Session session) : base(session) {}
 
         public DocEntityBackgroundTaskHistory() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new BackgroundTaskHistory()));
 
-        #region Static Members
         public static DocEntityBackgroundTaskHistory Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field(DefaultValue = 0)]
         public int? Completed { get; set; }
 
@@ -199,9 +194,7 @@ namespace Services.Schema
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -209,9 +202,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindBackgroundTaskHistorys";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -258,9 +249,7 @@ namespace Services.Schema
             base.FlushCache();
 
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -278,15 +267,12 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public BackgroundTaskHistory ToDto() => Mapper.Map<DocEntityBackgroundTaskHistory, BackgroundTaskHistory>(this);
 
         public static explicit operator BackgroundTaskHistory(DocEntityBackgroundTaskHistory en) => en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

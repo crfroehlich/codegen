@@ -108,7 +108,6 @@ namespace Services.Dto
         public ReconcileDocument(int id) : base(id) {}
         public ReconcileDocument(int? pId, string pArticleId, string pArticleLink, Reference pDocument, int? pDocumentId, int? pMatches, string pSearchLink, ReconciliationStatusEnm? pStatus) : 
             base(pId, pArticleId, pArticleLink, pDocument, pDocumentId, pMatches, pSearchLink, pStatus) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -154,7 +153,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<ReconcileDocument>();

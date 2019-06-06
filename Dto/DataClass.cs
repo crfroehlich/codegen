@@ -213,7 +213,6 @@ namespace Services.Dto
         public DataClass(int id) : base(id) {}
         public DataClass(int? pId, bool pAllowDelete, bool pAllSelectByDefault, ModelNameEnm? pBase, int? pCacheDuration, int? pClassId, List<Reference> pCustomCollections, int? pCustomCollectionsCount, bool pDELETE, string pDescription, List<Reference> pDontFlattenProperties, int? pDontFlattenPropertiesCount, string pDtoSuffix, bool pFlattenReferences, bool pGET, List<Reference> pIgnoreProps, int? pIgnorePropsCount, bool pIsInsertOnly, bool pIsReadOnly, string pName, bool pPATCH, bool pPOST, List<DataProperty> pProperties, int? pPropertiesCount, bool pPUT, List<DataTab> pTabs, int? pTabsCount) : 
             base(pId, pAllowDelete, pAllSelectByDefault, pBase, pCacheDuration, pClassId, pCustomCollections, pCustomCollectionsCount, pDELETE, pDescription, pDontFlattenProperties, pDontFlattenPropertiesCount, pDtoSuffix, pFlattenReferences, pGET, pIgnoreProps, pIgnorePropsCount, pIsInsertOnly, pIsReadOnly, pName, pPATCH, pPOST, pProperties, pPropertiesCount, pPUT, pTabs, pTabsCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -259,7 +258,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

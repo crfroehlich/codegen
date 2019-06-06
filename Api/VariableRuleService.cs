@@ -511,8 +511,6 @@ namespace Services.API
                     var pRule = entity.Rule;
                     var pScopes = entity.Scopes.ToList();
                     var pType = entity.Type;
-                    #region Custom Before copyVariableRule
-                    #endregion Custom Before copyVariableRule
                     var copy = new DocEntityVariableRule(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -537,8 +535,6 @@ namespace Services.API
                                 entity.Scopes.Add(item);
                             }
 
-                    #region Custom After copyVariableRule
-                    #endregion Custom After copyVariableRule
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

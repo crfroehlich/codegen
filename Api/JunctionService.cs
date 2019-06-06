@@ -450,8 +450,6 @@ namespace Services.API
                         pTargetType += " (Copy)";
                     var pType = entity.Type;
                     var pUser = entity.User;
-                    #region Custom Before copyJunction
-                    #endregion Custom Before copyJunction
                     var copy = new DocEntityJunction(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -469,8 +467,6 @@ namespace Services.API
                                 entity.Children.Add(item);
                             }
 
-                    #region Custom After copyJunction
-                    #endregion Custom After copyJunction
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

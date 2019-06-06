@@ -143,7 +143,6 @@ namespace Services.Dto
         public History(int id) : base(id) {}
         public History(int? pId, Reference pApp, int? pAppId, Reference pDocumentSet, int? pDocumentSetId, Reference pImpersonation, int? pImpersonationId, Reference pPage, int? pPageId, string pURL, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId, Reference pWorkflow, int? pWorkflowId) : 
             base(pId, pApp, pAppId, pDocumentSet, pDocumentSetId, pImpersonation, pImpersonationId, pPage, pPageId, pURL, pUser, pUserId, pUserSession, pUserSessionId, pWorkflow, pWorkflowId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -189,7 +188,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<History>();

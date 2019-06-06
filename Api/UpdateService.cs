@@ -497,8 +497,6 @@ namespace Services.API
                         pSubject += " (Copy)";
                     var pTeam = entity.Team;
                     var pUser = entity.User;
-                    #region Custom Before copyUpdate
-                    #endregion Custom Before copyUpdate
                     var copy = new DocEntityUpdate(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -519,8 +517,6 @@ namespace Services.API
                                 entity.Events.Add(item);
                             }
 
-                    #region Custom After copyUpdate
-                    #endregion Custom After copyUpdate
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

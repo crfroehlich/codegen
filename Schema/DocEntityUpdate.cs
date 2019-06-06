@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string UPDATE_CACHE = "UpdateCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.UPDATE;
         
-        #region Constructor
         public DocEntityUpdate(Session session) : base(session) {}
 
         public DocEntityUpdate() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Update()));
 
-        #region Static Members
         public static DocEntityUpdate Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field(Length = int.MaxValue)]
         public string Body { get; set; }
 
@@ -164,9 +159,7 @@ namespace Services.Schema
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -174,9 +167,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindUpdates";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -217,9 +208,7 @@ namespace Services.Schema
             base.FlushCache();
 
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -233,15 +222,12 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public Update ToDto() => Mapper.Map<DocEntityUpdate, Update>(this);
 
         public static explicit operator Update(DocEntityUpdate en) => en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

@@ -365,8 +365,6 @@ namespace Services.API
                     var pEnum = entity.Enum;
                     var pLookups = entity.Lookups.ToList();
                     var pParentCategory = entity.ParentCategory;
-                    #region Custom Before copyLookupCategory
-                    #endregion Custom Before copyLookupCategory
                     var copy = new DocEntityLookupCategory(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -379,8 +377,6 @@ namespace Services.API
                                 entity.Lookups.Add(item);
                             }
 
-                    #region Custom After copyLookupCategory
-                    #endregion Custom After copyLookupCategory
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

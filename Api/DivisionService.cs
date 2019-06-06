@@ -445,8 +445,6 @@ namespace Services.API
                     var pRole = entity.Role;
                     var pSettings = entity.Settings;
                     var pUsers = entity.Users.ToList();
-                    #region Custom Before copyDivision
-                    #endregion Custom Before copyDivision
                     var copy = new DocEntityDivision(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -466,8 +464,6 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                    #region Custom After copyDivision
-                    #endregion Custom After copyDivision
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

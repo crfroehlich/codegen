@@ -572,8 +572,6 @@ namespace Services.API
                         pSlack += " (Copy)";
                     var pUpdates = entity.Updates.ToList();
                     var pUsers = entity.Users.ToList();
-                    #region Custom Before copyTeam
-                    #endregion Custom Before copyTeam
                     var copy = new DocEntityTeam(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -605,8 +603,6 @@ namespace Services.API
                                 entity.Users.Add(item);
                             }
 
-                    #region Custom After copyTeam
-                    #endregion Custom After copyTeam
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

@@ -124,7 +124,6 @@ namespace Services.Dto
         public Attribute(int id) : base(id) {}
         public Attribute(int? pId, Reference pAttributeName, int? pAttributeNameId, Reference pAttributeType, int? pAttributeTypeId, AttributeInterval pInterval, int? pIntervalId, bool pIsCharacteristic, bool pIsOutcome, bool? pIsPositive, string pUniqueKey) : 
             base(pId, pAttributeName, pAttributeNameId, pAttributeType, pAttributeTypeId, pInterval, pIntervalId, pIsCharacteristic, pIsOutcome, pIsPositive, pUniqueKey) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -168,7 +167,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<Attribute>();

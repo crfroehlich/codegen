@@ -100,7 +100,6 @@ namespace Services.Dto
         public DocumentSetHistory(int id) : base(id) {}
         public DocumentSetHistory(int? pId, Reference pDocumentSet, int? pDocumentSetId, int? pEvidencePortalID, int? pFqId, int? pStudyCount, int? pStudyCountFQ) : 
             base(pId, pDocumentSet, pDocumentSetId, pEvidencePortalID, pFqId, pStudyCount, pStudyCountFQ) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -146,7 +145,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<DocumentSetHistory>();

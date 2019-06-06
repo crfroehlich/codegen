@@ -126,7 +126,6 @@ namespace Services.Dto
         public MeanRangeValue(int id) : base(id) {}
         public MeanRangeValue(int? pId, Reference pMeanVarianceType, int? pMeanVarianceTypeId, TypeUnits pMidSpread, int? pOrder, List<MeanRanges> pOwners, int? pOwnersCount, decimal? pPercent, decimal? pPercentLow, TypeUnitsRange pRange, Reference pType, int? pTypeId) : 
             base(pId, pMeanVarianceType, pMeanVarianceTypeId, pMidSpread, pOrder, pOwners, pOwnersCount, pPercent, pPercentLow, pRange, pType, pTypeId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -170,7 +169,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

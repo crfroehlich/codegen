@@ -315,16 +315,12 @@ namespace Services.API
                         throw new HttpError(HttpStatusCode.Forbidden, "You do not have ADD permission for this route.");
 
 
-                    #region Custom Before copyDiseaseStateSet
-                    #endregion Custom Before copyDiseaseStateSet
                     var copy = new DocEntityDiseaseStateSet(ssn)
                     {
                         Hash = Guid.NewGuid()
 
                     };
 
-                    #region Custom After copyDiseaseStateSet
-                    #endregion Custom After copyDiseaseStateSet
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

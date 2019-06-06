@@ -94,7 +94,6 @@ namespace Services.Dto
         public FeatureSet(int id) : base(id) {}
         public FeatureSet(int? pId, string pDescription, string pName, string pPermissionTemplate, List<Reference> pRoles, int? pRolesCount) : 
             base(pId, pDescription, pName, pPermissionTemplate, pRoles, pRolesCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -140,7 +139,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

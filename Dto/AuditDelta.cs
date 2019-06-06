@@ -83,7 +83,6 @@ namespace Services.Dto
         public AuditDelta(int id) : base(id) {}
         public AuditDelta(int? pId, Reference pAudit, int? pAuditId, string pDelta) : 
             base(pId, pAudit, pAuditId, pDelta) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -129,7 +128,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<AuditDelta>();

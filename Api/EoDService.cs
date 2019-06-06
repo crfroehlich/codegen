@@ -324,8 +324,6 @@ namespace Services.API
 
                     var pDocument = entity.Document;
                     var pStatus = entity.Status;
-                    #region Custom Before copyEoD
-                    #endregion Custom Before copyEoD
                     var copy = new DocEntityEoD(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -333,8 +331,6 @@ namespace Services.API
                                 , Status = pStatus
                     };
 
-                    #region Custom After copyEoD
-                    #endregion Custom After copyEoD
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

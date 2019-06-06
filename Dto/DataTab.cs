@@ -94,7 +94,6 @@ namespace Services.Dto
         public DataTab(int id) : base(id) {}
         public DataTab(int? pId, Reference pClass, int? pClassId, string pDescription, string pName, int? pOrder) : 
             base(pId, pClass, pClassId, pDescription, pName, pOrder) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -140,7 +139,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<DataTab>();

@@ -135,7 +135,6 @@ namespace Services.Dto
         public UnitConversionRules(int id) : base(id) {}
         public UnitConversionRules(int? pId, Reference pDestinationUnit, int? pDestinationUnitId, bool pIsDefault, bool pIsDestinationSi, Reference pModifierTerm, int? pModifierTermId, decimal pMultiplier, Reference pParent, int? pParentId, Reference pRootTerm, int? pRootTermId, Reference pSourceUnit, int? pSourceUnitId) : 
             base(pId, pDestinationUnit, pDestinationUnitId, pIsDefault, pIsDestinationSi, pModifierTerm, pModifierTermId, pMultiplier, pParent, pParentId, pRootTerm, pRootTermId, pSourceUnit, pSourceUnitId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -179,7 +178,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<UnitConversionRules>();

@@ -362,7 +362,6 @@ namespace Services.Dto
         public Document(int id) : base(id) {}
         public Document(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pArticleId, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : 
             base(pId, pAbstract, pAccessionID, pAcronym, pArticleId, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDatabaseTypeId, pDocumentSets, pDocumentSetsCount, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -408,7 +407,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

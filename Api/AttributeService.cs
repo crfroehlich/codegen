@@ -426,8 +426,6 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pUniqueKey))
                         pUniqueKey += " (Copy)";
                     var pValueType = entity.ValueType;
-                    #region Custom Before copyAttribute
-                    #endregion Custom Before copyAttribute
                     var copy = new DocEntityAttribute(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -441,8 +439,6 @@ namespace Services.API
                                 , ValueType = pValueType
                     };
 
-                    #region Custom After copyAttribute
-                    #endregion Custom After copyAttribute
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

@@ -32,15 +32,12 @@ namespace Services.Schema
         private const string HELP_CACHE = "HelpCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.HELP;
         
-        #region Constructor
         public DocEntityHelp(Session session) : base(session) {}
 
         public DocEntityHelp() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
-        #endregion Constructor
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Help()));
 
-        #region Static Members
         public static DocEntityHelp Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -85,9 +82,7 @@ namespace Services.Schema
             }
             return ret;
         }
-        #endregion Static Members
 
-        #region Properties
         [Field]
         public string ConfluenceId { get; set; }
 
@@ -152,9 +147,7 @@ namespace Services.Schema
         [Field(DefaultValue = false), FieldMapping(nameof(Archived))]
         public override bool Archived { get; set; }
 
-        #endregion Properties
 
-        #region Overrides of DocEntity
 
         public override ModelNameEnm ClassName => CLASS_NAME;
 
@@ -162,9 +155,7 @@ namespace Services.Schema
 
         public const string CACHE_KEY_PREFIX = "FindHelps";
 
-        #endregion Overrides of DocEntity
 
-        #region Entity overrides
         /// <summary>
         ///    Called when entity is about to be removed.
         /// </summary>
@@ -207,9 +198,7 @@ namespace Services.Schema
             base.FlushCache();
             DocCacheClient.RemoveById(Id);
         }
-        #endregion Entity overrides
 
-        #region Validation
         public DocValidationMessage ValidationMessage
         {
             get
@@ -232,15 +221,12 @@ namespace Services.Schema
                 return ret;
             }
         }
-        #endregion Validation
 
-        #region Converters
 
         public Help ToDto() => Mapper.Map<DocEntityHelp, Help>(this);
 
         public static explicit operator Help(DocEntityHelp en) => en?.ToDto();
 
         public override IDto ToIDto() => ToDto();
-        #endregion Converters
     }
 }

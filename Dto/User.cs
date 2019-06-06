@@ -310,7 +310,6 @@ namespace Services.Dto
         public User(int id) : base(id) {}
         public User(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, StatusEnm? pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -356,7 +355,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

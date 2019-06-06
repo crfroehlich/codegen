@@ -513,8 +513,6 @@ namespace Services.API
                     var pURI = entity.URI;
                     if(!DocTools.IsNullOrEmpty(pURI))
                         pURI += " (Copy)";
-                    #region Custom Before copyTermMaster
-                    #endregion Custom Before copyTermMaster
                     var copy = new DocEntityTermMaster(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -538,8 +536,6 @@ namespace Services.API
                                 entity.Synonyms.Add(item);
                             }
 
-                    #region Custom After copyTermMaster
-                    #endregion Custom After copyTermMaster
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

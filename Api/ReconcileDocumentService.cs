@@ -391,8 +391,6 @@ namespace Services.API
                     if(!DocTools.IsNullOrEmpty(pSearchLink))
                         pSearchLink += " (Copy)";
                     var pStatus = entity.Status;
-                    #region Custom Before copyReconcileDocument
-                    #endregion Custom Before copyReconcileDocument
                     var copy = new DocEntityReconcileDocument(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -404,8 +402,6 @@ namespace Services.API
                                 , Status = pStatus
                     };
 
-                    #region Custom After copyReconcileDocument
-                    #endregion Custom After copyReconcileDocument
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

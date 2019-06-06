@@ -228,7 +228,6 @@ namespace Services.Dto
         public Project(int id) : base(id) {}
         public Project(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pClient, int? pClientId, DateTime? pDatabaseDeadline, string pDatabaseName, Reference pDataset, int? pDatasetId, DateTime? pDeliverableDeadline, int? pFqId, Reference pFqWorkflow, int? pFqWorkflowId, int? pLegacyPackageId, Reference pLibrary, int? pLibraryId, int? pLibraryPackageId, string pLibraryPackageName, string pNumber, string pOperationsDeliverable, string pOpportunityId, string pOpportunityName, Reference pParent, int? pParentId, string pPICO, string pProjectId, string pProjectName, ForeignKeyStatusEnm? pStatus, List<Reference> pTimeCards, int? pTimeCardsCount) : 
             base(pId, pChildren, pChildrenCount, pClient, pClientId, pDatabaseDeadline, pDatabaseName, pDataset, pDatasetId, pDeliverableDeadline, pFqId, pFqWorkflow, pFqWorkflowId, pLegacyPackageId, pLibrary, pLibraryId, pLibraryPackageId, pLibraryPackageName, pNumber, pOperationsDeliverable, pOpportunityId, pOpportunityName, pParent, pParentId, pPICO, pProjectId, pProjectName, pStatus, pTimeCards, pTimeCardsCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -274,7 +273,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

@@ -352,8 +352,6 @@ namespace Services.API
                         pIcon += " (Copy)";
                     var pPage = entity.Page;
                     var pTerm = entity.Term;
-                    #region Custom Before copyGlossary
-                    #endregion Custom Before copyGlossary
                     var copy = new DocEntityGlossary(ssn)
                     {
                         Hash = Guid.NewGuid()
@@ -364,8 +362,6 @@ namespace Services.API
                                 , Term = pTerm
                     };
 
-                    #region Custom After copyGlossary
-                    #endregion Custom After copyGlossary
                     copy.SaveChanges(DocConstantPermission.ADD);
                     ret = copy.ToDto();
                 });

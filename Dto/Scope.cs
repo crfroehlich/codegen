@@ -228,7 +228,6 @@ namespace Services.Dto
         public Scope(int id) : base(id) {}
         public Scope(int? pId, Reference pApp, int? pAppId, List<Reference> pBindings, int? pBindingsCount, List<Reference> pBroadcasts, int? pBroadcastsCount, Reference pClient, int? pClientId, bool pDelete, Reference pDocumentSet, int? pDocumentSetId, bool pEdit, List<Reference> pHelp, int? pHelpCount, bool pIsGlobal, List<Reference> pScopedComments, int? pScopedCommentsCount, List<Reference> pScopedTags, int? pScopedTagsCount, List<Reference> pSynonyms, int? pSynonymsCount, Reference pTeam, int? pTeamId, ScopeEnm? pType, Reference pUser, int? pUserId, List<Reference> pVariableRules, int? pVariableRulesCount, bool pView, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pApp, pAppId, pBindings, pBindingsCount, pBroadcasts, pBroadcastsCount, pClient, pClientId, pDelete, pDocumentSet, pDocumentSetId, pEdit, pHelp, pHelpCount, pIsGlobal, pScopedComments, pScopedCommentsCount, pScopedTags, pScopedTagsCount, pSynonyms, pSynonymsCount, pTeam, pTeamId, pType, pUser, pUserId, pVariableRules, pVariableRulesCount, pView, pWorkflows, pWorkflowsCount) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -274,7 +273,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {

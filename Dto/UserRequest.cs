@@ -114,7 +114,6 @@ namespace Services.Dto
         public UserRequest(int id) : base(id) {}
         public UserRequest(int? pId, Reference pApp, int? pAppId, string pMethod, Reference pPage, int? pPageId, string pPath, string pURL, Reference pUserSession, int? pUserSessionId) : 
             base(pId, pApp, pAppId, pMethod, pPage, pPageId, pPath, pURL, pUserSession, pUserSessionId) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -160,7 +159,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
 
         public object Clone() => this.Copy<UserRequest>();

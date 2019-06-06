@@ -89,7 +89,6 @@ namespace Services.Dto
         public Tag(int id) : base(id) {}
         public Tag(int? pId, string pName, List<Reference> pScopes, int? pScopesCount, string pURI) : 
             base(pId, pName, pScopes, pScopesCount, pURI) { }
-        #region Fields
 
         public new bool? ShouldSerialize(string field)
         {
@@ -135,7 +134,6 @@ namespace Services.Dto
         [Obsolete, ApiMember(Name = nameof(VisibleFields), Description = "Deprecated. Use Select instead.", AllowMultiple = true)]
         public override List<string> VisibleFields { get => Select; set => Select = value; }
 
-        #endregion Fields
 
         private List<string> _collections = new List<string>
         {
