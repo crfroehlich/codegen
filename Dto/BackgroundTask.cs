@@ -75,26 +75,18 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
-        public List<int> DescriptionIds { get; set; }
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Enabled), Description = "bool", IsRequired = false)]
         public bool Enabled { get; set; }
-        public List<int> EnabledIds { get; set; }
-        public int? EnabledCount { get; set; }
 
 
         [ApiMember(Name = nameof(Frequency), Description = "int?", IsRequired = false)]
         public int? Frequency { get; set; }
-        public List<int> FrequencyIds { get; set; }
-        public int? FrequencyCount { get; set; }
 
 
         [ApiMember(Name = nameof(HistoryRetention), Description = "int?", IsRequired = false)]
         public int? HistoryRetention { get; set; }
-        public List<int> HistoryRetentionIds { get; set; }
-        public int? HistoryRetentionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Items), Description = "BackgroundTaskItem", IsRequired = false)]
@@ -105,50 +97,34 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(KeepHistory), Description = "bool", IsRequired = false)]
         public bool KeepHistory { get; set; }
-        public List<int> KeepHistoryIds { get; set; }
-        public int? KeepHistoryCount { get; set; }
 
 
         [ApiMember(Name = nameof(LastRunVersion), Description = "string", IsRequired = false)]
         public string LastRunVersion { get; set; }
-        public List<int> LastRunVersionIds { get; set; }
-        public int? LastRunVersionCount { get; set; }
 
 
         [ApiMember(Name = nameof(LogError), Description = "bool", IsRequired = false)]
         public bool LogError { get; set; }
-        public List<int> LogErrorIds { get; set; }
-        public int? LogErrorCount { get; set; }
 
 
         [ApiMember(Name = nameof(LogInfo), Description = "bool", IsRequired = false)]
         public bool LogInfo { get; set; }
-        public List<int> LogInfoIds { get; set; }
-        public int? LogInfoCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(RowsToProcessPerIteration), Description = "int?", IsRequired = false)]
         public int? RowsToProcessPerIteration { get; set; }
-        public List<int> RowsToProcessPerIterationIds { get; set; }
-        public int? RowsToProcessPerIterationCount { get; set; }
 
 
         [ApiMember(Name = nameof(RunNow), Description = "bool", IsRequired = false)]
         public bool RunNow { get; set; }
-        public List<int> RunNowIds { get; set; }
-        public int? RunNowCount { get; set; }
 
 
         [ApiMember(Name = nameof(StartAt), Description = "string", IsRequired = false)]
         public string StartAt { get; set; }
-        public List<int> StartAtIds { get; set; }
-        public int? StartAtCount { get; set; }
 
 
         [ApiMember(Name = nameof(TaskHistory), Description = "BackgroundTaskHistory", IsRequired = false)]
@@ -193,12 +169,26 @@ namespace Services.Dto
 
     public partial class BackgroundTask : BackgroundTaskBase, IReturn<BackgroundTask>, IDto, ICloneable
     {
-        public BackgroundTask() => _Constructor();
+        public BackgroundTask()
+        {
+            _Constructor();
+        }
 
         public BackgroundTask(int? id) : base(DocConvert.ToInt(id)) {}
         public BackgroundTask(int id) : base(id) {}
-        public BackgroundTask(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, bool pKeepHistory, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) :
+        public BackgroundTask(int? pId, Reference pApp, int? pAppId, Reference pChannel, int? pChannelId, string pDescription, bool pEnabled, int? pFrequency, int? pHistoryRetention, List<Reference> pItems, int? pItemsCount, bool pKeepHistory, string pLastRunVersion, bool pLogError, bool pLogInfo, string pName, int? pRowsToProcessPerIteration, bool pRunNow, string pStartAt, List<Reference> pTaskHistory, int? pTaskHistoryCount) : 
             base(pId, pApp, pAppId, pChannel, pChannelId, pDescription, pEnabled, pFrequency, pHistoryRetention, pItems, pItemsCount, pKeepHistory, pLastRunVersion, pLogError, pLogInfo, pName, pRowsToProcessPerIteration, pRunNow, pStartAt, pTaskHistory, pTaskHistoryCount) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<BackgroundTask>();
 
@@ -236,7 +226,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Items), nameof(ItemsCount), nameof(ItemsIds), nameof(TaskHistory), nameof(TaskHistoryCount), nameof(TaskHistoryIds)
+            nameof(Items), nameof(ItemsCount), nameof(TaskHistory), nameof(TaskHistoryCount)
         };
         private List<string> collections { get { return _collections; } }
 

@@ -85,6 +85,8 @@ namespace Services.Enums
         FAVORITE = 20485,
         [EnumMember(Value = DocConstantModelName.FEATURESET), SCDescript(DocConstantModelName.FEATURESET), SSDescript(DocConstantModelName.FEATURESET), SCDisplay(Name = DocConstantModelName.FEATURESET)]
         FEATURESET = 116,
+        [EnumMember(Value = DocConstantModelName.FILE), SCDescript(DocConstantModelName.FILE), SSDescript(DocConstantModelName.FILE), SCDisplay(Name = DocConstantModelName.FILE)]
+        FILE = 21285,
         [EnumMember(Value = DocConstantModelName.GLOSSARY), SCDescript(DocConstantModelName.GLOSSARY), SSDescript(DocConstantModelName.GLOSSARY), SCDisplay(Name = DocConstantModelName.GLOSSARY)]
         GLOSSARY = 14977,
         [EnumMember(Value = DocConstantModelName.HELP), SCDescript(DocConstantModelName.HELP), SSDescript(DocConstantModelName.HELP), SCDisplay(Name = DocConstantModelName.HELP)]
@@ -257,6 +259,8 @@ namespace Services.Enums
                     return DocConstantModelName.FAVORITE;
                 case ModelNameEnm.FEATURESET:
                     return DocConstantModelName.FEATURESET;
+                case ModelNameEnm.FILE:
+                    return DocConstantModelName.FILE;
                 case ModelNameEnm.GLOSSARY:
                     return DocConstantModelName.GLOSSARY;
                 case ModelNameEnm.HELP:
@@ -406,6 +410,7 @@ namespace Services.Enums
         public const string EVENT = "Event";
         public const string FAVORITE = "Favorite";
         public const string FEATURESET = "FeatureSet";
+        public const string FILE = "File";
         public const string GLOSSARY = "Glossary";
         public const string HELP = "Help";
         public const string HISTORY = "History";
@@ -459,7 +464,8 @@ namespace Services.Enums
         public const string VARIABLEINSTANCE = "VariableInstance";
         public const string VARIABLERULE = "VariableRule";
         public const string WORKFLOW = "Workflow";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantModelName).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -489,6 +495,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantModelName obj) => this == obj;
 
         public static bool operator ==(DocConstantModelName x, DocConstantModelName y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -514,5 +522,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantModelName obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

@@ -114,7 +114,8 @@ namespace Services.Enums
         public const string LESS_THAN_OR_EQUALS = "<=";
         public const string LESS_THAN_OR_EQUALS_ALIAS = "≤";
         public const string NOT_EQUALS = "!=";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantEqualityOperator).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -144,6 +145,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantEqualityOperator obj) => this == obj;
 
         public static bool operator ==(DocConstantEqualityOperator x, DocConstantEqualityOperator y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -169,5 +172,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantEqualityOperator obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

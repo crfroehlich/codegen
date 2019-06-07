@@ -66,12 +66,26 @@ namespace Services.Dto
 
     public partial class StudyDesign : StudyDesignBase, IReturn<StudyDesign>, IDto, ICloneable
     {
-        public StudyDesign() => _Constructor();
+        public StudyDesign()
+        {
+            _Constructor();
+        }
 
         public StudyDesign(int? id) : base(DocConvert.ToInt(id)) {}
         public StudyDesign(int id) : base(id) {}
-        public StudyDesign(int? pId, Reference pDesign, int? pDesignId) :
+        public StudyDesign(int? pId, Reference pDesign, int? pDesignId) : 
             base(pId, pDesign, pDesignId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<StudyDesign>();
 

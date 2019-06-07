@@ -33,7 +33,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.AutoCreateMissing, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.AutoCreateMissing))))
                 .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Children))))
                 .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.ChildrenCount))))
-                .ForMember(dest => dest.ChildrenIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.ChildrenIds))))
+                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.ChildrenIds))))
                 .ForMember(dest => dest.Class, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Class))))
                 .ForMember(dest => dest.ClassId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.ClassId))))
                 .ForMember(dest => dest.Description, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<DataProperty>(c, nameof(DocEntityDataProperty.Description))))

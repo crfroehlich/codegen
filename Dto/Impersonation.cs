@@ -87,12 +87,26 @@ namespace Services.Dto
 
     public partial class Impersonation : ImpersonationBase, IReturn<Impersonation>, IDto, ICloneable
     {
-        public Impersonation() => _Constructor();
+        public Impersonation()
+        {
+            _Constructor();
+        }
 
         public Impersonation(int? id) : base(DocConvert.ToInt(id)) {}
         public Impersonation(int id) : base(id) {}
-        public Impersonation(int? pId, Reference pAuthenticatedUser, int? pAuthenticatedUserId, Reference pImpersonatedUser, int? pImpersonatedUserId, Reference pUserSession, int? pUserSessionId) :
+        public Impersonation(int? pId, Reference pAuthenticatedUser, int? pAuthenticatedUserId, Reference pImpersonatedUser, int? pImpersonatedUserId, Reference pUserSession, int? pUserSessionId) : 
             base(pId, pAuthenticatedUser, pAuthenticatedUserId, pImpersonatedUser, pImpersonatedUserId, pUserSession, pUserSessionId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Impersonation>();
 

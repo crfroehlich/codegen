@@ -81,6 +81,12 @@ namespace Services.Enums
         FEATURE = 1667,
         [EnumMember(Value = DocConstantLookupTable.FIELDTYPE), SCDescript(DocConstantLookupTable.FIELDTYPE), SSDescript(DocConstantLookupTable.FIELDTYPE), SCDisplay(Name = DocConstantLookupTable.FIELDTYPE)]
         FIELDTYPE = 1677,
+        [EnumMember(Value = DocConstantLookupTable.FILERIGHTS), SCDescript(DocConstantLookupTable.FILERIGHTS), SSDescript(DocConstantLookupTable.FILERIGHTS), SCDisplay(Name = DocConstantLookupTable.FILERIGHTS)]
+        FILERIGHTS = 156369087,
+        [EnumMember(Value = DocConstantLookupTable.FILESOURCE), SCDescript(DocConstantLookupTable.FILESOURCE), SSDescript(DocConstantLookupTable.FILESOURCE), SCDisplay(Name = DocConstantLookupTable.FILESOURCE)]
+        FILESOURCE = 156369088,
+        [EnumMember(Value = DocConstantLookupTable.FILETYPE), SCDescript(DocConstantLookupTable.FILETYPE), SSDescript(DocConstantLookupTable.FILETYPE), SCDisplay(Name = DocConstantLookupTable.FILETYPE)]
+        FILETYPE = 156369089,
         [EnumMember(Value = DocConstantLookupTable.FOREIGNKEYSTATUS), SCDescript(DocConstantLookupTable.FOREIGNKEYSTATUS), SSDescript(DocConstantLookupTable.FOREIGNKEYSTATUS), SCDisplay(Name = DocConstantLookupTable.FOREIGNKEYSTATUS)]
         FOREIGNKEYSTATUS = 90640174,
         [EnumMember(Value = DocConstantLookupTable.FQREFERENCESTATUS), SCDescript(DocConstantLookupTable.FQREFERENCESTATUS), SSDescript(DocConstantLookupTable.FQREFERENCESTATUS), SCDisplay(Name = DocConstantLookupTable.FQREFERENCESTATUS)]
@@ -331,6 +337,12 @@ namespace Services.Enums
                     return DocConstantLookupTable.FEATURE;
                 case LookupTableEnm.FIELDTYPE:
                     return DocConstantLookupTable.FIELDTYPE;
+                case LookupTableEnm.FILERIGHTS:
+                    return DocConstantLookupTable.FILERIGHTS;
+                case LookupTableEnm.FILESOURCE:
+                    return DocConstantLookupTable.FILESOURCE;
+                case LookupTableEnm.FILETYPE:
+                    return DocConstantLookupTable.FILETYPE;
                 case LookupTableEnm.FOREIGNKEYSTATUS:
                     return DocConstantLookupTable.FOREIGNKEYSTATUS;
                 case LookupTableEnm.FQREFERENCESTATUS:
@@ -560,6 +572,9 @@ namespace Services.Enums
         public const string EXTERNALKEY = "ExternalKey";
         public const string FEATURE = "Feature";
         public const string FIELDTYPE = "FieldType";
+        public const string FILERIGHTS = "FileRights";
+        public const string FILESOURCE = "FileSource";
+        public const string FILETYPE = "FileType";
         public const string FOREIGNKEYSTATUS = "ForeignKeyStatus";
         public const string FQREFERENCESTATUS = "FqReferenceStatus";
         public const string HELP = "Help";
@@ -654,7 +669,8 @@ namespace Services.Enums
         public const string WORKFLOW = "Workflow";
         public const string WORKFLOWSTATUS = "WorkflowStatus";
         public const string YESNONA = "YesNoNa";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantLookupTable).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -684,6 +700,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantLookupTable obj) => this == obj;
 
         public static bool operator ==(DocConstantLookupTable x, DocConstantLookupTable y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -709,5 +727,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantLookupTable obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

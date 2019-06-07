@@ -57,20 +57,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Multiplier), Description = "int?", IsRequired = false)]
         public int? Multiplier { get; set; }
-        public List<int> MultiplierIds { get; set; }
-        public int? MultiplierCount { get; set; }
 
 
         [ApiMember(Name = nameof(Number), Description = "decimal?", IsRequired = false)]
         public decimal? Number { get; set; }
-        public List<int> NumberIds { get; set; }
-        public int? NumberCount { get; set; }
 
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         public int? Order { get; set; }
-        public List<int> OrderIds { get; set; }
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(Unit), Description = "UnitOfMeasure", IsRequired = true)]
@@ -100,12 +94,26 @@ namespace Services.Dto
 
     public partial class UnitValue : UnitValueBase, IReturn<UnitValue>, IDto, ICloneable
     {
-        public UnitValue() => _Constructor();
+        public UnitValue()
+        {
+            _Constructor();
+        }
 
         public UnitValue(int? id) : base(DocConvert.ToInt(id)) {}
         public UnitValue(int id) : base(id) {}
-        public UnitValue(int? pId, Reference pEqualityOperator, int? pEqualityOperatorId, int? pMultiplier, decimal? pNumber, int? pOrder, UnitOfMeasure pUnit, int? pUnitId) :
+        public UnitValue(int? pId, Reference pEqualityOperator, int? pEqualityOperatorId, int? pMultiplier, decimal? pNumber, int? pOrder, UnitOfMeasure pUnit, int? pUnitId) : 
             base(pId, pEqualityOperator, pEqualityOperatorId, pMultiplier, pNumber, pOrder, pUnit, pUnitId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<UnitValue>();
 
@@ -141,7 +149,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Owners), nameof(Owners), nameof(OwnersCount), nameof(OwnersIds)
+            nameof(Owners), nameof(Owners), nameof(OwnersCount)
         };
         private List<string> collections { get { return _collections; } }
 

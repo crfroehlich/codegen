@@ -53,8 +53,6 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Accepted",@"Collected",@"Rejected",@"Requested",@"Unavailable"})]
         [ApiMember(Name = nameof(Status), Description = "EoDStatusEnm?", IsRequired = false)]
         public EoDStatusEnm? Status { get; set; }
-        public List<int> StatusIds { get; set; }
-        public int? StatusCount { get; set; }
 
 
 
@@ -77,12 +75,26 @@ namespace Services.Dto
 
     public partial class EoD : EoDBase, IReturn<EoD>, IDto, ICloneable
     {
-        public EoD() => _Constructor();
+        public EoD()
+        {
+            _Constructor();
+        }
 
         public EoD(int? id) : base(DocConvert.ToInt(id)) {}
         public EoD(int id) : base(id) {}
-        public EoD(int? pId, Reference pDocument, int? pDocumentId, EoDStatusEnm? pStatus) :
+        public EoD(int? pId, Reference pDocument, int? pDocumentId, EoDStatusEnm? pStatus) : 
             base(pId, pDocument, pDocumentId, pStatus) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<EoD>();
 

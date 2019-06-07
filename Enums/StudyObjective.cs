@@ -154,7 +154,8 @@ namespace Services.Enums
         public const string TERTIARY_ENDPOINT_OUTCOME = "Tertiary Endpoint/Outcome";
         public const string TERTIARY_OBJECTIVE = "Tertiary Objective";
         public const string TERTIARY_SAFETY_OUTCOME = "Tertiary Safety Outcome";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantStudyObjective).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -184,6 +185,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantStudyObjective obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyObjective x, DocConstantStudyObjective y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -209,5 +212,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantStudyObjective obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

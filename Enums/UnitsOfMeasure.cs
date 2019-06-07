@@ -734,7 +734,8 @@ namespace Services.Enums
         public const string TERAGRAM = "Tg";
         public const string WEEK = "wk";
         public const string YEAR = "yr";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantUnitsOfMeasure).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -764,6 +765,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantUnitsOfMeasure obj) => this == obj;
 
         public static bool operator ==(DocConstantUnitsOfMeasure x, DocConstantUnitsOfMeasure y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -789,5 +792,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantUnitsOfMeasure obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

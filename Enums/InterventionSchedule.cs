@@ -159,7 +159,8 @@ namespace Services.Enums
         public const string PRE_LUNCH = "Pre-Lunch";
         public const string PRE_POST_OP = "Pre/Post-op";
         public const string PRE_PRANDIAL = "Pre-Prandial";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantInterventionSchedule).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -189,6 +190,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantInterventionSchedule obj) => this == obj;
 
         public static bool operator ==(DocConstantInterventionSchedule x, DocConstantInterventionSchedule y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -214,5 +217,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantInterventionSchedule obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

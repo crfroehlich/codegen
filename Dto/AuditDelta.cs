@@ -52,8 +52,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Delta), Description = "string", IsRequired = true)]
         public string Delta { get; set; }
-        public List<int> DeltaIds { get; set; }
-        public int? DeltaCount { get; set; }
 
 
 
@@ -76,12 +74,26 @@ namespace Services.Dto
 
     public partial class AuditDelta : AuditDeltaBase, IReturn<AuditDelta>, IDto, ICloneable
     {
-        public AuditDelta() => _Constructor();
+        public AuditDelta()
+        {
+            _Constructor();
+        }
 
         public AuditDelta(int? id) : base(DocConvert.ToInt(id)) {}
         public AuditDelta(int id) : base(id) {}
-        public AuditDelta(int? pId, Reference pAudit, int? pAuditId, string pDelta) :
+        public AuditDelta(int? pId, Reference pAudit, int? pAuditId, string pDelta) : 
             base(pId, pAudit, pAuditId, pDelta) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<AuditDelta>();
 

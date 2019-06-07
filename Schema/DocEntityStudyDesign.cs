@@ -31,12 +31,13 @@ namespace Services.Schema
     {
         private const string STUDYDESIGN_CACHE = "StudyDesignCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.STUDYDESIGN;
-
+        
         public DocEntityStudyDesign(Session session) : base(session) {}
 
         public DocEntityStudyDesign() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new StudyDesign()));
+
         public static DocEntityStudyDesign Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -107,10 +108,13 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
+
         public override ModelNameEnm ClassName => CLASS_NAME;
+
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindStudyDesigns";
+
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -177,6 +181,7 @@ namespace Services.Schema
                 return ret;
             }
         }
+
 
         public StudyDesign ToDto() => Mapper.Map<DocEntityStudyDesign, StudyDesign>(this);
 

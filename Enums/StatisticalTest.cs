@@ -129,7 +129,8 @@ namespace Services.Enums
         public const string STUDENT_T_TEST = "Student t-test";
         public const string WILCOXON_MANN_WHITNEY_TEST = "Wilcoxon-Mann Whitney test (Wilcoxon rank-sum test)";
         public const string WILCOXON_SIGNED_RANKS_TEST = "Wilcoxon signed ranks test";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantStatisticalTest).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -159,6 +160,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantStatisticalTest obj) => this == obj;
 
         public static bool operator ==(DocConstantStatisticalTest x, DocConstantStatisticalTest y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -184,5 +187,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantStatisticalTest obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

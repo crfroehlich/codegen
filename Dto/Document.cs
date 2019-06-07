@@ -94,56 +94,38 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Abstract), Description = "string", IsRequired = false)]
         public string Abstract { get; set; }
-        public List<int> AbstractIds { get; set; }
-        public int? AbstractCount { get; set; }
 
 
         [ApiMember(Name = nameof(AccessionID), Description = "string", IsRequired = false)]
         public string AccessionID { get; set; }
-        public List<int> AccessionIDIds { get; set; }
-        public int? AccessionIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(Acronym), Description = "string", IsRequired = false)]
         public string Acronym { get; set; }
-        public List<int> AcronymIds { get; set; }
-        public int? AcronymCount { get; set; }
 
 
         [ApiMember(Name = nameof(ArticleId), Description = "string", IsRequired = false)]
         public string ArticleId { get; set; }
-        public List<int> ArticleIdIds { get; set; }
-        public int? ArticleIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Authors), Description = "string", IsRequired = false)]
         public string Authors { get; set; }
-        public List<int> AuthorsIds { get; set; }
-        public int? AuthorsCount { get; set; }
 
 
         [ApiMember(Name = nameof(CochraneID), Description = "string", IsRequired = false)]
         public string CochraneID { get; set; }
-        public List<int> CochraneIDIds { get; set; }
-        public int? CochraneIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(CorporateAuthor), Description = "string", IsRequired = false)]
         public string CorporateAuthor { get; set; }
-        public List<int> CorporateAuthorIds { get; set; }
-        public int? CorporateAuthorCount { get; set; }
 
 
         [ApiMember(Name = nameof(Country), Description = "string", IsRequired = false)]
         public string Country { get; set; }
-        public List<int> CountryIds { get; set; }
-        public int? CountryCount { get; set; }
 
 
         [ApiMember(Name = nameof(CustomData), Description = "string", IsRequired = false)]
         public string CustomData { get; set; }
-        public List<int> CustomDataIds { get; set; }
-        public int? CustomDataCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"ASCO",@"ClinicalTrials.gov",@"Cochrane",@"Embase",@"IOVS",@"Manual Entry",@"MEDLINE",@"Northern Light"})]
@@ -168,38 +150,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DOI), Description = "string", IsRequired = false)]
         public string DOI { get; set; }
-        public List<int> DOIIds { get; set; }
-        public int? DOICount { get; set; }
 
 
         [ApiMember(Name = nameof(EmbaseAccessionNumber), Description = "string", IsRequired = false)]
         public string EmbaseAccessionNumber { get; set; }
-        public List<int> EmbaseAccessionNumberIds { get; set; }
-        public int? EmbaseAccessionNumberCount { get; set; }
 
 
         [ApiMember(Name = nameof(Emtree), Description = "string", IsRequired = false)]
         public string Emtree { get; set; }
-        public List<int> EmtreeIds { get; set; }
-        public int? EmtreeCount { get; set; }
 
 
         [ApiMember(Name = nameof(ErrataText), Description = "string", IsRequired = false)]
         public string ErrataText { get; set; }
-        public List<int> ErrataTextIds { get; set; }
-        public int? ErrataTextCount { get; set; }
 
 
         [ApiMember(Name = nameof(FullText), Description = "string", IsRequired = false)]
         public string FullText { get; set; }
-        public List<int> FullTextIds { get; set; }
-        public int? FullTextCount { get; set; }
 
 
         [ApiMember(Name = nameof(FullTextURL), Description = "string", IsRequired = false)]
         public string FullTextURL { get; set; }
-        public List<int> FullTextURLIds { get; set; }
-        public int? FullTextURLCount { get; set; }
 
 
         [ApiMember(Name = nameof(Import), Description = "ImportData", IsRequired = false)]
@@ -217,32 +187,22 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Institution), Description = "string", IsRequired = false)]
         public string Institution { get; set; }
-        public List<int> InstitutionIds { get; set; }
-        public int? InstitutionCount { get; set; }
 
 
         [ApiMember(Name = nameof(ISSN), Description = "string", IsRequired = false)]
         public string ISSN { get; set; }
-        public List<int> ISSNIds { get; set; }
-        public int? ISSNCount { get; set; }
 
 
         [ApiMember(Name = nameof(Issue), Description = "string", IsRequired = false)]
         public string Issue { get; set; }
-        public List<int> IssueIds { get; set; }
-        public int? IssueCount { get; set; }
 
 
         [ApiMember(Name = nameof(JournalTitle), Description = "string", IsRequired = false)]
         public string JournalTitle { get; set; }
-        public List<int> JournalTitleIds { get; set; }
-        public int? JournalTitleCount { get; set; }
 
 
         [ApiMember(Name = nameof(LegacySync), Description = "DateTime?", IsRequired = false)]
         public DateTime? LegacySync { get; set; }
-        public List<int> LegacySyncIds { get; set; }
-        public int? LegacySyncCount { get; set; }
 
 
         [ApiMember(Name = nameof(LookupTables), Description = "LookupTable", IsRequired = false)]
@@ -253,98 +213,66 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(MedlineID), Description = "int?", IsRequired = false)]
         public int? MedlineID { get; set; }
-        public List<int> MedlineIDIds { get; set; }
-        public int? MedlineIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(MeSH), Description = "string", IsRequired = false)]
         public string MeSH { get; set; }
-        public List<int> MeSHIds { get; set; }
-        public int? MeSHCount { get; set; }
 
 
         [ApiMember(Name = nameof(Pages), Description = "string", IsRequired = false)]
         public string Pages { get; set; }
-        public List<int> PagesIds { get; set; }
-        public int? PagesCount { get; set; }
 
 
         [ApiMember(Name = nameof(ParentChildStatus), Description = "char?", IsRequired = false)]
         public char? ParentChildStatus { get; set; }
-        public List<int> ParentChildStatusIds { get; set; }
-        public int? ParentChildStatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(ParentID), Description = "int?", IsRequired = false)]
         public int? ParentID { get; set; }
-        public List<int> ParentIDIds { get; set; }
-        public int? ParentIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(PublicationDate), Description = "string", IsRequired = false)]
         public string PublicationDate { get; set; }
-        public List<int> PublicationDateIds { get; set; }
-        public int? PublicationDateCount { get; set; }
 
 
         [ApiMember(Name = nameof(PublicationYear), Description = "int?", IsRequired = false)]
         public int? PublicationYear { get; set; }
-        public List<int> PublicationYearIds { get; set; }
-        public int? PublicationYearCount { get; set; }
 
 
         [ApiMember(Name = nameof(PubType), Description = "string", IsRequired = false)]
         public string PubType { get; set; }
-        public List<int> PubTypeIds { get; set; }
-        public int? PubTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(ReferenceStudy), Description = "int?", IsRequired = false)]
         public int? ReferenceStudy { get; set; }
-        public List<int> ReferenceStudyIds { get; set; }
-        public int? ReferenceStudyCount { get; set; }
 
 
         [ApiMember(Name = nameof(SecondarySourceID), Description = "string", IsRequired = false)]
         public string SecondarySourceID { get; set; }
-        public List<int> SecondarySourceIDIds { get; set; }
-        public int? SecondarySourceIDCount { get; set; }
 
 
         [ApiMember(Name = nameof(Source), Description = "string", IsRequired = false)]
         public string Source { get; set; }
-        public List<int> SourceIds { get; set; }
-        public int? SourceCount { get; set; }
 
 
         [ApiMember(Name = nameof(StorageModel), Description = "string", IsRequired = false)]
         public string StorageModel { get; set; }
-        public List<int> StorageModelIds { get; set; }
-        public int? StorageModelCount { get; set; }
 
 
         [ApiMember(Name = nameof(SupplementalFiles), Description = "string", IsRequired = false)]
         public string SupplementalFiles { get; set; }
-        public List<int> SupplementalFilesIds { get; set; }
-        public int? SupplementalFilesCount { get; set; }
 
 
         [ApiMember(Name = nameof(TaStudyDesign), Description = "string", IsRequired = false)]
         public string TaStudyDesign { get; set; }
-        public List<int> TaStudyDesignIds { get; set; }
-        public int? TaStudyDesignCount { get; set; }
 
 
         [ApiMember(Name = nameof(Title), Description = "string", IsRequired = false)]
         public string Title { get; set; }
-        public List<int> TitleIds { get; set; }
-        public int? TitleCount { get; set; }
 
 
         [ApiMember(Name = nameof(TrialOutcome), Description = "short?", IsRequired = false)]
         public short? TrialOutcome { get; set; }
-        public List<int> TrialOutcomeIds { get; set; }
-        public int? TrialOutcomeCount { get; set; }
 
 
         [ApiMember(Name = nameof(VariableData), Description = "VariableInstance", IsRequired = false)]
@@ -355,8 +283,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Volume), Description = "string", IsRequired = false)]
         public string Volume { get; set; }
-        public List<int> VolumeIds { get; set; }
-        public int? VolumeCount { get; set; }
 
 
 
@@ -427,12 +353,26 @@ namespace Services.Dto
 
     public partial class Document : DocumentBase, IReturn<Document>, IDto, ICloneable
     {
-        public Document() => _Constructor();
+        public Document()
+        {
+            _Constructor();
+        }
 
         public Document(int? id) : base(DocConvert.ToInt(id)) {}
         public Document(int id) : base(id) {}
-        public Document(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pArticleId, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) :
+        public Document(int? pId, string pAbstract, string pAccessionID, string pAcronym, string pArticleId, string pAuthors, string pCochraneID, string pCorporateAuthor, string pCountry, string pCustomData, Reference pDatabaseType, int? pDatabaseTypeId, List<Reference> pDocumentSets, int? pDocumentSetsCount, Reference pDocumentType, int? pDocumentTypeId, string pDOI, string pEmbaseAccessionNumber, string pEmtree, string pErrataText, string pFullText, string pFullTextURL, Reference pImport, int? pImportId, Reference pImportType, int? pImportTypeId, string pInstitution, string pISSN, string pIssue, string pJournalTitle, DateTime? pLegacySync, List<Reference> pLookupTables, int? pLookupTablesCount, int? pMedlineID, string pMeSH, string pPages, char? pParentChildStatus, int? pParentID, string pPublicationDate, int? pPublicationYear, string pPubType, int? pReferenceStudy, string pSecondarySourceID, string pSource, string pStorageModel, string pSupplementalFiles, string pTaStudyDesign, string pTitle, short? pTrialOutcome, List<Reference> pVariableData, int? pVariableDataCount, string pVolume) : 
             base(pId, pAbstract, pAccessionID, pAcronym, pArticleId, pAuthors, pCochraneID, pCorporateAuthor, pCountry, pCustomData, pDatabaseType, pDatabaseTypeId, pDocumentSets, pDocumentSetsCount, pDocumentType, pDocumentTypeId, pDOI, pEmbaseAccessionNumber, pEmtree, pErrataText, pFullText, pFullTextURL, pImport, pImportId, pImportType, pImportTypeId, pInstitution, pISSN, pIssue, pJournalTitle, pLegacySync, pLookupTables, pLookupTablesCount, pMedlineID, pMeSH, pPages, pParentChildStatus, pParentID, pPublicationDate, pPublicationYear, pPubType, pReferenceStudy, pSecondarySourceID, pSource, pStorageModel, pSupplementalFiles, pTaStudyDesign, pTitle, pTrialOutcome, pVariableData, pVariableDataCount, pVolume) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Document>();
 
@@ -470,7 +410,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(DocumentSets), nameof(DocumentSetsCount), nameof(DocumentSetsIds), nameof(LookupTables), nameof(LookupTablesCount), nameof(LookupTablesIds), nameof(VariableData), nameof(VariableDataCount), nameof(VariableDataIds)
+            nameof(DocumentSets), nameof(DocumentSetsCount), nameof(LookupTables), nameof(LookupTablesCount), nameof(VariableData), nameof(VariableDataCount)
         };
         private List<string> collections { get { return _collections; } }
 

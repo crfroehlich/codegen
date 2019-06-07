@@ -63,8 +63,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Definition), Description = "string", IsRequired = false)]
         public string Definition { get; set; }
-        public List<int> DefinitionIds { get; set; }
-        public int? DefinitionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Instances), Description = "VariableInstance", IsRequired = false)]
@@ -75,8 +73,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "VariableRule", IsRequired = false)]
@@ -136,12 +132,26 @@ namespace Services.Dto
 
     public partial class VariableRule : VariableRuleBase, IReturn<VariableRule>, IDto, ICloneable
     {
-        public VariableRule() => _Constructor();
+        public VariableRule()
+        {
+            _Constructor();
+        }
 
         public VariableRule(int? id) : base(DocConvert.ToInt(id)) {}
         public VariableRule(int id) : base(id) {}
-        public VariableRule(int? pId, List<Reference> pChildren, int? pChildrenCount, string pDefinition, List<Reference> pInstances, int? pInstancesCount, string pName, Reference pOwner, int? pOwnerId, Reference pRule, int? pRuleId, List<Reference> pScopes, int? pScopesCount, Reference pType, int? pTypeId) :
+        public VariableRule(int? pId, List<Reference> pChildren, int? pChildrenCount, string pDefinition, List<Reference> pInstances, int? pInstancesCount, string pName, Reference pOwner, int? pOwnerId, Reference pRule, int? pRuleId, List<Reference> pScopes, int? pScopesCount, Reference pType, int? pTypeId) : 
             base(pId, pChildren, pChildrenCount, pDefinition, pInstances, pInstancesCount, pName, pOwner, pOwnerId, pRule, pRuleId, pScopes, pScopesCount, pType, pTypeId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<VariableRule>();
 
@@ -179,7 +189,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Children), nameof(ChildrenCount), nameof(ChildrenIds), nameof(Instances), nameof(InstancesCount), nameof(InstancesIds), nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds)
+            nameof(Children), nameof(ChildrenCount), nameof(Instances), nameof(InstancesCount), nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
 

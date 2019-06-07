@@ -59,20 +59,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
-        public List<int> DataIds { get; set; }
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = true)]
         public string Description { get; set; }
-        public List<int> DescriptionIds { get; set; }
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(DueDate), Description = "DateTime?", IsRequired = false)]
         public DateTime? DueDate { get; set; }
-        public List<int> DueDateIds { get; set; }
-        public int? DueDateCount { get; set; }
 
 
         [ApiMember(Name = nameof(Reporter), Description = "User", IsRequired = true)]
@@ -84,8 +78,6 @@ namespace Services.Dto
         [ApiAllowableValues("Includes", Values = new string[] {@"Document Adjudication",@"Document Rating",@"Document Search Reconciliation",@"Evidence on Demand"})]
         [ApiMember(Name = nameof(Type), Description = "TaskTypeEnm?", IsRequired = false)]
         public TaskTypeEnm? Type { get; set; }
-        public List<int> TypeIds { get; set; }
-        public int? TypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Workflow), Description = "Workflow", IsRequired = true)]
@@ -121,12 +113,26 @@ namespace Services.Dto
 
     public partial class Task : TaskBase, IReturn<Task>, IDto, ICloneable
     {
-        public Task() => _Constructor();
+        public Task()
+        {
+            _Constructor();
+        }
 
         public Task(int? id) : base(DocConvert.ToInt(id)) {}
         public Task(int id) : base(id) {}
-        public Task(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, TaskTypeEnm? pType, Reference pWorkflow, int? pWorkflowId) :
+        public Task(int? pId, Reference pAssignee, int? pAssigneeId, string pData, string pDescription, DateTime? pDueDate, Reference pReporter, int? pReporterId, TaskTypeEnm? pType, Reference pWorkflow, int? pWorkflowId) : 
             base(pId, pAssignee, pAssigneeId, pData, pDescription, pDueDate, pReporter, pReporterId, pType, pWorkflow, pWorkflowId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Task>();
 

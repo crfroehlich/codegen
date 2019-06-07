@@ -36,7 +36,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.EmailSent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.EmailSent))))
                 .ForMember(dest => dest.Events, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Events))))
                 .ForMember(dest => dest.EventsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.EventsCount))))
-                .ForMember(dest => dest.EventsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.EventsIds))))
+                .ForMember(dest => dest.EventsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.EventsIds))))
                 .ForMember(dest => dest.Link, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Link))))
                 .ForMember(dest => dest.Priority, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Priority))))
                 .ForMember(dest => dest.Read, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Update>(c, nameof(DocEntityUpdate.Read))))

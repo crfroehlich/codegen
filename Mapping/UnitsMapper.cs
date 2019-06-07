@@ -32,7 +32,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitsDto>(c, "Updated")))
                 .ForMember(dest => dest.Units, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitsDto>(c, nameof(DocEntityUnits.Units))))
                 .ForMember(dest => dest.UnitsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitsDto>(c, nameof(DocEntityUnits.UnitsCount))))
-                .ForMember(dest => dest.UnitsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitsDto>(c, nameof(DocEntityUnits.UnitsIds))))
+                .ForMember(dest => dest.UnitsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<UnitsDto>(c, nameof(DocEntityUnits.UnitsIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<UnitsDto,DocEntityUnits>()
                 .MaxDepth(2);

@@ -151,6 +151,10 @@ namespace Services.Core
                     var enFeatureSet = entity as DocEntityFeatureSet;
                     ret = enFeatureSet.ToDto() as TDto;
                     break;
+                case DocConstantModelName.FILE:
+                    var enFile = entity as DocEntityFile;
+                    ret = enFile.ToDto() as TDto;
+                    break;
                 case DocConstantModelName.GLOSSARY:
                     var enGlossary = entity as DocEntityGlossary;
                     ret = enGlossary.ToDto() as TDto;

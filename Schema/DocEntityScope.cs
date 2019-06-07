@@ -31,12 +31,13 @@ namespace Services.Schema
     {
         private const string SCOPE_CACHE = "ScopeCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.SCOPE;
-
+        
         public DocEntityScope(Session session) : base(session) {}
 
         public DocEntityScope() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new Scope()));
+
         public static DocEntityScope Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -125,6 +126,16 @@ namespace Services.Schema
 
         [Field(DefaultValue = false)]
         public bool Edit { get; set; }
+
+
+        [Field]
+        public DocEntitySet<DocEntityFile> Files { get; private set; }
+
+
+        public List<int> FilesIds => Files.Select(e => e.Id).ToList();
+
+
+        public int? FilesCount { get { return Files.Count(); } private set { var noid = value; } }
 
 
         [Field]
@@ -232,10 +243,13 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
+
         public override ModelNameEnm ClassName => CLASS_NAME;
+
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindScopes";
+
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -294,6 +308,7 @@ namespace Services.Schema
                 return ret;
             }
         }
+
 
         public Scope ToDto() => Mapper.Map<DocEntityScope, Scope>(this);
 

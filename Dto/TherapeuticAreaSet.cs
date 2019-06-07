@@ -61,12 +61,26 @@ namespace Services.Dto
 
     public partial class TherapeuticAreaSet : TherapeuticAreaSetBase, IReturn<TherapeuticAreaSet>, IDto, ICloneable
     {
-        public TherapeuticAreaSet() => _Constructor();
+        public TherapeuticAreaSet()
+        {
+            _Constructor();
+        }
 
         public TherapeuticAreaSet(int? id) : base(DocConvert.ToInt(id)) {}
         public TherapeuticAreaSet(int id) : base(id) {}
-        public TherapeuticAreaSet(int? pId, bool isDummyParam) :
+        public TherapeuticAreaSet(int? pId, bool isDummyParam) : 
             base(pId, isDummyParam) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<TherapeuticAreaSet>();
 

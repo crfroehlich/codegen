@@ -59,8 +59,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
-        public List<int> DescriptionIds { get; set; }
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Glossary), Description = "Glossary", IsRequired = false)]
@@ -77,8 +75,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Roles), Description = "Role", IsRequired = false)]
@@ -114,12 +110,26 @@ namespace Services.Dto
 
     public partial class Page : PageBase, IReturn<Page>, IDto, ICloneable
     {
-        public Page() => _Constructor();
+        public Page()
+        {
+            _Constructor();
+        }
 
         public Page(int? id) : base(DocConvert.ToInt(id)) {}
         public Page(int id) : base(id) {}
-        public Page(int? pId, List<Reference> pApps, int? pAppsCount, string pDescription, List<Reference> pGlossary, int? pGlossaryCount, List<Reference> pHelp, int? pHelpCount, string pName, List<Reference> pRoles, int? pRolesCount) :
+        public Page(int? pId, List<Reference> pApps, int? pAppsCount, string pDescription, List<Reference> pGlossary, int? pGlossaryCount, List<Reference> pHelp, int? pHelpCount, string pName, List<Reference> pRoles, int? pRolesCount) : 
             base(pId, pApps, pAppsCount, pDescription, pGlossary, pGlossaryCount, pHelp, pHelpCount, pName, pRoles, pRolesCount) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Page>();
 
@@ -157,7 +167,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Apps), nameof(AppsCount), nameof(AppsIds), nameof(Glossary), nameof(GlossaryCount), nameof(GlossaryIds), nameof(Help), nameof(HelpCount), nameof(HelpIds), nameof(Roles), nameof(RolesCount), nameof(RolesIds)
+            nameof(Apps), nameof(AppsCount), nameof(Glossary), nameof(GlossaryCount), nameof(Help), nameof(HelpCount), nameof(Roles), nameof(RolesCount)
         };
         private List<string> collections { get { return _collections; } }
 

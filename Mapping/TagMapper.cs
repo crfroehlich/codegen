@@ -33,7 +33,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.Name))))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.ScopesCount))))
-                .ForMember(dest => dest.ScopesIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.ScopesIds))))
+                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.ScopesIds))))
                 .ForMember(dest => dest.URI, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Tag>(c, nameof(DocEntityTag.URI))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<Tag,DocEntityTag>()

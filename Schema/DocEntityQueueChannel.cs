@@ -31,12 +31,13 @@ namespace Services.Schema
     {
         private const string QUEUECHANNEL_CACHE = "QueueChannelCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.QUEUECHANNEL;
-
+        
         public DocEntityQueueChannel(Session session) : base(session) {}
 
         public DocEntityQueueChannel() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new QueueChannel()));
+
         public static DocEntityQueueChannel Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -131,10 +132,13 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
+
         public override ModelNameEnm ClassName => CLASS_NAME;
+
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindQueueChannels";
+
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -214,6 +218,7 @@ namespace Services.Schema
                 return ret;
             }
         }
+
 
         public QueueChannel ToDto() => Mapper.Map<DocEntityQueueChannel, QueueChannel>(this);
 

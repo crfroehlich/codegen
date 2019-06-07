@@ -57,8 +57,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
-        public List<int> DescriptionIds { get; set; }
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Document), Description = "Document", IsRequired = false)]
@@ -69,8 +67,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(End), Description = "DateTime?", IsRequired = true)]
         public DateTime? End { get; set; }
-        public List<int> EndIds { get; set; }
-        public int? EndCount { get; set; }
 
 
         [ApiMember(Name = nameof(Project), Description = "Project", IsRequired = false)]
@@ -81,14 +77,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = false)]
         public int? ReferenceId { get; set; }
-        public List<int> ReferenceIdIds { get; set; }
-        public int? ReferenceIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Start), Description = "DateTime?", IsRequired = true)]
         public DateTime? Start { get; set; }
-        public List<int> StartIds { get; set; }
-        public int? StartCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Approved",@"Pending",@"Rejected"})]
@@ -141,12 +133,26 @@ namespace Services.Dto
 
     public partial class TimeCard : TimeCardBase, IReturn<TimeCard>, IDto, ICloneable
     {
-        public TimeCard() => _Constructor();
+        public TimeCard()
+        {
+            _Constructor();
+        }
 
         public TimeCard(int? id) : base(DocConvert.ToInt(id)) {}
         public TimeCard(int id) : base(id) {}
-        public TimeCard(int? pId, string pDescription, Reference pDocument, int? pDocumentId, DateTime? pEnd, Reference pProject, int? pProjectId, int? pReferenceId, DateTime? pStart, Reference pStatus, int? pStatusId, Reference pUser, int? pUserId, Reference pWorkType, int? pWorkTypeId) :
+        public TimeCard(int? pId, string pDescription, Reference pDocument, int? pDocumentId, DateTime? pEnd, Reference pProject, int? pProjectId, int? pReferenceId, DateTime? pStart, Reference pStatus, int? pStatusId, Reference pUser, int? pUserId, Reference pWorkType, int? pWorkTypeId) : 
             base(pId, pDescription, pDocument, pDocumentId, pEnd, pProject, pProjectId, pReferenceId, pStart, pStatus, pStatusId, pUser, pUserId, pWorkType, pWorkTypeId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<TimeCard>();
 

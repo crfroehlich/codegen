@@ -47,8 +47,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
@@ -59,8 +57,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
         public string URI { get; set; }
-        public List<int> URIIds { get; set; }
-        public int? URICount { get; set; }
 
 
 
@@ -84,12 +80,26 @@ namespace Services.Dto
 
     public partial class Tag : TagBase, IReturn<Tag>, IDto, ICloneable
     {
-        public Tag() => _Constructor();
+        public Tag()
+        {
+            _Constructor();
+        }
 
         public Tag(int? id) : base(DocConvert.ToInt(id)) {}
         public Tag(int id) : base(id) {}
-        public Tag(int? pId, string pName, List<Reference> pScopes, int? pScopesCount, string pURI) :
+        public Tag(int? pId, string pName, List<Reference> pScopes, int? pScopesCount, string pURI) : 
             base(pId, pName, pScopes, pScopesCount, pURI) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Tag>();
 
@@ -127,7 +137,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds)
+            nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
 

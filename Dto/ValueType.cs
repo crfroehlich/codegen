@@ -81,12 +81,26 @@ namespace Services.Dto
 
     public partial class ValueType : ValueTypeBase, IReturn<ValueType>, IDto, ICloneable
     {
-        public ValueType() => _Constructor();
+        public ValueType()
+        {
+            _Constructor();
+        }
 
         public ValueType(int? id) : base(DocConvert.ToInt(id)) {}
         public ValueType(int id) : base(id) {}
-        public ValueType(int? pId, Reference pFieldType, int? pFieldTypeId, Reference pName, int? pNameId) :
+        public ValueType(int? pId, Reference pFieldType, int? pFieldTypeId, Reference pName, int? pNameId) : 
             base(pId, pFieldType, pFieldTypeId, pName, pNameId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<ValueType>();
 

@@ -60,20 +60,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
-        public List<int> DescriptionIds { get; set; }
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Processed), Description = "DateTime?", IsRequired = false)]
         public DateTime? Processed { get; set; }
-        public List<int> ProcessedIds { get; set; }
-        public int? ProcessedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Status), Description = "string", IsRequired = false)]
         public string Status { get; set; }
-        public List<int> StatusIds { get; set; }
-        public int? StatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(Teams), Description = "Team", IsRequired = false)]
@@ -121,12 +115,26 @@ namespace Services.Dto
 
     public partial class Event : EventBase, IReturn<Event>, IDto, ICloneable
     {
-        public Event() => _Constructor();
+        public Event()
+        {
+            _Constructor();
+        }
 
         public Event(int? id) : base(DocConvert.ToInt(id)) {}
         public Event(int id) : base(id) {}
-        public Event(int? pId, Reference pAuditRecord, int? pAuditRecordId, string pDescription, DateTime? pProcessed, string pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) :
+        public Event(int? pId, Reference pAuditRecord, int? pAuditRecordId, string pDescription, DateTime? pProcessed, string pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pUpdates, int? pUpdatesCount, List<Reference> pUsers, int? pUsersCount) : 
             base(pId, pAuditRecord, pAuditRecordId, pDescription, pProcessed, pStatus, pTeams, pTeamsCount, pUpdates, pUpdatesCount, pUsers, pUsersCount) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Event>();
 
@@ -164,7 +172,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Teams), nameof(TeamsCount), nameof(TeamsIds), nameof(Updates), nameof(UpdatesCount), nameof(UpdatesIds), nameof(Users), nameof(UsersCount), nameof(UsersIds)
+            nameof(Teams), nameof(TeamsCount), nameof(Updates), nameof(UpdatesCount), nameof(Users), nameof(UsersCount)
         };
         private List<string> collections { get { return _collections; } }
 

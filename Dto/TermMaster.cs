@@ -57,8 +57,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(BioPortal), Description = "string", IsRequired = false)]
         public string BioPortal { get; set; }
-        public List<int> BioPortalIds { get; set; }
-        public int? BioPortalCount { get; set; }
 
 
         [ApiMember(Name = nameof(Categories), Description = "TermCategory", IsRequired = false)]
@@ -69,8 +67,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(CUI), Description = "string", IsRequired = false)]
         public string CUI { get; set; }
-        public List<int> CUIIds { get; set; }
-        public int? CUICount { get; set; }
 
 
         [ApiMember(Name = nameof(Enum), Description = "LookupTableEnum", IsRequired = true)]
@@ -81,26 +77,18 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(MedDRA), Description = "string", IsRequired = false)]
         public string MedDRA { get; set; }
-        public List<int> MedDRAIds { get; set; }
-        public int? MedDRACount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(RxNorm), Description = "string", IsRequired = false)]
         public string RxNorm { get; set; }
-        public List<int> RxNormIds { get; set; }
-        public int? RxNormCount { get; set; }
 
 
         [ApiMember(Name = nameof(SNOWMED), Description = "string", IsRequired = false)]
         public string SNOWMED { get; set; }
-        public List<int> SNOWMEDIds { get; set; }
-        public int? SNOWMEDCount { get; set; }
 
 
         [ApiMember(Name = nameof(Synonyms), Description = "TermSynonym", IsRequired = false)]
@@ -111,14 +99,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(TUI), Description = "string", IsRequired = false)]
         public string TUI { get; set; }
-        public List<int> TUIIds { get; set; }
-        public int? TUICount { get; set; }
 
 
         [ApiMember(Name = nameof(URI), Description = "string", IsRequired = false)]
         public string URI { get; set; }
-        public List<int> URIIds { get; set; }
-        public int? URICount { get; set; }
 
 
 
@@ -152,12 +136,26 @@ namespace Services.Dto
 
     public partial class TermMaster : TermMasterBase, IReturn<TermMaster>, IDto, ICloneable
     {
-        public TermMaster() => _Constructor();
+        public TermMaster()
+        {
+            _Constructor();
+        }
 
         public TermMaster(int? id) : base(DocConvert.ToInt(id)) {}
         public TermMaster(int id) : base(id) {}
-        public TermMaster(int? pId, string pBioPortal, List<TermCategory> pCategories, int? pCategoriesCount, string pCUI, Reference pEnum, int? pEnumId, string pMedDRA, string pName, string pRxNorm, string pSNOWMED, List<Reference> pSynonyms, int? pSynonymsCount, string pTUI, string pURI) :
+        public TermMaster(int? pId, string pBioPortal, List<TermCategory> pCategories, int? pCategoriesCount, string pCUI, Reference pEnum, int? pEnumId, string pMedDRA, string pName, string pRxNorm, string pSNOWMED, List<Reference> pSynonyms, int? pSynonymsCount, string pTUI, string pURI) : 
             base(pId, pBioPortal, pCategories, pCategoriesCount, pCUI, pEnum, pEnumId, pMedDRA, pName, pRxNorm, pSNOWMED, pSynonyms, pSynonymsCount, pTUI, pURI) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<TermMaster>();
 
@@ -195,7 +193,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Categories), nameof(CategoriesCount), nameof(CategoriesIds), nameof(Synonyms), nameof(SynonymsCount), nameof(SynonymsIds)
+            nameof(Categories), nameof(CategoriesCount), nameof(Synonyms), nameof(SynonymsCount)
         };
         private List<string> collections { get { return _collections; } }
 
@@ -216,7 +214,7 @@ namespace Services.Dto
         public string CUI { get; set; }
         public Reference Enum { get; set; }
         public List<int> EnumIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"AmPersonCount",@"App",@"ArmPopulationAge",@"ArmPopulationN",@"AssociationMeasure",@"AttributeCategory",@"AttributeType",@"BroadcastStatus",@"BroadcastType",@"ConfidenceInterval",@"Conjunction",@"DatabaseType",@"DataHubSearchCategory",@"DataHubSource",@"DefaultTimeUnit",@"DefaultUnitType",@"Directionality",@"DocumentSetType",@"DocumentType",@"DosageProtocol",@"DosageType",@"EoDStatus",@"EqualityOperator",@"ErrorMessage",@"ExternalKey",@"Feature",@"FieldType",@"ForeignKeyStatus",@"FqReferenceStatus",@"Help",@"ImportStatus",@"IncidenceRateType",@"InstitutionType",@"IntegrationName",@"IntegrationPropertyName",@"InterventionLineOfTreatment",@"InterventionMedium",@"InterventionProvider",@"InterventionRoute",@"InterventionSchedule",@"InterventionStageSetting",@"InterventionType",@"Job",@"JunctionType",@"LookupTable",@"LookupType",@"ManualizedTreatment",@"MeanCalculationType",@"MeanRangeType",@"MeanVariableType",@"MeanVarianceType",@"MethodOfAnalysis",@"ModelName",@"OutcomeCategory",@"OutcomeType",@"Permission",@"PopulationType",@"PrevalenceType",@"ProtocolFilterOwner",@"ProtocolFilterType",@"ProtocolType",@"PublicationPoolStudies",@"PubType",@"Question",@"QuestionCategory",@"QuestionType",@"QueueChannel",@"Randomization",@"RangeType",@"Rating",@"ReasonRejected",@"ReconciliationStatus",@"RecruitmentMethod",@"RepresentativeSample",@"ResponsesCollectedBy",@"ResultsCategory",@"RiskOfBiasAssessment",@"Scope",@"SettingType",@"StatisticalSignificance",@"StatisticalTest",@"StatsRecordName",@"Status",@"StratificationType",@"StudyAllocattionMethod",@"StudyBias",@"StudyBlindingMethod",@"StudyCompliance",@"StudyDesign",@"StudyDocumentType",@"StudyFunding",@"StudyGroupType",@"StudyImportLocation",@"StudyImportType",@"StudyNGA",@"StudyObjective",@"StudyPhaseNames",@"StudyPurpose",@"StudyRandomizationMethod",@"StudyType",@"StudyTypeHarmEtiology",@"StudyTypeTherapy",@"StudyYears",@"TaskType",@"TermClassification",@"TermSection",@"TimeCardStatus",@"TimepointType",@"UnitsOfMeasure",@"UnitType",@"UserEmployeeType",@"UserPayrollStatus",@"UserPayrollType",@"UserType",@"ValueStatus",@"ValueType",@"VariableRule",@"VariableType",@"Workflow",@"WorkflowStatus",@"YesNoNa"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"AmPersonCount",@"App",@"ArmPopulationAge",@"ArmPopulationN",@"AssociationMeasure",@"AttributeCategory",@"AttributeType",@"BroadcastStatus",@"BroadcastType",@"ConfidenceInterval",@"Conjunction",@"DatabaseType",@"DataHubSearchCategory",@"DataHubSource",@"DefaultTimeUnit",@"DefaultUnitType",@"Directionality",@"DocumentSetType",@"DocumentType",@"DosageProtocol",@"DosageType",@"EoDStatus",@"EqualityOperator",@"ErrorMessage",@"ExternalKey",@"Feature",@"FieldType",@"FileRights",@"FileSource",@"FileType",@"ForeignKeyStatus",@"FqReferenceStatus",@"Help",@"ImportStatus",@"IncidenceRateType",@"InstitutionType",@"IntegrationName",@"IntegrationPropertyName",@"InterventionLineOfTreatment",@"InterventionMedium",@"InterventionProvider",@"InterventionRoute",@"InterventionSchedule",@"InterventionStageSetting",@"InterventionType",@"Job",@"JunctionType",@"LookupTable",@"LookupType",@"ManualizedTreatment",@"MeanCalculationType",@"MeanRangeType",@"MeanVariableType",@"MeanVarianceType",@"MethodOfAnalysis",@"ModelName",@"OutcomeCategory",@"OutcomeType",@"Permission",@"PopulationType",@"PrevalenceType",@"ProtocolFilterOwner",@"ProtocolFilterType",@"ProtocolType",@"PublicationPoolStudies",@"PubType",@"Question",@"QuestionCategory",@"QuestionType",@"QueueChannel",@"Randomization",@"RangeType",@"Rating",@"ReasonRejected",@"ReconciliationStatus",@"RecruitmentMethod",@"RepresentativeSample",@"ResponsesCollectedBy",@"ResultsCategory",@"RiskOfBiasAssessment",@"Scope",@"SettingType",@"StatisticalSignificance",@"StatisticalTest",@"StatsRecordName",@"Status",@"StratificationType",@"StudyAllocattionMethod",@"StudyBias",@"StudyBlindingMethod",@"StudyCompliance",@"StudyDesign",@"StudyDocumentType",@"StudyFunding",@"StudyGroupType",@"StudyImportLocation",@"StudyImportType",@"StudyNGA",@"StudyObjective",@"StudyPhaseNames",@"StudyPurpose",@"StudyRandomizationMethod",@"StudyType",@"StudyTypeHarmEtiology",@"StudyTypeTherapy",@"StudyYears",@"TaskType",@"TermClassification",@"TermSection",@"TimeCardStatus",@"TimepointType",@"UnitsOfMeasure",@"UnitType",@"UserEmployeeType",@"UserPayrollStatus",@"UserPayrollType",@"UserType",@"ValueStatus",@"ValueType",@"VariableRule",@"VariableType",@"Workflow",@"WorkflowStatus",@"YesNoNa"})]
         public List<string> EnumNames { get; set; }
         public string MedDRA { get; set; }
         public string Name { get; set; }

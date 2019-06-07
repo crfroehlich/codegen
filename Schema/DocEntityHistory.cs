@@ -31,12 +31,13 @@ namespace Services.Schema
     {
         private const string HISTORY_CACHE = "HistoryCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.HISTORY;
-
+        
         public DocEntityHistory(Session session) : base(session) {}
 
         public DocEntityHistory() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new History()));
+
         public static DocEntityHistory Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -141,10 +142,13 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
+
         public override ModelNameEnm ClassName => CLASS_NAME;
+
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindHistorys";
+
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -203,6 +207,7 @@ namespace Services.Schema
                 return ret;
             }
         }
+
 
         public History ToDto() => Mapper.Map<DocEntityHistory, History>(this);
 

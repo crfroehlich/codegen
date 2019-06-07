@@ -31,12 +31,13 @@ namespace Services.Schema
     {
         private const string DOCUMENTSET_CACHE = "DocumentSetCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.DOCUMENTSET;
-
+        
         public DocEntityDocumentSet(Session session) : base(session) {}
 
         public DocEntityDocumentSet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new DocumentSet()));
+
         public static DocEntityDocumentSet Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -220,10 +221,13 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
+
         public override ModelNameEnm ClassName => CLASS_NAME;
+
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindDocumentSets";
+
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -323,6 +327,7 @@ namespace Services.Schema
                 return ret;
             }
         }
+
 
         public DocumentSet ToDto() => Mapper.Map<DocEntityDocumentSet, DocumentSet>(this);
 

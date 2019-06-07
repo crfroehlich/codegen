@@ -64,7 +64,8 @@ namespace Services.Enums
         public const string ARITHMETIC = "Arithmetic";
         public const string GEOMETRIC = "Geometric";
         public const string LEAST_SQUARES_MEAN = "Least-Squares Mean";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantMeanCalculationType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -94,6 +95,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantMeanCalculationType obj) => this == obj;
 
         public static bool operator ==(DocConstantMeanCalculationType x, DocConstantMeanCalculationType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -119,5 +122,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantMeanCalculationType obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

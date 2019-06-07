@@ -50,12 +50,13 @@ namespace Services.Schema
     {
         private const string ADJUDICATEDRATING_CACHE = "AdjudicatedRatingCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.ADJUDICATEDRATING;
-
+        
         public DocEntityAdjudicatedRating(Session session) : base(session) {}
 
         public DocEntityAdjudicatedRating() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new AdjudicatedRating()));
+
         public static DocEntityAdjudicatedRating Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -116,10 +117,13 @@ namespace Services.Schema
 
 
 
+
         public override ModelNameEnm ClassName => CLASS_NAME;
+
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindAdjudicatedRatings";
+
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -174,6 +178,7 @@ namespace Services.Schema
                 return ret;
             }
         }
+
 
         public AdjudicatedRating ToDto() => Mapper.Map<DocEntityAdjudicatedRating, AdjudicatedRating>(this);
 

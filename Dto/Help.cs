@@ -54,26 +54,18 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ConfluenceId), Description = "string", IsRequired = false)]
         public string ConfluenceId { get; set; }
-        public List<int> ConfluenceIdIds { get; set; }
-        public int? ConfluenceIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
-        public List<int> DescriptionIds { get; set; }
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Icon), Description = "string", IsRequired = false)]
         public string Icon { get; set; }
-        public List<int> IconIds { get; set; }
-        public int? IconCount { get; set; }
 
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         public int? Order { get; set; }
-        public List<int> OrderIds { get; set; }
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(Pages), Description = "Page", IsRequired = false)]
@@ -90,8 +82,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Title), Description = "string", IsRequired = true)]
         public string Title { get; set; }
-        public List<int> TitleIds { get; set; }
-        public int? TitleCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Dialog",@"Manual",@"Section",@"Sidebar"})]
@@ -129,12 +119,26 @@ namespace Services.Dto
 
     public partial class Help : HelpBase, IReturn<Help>, IDto, ICloneable
     {
-        public Help() => _Constructor();
+        public Help()
+        {
+            _Constructor();
+        }
 
         public Help(int? id) : base(DocConvert.ToInt(id)) {}
         public Help(int id) : base(id) {}
-        public Help(int? pId, string pConfluenceId, string pDescription, string pIcon, int? pOrder, List<Reference> pPages, int? pPagesCount, List<Reference> pScopes, int? pScopesCount, string pTitle, Reference pType, int? pTypeId) :
+        public Help(int? pId, string pConfluenceId, string pDescription, string pIcon, int? pOrder, List<Reference> pPages, int? pPagesCount, List<Reference> pScopes, int? pScopesCount, string pTitle, Reference pType, int? pTypeId) : 
             base(pId, pConfluenceId, pDescription, pIcon, pOrder, pPages, pPagesCount, pScopes, pScopesCount, pTitle, pType, pTypeId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Help>();
 
@@ -172,7 +176,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Pages), nameof(PagesCount), nameof(PagesIds), nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds)
+            nameof(Pages), nameof(PagesCount), nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
 

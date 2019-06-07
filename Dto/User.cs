@@ -88,8 +88,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ClientDepartment), Description = "string", IsRequired = false)]
         public string ClientDepartment { get; set; }
-        public List<int> ClientDepartmentIds { get; set; }
-        public int? ClientDepartmentCount { get; set; }
 
 
         [ApiMember(Name = nameof(Division), Description = "Division", IsRequired = true)]
@@ -106,32 +104,22 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Email), Description = "string", IsRequired = false)]
         public string Email { get; set; }
-        public List<int> EmailIds { get; set; }
-        public int? EmailCount { get; set; }
 
 
         [ApiMember(Name = nameof(ExpireDate), Description = "DateTime?", IsRequired = false)]
         public DateTime? ExpireDate { get; set; }
-        public List<int> ExpireDateIds { get; set; }
-        public int? ExpireDateCount { get; set; }
 
 
         [ApiMember(Name = nameof(FailedLoginCount), Description = "int?", IsRequired = false)]
         public int? FailedLoginCount { get; set; }
-        public List<int> FailedLoginCountIds { get; set; }
-        public int? FailedLoginCountCount { get; set; }
 
 
         [ApiMember(Name = nameof(FirstName), Description = "string", IsRequired = false)]
         public string FirstName { get; set; }
-        public List<int> FirstNameIds { get; set; }
-        public int? FirstNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Gravatar), Description = "string", IsRequired = false)]
         public string Gravatar { get; set; }
-        public List<int> GravatarIds { get; set; }
-        public int? GravatarCount { get; set; }
 
 
         [ApiMember(Name = nameof(History), Description = "History", IsRequired = false)]
@@ -154,32 +142,22 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsSystemUser), Description = "bool?", IsRequired = false)]
         public bool? IsSystemUser { get; private set; }
-        public List<int> IsSystemUserIds { get; set; }
-        public int? IsSystemUserCount { get; set; }
 
 
         [ApiMember(Name = nameof(JobTitle), Description = "string", IsRequired = false)]
         public string JobTitle { get; set; }
-        public List<int> JobTitleIds { get; set; }
-        public int? JobTitleCount { get; set; }
 
 
         [ApiMember(Name = nameof(LastLogin), Description = "DateTime?", IsRequired = false)]
         public DateTime? LastLogin { get; set; }
-        public List<int> LastLoginIds { get; set; }
-        public int? LastLoginCount { get; set; }
 
 
         [ApiMember(Name = nameof(LastName), Description = "string", IsRequired = false)]
         public string LastName { get; set; }
-        public List<int> LastNameIds { get; set; }
-        public int? LastNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(LegacyUsername), Description = "string", IsRequired = false)]
         public string LegacyUsername { get; set; }
-        public List<int> LegacyUsernameIds { get; set; }
-        public int? LegacyUsernameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Locale), Description = "Locale", IsRequired = false)]
@@ -190,14 +168,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(LoginCount), Description = "int?", IsRequired = false)]
         public int? LoginCount { get; set; }
-        public List<int> LoginCountIds { get; set; }
-        public int? LoginCountCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Roles), Description = "Role", IsRequired = false)]
@@ -220,27 +194,19 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Settings), Description = "JsonObject", IsRequired = false)]
         public JsonObject Settings { get; set; }
-        public List<int> SettingsIds { get; set; }
-        public int? SettingsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Slack), Description = "string", IsRequired = false)]
         public string Slack { get; set; }
-        public List<int> SlackIds { get; set; }
-        public int? SlackCount { get; set; }
 
 
         [ApiMember(Name = nameof(StartDate), Description = "DateTime?", IsRequired = false)]
         public DateTime? StartDate { get; set; }
-        public List<int> StartDateIds { get; set; }
-        public int? StartDateCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Disabled",@"Inactive"})]
         [ApiMember(Name = nameof(Status), Description = "StatusEnm?", IsRequired = false)]
         public StatusEnm? Status { get; set; }
-        public List<int> StatusIds { get; set; }
-        public int? StatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(Teams), Description = "Team", IsRequired = false)]
@@ -335,12 +301,26 @@ namespace Services.Dto
 
     public partial class User : UserBase, IReturn<User>, IDto, ICloneable
     {
-        public User() => _Constructor();
+        public User()
+        {
+            _Constructor();
+        }
 
         public User(int? id) : base(DocConvert.ToInt(id)) {}
         public User(int id) : base(id) {}
-        public User(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, StatusEnm? pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) :
+        public User(int? pId, string pClientDepartment, Reference pDivision, int? pDivisionId, List<Reference> pDocumentSets, int? pDocumentSetsCount, string pEmail, DateTime? pExpireDate, int? pFailedLoginCount, string pFirstName, string pGravatar, List<Reference> pHistory, int? pHistoryCount, List<Reference> pImpersonated, int? pImpersonatedCount, List<Reference> pImpersonating, int? pImpersonatingCount, bool? pIsSystemUser, string pJobTitle, DateTime? pLastLogin, string pLastName, string pLegacyUsername, Reference pLocale, int? pLocaleId, int? pLoginCount, string pName, List<Role> pRoles, int? pRolesCount, List<Reference> pScopes, int? pScopesCount, List<Reference> pSessions, int? pSessionsCount, JsonObject pSettings, string pSlack, DateTime? pStartDate, StatusEnm? pStatus, List<Reference> pTeams, int? pTeamsCount, List<Reference> pTimeCards, int? pTimeCardsCount, List<Reference> pUpdates, int? pUpdatesCount, Reference pUserType, int? pUserTypeId, List<Reference> pWorkflows, int? pWorkflowsCount) : 
             base(pId, pClientDepartment, pDivision, pDivisionId, pDocumentSets, pDocumentSetsCount, pEmail, pExpireDate, pFailedLoginCount, pFirstName, pGravatar, pHistory, pHistoryCount, pImpersonated, pImpersonatedCount, pImpersonating, pImpersonatingCount, pIsSystemUser, pJobTitle, pLastLogin, pLastName, pLegacyUsername, pLocale, pLocaleId, pLoginCount, pName, pRoles, pRolesCount, pScopes, pScopesCount, pSessions, pSessionsCount, pSettings, pSlack, pStartDate, pStatus, pTeams, pTeamsCount, pTimeCards, pTimeCardsCount, pUpdates, pUpdatesCount, pUserType, pUserTypeId, pWorkflows, pWorkflowsCount) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<User>();
 
@@ -378,7 +358,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(DocumentSets), nameof(DocumentSetsCount), nameof(DocumentSetsIds), nameof(History), nameof(HistoryCount), nameof(HistoryIds), nameof(Impersonated), nameof(ImpersonatedCount), nameof(ImpersonatedIds), nameof(Impersonating), nameof(ImpersonatingCount), nameof(ImpersonatingIds), nameof(Roles), nameof(RolesCount), nameof(RolesIds), nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds), nameof(Sessions), nameof(SessionsCount), nameof(SessionsIds), nameof(Teams), nameof(TeamsCount), nameof(TeamsIds), nameof(TimeCards), nameof(TimeCardsCount), nameof(TimeCardsIds), nameof(Updates), nameof(UpdatesCount), nameof(UpdatesIds), nameof(Workflows), nameof(WorkflowsCount), nameof(WorkflowsIds)
+            nameof(DocumentSets), nameof(DocumentSetsCount), nameof(History), nameof(HistoryCount), nameof(Impersonated), nameof(ImpersonatedCount), nameof(Impersonating), nameof(ImpersonatingCount), nameof(Roles), nameof(RolesCount), nameof(Scopes), nameof(ScopesCount), nameof(Sessions), nameof(SessionsCount), nameof(Teams), nameof(TeamsCount), nameof(TimeCards), nameof(TimeCardsCount), nameof(Updates), nameof(UpdatesCount), nameof(Workflows), nameof(WorkflowsCount)
         };
         private List<string> collections { get { return _collections; } }
 

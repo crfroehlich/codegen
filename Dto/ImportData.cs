@@ -68,8 +68,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(CompletedOn), Description = "DateTime?", IsRequired = false)]
         public DateTime? CompletedOn { get; set; }
-        public List<int> CompletedOnIds { get; set; }
-        public int? CompletedOnCount { get; set; }
 
 
         [ApiMember(Name = nameof(DataSets), Description = "DataSet", IsRequired = false)]
@@ -86,26 +84,18 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ErrorData), Description = "string", IsRequired = false)]
         public string ErrorData { get; set; }
-        public List<int> ErrorDataIds { get; set; }
-        public int? ErrorDataCount { get; set; }
 
 
         [ApiMember(Name = nameof(ExtractUrl), Description = "string", IsRequired = false)]
         public string ExtractUrl { get; set; }
-        public List<int> ExtractUrlIds { get; set; }
-        public int? ExtractUrlCount { get; set; }
 
 
         [ApiMember(Name = nameof(HighPriority), Description = "bool", IsRequired = false)]
         public bool HighPriority { get; set; }
-        public List<int> HighPriorityIds { get; set; }
-        public int? HighPriorityCount { get; set; }
 
 
         [ApiMember(Name = nameof(ImportFr), Description = "bool", IsRequired = false)]
         public bool ImportFr { get; set; }
-        public List<int> ImportFrIds { get; set; }
-        public int? ImportFrCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Default",@"DocData",@"Extract",@"Import Data"})]
@@ -117,20 +107,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ImportNewName), Description = "bool", IsRequired = false)]
         public bool ImportNewName { get; set; }
-        public List<int> ImportNewNameIds { get; set; }
-        public int? ImportNewNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(ImportTable), Description = "bool", IsRequired = false)]
         public bool ImportTable { get; set; }
-        public List<int> ImportTableIds { get; set; }
-        public int? ImportTableCount { get; set; }
 
 
         [ApiMember(Name = nameof(ImportText), Description = "bool", IsRequired = false)]
         public bool ImportText { get; set; }
-        public List<int> ImportTextIds { get; set; }
-        public int? ImportTextCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"ClinicalTrials.gov",@"Extract",@"Legacy"})]
@@ -142,20 +126,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsLegacy), Description = "bool", IsRequired = false)]
         public bool IsLegacy { get; set; }
-        public List<int> IsLegacyIds { get; set; }
-        public int? IsLegacyCount { get; set; }
 
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         public int? Order { get; set; }
-        public List<int> OrderIds { get; set; }
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(ReferenceId), Description = "int?", IsRequired = true)]
         public int? ReferenceId { get; set; }
-        public List<int> ReferenceIdIds { get; set; }
-        public int? ReferenceIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(RequestedBy), Description = "User", IsRequired = false)]
@@ -166,14 +144,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(RequestedOn), Description = "DateTime?", IsRequired = false)]
         public DateTime? RequestedOn { get; set; }
-        public List<int> RequestedOnIds { get; set; }
-        public int? RequestedOnCount { get; set; }
 
 
         [ApiMember(Name = nameof(StartedOn), Description = "DateTime?", IsRequired = false)]
         public DateTime? StartedOn { get; set; }
-        public List<int> StartedOnIds { get; set; }
-        public int? StartedOnCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Already Imported",@"Cancelled",@"Failed",@"No JSON Found",@"Processing",@"Queued",@"Succeeded"})]
@@ -225,12 +199,26 @@ namespace Services.Dto
 
     public partial class ImportData : ImportDataBase, IReturn<ImportData>, IDto, ICloneable
     {
-        public ImportData() => _Constructor();
+        public ImportData()
+        {
+            _Constructor();
+        }
 
         public ImportData(int? id) : base(DocConvert.ToInt(id)) {}
         public ImportData(int id) : base(id) {}
-        public ImportData(int? pId, DateTime? pCompletedOn, List<Reference> pDataSets, int? pDataSetsCount, Reference pDocument, int? pDocumentId, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) :
+        public ImportData(int? pId, DateTime? pCompletedOn, List<Reference> pDataSets, int? pDataSetsCount, Reference pDocument, int? pDocumentId, string pErrorData, string pExtractUrl, bool pHighPriority, bool pImportFr, Reference pImportLocation, int? pImportLocationId, bool pImportNewName, bool pImportTable, bool pImportText, Reference pImportType, int? pImportTypeId, bool pIsLegacy, int? pOrder, int? pReferenceId, Reference pRequestedBy, int? pRequestedById, DateTime? pRequestedOn, DateTime? pStartedOn, Reference pStatus, int? pStatusId) : 
             base(pId, pCompletedOn, pDataSets, pDataSetsCount, pDocument, pDocumentId, pErrorData, pExtractUrl, pHighPriority, pImportFr, pImportLocation, pImportLocationId, pImportNewName, pImportTable, pImportText, pImportType, pImportTypeId, pIsLegacy, pOrder, pReferenceId, pRequestedBy, pRequestedById, pRequestedOn, pStartedOn, pStatus, pStatusId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<ImportData>();
 
@@ -266,7 +254,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(DataSets), nameof(DataSetsCount), nameof(DataSetsIds)
+            nameof(DataSets), nameof(DataSetsCount)
         };
         private List<string> collections { get { return _collections; } }
 

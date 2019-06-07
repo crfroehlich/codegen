@@ -32,7 +32,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Updated, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, "Updated")))
                 .ForMember(dest => dest.Children, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.Children))))
                 .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.ChildrenCount))))
-                .ForMember(dest => dest.ChildrenIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.ChildrenIds))))
+                .ForMember(dest => dest.ChildrenCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.ChildrenIds))))
                 .ForMember(dest => dest.Data, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.Data))))
                 .ForMember(dest => dest.OwnerId, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.OwnerId))))
                 .ForMember(dest => dest.OwnerType, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<Junction>(c, nameof(DocEntityJunction.OwnerType))))

@@ -46,20 +46,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsBindable), Description = "bool", IsRequired = false)]
         public bool IsBindable { get; set; }
-        public List<int> IsBindableIds { get; set; }
-        public int? IsBindableCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsGlobal), Description = "bool", IsRequired = false)]
         public bool IsGlobal { get; set; }
-        public List<int> IsGlobalIds { get; set; }
-        public int? IsGlobalCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
 
@@ -82,12 +76,26 @@ namespace Services.Dto
 
     public partial class LookupTableEnum : LookupTableEnumBase, IReturn<LookupTableEnum>, IDto, ICloneable
     {
-        public LookupTableEnum() => _Constructor();
+        public LookupTableEnum()
+        {
+            _Constructor();
+        }
 
         public LookupTableEnum(int? id) : base(DocConvert.ToInt(id)) {}
         public LookupTableEnum(int id) : base(id) {}
-        public LookupTableEnum(int? pId, bool pIsBindable, bool pIsGlobal, string pName) :
+        public LookupTableEnum(int? pId, bool pIsBindable, bool pIsGlobal, string pName) : 
             base(pId, pIsBindable, pIsGlobal, pName) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<LookupTableEnum>();
 

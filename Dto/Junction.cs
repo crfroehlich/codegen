@@ -62,20 +62,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
-        public List<int> DataIds { get; set; }
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(OwnerId), Description = "int?", IsRequired = false)]
         public int? OwnerId { get; set; }
-        public List<int> OwnerIdIds { get; set; }
-        public int? OwnerIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(OwnerType), Description = "string", IsRequired = false)]
         public string OwnerType { get; set; }
-        public List<int> OwnerTypeIds { get; set; }
-        public int? OwnerTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(Parent), Description = "Junction", IsRequired = false)]
@@ -86,14 +80,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(TargetId), Description = "int?", IsRequired = false)]
         public int? TargetId { get; set; }
-        public List<int> TargetIdIds { get; set; }
-        public int? TargetIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(TargetType), Description = "string", IsRequired = false)]
         public string TargetType { get; set; }
-        public List<int> TargetTypeIds { get; set; }
-        public int? TargetTypeCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Approval",@"Comment",@"Flagged for Approval",@"Rating"})]
@@ -139,12 +129,26 @@ namespace Services.Dto
 
     public partial class Junction : JunctionBase, IReturn<Junction>, IDto, ICloneable
     {
-        public Junction() => _Constructor();
+        public Junction()
+        {
+            _Constructor();
+        }
 
         public Junction(int? id) : base(DocConvert.ToInt(id)) {}
         public Junction(int id) : base(id) {}
-        public Junction(int? pId, List<Reference> pChildren, int? pChildrenCount, string pData, int? pOwnerId, string pOwnerType, Reference pParent, int? pParentId, int? pTargetId, string pTargetType, Reference pType, int? pTypeId, Reference pUser, int? pUserId) :
+        public Junction(int? pId, List<Reference> pChildren, int? pChildrenCount, string pData, int? pOwnerId, string pOwnerType, Reference pParent, int? pParentId, int? pTargetId, string pTargetType, Reference pType, int? pTypeId, Reference pUser, int? pUserId) : 
             base(pId, pChildren, pChildrenCount, pData, pOwnerId, pOwnerType, pParent, pParentId, pTargetId, pTargetType, pType, pTypeId, pUser, pUserId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Junction>();
 
@@ -182,7 +186,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Children), nameof(ChildrenCount), nameof(ChildrenIds)
+            nameof(Children), nameof(ChildrenCount)
         };
         private List<string> collections { get { return _collections; } }
 

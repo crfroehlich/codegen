@@ -50,8 +50,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(IsSI), Description = "bool", IsRequired = false)]
         public bool IsSI { get; set; }
-        public List<int> IsSIIds { get; set; }
-        public int? IsSICount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "LookupTable", IsRequired = true)]
@@ -97,12 +95,26 @@ namespace Services.Dto
 
     public partial class UnitOfMeasure : UnitOfMeasureBase, IReturn<UnitOfMeasure>, IDto, ICloneable
     {
-        public UnitOfMeasure() => _Constructor();
+        public UnitOfMeasure()
+        {
+            _Constructor();
+        }
 
         public UnitOfMeasure(int? id) : base(DocConvert.ToInt(id)) {}
         public UnitOfMeasure(int id) : base(id) {}
-        public UnitOfMeasure(int? pId, bool pIsSI, Reference pName, int? pNameId, Reference pType, int? pTypeId, Reference pUnit, int? pUnitId) :
+        public UnitOfMeasure(int? pId, bool pIsSI, Reference pName, int? pNameId, Reference pType, int? pTypeId, Reference pUnit, int? pUnitId) : 
             base(pId, pIsSI, pName, pNameId, pType, pTypeId, pUnit, pUnitId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<UnitOfMeasure>();
 

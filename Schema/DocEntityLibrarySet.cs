@@ -31,12 +31,13 @@ namespace Services.Schema
     {
         private const string LIBRARYSET_CACHE = "LibrarySetCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.LIBRARYSET;
-
+        
         public DocEntityLibrarySet(Session session) : base(session) {}
 
         public DocEntityLibrarySet() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new LibrarySet()));
+
         public static DocEntityLibrarySet Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -213,10 +214,13 @@ namespace Services.Schema
 
 
 
+
         public override ModelNameEnm ClassName => CLASS_NAME;
+
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindLibrarySets";
+
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -271,6 +275,7 @@ namespace Services.Schema
                 return ret;
             }
         }
+
 
         public LibrarySet ToDto() => Mapper.Map<DocEntityLibrarySet, LibrarySet>(this);
 

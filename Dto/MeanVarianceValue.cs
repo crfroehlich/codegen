@@ -65,8 +65,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         public int? Order { get; set; }
-        public List<int> OrderIds { get; set; }
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owners), Description = "MeanVariances", IsRequired = false)]
@@ -96,12 +94,26 @@ namespace Services.Dto
 
     public partial class MeanVarianceValue : MeanVarianceValueBase, IReturn<MeanVarianceValue>, IDto, ICloneable
     {
-        public MeanVarianceValue() => _Constructor();
+        public MeanVarianceValue()
+        {
+            _Constructor();
+        }
 
         public MeanVarianceValue(int? id) : base(DocConvert.ToInt(id)) {}
         public MeanVarianceValue(int id) : base(id) {}
-        public MeanVarianceValue(int? pId, TypeUnits pMeanVariance, TypeUnitsRange pMeanVarianceRange, Reference pMeanVarianceType, int? pMeanVarianceTypeId, int? pOrder, List<MeanVariances> pOwners, int? pOwnersCount) :
+        public MeanVarianceValue(int? pId, TypeUnits pMeanVariance, TypeUnitsRange pMeanVarianceRange, Reference pMeanVarianceType, int? pMeanVarianceTypeId, int? pOrder, List<MeanVariances> pOwners, int? pOwnersCount) : 
             base(pId, pMeanVariance, pMeanVarianceRange, pMeanVarianceType, pMeanVarianceTypeId, pOrder, pOwners, pOwnersCount) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<MeanVarianceValue>();
 
@@ -137,7 +149,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Owners), nameof(OwnersCount), nameof(OwnersIds)
+            nameof(Owners), nameof(OwnersCount)
         };
         private List<string> collections { get { return _collections; } }
 

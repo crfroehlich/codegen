@@ -52,8 +52,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Approved), Description = "bool", IsRequired = false)]
         public bool Approved { get; set; }
-        public List<int> ApprovedIds { get; set; }
-        public int? ApprovedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Bindings), Description = "LookupTableBinding", IsRequired = false)]
@@ -70,8 +68,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Preferred), Description = "bool", IsRequired = false)]
         public bool Preferred { get; set; }
-        public List<int> PreferredIds { get; set; }
-        public int? PreferredCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scope), Description = "Scope", IsRequired = false)]
@@ -82,8 +78,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Synonym), Description = "string", IsRequired = true)]
         public string Synonym { get; set; }
-        public List<int> SynonymIds { get; set; }
-        public int? SynonymCount { get; set; }
 
 
 
@@ -112,12 +106,26 @@ namespace Services.Dto
 
     public partial class TermSynonym : TermSynonymBase, IReturn<TermSynonym>, IDto, ICloneable
     {
-        public TermSynonym() => _Constructor();
+        public TermSynonym()
+        {
+            _Constructor();
+        }
 
         public TermSynonym(int? id) : base(DocConvert.ToInt(id)) {}
         public TermSynonym(int id) : base(id) {}
-        public TermSynonym(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) :
+        public TermSynonym(int? pId, bool pApproved, List<Reference> pBindings, int? pBindingsCount, Reference pMaster, int? pMasterId, bool pPreferred, Reference pScope, int? pScopeId, string pSynonym) : 
             base(pId, pApproved, pBindings, pBindingsCount, pMaster, pMasterId, pPreferred, pScope, pScopeId, pSynonym) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<TermSynonym>();
 
@@ -155,7 +163,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Bindings), nameof(BindingsCount), nameof(BindingsIds)
+            nameof(Bindings), nameof(BindingsCount)
         };
         private List<string> collections { get { return _collections; } }
 

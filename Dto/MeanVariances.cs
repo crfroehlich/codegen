@@ -59,12 +59,26 @@ namespace Services.Dto
 
     public partial class MeanVariances : MeanVariancesBase, IReturn<MeanVariances>, IDto, ICloneable
     {
-        public MeanVariances() => _Constructor();
+        public MeanVariances()
+        {
+            _Constructor();
+        }
 
         public MeanVariances(int? id) : base(DocConvert.ToInt(id)) {}
         public MeanVariances(int id) : base(id) {}
-        public MeanVariances(int? pId, bool isDummyParam) :
+        public MeanVariances(int? pId, bool isDummyParam) : 
             base(pId, isDummyParam) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<MeanVariances>();
 
@@ -100,7 +114,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Variances), nameof(Variances), nameof(VariancesCount), nameof(VariancesIds)
+            nameof(Variances), nameof(Variances), nameof(VariancesCount)
         };
         private List<string> collections { get { return _collections; } }
 

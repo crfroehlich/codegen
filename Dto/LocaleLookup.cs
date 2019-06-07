@@ -47,14 +47,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Data), Description = "IpData", IsRequired = false)]
         public IpData Data { get; set; }
-        public List<int> DataIds { get; set; }
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(IpAddress), Description = "string", IsRequired = true)]
         public string IpAddress { get; set; }
-        public List<int> IpAddressIds { get; set; }
-        public int? IpAddressCount { get; set; }
 
 
         [ApiMember(Name = nameof(Locale), Description = "Locale", IsRequired = true)]
@@ -84,12 +80,26 @@ namespace Services.Dto
 
     public partial class LocaleLookup : LocaleLookupBase, IReturn<LocaleLookup>, IDto, ICloneable
     {
-        public LocaleLookup() => _Constructor();
+        public LocaleLookup()
+        {
+            _Constructor();
+        }
 
         public LocaleLookup(int? id) : base(DocConvert.ToInt(id)) {}
         public LocaleLookup(int id) : base(id) {}
-        public LocaleLookup(int? pId, IpData pData, string pIpAddress, Reference pLocale, int? pLocaleId) :
+        public LocaleLookup(int? pId, IpData pData, string pIpAddress, Reference pLocale, int? pLocaleId) : 
             base(pId, pData, pIpAddress, pLocale, pLocaleId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<LocaleLookup>();
 

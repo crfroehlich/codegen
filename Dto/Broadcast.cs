@@ -61,26 +61,18 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(ConfluenceId), Description = "string", IsRequired = false)]
         public string ConfluenceId { get; set; }
-        public List<int> ConfluenceIdIds { get; set; }
-        public int? ConfluenceIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Reprocess), Description = "bool", IsRequired = false)]
         public bool Reprocess { get; set; }
-        public List<int> ReprocessIds { get; set; }
-        public int? ReprocessCount { get; set; }
 
 
         [ApiMember(Name = nameof(Reprocessed), Description = "DateTime?", IsRequired = false)]
         public DateTime? Reprocessed { get; set; }
-        public List<int> ReprocessedIds { get; set; }
-        public int? ReprocessedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Scopes), Description = "Scope", IsRequired = false)]
@@ -132,12 +124,26 @@ namespace Services.Dto
 
     public partial class Broadcast : BroadcastBase, IReturn<Broadcast>, IDto, ICloneable
     {
-        public Broadcast() => _Constructor();
+        public Broadcast()
+        {
+            _Constructor();
+        }
 
         public Broadcast(int? id) : base(DocConvert.ToInt(id)) {}
         public Broadcast(int id) : base(id) {}
-        public Broadcast(int? pId, Reference pApp, int? pAppId, string pConfluenceId, string pName, bool pReprocess, DateTime? pReprocessed, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId) :
+        public Broadcast(int? pId, Reference pApp, int? pAppId, string pConfluenceId, string pName, bool pReprocess, DateTime? pReprocessed, List<Reference> pScopes, int? pScopesCount, Reference pStatus, int? pStatusId, Reference pType, int? pTypeId) : 
             base(pId, pApp, pAppId, pConfluenceId, pName, pReprocess, pReprocessed, pScopes, pScopesCount, pStatus, pStatusId, pType, pTypeId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Broadcast>();
 
@@ -175,7 +181,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Scopes), nameof(ScopesCount), nameof(ScopesIds)
+            nameof(Scopes), nameof(ScopesCount)
         };
         private List<string> collections { get { return _collections; } }
 

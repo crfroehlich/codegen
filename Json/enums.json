@@ -268,6 +268,25 @@
     "RATE": "Rate",
     "YES_NO_NA": "Yes/No/Na"
   },
+  "FileRights": {
+    "FREE": "Free",
+    "RESTRICTED": "Restricted"
+  },
+  "FileSource": {
+    "CLIENT_SUPPLIED": "Client Supplied",
+    "DOCUMENT_DELIVERY": "Document Delivery",
+    "PMC_BMC": "PMC/BMC",
+    "PUBLISHER": "Publisher",
+    "SUBSCRIPTION": "Subscription",
+    "UCLA": "UCLA"
+  },
+  "FileType": {
+    "DOCUMENT_SET": "Document Set",
+    "ERRATA": "Errata",
+    "FULL_TEXT": "Full Text",
+    "PROTOCOL": "Protocol",
+    "SUPPLEMENTAL": "Supplemental"
+  },
   "ForeignKeyStatus": {
     "ACTIVE": "Active",
     "ARCHIVED": "Archived",
@@ -471,6 +490,9 @@
     "EXTERNALKEY": "ExternalKey",
     "FEATURE": "Feature",
     "FIELDTYPE": "FieldType",
+    "FILERIGHTS": "FileRights",
+    "FILESOURCE": "FileSource",
+    "FILETYPE": "FileType",
     "FOREIGNKEYSTATUS": "ForeignKeyStatus",
     "FQREFERENCESTATUS": "FqReferenceStatus",
     "HELP": "Help",
@@ -648,6 +670,7 @@
     "EVENT": "Event",
     "FAVORITE": "Favorite",
     "FEATURESET": "FeatureSet",
+    "FILE": "File",
     "GLOSSARY": "Glossary",
     "HELP": "Help",
     "HISTORY": "History",

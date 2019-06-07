@@ -109,7 +109,8 @@ namespace Services.Enums
         public const string SCALES_SCORES = "Scales/Scores";
         public const string SOCIAL_HISTORY = "Social History";
         public const string WITHDRAWAL_DRUG_DISCONTINUATION = "Withdrawal/Drug Discontinuation";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantAttributeCategory).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -139,6 +140,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantAttributeCategory obj) => this == obj;
 
         public static bool operator ==(DocConstantAttributeCategory x, DocConstantAttributeCategory y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -164,5 +167,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantAttributeCategory obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

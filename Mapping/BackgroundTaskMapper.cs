@@ -40,7 +40,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.HistoryRetention, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.HistoryRetention))))
                 .ForMember(dest => dest.Items, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.Items))))
                 .ForMember(dest => dest.ItemsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.ItemsCount))))
-                .ForMember(dest => dest.ItemsIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.ItemsIds))))
+                .ForMember(dest => dest.ItemsCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.ItemsIds))))
                 .ForMember(dest => dest.KeepHistory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.KeepHistory))))
                 .ForMember(dest => dest.LastRunVersion, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.LastRunVersion))))
                 .ForMember(dest => dest.LogError, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.LogError))))
@@ -51,7 +51,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.StartAt, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.StartAt))))
                 .ForMember(dest => dest.TaskHistory, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.TaskHistory))))
                 .ForMember(dest => dest.TaskHistoryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.TaskHistoryCount))))
-                .ForMember(dest => dest.TaskHistoryIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.TaskHistoryIds))))
+                .ForMember(dest => dest.TaskHistoryCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<BackgroundTask>(c, nameof(DocEntityBackgroundTask.TaskHistoryIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<BackgroundTask,DocEntityBackgroundTask>()
                 .MaxDepth(2);

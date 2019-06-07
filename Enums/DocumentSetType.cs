@@ -79,7 +79,8 @@ namespace Services.Enums
         public const string LIBRARY = "Library";
         public const string SERVE_PORTAL = "SERVE Portal";
         public const string THERAPEUTIC_AREA = "Therapeutic Area";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantDocumentSetType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -109,6 +110,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantDocumentSetType obj) => this == obj;
 
         public static bool operator ==(DocConstantDocumentSetType x, DocConstantDocumentSetType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -134,5 +137,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantDocumentSetType obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

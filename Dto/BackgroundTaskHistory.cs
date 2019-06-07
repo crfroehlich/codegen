@@ -55,32 +55,22 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Completed), Description = "int?", IsRequired = false)]
         public int? Completed { get; set; }
-        public List<int> CompletedIds { get; set; }
-        public int? CompletedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Data), Description = "string", IsRequired = false)]
         public string Data { get; set; }
-        public List<int> DataIds { get; set; }
-        public int? DataCount { get; set; }
 
 
         [ApiMember(Name = nameof(Ended), Description = "DateTime?", IsRequired = false)]
         public DateTime? Ended { get; set; }
-        public List<int> EndedIds { get; set; }
-        public int? EndedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Errors), Description = "string", IsRequired = false)]
         public string Errors { get; set; }
-        public List<int> ErrorsIds { get; set; }
-        public int? ErrorsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Failed), Description = "int?", IsRequired = false)]
         public int? Failed { get; set; }
-        public List<int> FailedIds { get; set; }
-        public int? FailedCount { get; set; }
 
 
         [ApiMember(Name = nameof(Items), Description = "BackgroundTaskItem", IsRequired = false)]
@@ -91,20 +81,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Logs), Description = "string", IsRequired = false)]
         public string Logs { get; set; }
-        public List<int> LogsIds { get; set; }
-        public int? LogsCount { get; set; }
 
 
         [ApiMember(Name = nameof(Succeeded), Description = "bool?", IsRequired = false)]
         public bool? Succeeded { get; set; }
-        public List<int> SucceededIds { get; set; }
-        public int? SucceededCount { get; set; }
 
 
         [ApiMember(Name = nameof(Summary), Description = "string", IsRequired = false)]
         public string Summary { get; set; }
-        public List<int> SummaryIds { get; set; }
-        public int? SummaryCount { get; set; }
 
 
         [ApiMember(Name = nameof(Task), Description = "BackgroundTask", IsRequired = true)]
@@ -141,12 +125,26 @@ namespace Services.Dto
 
     public partial class BackgroundTaskHistory : BackgroundTaskHistoryBase, IReturn<BackgroundTaskHistory>, IDto, ICloneable
     {
-        public BackgroundTaskHistory() => _Constructor();
+        public BackgroundTaskHistory()
+        {
+            _Constructor();
+        }
 
         public BackgroundTaskHistory(int? id) : base(DocConvert.ToInt(id)) {}
         public BackgroundTaskHistory(int id) : base(id) {}
-        public BackgroundTaskHistory(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) :
+        public BackgroundTaskHistory(int? pId, int? pCompleted, string pData, DateTime? pEnded, string pErrors, int? pFailed, List<Reference> pItems, int? pItemsCount, string pLogs, bool? pSucceeded, string pSummary, Reference pTask, int? pTaskId) : 
             base(pId, pCompleted, pData, pEnded, pErrors, pFailed, pItems, pItemsCount, pLogs, pSucceeded, pSummary, pTask, pTaskId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<BackgroundTaskHistory>();
 
@@ -184,7 +182,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Items), nameof(ItemsCount), nameof(ItemsIds)
+            nameof(Items), nameof(ItemsCount)
         };
         private List<string> collections { get { return _collections; } }
 

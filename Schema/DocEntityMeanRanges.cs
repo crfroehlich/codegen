@@ -31,12 +31,13 @@ namespace Services.Schema
     {
         private const string MEANRANGES_CACHE = "MeanRangesCache";
         public const ModelNameEnm CLASS_NAME = ModelNameEnm.MEANRANGES;
-
+        
         public DocEntityMeanRanges(Session session) : base(session) {}
 
         public DocEntityMeanRanges() : base(new DocDbSession(Xtensive.Orm.Session.Current)) {}
 
         protected override List<string> _select => __vf ?? (__vf = DocWebSession.GetTypeSelect(new MeanRanges()));
+
         public static DocEntityMeanRanges Get(Reference reference)
         {
             return (true == (reference?.Id > 0)) ? Get(reference.Id) : null;
@@ -113,10 +114,13 @@ namespace Services.Schema
         public override bool Archived { get; set; }
 
 
+
         public override ModelNameEnm ClassName => CLASS_NAME;
+
         public override DocConstantModelName TableName => CLASS_NAME.ToEnumString();
 
         public const string CACHE_KEY_PREFIX = "FindMeanRangess";
+
 
         /// <summary>
         ///    Called when entity is about to be removed.
@@ -171,6 +175,7 @@ namespace Services.Schema
                 return ret;
             }
         }
+
 
         public MeanRanges ToDto() => Mapper.Map<DocEntityMeanRanges, MeanRanges>(this);
 

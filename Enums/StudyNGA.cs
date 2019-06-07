@@ -109,7 +109,8 @@ namespace Services.Enums
         public const string SAFETY = "Safety";
         public const string SCREENED = "Screened";
         public const string STUDY_WITHDRAWALS = "Study Withdrawals";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantStudyNGA).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -139,6 +140,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantStudyNGA obj) => this == obj;
 
         public static bool operator ==(DocConstantStudyNGA x, DocConstantStudyNGA y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -164,5 +167,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantStudyNGA obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

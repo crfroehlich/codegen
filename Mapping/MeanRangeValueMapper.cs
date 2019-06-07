@@ -36,7 +36,7 @@ namespace Services.Schema
                 .ForMember(dest => dest.Order, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Order))))
                 .ForMember(dest => dest.Owners, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Owners))))
                 .ForMember(dest => dest.OwnersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.OwnersCount))))
-                .ForMember(dest => dest.OwnersIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.OwnersIds))))
+                .ForMember(dest => dest.OwnersCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.OwnersIds))))
                 .ForMember(dest => dest.Percent, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Percent))))
                 .ForMember(dest => dest.PercentLow, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.PercentLow))))
                 .ForMember(dest => dest.Range, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<MeanRangeValue>(c, nameof(DocEntityMeanRangeValue.Range))))

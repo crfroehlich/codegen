@@ -90,8 +90,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(AutoCreateMissing), Description = "bool", IsRequired = false)]
         public bool AutoCreateMissing { get; set; }
-        public List<int> AutoCreateMissingIds { get; set; }
-        public int? AutoCreateMissingCount { get; set; }
 
 
         [ApiMember(Name = nameof(Children), Description = "DataProperty", IsRequired = false)]
@@ -108,134 +106,90 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
-        public List<int> DescriptionIds { get; set; }
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(DisplayName), Description = "string", IsRequired = false)]
         public string DisplayName { get; set; }
-        public List<int> DisplayNameIds { get; set; }
-        public int? DisplayNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsAllowAddInForm), Description = "bool", IsRequired = false)]
         public bool IsAllowAddInForm { get; set; }
-        public List<int> IsAllowAddInFormIds { get; set; }
-        public int? IsAllowAddInFormCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsAllowCreateInForm), Description = "bool", IsRequired = false)]
         public bool IsAllowCreateInForm { get; set; }
-        public List<int> IsAllowCreateInFormIds { get; set; }
-        public int? IsAllowCreateInFormCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsAllowEditInForm), Description = "bool", IsRequired = false)]
         public bool IsAllowEditInForm { get; set; }
-        public List<int> IsAllowEditInFormIds { get; set; }
-        public int? IsAllowEditInFormCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsAllowFreeText), Description = "bool", IsRequired = false)]
         public bool IsAllowFreeText { get; set; }
-        public List<int> IsAllowFreeTextIds { get; set; }
-        public int? IsAllowFreeTextCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsAllowRemoveInForm), Description = "bool", IsRequired = false)]
         public bool IsAllowRemoveInForm { get; set; }
-        public List<int> IsAllowRemoveInFormIds { get; set; }
-        public int? IsAllowRemoveInFormCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsAudited), Description = "bool", IsRequired = false)]
         public bool IsAudited { get; set; }
-        public List<int> IsAuditedIds { get; set; }
-        public int? IsAuditedCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsCompressed), Description = "bool", IsRequired = false)]
         public bool IsCompressed { get; set; }
-        public List<int> IsCompressedIds { get; set; }
-        public int? IsCompressedCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsDisplayInForm), Description = "bool", IsRequired = false)]
         public bool IsDisplayInForm { get; set; }
-        public List<int> IsDisplayInFormIds { get; set; }
-        public int? IsDisplayInFormCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsDisplayInGrid), Description = "bool", IsRequired = false)]
         public bool IsDisplayInGrid { get; set; }
-        public List<int> IsDisplayInGridIds { get; set; }
-        public int? IsDisplayInGridCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsEditColumn), Description = "bool", IsRequired = false)]
         public bool IsEditColumn { get; set; }
-        public List<int> IsEditColumnIds { get; set; }
-        public int? IsEditColumnCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsInsertOnly), Description = "bool", IsRequired = false)]
         public bool IsInsertOnly { get; set; }
-        public List<int> IsInsertOnlyIds { get; set; }
-        public int? IsInsertOnlyCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsJSON), Description = "bool", IsRequired = false)]
         public bool IsJSON { get; set; }
-        public List<int> IsJSONIds { get; set; }
-        public int? IsJSONCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsLazy), Description = "bool", IsRequired = false)]
         public bool IsLazy { get; set; }
-        public List<int> IsLazyIds { get; set; }
-        public int? IsLazyCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsNullOnUpgrade), Description = "bool", IsRequired = false)]
         public bool IsNullOnUpgrade { get; set; }
-        public List<int> IsNullOnUpgradeIds { get; set; }
-        public int? IsNullOnUpgradeCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsReadOnly), Description = "bool", IsRequired = false)]
         public bool IsReadOnly { get; set; }
-        public List<int> IsReadOnlyIds { get; set; }
-        public int? IsReadOnlyCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsRelationship), Description = "bool", IsRequired = false)]
         public bool IsRelationship { get; set; }
-        public List<int> IsRelationshipIds { get; set; }
-        public int? IsRelationshipCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsRequired), Description = "bool", IsRequired = false)]
         public bool IsRequired { get; set; }
-        public List<int> IsRequiredIds { get; set; }
-        public int? IsRequiredCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsRequiredInForm), Description = "bool", IsRequired = false)]
         public bool IsRequiredInForm { get; set; }
-        public List<int> IsRequiredInFormIds { get; set; }
-        public int? IsRequiredInFormCount { get; set; }
 
 
         [ApiMember(Name = nameof(IsVirtual), Description = "bool", IsRequired = false)]
         public bool IsVirtual { get; set; }
-        public List<int> IsVirtualIds { get; set; }
-        public int? IsVirtualCount { get; set; }
 
 
         [ApiMember(Name = nameof(JsonType), Description = "string", IsRequired = false)]
         public string JsonType { get; set; }
-        public List<int> JsonTypeIds { get; set; }
-        public int? JsonTypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(LookupTableEnum), Description = "LookupTableEnum", IsRequired = false)]
@@ -246,14 +200,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Name), Description = "string", IsRequired = true)]
         public string Name { get; set; }
-        public List<int> NameIds { get; set; }
-        public int? NameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Order), Description = "int?", IsRequired = false)]
         public int? Order { get; set; }
-        public List<int> OrderIds { get; set; }
-        public int? OrderCount { get; set; }
 
 
         [ApiMember(Name = nameof(Owner), Description = "DataProperty", IsRequired = false)]
@@ -264,20 +214,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Precision), Description = "int?", IsRequired = false)]
         public int? Precision { get; set; }
-        public List<int> PrecisionIds { get; set; }
-        public int? PrecisionCount { get; set; }
 
 
         [ApiMember(Name = nameof(RelationshipOnOwnerRemove), Description = "OnRemoveAction?", IsRequired = false)]
         public OnRemoveAction? RelationshipOnOwnerRemove { get; set; }
-        public List<int> RelationshipOnOwnerRemoveIds { get; set; }
-        public int? RelationshipOnOwnerRemoveCount { get; set; }
 
 
         [ApiMember(Name = nameof(RelationshipOnTargetRemove), Description = "OnRemoveAction?", IsRequired = false)]
         public OnRemoveAction? RelationshipOnTargetRemove { get; set; }
-        public List<int> RelationshipOnTargetRemoveIds { get; set; }
-        public int? RelationshipOnTargetRemoveCount { get; set; }
 
 
         [ApiMember(Name = nameof(RelationshipPairTo), Description = "DataProperty", IsRequired = false)]
@@ -288,14 +232,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(Scale), Description = "int?", IsRequired = false)]
         public int? Scale { get; set; }
-        public List<int> ScaleIds { get; set; }
-        public int? ScaleCount { get; set; }
 
 
         [ApiMember(Name = nameof(SetDefaultValue), Description = "string", IsRequired = false)]
         public string SetDefaultValue { get; set; }
-        public List<int> SetDefaultValueIds { get; set; }
-        public int? SetDefaultValueCount { get; set; }
 
 
         [ApiMember(Name = nameof(Tab), Description = "DataTab", IsRequired = false)]
@@ -312,20 +252,14 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(TargetAlias), Description = "string", IsRequired = false)]
         public string TargetAlias { get; set; }
-        public List<int> TargetAliasIds { get; set; }
-        public int? TargetAliasCount { get; set; }
 
 
         [ApiMember(Name = nameof(Type), Description = "DataType?", IsRequired = false)]
         public DataType? Type { get; set; }
-        public List<int> TypeIds { get; set; }
-        public int? TypeCount { get; set; }
 
 
         [ApiMember(Name = nameof(UIType), Description = "UiType?", IsRequired = false)]
         public UiType? UIType { get; set; }
-        public List<int> UITypeIds { get; set; }
-        public int? UITypeCount { get; set; }
 
 
 
@@ -391,12 +325,26 @@ namespace Services.Dto
 
     public partial class DataProperty : DataPropertyBase, IReturn<DataProperty>, IDto, ICloneable
     {
-        public DataProperty() => _Constructor();
+        public DataProperty()
+        {
+            _Constructor();
+        }
 
         public DataProperty(int? id) : base(DocConvert.ToInt(id)) {}
         public DataProperty(int id) : base(id) {}
-        public DataProperty(int? pId, bool pAutoCreateMissing, List<Reference> pChildren, int? pChildrenCount, Reference pClass, int? pClassId, string pDescription, string pDisplayName, bool pIsAllowAddInForm, bool pIsAllowCreateInForm, bool pIsAllowEditInForm, bool pIsAllowFreeText, bool pIsAllowRemoveInForm, bool pIsAudited, bool pIsCompressed, bool pIsDisplayInForm, bool pIsDisplayInGrid, bool pIsEditColumn, bool pIsInsertOnly, bool pIsJSON, bool pIsLazy, bool pIsNullOnUpgrade, bool pIsReadOnly, bool pIsRelationship, bool pIsRequired, bool pIsRequiredInForm, bool pIsVirtual, string pJsonType, Reference pLookupTableEnum, int? pLookupTableEnumId, string pName, int? pOrder, Reference pOwner, int? pOwnerId, int? pPrecision, OnRemoveAction? pRelationshipOnOwnerRemove, OnRemoveAction? pRelationshipOnTargetRemove, Reference pRelationshipPairTo, int? pRelationshipPairToId, int? pScale, string pSetDefaultValue, Reference pTab, int? pTabId, Reference pTarget, int? pTargetId, string pTargetAlias, DataType? pType, UiType? pUIType) :
+        public DataProperty(int? pId, bool pAutoCreateMissing, List<Reference> pChildren, int? pChildrenCount, Reference pClass, int? pClassId, string pDescription, string pDisplayName, bool pIsAllowAddInForm, bool pIsAllowCreateInForm, bool pIsAllowEditInForm, bool pIsAllowFreeText, bool pIsAllowRemoveInForm, bool pIsAudited, bool pIsCompressed, bool pIsDisplayInForm, bool pIsDisplayInGrid, bool pIsEditColumn, bool pIsInsertOnly, bool pIsJSON, bool pIsLazy, bool pIsNullOnUpgrade, bool pIsReadOnly, bool pIsRelationship, bool pIsRequired, bool pIsRequiredInForm, bool pIsVirtual, string pJsonType, Reference pLookupTableEnum, int? pLookupTableEnumId, string pName, int? pOrder, Reference pOwner, int? pOwnerId, int? pPrecision, OnRemoveAction? pRelationshipOnOwnerRemove, OnRemoveAction? pRelationshipOnTargetRemove, Reference pRelationshipPairTo, int? pRelationshipPairToId, int? pScale, string pSetDefaultValue, Reference pTab, int? pTabId, Reference pTarget, int? pTargetId, string pTargetAlias, DataType? pType, UiType? pUIType) : 
             base(pId, pAutoCreateMissing, pChildren, pChildrenCount, pClass, pClassId, pDescription, pDisplayName, pIsAllowAddInForm, pIsAllowCreateInForm, pIsAllowEditInForm, pIsAllowFreeText, pIsAllowRemoveInForm, pIsAudited, pIsCompressed, pIsDisplayInForm, pIsDisplayInGrid, pIsEditColumn, pIsInsertOnly, pIsJSON, pIsLazy, pIsNullOnUpgrade, pIsReadOnly, pIsRelationship, pIsRequired, pIsRequiredInForm, pIsVirtual, pJsonType, pLookupTableEnum, pLookupTableEnumId, pName, pOrder, pOwner, pOwnerId, pPrecision, pRelationshipOnOwnerRemove, pRelationshipOnTargetRemove, pRelationshipPairTo, pRelationshipPairToId, pScale, pSetDefaultValue, pTab, pTabId, pTarget, pTargetId, pTargetAlias, pType, pUIType) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<DataProperty>();
 
@@ -434,7 +382,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Children), nameof(ChildrenCount), nameof(ChildrenIds)
+            nameof(Children), nameof(ChildrenCount)
         };
         private List<string> collections { get { return _collections; } }
 
@@ -495,7 +443,7 @@ namespace Services.Dto
         public string JsonType { get; set; }
         public Reference LookupTableEnum { get; set; }
         public List<int> LookupTableEnumIds { get; set; }
-        [ApiAllowableValues("Includes", Values = new string[] {@"AmPersonCount",@"App",@"ArmPopulationAge",@"ArmPopulationN",@"AssociationMeasure",@"AttributeCategory",@"AttributeType",@"BroadcastStatus",@"BroadcastType",@"ConfidenceInterval",@"Conjunction",@"DatabaseType",@"DataHubSearchCategory",@"DataHubSource",@"DefaultTimeUnit",@"DefaultUnitType",@"Directionality",@"DocumentSetType",@"DocumentType",@"DosageProtocol",@"DosageType",@"EoDStatus",@"EqualityOperator",@"ErrorMessage",@"ExternalKey",@"Feature",@"FieldType",@"ForeignKeyStatus",@"FqReferenceStatus",@"Help",@"ImportStatus",@"IncidenceRateType",@"InstitutionType",@"IntegrationName",@"IntegrationPropertyName",@"InterventionLineOfTreatment",@"InterventionMedium",@"InterventionProvider",@"InterventionRoute",@"InterventionSchedule",@"InterventionStageSetting",@"InterventionType",@"Job",@"JunctionType",@"LookupTable",@"LookupType",@"ManualizedTreatment",@"MeanCalculationType",@"MeanRangeType",@"MeanVariableType",@"MeanVarianceType",@"MethodOfAnalysis",@"ModelName",@"OutcomeCategory",@"OutcomeType",@"Permission",@"PopulationType",@"PrevalenceType",@"ProtocolFilterOwner",@"ProtocolFilterType",@"ProtocolType",@"PublicationPoolStudies",@"PubType",@"Question",@"QuestionCategory",@"QuestionType",@"QueueChannel",@"Randomization",@"RangeType",@"Rating",@"ReasonRejected",@"ReconciliationStatus",@"RecruitmentMethod",@"RepresentativeSample",@"ResponsesCollectedBy",@"ResultsCategory",@"RiskOfBiasAssessment",@"Scope",@"SettingType",@"StatisticalSignificance",@"StatisticalTest",@"StatsRecordName",@"Status",@"StratificationType",@"StudyAllocattionMethod",@"StudyBias",@"StudyBlindingMethod",@"StudyCompliance",@"StudyDesign",@"StudyDocumentType",@"StudyFunding",@"StudyGroupType",@"StudyImportLocation",@"StudyImportType",@"StudyNGA",@"StudyObjective",@"StudyPhaseNames",@"StudyPurpose",@"StudyRandomizationMethod",@"StudyType",@"StudyTypeHarmEtiology",@"StudyTypeTherapy",@"StudyYears",@"TaskType",@"TermClassification",@"TermSection",@"TimeCardStatus",@"TimepointType",@"UnitsOfMeasure",@"UnitType",@"UserEmployeeType",@"UserPayrollStatus",@"UserPayrollType",@"UserType",@"ValueStatus",@"ValueType",@"VariableRule",@"VariableType",@"Workflow",@"WorkflowStatus",@"YesNoNa"})]
+        [ApiAllowableValues("Includes", Values = new string[] {@"AmPersonCount",@"App",@"ArmPopulationAge",@"ArmPopulationN",@"AssociationMeasure",@"AttributeCategory",@"AttributeType",@"BroadcastStatus",@"BroadcastType",@"ConfidenceInterval",@"Conjunction",@"DatabaseType",@"DataHubSearchCategory",@"DataHubSource",@"DefaultTimeUnit",@"DefaultUnitType",@"Directionality",@"DocumentSetType",@"DocumentType",@"DosageProtocol",@"DosageType",@"EoDStatus",@"EqualityOperator",@"ErrorMessage",@"ExternalKey",@"Feature",@"FieldType",@"FileRights",@"FileSource",@"FileType",@"ForeignKeyStatus",@"FqReferenceStatus",@"Help",@"ImportStatus",@"IncidenceRateType",@"InstitutionType",@"IntegrationName",@"IntegrationPropertyName",@"InterventionLineOfTreatment",@"InterventionMedium",@"InterventionProvider",@"InterventionRoute",@"InterventionSchedule",@"InterventionStageSetting",@"InterventionType",@"Job",@"JunctionType",@"LookupTable",@"LookupType",@"ManualizedTreatment",@"MeanCalculationType",@"MeanRangeType",@"MeanVariableType",@"MeanVarianceType",@"MethodOfAnalysis",@"ModelName",@"OutcomeCategory",@"OutcomeType",@"Permission",@"PopulationType",@"PrevalenceType",@"ProtocolFilterOwner",@"ProtocolFilterType",@"ProtocolType",@"PublicationPoolStudies",@"PubType",@"Question",@"QuestionCategory",@"QuestionType",@"QueueChannel",@"Randomization",@"RangeType",@"Rating",@"ReasonRejected",@"ReconciliationStatus",@"RecruitmentMethod",@"RepresentativeSample",@"ResponsesCollectedBy",@"ResultsCategory",@"RiskOfBiasAssessment",@"Scope",@"SettingType",@"StatisticalSignificance",@"StatisticalTest",@"StatsRecordName",@"Status",@"StratificationType",@"StudyAllocattionMethod",@"StudyBias",@"StudyBlindingMethod",@"StudyCompliance",@"StudyDesign",@"StudyDocumentType",@"StudyFunding",@"StudyGroupType",@"StudyImportLocation",@"StudyImportType",@"StudyNGA",@"StudyObjective",@"StudyPhaseNames",@"StudyPurpose",@"StudyRandomizationMethod",@"StudyType",@"StudyTypeHarmEtiology",@"StudyTypeTherapy",@"StudyYears",@"TaskType",@"TermClassification",@"TermSection",@"TimeCardStatus",@"TimepointType",@"UnitsOfMeasure",@"UnitType",@"UserEmployeeType",@"UserPayrollStatus",@"UserPayrollType",@"UserType",@"ValueStatus",@"ValueType",@"VariableRule",@"VariableType",@"Workflow",@"WorkflowStatus",@"YesNoNa"})]
         public List<string> LookupTableEnumNames { get; set; }
         public string Name { get; set; }
         public int? Order { get; set; }

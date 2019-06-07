@@ -84,14 +84,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DatabaseDeadline), Description = "DateTime?", IsRequired = false)]
         public DateTime? DatabaseDeadline { get; set; }
-        public List<int> DatabaseDeadlineIds { get; set; }
-        public int? DatabaseDeadlineCount { get; set; }
 
 
         [ApiMember(Name = nameof(DatabaseName), Description = "string", IsRequired = false)]
         public string DatabaseName { get; set; }
-        public List<int> DatabaseNameIds { get; set; }
-        public int? DatabaseNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Dataset), Description = "DataSet", IsRequired = false)]
@@ -102,14 +98,10 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DeliverableDeadline), Description = "DateTime?", IsRequired = false)]
         public DateTime? DeliverableDeadline { get; set; }
-        public List<int> DeliverableDeadlineIds { get; set; }
-        public int? DeliverableDeadlineCount { get; set; }
 
 
         [ApiMember(Name = nameof(FqId), Description = "int?", IsRequired = false)]
         public int? FqId { get; set; }
-        public List<int> FqIdIds { get; set; }
-        public int? FqIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(FqWorkflow), Description = "Workflow", IsRequired = false)]
@@ -120,8 +112,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(LegacyPackageId), Description = "int?", IsRequired = false)]
         public int? LegacyPackageId { get; set; }
-        public List<int> LegacyPackageIdIds { get; set; }
-        public int? LegacyPackageIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(Library), Description = "LibrarySet", IsRequired = false)]
@@ -132,38 +122,26 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(LibraryPackageId), Description = "int?", IsRequired = false)]
         public int? LibraryPackageId { get; set; }
-        public List<int> LibraryPackageIdIds { get; set; }
-        public int? LibraryPackageIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(LibraryPackageName), Description = "string", IsRequired = false)]
         public string LibraryPackageName { get; set; }
-        public List<int> LibraryPackageNameIds { get; set; }
-        public int? LibraryPackageNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Number), Description = "string", IsRequired = false)]
         public string Number { get; set; }
-        public List<int> NumberIds { get; set; }
-        public int? NumberCount { get; set; }
 
 
         [ApiMember(Name = nameof(OperationsDeliverable), Description = "string", IsRequired = false)]
         public string OperationsDeliverable { get; set; }
-        public List<int> OperationsDeliverableIds { get; set; }
-        public int? OperationsDeliverableCount { get; set; }
 
 
         [ApiMember(Name = nameof(OpportunityId), Description = "string", IsRequired = false)]
         public string OpportunityId { get; set; }
-        public List<int> OpportunityIdIds { get; set; }
-        public int? OpportunityIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(OpportunityName), Description = "string", IsRequired = false)]
         public string OpportunityName { get; set; }
-        public List<int> OpportunityNameIds { get; set; }
-        public int? OpportunityNameCount { get; set; }
 
 
         [ApiMember(Name = nameof(Parent), Description = "Project", IsRequired = false)]
@@ -174,27 +152,19 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(PICO), Description = "string", IsRequired = false)]
         public string PICO { get; set; }
-        public List<int> PICOIds { get; set; }
-        public int? PICOCount { get; set; }
 
 
         [ApiMember(Name = nameof(ProjectId), Description = "string", IsRequired = false)]
         public string ProjectId { get; set; }
-        public List<int> ProjectIdIds { get; set; }
-        public int? ProjectIdCount { get; set; }
 
 
         [ApiMember(Name = nameof(ProjectName), Description = "string", IsRequired = false)]
         public string ProjectName { get; set; }
-        public List<int> ProjectNameIds { get; set; }
-        public int? ProjectNameCount { get; set; }
 
 
         [ApiAllowableValues("Includes", Values = new string[] {@"Active",@"Archived",@"Inactive"})]
         [ApiMember(Name = nameof(Status), Description = "ForeignKeyStatusEnm?", IsRequired = false)]
         public ForeignKeyStatusEnm? Status { get; set; }
-        public List<int> StatusIds { get; set; }
-        public int? StatusCount { get; set; }
 
 
         [ApiMember(Name = nameof(TimeCards), Description = "TimeCard", IsRequired = false)]
@@ -249,12 +219,26 @@ namespace Services.Dto
 
     public partial class Project : ProjectBase, IReturn<Project>, IDto, ICloneable
     {
-        public Project() => _Constructor();
+        public Project()
+        {
+            _Constructor();
+        }
 
         public Project(int? id) : base(DocConvert.ToInt(id)) {}
         public Project(int id) : base(id) {}
-        public Project(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pClient, int? pClientId, DateTime? pDatabaseDeadline, string pDatabaseName, Reference pDataset, int? pDatasetId, DateTime? pDeliverableDeadline, int? pFqId, Reference pFqWorkflow, int? pFqWorkflowId, int? pLegacyPackageId, Reference pLibrary, int? pLibraryId, int? pLibraryPackageId, string pLibraryPackageName, string pNumber, string pOperationsDeliverable, string pOpportunityId, string pOpportunityName, Reference pParent, int? pParentId, string pPICO, string pProjectId, string pProjectName, ForeignKeyStatusEnm? pStatus, List<Reference> pTimeCards, int? pTimeCardsCount) :
+        public Project(int? pId, List<Reference> pChildren, int? pChildrenCount, Reference pClient, int? pClientId, DateTime? pDatabaseDeadline, string pDatabaseName, Reference pDataset, int? pDatasetId, DateTime? pDeliverableDeadline, int? pFqId, Reference pFqWorkflow, int? pFqWorkflowId, int? pLegacyPackageId, Reference pLibrary, int? pLibraryId, int? pLibraryPackageId, string pLibraryPackageName, string pNumber, string pOperationsDeliverable, string pOpportunityId, string pOpportunityName, Reference pParent, int? pParentId, string pPICO, string pProjectId, string pProjectName, ForeignKeyStatusEnm? pStatus, List<Reference> pTimeCards, int? pTimeCardsCount) : 
             base(pId, pChildren, pChildrenCount, pClient, pClientId, pDatabaseDeadline, pDatabaseName, pDataset, pDatasetId, pDeliverableDeadline, pFqId, pFqWorkflow, pFqWorkflowId, pLegacyPackageId, pLibrary, pLibraryId, pLibraryPackageId, pLibraryPackageName, pNumber, pOperationsDeliverable, pOpportunityId, pOpportunityName, pParent, pParentId, pPICO, pProjectId, pProjectName, pStatus, pTimeCards, pTimeCardsCount) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<Project>();
 
@@ -292,7 +276,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Children), nameof(ChildrenCount), nameof(ChildrenIds), nameof(TimeCards), nameof(TimeCardsCount), nameof(TimeCardsIds)
+            nameof(Children), nameof(ChildrenCount), nameof(TimeCards), nameof(TimeCardsCount)
         };
         private List<string> collections { get { return _collections; } }
 

@@ -47,26 +47,18 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(DatabaseState), Description = "string", IsRequired = false)]
         public string DatabaseState { get; set; }
-        public List<int> DatabaseStateIds { get; set; }
-        public int? DatabaseStateCount { get; set; }
 
 
         [ApiMember(Name = nameof(Description), Description = "string", IsRequired = false)]
         public string Description { get; set; }
-        public List<int> DescriptionIds { get; set; }
-        public int? DescriptionCount { get; set; }
 
 
         [ApiMember(Name = nameof(Release), Description = "string", IsRequired = false)]
         public string Release { get; set; }
-        public List<int> ReleaseIds { get; set; }
-        public int? ReleaseCount { get; set; }
 
 
         [ApiMember(Name = nameof(VersionName), Description = "string", IsRequired = true)]
         public string VersionName { get; set; }
-        public List<int> VersionNameIds { get; set; }
-        public int? VersionNameCount { get; set; }
 
 
 
@@ -89,12 +81,26 @@ namespace Services.Dto
 
     public partial class DatabaseVersion : DatabaseVersionBase, IReturn<DatabaseVersion>, IDto, ICloneable
     {
-        public DatabaseVersion() => _Constructor();
+        public DatabaseVersion()
+        {
+            _Constructor();
+        }
 
         public DatabaseVersion(int? id) : base(DocConvert.ToInt(id)) {}
         public DatabaseVersion(int id) : base(id) {}
-        public DatabaseVersion(int? pId, string pDatabaseState, string pDescription, string pRelease, string pVersionName) :
+        public DatabaseVersion(int? pId, string pDatabaseState, string pDescription, string pRelease, string pVersionName) : 
             base(pId, pDatabaseState, pDescription, pRelease, pVersionName) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<DatabaseVersion>();
 

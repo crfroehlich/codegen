@@ -84,7 +84,8 @@ namespace Services.Enums
         public const string NEWS_ARTICLE_PRESS_RELEASE = "News Article/Press Release";
         public const string OTHER = "Other";
         public const string REGULATORY_DOCUMENTS = "Regulatory Documents";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantPubType).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -114,6 +115,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantPubType obj) => this == obj;
 
         public static bool operator ==(DocConstantPubType x, DocConstantPubType y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -139,5 +142,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantPubType obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

@@ -79,7 +79,8 @@ namespace Services.Enums
         public const string PROJECT = "Project";
         public const string STUDY_DESIGN_ID = "Study Design Id";
         public const string STUDY_TYPE_ID = "Study Type Id";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantExternalKey).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -109,6 +110,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantExternalKey obj) => this == obj;
 
         public static bool operator ==(DocConstantExternalKey x, DocConstantExternalKey y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -134,5 +137,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantExternalKey obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

@@ -68,12 +68,26 @@ namespace Services.Dto
 
     public partial class ServePortalSet : ServePortalSetBase, IReturn<ServePortalSet>, IDto, ICloneable
     {
-        public ServePortalSet() => _Constructor();
+        public ServePortalSet()
+        {
+            _Constructor();
+        }
 
         public ServePortalSet(int? id) : base(DocConvert.ToInt(id)) {}
         public ServePortalSet(int id) : base(id) {}
-        public ServePortalSet(int? pId, List<Reference> pInterventions, int? pInterventionsCount) :
+        public ServePortalSet(int? pId, List<Reference> pInterventions, int? pInterventionsCount) : 
             base(pId, pInterventions, pInterventionsCount) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<ServePortalSet>();
 
@@ -111,7 +125,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Interventions), nameof(InterventionsCount), nameof(InterventionsIds)
+            nameof(Interventions), nameof(InterventionsCount)
         };
         private List<string> collections { get { return _collections; } }
 

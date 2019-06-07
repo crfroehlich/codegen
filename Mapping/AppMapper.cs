@@ -34,13 +34,13 @@ namespace Services.Schema
                 .ForMember(dest => dest.Name, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Name))))
                 .ForMember(dest => dest.Pages, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Pages))))
                 .ForMember(dest => dest.PagesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.PagesCount))))
-                .ForMember(dest => dest.PagesIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.PagesIds))))
+                .ForMember(dest => dest.PagesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.PagesIds))))
                 .ForMember(dest => dest.Roles, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Roles))))
                 .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.RolesCount))))
-                .ForMember(dest => dest.RolesIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.RolesIds))))
+                .ForMember(dest => dest.RolesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.RolesIds))))
                 .ForMember(dest => dest.Scopes, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.Scopes))))
                 .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.ScopesCount))))
-                .ForMember(dest => dest.ScopesIds, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.ScopesIds))))
+                .ForMember(dest => dest.ScopesCount, opt => opt.PreCondition(c => DocMapperConfig.ShouldBeMapped<App>(c, nameof(DocEntityApp.ScopesIds))))
                 .MaxDepth(2);
             _DtoToEntity = CreateMap<App,DocEntityApp>()
                 .MaxDepth(2);

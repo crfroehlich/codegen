@@ -74,7 +74,8 @@ namespace Services.Enums
         public const string NOT_COLLECTED = "Not Collected";
         public const string NOT_REPORTED = "Not Reported";
         public const string REQUESTED = "Requested";
-
+        
+        
         private static List<string> _all;
         public static List<string> All => _all ?? (_all = typeof(DocConstantValueStatus).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).Where(fi => fi.IsLiteral && !fi.IsInitOnly).Select( fi => fi.GetRawConstantValue().ToString() ).OrderBy(n => n).ToList());
 
@@ -104,6 +105,8 @@ namespace Services.Enums
 
         public override string ToString() => Value;
 
+
+
         public bool Equals(DocConstantValueStatus obj) => this == obj;
 
         public static bool operator ==(DocConstantValueStatus x, DocConstantValueStatus y) => DocTools.AreEqual(DocConvert.ToString(x), DocConvert.ToString(y));
@@ -129,5 +132,6 @@ namespace Services.Enums
         public override int GetHashCode() => 17 * Value?.GetHashCode() ?? -1;
                 
         public int GetHashCode(DocConstantValueStatus obj) => obj?.GetHashCode() ?? -17;
+
     }
 }

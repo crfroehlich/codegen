@@ -88,12 +88,26 @@ namespace Services.Dto
 
     public partial class TermCategory : TermCategoryBase, IReturn<TermCategory>, IDto, ICloneable
     {
-        public TermCategory() => _Constructor();
+        public TermCategory()
+        {
+            _Constructor();
+        }
 
         public TermCategory(int? id) : base(DocConvert.ToInt(id)) {}
         public TermCategory(int id) : base(id) {}
-        public TermCategory(int? pId, Reference pParentCategory, int? pParentCategoryId, Reference pScope, int? pScopeId, List<Reference> pTerms, int? pTermsCount) :
+        public TermCategory(int? pId, Reference pParentCategory, int? pParentCategoryId, Reference pScope, int? pScopeId, List<Reference> pTerms, int? pTermsCount) : 
             base(pId, pParentCategory, pParentCategoryId, pScope, pScopeId, pTerms, pTermsCount) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<TermCategory>();
 
@@ -131,7 +145,7 @@ namespace Services.Dto
 
         private List<string> _collections = new List<string>
         {
-            nameof(Terms), nameof(TermsCount), nameof(TermsIds)
+            nameof(Terms), nameof(TermsCount)
         };
         private List<string> collections { get { return _collections; } }
 

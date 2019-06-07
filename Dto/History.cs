@@ -82,8 +82,6 @@ namespace Services.Dto
 
         [ApiMember(Name = nameof(URL), Description = "string", IsRequired = false)]
         public string URL { get; set; }
-        public List<int> URLIds { get; set; }
-        public int? URLCount { get; set; }
 
 
         [ApiMember(Name = nameof(User), Description = "User", IsRequired = true)]
@@ -136,12 +134,26 @@ namespace Services.Dto
 
     public partial class History : HistoryBase, IReturn<History>, IDto, ICloneable
     {
-        public History() => _Constructor();
+        public History()
+        {
+            _Constructor();
+        }
 
         public History(int? id) : base(DocConvert.ToInt(id)) {}
         public History(int id) : base(id) {}
-        public History(int? pId, Reference pApp, int? pAppId, Reference pDocumentSet, int? pDocumentSetId, Reference pImpersonation, int? pImpersonationId, Reference pPage, int? pPageId, string pURL, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId, Reference pWorkflow, int? pWorkflowId) :
+        public History(int? pId, Reference pApp, int? pAppId, Reference pDocumentSet, int? pDocumentSetId, Reference pImpersonation, int? pImpersonationId, Reference pPage, int? pPageId, string pURL, Reference pUser, int? pUserId, Reference pUserSession, int? pUserSessionId, Reference pWorkflow, int? pWorkflowId) : 
             base(pId, pApp, pAppId, pDocumentSet, pDocumentSetId, pImpersonation, pImpersonationId, pPage, pPageId, pURL, pUser, pUserId, pUserSession, pUserSessionId, pWorkflow, pWorkflowId) { }
+
+        public new bool? ShouldSerialize(string field)
+        {
+            //Allow individual classes to specify their own logic
+            var manualOverride = _ShouldSerialize(field);
+            if(null != manualOverride) return manualOverride;
+
+            if (IgnoredSelect.Matches(field, true)) return false;
+            var ret = MandatorySelect.Matches(field, true) || true == Select?.Matches(field, true);
+            return ret;
+        }
 
         public static List<string> Fields => DocTools.Fields<History>();
 
